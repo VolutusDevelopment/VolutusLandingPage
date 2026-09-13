@@ -430,3 +430,34 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 
 **Pendiente de esta pregunta:** el contraejemplo con nombre propio (a quién no
 queremos parecernos).
+
+### A.2 Prohibiciones y dirección inicial (2026-09-13)
+
+**Lo que NO puede existir en la página (acuerdo de ambos socios):**
+
+- Degradados de colores tipo RGB / unicornio.
+- El color morado, en ninguna forma.
+- Cualquier cosa que delate "generado con la IA más barata del mercado".
+- Sobrecarga de animaciones.
+- Exceso de recuadros con información.
+- **Por encima de todo: falta de identidad.** Es el defecto que más rechazan.
+
+**Dirección declarada:**
+
+- Paleta simple: blanco y algún tipo de azul celeste (a validar, ver A.3).
+- La página tiene identidad **por encima** de sus componentes.
+- Nada que no aporte a la comunicación entre usuario y página.
+- Cada animación tiene que tener su porqué.
+- Debe demostrar habilidad técnica y simpleza al mismo tiempo.
+
+**Arquitectura propuesta por Rodrigo (alimenta la sección 4, sin cerrar):**
+
+| # | Bloque | Intención declarada |
+| --- | --- | --- |
+| 1 | Ejemplo gráfico de lo que hace la empresa, casi un demo en vivo de los productos | Mostrar, no contar |
+| 2 | El beneficio del tipo de diseño, en métricas | Probar la habilidad técnica con números |
+| 3 | Algo breve sobre nosotros | Confianza |
+| 4 | Formulario | Conversión |
+
+**Objetivo de este bloque de trabajo:** identidad clara, imagen de marca e
+idealmente un logo, utilizables en la página.
