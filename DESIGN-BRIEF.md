@@ -394,3 +394,39 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 - [ ] Los colores del acento pasan el contraste sobre su fondo real
 - [ ] El foco de teclado se ve en todo lo que se pueda pulsar
 - [ ] Alguien ajeno al proyecto leyó la página y supo decir qué ofrecéis
+
+---
+
+## Anexo A. Ejercicio de personificación de marca `[~]`
+
+> Registro de la sesión de identidad (Rodrigo + socio). Material en bruto y su
+> traducción a consecuencias de diseño. Alimenta las secciones 5 y 6; nada de
+> aquí está cerrado hasta que se copie a su sección con valores concretos.
+
+### A.1 "Volutus entra a una sala" (2026-09-13)
+
+**Respuesta del equipo:**
+
+- No busca llamar la atención, pero tampoco pasar desapercibida.
+- Persona correcta, vestida de manera semiformal. No necesita ruido para que
+  la noten.
+- Usa lentes, pero no parece un nerd.
+- Da su opinión cuando le preguntan, sin cerrarse a la de los demás.
+- Mira a los ojos, da la mano firme, conversa de cerca y **al mismo nivel** que
+  el otro.
+- Busca que la persona con la que habla entienda lo mismo que ella: abstrae
+  ideas y aterriza expectativas.
+
+**Lectura para diseño (propuesta, sin cerrar):**
+
+| Rasgo declarado | Consecuencia concreta en la página |
+| --- | --- |
+| Ni ruidosa ni invisible | Un solo elemento con fuerza por pantalla, el resto en silencio. Sin degradados ni animaciones decorativas. |
+| Semiformal | Sans con carácter. Ni serif de bufete ni grotesque genérica de startup. |
+| No necesita ruido | Un único color de acento, usado poco. El peso lo carga el espacio. |
+| Lentes, no nerd | Precisión sin estética hacker: nada de terminal, monoespaciado solo para datos reales. |
+| Habla al mismo nivel | Copy sin jerga. Se explica el *cómo trabajamos*, no solo el *qué usamos*. |
+| Opina, pero escucha | Titulares afirmativos, no preguntas retóricas. |
+
+**Pendiente de esta pregunta:** el contraejemplo con nombre propio (a quién no
+queremos parecernos).
