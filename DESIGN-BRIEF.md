@@ -508,3 +508,29 @@ Dos cortes en toda la página, ambos secos. **Se descartó:** el corte temprano
 (dejaba la identidad de marca reducida a una sola pantalla) y el descenso
 completo sin retorno (dejaba el formulario sobre fondo oscuro, peor para
 conversión y más frágil en accesibilidad).
+
+### A.5 Estructura del logo `[x]`
+
+**Cerrado:** la marca es un **lockup**, símbolo más palabra, y el símbolo tiene
+que sostenerse solo.
+
+| Versión | Composición | Dónde se usa |
+| --- | --- | --- |
+| Principal | Símbolo + `VOLUTUS` en horizontal | Nav, pie, firma de correo, documentos |
+| Símbolo solo | Símbolo aislado | Favicon, avatar, cualquier espacio cuadrado |
+| Palabra sola | `VOLUTUS` sin símbolo | Casos de una sola línea, texto legal |
+
+**Requisitos técnicos, no negociables:**
+
+- El símbolo tiene que ser legible a **16 px**. Lo que no se distingue a 16 px
+  no entra en el símbolo.
+- SVG vectorial, sin degradados, sin sombras, sin más de un color.
+- Versión para fondo claro (cielo) y para fondo oscuro (plano), porque la
+  página usa los dos.
+- La tipografía de la palabra sale de la familia de titulares del sitio, no
+  de una fuente exclusiva del logo. Una familia menos que cargar.
+
+**Consecuencia directa:** el favicon actual, un cuadrado azul sobre gris,
+queda descartado.
+
+**Pendiente:** la forma concreta del símbolo.
