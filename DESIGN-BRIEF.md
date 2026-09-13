@@ -273,18 +273,30 @@ Reglas de uso, obligatorias (razón en el anexo A.7):
 | `xl` | 34 px | Título de sección |
 | `2xl` | fluido, 48 a 76 px | Titular de portada |
 
-### Espaciado y forma
+### Espaciado y forma `[x]`
 
 | Concepto | Valor |
 | --- | --- |
-| Unidad base de espaciado | |
-| Ancho máximo del contenido | |
-| Radio de esquinas | |
-| Sombras | |
+| Unidad base de espaciado | 4 px, escala de 4 a 96 |
+| Ancho máximo del contenido | 1200 px, con `padding-inline` de 24 px |
+| Medida de lectura | 68 caracteres máximo en texto corrido |
+| Radio de esquinas | **4 px**, uniforme en todo el sitio |
+| Sombras | **Ninguna** |
 
-> Guía: borde, relleno, radio y sombra dicen «esto es un objeto aparte». Gastarlos en todos
-> los bloques aplana la jerarquía en vez de crearla. Conviene reservarlos para lo que de
-> verdad tiene que destacar.
+**Radio 4 px (decisión de Rodrigo; voto del socio no registrado).** Se descartó
+la esquina recta absoluta, que con Geist resultaba dura, y el radio amable de
+10 a 12 px, que es el aspecto por defecto de las plantillas SaaS y apunta justo
+a la prohibición principal de A.2.
+
+**Sin sombras, por decisión, no por olvido.** La separación entre planos se
+hace con color de superficie y una línea de 1 px. Una sombra dice "esto flota",
+y en esta página nada flota. Además evita repintados y `will-change`
+innecesarios.
+
+**Regla de jerarquía:** borde, relleno, radio y fondo propio son recursos
+caros. Si todos los bloques los llevan, dejan de significar nada. Se reservan
+para lo que de verdad tiene que destacar, que en esta página es la acción
+principal y los datos de la zona de plano.
 
 ### Imagen y gráfica
 
