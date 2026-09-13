@@ -149,12 +149,24 @@ decisión A.4.
 | 1 | Portada | Que se entienda qué hacemos y qué hacer, sin desplazar | Titular, entradilla, acción principal, pieza atmosférica de marca | Cielo | `[~]` |
 | 2 | Demostración | Mostrar en vez de contar | Dos huecos reservados para capturas de proyectos en desarrollo | Plano | `[~]` |
 | 3 | Métricas | Probar la capacidad técnica con números | Datos reales en Geist Mono sobre fondo de plano | Plano | `[~]` |
-| 4 | *(por definir)* | *(ver nota)* | *(ver nota)* | Cielo | `[ ]` |
+| 4 | Qué hacemos y cómo lo hacemos | Responder la objeción silenciosa: en qué me meto, cuánto tarda y qué queda fuera | Proceso real en 3 o 4 pasos con plazos, más una lista corta de qué sí y qué no aceptamos | Cielo | `[~]` |
 | 5 | Contacto | Convertir | Formulario | Cielo | `[~]` |
 
 **Nota sobre el bloque 4.** En la arquitectura original era "sobre nosotros".
-Con la decisión de no mostrar personas, ese bloque se queda sin contenido y
-está pendiente de redefinición.
+Vaciado al decidir que no aparecen personas, se reemplaza por "qué hacemos y
+cómo lo hacemos". Condiciones para que no se descontrole:
+
+1. **Es un bloque, no dos.** El *cómo* manda y el *qué* va subordinado. Si se
+   parten en dos secciones, la página vuelve a crecer sin motivo.
+2. **Máximo cinco ítems en el *qué*,** nombrados por el resultado que recibe el
+   cliente, no por la tecnología que se usa. "Una app Android en producción",
+   no "Kotlin · Jetpack Compose · Material 3".
+3. **El *cómo* lleva plazos.** Un proceso sin tiempos no responde la pregunta
+   que el visitante trae.
+4. **Se dice también lo que no hacemos.** Es lo que da carácter y filtra los
+   encargos malos antes de la primera reunión.
+5. Las tecnologías dejan de ser protagonistas. Si aparecen, es como pie de
+   página, nunca como argumento de venta.
 
 **Personas en la página** `[x]`: **no aparece ninguna.** Sin nombres, sin
 retratos, sin firmas. Habla la empresa en primera persona del plural. Un
