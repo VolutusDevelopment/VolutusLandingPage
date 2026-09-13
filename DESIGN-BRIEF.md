@@ -57,12 +57,33 @@ código se ajusta a él, no al revés.
 
 ---
 
-## 1. Qué es y qué tiene que pasar `[ ]`
+## 1. Qué es y qué tiene que pasar `[~]`
 
-**Qué es esta página, en una frase:**
+**Qué es esta página, en una frase:** `[x]`
 
-> Guía: una frase que entienda alguien ajeno al proyecto. Sin «plataforma integral» ni
-> «solución 360». Si no se puede decir en una frase, todavía no está claro.
+> La página donde Volutus demuestra, con obra que se puede abrir y revisar, que
+> es una empresa real y que sabe construir software.
+
+**Para qué existe, dicho por el equipo:** validar que la empresa existe, servir
+de punto al que redirigir, e indexar los proyectos hechos. **No es una página
+que capte por sí sola.** Es una página de respaldo: casi todo el que llegue
+vendrá con el enlace ya en la mano, enviado por uno de los dos socios.
+
+**Consecuencia sobre la prioridad de SEO.** El `CLAUDE.md` del repositorio pone
+el SEO como prioridad absoluta. Con dominio nuevo, sin historial, sin enlaces
+externos y sin clientes, el posicionamiento por búsquedas genéricas no va a
+traer visitas en el plazo de este proyecto. Lo que sí importa, y es barato:
+
+1. **Búsqueda de marca.** Quien oiga "Volutus" y lo busque tiene que encontrar
+   esta página en el primer resultado. Eso sí se consigue rápido.
+2. **Rendimiento real en móvil**, porque el enlace se va a abrir desde
+   WhatsApp, con datos móviles y sin paciencia.
+3. **La tarjeta de previsualización del enlace.** Es literalmente lo primero
+   que ve el visitante, antes que la página. Si sale un recuadro gris, el
+   enlace parece sospechoso.
+
+El SEO técnico se hace bien porque cuesta poco hacerlo bien, no porque vaya a
+traer clientes. Se recomienda ajustar esa prioridad en `CLAUDE.md`.
 
 **La única acción que queremos que haga el visitante:** `[x]`
 
