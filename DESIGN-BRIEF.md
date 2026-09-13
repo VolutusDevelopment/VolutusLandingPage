@@ -111,36 +111,41 @@ elegida).
 
 ---
 
-## 2. A quién le hablamos `[ ]`
+## 2. A quién le hablamos `[~]`
 
-**Visitante principal:**
+*Propuesta del asesor derivada de la sección 1. Pendiente de validación, salvo
+las objeciones, que las tiene que aportar el equipo con sus palabras reales.*
 
-> Guía: un perfil, no un segmento demográfico. Qué hace, qué problema tiene hoy, cómo lo
-> resuelve ahora sin vosotros.
+**Visitante principal:** alguien que **acaba de hablar con uno de los dos
+socios** y quiere comprobar con quién está tratando antes de seguir. No busca
+proveedores: está verificando uno concreto. Tiene un problema que hoy resuelve
+a mano, con una planilla, con un conocido que "sabe de computación", o no lo
+resuelve.
 
-**Qué sabe ya cuando llega:**
-
-> Guía: esto decide cuánto hay que explicar. Alguien que llega desde una recomendación no
-> necesita el mismo texto que alguien que cae desde una búsqueda fría.
+**Qué sabe ya cuando llega:** el nombre Volutus y, más o menos, a qué se
+dedican, porque se lo acaban de contar. **No** hay que explicarle el rubro
+desde cero. Lo que necesita es comprobar que lo que le contaron es cierto.
 
 **De dónde llega:**
 
-> Guía: enumerad las vías reales previstas (búsqueda, redes, tarjeta física, boca a boca,
-> demo en persona). Si una vía trae gente con contexto muy distinto, quizá necesite su propia
-> entrada a la página.
+| Vía | Contexto con el que llega |
+| --- | --- |
+| Enlace por WhatsApp tras una conversación | El más frecuente. Móvil, datos, poca paciencia. La tarjeta de previsualización del enlace importa tanto como la página |
+| Recomendación de un conocido | Llega con confianza prestada, quiere confirmarla |
+| Búsqueda del nombre "Volutus" | Ya conoce el nombre, solo quiere encontrarlos |
+| Búsqueda genérica de proveedores | Prácticamente inexistente en esta etapa, y no se diseña para él |
 
-**Qué le preocupa antes de decir que sí:**
-
-> Guía: las objeciones reales, escritas como las diría esa persona. «¿Cuánto cuesta?»,
-> «¿esto me va a dar más trabajo?», «¿y si no funciona?». Cada una tendrá que estar
-> respondida en alguna parte de la página, o el visitante se va a buscarla fuera.
+**Qué le preocupa antes de decir que sí:** `[ ]` pendiente. Tienen que ser las
+preguntas reales que le hacen al equipo, escritas como las dice la persona.
 
 **A quién NO le hablamos:**
 
-> Guía: tan importante como lo anterior. Una página que intenta servir a todos no convence
-> a nadie.
-
----
+- A quien busca el precio más bajo del mercado.
+- A quien quiere una página lista mañana.
+- A empresas grandes con procesos de proveedor formales, que hoy no se pueden
+  atender.
+- A otros desarrolladores. La página no es un portafolio para colegas, aunque
+  enlace código.
 
 ## 3. La promesa y la prueba `[~]`
 
@@ -232,11 +237,15 @@ La lista pasa de seis tarjetas no verificables a **tres proyectos abiertos**.
 Es una mejora: tres cosas que se pueden abrir valen más que seis que nadie
 puede comprobar.
 
-**Problema pendiente con los enlaces.** Dos de los tres repositorios cuelgan de
-una cuenta personal (`DiegoPyLL`). Enlazarlos así contradice la decisión de no
-apuntar a personas, y además debilita justo lo que la página quiere probar: que
-Volutus es una empresa. Una organización de GitHub con la obra dentro es, por
-sí sola, una validación.
+**Titularidad de los repositorios** `[x]`: **se transfieren todos a la
+organización `VolutusDevelopment`.** Decisión del equipo. `CarFlip` y el
+repositorio de la hackathon salen de la cuenta personal `DiegoPyLL` antes de
+publicar la página. GitHub mantiene las redirecciones, así que no se rompe
+ningún enlace existente.
+
+Motivo: la página afirma que Volutus es una empresa, y hasta ahora dos tercios
+de su obra figuraban a nombre de un particular. Una organización con la obra
+dentro es, por sí sola, parte de la validación que esta página busca.
 
 **Antes de publicar hay que verificar que los tres repositorios son públicos.**
 Un enlace a un repositorio privado devuelve un 404 y produce el efecto
