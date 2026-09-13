@@ -180,7 +180,7 @@ decisión A.4.
 | # | Sección | Qué tiene que conseguir | Contenido | Tema | Estado |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Portada | Que se entienda qué hacemos y qué hacer, sin desplazar | Titular, entradilla, acción principal, pieza atmosférica de marca | Cielo | `[~]` |
-| 2 | Demostración | Mostrar en vez de contar | Dos huecos reservados para capturas de proyectos en desarrollo | Plano | `[~]` |
+| 2 | Demostración, el índice de proyectos | Mostrar en vez de contar, y dar algo que se pueda abrir y revisar | Lista de proyectos, cada uno con enlace a su repositorio o a su sitio en línea. Dos de ellos con hueco reservado para la captura de los que están en desarrollo | Plano | `[~]` |
 | 3 | Métricas | Probar la capacidad técnica con números | Datos reales en Geist Mono sobre fondo de plano | Plano | `[~]` |
 | 4 | Qué hacemos y cómo lo hacemos | Responder la objeción silenciosa: en qué me meto, cuánto tarda y qué queda fuera | Proceso real en 3 o 4 pasos con plazos, más una lista corta de qué sí y qué no aceptamos | Cielo | `[~]` |
 | 5 | Contacto | Convertir | Formulario | Cielo | `[~]` |
@@ -202,12 +202,18 @@ cómo lo hacemos". Condiciones para que no se descontrole:
    página, nunca como argumento de venta.
 
 **Personas en la página** `[x]`: **no aparece ninguna.** Sin nombres, sin
-retratos, sin firmas. Habla la empresa en primera persona del plural. Un
-apartado "sobre nosotros" queda para una versión posterior, fuera del alcance
-de esta.
+retratos, sin firmas, **y sin enlaces a perfiles personales de GitHub o
+LinkedIn**. Habla la empresa en primera persona del plural. Un apartado "sobre
+nosotros" queda para una versión posterior, fuera del alcance de esta.
 
-Se descartó mostrar nombres con enlace a GitHub o LinkedIn, que el asesor
-recomendaba como prueba verificable de capacidad técnica, y los retratos.
+**Lo que sí se enlaza: el código de cada proyecto.** Repositorios, no personas.
+Es la prueba técnica verificable sin exposición personal.
+
+**Regla dura que se deriva:** un proyecto que no tenga **repositorio público o
+URL en línea que se pueda abrir** no entra en la página. Sin excepciones. Es la
+misma regla de la sección 3 aplicada al listado: lo que no se puede enlazar, no
+se dice. Para una empresa sin clientes, la obra abierta es la única credencial
+que tiene.
 
 **Dónde aparece la acción principal y cuántas veces:** `[ ]` *bloqueado hasta
 que la sección 1 defina cuál es esa acción.*
