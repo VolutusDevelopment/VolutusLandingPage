@@ -194,46 +194,84 @@ código se ajusta a él, no al revés.
 
 ---
 
-## 6. Identidad visual `[ ]`
+## 6. Identidad visual `[~]`
 
-> Guía: esta sección se rellena con valores concretos, no con adjetivos. Es la que copia y
-> pega quien escribe el código.
+*Color y tipografía cerrados. Espaciado, forma e imagen pendientes.*
 
-### Color
+### Color `[x]`
 
-| Uso | Valor | Notas |
+La página usa **dos temas por zona**, no un modo oscuro conmutable. El corte
+está definido en el anexo A.4: la portada y el cierre van en *cielo*, la zona
+de demostración va en *plano*.
+
+**Color de marca:** `#38A9E8`, cielo de mediodía. Es el color del logo, de la
+onda y de las superficies de identidad. **No se usa nunca para texto ni para
+botones sobre fondo claro:** da 2.48:1, por debajo del mínimo de 4.5:1. Sobre
+el tema plano sí funciona (6.71:1) y ahí se usa tal cual.
+
+**Tema cielo (claro):**
+
+| Uso | Valor | Contraste sobre el fondo |
 | --- | --- | --- |
-| Fondo | | |
-| Superficie | | |
-| Texto principal | | |
-| Texto secundario | | |
-| Líneas y bordes | | |
-| Acento | | |
-| Éxito | | |
-| Aviso | | |
-| Error | | |
+| Fondo | `#F6F9FC` | base |
+| Superficie | `#FFFFFF` | base |
+| Texto principal | `#0A1A2A` | 16.64:1 |
+| Texto secundario | `#47607A` | 6.17:1 |
+| Líneas y bordes | `#D6E2EC` | decorativo |
+| Marca (solo superficies) | `#38A9E8` | 2.48:1, no apto para texto |
+| Acción (enlaces y botones) | `#116492` | 6.09:1, blanco encima 6.44:1 |
+| Acción hover | `#0F5780` | 7.37:1 |
+| Acción activa | `#0C4565` | 9.67:1 |
+| Éxito | `#12714B` | 5.70:1 |
+| Aviso | `#8A5A00` | 5.61:1 |
+| Error | `#B3261E` | 6.19:1 |
 
-**¿Hay modo oscuro?** `[ ] sí  [ ] no  [ ] más adelante`
+**Tema plano (oscuro):**
 
-> Guía: si la respuesta es sí, cada valor de arriba necesita su pareja. Decidirlo después
-> obliga a repasar la hoja de estilos entera.
+| Uso | Valor | Contraste sobre el fondo |
+| --- | --- | --- |
+| Fondo | `#0A1A2A` | base |
+| Superficie | `#122638` | base |
+| Texto principal | `#E6EEF6` | 15.01:1 |
+| Texto secundario | `#9DB2C6` | 8.05:1 |
+| Líneas y bordes | `#1E3348` | decorativo |
+| Acción y marca | `#38A9E8` | 6.71:1 |
+| Botón primario | fondo `#38A9E8`, texto `#0A1A2A` | 6.71:1 |
+| Éxito | `#4FCF96` | 8.96:1 |
+| Aviso | `#E8B14C` | 9.06:1 |
+| Error | `#FF8A80` | 7.70:1 |
 
-**Un neutro gris puro suele delatar que nadie lo eligió.** Un gris con una pizca del tono del
-acento se lee como decidido. Y los semánticos (éxito/aviso/error) son independientes del
-acento: no valen como color de marca.
+**¿Hay modo oscuro conmutable?** `[ ] sí  [x] no  [ ] más adelante`. Los dos
+temas son zonas de la página, no una preferencia del usuario.
 
-### Tipografía
+Los neutros llevan la misma tonalidad azulada que la marca, ningún gris puro.
+Los semánticos son independientes del acento y no se usan como color de marca.
+
+### Tipografía `[x]`
 
 | Rol | Familia | Grosores | De dónde se carga |
 | --- | --- | --- | --- |
-| Titulares | | | |
-| Texto | | | |
-| Datos / código | | | |
+| Titulares y wordmark | Geist | 400, 800 | Autohospedada, `woff2` variable con subset latino |
+| Texto | Geist | 400 | La misma variable |
+| Datos, métricas y código | Geist Mono | 400 | Autohospedada, subset latino |
 
-**Escala de tamaños:**
+Reglas de uso, obligatorias (razón en el anexo A.7):
 
-> Guía: definid la escala y no os salgáis de ella. Seis tamaños bien elegidos ordenan una
-> página; catorce tamaños improvisados la desordenan aunque cada uno se viera bien solo.
+- Solo 400 y 800. Nunca 500 ni 600.
+- Titulares grandes con `letter-spacing: -0.03em`.
+- Wordmark `VOLUTUS` en mayúsculas con tracking positivo amplio.
+- Geist Mono solo para números y datos reales, nunca como decoración.
+
+**Escala de tamaños:** seis pasos, y no se sale de ahí.
+
+| Paso | Tamaño | Uso |
+| --- | --- | --- |
+| `xs` | 13 px | Etiquetas, pies |
+| `sm` | 15 px | Texto secundario |
+| `base` | 17 px | Texto corrido |
+| `lg` | 22 px | Entradilla |
+| `xl` | 34 px | Título de sección |
+| `2xl` | fluido, 48 a 76 px | Titular de portada |
 
 ### Espaciado y forma
 
