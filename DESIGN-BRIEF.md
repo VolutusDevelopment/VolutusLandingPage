@@ -183,7 +183,24 @@ validación del equipo):*
 | **Directos.** Decimos alcance, plazo y qué no hacemos. | Evasivos: "conversemos y lo vemos". |
 | **Del mismo nivel.** Explicamos sin jerga y sin condescendencia. | Ni sabihondos ("arquitectura hexagonal orientada a eventos") ni simplones ("te hacemos una web bonita"). |
 
-**Cómo se nombran las cosas, glosario** `[ ]`
+**Cómo se nombran las cosas, glosario** `[~]`
+
+Volutus se presenta como **empresa de desarrollo de software**. Decisión de
+Rodrigo. Se descartó "estudio de ingeniería" (palabra prestada mientras no haya
+obra publicada que la respalde) y declarar el tamaño de forma explícita
+("somos dos ingenieros"), que el asesor recomendaba como diferenciador frente a
+los equipos que subcontratan.
+
+*Resto del glosario: propuesta del asesor, pendiente de validación. Vocabulario
+de Chile.*
+
+| Lo llamamos | No lo llamamos | Por qué |
+| --- | --- | --- |
+| Empresa de desarrollo de software | Estudio, agencia, software factory | Es lo decidido, y se mantiene igual en toda la página |
+| Proyecto | Solución | "Solución" no significa nada y suena a folleto |
+| Cliente | Partner, aliado estratégico | Nadie habla así fuera de una presentación |
+| Reunión | Call, meeting | Se escribe en español en toda la página |
+| Cotización | Presupuesto, quote | Es la palabra que usa el cliente chileno |
 
 **Textos de los botones** `[ ]`
 
@@ -312,8 +329,16 @@ degradados" y "que no se vea pobre":
    máximo de **120 KB** en el tamaño que recibe un móvil.
 2. **Gráfica vectorial propia:** la onda de marca, diagramas e iconos de trazo,
    en SVG inline, de un solo color, sin degradados.
-3. **Capturas reales de producto**, cuando exista el repertorio. Entran más
-   adelante y sustituyen a la decoración, nunca al revés.
+3. **Capturas reales de producto: dos espacios reservados.** El diseño deja
+   dos huecos preparados que el equipo rellena con los proyectos que está
+   desarrollando. Hasta que lleguen las capturas, el hueco se ocupa con un
+   marcador sobrio del sistema (superficie, borde de 1 px y etiqueta), nunca
+   con una imagen de relleno.
+
+   Especificación del hueco, para que la imagen real entre sin romper nada:
+   proporción fija 16:10, `width` y `height` explícitos en el HTML, `webp` con
+   `srcset`, peso máximo 90 KB en el tamaño de móvil y `loading="lazy"`. Así el
+   CLS se mantiene en 0 antes y después de tener las capturas.
 
 **Qué NO usamos, nunca:**
 
