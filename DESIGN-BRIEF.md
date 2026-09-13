@@ -461,3 +461,32 @@ queremos parecernos).
 
 **Objetivo de este bloque de trabajo:** identidad clara, imagen de marca e
 idealmente un logo, utilizables en la página.
+
+### A.3 Dirección cromática: cielo que desciende a plano `[~]`
+
+**Decisión de dirección (Rodrigo, con acuerdo pendiente del socio):** combinar
+las direcciones A y B como un recorrido, no como una mezcla.
+
+- La página **abre en azul cielo**: identidad de marca, la nube volutus, única
+  e imponente.
+- A medida que se baja y el contenido se vuelve técnico, la página **pasa a
+  azul de plano**: azul profundo, casi negro, registro de ingeniería.
+
+El color cambia cuando cambia el registro del discurso: claro mientras la
+página *promete*, oscuro cuando la página *demuestra*.
+
+**Reglas que se derivan de esto y que no son negociables si la idea se
+mantiene:**
+
+1. **La transición es un corte, no un degradado.** Si el cielo se funde
+   suavemente con el plano, eso es un degradado de scroll, justo lo prohibido
+   en A.2. El cambio ocurre en un borde definido, coherente con las esquinas
+   rectas y los divisores marcados del sistema actual.
+2. **Dos temas significan dos sistemas completos:** cada token necesita su
+   pareja clara y oscura, y cada componente sus estados en ambos fondos. El
+   contraste se verifica en los dos.
+3. El número de cambios de tema en toda la página es **finito y decidido**,
+   no uno por sección.
+
+**Pendiente para cerrar:** punto exacto del corte, valores hex de ambos temas,
+y voto explícito del socio.
