@@ -192,7 +192,7 @@ trayectoria, sino mostrando obra verificable.
 | Objeción | Dónde se responde | Cómo |
 | --- | --- | --- |
 | "¿Qué hacen y eso me sirve a mí?" | Portada y bloque 4 | Resultados en el idioma del cliente, no tecnologías. "Una app Android en producción", no "Kotlin" |
-| "¿Cuánto me cobran?" | Bloque 4 | `[ ]` **pendiente: si se publica precio y en qué forma** |
+| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde en la primera contestación al formulario, dentro de las 48 horas hábiles comprometidas, y ahí sí con un rango concreto |
 | "¿En cuánto tiempo?" | Bloque 4 | Rango de plazos por tipo de proyecto, nunca una promesa única |
 | "¿Qué tengo que entregar yo?" | Bloque 4, dentro del "cómo lo hacemos" | Lista concreta de lo que se le pide al cliente en cada paso |
 
@@ -296,6 +296,7 @@ validación del equipo):*
 | --- | --- |
 | **Precisos.** Cada afirmación va con su número o no se hace. | Vagos: "soluciones a medida", "calidad de nivel empresarial". |
 | **Directos.** Decimos alcance, plazo y qué no hacemos. | Evasivos: "conversemos y lo vemos". |
+| *Acotación:* al no publicarse precios, "directos" se demuestra en lo que sí está escrito (plazos, proceso, lo que no hacemos) y en responder con un rango real en el primer correo. | |
 | **Del mismo nivel.** Explicamos sin jerga y sin condescendencia. | Ni sabihondos ("arquitectura hexagonal orientada a eventos") ni simplones ("te hacemos una web bonita"). |
 
 **Cómo se nombran las cosas, glosario** `[~]`
@@ -609,6 +610,9 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 | 7 | 2026-09-13 | Color de marca `#38A9E8`, con `#116492` para toda acción y texto | Usar el celeste para texto o botones: 2.48:1, incumple accesibilidad | Rodrigo |
 | 8 | 2026-09-13 | Radio 4 px y cero sombras en la interfaz | Esquina recta absoluta (dura con Geist) y radio de 10 a 12 px (estética de plantilla SaaS) | Rodrigo |
 | 9 | 2026-09-13 | La riqueza visual viene de una pieza atmosférica en imagen, no de efectos en código | Fotorrealismo simulado en CSS o SVG: coste de pintado alto y aspecto de plantilla | Ambos |
+| 11 | 2026-09-13 | No se publican precios en la página | Publicar un precio de entrada ("desde $X"), que el asesor recomendaba para filtrar y para sostener la promesa de ser directos. Coste asumido: la página no responde la objeción que más pesa, y esa promesa queda rebajada | Rodrigo |
+| 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
+| 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
 | 10 | 2026-09-13 | Se elimina el video del hero | Mantenerlo: medio megabyte en la pantalla donde se mide el LCP, sin aportar prueba | Rodrigo |
 
 ---
