@@ -46,7 +46,7 @@ código se ajusta a él, no al revés.
 | Proyecto | Volutus, landing page |
 | Repositorio | github.com/VolutusDevelopment/VolutusLandingPage |
 | Dominio previsto | *pendiente (el código sigue apuntando a `example.com`)* |
-| Personas que deciden | *pendiente* |
+| Personas que deciden | Rodrigo y su socio. **Desempata Rodrigo** (delegado explícitamente, 2026-09-13) |
 | Fecha de inicio | *pendiente* |
 | Fecha objetivo de publicación | *pendiente* |
 | Última actualización de este documento | 2026-09-13 |
