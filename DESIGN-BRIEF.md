@@ -64,12 +64,20 @@ código se ajusta a él, no al revés.
 > Guía: una frase que entienda alguien ajeno al proyecto. Sin «plataforma integral» ni
 > «solución 360». Si no se puede decir en una frase, todavía no está claro.
 
-**La única acción que queremos que haga el visitante:**
+**La única acción que queremos que haga el visitante:** `[x]`
 
-> Guía: **una**, no tres. Si la lista tiene «que se registre, que nos escriba y que vea el
-> catálogo», la página va a hacer las tres mal. Lo demás son acciones secundarias y van abajo.
+**Enviar el formulario contando su proyecto.** El mensaje llega por correo al
+equipo. Todo lo demás en la página existe para que esa acción ocurra.
+
+Se descartó agendar una reunión directa en agenda (recomendada por el asesor:
+filtra mejor y elimina la ida y vuelta, pero obliga a comprometer horas) y
+WhatsApp (fricción mínima, pero se come el día y choca con la formalidad
+elegida).
 
 **Acciones secundarias aceptables:**
+
+- Ver los proyectos.
+- Escribir directamente al correo de contacto.
 
 **Qué cuenta como éxito:**
 
@@ -221,10 +229,29 @@ de Chile.*
 | Reunión | Call, meeting | Se escribe en español en toda la página |
 | Cotización | Presupuesto, quote | Es la palabra que usa el cliente chileno |
 
-**Textos de los botones** `[ ]`
+**Textos de los botones** `[~]`
 
-*Bloqueado: los textos de botón no se pueden escribir hasta que la sección 1
-defina cuál es la única acción principal de la página.*
+Cada botón dice lo que va a pasar, y el mensaje posterior confirma en los
+mismos términos.
+
+| Dónde | Texto | Qué confirma después |
+| --- | --- | --- |
+| Acción principal, portada | Cuéntanos tu proyecto | Lleva al formulario |
+| Acción secundaria, portada | Ver proyectos | Lleva al bloque de demostración |
+| Envío del formulario | Enviar mensaje | "Mensaje enviado." |
+| Estado de carga | Enviando… | El botón queda desactivado, nunca desaparece |
+
+**Mensajes del sistema.** Mismo tuteo, y dicen qué hacer, no qué falló:
+
+| Situación | Texto |
+| --- | --- |
+| Falta un campo | "Falta tu correo." (nunca "Campo requerido") |
+| Correo mal escrito | "Ese correo no parece válido, revísalo." |
+| Envío correcto | "Mensaje enviado. Te respondemos en *(plazo por confirmar)*." |
+| Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a *(correo)*." |
+
+*Pendiente: el plazo de respuesta que se compromete públicamente y el correo
+de contacto definitivo.*
 
 ## 6. Identidad visual `[~]`
 
