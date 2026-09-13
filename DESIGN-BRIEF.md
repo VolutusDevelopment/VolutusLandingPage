@@ -610,10 +610,10 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 | 7 | 2026-09-13 | Color de marca `#38A9E8`, con `#116492` para toda acción y texto | Usar el celeste para texto o botones: 2.48:1, incumple accesibilidad | Rodrigo |
 | 8 | 2026-09-13 | Radio 4 px y cero sombras en la interfaz | Esquina recta absoluta (dura con Geist) y radio de 10 a 12 px (estética de plantilla SaaS) | Rodrigo |
 | 9 | 2026-09-13 | La riqueza visual viene de una pieza atmosférica en imagen, no de efectos en código | Fotorrealismo simulado en CSS o SVG: coste de pintado alto y aspecto de plantilla | Ambos |
+| 10 | 2026-09-13 | Se elimina el video del hero | Mantenerlo: medio megabyte en la pantalla donde se mide el LCP, sin aportar prueba | Rodrigo |
 | 11 | 2026-09-13 | No se publican precios en la página | Publicar un precio de entrada ("desde $X"), que el asesor recomendaba para filtrar y para sostener la promesa de ser directos. Coste asumido: la página no responde la objeción que más pesa, y esa promesa queda rebajada | Rodrigo |
 | 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
 | 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
-| 10 | 2026-09-13 | Se elimina el video del hero | Mantenerlo: medio megabyte en la pantalla donde se mide el LCP, sin aportar prueba | Rodrigo |
 
 ---
 
