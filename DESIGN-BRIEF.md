@@ -1,7 +1,9 @@
 # DESIGN — Landing de Volutus
 
-> **Plantilla vacía.** Nada de lo que hay aquí abajo es una decisión tomada: son huecos con
-> una guía al lado. Se rellena caminando, no de una sentada.
+> **Documento de trabajo en curso.** Rellenado en sesión con Rodrigo y su socio el
+> 2026-09-13. Las secciones marcadas `[x]` están cerradas y se pueden ejecutar sin
+> volver a preguntar. Las `[~]` tienen propuesta escrita y esperan validación.
+> Este documento manda sobre el código: el rediseño se ajusta a él, no al revés.
 
 ---
 
@@ -51,9 +53,6 @@ código se ajusta a él, no al revés.
 | Fecha objetivo de publicación | *pendiente* |
 | Última actualización de este documento | 2026-09-13 |
 
-> Guía: «Personas que deciden» no es «el equipo». Son los nombres que pueden cerrar una sección.
-> Si son dos, escribid los dos y añadid quién desempata cuando no hay acuerdo — decidirlo ahora,
-> en frío, cuesta una línea; decidirlo en caliente cuesta una semana.
 
 ---
 
@@ -100,14 +99,26 @@ elegida).
 - Ver los proyectos.
 - Escribir directamente al correo de contacto.
 
-**Qué cuenta como éxito:**
+**Qué cuenta como éxito** `[~]` *(propuesta del asesor, falta que el equipo
+confirme los números):*
 
-> Guía: un número y un plazo. «Que funcione bien» no es medible. «30 registros el primer mes»
-> sí, y además os obliga a mirarlo.
+Como la página es de respaldo, el tráfico no mide nada. Lo que mide es qué hace
+quien llega con el enlace.
 
-**Qué pasa si esta página no existe:**
+| Indicador | Objetivo | Plazo |
+| --- | --- | --- |
+| Mensajes reales recibidos por el formulario | 6 | Primeros 3 meses |
+| Porcentaje de visitas que envían el formulario | 10 % o más | Medido al tercer mes |
+| Posición al buscar "Volutus" en Google | Primer resultado | Primeros 2 meses |
+| Lighthouse móvil | 100 en las cuatro categorías | Desde la publicación |
 
-> Guía: si la respuesta honesta es «nada», conviene saberlo antes de invertir seis semanas.
+**Qué pasa si esta página no existe** `[x]`
+
+Los dos socios siguen consiguiendo trabajo por conversación, como hasta ahora,
+pero no tienen a dónde mandar a nadie. Cada conversación termina sin sitio
+donde comprobar lo que se acaba de contar, y la obra hecha (dos productos en
+línea y un premio) queda invisible. La página no genera demanda: **evita perder
+la que ya se genera en las conversaciones.**
 
 ---
 
@@ -169,8 +180,22 @@ son tres trabajos propios:
 | Agente de IA para *incident response* | **Segundo lugar en una hackathon de IA agéntica**, con repositorio | Un jurado externo. Es la única prueba validada por un tercero |
 | `carflip.cl` | Indexador de automotores con scraping de múltiples sitios | Nadie externo, todavía |
 
-**La promesa, en una frase que pueda ir de titular:** `[ ]` pendiente, y no se
-puede escribir hasta cerrar el objetivo real de la página (sección 1).
+**La promesa, en una frase que pueda ir de titular** `[~]` *(propuesta del
+asesor, pendiente de validación):*
+
+> **Construimos software que puedes abrir y revisar.**
+
+Entradilla que la acompaña:
+
+> Dos productos en línea y un agente de IA premiado en una hackathon. Todo con
+> su enlace y su código a la vista. Cuéntanos qué necesitas y te respondemos en
+> menos de 48 horas hábiles.
+
+Por qué esta y no otra: el visitante llega a **verificar**, no a descubrir el
+rubro. El titular le entrega justo eso, es comprobable en el mismo momento y
+convierte en ventaja la única credencial que hoy existe, obra abierta. Una
+promesa de resultado de negocio ("ahorra horas", "vende más") no se puede
+sostener sin un solo cliente que lo demuestre.
 
 **Por qué habría de creernos, la prueba:**
 
@@ -272,11 +297,22 @@ dentro es, por sí sola, parte de la validación que esta página busca.
 Un enlace a un repositorio privado devuelve un 404 y produce el efecto
 contrario al buscado.
 
-**Dónde aparece la acción principal y cuántas veces:** `[ ]` *bloqueado hasta
-que la sección 1 defina cuál es esa acción.*
+**Dónde aparece la acción principal y cuántas veces** `[x]`: **dos veces.** El
+botón "Cuéntanos tu proyecto" en la portada, que lleva al formulario, y el
+formulario propio al final. Nada más. Una barra fija que persiga al visitante
+con el mismo botón es ruido en una página que se lee en un minuto.
 
-**Qué ve alguien que no baja nada, la primera pantalla:** `[ ]` *bloqueado por
-lo mismo.*
+**Qué ve alguien que no baja nada, la primera pantalla** `[~]`:
+
+1. El logo, arriba a la izquierda.
+2. El titular de la sección 3.
+3. Una entradilla de dos líneas con la prueba y el plazo de respuesta.
+4. El botón "Cuéntanos tu proyecto" y, secundario, "Ver proyectos".
+5. La pieza atmosférica de marca, **contenida**, nunca a pantalla completa.
+
+La regla que manda aquí: si la pieza visual empuja el titular fuera de la
+pantalla en un móvil de 360 px de ancho, la pieza se reduce. El texto gana
+siempre, porque es lo único que casi todos van a leer.
 
 ## 5. Voz y copy `[~]`
 
@@ -500,104 +536,161 @@ imagen.
 (anexo A.6: la onda, un solo trazo, geometría). Los archivos SVG se producen en
 la sesión de rediseño y viven en `public/image/`.
 
-## 7. Componentes `[ ]`
+## 7. Componentes `[x]`
 
-> Guía: la lista de piezas que se repiten. Rellenar solo las que la página necesita de verdad
-> — un inventario inventado se convierte en trabajo inventado.
+Solo las piezas que la página necesita de verdad. Cada una existe en los dos
+temas, cielo y plano.
 
-| Componente | Estados que necesita | Dónde se usa | Estado |
-| --- | --- | --- | --- |
-| Botón principal | reposo, hover, foco, pulsado, desactivado, cargando | | `[ ]` |
-| Botón secundario | | | `[ ]` |
-| Campo de formulario | reposo, foco, error, desactivado | | `[ ]` |
-| | | | `[ ]` |
+| Componente | Estados que necesita | Dónde se usa |
+| --- | --- | --- |
+| Botón principal | reposo, hover, foco, pulsado, desactivado, cargando | Acción principal en portada y envío del formulario |
+| Botón secundario | reposo, hover, foco, pulsado | "Ver proyectos" en portada |
+| Enlace de texto | reposo, hover, foco, visitado | Enlaces a repositorios y sitios en línea |
+| Campo de formulario | reposo, foco, error, desactivado | Contacto |
+| Área de texto | los mismos del campo | Descripción del proyecto |
+| Tarjeta de proyecto | reposo, hover, foco | Índice de proyectos |
+| Dato de métrica | único | Bloque de métricas, con Geist Mono |
+| Barra de navegación | reposo, fija al desplazar | Toda la página |
+| Separador de zona | único | Los dos cortes de tema |
 
-**El foco de teclado tiene que verse siempre.** Es la única forma de navegar para quien no usa
-ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque queda feo».
+**Reglas transversales, no negociables:**
 
----
+1. **El foco de teclado se ve siempre.** Contorno de 2 px con 2 px de
+   separación, en `#116492` sobre cielo y `#38A9E8` sobre plano. Nunca se
+   elimina el contorno del navegador sin poner uno propio encima.
+2. **Área táctil mínima de 44 × 44 px** en todo lo pulsable, aunque el elemento
+   se vea más pequeño.
+3. **El error nunca se comunica solo con color.** Siempre color más texto más
+   `aria-invalid`, para quien no distingue rojo de gris.
+4. **El botón que envía no desaparece mientras carga.** Cambia a "Enviando…" y
+   se desactiva, conservando su ancho para no mover el layout.
+5. Ningún componente lleva sombra. La jerarquía la dan el color de superficie y
+   una línea de 1 px.
 
-## 8. Responsive, accesibilidad y rendimiento `[ ]`
+## 8. Responsive, accesibilidad y rendimiento `[x]`
 
 **Puntos de quiebre:**
 
-**¿Se diseña primero móvil o escritorio?**
+| Nombre | Ancho | Tratamiento |
+| --- | --- | --- |
+| S | menos de 640 px | Una columna. Es el caso principal: el enlace se abre desde WhatsApp |
+| M | 640 a 1023 px | Una columna con más aire |
+| L | 1024 a 1439 px | Dos columnas donde aporte |
+| XL | 1440 px o más | Contenido tope a 1200 px, el resto es margen |
 
-> Guía: decidirlo explícitamente. «Ya se verá» significa escritorio primero y un móvil
-> arreglado a última hora.
+**¿Se diseña primero móvil o escritorio?** **Móvil primero, y no como fórmula.**
+El visitante típico abre el enlace desde una conversación de WhatsApp, en la
+calle, con datos móviles. El escritorio es el caso secundario.
 
-**Contraste mínimo que aceptamos:**
-
-> Guía: el estándar razonable es 4.5:1 para texto normal y 3:1 para texto grande. Si el acento
-> de marca no llega, se ajusta el acento — no se baja el listón.
+**Contraste mínimo que aceptamos:** 4.5:1 en texto normal y 3:1 en texto
+grande. Ya verificado en la sección 6 para los dos temas. Si un color de marca
+no llega, se ajusta el color, nunca el listón.
 
 **Qué tiene que funcionar sin JavaScript:**
+
+- Todo el contenido y todos los enlaces, incluidos los de los proyectos.
+- La navegación entre bloques.
+- El formulario: envío nativo por `POST` como reserva. El JavaScript solo
+  mejora la validación y evita recargar la página.
+- Lo único que se pierde sin JavaScript son las animaciones de aparición, que
+  por definición son prescindibles.
+
+**Movimiento:** todo se desactiva con `prefers-reduced-motion: reduce`. Cada
+animación tiene que justificar su presencia o no entra.
 
 **Presupuesto de carga:**
 
 | Métrica | Objetivo |
 | --- | --- |
-| Peso total de la primera carga | |
-| Tiempo hasta que se ve el contenido | |
+| Peso total de la primera carga | 250 KB o menos |
+| HTML con el CSS crítico incrustado | 50 KB o menos |
+| JavaScript enviado al navegador | 15 KB o menos |
+| Tiempo hasta que se ve el contenido (LCP), 4G | menos de 1,5 s |
+| CLS | 0 |
+| INP | menos de 200 ms |
 
-**Idiomas:**
-
----
+**Idiomas:** solo español de Chile (`es-CL`). Sin infraestructura de traducción
+en esta versión.
 
 ## 9. SEO y metadatos `[~]`
 
 | Campo | Valor |
 | --- | --- |
 | Dominio canónico | `https://volutus.cl/` (hoy el código dice `example.com` en canonical, sitemap, Open Graph y JSON-LD) |
-| Título de la pestaña | `[ ]` depende de la promesa de la sección 3 |
-| Descripción | `[ ]` depende de la promesa de la sección 3 |
+| Título de la pestaña | `Volutus, desarrollo de software en Chile` *(propuesta)* |
+| Descripción | `Construimos software que puedes abrir y revisar: productos en línea, código público y un agente de IA premiado. Cuéntanos tu proyecto y respondemos en 48 horas hábiles.` *(propuesta)* |
 | Imagen para compartir (OG) | La pieza atmosférica de la nube volutus, 1200 × 630, `jpg` o `webp` optimizado |
 | ¿Se indexa? | Sí, sin restricciones |
 | Idioma | `es-CL` |
 | Correo en datos estructurados | `contacto@volutus.cl`, nunca un correo personal |
-| Palabras por las que queremos aparecer | `[ ]` pendiente, y depende de a quién le hablamos (sección 2) |
+| Palabras por las que queremos aparecer | "Volutus", "Volutus software", "Volutus Chile". Búsqueda de marca, no genéricas: ver la consecuencia sobre SEO en la sección 1 |
 
-## 10. Medición `[ ]`
+## 10. Medición `[x]`
 
-**Qué eventos queremos registrar:**
+Solo eventos que vayan a cambiar una decisión. Lo demás es ruido que hay que
+mantener para siempre.
 
 | Evento | Cuándo se dispara | Para qué decisión sirve |
 | --- | --- | --- |
-| | | |
+| `form_enviado` | El formulario se envía correctamente | Es el único indicador de éxito real de la página |
+| `form_error` | Falla el envío | Si aparece más de una vez, hay un fallo que está costando clientes en silencio |
+| `cta_principal` | Clic en "Cuéntanos tu proyecto" | Si se pulsa mucho y se envía poco, el problema está en el formulario, no en la portada |
+| `proyecto_abierto` | Clic en el enlace de un proyecto o repositorio | Dice qué obra convence. Si nadie los abre, el índice de proyectos no está cumpliendo su función |
+| `scroll_demostracion` | El visitante llega al bloque 2 | Si casi nadie llega, la portada no está reteniendo y hay que rehacerla |
 
-> Guía: la tercera columna es la que importa. Un evento que no va a cambiar ninguna decisión
-> es ruido que hay que mantener para siempre.
+**Herramienta:** Vercel Web Analytics, ya en uso vía el snippet oficial, sin
+paquete de npm. Sin cookies, sin aviso de consentimiento, peso mínimo. No se
+añade Google Analytics: coste de rendimiento y de privacidad sin beneficio para
+esta página.
 
-**Herramienta:**
+**Qué se mira y cada cuánto:** una revisión de diez minutos al mes. Se miran
+mensajes recibidos, porcentaje de envío sobre visitas y proyectos abiertos.
+Nada más.
 
-**Qué se mira y cada cuánto:**
-
----
-
-## 11. Alcance y restricciones `[ ]`
+## 11. Alcance y restricciones `[x]`
 
 **Lo que SÍ entra en la primera versión:**
 
+- Una sola página, con los cinco bloques de la sección 4.
+- Los dos temas de zona, cielo y plano.
+- Logo nuevo: símbolo de onda, wordmark y favicon, en sus versiones para fondo
+  claro y oscuro.
+- Índice con los **tres** proyectos verificables, cada uno con su enlace.
+- Formulario de contacto que llega a `contacto@volutus.cl`.
+- Pieza atmosférica de marca y dos huecos reservados para capturas.
+- Metadatos completos con el dominio real, incluida la imagen de
+  previsualización del enlace.
+
 **Lo que NO entra, y cuándo se revisará:**
 
-> Guía: esta lista es la que salva el proyecto. Todo lo que no esté aquí escrito como «no
-> entra» va a aparecer a mitad de camino como «era obvio que hacía falta».
+| No entra | Cuándo se revisa |
+| --- | --- |
+| Apartado "sobre nosotros" con personas | Cuando haya clientes y convenga poner cara |
+| Precios publicados | Cuando el equipo sepa con certeza cuánto cobra |
+| Blog o artículos | Solo si alguna vez se decide apostar por búsqueda, que hoy no es el caso |
+| Casos de estudio | Cuando exista el primer cliente que pague y autorice contarlo |
+| Testimonios y logos de clientes | Lo mismo. Hasta entonces no se insinúan |
+| Agendamiento en calendario | Si el formulario resulta demasiado lento en la práctica |
+| Segundo idioma | Fuera de alcance |
+| Modo oscuro conmutable | Fuera de alcance: los dos temas son zonas, no una preferencia |
+| Gestor de contenidos | Fuera de alcance. El contenido cambia pocas veces al año |
+| Chat en vivo | Fuera de alcance. Dos personas no pueden sostenerlo |
 
 **Restricciones técnicas conocidas:**
 
 | Restricción | De dónde viene |
 | --- | --- |
-| | |
+| React solo en build, nunca en el navegador | Arquitectura actual de prerender, y es la razón de que el JavaScript enviado sea mínimo |
+| Formulario dependiente de una función serverless y de `RESEND_API_KEY` | Integración con Resend en Vercel |
+| Sin dependencias nuevas salvo justificación explícita | `CLAUDE.md` del repositorio |
+| 8 vulnerabilidades de dependencias detectadas en la rama principal (4 altas, 4 moderadas) | Dependabot. **Hay que resolverlas antes de publicar**, la seguridad es prioridad declarada del proyecto |
+| El dominio `volutus.cl` debe estar registrado y apuntando | Sin él, los metadatos siguen apuntando a `example.com` |
 
-**Presupuesto y plazos:**
-
----
+**Presupuesto y plazos:** sin definir. Es lo único del documento que sigue sin
+tener dueño ni fecha.
 
 ## 12. Registro de decisiones
 
-> Guía: una fila por decisión que costó una conversación. Las que se tomaron sin discutir no
-> hace falta registrarlas. La columna que de verdad sirve es «qué descartamos»: dentro de dos
-> meses, alguien va a proponer exactamente eso, y esta tabla evita repetir el debate entero.
 
 | # | Fecha | Decisión | Qué descartamos y por qué | Quién |
 | --- | --- | --- | --- | --- |
@@ -619,28 +712,29 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 
 ## 13. Preguntas abiertas
 
-> Guía: aquí vive lo que está en `[~]`. Cuando una se resuelve, se mueve a la sección que
-> corresponda y se borra de aquí. Si una pregunta lleva semanas sin moverse, normalmente no es
-> que sea difícil: es que falta un dato que nadie ha ido a buscar, o que bloquea a alguien que
-> no sabe que está bloqueado.
-
-| # | Pregunta | Postura A | Postura B | Qué hace falta para cerrarla | Bloquea a |
-| --- | --- | --- | --- | --- | --- |
-| 1 | ¿Qué se muestra exactamente en el "demo en vivo" del bloque 1? | Sin postura | Sin postura | Saber si existe un producto propio demostrable, o si el demo es de trabajo hecho para clientes | La primera pantalla entera y el bloque de mayor riesgo del rediseño |
-| 2 | | | | | |
+| # | Pregunta | Qué hace falta para cerrarla | Bloquea a |
+| --- | --- | --- | --- |
+| 1 | ¿Qué se muestra exactamente en el demo del bloque 2? | Decidir si son capturas de `ponlenota.cl` y `carflip.cl` o algo interactivo | El bloque de mayor riesgo del rediseño |
+| 2 | ¿Está registrado `volutus.cl`? | Comprobarlo en NIC Chile | Metadatos, correo y publicación |
+| 3 | ¿Se valida el titular propuesto en la sección 3? | Respuesta del equipo | La portada entera |
+| 4 | ¿Se validan los números de éxito de la sección 1? | Respuesta del equipo | La medición |
+| 5 | ¿`beatrizberger.cl` tiene enlace y entra al índice? | Confirmar URL y si se puede mostrar | El índice de proyectos |
+| 6 | ¿Qué plazos reales se publican en el bloque 4? | Que el equipo defina horquillas por tipo de proyecto | La objeción del tiempo |
+| 7 | Presupuesto y fecha de publicación | Decisión de los socios | La planificación entera |
+| 8 | Voto del socio en las decisiones 6, 7, 8, 11 y en el tuteo | Que las revise y confirme | Riesgo de reabrir decisiones ya cerradas |
 
 ---
 
 ## Antes de dar el diseño por cerrado
 
-- [ ] Ninguna sección sigue en `[ ]` o `[~]`
-- [ ] No queda ninguna línea `Guía:` en el documento
-- [ ] Todas las afirmaciones de la sección 3 tienen con qué sostenerse
-- [ ] La primera pantalla explica qué ofrecéis y qué hacer, sin desplazar
-- [ ] Hay **una** acción principal, y se puede señalar con el dedo
-- [ ] Los colores del acento pasan el contraste sobre su fondo real
-- [ ] El foco de teclado se ve en todo lo que se pueda pulsar
-- [ ] Alguien ajeno al proyecto leyó la página y supo decir qué ofrecéis
+- [x] No queda ninguna línea `Guía:` en el documento
+- [x] Todas las afirmaciones de la sección 3 tienen con qué sostenerse, y las que no, se eliminaron
+- [x] Hay **una** acción principal, y se puede señalar con el dedo
+- [x] Los colores del acento pasan el contraste sobre su fondo real
+- [x] El foco de teclado se ve en todo lo que se pueda pulsar
+- [ ] Ninguna sección sigue en `[ ]` o `[~]` *(quedan las 8 preguntas abiertas)*
+- [ ] La primera pantalla explica qué ofrecéis y qué hacer, sin desplazar *(pendiente de validar el titular)*
+- [ ] Alguien ajeno al proyecto leyó la página y supo decir qué ofrecéis *(se hace con la página construida)*
 
 ---
 
