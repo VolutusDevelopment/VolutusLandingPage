@@ -121,31 +121,35 @@ elegida).
 
 ---
 
-## 3. La promesa y la prueba `[ ]`
+## 3. La promesa y la prueba `[~]`
 
-**La promesa, en una frase que pueda ir de titular:**
+**Hecho declarado por el equipo (2026-09-13), y es el dato que condiciona toda
+la página:** a esta fecha **no hay clientes que hayan pagado**. Lo que existe
+son tres trabajos propios:
 
-> Guía: qué gana el visitante, no qué hacéis vosotros. «Ahorra dos horas de caja al día» y no
-> «software de gestión avanzada».
+| Trabajo | Qué es | Quién lo valida |
+| --- | --- | --- |
+| `ponlenota.cl` | Producto propio, en línea | Nadie externo, todavía |
+| Agente de IA para *incident response* | **Segundo lugar en una hackathon de IA agéntica**, con repositorio | Un jurado externo. Es la única prueba validada por un tercero |
+| `carflip.cl` | Indexador de automotores con scraping de múltiples sitios | Nadie externo, todavía |
 
-**Por qué habría de creernos — la prueba:**
+**La promesa, en una frase que pueda ir de titular:** `[ ]` pendiente, y no se
+puede escribir hasta cerrar el objetivo real de la página (sección 1).
+
+**Por qué habría de creernos, la prueba:**
 
 | Afirmación | Con qué se sostiene | ¿La tenemos ya? |
 | --- | --- | --- |
-| | | |
-| | | |
+| Llevamos productos propios a producción | `ponlenota.cl` y `carflip.cl` en línea, con capturas y enlaces | Sí |
+| Sabemos construir agentes de IA que funcionan | Segundo lugar en hackathon de IA agéntica, con repositorio público y jurado externo | Sí, y es la prueba más fuerte que existe hoy |
+| Medimos el rendimiento de lo que hacemos | Lighthouse público de los sitios propios, con la fecha de la medición | Sí, si se publican los números |
+| "Calidad de nivel empresarial" | Nada. No hay ningún cliente empresarial | **No. Se elimina de la página.** |
+| "Confían en nosotros" con logos de clientes | Nada | **No. No se insinúa siquiera.** |
 
-> Guía: cifras, clientes reales, capturas, garantías, una demo. **Si una fila no tiene con qué
-> sostenerse, o se consigue la prueba o se quita la afirmación.** Una promesa sin respaldo se
-> nota, y quema la confianza del resto de la página.
-
-**Respuesta a cada objeción de la sección 2:**
-
-| Objeción | Dónde se responde en la página | Cómo |
-| --- | --- | --- |
-| | | |
-
----
+**Regla que se deriva:** cada afirmación de la página va con su enlace, su
+número o su repositorio. Lo que no se pueda enlazar, no se dice. Es la única
+forma de que una empresa sin clientes resulte creíble: no aparentando
+trayectoria, sino mostrando obra verificable.
 
 ## 4. Arquitectura de la página `[~]`
 
