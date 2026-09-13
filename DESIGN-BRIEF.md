@@ -163,36 +163,32 @@ código se ajusta a él, no al revés.
 
 ---
 
-## 5. Voz y copy `[ ]`
+## 5. Voz y copy `[~]`
 
-**Cómo hablamos — tres adjetivos y un contraejemplo de cada uno:**
+**Tratamiento:** `[x]` **Tuteo.** "Cuéntanos qué necesitas." Se mantiene en toda
+la página, botones, mensajes de error, validaciones del formulario y correos de
+respuesta. Decisión de Rodrigo; voto del socio no registrado.
+
+Se descartó el usted (choca de frente con la persona que "conversa al mismo
+nivel" del anexo A.1) y el impersonal (no ofende a nadie y tampoco conecta con
+nadie).
+
+**Cómo hablamos, tres adjetivos y un contraejemplo de cada uno** `[~]`
+*(propuesta del asesor derivada de los anexos A.1 y A.2, pendiente de
+validación del equipo):*
 
 | Somos | No somos |
 | --- | --- |
-| | |
-| | |
-| | |
+| **Precisos.** Cada afirmación va con su número o no se hace. | Vagos: "soluciones a medida", "calidad de nivel empresarial". |
+| **Directos.** Decimos alcance, plazo y qué no hacemos. | Evasivos: "conversemos y lo vemos". |
+| **Del mismo nivel.** Explicamos sin jerga y sin condescendencia. | Ni sabihondos ("arquitectura hexagonal orientada a eventos") ni simplones ("te hacemos una web bonita"). |
 
-**Tratamiento:**
+**Cómo se nombran las cosas, glosario** `[ ]`
 
-> Guía: tú / usted / vosotros. Y se mantiene en toda la página, incluidos botones, errores y
-> correos. Mezclarlo se nota aunque nadie sepa decir por qué.
+**Textos de los botones** `[ ]`
 
-**Cómo se nombran las cosas — glosario:**
-
-| Lo llamamos | No lo llamamos | Por qué |
-| --- | --- | --- |
-| | | |
-
-> Guía: el vocabulario del visitante, no el del código. Si internamente es un «tap» y la
-> persona lo vive como «cuando el cliente acerca el móvil», gana la segunda.
-
-**Textos de los botones:**
-
-> Guía: que digan lo que va a pasar. «Pedir demo» y no «Enviar». Y que el mensaje posterior
-> confirme en los mismos términos: si el botón dice «Pedir demo», el aviso dice «Demo pedida».
-
----
+*Bloqueado: los textos de botón no se pueden escribir hasta que la sección 1
+defina cuál es la única acción principal de la página.*
 
 ## 6. Identidad visual `[~]`
 
