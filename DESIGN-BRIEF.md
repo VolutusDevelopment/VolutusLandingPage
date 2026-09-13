@@ -45,7 +45,7 @@ código se ajusta a él, no al revés.
 | --- | --- |
 | Proyecto | Volutus, landing page |
 | Repositorio | github.com/VolutusDevelopment/VolutusLandingPage |
-| Dominio previsto | *pendiente (el código sigue apuntando a `example.com`)* |
+| Dominio previsto | `volutus.cl` *(confirmar si ya está registrado)* |
 | Personas que deciden | Rodrigo y su socio. **Desempata Rodrigo** (delegado explícitamente, 2026-09-13) |
 | Fecha de inicio | *pendiente* |
 | Fecha objetivo de publicación | *pendiente* |
@@ -247,11 +247,15 @@ mismos términos.
 | --- | --- |
 | Falta un campo | "Falta tu correo." (nunca "Campo requerido") |
 | Correo mal escrito | "Ese correo no parece válido, revísalo." |
-| Envío correcto | "Mensaje enviado. Te respondemos en *(plazo por confirmar)*." |
-| Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a *(correo)*." |
+| Envío correcto | "Mensaje enviado. Te respondemos en menos de 48 horas hábiles." |
+| Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
 
-*Pendiente: el plazo de respuesta que se compromete públicamente y el correo
-de contacto definitivo.*
+**Compromiso público:** respuesta en menos de **48 horas hábiles**. Si se
+escribe en la página, se cumple.
+
+**Correo de contacto:** `contacto@volutus.cl`. El Gmail personal que hoy
+aparece en el `JSON-LD` se retira: contradice la decisión de hablar como
+empresa y es comida para rastreadores de spam.
 
 ## 6. Identidad visual `[~]`
 
@@ -451,20 +455,18 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 
 ---
 
-## 9. SEO y metadatos `[ ]`
+## 9. SEO y metadatos `[~]`
 
 | Campo | Valor |
 | --- | --- |
-| Título de la pestaña | |
-| Descripción | |
-| Imagen para compartir (OG) | |
-| ¿Se indexa? | |
-| Palabras por las que queremos aparecer | |
-
-> Guía: la imagen de compartir es lo que se ve cuando alguien pega el enlace en WhatsApp. Si
-> no se define, se ve un recuadro gris y parece un enlace sospechoso.
-
----
+| Dominio canónico | `https://volutus.cl/` (hoy el código dice `example.com` en canonical, sitemap, Open Graph y JSON-LD) |
+| Título de la pestaña | `[ ]` depende de la promesa de la sección 3 |
+| Descripción | `[ ]` depende de la promesa de la sección 3 |
+| Imagen para compartir (OG) | La pieza atmosférica de la nube volutus, 1200 × 630, `jpg` o `webp` optimizado |
+| ¿Se indexa? | Sí, sin restricciones |
+| Idioma | `es-CL` |
+| Correo en datos estructurados | `contacto@volutus.cl`, nunca un correo personal |
+| Palabras por las que queremos aparecer | `[ ]` pendiente, y depende de a quién le hablamos (sección 2) |
 
 ## 10. Medición `[ ]`
 
