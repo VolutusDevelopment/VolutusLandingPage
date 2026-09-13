@@ -534,3 +534,18 @@ que sostenerse solo.
 queda descartado.
 
 **Pendiente:** la forma concreta del símbolo.
+
+### A.6 Forma del símbolo `[x]`
+
+**Cerrado (voto de ambos socios, 2026-09-13): la onda.**
+
+Una sola línea continua que se enrolla sobre sí misma, construida con
+geometría (círculos y tangentes), no dibujada a mano. Una idea, un trazo, un
+color.
+
+**Se descartó:** la nube como sección técnica con curvas de nivel. Motivo: a
+16 px se convierte en una mancha, y el símbolo tiene que sobrevivir al favicon.
+
+**Criterio de construcción:** si la onda se puede confundir con el logo de otra
+empresa, está mal construida. La precisión geométrica es lo que la hace
+propia, no la curva en sí.
