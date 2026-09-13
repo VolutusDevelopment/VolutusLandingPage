@@ -215,6 +215,33 @@ misma regla de la sección 3 aplicada al listado: lo que no se puede enlazar, no
 se dice. Para una empresa sin clientes, la obra abierta es la única credencial
 que tiene.
 
+**Inventario real de proyectos (aportado por el equipo, 2026-09-13):**
+
+| Proyecto | En línea | Repositorio | ¿Entra? |
+| --- | --- | --- | --- |
+| PonleNota | `ponlenota.cl` | `VolutusDevelopment/PonleNota-WEB` | Sí |
+| CarFlip | `carflip.cl` | `DiegoPyLL/CarFlip` | Sí |
+| Agente de *incident response* (2.º lugar hackathon) | No | `DiegoPyLL/Hackathon-Huawei-Cloud-MaaS` | Sí, y va destacado |
+| LapMaster | Sin dato | Sin dato | No, mientras no haya enlace |
+| beatrizberger.cl | Por confirmar | Sin dato | Pendiente de confirmar |
+| Prospector Places | Sin dato | Sin dato | No, mientras no haya enlace |
+| RepoBase BPL | Sin dato | Sin dato | No, mientras no haya enlace |
+| Agente IA HelpDesk | Sin dato | Sin dato | No, salvo que sea el mismo de la hackathon |
+
+La lista pasa de seis tarjetas no verificables a **tres proyectos abiertos**.
+Es una mejora: tres cosas que se pueden abrir valen más que seis que nadie
+puede comprobar.
+
+**Problema pendiente con los enlaces.** Dos de los tres repositorios cuelgan de
+una cuenta personal (`DiegoPyLL`). Enlazarlos así contradice la decisión de no
+apuntar a personas, y además debilita justo lo que la página quiere probar: que
+Volutus es una empresa. Una organización de GitHub con la obra dentro es, por
+sí sola, una validación.
+
+**Antes de publicar hay que verificar que los tres repositorios son públicos.**
+Un enlace a un repositorio privado devuelve un 404 y produce el efecto
+contrario al buscado.
+
 **Dónde aparece la acción principal y cuántas veces:** `[ ]` *bloqueado hasta
 que la sección 1 defina cuál es esa acción.*
 
