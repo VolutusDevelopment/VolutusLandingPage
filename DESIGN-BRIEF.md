@@ -379,7 +379,7 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 
 | # | Pregunta | Postura A | Postura B | Qué hace falta para cerrarla | Bloquea a |
 | --- | --- | --- | --- | --- | --- |
-| 1 | | | | | |
+| 1 | ¿Qué se muestra exactamente en el "demo en vivo" del bloque 1? | Sin postura | Sin postura | Saber si existe un producto propio demostrable, o si el demo es de trabajo hecho para clientes | La primera pantalla entera y el bloque de mayor riesgo del rediseño |
 | 2 | | | | | |
 
 ---
@@ -490,3 +490,21 @@ mantiene:**
 
 **Pendiente para cerrar:** punto exacto del corte, valores hex de ambos temas,
 y voto explícito del socio.
+
+### A.4 Punto de corte del tema `[x]`
+
+**Cerrado (acuerdo de ambos socios, 2026-09-13): opción B, corte en la mitad
+con retorno.**
+
+| Zona | Tema | Función |
+| --- | --- | --- |
+| Portada | Cielo (claro) | Promete |
+| Demo en vivo | Plano (oscuro) | Demuestra |
+| Métricas | Plano (oscuro) | Demuestra |
+| Nosotros | Cielo (claro) | Da confianza |
+| Formulario y pie | Cielo (claro) | Convierte |
+
+Dos cortes en toda la página, ambos secos. **Se descartó:** el corte temprano
+(dejaba la identidad de marca reducida a una sola pantalla) y el descenso
+completo sin retorno (dejaba el formulario sobre fondo oscuro, peor para
+conversión y más frágil en accesibilidad).
