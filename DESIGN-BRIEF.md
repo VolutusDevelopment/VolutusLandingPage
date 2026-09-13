@@ -549,3 +549,33 @@ color.
 **Criterio de construcción:** si la onda se puede confundir con el logo de otra
 empresa, está mal construida. La precisión geométrica es lo que la hace
 propia, no la curva en sí.
+
+### A.7 Tipografía `[x]`
+
+**Cerrado (decisión de Rodrigo, 2026-09-13): Geist y Geist Mono.**
+
+| Rol | Familia | Grosores | De dónde se carga |
+| --- | --- | --- | --- |
+| Titulares y wordmark | Geist | 400 y 800 | Autohospedada, `woff2` variable con subset latino |
+| Texto | Geist | 400 | La misma variable |
+| Datos, métricas y código | Geist Mono | 400 | Autohospedada, subset latino |
+
+**Se descartó:** Archivo (correcta pero anónima, no carga identidad) e IBM Plex
+(recomendada por el asesor, rechazada por el equipo).
+
+**Riesgo asumido, declarado una vez y registrado:** Geist es la tipografía de
+Vercel y del ecosistema Next. Un visitante técnico, que es parte del público
+objetivo, puede leerla como "plantilla por defecto".
+
+**Mitigación obligatoria, porque la diferenciación ya no puede venir de la
+familia sino del uso:**
+
+1. Solo dos grosores, 400 y 800. Nada de 500 ni 600, que es el ajuste por
+   defecto de las plantillas.
+2. Titulares grandes con `letter-spacing` negativo marcado, alrededor de
+   `-0.03em`. El tracking por defecto es lo que hace que Geist parezca
+   plantilla.
+3. El wordmark `VOLUTUS` va en mayúsculas con tracking **positivo** amplio,
+   lo contrario de los titulares. Ese contraste es lo que lo vuelve una marca
+   y no un texto.
+4. Geist Mono se reserva para números y datos reales. Nunca como decoración.
