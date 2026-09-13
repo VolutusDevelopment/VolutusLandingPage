@@ -298,18 +298,47 @@ caros. Si todos los bloques los llevan, dejan de significar nada. Se reservan
 para lo que de verdad tiene que destacar, que en esta página es la acción
 principal y los datos de la zona de plano.
 
-### Imagen y gráfica
+### Imagen y gráfica `[x]`
+
+**Regla de las dos capas.** Es la que resuelve la tensión entre "sin sombras ni
+degradados" y "que no se vea pobre":
+
+| Capa | Qué incluye | Reglas |
+| --- | --- | --- |
+| Interfaz | Botones, campos, tarjetas, tablas, datos | Sin sombras, sin degradados, radio 4 px, color plano |
+| Atmósfera de marca | Una o dos piezas grandes en toda la página | Aquí sí hay luz, profundidad y tonalidad, y se resuelve como **imagen**, nunca simulada en CSS o SVG |
 
 **Qué tipo de imágenes usamos:**
 
-**Qué NO usamos:**
+1. **Pieza atmosférica de marca: la nube volutus, fotorrealista.** Cielo real,
+   luz rasante, calidad de cuadro. Como máximo dos apariciones en la página.
+   Se genera y se exporta a `webp` con `srcset`, dimensiones explícitas y peso
+   máximo de **120 KB** en el tamaño que recibe un móvil.
+2. **Gráfica vectorial propia:** la onda de marca, diagramas e iconos de trazo,
+   en SVG inline, de un solo color, sin degradados.
+3. **Capturas reales de producto**, cuando exista el repertorio. Entran más
+   adelante y sustituyen a la decoración, nunca al revés.
 
-> Guía: aquí es útil ser tajante. «Nada de fotos de banco de imágenes con gente sonriendo
-> señalando una pantalla» ahorra tres discusiones futuras.
+**Qué NO usamos, nunca:**
 
-**¿Hay logo? ¿Dónde están los archivos?**
+- Fotos de banco de imágenes, y en especial gente sonriendo señalando una
+  pantalla.
+- Ilustración vectorial con degradados suaves y sombritas, el estilo por
+  defecto de las plantillas y de las IA de diseño baratas.
+- Iconografía 3D genérica.
+- Fotorrealismo **simulado** en CSS o SVG: cuesta más pintar que la foto que
+  pretende evitar.
+- Degradados RGB, morado, y cualquier cosa que delate generación automática.
 
----
+**Consecuencia sobre lo que ya existe:** el video del hero actual queda
+descartado. Son 464 KB en `webm` y 512 KB en `mp4` con `preload="auto"`,
+compitiendo por ancho de banda en la pantalla donde se mide el LCP, a cambio
+de decoración que no demuestra nada. Lo sustituye la pieza atmosférica como
+imagen.
+
+**¿Hay logo? ¿Dónde están los archivos?** Todavía no. La forma está decidida
+(anexo A.6: la onda, un solo trazo, geometría). Los archivos SVG se producen en
+la sesión de rediseño y viven en `public/image/`.
 
 ## 7. Componentes `[ ]`
 
@@ -414,9 +443,16 @@ ratón, y es lo primero que se pierde cuando alguien quita el contorno «porque 
 
 | # | Fecha | Decisión | Qué descartamos y por qué | Quién |
 | --- | --- | --- | --- | --- |
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
+| 1 | 2026-09-13 | Desempata Rodrigo cuando no hay acuerdo | Una regla objetiva sin nombre propio: no cierra nada en caliente | Rodrigo |
+| 2 | 2026-09-13 | Dos temas por zona: cielo arriba, plano en la zona técnica, cielo al cierre | Quedarse solo en azul cielo (indistinguible del resto de la industria) y solo en azul de plano (pierde el vínculo con el nombre) | Ambos |
+| 3 | 2026-09-13 | El corte de tema ocurre en un borde seco, dos veces en toda la página | El fundido progresivo: sería un degradado de scroll, justo lo prohibido | Ambos |
+| 4 | 2026-09-13 | Logo = símbolo más palabra, con símbolo autónomo para favicon | Solo wordmark: dejaba sin marca todos los espacios cuadrados | Ambos |
+| 5 | 2026-09-13 | El símbolo es una onda de un solo trazo, geométrica | La nube como sección técnica con curvas de nivel: a 16 px es una mancha | Ambos |
+| 6 | 2026-09-13 | Tipografía Geist y Geist Mono | Archivo (anónima) e IBM Plex (recomendada por el asesor). Riesgo asumido: Geist se asocia al ecosistema Vercel | Rodrigo |
+| 7 | 2026-09-13 | Color de marca `#38A9E8`, con `#116492` para toda acción y texto | Usar el celeste para texto o botones: 2.48:1, incumple accesibilidad | Rodrigo |
+| 8 | 2026-09-13 | Radio 4 px y cero sombras en la interfaz | Esquina recta absoluta (dura con Geist) y radio de 10 a 12 px (estética de plantilla SaaS) | Rodrigo |
+| 9 | 2026-09-13 | La riqueza visual viene de una pieza atmosférica en imagen, no de efectos en código | Fotorrealismo simulado en CSS o SVG: coste de pintado alto y aspecto de plantilla | Ambos |
+| 10 | 2026-09-13 | Se elimina el video del hero | Mantenerlo: medio megabyte en la pantalla donde se mide el LCP, sin aportar prueba | Rodrigo |
 
 ---
 
