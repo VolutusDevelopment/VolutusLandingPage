@@ -139,29 +139,36 @@ código se ajusta a él, no al revés.
 
 ---
 
-## 4. Arquitectura de la página `[ ]`
+## 4. Arquitectura de la página `[~]`
 
-> Guía: el orden en que se cuenta. Rellenad de arriba abajo, como lo va a leer alguien que
-> baja con el pulgar. Añadid o quitad filas: no hay un número correcto de secciones, hay un
-> número correcto de ideas.
+Orden acordado con el equipo. El tema de color de cada bloque viene de la
+decisión A.4.
 
-| # | Sección | Qué tiene que conseguir | Contenido | Estado |
-| --- | --- | --- | --- | --- |
-| 1 | | | | `[ ]` |
-| 2 | | | | `[ ]` |
-| 3 | | | | `[ ]` |
-| 4 | | | | `[ ]` |
-| 5 | | | | `[ ]` |
+| # | Sección | Qué tiene que conseguir | Contenido | Tema | Estado |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Portada | Que se entienda qué hacemos y qué hacer, sin desplazar | Titular, entradilla, acción principal, pieza atmosférica de marca | Cielo | `[~]` |
+| 2 | Demostración | Mostrar en vez de contar | Dos huecos reservados para capturas de proyectos en desarrollo | Plano | `[~]` |
+| 3 | Métricas | Probar la capacidad técnica con números | Datos reales en Geist Mono sobre fondo de plano | Plano | `[~]` |
+| 4 | *(por definir)* | *(ver nota)* | *(ver nota)* | Cielo | `[ ]` |
+| 5 | Contacto | Convertir | Formulario | Cielo | `[~]` |
 
-**Dónde aparece la acción principal (sección 1) y cuántas veces:**
+**Nota sobre el bloque 4.** En la arquitectura original era "sobre nosotros".
+Con la decisión de no mostrar personas, ese bloque se queda sin contenido y
+está pendiente de redefinición.
 
-**Qué ve alguien que no baja nada — la primera pantalla:**
+**Personas en la página** `[x]`: **no aparece ninguna.** Sin nombres, sin
+retratos, sin firmas. Habla la empresa en primera persona del plural. Un
+apartado "sobre nosotros" queda para una versión posterior, fuera del alcance
+de esta.
 
-> Guía: mucha gente no baja. Si con lo que se ve sin desplazar no se entiende qué ofrecéis y
-> qué hacer, el resto de la página da igual. Ojo con abrir con una imagen a pantalla completa:
-> empuja fuera el único texto que casi todos van a leer.
+Se descartó mostrar nombres con enlace a GitHub o LinkedIn, que el asesor
+recomendaba como prueba verificable de capacidad técnica, y los retratos.
 
----
+**Dónde aparece la acción principal y cuántas veces:** `[ ]` *bloqueado hasta
+que la sección 1 defina cuál es esa acción.*
+
+**Qué ve alguien que no baja nada, la primera pantalla:** `[ ]` *bloqueado por
+lo mismo.*
 
 ## 5. Voz y copy `[~]`
 
