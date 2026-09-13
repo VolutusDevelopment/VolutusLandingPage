@@ -135,8 +135,18 @@ desde cero. Lo que necesita es comprobar que lo que le contaron es cierto.
 | Búsqueda del nombre "Volutus" | Ya conoce el nombre, solo quiere encontrarlos |
 | Búsqueda genérica de proveedores | Prácticamente inexistente en esta etapa, y no se diseña para él |
 
-**Qué le preocupa antes de decir que sí:** `[ ]` pendiente. Tienen que ser las
-preguntas reales que le hacen al equipo, escritas como las dice la persona.
+**Qué le preocupa antes de decir que sí** `[x]`, en sus palabras, aportadas por
+el equipo:
+
+1. "¿Qué hacen ustedes?" y, enseguida, **"¿eso me sirve a mí?"**
+2. **"¿Cuánto me cobran?"** Es la que más pesa.
+3. **"¿En cuánto tiempo lo tienen listo?"**
+4. **"¿Qué tengo que entregarles yo para que puedan hacerlo?"**
+
+La cuarta es la más valiosa de las cuatro y casi ninguna página de software la
+responde. Revela la ansiedad real del cliente: no teme que no sepáis programar,
+teme quedar atrapado en un proceso que no entiende y que dependa de él.
+Responderla es una ventaja competitiva barata.
 
 **A quién NO le hablamos:**
 
@@ -176,6 +186,17 @@ puede escribir hasta cerrar el objetivo real de la página (sección 1).
 número o su repositorio. Lo que no se pueda enlazar, no se dice. Es la única
 forma de que una empresa sin clientes resulte creíble: no aparentando
 trayectoria, sino mostrando obra verificable.
+
+**Respuesta a cada objeción de la sección 2:**
+
+| Objeción | Dónde se responde | Cómo |
+| --- | --- | --- |
+| "¿Qué hacen y eso me sirve a mí?" | Portada y bloque 4 | Resultados en el idioma del cliente, no tecnologías. "Una app Android en producción", no "Kotlin" |
+| "¿Cuánto me cobran?" | Bloque 4 | `[ ]` **pendiente: si se publica precio y en qué forma** |
+| "¿En cuánto tiempo?" | Bloque 4 | Rango de plazos por tipo de proyecto, nunca una promesa única |
+| "¿Qué tengo que entregar yo?" | Bloque 4, dentro del "cómo lo hacemos" | Lista concreta de lo que se le pide al cliente en cada paso |
+
+---
 
 ## 4. Arquitectura de la página `[~]`
 
