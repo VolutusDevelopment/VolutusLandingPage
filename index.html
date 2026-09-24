@@ -1,34 +1,50 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Volutus — Ingeniería de software: web, mobile, cloud e IA</title>
+
+    <title>Volutus, desarrollo de software en Chile</title>
     <meta
       name="description"
-      content="Estudio de ingeniería de software: desarrollo web, apps móviles, backend, APIs, cloud, inteligencia artificial y DevOps. Calidad de nivel empresarial, rendimiento medible y seguridad por diseño."
+      content="Construimos software que puedes abrir y revisar: productos en línea, código público y un agente de IA premiado. Cuéntanos tu proyecto y respondemos en 48 horas hábiles."
     />
     <link rel="canonical" href="https://volutus.cl/" />
+
+    <!--
+      Favicon: el símbolo solo, en su versión para fondo oscuro (A.5). Va sobre
+      el azul de plano y no suelto, para que se distinga en una pestaña clara y
+      en una oscura sin necesitar dos archivos. Inline como data URI: pesa medio
+      kilobyte y ahorra una petición del camino crítico.
+    -->
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f4f8fb'/%3E%3Crect x='27' y='27' width='10' height='10' fill='%231a5f9e'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230A1A2A'/%3E%3Cg transform='translate(2.16 2.16) scale(0.82)'%3E%3Cpath d='M3.75 19.5H12.75A7.5 7.5 0 0 0 12.75 4.5A3.75 3.75 0 0 0 12.75 12' fill='none' stroke='%2338A9E8' stroke-width='2.6' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E"
     />
-    <meta name="theme-color" content="#f4f8fb" />
+    <meta name="theme-color" content="#f6f9fc" />
+
+    <!--
+      Las dos fuentes se precargan porque las dos se usan sobre el pliegue: la
+      sans en el titular y la mono en el antetítulo. Juntas pesan 36 KB.
+    -->
+    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link
       rel="preload"
-      href="/fonts/archivo-latin.woff2"
+      href="/fonts/geist-mono-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
 
-    <!-- Open Graph -->
+    <!-- Open Graph. La tarjeta de previsualización es literalmente lo primero
+         que ve quien recibe el enlace por WhatsApp: §1 la pone al nivel de la
+         página misma. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Volutus" />
-    <meta property="og:title" content="Volutus — Ingeniería de software" />
+    <meta property="og:title" content="Volutus, desarrollo de software en Chile" />
     <meta
       property="og:description"
-      content="Desarrollo web, mobile, backend, cloud e IA con calidad de nivel empresarial. No buscamos problemas, sino soluciones."
+      content="Software que puedes abrir y revisar. Cuéntanos tu proyecto y respondemos en 48 horas hábiles."
     />
     <meta property="og:url" content="https://volutus.cl/" />
     <meta property="og:locale" content="es_CL" />
@@ -37,18 +53,26 @@
     <meta property="og:image:height" content="524" />
     <meta
       property="og:image:alt"
-      content="Nube volutus: una onda continua cruzando el cielo"
+      content="Una nube volutus extendida sobre el horizonte al atardecer, con un avión cruzándola de lado."
     />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Volutus — Ingeniería de software" />
+    <meta name="twitter:title" content="Volutus, desarrollo de software en Chile" />
     <meta
       name="twitter:description"
-      content="Desarrollo web, mobile, backend, cloud e IA con calidad de nivel empresarial."
+      content="Software que puedes abrir y revisar. Cuéntanos tu proyecto y respondemos en 48 horas hábiles."
     />
     <meta name="twitter:image" content="https://volutus.cl/image/og-volutus.jpg" />
 
+    <!--
+      Datos estructurados. El correo es el de la empresa: el Gmail personal que
+      había aquí contradecía la decisión de hablar como empresa y era comida
+      para rastreadores de spam (§5).
+
+      Tampoco se declara «estudio de ingeniería» ni «calidad de nivel
+      empresarial»: el glosario de §5 fija «empresa de desarrollo de software»,
+      y §3 elimina de la página toda afirmación que no se pueda sostener.
+    -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -57,23 +81,15 @@
             "@type": "WebSite",
             "name": "Volutus",
             "url": "https://volutus.cl/",
-            "inLanguage": "es"
+            "inLanguage": "es-CL"
           },
           {
             "@type": "Organization",
             "name": "Volutus",
             "url": "https://volutus.cl/",
-            "description": "Estudio de ingeniería de software: desarrollo web, mobile, backend, cloud, inteligencia artificial y DevOps.",
-            "email": "dpenaylilloluhrs@gmail.com",
-            "knowsAbout": [
-              "Desarrollo Web",
-              "Desarrollo Mobile",
-              "Backend",
-              "APIs",
-              "Cloud",
-              "Inteligencia Artificial",
-              "DevOps"
-            ]
+            "description": "Empresa de desarrollo de software en Chile.",
+            "email": "contacto@volutus.cl",
+            "areaServed": "CL"
           }
         ]
       }

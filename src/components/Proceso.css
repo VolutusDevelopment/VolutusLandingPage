@@ -1,0 +1,89 @@
+.proceso-entradilla {
+  margin-top: var(--e-4);
+}
+
+.pasos {
+  list-style: none;
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+.paso {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--e-4);
+  padding-block: var(--e-6);
+  border-top: 1px solid var(--linea);
+}
+
+.paso-numero {
+  font-size: var(--texto-sm);
+  color: var(--accion);
+  line-height: 1.5;
+}
+
+.paso-cuerpo h3 {
+  margin-bottom: var(--e-2);
+}
+
+/* «Pones tú» es lo que diferencia este bloque de cualquier otra página de
+   servicios. Se marca con peso, no con color: el color ya está gastado en la
+   acción principal y §6 pide no repartirlo. */
+.paso-pones {
+  color: var(--texto-suave);
+}
+
+.paso-pones-etiqueta {
+  font-weight: 800;
+  color: var(--texto);
+}
+
+.paso-plazo {
+  margin-top: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.proceso-columnas {
+  display: grid;
+  gap: var(--e-12);
+  margin-top: var(--e-16);
+}
+
+.lista {
+  margin: var(--e-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista li {
+  position: relative;
+  padding-left: var(--e-6);
+  padding-block: var(--e-2);
+  color: var(--texto-suave);
+  max-width: var(--medida-lectura);
+}
+
+/* Viñeta propia: un guion corto en el color de acción. Un carácter, cero
+   peticiones, y no depende de una familia de iconos. */
+.lista li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.05em;
+  width: 10px;
+  height: 1px;
+  background: var(--accion);
+}
+
+@media (min-width: 1024px) {
+  .paso {
+    grid-template-columns: 56px 1fr;
+    gap: var(--e-8);
+  }
+
+  .proceso-columnas {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e-16);
+  }
+}

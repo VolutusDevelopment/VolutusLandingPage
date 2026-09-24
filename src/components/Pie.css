@@ -1,0 +1,27 @@
+.pie {
+  background: var(--fondo);
+  color: var(--texto);
+  border-top: 1px solid var(--linea);
+  padding-block: var(--e-12);
+}
+
+.pie-interior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-6);
+}
+
+.pie-contacto,
+.pie-legal {
+  margin: 0;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.pie-contacto a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

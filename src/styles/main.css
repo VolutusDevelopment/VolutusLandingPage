@@ -1,10 +1,20 @@
-/* Punto de entrada de estilos (importado por src/main.js). El orden replica
-   la cascada del bundle anterior: componentes primero, base al final. */
-@import '../components/Nav.css';
-@import '../components/Typewriter.css';
-@import '../components/Hero.css';
-@import '../components/About.css';
-@import '../components/ServicesCarousel.css';
-@import '../components/ContactHero.css';
-@import '../components/Footer.css';
+/* Punto de entrada de estilos, importado por src/main.js.
+ *
+ * Todo el CSS entra POR AQUÍ y no desde cada componente, y el motivo es la
+ * arquitectura: los .jsx solo se ejecutan en el build (prerender) y en dev, así
+ * que en producción no forman parte del grafo del cliente. Un `import` de CSS
+ * dentro de un componente no acabaría en el bundle y la página saldría sin
+ * estilos.
+ *
+ * Los tokens van PRIMERO: definen las variables de las que cuelga todo lo de
+ * abajo, y así cada componente puede ajustar lo que herede sin pelear con la
+ * especificidad. */
 @import './index.css';
+
+@import '../components/Barra.css';
+@import '../components/Portada.css';
+@import '../components/Proyectos.css';
+@import '../components/Metricas.css';
+@import '../components/Proceso.css';
+@import '../components/Contacto.css';
+@import '../components/Pie.css';

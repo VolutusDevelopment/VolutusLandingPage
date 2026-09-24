@@ -1,0 +1,74 @@
+.proyectos-entradilla {
+  margin-top: var(--e-4);
+}
+
+.proyecto {
+  margin-top: var(--e-8);
+}
+
+.proyecto h3 {
+  margin-bottom: var(--e-3);
+}
+
+.proyecto-resumen {
+  color: var(--texto-suave);
+}
+
+/* La credencial es el único dato de la página validado por un tercero, así que
+   lleva mono y el color de marca —que sobre plano sí pasa contraste (6.71:1)—.
+   Sobre cielo esto sería ilegible; por eso este bloque vive en plano. */
+.proyecto-credencial {
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--marca);
+  margin: 0 0 var(--e-3);
+}
+
+.proyecto-destacado {
+  /* Borde y relleno son recursos caros (§6): se gastan en lo que de verdad
+     destaca, y en esta sección eso es el proyecto con jurado externo. */
+  border-color: color-mix(in srgb, var(--marca) 45%, var(--linea));
+}
+
+.proyecto-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-6);
+  margin-top: var(--e-6);
+}
+
+.proyecto-enlaces a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--texto-sm);
+}
+
+/* Hueco de captura: proporción fija, así que la imagen real entra sin mover
+   nada. Marcador sobrio, nunca una imagen de relleno. */
+.proyecto-hueco {
+  margin-top: var(--e-6);
+  aspect-ratio: 16 / 10;
+  border: 1px dashed var(--linea);
+  border-radius: var(--radio);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texto-suave);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+  .proyectos-resto {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e-6);
+  }
+
+  .proyectos-resto .proyecto {
+    margin-top: var(--e-6);
+  }
+}

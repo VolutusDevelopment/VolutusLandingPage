@@ -1,34 +1,49 @@
 # Volutus
 
-> Estudio de ingeniería de software: desarrollo web, apps móviles, backend, APIs, cloud, inteligencia artificial y DevOps. Calidad de nivel empresarial, rendimiento medible y seguridad por diseño.
+> Empresa de desarrollo de software en Chile. Construimos software que se puede
+> abrir y revisar: cada afirmación de esta página va con su enlace o su código.
 
-Volutus es una landing page de una sola página. Todo el contenido está en español.
-Contacto: dpenaylilloluhrs@gmail.com
+Volutus es una página única, en español de Chile. Existe para que quien haya
+hablado con el equipo pueda comprobar la obra antes de seguir.
 
+Contacto: contacto@volutus.cl — respuesta en menos de 48 horas hábiles.
 
 ## Secciones
 
-- [Inicio](https://volutus.cl/): propuesta de valor y presentación del estudio
-- [Quiénes Somos](https://volutus.cl/#quienes-somos): misión, visión y filosofía de trabajo
-- [Servicios](https://volutus.cl/#servicios): frontend, backend, infraestructura y automatización con IA
-- [Proyectos](https://volutus.cl/#proyectos): sistemas reales en producción
-- [Contacto](https://volutus.cl/#contacto): formulario y correo del equipo
-
-## Servicios
-
-- Frontend: React, Next.js, TypeScript, Astro, Vite
-- Mobile: Kotlin, Jetpack Compose, Material 3
-- Backend: Node.js, Python, Spring Boot
-- Datos: PostgreSQL, MySQL, MongoDB, Supabase
-- Cloud: AWS, Google Cloud, Azure, Vercel, Firebase
-- DevOps: Docker, Kubernetes, GitHub Actions
-- IA: integración de LLMs (Gemini, Claude, ChatGPT) y agentes
+- [Portada](https://volutus.cl/#portada): qué hacemos y qué hacer
+- [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
+- [Métricas](https://volutus.cl/#metricas): lo que pesa esta página, medido
+- [Cómo trabajamos](https://volutus.cl/#proceso): los cuatro pasos y qué pone el cliente
+- [Contacto](https://volutus.cl/#contacto): el formulario
 
 ## Proyectos
 
-- CarFlip: agregador de avisos de autos en venta en Chile con historial de precios y detección de oportunidades (Python, PostgreSQL, AWS, Astro)
-- Agente IA HelpDesk: clasificación automática de tickets de correo con IA e informes ejecutivos (Python, Gemini API)
-- LapMaster: app Android de cronometraje de pista multi-piloto con GPS y clima en vivo (Kotlin, Jetpack Compose)
-- beatrizberger.cl: sitio literario con optimización total de performance y SEO, Lighthouse móvil ≥ 95 (React, Vite)
-- Prospector Places: extracción masiva de negocios vía Google Places API con análisis bayesiano de reseñas (Python)
-- RepoBase BPL: base SaaS reutilizable con reservas, pagos y panel admin (Next.js, TypeScript, Supabase, Mercado Pago)
+Solo entra lo que se puede abrir. Un proyecto sin repositorio público ni sitio
+en línea no aparece en la página.
+
+- Agente de respuesta a incidentes: segundo lugar en una hackathon de IA
+  agéntica, con jurado externo. Código en
+  https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS
+- PonleNota: plataforma NFC de valoraciones y cupones para negocios locales, en
+  línea en https://ponlenota.cl
+- CarFlip: indexador de automotores que rastrea varios sitios de venta. Código
+  en https://github.com/DiegoPyLL/CarFlip
+
+## Qué construimos
+
+- Un producto web en producción, con su panel y sus usuarios
+- Una app Android publicada y funcionando
+- Un agente de IA conectado a los sistemas que el cliente ya usa
+- Un indexador que reúne datos dispersos en un solo lugar consultable
+
+## Qué no tomamos
+
+- Encargos urgentes para el día siguiente
+- Competencia por precio más bajo
+- Procesos de proveedor de empresa grande
+
+## Lo que esta página no dice
+
+No hay clientes que hayan pagado todavía, así que no hay testimonios, logos ni
+casos de estudio, y no se insinúan. Tampoco se publican precios: se responden
+con un rango real en la primera contestación al formulario.

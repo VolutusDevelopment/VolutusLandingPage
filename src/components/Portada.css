@@ -1,0 +1,55 @@
+.portada {
+  /* La barra mide 64 px y es sticky, así que el aire de arriba se mide desde
+     debajo de ella. */
+  padding-block: var(--e-12) var(--e-16);
+}
+
+.portada-interior {
+  display: grid;
+  gap: var(--e-12);
+}
+
+.portada-entradilla {
+  margin-top: var(--e-6);
+}
+
+.portada-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}
+
+/* En S los botones van a ancho completo: el pulgar no tiene que apuntar. */
+@media (max-width: 479px) {
+  .portada-acciones .boton {
+    width: 100%;
+  }
+}
+
+.portada-figura {
+  margin: 0;
+}
+
+.portada-figura img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radio);
+  /* Es la única pieza con atmósfera de la portada; la línea la ata al sistema
+     y evita que flote, que es lo que haría una sombra. */
+  border: 1px solid var(--linea);
+}
+
+/* En L el texto y la foto se abren a dos columnas. El texto va primero en el
+   marcado y primero en pantalla: la foto acompaña, no encabeza. */
+@media (min-width: 1024px) {
+  .portada {
+    padding-block: var(--e-16) var(--e-24);
+  }
+
+  .portada-interior {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--e-16);
+  }
+}

@@ -1,42 +1,119 @@
-/* ============ Tipografía auto-hospedada ============ */
+/* ============================================================================
+   Volutus, capa de tokens y base.
+
+   Todo lo que hay aquí sale de DESIGN-BRIEF.md §6, §7 y §8. Los valores no se
+   eligen aquí: se copian de allí, que es el documento que manda sobre el código.
+
+   La decisión que da forma a este archivo es la A.4: la página tiene DOS TEMAS
+   DE ZONA, cielo y plano, y no un modo oscuro conmutable. Por eso los tokens de
+   color no viven en :root sino en .zona-cielo y .zona-plano, que son clases que
+   se ponen en las secciones. Una sección declara en qué tema está y todo lo que
+   lleva dentro se resuelve solo.
+
+   Consecuencia práctica: ningún componente conoce su color. El botón primario
+   es `background: var(--accion)` en los dos temas; lo que cambia es quién
+   define --accion. Eso es lo que evita duplicar cada componente por tema.
+   ============================================================================ */
+
+/* ============ Tipografía autohospedada ============
+   Geist y Geist Mono, subset latino, eje de peso recortado a 400-800 porque
+   A.7 prohíbe 500 y 600. Las dos juntas pesan 36 KB. */
 @font-face {
-  font-family: 'Archivo';
+  font-family: 'Geist';
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 400 800;
   font-display: swap;
-  src: url('/fonts/archivo-latin.woff2') format('woff2');
+  src: url('/fonts/geist-latin.woff2') format('woff2');
 }
 
-/* ============ Tokens (Modernist DS, retema "cielo") ============ */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+}
+
+/* ============ Tokens que no dependen del tema ============ */
 :root {
-  --color-bg: #ffffff;
-  --color-surface: #e9f0f6;
-  --color-text: #17242f;
-  --color-accent: #1a5f9e;
-  --color-divider: color-mix(in srgb, #17242f 40%, transparent);
+  --fuente-texto: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  --color-neutral-100: #f6f9fb;
-  --color-neutral-600: #5f6e79;
-  --color-neutral-700: #586873;
-  --color-neutral-800: #3d4a54;
+  /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
+     esta tabla es un tamaño que nadie decidió. */
+  --texto-xs: 13px;
+  --texto-sm: 15px;
+  --texto-base: 17px;
+  --texto-lg: 22px;
+  --texto-xl: 34px;
+  --texto-2xl: clamp(48px, 7vw, 76px);
 
-  --color-accent-100: #ecf4fb;
-  --color-accent-600: #16537f;
-  --color-accent-700: #113f60;
-  --color-accent-800: #0e3049;
+  /* Escala de espaciado, múltiplos de 4 (§6). */
+  --e-1: 4px;
+  --e-2: 8px;
+  --e-3: 12px;
+  --e-4: 16px;
+  --e-6: 24px;
+  --e-8: 32px;
+  --e-12: 48px;
+  --e-16: 64px;
+  --e-24: 96px;
 
-  --font-heading: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ancho-maximo: 1200px;
+  --margen-lateral: 24px;
+  --medida-lectura: 68ch;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
-  --space-8: 32px;
+  /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
+     con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
+  --radio: 4px;
 
-  --max-width: 1320px;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============ Tema cielo: la página promete ============
+   Portada, bloque de qué/cómo, formulario y pie. */
+.zona-cielo {
+  --fondo: #f6f9fc;
+  --superficie: #ffffff;
+  --texto: #0a1a2a;
+  --texto-suave: #47607a;
+  --linea: #d6e2ec;
+
+  /* La marca NUNCA es texto ni botón sobre claro: da 2.48:1. Solo superficies. */
+  --marca: #38a9e8;
+  --accion: #116492;
+  --accion-hover: #0f5780;
+  --accion-activa: #0c4565;
+  --sobre-accion: #ffffff;
+
+  --exito: #12714b;
+  --aviso: #8a5a00;
+  --error: #b3261e;
+
+  --foco: #116492;
+}
+
+/* ============ Tema plano: la página demuestra ============
+   Índice de proyectos y métricas. Sobre este fondo la marca sí llega a 6.71:1,
+   así que aquí es el color de acción y no hace falta el azul oscurecido. */
+.zona-plano {
+  --fondo: #0a1a2a;
+  --superficie: #122638;
+  --texto: #e6eef6;
+  --texto-suave: #9db2c6;
+  --linea: #1e3348;
+
+  --marca: #38a9e8;
+  --accion: #38a9e8;
+  --accion-hover: #6dc0ef;
+  --accion-activa: #8fd0f4;
+  --sobre-accion: #0a1a2a;
+
+  --exito: #4fcf96;
+  --aviso: #e8b14c;
+  --error: #ff8a80;
+
+  --foco: #38a9e8;
 }
 
 /* ============ Base ============ */
@@ -48,172 +125,80 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px;
+  /* La barra mide 64 px; el ancla no debe quedar debajo de ella. */
+  scroll-padding-top: 80px;
+  /* El fondo del documento es el de la portada: lo que se ve al rebotar el
+     scroll arriba del todo, y detrás de la barra translúcida. */
+  background: #f6f9fc;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 15px;
-  background: var(--color-bg);
-  color: var(--color-text);
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  font-weight: 400;
   line-height: 1.6;
+  color: var(--texto);
+  background: var(--fondo);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+/* Solo 400 y 800 (A.7). Los títulos van en 800 y nada más usa peso. */
 h1,
 h2,
 h3 {
-  font-family: var(--font-heading);
   font-weight: 800;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  text-wrap: balance;
   margin: 0;
+}
+
+h1 {
+  font-size: var(--texto-2xl);
+}
+
+h2 {
+  font-size: var(--texto-xl);
+}
+
+h3 {
+  font-size: var(--texto-lg);
+  letter-spacing: -0.015em;
 }
 
 p {
   margin: 0;
+  max-width: var(--medida-lectura);
 }
 
-img {
+a {
+  color: var(--accion);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accion-hover);
+}
+
+img,
+svg {
   max-width: 100%;
   display: block;
 }
 
-a {
-  color: inherit;
-}
-
+/* ============ Foco, regla 1 de §7 ============
+   Se ve siempre, en los dos temas, y nunca se quita sin poner otro encima. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--foco);
   outline-offset: 2px;
+  border-radius: var(--radio);
 }
 
-::selection {
-  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
-}
-
-/* ============ Utilidades de layout ============ */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.container {
-  max-width: var(--max-width);
-  margin-inline: auto;
-  padding-inline: 24px;
-}
-
-.section-divider {
-  border-top: 2px solid var(--color-divider);
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 16px;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.eyebrow::before {
-  content: '';
-  width: 24px;
-  height: 2px;
-  background: var(--color-accent);
-}
-
-.skip-link {
-  position: absolute;
-  top: -100%;
-  left: 1rem;
-  z-index: 100;
-  padding: 0.6rem 1rem;
-  background: var(--color-text);
-  color: var(--color-bg);
-  text-decoration: none;
-}
-
-.skip-link:focus {
-  top: 0.5rem;
-}
-
-/* ============ Botones ============ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 15px;
-  color: var(--color-text);
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 12px 22px;
-  transition:
-    background-color 0.25s var(--ease-out),
-    border-color 0.25s var(--ease-out);
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  color: var(--color-bg);
-}
-
-.btn-primary:hover {
-  background: var(--color-accent-600);
-}
-
-.btn-primary:active {
-  background: var(--color-accent-700);
-}
-
-.btn-secondary {
-  border-color: var(--color-divider);
-}
-
-.btn-secondary:hover {
-  background: color-mix(in srgb, var(--color-text) 7%, transparent);
-}
-
-/* ============ Etiquetas ============ */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  padding: 3px 10px;
-  background: var(--color-neutral-100);
-  color: var(--color-neutral-800);
-}
-
-/* ============ Reveal al hacer scroll ============ */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.7s var(--ease-out),
-    transform 0.7s var(--ease-out);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
+/* ============ Movimiento ============
+   Cada animación justifica su presencia o no entra (§8), y todas se apagan. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -226,9 +211,152 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
 
-  .reveal {
-    opacity: 1;
-    transform: none;
+/* ============ Utilidades ============ */
+
+/* El contenedor es lo único que fija el ancho. Ninguna sección lo repite. */
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho-maximo);
+  margin-inline: auto;
+  padding-inline: var(--margen-lateral);
+}
+
+/* Ritmo vertical de sección. Móvil primero (§8): el caso principal es S. */
+.seccion {
+  background: var(--fondo);
+  color: var(--texto);
+  padding-block: var(--e-16);
+}
+
+@media (min-width: 1024px) {
+  .seccion {
+    padding-block: var(--e-24);
   }
+}
+
+/* El corte entre temas es una LÍNEA, no un degradado (A.3, regla 1). Va en el
+   lado que entra, para que el borde pertenezca siempre a la zona nueva. */
+.corte-de-zona {
+  border-top: 1px solid var(--linea);
+}
+
+/* Antetítulo de sección. Es un <p>, no un encabezado: no entra en la jerarquía
+   de títulos. En mono porque es una etiqueta, no prosa. */
+.antetitulo {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  margin: 0 0 var(--e-4);
+}
+
+.entradilla {
+  font-size: var(--texto-lg);
+  line-height: 1.45;
+  color: var(--texto-suave);
+}
+
+.dato {
+  font-family: var(--fuente-datos);
+  font-variant-numeric: tabular-nums;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Enlace de salto: primer elemento enfocable, visible solo al recibir foco. */
+.salto {
+  position: absolute;
+  left: var(--e-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--radio);
+  background: var(--accion);
+  color: var(--sobre-accion);
+  font-size: var(--texto-sm);
+  text-decoration: none;
+  transition: top 120ms var(--curva);
+}
+
+.salto:focus {
+  top: var(--e-4);
+  color: var(--sobre-accion);
+}
+
+/* ============ Componentes (§7) ============
+   Ninguno lleva sombra. La jerarquía la dan el color de superficie y 1 px de
+   línea. Todos funcionan en los dos temas sin variante propia. */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  /* 44 px de alto: el área táctil mínima de la regla 2 de §7. */
+  min-height: 44px;
+  padding: 0 var(--e-6);
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  font-family: inherit;
+  font-size: var(--texto-base);
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 140ms var(--curva),
+    border-color 140ms var(--curva),
+    color 140ms var(--curva);
+}
+
+.boton-primario {
+  background: var(--accion);
+  color: var(--sobre-accion);
+}
+
+.boton-primario:hover {
+  background: var(--accion-hover);
+  color: var(--sobre-accion);
+}
+
+.boton-primario:active {
+  background: var(--accion-activa);
+}
+
+.boton-secundario {
+  background: transparent;
+  border-color: var(--linea);
+  color: var(--texto);
+}
+
+.boton-secundario:hover {
+  border-color: var(--accion);
+  color: var(--accion);
+}
+
+/* Regla 4 de §7: al enviar, el botón no desaparece ni encoge. Cambia el texto
+   y se desactiva conservando su ancho, así que el layout no se mueve. */
+.boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  padding: var(--e-6);
 }

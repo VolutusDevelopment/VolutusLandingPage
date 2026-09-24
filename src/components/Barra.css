@@ -1,0 +1,60 @@
+.barra {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* Translúcida con desenfoque: al pasar sobre la zona de plano se oscurece
+     sola, sin conmutar el tema con JavaScript. */
+  background: color-mix(in srgb, var(--fondo) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--linea);
+}
+
+.barra-interior {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-6);
+}
+
+.barra-marca {
+  color: var(--texto);
+  text-decoration: none;
+  /* El lockup queda por debajo de los 44 px de alto de la barra, así que el
+     área táctil se estira con padding sin mover el dibujo. */
+  padding-block: var(--e-2);
+}
+
+.barra-enlaces {
+  display: flex;
+  align-items: center;
+  gap: var(--e-6);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.barra-enlaces a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  text-decoration: none;
+}
+
+.barra-enlaces a:hover {
+  color: var(--accion);
+}
+
+/* En S los dos enlaces caben, pero compiten con el lockup. Se recorta el
+   tracking de la palabra antes que esconder la navegación. */
+@media (max-width: 400px) {
+  .barra-enlaces {
+    gap: var(--e-4);
+  }
+
+  .barra-enlaces a {
+    font-size: var(--texto-xs);
+  }
+}

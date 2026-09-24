@@ -1,0 +1,96 @@
+.contacto-interior {
+  display: grid;
+  gap: var(--e-12);
+}
+
+.contacto-entradilla {
+  margin-top: var(--e-4);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-6);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.campo label {
+  font-size: var(--texto-sm);
+  color: var(--texto);
+}
+
+.campo input,
+.campo textarea {
+  font-family: inherit;
+  font-size: var(--texto-base);
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  padding: var(--e-3) var(--e-4);
+  /* 44 px de área táctil incluso en el input de una línea. */
+  min-height: 44px;
+  width: 100%;
+}
+
+.campo textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.campo input:hover,
+.campo textarea:hover {
+  border-color: color-mix(in srgb, var(--accion) 40%, var(--linea));
+}
+
+/* Regla 3 de §7: el error nunca se comunica solo con color. El borde cambia,
+   pero lo que informa es el texto de abajo y el aria-invalid que pone el JS. */
+.campo input[aria-invalid='true'],
+.campo textarea[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+.campo-error {
+  font-size: var(--texto-sm);
+  color: var(--error);
+}
+
+.formulario-enviar {
+  align-self: flex-start;
+  /* Reserva el ancho del estado más largo («Enviando…» vs «Enviar mensaje»)
+     para que cambiar el texto no mueva nada. */
+  min-width: 11rem;
+}
+
+.formulario-aviso {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.formulario-aviso[data-estado='error'] {
+  color: var(--error);
+}
+
+.formulario-aviso[data-estado='ok'] {
+  color: var(--exito);
+}
+
+@media (max-width: 479px) {
+  .formulario-enviar {
+    align-self: stretch;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contacto-interior {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e-16);
+    align-items: start;
+  }
+}
