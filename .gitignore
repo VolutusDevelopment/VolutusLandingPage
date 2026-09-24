@@ -5,3 +5,11 @@ dist
 *.local
 .DS_Store
 .playwright-mcp
+
+# Secretos locales del Worker. Aquí va RESEND_API_KEY para `wrangler dev`, y en
+# producción el mismo valor se carga con `wrangler secret put`. Nunca al repo.
+.dev.vars
+.dev.vars.*
+
+# Estado local de wrangler (caché, sesiones, almacenamiento simulado).
+.wrangler

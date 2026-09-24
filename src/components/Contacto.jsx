@@ -66,6 +66,20 @@ export default function Contacto() {
             </p>
           </div>
 
+          {/* Trampa para robots. No es un campo del diseño —§7 lista los que
+              hay y este no está— sino una defensa del endpoint, que es público
+              y cualquiera puede llamar. Una persona nunca lo ve ni lo rellena;
+              un robot que completa todo lo que encuentra, sí, y el Worker
+              descarta ese envío en silencio.
+
+              `aria-hidden` y `tabIndex` lo sacan también del recorrido de
+              teclado y del lector de pantalla: esconderlo solo con CSS lo
+              habría dejado en medio del formulario para quien navega a ciegas. */}
+          <div className="trampa" aria-hidden="true">
+            <label htmlFor="empresa">No rellenes este campo</label>
+            <input id="empresa" name="empresa" type="text" tabIndex={-1} autoComplete="off" />
+          </div>
+
           {/* Regla 4 de §7: al enviar no desaparece ni encoge. El ancho lo fija
               el texto más largo de los dos estados, reservado desde el HTML. */}
           <button className="boton boton-primario formulario-enviar" type="submit">

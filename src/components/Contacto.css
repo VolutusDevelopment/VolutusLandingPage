@@ -60,6 +60,16 @@
   color: var(--error);
 }
 
+/* La trampa para robots. `display: none` la delataría: los que valen algo lo
+   comprueban. Se saca del flujo dejándola técnicamente presente. */
+.trampa {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .formulario-enviar {
   align-self: flex-start;
   /* Reserva el ancho del estado más largo («Enviando…» vs «Enviar mensaje»)

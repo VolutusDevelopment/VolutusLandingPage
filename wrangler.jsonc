@@ -1,7 +1,28 @@
 {
   "name": "volutuslandingpage",
   "compatibility_date": "2026-08-17",
+
+  // El Worker existe por una sola ruta, POST /api/contacto (worker/index.js).
+  // Cloudflare sirve `dist/` directamente y solo invoca el Worker cuando la
+  // petición no corresponde a ningún archivo, así que la portada no paga nada
+  // por que esto exista.
+  "main": "worker/index.js",
+
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // El binding es lo que permite al Worker devolver el sitio estático para
+    // cualquier ruta que no sea la suya.
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    // Los console.error del endpoint son el único aviso de que se están
+    // perdiendo mensajes. Sin logs, un fallo de Resend es invisible.
+    "enabled": true
   }
+
+  // RESEND_API_KEY NO va aquí: es un secreto y se carga con
+  //   wrangler secret put RESEND_API_KEY
+  // REMITENTE es opcional y se puede poner como variable normal cuando
+  // volutus.cl esté verificado en Resend.
 }
