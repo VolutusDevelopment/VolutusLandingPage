@@ -1,0 +1,922 @@
+# DESIGN — Landing de Volutus
+
+> **Documento de trabajo en curso.** Rellenado en sesión con Rodrigo y su socio el
+> 2026-09-13. Las secciones marcadas `[x]` están cerradas y se pueden ejecutar sin
+> volver a preguntar. Las `[~]` tienen propuesta escrita y esperan validación.
+> Este documento manda sobre el código: el rediseño se ajusta a él, no al revés.
+
+---
+
+## Cómo se usa este archivo
+
+**Las líneas que empiezan con `Guía:` son instrucciones para quien rellena. Se borran cuando la
+sección queda cerrada.** Si al final del proyecto queda alguna, es que esa sección nunca se
+decidió de verdad.
+
+Cada sección lleva un estado. Solo hay tres:
+
+| Marca | Significa |
+| --- | --- |
+| `[ ]` | **Pendiente.** Nadie lo ha pensado todavía. |
+| `[~]` | **En discusión.** Hay opciones sobre la mesa y no hay acuerdo. |
+| `[x]` | **Cerrado.** Hay una respuesta y quien la lea puede actuar sin preguntar. |
+
+Una sección **no se cierra porque alguien tenga una opinión**: se cierra cuando la respuesta es
+lo bastante concreta como para que otra persona la ejecute sin volver a preguntar. «Colores
+cálidos» no cierra nada. `#C4553A` sí.
+
+**Regla del desacuerdo:** si tú y tu socia no coincidís, la sección se queda en `[~]` y la
+discrepancia se escribe en *Preguntas abiertas* con las dos posturas. No se cierra por cansancio
+ni por quien hable último. Una decisión tomada a medias reaparece en la semana tres disfrazada
+de «esto no era lo que habíamos dicho».
+
+**Orden sugerido:** las secciones 1 a 5 antes que las 6 a 9. La identidad visual decidida antes
+de saber qué dice la página produce una página bonita que no convierte. Si hay prisa por ver
+algo, es mejor un boceto feo con el mensaje correcto.
+
+**Si vas a trabajar esto con un agente en otro chat:** súbele este archivo y el enlace del repo,
+y pídele que rellene **una sección a la vez**, que te pregunte lo que no pueda deducir y que no
+cierre ninguna sección por su cuenta. Este documento es la fuente de verdad del diseño; el
+código se ajusta a él, no al revés.
+
+---
+
+## 0. Ficha
+
+| Campo | Valor |
+| --- | --- |
+| Proyecto | Volutus, landing page |
+| Repositorio | github.com/VolutusDevelopment/VolutusLandingPage |
+| Dominio previsto | `volutus.cl` *(confirmar si ya está registrado)* |
+| Personas que deciden | Rodrigo y su socio. **Desempata Rodrigo** (delegado explícitamente, 2026-09-13) |
+| Fecha de inicio | *pendiente* |
+| Fecha objetivo de publicación | *pendiente* |
+| Última actualización de este documento | 2026-09-13 |
+
+
+---
+
+## 1. Qué es y qué tiene que pasar `[~]`
+
+**Qué es esta página, en una frase:** `[x]`
+
+> La página donde Volutus demuestra, con obra que se puede abrir y revisar, que
+> es una empresa real y que sabe construir software.
+
+**Para qué existe, dicho por el equipo:** validar que la empresa existe, servir
+de punto al que redirigir, e indexar los proyectos hechos. **No es una página
+que capte por sí sola.** Es una página de respaldo: casi todo el que llegue
+vendrá con el enlace ya en la mano, enviado por uno de los dos socios.
+
+**Consecuencia sobre la prioridad de SEO.** El `CLAUDE.md` del repositorio pone
+el SEO como prioridad absoluta. Con dominio nuevo, sin historial, sin enlaces
+externos y sin clientes, el posicionamiento por búsquedas genéricas no va a
+traer visitas en el plazo de este proyecto. Lo que sí importa, y es barato:
+
+1. **Búsqueda de marca.** Quien oiga "Volutus" y lo busque tiene que encontrar
+   esta página en el primer resultado. Eso sí se consigue rápido.
+2. **Rendimiento real en móvil**, porque el enlace se va a abrir desde
+   WhatsApp, con datos móviles y sin paciencia.
+3. **La tarjeta de previsualización del enlace.** Es literalmente lo primero
+   que ve el visitante, antes que la página. Si sale un recuadro gris, el
+   enlace parece sospechoso.
+
+El SEO técnico se hace bien porque cuesta poco hacerlo bien, no porque vaya a
+traer clientes. Se recomienda ajustar esa prioridad en `CLAUDE.md`.
+
+**La única acción que queremos que haga el visitante:** `[x]`
+
+**Enviar el formulario contando su proyecto.** El mensaje llega por correo al
+equipo. Todo lo demás en la página existe para que esa acción ocurra.
+
+Se descartó agendar una reunión directa en agenda (recomendada por el asesor:
+filtra mejor y elimina la ida y vuelta, pero obliga a comprometer horas) y
+WhatsApp (fricción mínima, pero se come el día y choca con la formalidad
+elegida).
+
+**Acciones secundarias aceptables:**
+
+- Ver los proyectos.
+- Escribir directamente al correo de contacto.
+
+**Qué cuenta como éxito** `[~]` *(propuesta del asesor, falta que el equipo
+confirme los números):*
+
+Como la página es de respaldo, el tráfico no mide nada. Lo que mide es qué hace
+quien llega con el enlace.
+
+| Indicador | Objetivo | Plazo |
+| --- | --- | --- |
+| Mensajes reales recibidos por el formulario | 6 | Primeros 3 meses |
+| Porcentaje de visitas que envían el formulario | 10 % o más | Medido al tercer mes |
+| Posición al buscar "Volutus" en Google | Primer resultado | Primeros 2 meses |
+| Lighthouse móvil | 100 en las cuatro categorías | Desde la publicación |
+
+**Qué pasa si esta página no existe** `[x]`
+
+Los dos socios siguen consiguiendo trabajo por conversación, como hasta ahora,
+pero no tienen a dónde mandar a nadie. Cada conversación termina sin sitio
+donde comprobar lo que se acaba de contar, y la obra hecha (dos productos en
+línea y un premio) queda invisible. La página no genera demanda: **evita perder
+la que ya se genera en las conversaciones.**
+
+---
+
+## 2. A quién le hablamos `[~]`
+
+*Propuesta del asesor derivada de la sección 1. Pendiente de validación, salvo
+las objeciones, que las tiene que aportar el equipo con sus palabras reales.*
+
+**Visitante principal:** alguien que **acaba de hablar con uno de los dos
+socios** y quiere comprobar con quién está tratando antes de seguir. No busca
+proveedores: está verificando uno concreto. Tiene un problema que hoy resuelve
+a mano, con una planilla, con un conocido que "sabe de computación", o no lo
+resuelve.
+
+**Qué sabe ya cuando llega:** el nombre Volutus y, más o menos, a qué se
+dedican, porque se lo acaban de contar. **No** hay que explicarle el rubro
+desde cero. Lo que necesita es comprobar que lo que le contaron es cierto.
+
+**De dónde llega:**
+
+| Vía | Contexto con el que llega |
+| --- | --- |
+| Enlace por WhatsApp tras una conversación | El más frecuente. Móvil, datos, poca paciencia. La tarjeta de previsualización del enlace importa tanto como la página |
+| Recomendación de un conocido | Llega con confianza prestada, quiere confirmarla |
+| Búsqueda del nombre "Volutus" | Ya conoce el nombre, solo quiere encontrarlos |
+| Búsqueda genérica de proveedores | Prácticamente inexistente en esta etapa, y no se diseña para él |
+
+**Qué le preocupa antes de decir que sí** `[x]`, en sus palabras, aportadas por
+el equipo:
+
+1. "¿Qué hacen ustedes?" y, enseguida, **"¿eso me sirve a mí?"**
+2. **"¿Cuánto me cobran?"** Es la que más pesa.
+3. **"¿En cuánto tiempo lo tienen listo?"**
+4. **"¿Qué tengo que entregarles yo para que puedan hacerlo?"**
+
+La cuarta es la más valiosa de las cuatro y casi ninguna página de software la
+responde. Revela la ansiedad real del cliente: no teme que no sepáis programar,
+teme quedar atrapado en un proceso que no entiende y que dependa de él.
+Responderla es una ventaja competitiva barata.
+
+**A quién NO le hablamos:**
+
+- A quien busca el precio más bajo del mercado.
+- A quien quiere una página lista mañana.
+- A empresas grandes con procesos de proveedor formales, que hoy no se pueden
+  atender.
+- A otros desarrolladores. La página no es un portafolio para colegas, aunque
+  enlace código.
+
+## 3. La promesa y la prueba `[~]`
+
+**Hecho declarado por el equipo (2026-09-13), y es el dato que condiciona toda
+la página:** a esta fecha **no hay clientes que hayan pagado**. Lo que existe
+son tres trabajos propios:
+
+| Trabajo | Qué es | Quién lo valida |
+| --- | --- | --- |
+| `ponlenota.cl` | Producto propio, en línea | Nadie externo, todavía |
+| Agente de IA para *incident response* | **Segundo lugar en una hackathon de IA agéntica**, con repositorio | Un jurado externo. Es la única prueba validada por un tercero |
+| `carflip.cl` | Indexador de automotores con scraping de múltiples sitios | Nadie externo, todavía |
+
+**La promesa, en una frase que pueda ir de titular** `[~]` *(propuesta del
+asesor, pendiente de validación):*
+
+> **Construimos software que puedes abrir y revisar.**
+
+Entradilla que la acompaña:
+
+> Dos productos en línea y un agente de IA premiado en una hackathon. Todo con
+> su enlace y su código a la vista. Cuéntanos qué necesitas y te respondemos en
+> menos de 48 horas hábiles.
+
+Por qué esta y no otra: el visitante llega a **verificar**, no a descubrir el
+rubro. El titular le entrega justo eso, es comprobable en el mismo momento y
+convierte en ventaja la única credencial que hoy existe, obra abierta. Una
+promesa de resultado de negocio ("ahorra horas", "vende más") no se puede
+sostener sin un solo cliente que lo demuestre.
+
+**Por qué habría de creernos, la prueba:**
+
+| Afirmación | Con qué se sostiene | ¿La tenemos ya? |
+| --- | --- | --- |
+| Llevamos productos propios a producción | `ponlenota.cl` y `carflip.cl` en línea, con capturas y enlaces | Sí |
+| Sabemos construir agentes de IA que funcionan | Segundo lugar en hackathon de IA agéntica, con repositorio público y jurado externo | Sí, y es la prueba más fuerte que existe hoy |
+| Medimos el rendimiento de lo que hacemos | Lighthouse público de los sitios propios, con la fecha de la medición | Sí, si se publican los números |
+| "Calidad de nivel empresarial" | Nada. No hay ningún cliente empresarial | **No. Se elimina de la página.** |
+| "Confían en nosotros" con logos de clientes | Nada | **No. No se insinúa siquiera.** |
+
+**Regla que se deriva:** cada afirmación de la página va con su enlace, su
+número o su repositorio. Lo que no se pueda enlazar, no se dice. Es la única
+forma de que una empresa sin clientes resulte creíble: no aparentando
+trayectoria, sino mostrando obra verificable.
+
+**Respuesta a cada objeción de la sección 2:**
+
+| Objeción | Dónde se responde | Cómo |
+| --- | --- | --- |
+| "¿Qué hacen y eso me sirve a mí?" | Portada y bloque 4 | Resultados en el idioma del cliente, no tecnologías. "Una app Android en producción", no "Kotlin" |
+| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde en la primera contestación al formulario, dentro de las 48 horas hábiles comprometidas, y ahí sí con un rango concreto |
+| "¿En cuánto tiempo?" | Bloque 4 | Rango de plazos por tipo de proyecto, nunca una promesa única |
+| "¿Qué tengo que entregar yo?" | Bloque 4, dentro del "cómo lo hacemos" | Lista concreta de lo que se le pide al cliente en cada paso |
+
+---
+
+## 4. Arquitectura de la página `[~]`
+
+Orden acordado con el equipo. El tema de color de cada bloque viene de la
+decisión A.4.
+
+| # | Sección | Qué tiene que conseguir | Contenido | Tema | Estado |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Portada | Que se entienda qué hacemos y qué hacer, sin desplazar | Titular, entradilla, acción principal, pieza atmosférica de marca | Cielo | `[~]` |
+| 2 | Demostración, el índice de proyectos | Mostrar en vez de contar, y dar algo que se pueda abrir y revisar | Lista de proyectos, cada uno con enlace a su repositorio o a su sitio en línea. Dos de ellos con hueco reservado para la captura de los que están en desarrollo | Plano | `[~]` |
+| 3 | Métricas | Probar la capacidad técnica con números | Datos reales en Geist Mono sobre fondo de plano | Plano | `[~]` |
+| 4 | Qué hacemos y cómo lo hacemos | Responder la objeción silenciosa: en qué me meto, cuánto tarda y qué queda fuera | Proceso real en 3 o 4 pasos con plazos, más una lista corta de qué sí y qué no aceptamos | Cielo | `[~]` |
+| 5 | Contacto | Convertir | Formulario | Cielo | `[~]` |
+
+**Nota sobre el bloque 4.** En la arquitectura original era "sobre nosotros".
+Vaciado al decidir que no aparecen personas, se reemplaza por "qué hacemos y
+cómo lo hacemos". Condiciones para que no se descontrole:
+
+1. **Es un bloque, no dos.** El *cómo* manda y el *qué* va subordinado. Si se
+   parten en dos secciones, la página vuelve a crecer sin motivo.
+2. **Máximo cinco ítems en el *qué*,** nombrados por el resultado que recibe el
+   cliente, no por la tecnología que se usa. "Una app Android en producción",
+   no "Kotlin · Jetpack Compose · Material 3".
+3. **El *cómo* lleva plazos.** Un proceso sin tiempos no responde la pregunta
+   que el visitante trae.
+4. **Se dice también lo que no hacemos.** Es lo que da carácter y filtra los
+   encargos malos antes de la primera reunión.
+5. Las tecnologías dejan de ser protagonistas. Si aparecen, es como pie de
+   página, nunca como argumento de venta.
+
+**Personas en la página** `[x]`: **no aparece ninguna.** Sin nombres, sin
+retratos, sin firmas, **y sin enlaces a perfiles personales de GitHub o
+LinkedIn**. Habla la empresa en primera persona del plural. Un apartado "sobre
+nosotros" queda para una versión posterior, fuera del alcance de esta.
+
+**Lo que sí se enlaza: el código de cada proyecto.** Repositorios, no personas.
+Es la prueba técnica verificable sin exposición personal.
+
+**Regla dura que se deriva:** un proyecto que no tenga **repositorio público o
+URL en línea que se pueda abrir** no entra en la página. Sin excepciones. Es la
+misma regla de la sección 3 aplicada al listado: lo que no se puede enlazar, no
+se dice. Para una empresa sin clientes, la obra abierta es la única credencial
+que tiene.
+
+**Inventario real de proyectos (aportado por el equipo, 2026-09-13):**
+
+| Proyecto | En línea | Repositorio | ¿Entra? |
+| --- | --- | --- | --- |
+| PonleNota | `ponlenota.cl` | `VolutusDevelopment/PonleNota-WEB` | Sí |
+| CarFlip | `carflip.cl` | `DiegoPyLL/CarFlip` | Sí |
+| Agente de *incident response* (2.º lugar hackathon) | No | `DiegoPyLL/Hackathon-Huawei-Cloud-MaaS` | Sí, y va destacado |
+| LapMaster | Sin dato | Sin dato | No, mientras no haya enlace |
+| beatrizberger.cl | Por confirmar | Sin dato | Pendiente de confirmar |
+| Prospector Places | Sin dato | Sin dato | No, mientras no haya enlace |
+| RepoBase BPL | Sin dato | Sin dato | No, mientras no haya enlace |
+| Agente IA HelpDesk | Sin dato | Sin dato | No, salvo que sea el mismo de la hackathon |
+
+La lista pasa de seis tarjetas no verificables a **tres proyectos abiertos**.
+Es una mejora: tres cosas que se pueden abrir valen más que seis que nadie
+puede comprobar.
+
+**Titularidad de los repositorios** `[x]`: **se transfieren todos a la
+organización `VolutusDevelopment`.** Decisión del equipo. `CarFlip` y el
+repositorio de la hackathon salen de la cuenta personal `DiegoPyLL` antes de
+publicar la página. GitHub mantiene las redirecciones, así que no se rompe
+ningún enlace existente.
+
+Motivo: la página afirma que Volutus es una empresa, y hasta ahora dos tercios
+de su obra figuraban a nombre de un particular. Una organización con la obra
+dentro es, por sí sola, parte de la validación que esta página busca.
+
+**Antes de publicar hay que verificar que los tres repositorios son públicos.**
+Un enlace a un repositorio privado devuelve un 404 y produce el efecto
+contrario al buscado.
+
+**Dónde aparece la acción principal y cuántas veces** `[x]`: **dos veces.** El
+botón "Cuéntanos tu proyecto" en la portada, que lleva al formulario, y el
+formulario propio al final. Nada más. Una barra fija que persiga al visitante
+con el mismo botón es ruido en una página que se lee en un minuto.
+
+**Qué ve alguien que no baja nada, la primera pantalla** `[~]`:
+
+1. El logo, arriba a la izquierda.
+2. El titular de la sección 3.
+3. Una entradilla de dos líneas con la prueba y el plazo de respuesta.
+4. El botón "Cuéntanos tu proyecto" y, secundario, "Ver proyectos".
+5. La pieza atmosférica de marca, **contenida**, nunca a pantalla completa.
+
+La regla que manda aquí: si la pieza visual empuja el titular fuera de la
+pantalla en un móvil de 360 px de ancho, la pieza se reduce. El texto gana
+siempre, porque es lo único que casi todos van a leer.
+
+## 5. Voz y copy `[~]`
+
+**Tratamiento:** `[x]` **Tuteo.** "Cuéntanos qué necesitas." Se mantiene en toda
+la página, botones, mensajes de error, validaciones del formulario y correos de
+respuesta. Decisión de Rodrigo; voto del socio no registrado.
+
+Se descartó el usted (choca de frente con la persona que "conversa al mismo
+nivel" del anexo A.1) y el impersonal (no ofende a nadie y tampoco conecta con
+nadie).
+
+**Cómo hablamos, tres adjetivos y un contraejemplo de cada uno** `[~]`
+*(propuesta del asesor derivada de los anexos A.1 y A.2, pendiente de
+validación del equipo):*
+
+| Somos | No somos |
+| --- | --- |
+| **Precisos.** Cada afirmación va con su número o no se hace. | Vagos: "soluciones a medida", "calidad de nivel empresarial". |
+| **Directos.** Decimos alcance, plazo y qué no hacemos. | Evasivos: "conversemos y lo vemos". |
+| *Acotación:* al no publicarse precios, "directos" se demuestra en lo que sí está escrito (plazos, proceso, lo que no hacemos) y en responder con un rango real en el primer correo. | |
+| **Del mismo nivel.** Explicamos sin jerga y sin condescendencia. | Ni sabihondos ("arquitectura hexagonal orientada a eventos") ni simplones ("te hacemos una web bonita"). |
+
+**Cómo se nombran las cosas, glosario** `[~]`
+
+Volutus se presenta como **empresa de desarrollo de software**. Decisión de
+Rodrigo. Se descartó "estudio de ingeniería" (palabra prestada mientras no haya
+obra publicada que la respalde) y declarar el tamaño de forma explícita
+("somos dos ingenieros"), que el asesor recomendaba como diferenciador frente a
+los equipos que subcontratan.
+
+*Resto del glosario: propuesta del asesor, pendiente de validación. Vocabulario
+de Chile.*
+
+| Lo llamamos | No lo llamamos | Por qué |
+| --- | --- | --- |
+| Empresa de desarrollo de software | Estudio, agencia, software factory | Es lo decidido, y se mantiene igual en toda la página |
+| Proyecto | Solución | "Solución" no significa nada y suena a folleto |
+| Cliente | Partner, aliado estratégico | Nadie habla así fuera de una presentación |
+| Reunión | Call, meeting | Se escribe en español en toda la página |
+| Cotización | Presupuesto, quote | Es la palabra que usa el cliente chileno |
+
+**Textos de los botones** `[~]`
+
+Cada botón dice lo que va a pasar, y el mensaje posterior confirma en los
+mismos términos.
+
+| Dónde | Texto | Qué confirma después |
+| --- | --- | --- |
+| Acción principal, portada | Cuéntanos tu proyecto | Lleva al formulario |
+| Acción secundaria, portada | Ver proyectos | Lleva al bloque de demostración |
+| Envío del formulario | Enviar mensaje | "Mensaje enviado." |
+| Estado de carga | Enviando… | El botón queda desactivado, nunca desaparece |
+
+**Mensajes del sistema.** Mismo tuteo, y dicen qué hacer, no qué falló:
+
+| Situación | Texto |
+| --- | --- |
+| Falta un campo | "Falta tu correo." (nunca "Campo requerido") |
+| Correo mal escrito | "Ese correo no parece válido, revísalo." |
+| Envío correcto | "Mensaje enviado. Te respondemos en menos de 48 horas hábiles." |
+| Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
+
+**Compromiso público:** respuesta en menos de **48 horas hábiles**. Si se
+escribe en la página, se cumple.
+
+**Correo de contacto:** `contacto@volutus.cl`. El Gmail personal que hoy
+aparece en el `JSON-LD` se retira: contradice la decisión de hablar como
+empresa y es comida para rastreadores de spam.
+
+## 6. Identidad visual `[~]`
+
+*Color y tipografía cerrados. Espaciado, forma e imagen pendientes.*
+
+### Color `[x]`
+
+La página usa **dos temas por zona**, no un modo oscuro conmutable. El corte
+está definido en el anexo A.4: la portada y el cierre van en *cielo*, la zona
+de demostración va en *plano*.
+
+**Color de marca:** `#38A9E8`, cielo de mediodía. Es el color del logo, de la
+onda y de las superficies de identidad. **No se usa nunca para texto ni para
+botones sobre fondo claro:** da 2.48:1, por debajo del mínimo de 4.5:1. Sobre
+el tema plano sí funciona (6.71:1) y ahí se usa tal cual.
+
+**Tema cielo (claro):**
+
+| Uso | Valor | Contraste sobre el fondo |
+| --- | --- | --- |
+| Fondo | `#F6F9FC` | base |
+| Superficie | `#FFFFFF` | base |
+| Texto principal | `#0A1A2A` | 16.64:1 |
+| Texto secundario | `#47607A` | 6.17:1 |
+| Líneas y bordes | `#D6E2EC` | decorativo |
+| Marca (solo superficies) | `#38A9E8` | 2.48:1, no apto para texto |
+| Acción (enlaces y botones) | `#116492` | 6.09:1, blanco encima 6.44:1 |
+| Acción hover | `#0F5780` | 7.37:1 |
+| Acción activa | `#0C4565` | 9.67:1 |
+| Éxito | `#12714B` | 5.70:1 |
+| Aviso | `#8A5A00` | 5.61:1 |
+| Error | `#B3261E` | 6.19:1 |
+
+**Tema plano (oscuro):**
+
+| Uso | Valor | Contraste sobre el fondo |
+| --- | --- | --- |
+| Fondo | `#0A1A2A` | base |
+| Superficie | `#122638` | base |
+| Texto principal | `#E6EEF6` | 15.01:1 |
+| Texto secundario | `#9DB2C6` | 8.05:1 |
+| Líneas y bordes | `#1E3348` | decorativo |
+| Acción y marca | `#38A9E8` | 6.71:1 |
+| Botón primario | fondo `#38A9E8`, texto `#0A1A2A` | 6.71:1 |
+| Éxito | `#4FCF96` | 8.96:1 |
+| Aviso | `#E8B14C` | 9.06:1 |
+| Error | `#FF8A80` | 7.70:1 |
+
+**¿Hay modo oscuro conmutable?** `[ ] sí  [x] no  [ ] más adelante`. Los dos
+temas son zonas de la página, no una preferencia del usuario.
+
+Los neutros llevan la misma tonalidad azulada que la marca, ningún gris puro.
+Los semánticos son independientes del acento y no se usan como color de marca.
+
+### Tipografía `[x]`
+
+| Rol | Familia | Grosores | De dónde se carga |
+| --- | --- | --- | --- |
+| Titulares y wordmark | Geist | 400, 800 | Autohospedada, `woff2` variable con subset latino |
+| Texto | Geist | 400 | La misma variable |
+| Datos, métricas y código | Geist Mono | 400 | Autohospedada, subset latino |
+
+Reglas de uso, obligatorias (razón en el anexo A.7):
+
+- Solo 400 y 800. Nunca 500 ni 600.
+- Titulares grandes con `letter-spacing: -0.03em`.
+- Wordmark `VOLUTUS` en mayúsculas con tracking positivo amplio.
+- Geist Mono solo para números y datos reales, nunca como decoración.
+
+**Escala de tamaños:** seis pasos, y no se sale de ahí.
+
+| Paso | Tamaño | Uso |
+| --- | --- | --- |
+| `xs` | 13 px | Etiquetas, pies |
+| `sm` | 15 px | Texto secundario |
+| `base` | 17 px | Texto corrido |
+| `lg` | 22 px | Entradilla |
+| `xl` | 34 px | Título de sección |
+| `2xl` | fluido, 48 a 76 px | Titular de portada |
+
+### Espaciado y forma `[x]`
+
+| Concepto | Valor |
+| --- | --- |
+| Unidad base de espaciado | 4 px, escala de 4 a 96 |
+| Ancho máximo del contenido | 1200 px, con `padding-inline` de 24 px |
+| Medida de lectura | 68 caracteres máximo en texto corrido |
+| Radio de esquinas | **4 px**, uniforme en todo el sitio |
+| Sombras | **Ninguna** |
+
+**Radio 4 px (decisión de Rodrigo; voto del socio no registrado).** Se descartó
+la esquina recta absoluta, que con Geist resultaba dura, y el radio amable de
+10 a 12 px, que es el aspecto por defecto de las plantillas SaaS y apunta justo
+a la prohibición principal de A.2.
+
+**Sin sombras, por decisión, no por olvido.** La separación entre planos se
+hace con color de superficie y una línea de 1 px. Una sombra dice "esto flota",
+y en esta página nada flota. Además evita repintados y `will-change`
+innecesarios.
+
+**Regla de jerarquía:** borde, relleno, radio y fondo propio son recursos
+caros. Si todos los bloques los llevan, dejan de significar nada. Se reservan
+para lo que de verdad tiene que destacar, que en esta página es la acción
+principal y los datos de la zona de plano.
+
+### Imagen y gráfica `[x]`
+
+**Regla de las dos capas.** Es la que resuelve la tensión entre "sin sombras ni
+degradados" y "que no se vea pobre":
+
+| Capa | Qué incluye | Reglas |
+| --- | --- | --- |
+| Interfaz | Botones, campos, tarjetas, tablas, datos | Sin sombras, sin degradados, radio 4 px, color plano |
+| Atmósfera de marca | Una o dos piezas grandes en toda la página | Aquí sí hay luz, profundidad y tonalidad, y se resuelve como **imagen**, nunca simulada en CSS o SVG |
+
+**Qué tipo de imágenes usamos:**
+
+1. **Pieza atmosférica de marca: la nube volutus, fotorrealista.** Cielo real,
+   luz rasante, calidad de cuadro. Como máximo dos apariciones en la página.
+   Se genera y se exporta a `webp` con `srcset`, dimensiones explícitas y peso
+   máximo de **120 KB** en el tamaño que recibe un móvil.
+2. **Gráfica vectorial propia:** la onda de marca, diagramas e iconos de trazo,
+   en SVG inline, de un solo color, sin degradados.
+3. **Capturas reales de producto: dos espacios reservados.** El diseño deja
+   dos huecos preparados que el equipo rellena con los proyectos que está
+   desarrollando. Hasta que lleguen las capturas, el hueco se ocupa con un
+   marcador sobrio del sistema (superficie, borde de 1 px y etiqueta), nunca
+   con una imagen de relleno.
+
+   Especificación del hueco, para que la imagen real entre sin romper nada:
+   proporción fija 16:10, `width` y `height` explícitos en el HTML, `webp` con
+   `srcset`, peso máximo 90 KB en el tamaño de móvil y `loading="lazy"`. Así el
+   CLS se mantiene en 0 antes y después de tener las capturas.
+
+**Qué NO usamos, nunca:**
+
+- Fotos de banco de imágenes, y en especial gente sonriendo señalando una
+  pantalla.
+- Ilustración vectorial con degradados suaves y sombritas, el estilo por
+  defecto de las plantillas y de las IA de diseño baratas.
+- Iconografía 3D genérica.
+- Fotorrealismo **simulado** en CSS o SVG: cuesta más pintar que la foto que
+  pretende evitar.
+- Degradados RGB, morado, y cualquier cosa que delate generación automática.
+
+**Consecuencia sobre lo que ya existe:** el video del hero actual queda
+descartado. Son 464 KB en `webm` y 512 KB en `mp4` con `preload="auto"`,
+compitiendo por ancho de banda en la pantalla donde se mide el LCP, a cambio
+de decoración que no demuestra nada. Lo sustituye la pieza atmosférica como
+imagen.
+
+**¿Hay logo? ¿Dónde están los archivos?** Todavía no. La forma está decidida
+(anexo A.6: la onda, un solo trazo, geometría). Los archivos SVG se producen en
+la sesión de rediseño y viven en `public/image/`.
+
+## 7. Componentes `[x]`
+
+Solo las piezas que la página necesita de verdad. Cada una existe en los dos
+temas, cielo y plano.
+
+| Componente | Estados que necesita | Dónde se usa |
+| --- | --- | --- |
+| Botón principal | reposo, hover, foco, pulsado, desactivado, cargando | Acción principal en portada y envío del formulario |
+| Botón secundario | reposo, hover, foco, pulsado | "Ver proyectos" en portada |
+| Enlace de texto | reposo, hover, foco, visitado | Enlaces a repositorios y sitios en línea |
+| Campo de formulario | reposo, foco, error, desactivado | Contacto |
+| Área de texto | los mismos del campo | Descripción del proyecto |
+| Tarjeta de proyecto | reposo, hover, foco | Índice de proyectos |
+| Dato de métrica | único | Bloque de métricas, con Geist Mono |
+| Barra de navegación | reposo, fija al desplazar | Toda la página |
+| Separador de zona | único | Los dos cortes de tema |
+
+**Reglas transversales, no negociables:**
+
+1. **El foco de teclado se ve siempre.** Contorno de 2 px con 2 px de
+   separación, en `#116492` sobre cielo y `#38A9E8` sobre plano. Nunca se
+   elimina el contorno del navegador sin poner uno propio encima.
+2. **Área táctil mínima de 44 × 44 px** en todo lo pulsable, aunque el elemento
+   se vea más pequeño.
+3. **El error nunca se comunica solo con color.** Siempre color más texto más
+   `aria-invalid`, para quien no distingue rojo de gris.
+4. **El botón que envía no desaparece mientras carga.** Cambia a "Enviando…" y
+   se desactiva, conservando su ancho para no mover el layout.
+5. Ningún componente lleva sombra. La jerarquía la dan el color de superficie y
+   una línea de 1 px.
+
+## 8. Responsive, accesibilidad y rendimiento `[x]`
+
+**Puntos de quiebre:**
+
+| Nombre | Ancho | Tratamiento |
+| --- | --- | --- |
+| S | menos de 640 px | Una columna. Es el caso principal: el enlace se abre desde WhatsApp |
+| M | 640 a 1023 px | Una columna con más aire |
+| L | 1024 a 1439 px | Dos columnas donde aporte |
+| XL | 1440 px o más | Contenido tope a 1200 px, el resto es margen |
+
+**¿Se diseña primero móvil o escritorio?** **Móvil primero, y no como fórmula.**
+El visitante típico abre el enlace desde una conversación de WhatsApp, en la
+calle, con datos móviles. El escritorio es el caso secundario.
+
+**Contraste mínimo que aceptamos:** 4.5:1 en texto normal y 3:1 en texto
+grande. Ya verificado en la sección 6 para los dos temas. Si un color de marca
+no llega, se ajusta el color, nunca el listón.
+
+**Qué tiene que funcionar sin JavaScript:**
+
+- Todo el contenido y todos los enlaces, incluidos los de los proyectos.
+- La navegación entre bloques.
+- El formulario: envío nativo por `POST` como reserva. El JavaScript solo
+  mejora la validación y evita recargar la página.
+- Lo único que se pierde sin JavaScript son las animaciones de aparición, que
+  por definición son prescindibles.
+
+**Movimiento:** todo se desactiva con `prefers-reduced-motion: reduce`. Cada
+animación tiene que justificar su presencia o no entra.
+
+**Presupuesto de carga:**
+
+| Métrica | Objetivo |
+| --- | --- |
+| Peso total de la primera carga | 250 KB o menos |
+| HTML con el CSS crítico incrustado | 50 KB o menos |
+| JavaScript enviado al navegador | 15 KB o menos |
+| Tiempo hasta que se ve el contenido (LCP), 4G | menos de 1,5 s |
+| CLS | 0 |
+| INP | menos de 200 ms |
+
+**Idiomas:** solo español de Chile (`es-CL`). Sin infraestructura de traducción
+en esta versión.
+
+## 9. SEO y metadatos `[~]`
+
+| Campo | Valor |
+| --- | --- |
+| Dominio canónico | `https://volutus.cl/` (hoy el código dice `example.com` en canonical, sitemap, Open Graph y JSON-LD) |
+| Título de la pestaña | `Volutus, desarrollo de software en Chile` *(propuesta)* |
+| Descripción | `Construimos software que puedes abrir y revisar: productos en línea, código público y un agente de IA premiado. Cuéntanos tu proyecto y respondemos en 48 horas hábiles.` *(propuesta)* |
+| Imagen para compartir (OG) | La pieza atmosférica de la nube volutus, 1200 × 630, `jpg` o `webp` optimizado |
+| ¿Se indexa? | Sí, sin restricciones |
+| Idioma | `es-CL` |
+| Correo en datos estructurados | `contacto@volutus.cl`, nunca un correo personal |
+| Palabras por las que queremos aparecer | "Volutus", "Volutus software", "Volutus Chile". Búsqueda de marca, no genéricas: ver la consecuencia sobre SEO en la sección 1 |
+
+## 10. Medición `[x]`
+
+Solo eventos que vayan a cambiar una decisión. Lo demás es ruido que hay que
+mantener para siempre.
+
+| Evento | Cuándo se dispara | Para qué decisión sirve |
+| --- | --- | --- |
+| `form_enviado` | El formulario se envía correctamente | Es el único indicador de éxito real de la página |
+| `form_error` | Falla el envío | Si aparece más de una vez, hay un fallo que está costando clientes en silencio |
+| `cta_principal` | Clic en "Cuéntanos tu proyecto" | Si se pulsa mucho y se envía poco, el problema está en el formulario, no en la portada |
+| `proyecto_abierto` | Clic en el enlace de un proyecto o repositorio | Dice qué obra convence. Si nadie los abre, el índice de proyectos no está cumpliendo su función |
+| `scroll_demostracion` | El visitante llega al bloque 2 | Si casi nadie llega, la portada no está reteniendo y hay que rehacerla |
+
+**Herramienta:** Vercel Web Analytics, ya en uso vía el snippet oficial, sin
+paquete de npm. Sin cookies, sin aviso de consentimiento, peso mínimo. No se
+añade Google Analytics: coste de rendimiento y de privacidad sin beneficio para
+esta página.
+
+**Qué se mira y cada cuánto:** una revisión de diez minutos al mes. Se miran
+mensajes recibidos, porcentaje de envío sobre visitas y proyectos abiertos.
+Nada más.
+
+## 11. Alcance y restricciones `[x]`
+
+**Lo que SÍ entra en la primera versión:**
+
+- Una sola página, con los cinco bloques de la sección 4.
+- Los dos temas de zona, cielo y plano.
+- Logo nuevo: símbolo de onda, wordmark y favicon, en sus versiones para fondo
+  claro y oscuro.
+- Índice con los **tres** proyectos verificables, cada uno con su enlace.
+- Formulario de contacto que llega a `contacto@volutus.cl`.
+- Pieza atmosférica de marca y dos huecos reservados para capturas.
+- Metadatos completos con el dominio real, incluida la imagen de
+  previsualización del enlace.
+
+**Lo que NO entra, y cuándo se revisará:**
+
+| No entra | Cuándo se revisa |
+| --- | --- |
+| Apartado "sobre nosotros" con personas | Cuando haya clientes y convenga poner cara |
+| Precios publicados | Cuando el equipo sepa con certeza cuánto cobra |
+| Blog o artículos | Solo si alguna vez se decide apostar por búsqueda, que hoy no es el caso |
+| Casos de estudio | Cuando exista el primer cliente que pague y autorice contarlo |
+| Testimonios y logos de clientes | Lo mismo. Hasta entonces no se insinúan |
+| Agendamiento en calendario | Si el formulario resulta demasiado lento en la práctica |
+| Segundo idioma | Fuera de alcance |
+| Modo oscuro conmutable | Fuera de alcance: los dos temas son zonas, no una preferencia |
+| Gestor de contenidos | Fuera de alcance. El contenido cambia pocas veces al año |
+| Chat en vivo | Fuera de alcance. Dos personas no pueden sostenerlo |
+
+**Restricciones técnicas conocidas:**
+
+| Restricción | De dónde viene |
+| --- | --- |
+| React solo en build, nunca en el navegador | Arquitectura actual de prerender, y es la razón de que el JavaScript enviado sea mínimo |
+| Formulario dependiente de una función serverless y de `RESEND_API_KEY` | Integración con Resend en Vercel |
+| Sin dependencias nuevas salvo justificación explícita | `CLAUDE.md` del repositorio |
+| 8 vulnerabilidades de dependencias detectadas en la rama principal (4 altas, 4 moderadas) | Dependabot. **Hay que resolverlas antes de publicar**, la seguridad es prioridad declarada del proyecto |
+| El dominio `volutus.cl` debe estar registrado y apuntando | Sin él, los metadatos siguen apuntando a `example.com` |
+
+**Presupuesto y plazos:** sin definir. Es lo único del documento que sigue sin
+tener dueño ni fecha.
+
+## 12. Registro de decisiones
+
+
+| # | Fecha | Decisión | Qué descartamos y por qué | Quién |
+| --- | --- | --- | --- | --- |
+| 1 | 2026-09-13 | Desempata Rodrigo cuando no hay acuerdo | Una regla objetiva sin nombre propio: no cierra nada en caliente | Rodrigo |
+| 2 | 2026-09-13 | Dos temas por zona: cielo arriba, plano en la zona técnica, cielo al cierre | Quedarse solo en azul cielo (indistinguible del resto de la industria) y solo en azul de plano (pierde el vínculo con el nombre) | Ambos |
+| 3 | 2026-09-13 | El corte de tema ocurre en un borde seco, dos veces en toda la página | El fundido progresivo: sería un degradado de scroll, justo lo prohibido | Ambos |
+| 4 | 2026-09-13 | Logo = símbolo más palabra, con símbolo autónomo para favicon | Solo wordmark: dejaba sin marca todos los espacios cuadrados | Ambos |
+| 5 | 2026-09-13 | El símbolo es una onda de un solo trazo, geométrica | La nube como sección técnica con curvas de nivel: a 16 px es una mancha | Ambos |
+| 6 | 2026-09-13 | Tipografía Geist y Geist Mono | Archivo (anónima) e IBM Plex (recomendada por el asesor). Riesgo asumido: Geist se asocia al ecosistema Vercel | Rodrigo |
+| 7 | 2026-09-13 | Color de marca `#38A9E8`, con `#116492` para toda acción y texto | Usar el celeste para texto o botones: 2.48:1, incumple accesibilidad | Rodrigo |
+| 8 | 2026-09-13 | Radio 4 px y cero sombras en la interfaz | Esquina recta absoluta (dura con Geist) y radio de 10 a 12 px (estética de plantilla SaaS) | Rodrigo |
+| 9 | 2026-09-13 | La riqueza visual viene de una pieza atmosférica en imagen, no de efectos en código | Fotorrealismo simulado en CSS o SVG: coste de pintado alto y aspecto de plantilla | Ambos |
+| 10 | 2026-09-13 | Se elimina el video del hero | Mantenerlo: medio megabyte en la pantalla donde se mide el LCP, sin aportar prueba | Rodrigo |
+| 11 | 2026-09-13 | No se publican precios en la página | Publicar un precio de entrada ("desde $X"), que el asesor recomendaba para filtrar y para sostener la promesa de ser directos. Coste asumido: la página no responde la objeción que más pesa, y esa promesa queda rebajada | Rodrigo |
+| 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
+| 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
+
+---
+
+## 13. Preguntas abiertas
+
+| # | Pregunta | Qué hace falta para cerrarla | Bloquea a |
+| --- | --- | --- | --- |
+| 1 | ¿Qué se muestra exactamente en el demo del bloque 2? | Decidir si son capturas de `ponlenota.cl` y `carflip.cl` o algo interactivo | El bloque de mayor riesgo del rediseño |
+| 2 | ¿Está registrado `volutus.cl`? | Comprobarlo en NIC Chile | Metadatos, correo y publicación |
+| 3 | ¿Se valida el titular propuesto en la sección 3? | Respuesta del equipo | La portada entera |
+| 4 | ¿Se validan los números de éxito de la sección 1? | Respuesta del equipo | La medición |
+| 5 | ¿`beatrizberger.cl` tiene enlace y entra al índice? | Confirmar URL y si se puede mostrar | El índice de proyectos |
+| 6 | ¿Qué plazos reales se publican en el bloque 4? | Que el equipo defina horquillas por tipo de proyecto | La objeción del tiempo |
+| 7 | Presupuesto y fecha de publicación | Decisión de los socios | La planificación entera |
+| 8 | Voto del socio en las decisiones 6, 7, 8, 11 y en el tuteo | Que las revise y confirme | Riesgo de reabrir decisiones ya cerradas |
+
+---
+
+## Antes de dar el diseño por cerrado
+
+- [x] No queda ninguna línea `Guía:` en el documento
+- [x] Todas las afirmaciones de la sección 3 tienen con qué sostenerse, y las que no, se eliminaron
+- [x] Hay **una** acción principal, y se puede señalar con el dedo
+- [x] Los colores del acento pasan el contraste sobre su fondo real
+- [x] El foco de teclado se ve en todo lo que se pueda pulsar
+- [ ] Ninguna sección sigue en `[ ]` o `[~]` *(quedan las 8 preguntas abiertas)*
+- [ ] La primera pantalla explica qué ofrecéis y qué hacer, sin desplazar *(pendiente de validar el titular)*
+- [ ] Alguien ajeno al proyecto leyó la página y supo decir qué ofrecéis *(se hace con la página construida)*
+
+---
+
+## Anexo A. Ejercicio de personificación de marca `[~]`
+
+> Registro de la sesión de identidad (Rodrigo + socio). Material en bruto y su
+> traducción a consecuencias de diseño. Alimenta las secciones 5 y 6; nada de
+> aquí está cerrado hasta que se copie a su sección con valores concretos.
+
+### A.1 "Volutus entra a una sala" (2026-09-13)
+
+**Respuesta del equipo:**
+
+- No busca llamar la atención, pero tampoco pasar desapercibida.
+- Persona correcta, vestida de manera semiformal. No necesita ruido para que
+  la noten.
+- Usa lentes, pero no parece un nerd.
+- Da su opinión cuando le preguntan, sin cerrarse a la de los demás.
+- Mira a los ojos, da la mano firme, conversa de cerca y **al mismo nivel** que
+  el otro.
+- Busca que la persona con la que habla entienda lo mismo que ella: abstrae
+  ideas y aterriza expectativas.
+
+**Lectura para diseño (propuesta, sin cerrar):**
+
+| Rasgo declarado | Consecuencia concreta en la página |
+| --- | --- |
+| Ni ruidosa ni invisible | Un solo elemento con fuerza por pantalla, el resto en silencio. Sin degradados ni animaciones decorativas. |
+| Semiformal | Sans con carácter. Ni serif de bufete ni grotesque genérica de startup. |
+| No necesita ruido | Un único color de acento, usado poco. El peso lo carga el espacio. |
+| Lentes, no nerd | Precisión sin estética hacker: nada de terminal, monoespaciado solo para datos reales. |
+| Habla al mismo nivel | Copy sin jerga. Se explica el *cómo trabajamos*, no solo el *qué usamos*. |
+| Opina, pero escucha | Titulares afirmativos, no preguntas retóricas. |
+
+**Pendiente de esta pregunta:** el contraejemplo con nombre propio (a quién no
+queremos parecernos).
+
+### A.2 Prohibiciones y dirección inicial (2026-09-13)
+
+**Lo que NO puede existir en la página (acuerdo de ambos socios):**
+
+- Degradados de colores tipo RGB / unicornio.
+- El color morado, en ninguna forma.
+- Cualquier cosa que delate "generado con la IA más barata del mercado".
+- Sobrecarga de animaciones.
+- Exceso de recuadros con información.
+- **Por encima de todo: falta de identidad.** Es el defecto que más rechazan.
+
+**Dirección declarada:**
+
+- Paleta simple: blanco y algún tipo de azul celeste (a validar, ver A.3).
+- La página tiene identidad **por encima** de sus componentes.
+- Nada que no aporte a la comunicación entre usuario y página.
+- Cada animación tiene que tener su porqué.
+- Debe demostrar habilidad técnica y simpleza al mismo tiempo.
+
+**Arquitectura propuesta por Rodrigo (alimenta la sección 4, sin cerrar):**
+
+| # | Bloque | Intención declarada |
+| --- | --- | --- |
+| 1 | Ejemplo gráfico de lo que hace la empresa, casi un demo en vivo de los productos | Mostrar, no contar |
+| 2 | El beneficio del tipo de diseño, en métricas | Probar la habilidad técnica con números |
+| 3 | Algo breve sobre nosotros | Confianza |
+| 4 | Formulario | Conversión |
+
+**Objetivo de este bloque de trabajo:** identidad clara, imagen de marca e
+idealmente un logo, utilizables en la página.
+
+### A.3 Dirección cromática: cielo que desciende a plano `[~]`
+
+**Decisión de dirección (Rodrigo, con acuerdo pendiente del socio):** combinar
+las direcciones A y B como un recorrido, no como una mezcla.
+
+- La página **abre en azul cielo**: identidad de marca, la nube volutus, única
+  e imponente.
+- A medida que se baja y el contenido se vuelve técnico, la página **pasa a
+  azul de plano**: azul profundo, casi negro, registro de ingeniería.
+
+El color cambia cuando cambia el registro del discurso: claro mientras la
+página *promete*, oscuro cuando la página *demuestra*.
+
+**Reglas que se derivan de esto y que no son negociables si la idea se
+mantiene:**
+
+1. **La transición es un corte, no un degradado.** Si el cielo se funde
+   suavemente con el plano, eso es un degradado de scroll, justo lo prohibido
+   en A.2. El cambio ocurre en un borde definido, coherente con las esquinas
+   rectas y los divisores marcados del sistema actual.
+2. **Dos temas significan dos sistemas completos:** cada token necesita su
+   pareja clara y oscura, y cada componente sus estados en ambos fondos. El
+   contraste se verifica en los dos.
+3. El número de cambios de tema en toda la página es **finito y decidido**,
+   no uno por sección.
+
+**Pendiente para cerrar:** punto exacto del corte, valores hex de ambos temas,
+y voto explícito del socio.
+
+### A.4 Punto de corte del tema `[x]`
+
+**Cerrado (acuerdo de ambos socios, 2026-09-13): opción B, corte en la mitad
+con retorno.**
+
+| Zona | Tema | Función |
+| --- | --- | --- |
+| Portada | Cielo (claro) | Promete |
+| Demo en vivo | Plano (oscuro) | Demuestra |
+| Métricas | Plano (oscuro) | Demuestra |
+| Nosotros | Cielo (claro) | Da confianza |
+| Formulario y pie | Cielo (claro) | Convierte |
+
+Dos cortes en toda la página, ambos secos. **Se descartó:** el corte temprano
+(dejaba la identidad de marca reducida a una sola pantalla) y el descenso
+completo sin retorno (dejaba el formulario sobre fondo oscuro, peor para
+conversión y más frágil en accesibilidad).
+
+### A.5 Estructura del logo `[x]`
+
+**Cerrado:** la marca es un **lockup**, símbolo más palabra, y el símbolo tiene
+que sostenerse solo.
+
+| Versión | Composición | Dónde se usa |
+| --- | --- | --- |
+| Principal | Símbolo + `VOLUTUS` en horizontal | Nav, pie, firma de correo, documentos |
+| Símbolo solo | Símbolo aislado | Favicon, avatar, cualquier espacio cuadrado |
+| Palabra sola | `VOLUTUS` sin símbolo | Casos de una sola línea, texto legal |
+
+**Requisitos técnicos, no negociables:**
+
+- El símbolo tiene que ser legible a **16 px**. Lo que no se distingue a 16 px
+  no entra en el símbolo.
+- SVG vectorial, sin degradados, sin sombras, sin más de un color.
+- Versión para fondo claro (cielo) y para fondo oscuro (plano), porque la
+  página usa los dos.
+- La tipografía de la palabra sale de la familia de titulares del sitio, no
+  de una fuente exclusiva del logo. Una familia menos que cargar.
+
+**Consecuencia directa:** el favicon actual, un cuadrado azul sobre gris,
+queda descartado.
+
+**Pendiente:** la forma concreta del símbolo.
+
+### A.6 Forma del símbolo `[x]`
+
+**Cerrado (voto de ambos socios, 2026-09-13): la onda.**
+
+Una sola línea continua que se enrolla sobre sí misma, construida con
+geometría (círculos y tangentes), no dibujada a mano. Una idea, un trazo, un
+color.
+
+**Se descartó:** la nube como sección técnica con curvas de nivel. Motivo: a
+16 px se convierte en una mancha, y el símbolo tiene que sobrevivir al favicon.
+
+**Criterio de construcción:** si la onda se puede confundir con el logo de otra
+empresa, está mal construida. La precisión geométrica es lo que la hace
+propia, no la curva en sí.
+
+### A.7 Tipografía `[x]`
+
+**Cerrado (decisión de Rodrigo, 2026-09-13): Geist y Geist Mono.**
+
+| Rol | Familia | Grosores | De dónde se carga |
+| --- | --- | --- | --- |
+| Titulares y wordmark | Geist | 400 y 800 | Autohospedada, `woff2` variable con subset latino |
+| Texto | Geist | 400 | La misma variable |
+| Datos, métricas y código | Geist Mono | 400 | Autohospedada, subset latino |
+
+**Se descartó:** Archivo (correcta pero anónima, no carga identidad) e IBM Plex
+(recomendada por el asesor, rechazada por el equipo).
+
+**Riesgo asumido, declarado una vez y registrado:** Geist es la tipografía de
+Vercel y del ecosistema Next. Un visitante técnico, que es parte del público
+objetivo, puede leerla como "plantilla por defecto".
+
+**Mitigación obligatoria, porque la diferenciación ya no puede venir de la
+familia sino del uso:**
+
+1. Solo dos grosores, 400 y 800. Nada de 500 ni 600, que es el ajuste por
+   defecto de las plantillas.
+2. Titulares grandes con `letter-spacing` negativo marcado, alrededor de
+   `-0.03em`. El tracking por defecto es lo que hace que Geist parezca
+   plantilla.
+3. El wordmark `VOLUTUS` va en mayúsculas con tracking **positivo** amplio,
+   lo contrario de los titulares. Ese contraste es lo que lo vuelve una marca
+   y no un texto.
+4. Geist Mono se reserva para números y datos reales. Nunca como decoración.
