@@ -1,0 +1,62 @@
+.legal {
+  background: var(--fondo);
+  color: var(--texto);
+  padding-block: var(--e-12) var(--e-24);
+}
+
+/* Ancho de lectura, no el del sitio. Son párrafos largos que se leen seguidos y
+   la medida cómoda está muy por debajo del contenedor de 1200 px. */
+.legal-interior {
+  max-width: 44rem;
+}
+
+.legal-cabecera {
+  padding-bottom: var(--e-8);
+  border-bottom: 1px solid var(--linea);
+}
+
+/* El h1 de un documento legal no es el titular de una portada: aquí manda la
+   legibilidad, no el impacto, así que no usa el paso fluido de la portada. */
+.legal-cabecera h1 {
+  font-size: var(--texto-xl);
+}
+
+.legal-entradilla {
+  margin-top: var(--e-4);
+}
+
+.legal-fecha {
+  margin-top: var(--e-6);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.legal-apartado {
+  margin-top: var(--e-12);
+}
+
+.legal-apartado h2 {
+  font-size: var(--texto-lg);
+  margin-bottom: var(--e-4);
+}
+
+.legal-apartado p {
+  color: var(--texto-suave);
+  margin-bottom: var(--e-4);
+}
+
+.legal-apartado p:last-child {
+  margin-bottom: 0;
+}
+
+/* En el cuerpo legal lo destacado es texto en negrita, no color: el color ya
+   está gastado en los enlaces, y en un documento que se lee entero un segundo
+   acento compite con ellos. */
+.legal-apartado strong {
+  font-weight: 800;
+  color: var(--texto);
+}
+
+.legal-apartado .lista {
+  margin-bottom: var(--e-4);
+}

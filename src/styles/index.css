@@ -40,13 +40,19 @@
   --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
-     esta tabla es un tamaño que nadie decidió. */
-  --texto-xs: 13px;
-  --texto-sm: 15px;
-  --texto-base: 17px;
-  --texto-lg: 22px;
-  --texto-xl: 34px;
-  --texto-2xl: clamp(48px, 7vw, 76px);
+     esta tabla es un tamaño que nadie decidió.
+
+     Cada paso se multiplica por --escala, que el widget de accesibilidad mueve
+     entre 1 y 1.5. Va aquí y no en cada componente porque así agrandar el texto
+     es UNA variable: los seis pasos crecen juntos y la jerarquía se mantiene.
+     El valor por defecto lo declara el propio widget sobre <html>, y el
+     fallback de cada calc() cubre el caso de que el widget no esté montado. */
+  --texto-xs: calc(13px * var(--escala, 1));
+  --texto-sm: calc(15px * var(--escala, 1));
+  --texto-base: calc(17px * var(--escala, 1));
+  --texto-lg: calc(22px * var(--escala, 1));
+  --texto-xl: calc(34px * var(--escala, 1));
+  --texto-2xl: calc(clamp(48px, 7vw, 76px) * var(--escala, 1));
 
   /* Escala de espaciado, múltiplos de 4 (§6). */
   --e-1: 4px;
@@ -71,8 +77,18 @@
 }
 
 /* ============ Tema cielo: la página promete ============
-   Portada, bloque de qué/cómo, formulario y pie. */
-.zona-cielo {
+   Portada, bloque de qué/cómo, formulario y pie.
+
+   El segundo selector es la puerta del widget de accesibilidad: con el tema
+   forzado a claro, las zonas de plano pasan a pintarse con estos mismos
+   valores. No se duplica ni un token — se amplía a quién aplican.
+
+   La especificidad hace el resto: `:root[data-tema] .zona-x` (0,2,1) gana a
+   `.zona-x` (0,1,0), así que la preferencia de la persona manda sobre lo que
+   la sección declara de sí misma. Sin el atributo, la página se ve exactamente
+   como la diseñó el brief. */
+.zona-cielo,
+:root[data-tema='claro'] .zona-plano {
   --fondo: #f6f9fc;
   --superficie: #ffffff;
   --texto: #0a1a2a;
@@ -95,8 +111,12 @@
 
 /* ============ Tema plano: la página demuestra ============
    Índice de proyectos y métricas. Sobre este fondo la marca sí llega a 6.71:1,
-   así que aquí es el color de acción y no hace falta el azul oscurecido. */
-.zona-plano {
+   así que aquí es el color de acción y no hace falta el azul oscurecido.
+
+   Igual que arriba: con el tema forzado a oscuro, las zonas de cielo se pintan
+   con estos valores y la página entera queda en plano. */
+.zona-plano,
+:root[data-tema='oscuro'] .zona-cielo {
   --fondo: #0a1a2a;
   --superficie: #122638;
   --texto: #e6eef6;
@@ -128,8 +148,29 @@ html {
   /* La barra mide 64 px; el ancla no debe quedar debajo de ella. */
   scroll-padding-top: 80px;
   /* El fondo del documento es el de la portada: lo que se ve al rebotar el
-     scroll arriba del todo, y detrás de la barra translúcida. */
+     scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
+     no en token porque <html> está por encima de cualquier zona y no hereda
+     ninguna; con el tema oscuro forzado se cambia abajo. */
   background: #f6f9fc;
+}
+
+:root[data-tema='oscuro'] {
+  background: #0a1a2a;
+}
+
+/* Movimiento reducido por preferencia explícita, no solo del sistema. Quien
+   marca esto en el widget suele ser alguien a quien el movimiento le produce
+   mareo, y no siempre lo tiene configurado en el sistema operativo. */
+:root[data-movimiento='reducido'] {
+  scroll-behavior: auto;
+}
+
+:root[data-movimiento='reducido'] *,
+:root[data-movimiento='reducido'] *::before,
+:root[data-movimiento='reducido'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
 
 body {

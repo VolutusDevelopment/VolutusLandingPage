@@ -1,10 +1,10 @@
-import Barra from './components/Barra.jsx'
-import Portada from './components/Portada.jsx'
-import Proyectos from './components/Proyectos.jsx'
-import Metricas from './components/Metricas.jsx'
-import Proceso from './components/Proceso.jsx'
-import Contacto from './components/Contacto.jsx'
-import Pie from './components/Pie.jsx'
+import Barra from '../components/Barra.jsx'
+import Portada from '../components/Portada.jsx'
+import Proyectos from '../components/Proyectos.jsx'
+import Metricas from '../components/Metricas.jsx'
+import Proceso from '../components/Proceso.jsx'
+import Contacto from '../components/Contacto.jsx'
+import Pie from '../components/Pie.jsx'
 
 /**
  * La página, en el orden que fija DESIGN-BRIEF §4.
@@ -22,7 +22,7 @@ import Pie from './components/Pie.jsx'
  * y no viaja al navegador: lo que llega es el HTML ya pintado más el JavaScript
  * de `client.js`.
  */
-export default function App() {
+export default function Inicio() {
   return (
     <>
       <a className="salto" href="#contenido">

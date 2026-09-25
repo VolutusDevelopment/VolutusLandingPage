@@ -9,6 +9,8 @@
 // funciona sin él: el <form> lleva method y action, así que sin JavaScript el
 // navegador envía y recarga. Esto solo valida antes y evita la recarga.
 
+import { montarAccesibilidad } from './accesibilidad/widget.js'
+
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Los textos salen de §5 y dicen qué hacer, no qué falló.
@@ -112,4 +114,5 @@ function initFormulario() {
 
 export default function init() {
   initFormulario()
+  montarAccesibilidad()
 }

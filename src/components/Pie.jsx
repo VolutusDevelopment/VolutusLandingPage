@@ -20,6 +20,10 @@ export default function Pie() {
           <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
         </p>
 
+        <p className="pie-legal">
+          <a href="/privacidad">Privacidad y protección de datos</a>
+        </p>
+
         <p className="pie-legal">Volutus · Desarrollo de software · Chile</p>
       </div>
     </footer>

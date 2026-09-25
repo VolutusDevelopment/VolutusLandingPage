@@ -15,6 +15,7 @@ Contacto: contacto@volutus.cl — respuesta en menos de 48 horas hábiles.
 - [Métricas](https://volutus.cl/#metricas): lo que pesa esta página, medido
 - [Cómo trabajamos](https://volutus.cl/#proceso): los cuatro pasos y qué pone el cliente
 - [Contacto](https://volutus.cl/#contacto): el formulario
+- [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 
 ## Proyectos
 
