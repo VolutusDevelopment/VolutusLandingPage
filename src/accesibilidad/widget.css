@@ -18,6 +18,15 @@
   font-family: var(--fuente-texto, system-ui, -apple-system, sans-serif);
   font-size: 15px;
   line-height: 1.5;
+  /* Flota sobre la página, así que no debe robar el toque a lo que hay
+     debajo: solo el botón y el panel reciben puntero, el resto del área lo
+     deja pasar. Sin esto, el rectángulo invisible del contenedor tapaba
+     enlaces reales del contenido. */
+  pointer-events: none;
+}
+
+.a11y > * {
+  pointer-events: auto;
 }
 
 .a11y-solo-lectores {

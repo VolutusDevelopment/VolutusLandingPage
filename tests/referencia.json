@@ -1,0 +1,82 @@
+{
+  "rutas": {
+    "/": {
+      "movil": {
+        "alto": 6510,
+        "desborda": false,
+        "h1": 172.75,
+        "bloquesQueEntran": 22,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 5609,
+        "desborda": false,
+        "h1": 116.125,
+        "bloquesQueEntran": 22,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "escritorio": {
+        "alto": 4340,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 22,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "oscuro": {
+        "alto": 4340,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 22,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/privacidad": {
+      "movil": {
+        "alto": 6257,
+        "desborda": false,
+        "h1": 73.4375,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 4140,
+        "desborda": false,
+        "h1": 36.71875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "escritorio": {
+        "alto": 4092,
+        "desborda": false,
+        "h1": 36.71875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "oscuro": {
+        "alto": 4092,
+        "desborda": false,
+        "h1": 36.71875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    }
+  },
+  "foco": {
+    "/": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/privacidad": {
+      "paradas": 9,
+      "sinAnillo": 0
+    }
+  }
+}

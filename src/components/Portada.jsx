@@ -31,10 +31,15 @@ export default function Portada() {
         <div className="portada-texto">
           <h1>Construimos software que puedes abrir y revisar.</h1>
 
+          {/* Tres líneas, no siete. Medido con Playwright: la versión anterior
+              ocupaba 223 px y, con el titular, se comía el 51 % de la pantalla
+              de un móvil de 390 px — el doble de lo que gastan Linear, Resend
+              o Railway. Lo que se fue no fue información: era la misma promesa
+              dicha con más palabras. El plazo de respuesta se queda porque es
+              un compromiso concreto; el resto lo cuenta la página. */}
           <p className="entradilla portada-entradilla">
-            Un producto en línea y un agente de IA premiado en una hackathon, cada uno con su
-            enlace o su código a la vista. Cuéntanos qué necesitas y te respondemos en menos de 48
-            horas hábiles.
+            Obra abierta, con su enlace o su código a la vista. Cuéntanos qué necesitas y te
+            respondemos en menos de 48 horas hábiles.
           </p>
 
           <div className="portada-acciones">
@@ -46,19 +51,21 @@ export default function Portada() {
             </a>
           </div>
 
-          {/* La única credencial que validó un tercero, y estaba enterrada a
-              media página. Sube aquí porque quien llega a comprobar con quién
-              trata necesita verla antes de decidir si sigue bajando: una prueba
-              que nadie ve no prueba nada.
+          {/* La única credencial que validó un tercero. Va DEBAJO de los
+              botones y no encima: no compite con la acción principal, la
+              respalda.
 
-              Va DEBAJO de los botones y no encima: no compite con la acción
-              principal, la respalda. */}
+              Una línea, no un párrafo. Railway resuelve la confianza con una
+              rejilla de logos que se lee de un vistazo; nosotros no tenemos
+              logos que poner, pero sí podemos dejar de contarlo en prosa. Lo
+              que se fue —«con jurado externo»— no se pierde: está en la ficha
+              del proyecto, y aquí lo que importa es que se lea sin detenerse. */}
           <p className="portada-credencial">
             <span className="portada-credencial-marca dato" aria-hidden="true">
               2.º
             </span>
             <span>
-              Segundo lugar en una hackathon de IA agéntica, con jurado externo.{' '}
+              Hackathon de IA agéntica.{' '}
               <a href="https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS" rel="noopener">
                 Ver el código
               </a>

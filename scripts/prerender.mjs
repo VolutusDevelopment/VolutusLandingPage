@@ -22,7 +22,7 @@ const { render, PAGINAS } = await import(new URL('../.prerender/entry-server.js'
 const ORIGEN = 'https://volutus.cl'
 const IMAGEN = `${ORIGEN}/image/og-volutus.jpg`
 const ALT_IMAGEN =
-  'Una nube volutus extendida sobre el horizonte al atardecer, con un avión cruzándola de lado.'
+  'Tarjeta de Volutus sobre una nube volutus al atardecer: el titular «Construimos software que puedes abrir y revisar».'
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -78,8 +78,8 @@ function cabecera(ruta, { titulo, descripcion }) {
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:locale" content="es_CL" />`,
     `<meta property="og:image" content="${IMAGEN}" />`,
-    `<meta property="og:image:width" content="1000" />`,
-    `<meta property="og:image:height" content="524" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
     `<meta property="og:image:alt" content="${atributo(ALT_IMAGEN)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${t}" />`,

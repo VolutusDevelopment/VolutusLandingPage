@@ -34,9 +34,43 @@
   src: url('/fonts/geist-mono-latin.woff2') format('woff2');
 }
 
+/**
+ * Respaldo con métricas calzadas a Geist.
+ *
+ * `font-display: swap` pinta el texto de inmediato con la fuente del sistema y
+ * lo cambia cuando llega Geist. Eso evita el texto invisible, pero produce el
+ * otro defecto: al cambiar, las líneas se recolocan porque Arial no mide lo
+ * mismo. El CLS que mide Lighthouse sale 0 —el salto ocurre dentro de bloques
+ * que ya tenían su alto— pero se VE, y es el último movimiento de la página
+ * que nadie pidió.
+ *
+ * Esta cara no descarga nada: toma la Arial local y la deforma para que ocupe
+ * exactamente lo que ocupará Geist. Mientras la real viaja, el texto ya está
+ * en su sitio definitivo.
+ *
+ * Los números están medidos, no copiados. Con el mismo párrafo a 100 px, Geist
+ * mide 4572 px y Arial 4419: de ahí el 103.47 %. Las otras tres salen de las
+ * métricas del propio archivo —ascenso 920, descenso 220, interlínea 100 sobre
+ * 1000 de em— divididas por ese mismo factor, porque se aplican DESPUÉS del
+ * ajuste de tamaño.
+ *
+ * Se ancla a Arial y no a `system-ui` a propósito: Arial existe en todas las
+ * plataformas, así que el cálculo vale igual en Windows, Mac y Android.
+ */
+@font-face {
+  font-family: 'Geist respaldo';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 103.47%;
+  ascent-override: 88.92%;
+  descent-override: 21.26%;
+  line-gap-override: 9.66%;
+}
+
 /* ============ Tokens que no dependen del tema ============ */
 :root {
-  --fuente-texto: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* El respaldo calzado va SEGUNDO, antes que las fuentes del sistema: es el
+     que se usa durante el viaje de Geist, y el único que mide igual que ella. */
+  --fuente-texto: 'Geist', 'Geist respaldo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
@@ -52,7 +86,12 @@
   --texto-base: calc(17px * var(--escala, 1));
   --texto-lg: calc(22px * var(--escala, 1));
   --texto-xl: calc(34px * var(--escala, 1));
-  --texto-2xl: calc(clamp(48px, 7vw, 76px) * var(--escala, 1));
+  /* El mínimo baja de 48 a 40 px. Medido contra diez landings de referencia en
+     un móvil de 390: Linear usa 38, Raycast 36, Clerk 32, Cal 40 — éramos el
+     más grande y el que más líneas gastaba, cuatro. A 40 px el titular entra
+     en tres y devuelve una línea entera de pantalla. En escritorio no cambia
+     nada: ahí manda el 7vw y el techo de 76. */
+  --texto-2xl: calc(clamp(40px, 7vw, 76px) * var(--escala, 1));
 
   /* Escala de espaciado, múltiplos de 4 (§6). */
   --e-1: 4px;
@@ -68,6 +107,25 @@
   --ancho-maximo: 1200px;
   --margen-lateral: 24px;
   --medida-lectura: 68ch;
+
+  /* Valores de respaldo para lo que vive FUERA de toda zona.
+   *
+   * Los colores los definen `.zona-cielo` y `.zona-plano`, pero hay dos cosas
+   * que no están dentro de ninguna sección: el enlace de salto —que es el
+   * primer elemento enfocable de la página— y el panel de accesibilidad, que
+   * el JavaScript cuelga del `<body>`.
+   *
+   * Sin esto, `var(--foco)` no resuelve, la declaración entera se invalida y
+   * el contorno desaparece: los dos elementos perdían el anillo por completo.
+   * Lo destapó recorrer la página con el tabulador midiendo el contraste en
+   * cada parada, no la vista. */
+  --foco: #116492;
+  --accion: #116492;
+  --sobre-accion: #ffffff;
+  --linea: #d6e2ec;
+  --superficie: #ffffff;
+  --texto: #0a1a2a;
+  --texto-suave: #47607a;
 
   /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
