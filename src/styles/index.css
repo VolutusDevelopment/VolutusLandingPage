@@ -73,7 +73,23 @@
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
-  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
+     `ease-out` a secas apenas se distingue de lineal.
+
+     La regla de cuándo usar cada una es mecánica y no de gusto: algo que
+     ENTRA o SALE va en ease-out, porque arranca rápido y por eso se siente
+     responsivo; algo que se MUEVE de un punto a otro ya en pantalla va en
+     ease-in-out. `ease-in` no se usa nunca en interfaz — empieza lento y
+     retrasa justo el instante que la persona está mirando. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Presupuesto de duración. La interfaz se queda por debajo de 300 ms: un
+     desplegable de 180 ms se siente más rápido que uno de 400. Lo que puede
+     durar más es lo narrativo, que se ve una vez. */
+  --t-pulsar: 160ms;
+  --t-panel: 180ms;
+  --t-entrada: 500ms;
 }
 
 /* ============ Tema cielo: la página promete ============
@@ -89,6 +105,13 @@
    como la diseñó el brief. */
 .zona-cielo,
 :root[data-tema='claro'] .zona-plano {
+  /* Le dice al navegador de qué color es esta zona, y con eso pinta acorde lo
+     que nosotros no controlamos: el interior de los `select`, las barras de
+     desplazamiento y el relleno automático del formulario. Sin esto, en la
+     zona de plano el autocompletado del navegador pinta un fondo claro con
+     texto claro encima. */
+  color-scheme: light;
+
   --fondo: #f6f9fc;
   --superficie: #ffffff;
   --texto: #0a1a2a;
@@ -117,6 +140,8 @@
    con estos valores y la página entera queda en plano. */
 .zona-plano,
 :root[data-tema='oscuro'] .zona-cielo {
+  color-scheme: dark;
+
   --fondo: #0a1a2a;
   --superficie: #122638;
   --texto: #e6eef6;
@@ -158,19 +183,23 @@ html {
   background: #0a1a2a;
 }
 
-/* Movimiento reducido por preferencia explícita, no solo del sistema. Quien
-   marca esto en el widget suele ser alguien a quien el movimiento le produce
-   mareo, y no siempre lo tiene configurado en el sistema operativo. */
+/* La otra vía: quien lo pide en el panel de esta página. Hace exactamente lo
+   mismo que el bloque de `prefers-reduced-motion` de más abajo — quita el
+   desplazamiento y deja los cambios de color. */
 :root[data-movimiento='reducido'] {
   scroll-behavior: auto;
 }
 
-:root[data-movimiento='reducido'] *,
-:root[data-movimiento='reducido'] *::before,
-:root[data-movimiento='reducido'] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+:root[data-movimiento='reducido'] .entra {
+  animation: none;
+}
+
+:root[data-movimiento='reducido'] .boton:active {
+  transform: none;
+}
+
+:root[data-movimiento='reducido'] .salto {
+  transition: none;
 }
 
 body {
@@ -214,6 +243,20 @@ p {
   max-width: var(--medida-lectura);
 }
 
+/* Toda superficie pulsable. `manipulation` le dice al navegador móvil que aquí
+   no hay doble toque para hacer zoom, y con eso deja de esperar 300 ms antes de
+   responder. El destello gris de Android se quita porque el foco y el estado
+   activo ya comunican lo mismo, y mejor. */
+a,
+button,
+label,
+input,
+textarea,
+summary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 a {
   color: var(--accion);
   text-decoration-thickness: 1px;
@@ -239,18 +282,102 @@ svg {
 }
 
 /* ============ Movimiento ============
-   Cada animación justifica su presencia o no entra (§8), y todas se apagan. */
+ *
+ * Cada animación justifica su presencia o no entra (§8). Las que hay pasaron
+ * las cuatro preguntas: con qué frecuencia se ve, para qué anima, si cabe en
+ * presupuesto y si ayuda o estorba. Lo que no las pasó está anotado abajo.
+ *
+ * Solo se animan `transform` y `opacity`: son las dos únicas propiedades que
+ * no fuerzan recálculo de layout ni repintado.
+ */
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    /* 12 px, no 40. El movimiento tiene que insinuar de dónde viene el bloque,
+       no hacerlo viajar: un desplazamiento largo obliga a esperar a que el
+       texto se quede quieto para poder leerlo. */
+    transform: translateY(12px);
+  }
+}
+
+/**
+ * Entrada de bloque al desplazar.
+ *
+ * Va con `animation-timeline: view()`, que ata el avance de la animación a la
+ * posición del elemento en la pantalla en vez de a un reloj. Tres consecuencias
+ * que son la razón de elegirlo:
+ *
+ *   1. **Cero JavaScript.** Sin IntersectionObserver, sin listeners de scroll y
+ *      sin nada que el presupuesto de 15 KB de §8 tenga que pagar.
+ *   2. **Reversible.** Si la persona sube, el bloque se deshace por el mismo
+ *      camino. Un observador dispara una vez y no sabe volver.
+ *   3. **Va con el dedo.** El avance lo manda el scroll, así que nunca hay un
+ *      bloque a medio aparecer esperando a que termine un temporizador.
+ *
+ * El `@supports` es lo que lo hace seguro: en un navegador que no lo implementa
+ * la regla entera no existe y el contenido se ve, sin más. Nunca hay texto
+ * escondido esperando a un JavaScript que quizá no llegue — que es el modo de
+ * fallar clásico de las apariciones al hacer scroll.
+ */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .entra {
+      animation: entrar var(--t-entrada) var(--ease-out) both;
+      animation-timeline: view();
+      /* El rango se cierra DENTRO de `entry`, no en `cover`, y esa diferencia
+         es lo que decide si la página se rompe o no.
+
+         Con un rango que terminaba en `cover 28%`, un bloque tenía que estar
+         casi centrado para llegar a opacidad 1. Bastaba pulsar «Cómo
+         trabajamos» en el menú para saltar al ancla y encontrarse el texto
+         todavía invisible: el salto deja la sección arriba, no centrada.
+
+         Cerrando en `entry 60%` el bloque está completo en cuanto asoma un
+         poco más de la mitad. Se sigue notando la entrada y ya no hay forma de
+         llegar a un bloque que no se haya resuelto. */
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+/* Al imprimir no hay scroll, así que una animación atada al scroll se queda en
+   su primer fotograma: opacidad 0. Sin esto, imprimir la página o guardarla
+   como PDF produce hojas en blanco. */
+@media print {
+  .entra {
+    animation: none;
+  }
+}
+
+/* Los elementos de un grupo no llevan retardos escalonados: cada uno tiene su
+   propia línea de tiempo y entra según DÓNDE está, así que el escalonado sale
+   solo de la geometría y siempre coincide con la velocidad del scroll. */
+
+/* ============ Movimiento reducido ============
+ *
+ * Reducir no es apagar. Lo que se va es el DESPLAZAMIENTO —lo que produce
+ * mareo— y lo que se queda son los cambios de color y opacidad, que ayudan a
+ * entender qué está pasando y no mueven nada.
+ *
+ * Se atiende por dos vías porque son dos personas distintas: quien lo tiene
+ * configurado en su sistema operativo, y quien lo pide en el panel de esta
+ * página sin tenerlo configurado en ningún sitio. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .entra {
+    animation: none;
+  }
+
+  .boton:active {
+    transform: none;
+  }
+
+  .salto {
+    transition: none;
   }
 }
 
@@ -275,6 +402,19 @@ svg {
   .seccion {
     padding-block: var(--e-24);
   }
+}
+
+/* Dos secciones seguidas del mismo tema suman sus dos rellenos: 192 px de aire
+   entre el último proyecto y el título de las métricas, sin corte de color que
+   lo justifique. El espacio grande se gana la separación cuando MARCA algo; si
+   no marca nada, solo obliga a desplazar.
+
+   Se colapsa el de arriba y se conserva el de abajo, así que la distancia
+   entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
+   siendo los momentos que más respiran de la página. */
+.zona-plano + .zona-plano,
+.zona-cielo + .zona-cielo:not(.corte-de-zona) {
+  padding-top: 0;
 }
 
 /* El corte entre temas es una LÍNEA, no un degradado (A.3, regla 1). Va en el
@@ -322,7 +462,7 @@ svg {
 .salto {
   position: absolute;
   left: var(--e-4);
-  top: -100px;
+  top: var(--e-4);
   z-index: 100;
   padding: var(--e-3) var(--e-4);
   border-radius: var(--radio);
@@ -330,11 +470,16 @@ svg {
   color: var(--sobre-accion);
   font-size: var(--texto-sm);
   text-decoration: none;
-  transition: top 120ms var(--curva);
+  /* Se esconde con `transform` y no moviendo `top`. Animar `top` obliga al
+     navegador a recalcular la posición en cada fotograma; `translate` va a la
+     GPU y no toca el layout. Es la misma regla que rige todo el archivo: aquí
+     solo se animan `transform` y `opacity`. */
+  transform: translateY(calc(-100% - var(--e-4) * 2));
+  transition: transform 140ms var(--ease-out);
 }
 
 .salto:focus {
-  top: var(--e-4);
+  transform: translateY(0);
   color: var(--sobre-accion);
 }
 
@@ -357,10 +502,30 @@ svg {
   font-weight: 400;
   text-decoration: none;
   cursor: pointer;
+  /* Quita el retardo de 300 ms que el navegador móvil espera por si el toque
+     era un doble toque para hacer zoom. Sin esto, el botón principal de la
+     portada responde tarde en el caso de uso que más importa: alguien que
+     abrió el enlace desde WhatsApp. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
-    background-color 140ms var(--curva),
-    border-color 140ms var(--curva),
-    color 140ms var(--curva);
+    background-color 140ms var(--ease-out),
+    border-color 140ms var(--ease-out),
+    color 140ms var(--ease-out),
+    transform var(--t-pulsar) var(--ease-out);
+}
+
+/* Respuesta al pulsar. Es la única animación de esta página que no se elige:
+   confirma que la interfaz oyó el toque, y su ausencia se nota más que su
+   presencia. 0.97 y no menos — `scale` afecta también al texto de dentro, así
+   que pasado cierto punto deja de leerse como un botón que se hunde y empieza
+   a leerse como uno que encoge. */
+.boton:active {
+  transform: scale(0.97);
+}
+
+.boton:disabled:active {
+  transform: none;
 }
 
 .boton-primario {

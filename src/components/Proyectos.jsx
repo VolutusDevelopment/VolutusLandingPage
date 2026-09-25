@@ -45,14 +45,14 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-plano corte-de-zona proyectos">
       <div className="contenedor">
-        <p className="antetitulo">Obra abierta</p>
-        <h2>Tres cosas que puedes abrir ahora mismo.</h2>
-        <p className="entradilla proyectos-entradilla">
+        <p className="antetitulo entra">Obra abierta</p>
+        <h2 className="entra">Tres cosas que puedes abrir ahora mismo.</h2>
+        <p className="entradilla proyectos-entradilla entra">
           No hay logos de clientes ni testimonios, porque todavía no hay clientes. Hay obra, y se
           revisa.
         </p>
 
-        <article className="tarjeta proyecto proyecto-destacado">
+        <article className="tarjeta proyecto proyecto-destacado entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que
               validó un tercero, y es el motivo de que este proyecto encabece. */}
           <p className="proyecto-credencial dato">{destacado.credencial}</p>
@@ -63,13 +63,28 @@ export default function Proyectos() {
 
         <div className="proyectos-resto">
           {resto.map((proyecto) => (
-            <article key={proyecto.id} className="tarjeta proyecto">
+            <article key={proyecto.id} className="tarjeta proyecto entra">
               <h3>{proyecto.nombre}</h3>
               <p className="proyecto-resumen">{proyecto.resumen}</p>
 
-              <div className="proyecto-hueco" role="img" aria-label={`Captura de ${proyecto.nombre}, pendiente`}>
-                <span className="dato">Captura en camino</span>
-              </div>
+              {/* La captura solo aparece si existe. Un marcador «en camino»
+                  ocupando el elemento más grande de la tarjeta resta en vez de
+                  sumar: la sección se llama «obra abierta» y un recuadro vacío
+                  es lo contrario de enseñar obra. Un proyecto sin captura se
+                  sostiene con su texto y su enlace, que es lo que exige §4. */}
+              {proyecto.captura && (
+                <img
+                  className="proyecto-captura"
+                  src={proyecto.captura.src}
+                  srcSet={proyecto.captura.srcSet}
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  width={proyecto.captura.ancho}
+                  height={proyecto.captura.alto}
+                  alt={proyecto.captura.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
 
               <Enlaces {...proyecto} />
             </article>

@@ -45,20 +45,15 @@
   font-size: var(--texto-sm);
 }
 
-/* Hueco de captura: proporción fija, así que la imagen real entra sin mover
-   nada. Marcador sobrio, nunca una imagen de relleno. */
-.proyecto-hueco {
+/* Captura de producto. `width` y `height` van en el HTML, así que el hueco
+   está reservado antes de que la imagen llegue y el CLS es 0. El borde la ata
+   al sistema y evita que flote, que es lo que haría una sombra. */
+.proyecto-captura {
   margin-top: var(--e-6);
-  aspect-ratio: 16 / 10;
-  border: 1px dashed var(--linea);
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--linea);
   border-radius: var(--radio);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--texto-suave);
-  font-size: var(--texto-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 @media (min-width: 1024px) {
@@ -66,6 +61,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--e-6);
+    /* Cada tarjeta mide lo que ocupa su contenido. Sin esto la rejilla iguala
+       las alturas y la que no lleva captura se estira con un vacío debajo del
+       enlace — justo el hueco vacío que acabamos de quitar, reaparecido por
+       otra vía. */
+    align-items: start;
   }
 
   .proyectos-resto .proyecto {

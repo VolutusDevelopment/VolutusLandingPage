@@ -86,9 +86,18 @@ function initFormulario() {
 
     // Regla 4 de §7: el botón no desaparece. Cambia el texto y se desactiva
     // conservando su ancho, que lo reserva el CSS.
+    //
+    // Desactivar es inmediato —es lo que impide un segundo envío—, pero el
+    // TEXTO espera 150 ms. Sin esa espera, una respuesta rápida hace que
+    // «Enviando…» aparezca y desaparezca en menos de lo que dura un parpadeo,
+    // y eso no se lee como «está trabajando»: se lee como un defecto. Si la
+    // respuesta llega antes, la persona no ve ningún estado intermedio, que es
+    // exactamente lo correcto cuando algo fue instantáneo.
     boton.disabled = true
-    boton.textContent = 'Enviando…'
     aviso.hidden = true
+    const avisarQueEnvia = setTimeout(() => {
+      boton.textContent = 'Enviando…'
+    }, 150)
 
     try {
       const respuesta = await fetch(form.action, {
@@ -105,6 +114,7 @@ function initFormulario() {
       aviso.textContent = MENSAJES.fallo
       aviso.dataset.estado = 'error'
     } finally {
+      clearTimeout(avisarQueEnvia)
       aviso.hidden = false
       boton.disabled = false
       boton.textContent = 'Enviar mensaje'

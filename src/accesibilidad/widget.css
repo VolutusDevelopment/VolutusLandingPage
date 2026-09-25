@@ -46,6 +46,8 @@
   background: var(--superficie, #ffffff);
   color: var(--accion, #116492);
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .a11y-boton:hover {
@@ -60,6 +62,41 @@
   border-radius: var(--radio, 4px);
   background: var(--superficie, #ffffff);
   color: var(--texto, #0a1a2a);
+
+  /* Crece DESDE el botón, no desde su propio centro: el origen está en la
+     esquina inferior derecha, que es justo donde está el disparador. Eso es lo
+     que hace que el panel se lea como algo que salió de ahí y no como algo que
+     apareció encima.
+
+     Nunca desde `scale(0)`: nada en el mundo real aparece de la nada. Desde
+     0.96 el panel se lee como que venía y llegó. */
+  transition:
+    opacity var(--t-panel, 180ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)),
+    transform var(--t-panel, 180ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+  transform-origin: bottom right;
+
+  /* `@starting-style` da la entrada sin una línea de JavaScript ni clases que
+     poner y quitar: el navegador la usa como estado de partida la primera vez
+     que el elemento se pinta, que es exactamente cuando se le quita `hidden`.
+     Un navegador que no lo implemente lo ignora y el panel abre al instante,
+     que es un final perfectamente aceptable. */
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Al cerrar no hay animación de salida, y es deliberado: cerrar es una orden,
+   no una transición. Lo que la persona quiere al pulsar es que desaparezca. */
+
+:root[data-movimiento='reducido'] .a11y-panel {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a11y-panel {
+    transition: none;
+  }
 }
 
 /* El panel va ARRIBA del botón en el marcado para que el orden de tabulación
@@ -121,6 +158,8 @@
   font-size: 13px;
   text-align: center;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .a11y-opcion input:checked + span {

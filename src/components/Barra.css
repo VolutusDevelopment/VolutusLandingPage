@@ -25,6 +25,52 @@
   padding-block: var(--e-2);
 }
 
+/**
+ * La onda se dibuja sola al cargar.
+ *
+ * No es adorno: A.6 define el símbolo como «una sola línea continua que se
+ * enrolla sobre sí misma», y dibujarlo de una pasada es la única forma de
+ * enseñar eso. Quieto, la onda es una forma; trazándose, es lo que dice ser.
+ *
+ * Pasa la compuerta: se ve una vez por carga —frecuencia rara, que es donde
+ * cabe el presupuesto de deleite—, su propósito es explicativo, y al ser
+ * narrativo puede durar más que los 300 ms de la interfaz.
+ *
+ * 45 es la longitud del trazo: la recta de 9 más las dos semicircunferencias,
+ * π·7.5 + π·3.75 ≈ 35.3. Se redondea hacia arriba para que el guion cubra el
+ * recorrido entero sin dejar un resto visible al final.
+ *
+ * Solo se anima en la barra. El mismo lockup está en el pie, y allí se queda
+ * quieto: repetir el gesto en la misma visita lo convertiría en un tic.
+ *
+ * La curva es `ease-out` y no `ease-in-out`: el símbolo está ENTRANDO, y la
+ * regla para lo que entra es arrancar rápido. Además cuenta mejor la historia
+ * de la marca — un trazo que sale decidido y se asienta se lee como una sola
+ * pasada segura, no como una mano que duda antes de empezar.
+ *
+ * Excepción consciente a la regla de animar solo `transform` y `opacity`: no
+ * existe equivalente en transform para dibujar una línea. `stroke-dashoffset`
+ * repinta pero no recalcula layout, es un único trazo de 26 px y ocurre una
+ * vez. Medido con Lighthouse: bloqueo total de 0 ms.
+ */
+@keyframes trazar-onda {
+  from {
+    stroke-dashoffset: 45;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .barra-marca svg path {
+    stroke-dasharray: 45;
+    animation: trazar-onda 900ms var(--ease-out) both;
+  }
+}
+
+:root[data-movimiento='reducido'] .barra-marca svg path {
+  animation: none;
+  stroke-dasharray: none;
+}
+
 .barra-enlaces {
   display: flex;
   align-items: center;
@@ -47,14 +93,27 @@
   color: var(--accion);
 }
 
-/* En S los dos enlaces caben, pero compiten con el lockup. Se recorta el
-   tracking de la palabra antes que esconder la navegación. */
-@media (max-width: 400px) {
+/* En S no caben el lockup completo y dos enlaces: a 360 px «Cómo trabajamos»
+   partía en dos líneas y apretaba la marca contra el borde.
+
+   Lo que se retira es la palabra, no la navegación, y no es un apaño: A.5
+   define la versión de «símbolo solo» justamente para los espacios donde el
+   lockup no cabe. La marca sigue estando —la onda es reconocible— y los dos
+   enlaces recuperan el ancho que necesitan para ir en una línea.
+
+   El nombre no se pierde para quien usa lector de pantalla: el enlace conserva
+   su `aria-label`. */
+@media (max-width: 479px) {
+  .barra-marca [translate='no'] {
+    display: none;
+  }
+
   .barra-enlaces {
     gap: var(--e-4);
   }
 
   .barra-enlaces a {
-    font-size: var(--texto-xs);
+    font-size: var(--texto-sm);
+    white-space: nowrap;
   }
 }

@@ -96,6 +96,19 @@ export function aplicar({ escala, tema, movimiento }) {
 
   if (movimiento === 'normal') raiz.removeAttribute('data-movimiento')
   else raiz.setAttribute('data-movimiento', movimiento)
+
+  // La barra del navegador en móvil se pinta con `theme-color`, y si se queda
+  // en el color claro mientras la página está en oscuro, queda una franja
+  // blanca arriba que delata que el tema es un parche. El único valor que el
+  // widget conoce del proyecto, y por eso se lee del CSS en vez de escribirlo
+  // aquí: lo que responda `--fondo` es el fondo de verdad.
+  const etiqueta = document.querySelector('meta[name="theme-color"]')
+  if (!etiqueta) return
+
+  // Se lee de <html> y no de <body>: el fondo de las zonas vive en las
+  // secciones, y arriba del todo solo <html> sabe de qué color es la página.
+  const fondo = getComputedStyle(raiz).backgroundColor
+  if (fondo) etiqueta.setAttribute('content', fondo)
 }
 
 function grupo(nombre, leyenda, opciones, seleccionado) {
@@ -123,8 +136,14 @@ export function montarAccesibilidad() {
   const preferencias = leer()
   aplicar(preferencias)
 
-  const raiz = document.createElement('div')
+  // `<aside>` y no `<div>`: es una región complementaria, así que el navegador
+  // la expone como punto de referencia y quien usa lector de pantalla puede
+  // saltar directamente aquí en vez de tabular la página entera. Sin esto, axe
+  // marca su contenido como texto fuera de toda región — el único hallazgo de
+  // la auditoría, y en el widget de accesibilidad, que es donde peor queda.
+  const raiz = document.createElement('aside')
   raiz.className = 'a11y'
+  raiz.setAttribute('aria-label', 'Accesibilidad')
   raiz.innerHTML = `
     <button class="a11y-boton" type="button" aria-expanded="false" aria-controls="a11y-panel">
       <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"

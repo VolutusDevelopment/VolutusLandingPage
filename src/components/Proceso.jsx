@@ -65,16 +65,16 @@ export default function Proceso() {
   return (
     <section id="proceso" className="seccion zona-cielo corte-de-zona proceso">
       <div className="contenedor">
-        <p className="antetitulo">Cómo trabajamos</p>
-        <h2>En qué te estás metiendo, antes de escribirnos.</h2>
-        <p className="entradilla proceso-entradilla">
+        <p className="antetitulo entra">Cómo trabajamos</p>
+        <h2 className="entra">En qué te estás metiendo, antes de escribirnos.</h2>
+        <p className="entradilla proceso-entradilla entra">
           Cuatro pasos, y en cada uno está dicho qué pones tú. Es la pregunta que más incomoda y la
           que casi nadie contesta.
         </p>
 
         <ol className="pasos">
           {PASOS.map((paso, i) => (
-            <li key={paso.titulo} className="paso">
+            <li key={paso.titulo} className="paso entra">
               <span className="paso-numero dato" aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -89,7 +89,7 @@ export default function Proceso() {
           ))}
         </ol>
 
-        <div className="proceso-columnas">
+        <div className="proceso-columnas entra">
           <div>
             <h3>Qué construimos</h3>
             <ul className="lista">

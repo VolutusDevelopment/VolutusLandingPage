@@ -45,14 +45,39 @@ export default function Portada() {
               Ver proyectos
             </a>
           </div>
+
+          {/* La única credencial que validó un tercero, y estaba enterrada a
+              media página. Sube aquí porque quien llega a comprobar con quién
+              trata necesita verla antes de decidir si sigue bajando: una prueba
+              que nadie ve no prueba nada.
+
+              Va DEBAJO de los botones y no encima: no compite con la acción
+              principal, la respalda. */}
+          <p className="portada-credencial">
+            <span className="portada-credencial-marca dato" aria-hidden="true">
+              2.º
+            </span>
+            <span>
+              Segundo lugar en una hackathon de IA agéntica, con jurado externo.{' '}
+              <a href="https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS" rel="noopener">
+                Ver el código
+              </a>
+            </span>
+          </p>
         </div>
 
         <figure className="portada-figura">
+          {/* Recortada a la parte donde se lee el rollo de la nube. La versión
+              anterior arrastraba una franja oscura en el tercio derecho que a
+              tamaño pequeño no se leía como profundidad sino como un recorte
+              mal hecho. */}
           <img
-            src="/image/hero-volutus-1000.webp"
-            width="1000"
-            height="667"
-            alt="Una nube volutus extendida sobre el horizonte al atardecer, con un avión cruzándola de lado."
+            src="/image/nube-700.webp"
+            srcSet="/image/nube-420.webp 420w, /image/nube-700.webp 700w"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            width="700"
+            height="467"
+            alt="Una nube volutus vista de lado al atardecer: una banda de nubes enrollada sobre sí misma, con un avión cruzándola a lo lejos."
             fetchPriority="high"
             decoding="async"
           />

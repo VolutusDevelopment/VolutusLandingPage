@@ -32,8 +32,8 @@ export default function Contacto() {
     <section id="contacto" className="seccion zona-cielo contacto">
       <div className="contenedor contacto-interior">
         <div>
-          <p className="antetitulo">Cuéntanos</p>
-          <h2>Dinos qué necesitas.</h2>
+          <p className="antetitulo entra">Cuéntanos</p>
+          <h2 className="entra">Dinos qué necesitas.</h2>
           <p className="entradilla contacto-entradilla">
             Te respondemos en menos de 48 horas hábiles, con un rango de precio real y lo que haría
             falta para empezar. Si prefieres el correo directo, escríbenos a{' '}
@@ -52,7 +52,16 @@ export default function Contacto() {
 
           <div className="campo">
             <label htmlFor="correo">Tu correo</label>
-            <input id="correo" name="correo" type="email" autoComplete="email" required />
+            <input
+              id="correo"
+              name="correo"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              spellCheck="false"
+              autoCapitalize="off"
+              required
+            />
             <p className="campo-error" id="error-correo" hidden>
               Falta tu correo.
             </p>

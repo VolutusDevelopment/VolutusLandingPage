@@ -16,7 +16,8 @@
  *
  * - `VolutusDevelopment/PonleNota-WEB` es PRIVADO. Entra por su sitio, no por
  *   su código.
- * - `carflip.cl` responde 500. Entra por su repositorio, no por su sitio.
+ * - `carflip.cl` responde 500. Entra por su repositorio, no por su sitio, y
+ *   por eso no lleva captura: no hay página que fotografiar.
  * - El traspaso de repositorios a la organización (decisión 13 del registro)
  *   NO se ha hecho: CarFlip y el de la hackathon siguen en la cuenta personal.
  *
@@ -43,6 +44,16 @@ export const PROYECTOS = [
     resumen:
       'Plataforma NFC para negocios locales: el cliente toca con el móvil, valora en menos de un minuto y se lleva un cupón para volver.',
     sitio: 'https://ponlenota.cl',
+    // Captura real del producto en línea, tomada el 25-09-2026. El hueco solo
+    // existe cuando hay algo con qué llenarlo: un marcador vacío ocupando el
+    // elemento más grande de la sección resta en vez de sumar.
+    captura: {
+      src: '/image/ponlenota-1280.webp',
+      srcSet: '/image/ponlenota-760.webp 760w, /image/ponlenota-1280.webp 1280w',
+      ancho: 1280,
+      alto: 800,
+      alt: 'La portada de PonleNota: el titular «Opiniones privadas. Reseñas en Google» junto a una tarjeta con la valoración media de un café de ejemplo.',
+    },
   },
   {
     id: 'carflip',

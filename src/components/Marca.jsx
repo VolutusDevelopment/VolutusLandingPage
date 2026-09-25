@@ -66,7 +66,7 @@ export default function Marca({ className }) {
           lineHeight: 1,
         }}
       >
-        VOLUTUS
+        <span translate="no">VOLUTUS</span>
       </span>
     </span>
   )
