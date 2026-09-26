@@ -193,6 +193,56 @@
   stroke-dasharray: none;
 }
 
+/* ---- el dibujo bajo el dedo ----
+ *
+ * Al arrastrar, `marca-interactiva.js` escribe los mismos valores que la
+ * animación. Para que no peleen, el primer toque pone `construccion-manual` y
+ * con ella las animaciones de entrada dejan de existir. */
+.construccion-manual .onda-guias,
+.construccion-manual .onda-circulo-mayor,
+.construccion-manual .onda-circulo-menor,
+.construccion-manual .onda-centros circle,
+.construccion-manual .onda-trazo,
+.construccion-manual .onda-cota {
+  animation: none;
+}
+
+/* Al soltar, el dibujo vuelve entero con una transición corta en vez de saltar.
+   La clase la quita el propio JavaScript en el siguiente toque. */
+.construccion-soltando .onda-guias,
+.construccion-soltando .onda-circulo-mayor,
+.construccion-soltando .onda-circulo-menor,
+.construccion-soltando .onda-centros circle,
+.construccion-soltando .onda-trazo,
+.construccion-soltando .onda-cota {
+  transition:
+    stroke-dashoffset 420ms var(--ease-out),
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada-construccion {
+    /* `pan-y` deja pasar el desplazamiento vertical de la página y se queda
+       solo con el horizontal, que es el del gesto. Sin esto, arrastrar de lado
+       en un teléfono movería la página en vez del dibujo. */
+    touch-action: pan-y;
+    cursor: ew-resize;
+  }
+
+  /* La pista de que se puede arrastrar solo aparece donde el gesto existe y
+     hay con qué descubrirlo; en táctil el propio dibujo invita a tocarlo. */
+  .portada-pie-gesto {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .portada-pie-gesto {
+      display: inline;
+    }
+  }
+}
+
 .portada-pie {
   font-size: var(--texto-xs);
   color: var(--texto-suave);

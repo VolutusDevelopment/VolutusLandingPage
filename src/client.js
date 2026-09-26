@@ -10,6 +10,7 @@
 // navegador envía y recarga. Esto solo valida antes y evita la recarga.
 
 import { montarAccesibilidad } from './accesibilidad/widget.js'
+import initMarcaInteractiva from './marca-interactiva.js'
 
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -125,4 +126,5 @@ function initFormulario() {
 export default function init() {
   initFormulario()
   montarAccesibilidad()
+  initMarcaInteractiva()
 }

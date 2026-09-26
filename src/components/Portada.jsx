@@ -84,9 +84,12 @@ export default function Portada() {
             puedes comprobar cómo. */}
         <figure className="portada-figura">
           <ConstruccionDeLaOnda className="portada-construccion" />
+          {/* La pista del gesto va aquí y no como globo flotante: quien no la
+              lea no se pierde nada, porque el dibujo ya está completo. Solo se
+              muestra donde hay puntero fino; en táctil el CSS la esconde. */}
           <figcaption className="portada-pie dato">
-            Una recta, dos circunferencias. Nuestro símbolo, con la construcción
-            a la vista.
+            Una recta, dos circunferencias. Nuestro símbolo, con la construcción a la vista.
+            <span className="portada-pie-gesto"> Arrástralo para deshacerlo.</span>
           </figcaption>
         </figure>
       </div>

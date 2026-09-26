@@ -2,26 +2,108 @@
   background: var(--fondo);
   color: var(--texto);
   border-top: 1px solid var(--linea);
-  padding-block: var(--e-12);
+  padding-block: var(--e-16) 0;
 }
 
 .pie-interior {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--e-6);
+  display: grid;
+  gap: var(--e-12);
 }
 
-.pie-contacto,
-.pie-legal {
-  margin: 0;
+/* ---- identidad ---- */
+
+.pie-lema {
+  margin-top: var(--e-4);
+  max-width: 34ch;
   font-size: var(--texto-sm);
   color: var(--texto-suave);
 }
 
-.pie-contacto a {
+.pie-correo {
+  margin-top: var(--e-6);
+  font-size: var(--texto-sm);
+}
+
+.pie-correo a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+}
+
+/* ---- columnas de enlaces ---- */
+
+/* Flex y no `grid` con `auto-fit`: la rejilla vive en una pista de ancho
+   automático, y sin un ancho definido que repartir `auto-fit` colapsa y deja
+   las tres columnas una debajo de otra. Con flex cada columna mide lo suyo y
+   solo baja de línea cuando de verdad no cabe. */
+.pie-columnas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-8) var(--e-12);
+  align-items: start;
+}
+
+.pie-columna {
+  min-width: 7rem;
+}
+
+.pie-titulo {
+  margin: 0 0 var(--e-2);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  font-family: var(--fuente-datos);
+}
+
+.pie-columna ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pie-columna a {
+  display: inline-flex;
+  align-items: center;
+  /* 44 px de área táctil: en una lista vertical de enlaces cortos, sin esto
+     los blancos quedan pegados y el dedo falla. */
+  min-height: 44px;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  text-decoration: none;
+}
+
+.pie-columna a:hover {
+  color: var(--accion);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- línea de cierre ---- */
+
+.pie-cierre {
+  margin-top: var(--e-12);
+  padding-block: var(--e-6);
+  border-top: 1px solid var(--linea);
+}
+
+.pie-cierre p {
+  margin: 0;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+/* La identidad se lleva más ancho que los enlaces: es lo que sostiene el pie,
+   y los enlaces son listas cortas que no necesitan medio ancho de página. */
+@media (min-width: 900px) {
+  .pie-interior {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--e-24);
+    align-items: start;
+  }
+
+  .pie-columnas {
+    gap: var(--e-8) var(--e-16);
+  }
 }
