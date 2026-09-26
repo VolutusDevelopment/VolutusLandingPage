@@ -33,11 +33,21 @@ export default function DocumentoLegal({ ruta, actualizado, apartados }) {
         Saltar al contenido
       </a>
 
-      <Barra />
+      {/* `enHome={false}` es lo que convierte los anclas del menú y del pie en
+          `/#proyectos`. Sin él apuntan a secciones que esta página no tiene y
+          el error no se ve hasta que alguien hace clic. */}
+      <Barra enHome={false} />
 
       <main id="contenido" className="zona-cielo legal">
         <div className="contenedor legal-interior">
           <header className="legal-cabecera">
+            {/* La marca de la barra ya vuelve a la portada, pero eso hay que
+                adivinarlo. Un documento legal es donde más fácil se pierde
+                alguien, así que la salida se dice con todas sus letras. */}
+            <a className="legal-volver" href="/">
+              <span aria-hidden="true">←</span> Volver a la portada
+            </a>
+
             <p className="antetitulo">Legal</p>
             <h1>Privacidad y protección de datos</h1>
             <p className="entradilla legal-entradilla">{descripcion}</p>
@@ -55,7 +65,7 @@ export default function DocumentoLegal({ ruta, actualizado, apartados }) {
         </div>
       </main>
 
-      <Pie />
+      <Pie enHome={false} />
     </>
   )
 }

@@ -166,7 +166,58 @@ async function medirFoco(ruta) {
   return { paradas, sinAnillo }
 }
 
+/**
+ * Comprueba que todos los enlaces internos de una página llevan a algún sitio.
+ *
+ * Existe porque este fallo ya ocurrió y nadie lo vio: la barra y el pie
+ * llevaban anclas peladas —`#proyectos`— que en la portada funcionan y en
+ * /privacidad resuelven a `/privacidad#proyectos`, una sección que esa página
+ * no tiene. El enlace parece correcto en el código y en pantalla; solo falla
+ * al pulsarlo, que es el peor momento para enterarse.
+ *
+ * Se comprueban las tres formas de romperse: el ancla local que no existe, la
+ * ruta que responde error, y la ruta correcta con un ancla que la página de
+ * destino no tiene.
+ */
+async function enlacesRotos(ruta) {
+  const ctx = await navegador.newContext({ viewport: { width: 1280, height: 900 } })
+  const pagina = await ctx.newPage()
+  await pagina.goto(BASE + ruta, { waitUntil: 'networkidle' })
+
+  const enlaces = await pagina.$$eval('a[href]', (els) =>
+    els.map((e) => ({ href: e.getAttribute('href'), abs: e.href }))
+  )
+
+  const rotos = []
+  for (const { href, abs } of enlaces) {
+    if (href.startsWith('http') || href.startsWith('mailto:')) continue
+
+    if (href.startsWith('#')) {
+      const existe = await pagina.evaluate((id) => Boolean(document.getElementById(id)), href.slice(1))
+      if (!existe) rotos.push(`${ruta}: «${href}» no existe en esta página`)
+      continue
+    }
+
+    const destino = new URL(abs)
+    const respuesta = await pagina.request.get(destino.origin + destino.pathname)
+    if (!respuesta.ok()) {
+      rotos.push(`${ruta}: «${href}» responde ${respuesta.status()}`)
+      continue
+    }
+    if (destino.hash) {
+      const html = await respuesta.text()
+      if (!html.includes(`id="${destino.hash.slice(1)}"`)) {
+        rotos.push(`${ruta}: «${href}» apunta a un ancla que el destino no tiene`)
+      }
+    }
+  }
+
+  await ctx.close()
+  return rotos
+}
+
 const actual = { rutas: {}, foco: {} }
+const enlaces = []
 
 for (const ruta of ['/', '/privacidad']) {
   actual.rutas[ruta] = {}
@@ -175,6 +226,7 @@ for (const ruta of ['/', '/privacidad']) {
   }
   actual.rutas[ruta].oscuro = await medir(ruta, 1440, 900, 'oscuro')
   actual.foco[ruta] = await medirFoco(ruta)
+  enlaces.push(...(await enlacesRotos(ruta)))
 }
 
 await navegador.close()
@@ -206,6 +258,8 @@ for (const [ruta, anchos] of Object.entries(actual.rutas)) {
       fallos.push(`${ruta} ${nombre}: el titular pasó de ${Math.round(r.h1)} a ${Math.round(m.h1)} px de alto`)
   }
 }
+
+fallos.push(...enlaces)
 
 for (const [ruta, f] of Object.entries(actual.foco)) {
   const r = referencia.foco?.[ruta]

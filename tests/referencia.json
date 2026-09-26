@@ -36,7 +36,7 @@
     },
     "/privacidad": {
       "movil": {
-        "alto": 6863,
+        "alto": 6915,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -44,7 +44,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 4510,
+        "alto": 4562,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -52,7 +52,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4308,
+        "alto": 4360,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -60,7 +60,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4308,
+        "alto": 4360,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -71,11 +71,11 @@
   },
   "foco": {
     "/": {
-      "paradas": 24,
+      "paradas": 25,
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 15,
+      "paradas": 17,
       "sinAnillo": 0
     }
   }

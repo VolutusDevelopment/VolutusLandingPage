@@ -15,21 +15,34 @@ import Marca from './Marca.jsx'
  * translúcido con desenfoque, así que al pasar sobre el corte se oscurece sola
  * sin que haya que conmutarle el tema con JavaScript.
  */
-export default function Barra() {
+export default function Barra({ enHome = true }) {
+  // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
+  // `#proyectos` resuelve a `/privacidad#proyectos`, que no existe. El enlace
+  // parece correcto hasta que alguien lo pulsa, que es el peor momento para
+  // enterarse. Desde otra página los anclas se cuelgan de la raíz.
+  const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
+
   return (
     <header className="barra zona-cielo">
       <div className="contenedor barra-interior">
-        <a className="barra-marca" href="#portada" aria-label="Volutus, inicio">
+        {/* En la portada la marca sube al principio; fuera de ella, vuelve a
+            la portada. Es la única forma de salir del documento legal con el
+            gesto que todo el mundo intenta primero. */}
+        <a
+          className="barra-marca"
+          href={enHome ? '#portada' : '/'}
+          aria-label={enHome ? 'Volutus, volver arriba' : 'Volutus, ir a la portada'}
+        >
           <Marca />
         </a>
 
         <nav aria-label="Secciones">
           <ul className="barra-enlaces">
             <li>
-              <a href="#proyectos">Proyectos</a>
+              <a href={ancla('proyectos')}>Proyectos</a>
             </li>
             <li>
-              <a href="#proceso">Cómo trabajamos</a>
+              <a href={ancla('proceso')}>Cómo trabajamos</a>
             </li>
           </ul>
         </nav>

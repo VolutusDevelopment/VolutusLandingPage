@@ -26,9 +26,9 @@ import { PROYECTOS } from '../data/proyectos.js'
  */
 
 const ANCLAS = [
-  ['#proyectos', 'Proyectos'],
-  ['#proceso', 'Cómo trabajamos'],
-  ['#contacto', 'Contacto'],
+  ['proyectos', 'Proyectos'],
+  ['proceso', 'Cómo trabajamos'],
+  ['contacto', 'Contacto'],
 ]
 
 function Columna({ titulo, children }) {
@@ -40,12 +40,18 @@ function Columna({ titulo, children }) {
   )
 }
 
-export default function Pie() {
+export default function Pie({ enHome = true }) {
+  // El mismo cuidado que en la barra: un ancla suelta fuera de la portada
+  // apunta a una sección que esa página no tiene.
+  const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
+
   return (
     <footer className="pie zona-cielo">
       <div className="contenedor pie-interior">
         <div className="pie-identidad">
-          <Marca />
+          <a className="pie-marca" href="/" aria-label="Volutus, ir a la portada">
+            <Marca />
+          </a>
 
           <p className="pie-lema">
             Software que puedes abrir y revisar. Cuéntanos qué necesitas y te respondemos en menos
@@ -59,9 +65,9 @@ export default function Pie() {
 
         <nav className="pie-columnas" aria-label="Pie de página">
           <Columna titulo="Página">
-            {ANCLAS.map(([href, texto]) => (
-              <li key={href}>
-                <a href={href}>{texto}</a>
+            {ANCLAS.map(([id, texto]) => (
+              <li key={id}>
+                <a href={ancla(id)}>{texto}</a>
               </li>
             ))}
           </Columna>

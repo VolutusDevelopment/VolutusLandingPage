@@ -10,6 +10,25 @@
   max-width: 44rem;
 }
 
+/* El enlace de vuelta abre el documento, antes del antetítulo: quien llega
+   aquí por error tiene que ver la salida sin leer nada. */
+.legal-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  min-height: 44px;
+  margin-bottom: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  text-decoration: none;
+}
+
+.legal-volver:hover {
+  color: var(--accion);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .legal-cabecera {
   padding-bottom: var(--e-8);
   border-bottom: 1px solid var(--linea);
