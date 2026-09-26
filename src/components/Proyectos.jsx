@@ -47,9 +47,17 @@ export default function Proyectos() {
       <div className="contenedor">
         <p className="antetitulo entra">Obra abierta</p>
         <h2 className="entra">Tres cosas que puedes abrir ahora mismo.</h2>
+        {/* La versión anterior abría anunciando lo que falta: «no hay logos de
+            clientes ni testimonios, porque todavía no hay clientes». Era
+            honesta, pero dejaba al lector pensando en los clientes que no hay
+            justo al entrar en la sección que tiene que convencerlo.
+
+            Esta dice lo mismo sin confesar nada. §3 pide no aparentar
+            trayectoria; no pide declarar la que falta. Y convierte la única
+            credencial que hay —obra abierta— en una invitación: no te pido que
+            me creas, te pido que lo abras. */}
         <p className="entradilla proyectos-entradilla entra">
-          No hay logos de clientes ni testimonios, porque todavía no hay clientes. Hay obra, y se
-          revisa.
+          No tienes que creernos: cada proyecto va con su enlace o su código.
         </p>
 
         <article className="tarjeta proyecto proyecto-destacado entra">
