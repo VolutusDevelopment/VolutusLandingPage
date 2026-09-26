@@ -11,8 +11,10 @@
  * JavaScript de `client.js` solo mejora la validación y evita la recarga.
  *
  * Los mensajes de error están escritos en el HTML servido y ocultos con
- * `hidden`, no creados al vuelo: así reservan su espacio y aparecer no empuja
- * el formulario hacia abajo. CLS 0 también cuando algo falla.
+ * `hidden`, no creados al vuelo. Ojo: `hidden` por sí solo NO reserva espacio
+ * —es `display: none`— y durante un tiempo eso movió el botón de enviar hacia
+ * abajo en cuanto aparecía el primer error. El hueco lo reserva el CSS, que le
+ * devuelve el `display` y lo esconde con `visibility`.
  *
  * ────────────────────────────────────────────────────────────────────────────
  * EL DESTINO NO EXISTE TODAVÍA. `/api/contacto` es el endpoint que este
@@ -35,41 +37,83 @@ export default function Contacto() {
           <p className="antetitulo entra">Cuéntanos</p>
           <h2 className="entra">Dinos qué necesitas.</h2>
           <p className="entradilla contacto-entradilla">
-            Te respondemos en menos de 48 horas hábiles, con un rango de precio real y lo que haría
-            falta para empezar. Si prefieres el correo directo, escríbenos a{' '}
-            <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>.
+            No hace falta que sepas cómo se resuelve. Con el problema en tus palabras nos basta
+            para contestarte algo útil.
+          </p>
+
+          {/* Qué pasa DESPUÉS de enviar, que es lo que la persona se está
+              preguntando con el dedo sobre el botón. Es el patrón de Linear en
+              su página de contacto: la columna de al lado del formulario no
+              repite la oferta, responde la duda de enviar.
+
+              Tres puntos y no cinco: cada uno es un compromiso, y un
+              compromiso que no se cumple cuesta más que no haberlo escrito. */}
+          <ul className="contacto-promesas">
+            <li>Te responde una persona, no un autocontestador.</li>
+            <li>Va con un rango de precio real, no «depende».</li>
+            <li>En menos de 48 horas hábiles.</li>
+          </ul>
+
+          <p className="contacto-alternativa">
+            ¿Prefieres el correo directo?{' '}
+            <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
           </p>
         </div>
 
-        <form className="formulario" method="post" action="/api/contacto" noValidate>
-          <div className="campo">
-            <label htmlFor="nombre">Tu nombre</label>
-            <input id="nombre" name="nombre" type="text" autoComplete="name" required />
-            <p className="campo-error" id="error-nombre" hidden>
-              Falta tu nombre.
-            </p>
-          </div>
+        {/* El formulario vive dentro de una tarjeta y no suelto sobre el fondo.
+            Es lo que hacen Supabase y Linear, y el motivo se ve al comparar:
+            sobre un fondo casi blanco, unos campos blancos no se distinguen y
+            el bloque entero se lee como texto con rayas. Dentro de una
+            superficie con su borde, el formulario es un objeto. */}
+        <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>
+          {/* Nombre y correo en dos columnas: son cortos y ponerlos uno debajo
+              de otro alarga el formulario sin necesidad. En S vuelven a una. */}
+          <div className="formulario-fila">
+            <div className="campo">
+              <label htmlFor="nombre">Tu nombre</label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                autoComplete="name"
+                placeholder="Ana Soto"
+                required
+              />
+              <p className="campo-error" id="error-nombre" hidden>
+                Falta tu nombre.
+              </p>
+            </div>
 
-          <div className="campo">
-            <label htmlFor="correo">Tu correo</label>
-            <input
-              id="correo"
-              name="correo"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              spellCheck="false"
-              autoCapitalize="off"
-              required
-            />
-            <p className="campo-error" id="error-correo" hidden>
-              Falta tu correo.
-            </p>
+            <div className="campo">
+              <label htmlFor="correo">Tu correo</label>
+              <input
+                id="correo"
+                name="correo"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                spellCheck="false"
+                autoCapitalize="off"
+                placeholder="ana@tuempresa.cl"
+                required
+              />
+              <p className="campo-error" id="error-correo" hidden>
+                Falta tu correo.
+              </p>
+            </div>
           </div>
 
           <div className="campo">
             <label htmlFor="proyecto">Qué necesitas</label>
-            <textarea id="proyecto" name="proyecto" rows="5" required />
+            {/* El marcador de posición enseña QUÉ clase de respuesta sirve, que
+                es la duda real de quien se queda mirando un recuadro vacío. */}
+            <textarea
+              id="proyecto"
+              name="proyecto"
+              rows="5"
+              placeholder="Tenemos las reservas en un cuaderno y se nos pierden. Queremos que el cliente reserve solo."
+              required
+            />
             <p className="campo-error" id="error-proyecto" hidden>
               Cuéntanos qué necesitas, aunque sea en una línea.
             </p>

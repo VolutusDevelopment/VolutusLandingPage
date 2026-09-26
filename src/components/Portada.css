@@ -52,15 +52,68 @@
 
 .portada-figura {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
 }
 
-.portada-figura img {
+.portada-construccion {
   width: 100%;
   height: auto;
-  border-radius: var(--radio);
-  /* Es la única pieza con atmósfera de la portada; la línea la ata al sistema
-     y evita que flote, que es lo que haría una sombra. */
+  /* El dibujo vive sobre la superficie y no sobre el fondo: así se lee como
+     una lámina, que es lo que es, y no como algo suelto sobre la página. */
+  background: var(--superficie);
   border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  padding: var(--e-6);
+}
+
+/* ---- las cuatro capas del dibujo ----
+   Cada una tiene su propio peso porque el orden de lectura importa: primero
+   se ve el trazo, y solo después se entiende que detrás hay una construcción. */
+
+.onda-guias {
+  stroke: var(--linea);
+  stroke-width: 0.12;
+  fill: none;
+}
+
+.onda-centros {
+  fill: var(--texto-suave);
+}
+
+.onda-trazo {
+  stroke: var(--marca);
+  stroke-width: 1.1;
+  fill: none;
+}
+
+.onda-cota {
+  fill: var(--texto-suave);
+  font-family: var(--fuente-datos);
+  font-size: 1.1px;
+  letter-spacing: 0.04em;
+}
+
+.portada-pie {
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  text-wrap: balance;
+}
+
+/* En la zona de plano la marca pasa a ser el color de acción, y el dibujo
+   necesita que su trazo siga destacando: ahí ya cumple contraste. */
+@media (max-width: 1023px) {
+  .portada-construccion {
+    /* En móvil el dibujo se reduce: el texto manda y esto acompaña. */
+    padding: var(--e-6);
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .portada-pie {
+    text-align: center;
+  }
 }
 
 /* En L el texto y la foto se abren a dos columnas. El texto va primero en el

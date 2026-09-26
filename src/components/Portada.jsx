@@ -1,19 +1,20 @@
+import ConstruccionDeLaOnda from './ConstruccionDeLaOnda.jsx'
+
 
 /**
  * Portada (DESIGN-BRIEF §4, bloque 1). Tema cielo: aquí la página promete.
  *
- * Lo que tiene que ver quien no baja nada: el titular, una entradilla con la
- * prueba y el plazo, la acción principal con su secundaria, y la pieza
- * atmosférica **contenida**. La regla que manda: si la imagen empuja el titular
- * fuera de la pantalla en un móvil de 360 px, la imagen se reduce. El texto
- * gana siempre, porque es lo único que casi todos van a leer. Por eso en S la
- * foto va DEBAJO del bloque de texto y no detrás.
+ * Lo que tiene que ver quien no baja nada: el titular, una entradilla corta, la
+ * acción principal con su secundaria, la credencial del jurado y la pieza de
+ * marca. La regla que manda: si la pieza visual empuja el titular fuera de la
+ * pantalla en un móvil de 360 px, la pieza se reduce. El texto gana siempre,
+ * porque es lo único que casi todos van a leer.
  *
- * La foto es la nube volutus real —cielo, luz rasante—, no una simulación en
- * CSS: §6 prohíbe el fotorrealismo simulado porque cuesta más pintar que la
- * foto que pretende evitar. Lleva `width` y `height` explícitos, así que el CLS
- * es 0 desde la primera pintura, y va sin `loading="lazy"` por estar sobre el
- * pliegue: es el LCP y diferirla sería retrasarlo.
+ * **La fotografía se fue.** Era una nube volutus real, y bien recortada se veía
+ * bien, pero no argumentaba nada: el titular promete obra que se puede abrir y
+ * revisar, y una foto no enseña obra. La sustituye el símbolo con su
+ * construcción geométrica a la vista, que dice exactamente eso sobre la propia
+ * marca. De paso es SVG dentro del HTML: una petición menos y 6 kB menos.
  *
  * ────────────────────────────────────────────────────────────────────────────
  * OJO CON LA ENTRADILLA. El brief propone «Dos productos en línea y un agente
@@ -73,21 +74,20 @@ export default function Portada() {
           </p>
         </div>
 
+        {/* Aquí había una fotografía de una nube. Se fue porque no argumentaba:
+            el titular promete obra que se puede abrir y revisar, y una foto
+            bonita no enseña nada de eso.
+
+            Lo que la sustituye es el símbolo con su construcción a la vista.
+            No hay que descargar nada —es SVG dentro del HTML— y dice lo mismo
+            que el titular aplicado a la propia marca: esto está construido y
+            puedes comprobar cómo. */}
         <figure className="portada-figura">
-          {/* Recortada a la parte donde se lee el rollo de la nube. La versión
-              anterior arrastraba una franja oscura en el tercio derecho que a
-              tamaño pequeño no se leía como profundidad sino como un recorte
-              mal hecho. */}
-          <img
-            src="/image/nube-700.webp"
-            srcSet="/image/nube-420.webp 420w, /image/nube-700.webp 700w"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            width="700"
-            height="467"
-            alt="Una nube volutus vista de lado al atardecer: una banda de nubes enrollada sobre sí misma, con un avión cruzándola a lo lejos."
-            fetchPriority="high"
-            decoding="async"
-          />
+          <ConstruccionDeLaOnda className="portada-construccion" />
+          <figcaption className="portada-pie dato">
+            Una recta, dos circunferencias. Nuestro símbolo, con la construcción
+            a la vista.
+          </figcaption>
         </figure>
       </div>
     </section>
