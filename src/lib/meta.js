@@ -24,7 +24,7 @@ export const PAGINAS = {
     archivo: 'index.html',
     titulo: 'Volutus, desarrollo de software en Chile',
     descripcion:
-      'Construimos software que puedes abrir y revisar: productos en línea, código público y un agente de IA premiado. Cuéntanos tu proyecto y respondemos en 48 horas hábiles.',
+      'Eso que hoy haces a mano, funcionando solo. Cuéntanos el problema y en 48 horas hábiles tienes alcance, plazo y precio. Cada proyecto con su enlace o su código.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',

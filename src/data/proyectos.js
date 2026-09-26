@@ -59,7 +59,7 @@ export const PROYECTOS = [
     id: 'carflip',
     nombre: 'CarFlip',
     resumen:
-      'Indexador de automotores que rastrea varios sitios de venta y los deja consultables en un solo lugar.',
+      'Rastrea varios sitios de venta de autos y los deja todos consultables en un solo lugar.',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]

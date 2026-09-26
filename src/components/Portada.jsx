@@ -11,36 +11,45 @@ import ConstruccionDeLaOnda from './ConstruccionDeLaOnda.jsx'
  * porque es lo único que casi todos van a leer.
  *
  * **La fotografía se fue.** Era una nube volutus real, y bien recortada se veía
- * bien, pero no argumentaba nada: el titular promete obra que se puede abrir y
- * revisar, y una foto no enseña obra. La sustituye el símbolo con su
- * construcción geométrica a la vista, que dice exactamente eso sobre la propia
- * marca. De paso es SVG dentro del HTML: una petición menos y 6 kB menos.
+ * bien, pero no argumentaba nada. La sustituye el símbolo con su construcción
+ * geométrica a la vista, que dice sobre la propia marca lo mismo que la página
+ * dice de su obra: está construida y puedes comprobar cómo. De paso es SVG
+ * dentro del HTML, así que es una petición menos y 6 kB menos.
  *
- * ────────────────────────────────────────────────────────────────────────────
- * OJO CON LA ENTRADILLA. El brief propone «Dos productos en línea y un agente
- * de IA premiado». Verificado el 2026-09-24, `carflip.cl` responde 500, así que
- * productos en línea hay UNO. La regla de §3 es que cada afirmación va con su
- * enlace o no se hace, y esa regla pesa más que la redacción propuesta: se
- * escribe lo que hoy se sostiene. En cuanto CarFlip vuelva a responder, esta
- * frase recupera el plural y el titular no cambia.
- * ────────────────────────────────────────────────────────────────────────────
+ * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
+ * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
+ * La obra la enseña el índice que viene debajo, con sus enlaces, que es donde
+ * §3 quiere que esté — cada afirmación con lo que la sostiene al lado.
  */
 export default function Portada() {
   return (
     <section id="portada" className="seccion zona-cielo portada">
       <div className="contenedor portada-interior">
         <div className="portada-texto">
-          <h1>Construimos software que puedes abrir y revisar.</h1>
+          {/* El titular anterior —«Construimos software que puedes abrir y
+              revisar»— describía lo que hacemos NOSOTROS. Pasado por el test de
+              «Ahora puedes…» no cuadra: «ahora puedes construir software que
+              puedes revisar» no es una capacidad que gane quien lee.
 
-          {/* Tres líneas, no siete. Medido con Playwright: la versión anterior
-              ocupaba 223 px y, con el titular, se comía el 51 % de la pantalla
-              de un móvil de 390 px — el doble de lo que gastan Linear, Resend
-              o Railway. Lo que se fue no fue información: era la misma promesa
-              dicha con más palabras. El plazo de respuesta se queda porque es
-              un compromiso concreto; el resto lo cuenta la página. */}
+              Este nombra la incomodidad con las palabras que el propio equipo
+              recogió en §2 —«lo resuelve a mano, con una planilla, con un
+              conocido que sabe de computación, o no lo resuelve»— y le pone
+              enfrente la visión. Ahora sí pasa el test: «ahora puedes tener
+              funcionando solo eso que hoy haces a mano».
+
+              Que no diga a qué se dedica Volutus es deliberado, no un olvido:
+              §2 dice que el visitante llega sabiéndolo porque acaba de hablar
+              con uno de los socios. Gastar el titular en explicar el rubro es
+              gastarlo en lo único que ya sabe. */}
+          <h1>Eso que hoy haces a mano, funcionando solo.</h1>
+
+          {/* La entradilla contesta tres de las cuatro preocupaciones de §2 en
+              dos frases: qué tengo que entregar yo («en tus palabras»), en
+              cuánto tiempo, y cuánto cuesta. La cuarta —qué hacen— la contesta
+              el índice de obra que viene justo debajo. */}
           <p className="entradilla portada-entradilla">
-            Obra abierta, con su enlace o su código a la vista. Cuéntanos qué necesitas y te
-            respondemos en menos de 48 horas hábiles.
+            Cuéntanos el problema en tus palabras. En menos de 48 horas hábiles tienes alcance,
+            plazo y un precio real.
           </p>
 
           <div className="portada-acciones">
@@ -48,7 +57,7 @@ export default function Portada() {
               Cuéntanos tu proyecto
             </a>
             <a className="boton boton-secundario" href="#proyectos">
-              Ver proyectos
+              Ver los tres proyectos
             </a>
           </div>
 
@@ -58,15 +67,15 @@ export default function Portada() {
 
               Una línea, no un párrafo. Railway resuelve la confianza con una
               rejilla de logos que se lee de un vistazo; nosotros no tenemos
-              logos que poner, pero sí podemos dejar de contarlo en prosa. Lo
-              que se fue —«con jurado externo»— no se pierde: está en la ficha
-              del proyecto, y aquí lo que importa es que se lea sin detenerse. */}
+              logos que poner, pero sí podemos dejar de contarlo en prosa.
+              «Jurado externo» se queda porque es lo que la separa de una
+              medalla que cualquiera se dibuja. */}
           <p className="portada-credencial">
             <span className="portada-credencial-marca dato" aria-hidden="true">
               2.º
             </span>
             <span>
-              Hackathon de IA agéntica.{' '}
+              Hackathon de IA agéntica, jurado externo.{' '}
               <a href="https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS" rel="noopener">
                 Ver el código
               </a>
@@ -74,14 +83,13 @@ export default function Portada() {
           </p>
         </div>
 
-        {/* Aquí había una fotografía de una nube. Se fue porque no argumentaba:
-            el titular promete obra que se puede abrir y revisar, y una foto
-            bonita no enseña nada de eso.
+        {/* Aquí había una fotografía de una nube. Se fue porque no argumentaba
+            nada: una foto bonita no demuestra que sepas construir.
 
             Lo que la sustituye es el símbolo con su construcción a la vista.
-            No hay que descargar nada —es SVG dentro del HTML— y dice lo mismo
-            que el titular aplicado a la propia marca: esto está construido y
-            puedes comprobar cómo. */}
+            No hay que descargar nada —es SVG dentro del HTML— y hace sobre la
+            marca la misma demostración que el índice de obra hace sobre el
+            trabajo: está construido y puedes comprobar cómo. */}
         <figure className="portada-figura">
           <ConstruccionDeLaOnda className="portada-construccion" />
           {/* La pista del gesto va aquí y no como globo flotante: quien no la

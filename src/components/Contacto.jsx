@@ -35,7 +35,7 @@ export default function Contacto() {
       <div className="contenedor contacto-interior">
         <div>
           <p className="antetitulo entra">Cuéntanos</p>
-          <h2 className="entra">Dinos qué necesitas.</h2>
+          <h2 className="entra">¿Qué estás resolviendo a mano?</h2>
           <p className="entradilla contacto-entradilla">
             No hace falta que sepas cómo se resuelve. Con el problema en tus palabras nos basta
             para contestarte algo útil.

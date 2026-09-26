@@ -2,9 +2,9 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 7619,
+        "alto": 7637,
         "desborda": false,
-        "h1": 172.75,
+        "h1": 129.5625,
         "bloquesQueEntran": 22,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
