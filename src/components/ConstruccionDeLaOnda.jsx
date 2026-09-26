@@ -45,8 +45,11 @@ export default function ConstruccionDeLaOnda({ className }) {
         <line x1="0.75" y1="19.5" x2="24.75" y2="19.5" strokeDasharray="1 1.5" />
         <line x1={MAYOR.cx} y1="1.2" x2={MAYOR.cx} y2="22.8" strokeDasharray="1 1.5" />
 
-        <circle cx={MAYOR.cx} cy={MAYOR.cy} r={MAYOR.r} />
-        <circle cx={MENOR.cx} cy={MENOR.cy} r={MENOR.r} />
+        {/* Cada circunferencia lleva su clase porque cada una se traza sola, y
+            en orden: primero la que define el arco grande. Si aquí cambian los
+            radios, hay que recalcular su longitud (2πr) en Portada.css. */}
+        <circle className="onda-circulo-mayor" cx={MAYOR.cx} cy={MAYOR.cy} r={MAYOR.r} />
+        <circle className="onda-circulo-menor" cx={MENOR.cx} cy={MENOR.cy} r={MENOR.r} />
 
         {/* Los radios que fijan cada arco. Verticales los dos, que es justo lo
             que hace que los empalmes no tengan esquina. */}

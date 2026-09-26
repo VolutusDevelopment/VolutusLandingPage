@@ -95,6 +95,104 @@
   letter-spacing: 0.04em;
 }
 
+/* ============================================================================
+ * La construcción, construyéndose.
+ *
+ * El dibujo explica que el símbolo está hecho con una recta y dos
+ * circunferencias. Animarlo en ese mismo orden no es adorno: es la explicación
+ * ocurriendo. Primero aparecen los ejes, después se trazan las dos
+ * circunferencias, se marcan sus centros y solo entonces la onda recorre el
+ * camino que esas guías dejaron preparado.
+ *
+ * Pasa la compuerta de las cuatro preguntas: se ve **una vez por carga**
+ * —frecuencia rara, que es donde cabe el presupuesto de deleite—, su propósito
+ * es explicativo, y por ser narrativa puede durar más que los 300 ms que manda
+ * la interfaz. Los 2,4 s se gastan en una sola pieza y en ninguna otra.
+ *
+ * Las longitudes de guion son las circunferencias reales, 2πr: 47.12 para la
+ * mayor y 23.56 para la menor. Si se tocan los radios en el JSX, hay que
+ * recalcularlas aquí o el trazado quedará a medias.
+ *
+ * `stroke-dasharray` solo existe DENTRO de la animación. Fuera de ella las
+ * circunferencias son continuas, así que quien tenga el movimiento reducido ve
+ * el dibujo terminado y no un círculo punteado.
+ * ========================================================================= */
+
+@keyframes onda-aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes onda-trazar {
+  from {
+    stroke-dashoffset: var(--largo);
+  }
+}
+
+@keyframes onda-centro {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada-construccion .onda-guias {
+    animation: onda-aparecer 500ms var(--ease-out) both;
+  }
+
+  /* Cada circunferencia se dibuja sola. El retardo de la menor empieza antes
+     de que termine la mayor: encadenado, no por turnos, que se siente lento. */
+  .portada-construccion .onda-circulo-mayor {
+    --largo: 47.12;
+    stroke-dasharray: var(--largo);
+    animation: onda-trazar 800ms var(--ease-in-out) 300ms both;
+  }
+
+  .portada-construccion .onda-circulo-menor {
+    --largo: 23.56;
+    stroke-dasharray: var(--largo);
+    animation: onda-trazar 650ms var(--ease-in-out) 850ms both;
+  }
+
+  /* Los centros aparecen como quien clava el compás. `transform-box: fill-box`
+     es obligatorio en SVG: sin él el origen de la escala es el lienzo entero y
+     los puntos salen disparados desde la esquina. */
+  .portada-construccion .onda-centros circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: onda-centro 260ms var(--ease-out) both;
+  }
+
+  .portada-construccion .onda-centros circle:first-child {
+    animation-delay: 1000ms;
+  }
+
+  .portada-construccion .onda-centros circle:last-child {
+    animation-delay: 1120ms;
+  }
+
+  /* El trazo definitivo, al final y sin prisa: es el protagonista y lo que la
+     persona recuerda. 45 es su longitud, la misma que usa la marca de la
+     barra. */
+  .portada-construccion .onda-trazo {
+    --largo: 45;
+    stroke-dasharray: var(--largo);
+    animation: onda-trazar 1100ms var(--ease-out) 1300ms both;
+  }
+
+  .portada-construccion .onda-cota {
+    animation: onda-aparecer 400ms var(--ease-out) 2200ms both;
+  }
+}
+
+/* Con el movimiento reducido no hay secuencia: el dibujo ya está hecho. */
+:root[data-movimiento='reducido'] .portada-construccion * {
+  animation: none;
+  stroke-dasharray: none;
+}
+
 .portada-pie {
   font-size: var(--texto-xs);
   color: var(--texto-suave);
