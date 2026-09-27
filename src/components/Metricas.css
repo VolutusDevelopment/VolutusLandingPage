@@ -38,6 +38,10 @@
   /* Hace del anillo la referencia de tamaño de lo que lleva dentro. Ver
      `.medidor-valor`. */
   container-type: inline-size;
+  /* Nada del gesto táctil le disputa el scroll al navegador —ver
+     `medidores.js`—, así que aquí solo se quita la espera del doble toque
+     para que el anillo responda al instante. */
+  touch-action: manipulation;
 }
 
 .medidor-anillo svg {
@@ -225,15 +229,15 @@
   animation: none;
 }
 
-/* Al tocar un medidor, `medidores.js` toma el mando. Apagar la animación es
-   obligatorio: una animación de CSS gana a un estilo en línea, así que sin
-   esto lo que escriba el JavaScript no se vería.
-   
-   La transición se declara aquí y no en línea para que el archivo de estilos
-   siga siendo el que manda sobre los tiempos. */
+/* Al tomar el mando `medidores.js`, la animación del scroll se apaga: una
+   animación de CSS gana a un estilo en línea, así que sin esto lo que escriba
+   el JavaScript no se vería.
+
+   El trazo NO lleva transición. El arco sigue al puntero y se reescribe en
+   cada fotograma; una transición encima lo dejaría siempre un paso por detrás
+   del dedo, que es justo lo que arruina la sensación de estar moviéndolo. El
+   suavizado del viaje de ida y del de vuelta lo pone el propio JavaScript. */
 .medidor-manual .medidor-relleno {
   animation: none;
-  transition:
-    stroke-dashoffset 900ms var(--ease-out),
-    stroke-width 160ms var(--ease-out);
+  transition: stroke-width 160ms var(--ease-out);
 }

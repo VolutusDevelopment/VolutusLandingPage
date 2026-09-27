@@ -1,6 +1,11 @@
 /**
  * Medidor circular: una puntuación sobre su tope.
  *
+ * `data-valor` y `data-tope` están ahí para `medidores.js`, que al seguir al
+ * puntero tiene que saber a qué cifra volver y sobre qué tope contar. Se
+ * publican en el marcado en vez de repetirse en el JavaScript para que el
+ * número de la página y el que usa el gesto no puedan separarse.
+ *
  * La forma no es un capricho. La guía de visualización la nombra sin ambages
  * —«a single ratio against a limit → Meter (same-ramp track)»— y lo que sí
  * marca como antipatrón es la dona para comparar valores parecidos, que es
@@ -30,7 +35,7 @@ export default function Medidor({ valor, tope = 100, nombre, nota }) {
   const fraccion = Math.min(1, Math.max(0, valor / tope))
 
   return (
-    <li className="medidor entra">
+    <li className="medidor entra" data-valor={valor} data-tope={tope}>
       <div className="medidor-anillo">
         <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
           {/* La pista completa: el recorrido que habría que llenar. */}
