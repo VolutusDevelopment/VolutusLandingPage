@@ -57,11 +57,14 @@ const VACIADO = 1600
 /**
  * Los tramos de Lighthouse, tal y como los publica Google. No son nuestros y
  * no se redondean a conveniencia: son la vara con la que se mide la página.
+ *
+ * El rango lleva espacios duros: la nota cabe en dos líneas justas y sin ellos
+ * partía por dentro, dejando un «89» solo en la segunda.
  */
 const TRAMOS = [
-  { hasta: 49, clase: 'tramo-malo', nombre: 'Deficiente · 0 a 49' },
-  { hasta: 89, clase: 'tramo-medio', nombre: 'Necesita mejorar · 50 a 89' },
-  { hasta: Infinity, clase: 'tramo-bueno', nombre: 'Bueno · 90 a 100' },
+  { hasta: 49, clase: 'tramo-malo', nombre: 'Deficiente · 0 a 49' },
+  { hasta: 89, clase: 'tramo-medio', nombre: 'Necesita mejorar · 50 a 89' },
+  { hasta: Infinity, clase: 'tramo-bueno', nombre: 'Bueno · 90 a 100' },
 ]
 
 const tramoDe = (n) => TRAMOS.find((t) => n <= t.hasta)

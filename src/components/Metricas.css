@@ -49,6 +49,10 @@
      dentro del anillo; el nombre y la explicación de debajo siguen sueltos. */
   user-select: none;
   -webkit-touch-callout: none;
+  /* Android pinta un recuadro encima de lo que se toca, y aquí tapaba el
+     anillo entero justo mientras se estaba mirando vaciarse. La respuesta al
+     dedo ya la da el propio arco, que es mejor aviso que un rectángulo. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .medidor-anillo svg {

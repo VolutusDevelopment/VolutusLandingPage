@@ -39,12 +39,18 @@ import { ORIGEN } from '../lib/meta.js'
  * Los nombres sí se quedan en castellano llano. Google los llama «Prácticas
  * recomendadas» y «SEO»; aquí son «Buenas prácticas» y «Posicionamiento»,
  * porque «SEO» es jerga para quien hoy resuelve esto con una planilla.
+ *
+ * Y la nota de Posicionamiento dice «los buscadores» y no «Google»: el nombre
+ * ya está en el titular, que es donde sostiene la afirmación, y repetirlo tres
+ * veces en la misma pantalla lo gasta. Dice «saben de qué trata» y no «apareces
+ * cuando te buscan» porque esa prueba mide si la página se deja entender, no si
+ * sale primera: prometer lo segundo sería justo lo que §3 prohíbe.
  */
 const PRUEBAS = [
   { nombre: 'Rendimiento', valor: 100, nota: 'Nadie se va porque tarda.' },
   { nombre: 'Accesibilidad', valor: 100, nota: 'La puede usar quien no ve la pantalla.' },
   { nombre: 'Buenas prácticas', valor: 100, nota: 'Nada inseguro ni roto por dentro.' },
-  { nombre: 'Posicionamiento', valor: 100, nota: 'Google entiende de qué trata.' },
+  { nombre: 'Posicionamiento', valor: 100, nota: 'Los buscadores saben de qué trata.' },
 ]
 
 // La prueba, sobre esta misma página. Es el enlace que el antetítulo promete:
@@ -58,15 +64,30 @@ export default function Metricas() {
         <p className="antetitulo entra">Medido, no prometido</p>
         {/* El titular lleva el número y dice de qué página habla. «Las cuatro
             pruebas de Google, llenas» describía un trofeo nuestro y solo se
-            entendía después de ver los anillos. */}
-        <h2 className="entra">Esta página saca 100 en las cuatro pruebas de Google.</h2>
-        {/* La segunda frase es la que trabaja: invita a medir lo que ya tiene.
-            Quien llega aquí suele arrastrar un sitio hecho por «un conocido que
-            sabe de computación» (§2), y la comparación la hace él solo. «La que
+            entendía después de ver los anillos.
+
+            «100 de 100» y no «100»: quien no conoce estas pruebas no sabe sobre
+            qué va la nota, y sin la escala el número no significa nada. Es la
+            única vez que se nombra a Google en la sección, y va aquí porque es
+            lo que convierte la afirmación en algo que no hay que creerse. */}
+        <h2 className="entra">Esta página saca 100 de 100 en las cuatro pruebas de Google.</h2>
+        {/* Escrita para quien nunca ha oído «Lighthouse», que es casi todo el
+            mundo: gratis y un minuto. Ni el nombre de la herramienta ni el de
+            Google hacen falta aquí — el titular ya puso el aval y el pie da la
+            puerta.
+
+            Que sirve para cualquier página no hace falta decirlo: «la que
+            tengas hoy» ya lo dice, y con el titular ocupando cuatro líneas en
+            móvil, una entradilla de otras cuatro dejaba los anillos fuera de la
+            primera pantalla.
+
+            La segunda frase es la que trabaja: invita a medir lo que ya tiene.
+            Quien llega suele arrastrar un sitio hecho por «un conocido que sabe
+            de computación» (§2), y la comparación la hace él solo. «La que
             tengas hoy» no da por hecho que exista. */}
         <p className="entradilla metricas-entradilla entra">
-          La prueba la hace Google, es gratis y la puede repetir cualquiera. Mide esta página, y
-          después la que tengas hoy.
+          La prueba es gratis y toma un minuto. Hazla con esta página, y después con la que tengas
+          hoy.
         </p>
 
         <ul className="medidores">
@@ -96,7 +117,7 @@ export default function Metricas() {
             prueba dependerá de su conexión, y encontrarse un 97 sin saber por
             qué gasta más confianza de la que cuesta esta línea. */}
         <p className="metricas-pie entra">
-          Medido en móvil con 4G simulado.{' '}
+          Medido en un celular, con una conexión 4G simulada.{' '}
           <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
             Mide esta página en PageSpeed Insights
           </a>

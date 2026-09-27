@@ -2,7 +2,7 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 7763,
+        "alto": 7768,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 25,
@@ -18,7 +18,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4851,
+        "alto": 4819,
         "desborda": false,
         "h1": 328.3125,
         "bloquesQueEntran": 25,
@@ -26,7 +26,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4851,
+        "alto": 4819,
         "desborda": false,
         "h1": 328.3125,
         "bloquesQueEntran": 25,
