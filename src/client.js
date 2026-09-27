@@ -11,6 +11,7 @@
 
 import { montarAccesibilidad } from './accesibilidad/widget.js'
 import initMarcaInteractiva from './marca-interactiva.js'
+import initMedidores from './medidores.js'
 
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -127,4 +128,5 @@ export default function init() {
   initFormulario()
   montarAccesibilidad()
   initMarcaInteractiva()
+  initMedidores()
 }

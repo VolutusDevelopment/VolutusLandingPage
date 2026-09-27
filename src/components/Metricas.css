@@ -27,8 +27,17 @@
 .medidor-anillo {
   position: relative;
   width: 100%;
-  max-width: 7.5rem;
+  /* Fluido entre 9 y 13 rem. A 7,5 rem los anillos se leían como iconos y no
+     como medidas: el número quedaba pequeño y el arco, fino. A este tamaño el
+     anillo es el objeto de la sección y el 100 se lee de lejos. */
+  max-width: clamp(9rem, 20vw, 13rem);
   margin-inline: auto;
+  /* El cursor dice que hay algo que hacer aquí, igual que en la construcción
+     de la portada. */
+  cursor: pointer;
+  /* Hace del anillo la referencia de tamaño de lo que lleva dentro. Ver
+     `.medidor-valor`. */
+  container-type: inline-size;
 }
 
 .medidor-anillo svg {
@@ -63,10 +72,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--texto-xl);
+  /* El paso mayor de la escala, el mismo del titular de portada. No es
+     exceso: la guía de visualización reserva la «hero figure» de 48 px o más
+     para la cifra que un bloque lidera, y aquí el número ES el bloque. Con el
+     paso anterior el anillo se veía vacío alrededor de un dato pequeño.
+
+     Es el valor de reserva. El de verdad está más abajo, atado al anillo. */
+  font-size: var(--texto-2xl);
   font-variant-numeric: tabular-nums;
   color: var(--texto);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* La cifra se mide contra SU anillo, no contra la ventana.
+ *
+ * Con dos escalas independientes —una para el anillo, otra para el número— la
+ * proporción se va a la deriva: el número llenaba el 81 % del hueco en
+ * escritorio y el 61 % en móvil, así que el mismo medidor pesaba distinto
+ * según el aparato. Una sola regla —«el número mide poco más de un tercio del
+ * anillo»— lo deja igual en los dos.
+ *
+ * El 36 % sale del hueco que deja la pista: con r = 20 y trazo 3 sobre un
+ * lienzo de 48, dentro del anillo caben 37/48 del ancho, y «100» a este cuerpo
+ * ocupa poco más de la mitad de eso. Queda aire a los lados sin que el número
+ * toque el arco.
+ *
+ * Detrás de `@supports` porque sin unidades de contenedor `36cqw` no es un
+ * tamaño válido: la declaración entera se caería y la cifra heredaría el
+ * cuerpo del párrafo. Arriba queda el paso mayor de la escala como reserva. */
+@supports (font-size: 1cqw) {
+  .medidor-valor {
+    font-size: 36cqw;
+  }
 }
 
 .medidor-nombre {
@@ -185,4 +223,17 @@
 
 :root[data-movimiento='reducido'] .medidor-relleno {
   animation: none;
+}
+
+/* Al tocar un medidor, `medidores.js` toma el mando. Apagar la animación es
+   obligatorio: una animación de CSS gana a un estilo en línea, así que sin
+   esto lo que escriba el JavaScript no se vería.
+   
+   La transición se declara aquí y no en línea para que el archivo de estilos
+   siga siendo el que manda sobre los tiempos. */
+.medidor-manual .medidor-relleno {
+  animation: none;
+  transition:
+    stroke-dashoffset 900ms var(--ease-out),
+    stroke-width 160ms var(--ease-out);
 }
