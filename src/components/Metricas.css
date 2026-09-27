@@ -42,6 +42,13 @@
      `medidores.js`—, así que aquí solo se quita la espera del doble toque
      para que el anillo responda al instante. */
   touch-action: manipulation;
+  /* El gesto del móvil es mantener el dedo apretado, y eso es justo lo que el
+     teléfono entiende como «selecciona esto» o «enséñame el menú». Sin estas
+     dos líneas, aguantar la pulsación levanta el globo de selección sobre la
+     cifra en vez de vaciar el anillo. Se pierde poder copiar el número desde
+     dentro del anillo; el nombre y la explicación de debajo siguen sueltos. */
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .medidor-anillo svg {

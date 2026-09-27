@@ -28,13 +28,14 @@
  * valor y de ahí saca el recorte del trazo, la cifra y el tramo. No existe el
  * estado en el que el anillo va por medio y el número dice cien.
  *
- * **Con el dedo no se sigue el puntero, y no por falta de ganas.** Recorrer un
- * círculo es moverse también en vertical, y en vertical manda el scroll: el
- * navegador se queda el gesto y cancela el nuestro a la primera. Ganarle exige
- * `touch-action: none`, que convertiría los cuatro anillos —media pantalla en
- * móvil— en cuatro sitios donde la página no baja. Ahí el toque repite la
- * construcción, que es la misma escala contada con el tiempo en vez de con la
- * posición.
+ * **Con el dedo se mantiene pulsado.** Seguir al puntero no se puede: recorrer
+ * un círculo es moverse también en vertical, y en vertical manda el scroll, así
+ * que el navegador se queda el gesto y cancela el nuestro a la primera.
+ * Ganarle exige `touch-action: none`, que convertiría los cuatro anillos
+ * —media pantalla en móvil— en cuatro sitios donde la página no baja. Lo que sí
+ * se puede es cambiar la posición por el tiempo: mantener el dedo apretado baja
+ * la nota, cruzando los tramos al revés, y soltarlo la devuelve arriba. Es el
+ * mismo control con la otra mano.
  */
 
 // La construcción, y lo que separa la salida de un anillo de la del siguiente.
@@ -47,6 +48,11 @@ const ESCALON = 260
 // volver a su valor al salir. La vuelta es más larga porque es un remate.
 const ENGANCHE = 260
 const VUELTA = 900
+
+// Lo que tarda en vaciarse del todo manteniendo el dedo apretado. Más rápido,
+// un toque sin querer lo dejaría en nada; más lento, no daría tiempo a ver la
+// cifra bajar antes de que se canse el pulgar.
+const VACIADO = 1600
 
 /**
  * Los tramos de Lighthouse, tal y como los publica Google. No son nuestros y
@@ -65,6 +71,9 @@ const asentado = (p) => (p < 0.5 ? 4 * p ** 3 : 1 - (-2 * p + 2) ** 3 / 2)
 
 /** Frena al llegar: la curva de algo que responde. Es `--ease-out` en JS. */
 const suave = (p) => 1 - (1 - p) ** 4
+
+/** A ritmo constante: la curva de algo que se maneja y hay que poder medir. */
+const seguido = (p) => p
 
 /** Prepara un medidor. Devuelve su mando, o `null` si le falta alguna pieza. */
 function prepararMedidor(medidor) {
@@ -245,24 +254,54 @@ function prepararMedidor(medidor) {
     pintar(destino)
   })
 
-  anillo.addEventListener('pointerleave', () => {
+  /** Suelta el anillo: sube de vuelta a su puntuación y se asienta. */
+  function soltar() {
     if (!mandando) return
     mandando = false
     enganchado = false
     destino = real
     viajar(VUELTA, suave, asentar)
-  })
+  }
 
-  // ---- con el dedo: el toque repite la construcción ----
+  anillo.addEventListener('pointerleave', soltar)
 
+  // ---- con el dedo: se mantiene pulsado y se vacía ----
+
+  /**
+   * Mantener el dedo baja la nota; soltarlo la devuelve.
+   *
+   * Es el mismo trato que con el ratón, con el tiempo de pulsación en lugar de
+   * la posición: cuanto más se aguante, más abajo llega, y el recorrido cruza
+   * los tramos al revés —verde, ámbar, rojo— hasta donde se quiera parar. Un
+   * toque corto apenas hunde la aguja y la deja volver, que es justo la
+   * invitación a mantenerlo apretado.
+   *
+   * El vaciado va a ritmo constante a propósito. Con una curva, el mismo
+   * segundo de pulsación valdría distinto según cuándo cayera, y esto es un
+   * control: hay que poder aprender cuánto baja por segundo. La vuelta sí
+   * frena al llegar, porque no es un control sino un remate.
+   *
+   * `setPointerCapture` aguanta el temblor del pulgar sin dar la pulsación por
+   * terminada. Si el dedo se pone a desplazar la página gana el navegador, que
+   * cancela el gesto, y el anillo vuelve a su nota: exactamente lo que pasa al
+   * soltar, así que no hay nada que arreglar ahí.
+   */
   anillo.addEventListener('pointerdown', (evento) => {
-    if (!listo || quieto() || evento.pointerType !== 'touch' || marco) return
+    if (!listo || quieto() || evento.pointerType !== 'touch') return
+    mandando = true
     tomarElMando()
     etiquetando = true
-    pintar(0)
-    destino = real
-    viajar(CONSTRUCCION, asentado, asentar)
+    anillo.setPointerCapture(evento.pointerId)
+    destino = 0
+    viajar(VACIADO, seguido)
   })
+
+  for (const fin of ['pointerup', 'pointercancel']) {
+    anillo.addEventListener(fin, (evento) => {
+      if (evento.pointerType !== 'touch') return
+      soltar()
+    })
+  }
 
   return { construir, rendir }
 }
