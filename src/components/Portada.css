@@ -107,7 +107,11 @@
  * Pasa la compuerta de las cuatro preguntas: se ve **una vez por carga**
  * —frecuencia rara, que es donde cabe el presupuesto de deleite—, su propósito
  * es explicativo, y por ser narrativa puede durar más que los 300 ms que manda
- * la interfaz. Los 2,4 s se gastan en una sola pieza y en ninguna otra.
+ * la interfaz. Los 7 s se gastan en una sola pieza y en ninguna otra.
+ *
+ * Tan lenta es deliberado: a 2,4 s la construcción pasaba antes de que nadie
+ * se diera cuenta de que había algo que mirar. A este ritmo se lee como una
+ * mano dibujando, que es lo que se quería contar.
  *
  * Las longitudes de guion son las circunferencias reales, 2πr: 47.12 para la
  * mayor y 23.56 para la menor. Si se tocan los radios en el JSX, hay que
@@ -139,7 +143,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .portada-construccion .onda-guias {
-    animation: onda-aparecer 500ms var(--ease-out) both;
+    animation: onda-aparecer 1400ms var(--ease-out) both;
   }
 
   /* Cada circunferencia se dibuja sola. El retardo de la menor empieza antes
@@ -147,13 +151,13 @@
   .portada-construccion .onda-circulo-mayor {
     --largo: 47.12;
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 800ms var(--ease-in-out) 300ms both;
+    animation: onda-trazar 2000ms var(--ease-in-out) 900ms both;
   }
 
   .portada-construccion .onda-circulo-menor {
     --largo: 23.56;
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 650ms var(--ease-in-out) 850ms both;
+    animation: onda-trazar 1700ms var(--ease-in-out) 2400ms both;
   }
 
   /* Los centros aparecen como quien clava el compás. `transform-box: fill-box`
@@ -162,15 +166,15 @@
   .portada-construccion .onda-centros circle {
     transform-box: fill-box;
     transform-origin: center;
-    animation: onda-centro 260ms var(--ease-out) both;
+    animation: onda-centro 600ms var(--ease-out) both;
   }
 
   .portada-construccion .onda-centros circle:first-child {
-    animation-delay: 1000ms;
+    animation-delay: 2900ms;
   }
 
   .portada-construccion .onda-centros circle:last-child {
-    animation-delay: 1120ms;
+    animation-delay: 3300ms;
   }
 
   /* El trazo definitivo, al final y sin prisa: es el protagonista y lo que la
@@ -179,11 +183,11 @@
   .portada-construccion .onda-trazo {
     --largo: 45;
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 1100ms var(--ease-out) 1300ms both;
+    animation: onda-trazar 2800ms var(--ease-out) 3700ms both;
   }
 
   .portada-construccion .onda-cota {
-    animation: onda-aparecer 400ms var(--ease-out) 2200ms both;
+    animation: onda-aparecer 900ms var(--ease-out) 6200ms both;
   }
 }
 
@@ -227,11 +231,11 @@
        solo con el horizontal, que es el del gesto. Sin esto, arrastrar de lado
        en un teléfono movería la página en vez del dibujo. */
     touch-action: pan-y;
-    cursor: ew-resize;
+    cursor: crosshair;
   }
 
-  /* La pista de que se puede arrastrar solo aparece donde el gesto existe y
-     hay con qué descubrirlo; en táctil el propio dibujo invita a tocarlo. */
+  /* La pista solo aparece donde hay puntero que pasar. En táctil el gesto es
+     arrastrar, y eso el dedo lo descubre solo. */
   .portada-pie-gesto {
     display: none;
   }

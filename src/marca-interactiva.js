@@ -5,11 +5,15 @@
  * disponible para arrastrar: la posición horizontal del puntero decide cuánto
  * de la construcción se ve, desde el lienzo vacío hasta la onda terminada.
  *
- * **Por qué arrastrar y no pasar el puntero por encima.** Con `hover` bastaría
- * cruzar el ratón por accidente para borrar la marca, y en un teléfono no
- * existe. Arrastrar es deliberado —hay que agarrarlo— y funciona igual con
- * dedo que con ratón, que es lo que pide la regla de gestos: nada queda solo
- * detrás de un gesto que el táctil no tenga.
+ * **Responde al puntero sin tener que agarrarlo.** La primera versión exigía
+ * mantener pulsado, y eso la hacía invisible: casi nadie prueba a arrastrar un
+ * dibujo. Ahora basta mover el puntero por encima, y la respuesta es inmediata
+ * — que es lo único que hace que algo se sienta interactivo de verdad.
+ *
+ * El riesgo de cruzar el ratón por accidente y deshacer la marca se resuelve
+ * al salir: vuelve entera sola. Y en táctil, donde no hay puntero que pasar,
+ * sigue funcionando el arrastre, así que nada queda detrás de un gesto que el
+ * dedo no tenga.
  *
  * Nada de información vive aquí dentro: el estado por defecto es el dibujo
  * completo y quien no interactúe nunca lo verá de otra manera. Es una mejora,
@@ -89,31 +93,38 @@ export default function initMarcaInteractiva() {
 
   let arrastrando = false
 
+  /** Toma el mando del dibujo y lo pinta según dónde esté el puntero. */
+  function seguir(evento) {
+    // Corta la animación de entrada: sin esto, el CSS y este código pelearían
+    // por las mismas propiedades. Al ser la secuencia de 7 s, lo normal es que
+    // todavía esté corriendo cuando alguien llega con el ratón.
+    svg.classList.add('construccion-manual')
+    svg.classList.remove('construccion-soltando')
+
+    const { left, width } = svg.getBoundingClientRect()
+    pintar((evento.clientX - left) / width)
+  }
+
+  svg.addEventListener('pointermove', (evento) => {
+    if (quieto()) return
+
+    // Con ratón o lápiz basta pasar por encima. Con el dedo no hay «encima»:
+    // ahí solo manda mientras se arrastra.
+    if (evento.pointerType === 'touch' && !arrastrando) return
+
+    if (arrastrando) evento.preventDefault()
+    seguir(evento)
+  })
+
   svg.addEventListener('pointerdown', (evento) => {
     if (quieto()) return
     arrastrando = true
-
-    // Corta la animación de entrada si todavía estuviera corriendo: sin esto,
-    // el CSS y este código pelearían por las mismas propiedades.
-    svg.classList.add('construccion-manual')
-    svg.classList.remove('construccion-soltando')
     svg.setPointerCapture(evento.pointerId)
-
-    const { left, width } = svg.getBoundingClientRect()
-    pintar((evento.clientX - left) / width)
-  })
-
-  svg.addEventListener('pointermove', (evento) => {
-    if (!arrastrando) return
-    // El arrastre manda sobre el desplazamiento de la página mientras dura.
-    evento.preventDefault()
-    const { left, width } = svg.getBoundingClientRect()
-    pintar((evento.clientX - left) / width)
+    seguir(evento)
   })
 
   for (const fin of ['pointerup', 'pointercancel', 'pointerleave']) {
     svg.addEventListener(fin, () => {
-      if (!arrastrando) return
       arrastrando = false
       soltar()
     })

@@ -58,7 +58,7 @@ const PASOS = [
 const NO_ACEPTAMOS = [
   'Encargos para mañana. Lo que se hace con prisa se paga dos veces.',
   'Competir por ser los más baratos. Hay quien cobra menos, y se nota.',
-  'Procesos de proveedor de empresa grande. Somos un equipo pequeño y no podemos sostenerlos.',
+  'Licitaciones con meses de papeleo. Para cuando aprueban, el problema ya cambió.',
 ]
 
 export default function Proceso() {

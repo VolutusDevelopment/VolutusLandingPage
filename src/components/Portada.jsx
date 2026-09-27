@@ -93,11 +93,12 @@ export default function Portada() {
         <figure className="portada-figura">
           <ConstruccionDeLaOnda className="portada-construccion" />
           {/* La pista del gesto va aquí y no como globo flotante: quien no la
-              lea no se pierde nada, porque el dibujo ya está completo. Solo se
-              muestra donde hay puntero fino; en táctil el CSS la esconde. */}
+              lea no se pierde nada, porque el dibujo acaba completo igual.
+              Solo se muestra donde hay puntero fino; en táctil el CSS la
+              esconde, porque ahí el gesto es arrastrar. */}
           <figcaption className="portada-pie dato">
             Una recta, dos circunferencias. Nuestro símbolo, con la construcción a la vista.
-            <span className="portada-pie-gesto"> Arrástralo para deshacerlo.</span>
+            <span className="portada-pie-gesto"> Muévete sobre él y lo construyes tú.</span>
           </figcaption>
         </figure>
       </div>
