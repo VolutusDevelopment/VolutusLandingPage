@@ -2,34 +2,34 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 7605,
+        "alto": 7581,
         "desborda": false,
         "h1": 129.5625,
-        "bloquesQueEntran": 22,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 6024,
+        "alto": 6032,
         "desborda": false,
         "h1": 116.125,
-        "bloquesQueEntran": 22,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4597,
+        "alto": 4686,
         "desborda": false,
         "h1": 328.3125,
-        "bloquesQueEntran": 22,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4597,
+        "alto": 4686,
         "desborda": false,
         "h1": 328.3125,
-        "bloquesQueEntran": 22,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }

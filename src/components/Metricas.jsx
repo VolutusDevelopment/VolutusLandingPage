@@ -1,3 +1,4 @@
+import Medidor from './Medidor.jsx'
 
 /**
  * Métricas (DESIGN-BRIEF §4, bloque 3). Sigue en plano: la página todavía está
@@ -11,43 +12,25 @@
  *
  * Lo que sí existe es esta página, y el visitante puede comprobar cada cifra
  * con las herramientas de su propio navegador sin pedirle permiso a nadie. Una
- * empresa de software que publica el peso de su portada y acierta está
- * demostrando exactamente lo que dice saber hacer.
+ * empresa de software que publica sus números y acierta está demostrando
+ * exactamente lo que dice saber hacer.
  *
- * Las cifras se miden sobre `dist/` después del build y se copian aquí a mano.
- * No se calculan en tiempo de ejecución: eso costaría JavaScript en la portada
- * para contar lo poco que pesa la portada.
+ * **La sección gastaba más palabras en explicar los números que los números.**
+ * Ahora las cuatro puntuaciones son cuatro medidores que se llenan al entrar, y
+ * la explicación de cada prueba cabe en una línea bajo su anillo. Las tres
+ * cifras duras que no van sobre cien —lo que tarda, lo que pesa, cuánto se
+ * mueve— quedan en una sola línea al pie, que es donde no estorban.
  *
- * Los plazos del proceso y los objetivos de negocio NO están aquí: son las
- * preguntas abiertas 4 y 6 del brief y las tiene que contestar el equipo.
+ * Medido con Lighthouse el 27-09-2026 sobre el build de producción, en móvil
+ * con 4G simulado. Si el build engorda, estos números mienten: se vuelven a
+ * medir antes de publicar cualquier cambio.
  */
 
-// Medido con Lighthouse el 2026-09-25 contra el build de producción, en móvil
-// con 4G simulado. Si el build engorda, estos números mienten: se vuelven a
-// medir antes de publicar cualquier cambio.
-//
-// **Las cifras están en el idioma del cliente, no en el nuestro.** «72 kB» es
-// la prueba, pero a quien llega a esta página no le dice nada: lo que le dice
-// algo es cuánto tarda en abrirse con datos y si el sitio aguanta la vara con
-// la que Google mide a todo el mundo. El dato técnico baja a la nota, que es
-// donde lo busca quien sabe leerlo. §2 lo pide sin rodeos — el visitante no es
-// ingeniero — y §5 prohíbe la jerga.
-const MEDICIONES = [
-  {
-    valor: '1,2 s',
-    etiqueta: 'Tarda en abrirse con datos',
-    nota: 'Medido en una conexión móvil 4G, que es como se abre un enlace que llega por WhatsApp. La página entera pesa 78 kB.',
-  },
-  {
-    valor: '100',
-    etiqueta: 'En las cuatro pruebas de Google',
-    nota: 'Rendimiento, accesibilidad, buenas prácticas y posicionamiento. Es la vara pública con la que se mide cualquier sitio, y la puedes correr tú.',
-  },
-  {
-    valor: '0',
-    etiqueta: 'Saltos mientras carga',
-    nota: 'Cada imagen reserva su sitio antes de llegar, así que nada se mueve bajo el dedo justo cuando vas a tocar.',
-  },
+const PRUEBAS = [
+  { nombre: 'Rendimiento', valor: 100, nota: 'Cuánto tarda en poder usarse.' },
+  { nombre: 'Accesibilidad', valor: 100, nota: 'Que sirva con teclado y lector de pantalla.' },
+  { nombre: 'Buenas prácticas', valor: 100, nota: 'Seguridad y errores de consola.' },
+  { nombre: 'Posicionamiento', valor: 100, nota: 'Que los buscadores la entiendan.' },
 ]
 
 export default function Metricas() {
@@ -55,24 +38,30 @@ export default function Metricas() {
     <section id="metricas" className="seccion zona-plano metricas">
       <div className="contenedor">
         <p className="antetitulo entra">Medido, no prometido</p>
-        <h2 className="entra">Lo que pesa esta página.</h2>
+        <h2 className="entra">Las cuatro pruebas de Google, llenas.</h2>
         <p className="entradilla metricas-entradilla entra">
-          Puedes comprobarlo ahora mismo con las herramientas de tu navegador. Publicamos los
-          números porque cumplirlos es la parte difícil.
+          Es la vara pública con la que se mide cualquier sitio, y la puedes correr tú ahora mismo.
         </p>
 
-        <dl className="metricas-rejilla">
-          {MEDICIONES.map((m) => (
-            <div key={m.etiqueta} className="metrica entra">
-              <dt className="solo-lectores">{m.etiqueta}</dt>
-              <dd className="metrica-cuerpo">
-                <span className="metrica-valor dato">{m.valor}</span>
-                <span className="metrica-etiqueta">{m.etiqueta}</span>
-                <span className="metrica-nota">{m.nota}</span>
-              </dd>
-            </div>
+        <ul className="medidores">
+          {PRUEBAS.map((p) => (
+            <Medidor key={p.nombre} {...p} />
           ))}
-        </dl>
+        </ul>
+
+        {/* Las tres cifras que no van sobre cien. En una línea, con separadores
+            en vez de tres tarjetas: ninguna necesita su propio párrafo. */}
+        <p className="metricas-duras entra">
+          <span>
+            <b className="dato">1,2 s</b> en abrir con datos móviles
+          </span>
+          <span>
+            <b className="dato">78 kB</b> la página entera
+          </span>
+          <span>
+            <b className="dato">0</b> saltos mientras carga
+          </span>
+        </p>
       </div>
     </section>
   )
