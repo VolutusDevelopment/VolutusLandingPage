@@ -177,67 +177,54 @@
 
 /* ---- el llenado ----
  *
- * Los anillos se llenan cuando entran en pantalla, con la misma línea de
- * tiempo del scroll que usa el resto de la página. Escalonados: cuatro
- * arrancando a la vez se leen como una imagen que aparece, no como cuatro
- * medidas que se toman.
- *
- * El estado por defecto —fuera de la animación— es el anillo LLENO. Así, sin
- * soporte o con movimiento reducido, se ve la puntuación y no una pista vacía. */
+ * La construcción la lleva `medidores.js` con su propio reloj. Iba con
+ * `animation-timeline: view()`, pero ahí la velocidad no se elige: la pone el
+ * scroll de quien mira, y bajando deprisa los cuatro anillos aparecían llenos
+ * de golpe. Aquí solo queda el estado por defecto, que es el que importa: el
+ * anillo LLENO con su puntuación. Sin JavaScript, al imprimir o con movimiento
+ * reducido se ve la nota de verdad y no una pista vacía. */
 
-@keyframes medidor-llenar {
-  from {
-    stroke-dashoffset: var(--vuelta);
-  }
-}
+/* Mientras `medidores.js` tiene el mando, el trazo NO lleva transición de
+   recorte: el arco sigue al puntero y se reescribe en cada fotograma, y una
+   transición encima lo dejaría siempre un paso por detrás, que es justo lo que
+   arruina la sensación de estar moviéndolo. El suavizado de los viajes lo pone
+   el propio JavaScript.
 
-@supports (animation-timeline: view()) {
-  @media screen and (prefers-reduced-motion: no-preference) {
-    .medidor-relleno {
-      animation: medidor-llenar var(--ease-out) both;
-      animation-timeline: view();
-      animation-range: entry 8% entry 55%;
-    }
-
-    /* El escalonado va en el RANGO, no en `animation-delay`. Una línea de
-       tiempo atada al scroll no avanza con el reloj, así que un retardo en
-       milisegundos no la mueve: lo que la mueve es empezar más tarde dentro
-       del recorrido. Los cuatro anillos están en la misma fila y entran a la
-       vez, así que sin esto se llenarían como una sola imagen en vez de como
-       cuatro medidas que se toman. */
-    .medidor:nth-child(2) .medidor-relleno {
-      animation-range: entry 14% entry 61%;
-    }
-
-    .medidor:nth-child(3) .medidor-relleno {
-      animation-range: entry 20% entry 67%;
-    }
-
-    .medidor:nth-child(4) .medidor-relleno {
-      animation-range: entry 26% entry 73%;
-    }
-  }
-}
-
-@media print {
-  .medidor-relleno {
-    animation: none;
-  }
-}
-
-:root[data-movimiento='reducido'] .medidor-relleno {
-  animation: none;
-}
-
-/* Al tomar el mando `medidores.js`, la animación del scroll se apaga: una
-   animación de CSS gana a un estilo en línea, así que sin esto lo que escriba
-   el JavaScript no se vería.
-
-   El trazo NO lleva transición. El arco sigue al puntero y se reescribe en
-   cada fotograma; una transición encima lo dejaría siempre un paso por detrás
-   del dedo, que es justo lo que arruina la sensación de estar moviéndolo. El
-   suavizado del viaje de ida y del de vuelta lo pone el propio JavaScript. */
+   El color sí la lleva: los saltos entre tramos son discretos —Google los
+   define así— pero un corte seco a mitad de un arrastre se lee como un
+   parpadeo. */
 .medidor-manual .medidor-relleno {
-  animation: none;
-  transition: stroke-width 160ms var(--ease-out);
+  transition:
+    stroke 200ms var(--ease-out),
+    stroke-width 160ms var(--ease-out);
+}
+
+/* ---- los tramos de Google ----
+ *
+ * Mientras el medidor se mueve, el arco lleva el color del tramo en el que
+ * cae: es lo que convierte un «100» abstracto en una posición dentro de una
+ * escala que alguien más publicó. Los valores son los semánticos del brief
+ * (§6), que existen justamente para esto y son independientes del acento.
+ *
+ * En reposo el anillo vuelve al color de marca. Cuatro anillos verdes fijos
+ * serían un cuadro de mandos; la identidad de la página es el celeste.
+ *
+ * El color nunca va solo: la cifra está en el centro y la nota de abajo dice
+ * el nombre del tramo mientras dura el gesto. */
+.medidor.tramo-malo .medidor-relleno {
+  stroke: var(--error);
+}
+
+.medidor.tramo-medio .medidor-relleno {
+  stroke: var(--aviso);
+}
+
+.medidor.tramo-bueno .medidor-relleno {
+  stroke: var(--exito);
+}
+
+/* La nota pasa a tinta plena mientras dice el tramo: deja de ser un pie de
+   apoyo y pasa a ser la lectura del medidor. */
+.medidor-manual .medidor-nota {
+  color: var(--texto);
 }
