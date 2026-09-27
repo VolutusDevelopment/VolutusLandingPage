@@ -1,4 +1,5 @@
 import Medidor from './Medidor.jsx'
+import { ORIGEN } from '../lib/meta.js'
 
 /**
  * Métricas (DESIGN-BRIEF §4, bloque 3). Sigue en plano: la página todavía está
@@ -26,21 +27,46 @@ import Medidor from './Medidor.jsx'
  * medir antes de publicar cualquier cambio.
  */
 
+/**
+ * Las notas dicen QUÉ TE DA cada prueba, no qué mide.
+ *
+ * Antes eran definiciones —«Cuánto tarda en poder usarse», «Seguridad y
+ * errores de consola»— y eso deja al lector traduciendo. Quien llega aquí no
+ * está evaluando una herramienta de Google: acaba de hablar con uno de los dos
+ * socios y está comprobando si lo que le contaron es cierto (§2). Lo que
+ * necesita de cada anillo es la consecuencia, no el temario.
+ *
+ * Los nombres sí se quedan en castellano llano. Google los llama «Prácticas
+ * recomendadas» y «SEO»; aquí son «Buenas prácticas» y «Posicionamiento»,
+ * porque «SEO» es jerga para quien hoy resuelve esto con una planilla.
+ */
 const PRUEBAS = [
-  { nombre: 'Rendimiento', valor: 100, nota: 'Cuánto tarda en poder usarse.' },
-  { nombre: 'Accesibilidad', valor: 100, nota: 'Que sirva con teclado y lector de pantalla.' },
-  { nombre: 'Buenas prácticas', valor: 100, nota: 'Seguridad y errores de consola.' },
-  { nombre: 'Posicionamiento', valor: 100, nota: 'Que los buscadores la entiendan.' },
+  { nombre: 'Rendimiento', valor: 100, nota: 'Nadie se va porque tarda.' },
+  { nombre: 'Accesibilidad', valor: 100, nota: 'La puede usar quien no ve la pantalla.' },
+  { nombre: 'Buenas prácticas', valor: 100, nota: 'Nada inseguro ni roto por dentro.' },
+  { nombre: 'Posicionamiento', valor: 100, nota: 'Google entiende de qué trata.' },
 ]
+
+// La prueba, sobre esta misma página. Es el enlace que el antetítulo promete:
+// sin él, «medido» es otra cosa que hay que creerse.
+const PRUEBA = `https://pagespeed.web.dev/analyze?url=${encodeURIComponent(`${ORIGEN}/`)}`
 
 export default function Metricas() {
   return (
     <section id="metricas" className="seccion zona-plano metricas">
       <div className="contenedor">
         <p className="antetitulo entra">Medido, no prometido</p>
-        <h2 className="entra">Las cuatro pruebas de Google, llenas.</h2>
+        {/* El titular lleva el número y dice de qué página habla. «Las cuatro
+            pruebas de Google, llenas» describía un trofeo nuestro y solo se
+            entendía después de ver los anillos. */}
+        <h2 className="entra">Esta página saca 100 en las cuatro pruebas de Google.</h2>
+        {/* La segunda frase es la que trabaja: invita a medir lo que ya tiene.
+            Quien llega aquí suele arrastrar un sitio hecho por «un conocido que
+            sabe de computación» (§2), y la comparación la hace él solo. «La que
+            tengas hoy» no da por hecho que exista. */}
         <p className="entradilla metricas-entradilla entra">
-          Es la vara pública con la que se mide cualquier sitio, y la puedes correr tú ahora mismo.
+          La prueba la hace Google, es gratis y la puede repetir cualquiera. Mide esta página, y
+          después la que tengas hoy.
         </p>
 
         <ul className="medidores">
@@ -50,17 +76,30 @@ export default function Metricas() {
         </ul>
 
         {/* Las tres cifras que no van sobre cien. En una línea, con separadores
-            en vez de tres tarjetas: ninguna necesita su propio párrafo. */}
+            en vez de tres tarjetas: ninguna necesita su propio párrafo.
+
+            «78 kB» no le dice nada a nadie sin con qué compararlo, y la foto
+            que ese mismo teléfono acaba de sacar pesa cuarenta veces más. */}
         <p className="metricas-duras entra">
           <span>
             <b className="dato">1,2 s</b> en abrir con datos móviles
           </span>
           <span>
-            <b className="dato">78 kB</b> la página entera
+            <b className="dato">78 kB</b> la página entera, menos que una foto
           </span>
           <span>
             <b className="dato">0</b> saltos mientras carga
           </span>
+        </p>
+
+        {/* Las condiciones van escritas porque el resultado de quien repita la
+            prueba dependerá de su conexión, y encontrarse un 97 sin saber por
+            qué gasta más confianza de la que cuesta esta línea. */}
+        <p className="metricas-pie entra">
+          Medido en móvil con 4G simulado.{' '}
+          <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
+            Mide esta página en PageSpeed Insights
+          </a>
         </p>
       </div>
     </section>

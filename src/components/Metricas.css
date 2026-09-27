@@ -182,6 +182,21 @@
   color: var(--marca);
 }
 
+/* ---- el pie: condiciones y la prueba ----
+ *
+ * Va en el paso más pequeño y en tinta suave: es la letra chica de la sección,
+ * no un cuarto argumento. El enlace se deja como enlace de texto y no como
+ * botón a propósito — §4 reserva las dos apariciones de llamada a la acción
+ * para el formulario, y esto no lleva a ningún sitio nuestro. */
+
+.metricas-pie {
+  margin: var(--e-6) auto 0;
+  max-width: none;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  text-align: center;
+}
+
 /* ---- el llenado ----
  *
  * La construcción la lleva `medidores.js` con su propio reloj. Iba con
