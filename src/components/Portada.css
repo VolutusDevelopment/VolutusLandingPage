@@ -2,6 +2,124 @@
   /* La barra mide 64 px y es sticky, así que el aire de arriba se mide desde
      debajo de ella. */
   padding-block: var(--e-12) var(--e-16);
+  position: relative;
+  /* El halo vive detrás de todo sin salirse de la sección: `isolation` crea
+     el apilamiento para su z-index negativo y `clip` evita el scroll lateral
+     sin crear un contenedor de scroll. */
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* ---- el halo ----
+   La profundidad de la portada: dos luces difusas, una petróleo y otra bosque,
+   los dos colores de la página. Es CSS puro, sin imagen, y entra una sola vez
+   escalando y fundiéndose, que es lo único que anima: `transform` y
+   `opacity`. */
+.portada::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -20% -10% auto 35%;
+  height: 120%;
+  background:
+    radial-gradient(40% 45% at 60% 40%, var(--halo-a), transparent 70%),
+    radial-gradient(35% 40% at 35% 65%, var(--halo-b), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---- la palabra que rota ----
+   Es un bloque de rejilla con dos ocupantes en la misma celda: la palabra
+   visible y, invisible, la más larga de la lista. La celda mide siempre lo que
+   la más larga, así que el titular reserva su alto desde el primer pintado y
+   no salta cuando cambia la palabra — ni en móvil, donde puede ocupar dos
+   líneas. */
+.rotativo {
+  display: grid;
+  color: var(--accion);
+}
+
+.rotativo::before {
+  content: attr(data-reserva);
+  visibility: hidden;
+}
+
+.rotativo::before,
+.rotativo-palabra {
+  grid-area: 1 / 1;
+}
+
+.rotativo-palabra {
+  transition:
+    transform 320ms var(--ease-out),
+    opacity 320ms var(--ease-out);
+}
+
+.rotativo-sale {
+  opacity: 0;
+  transform: translateY(-0.25em);
+}
+
+.rotativo-entra {
+  opacity: 0;
+  transform: translateY(0.25em);
+  transition: none;
+}
+
+/* ---- la entrada ----
+   Una sola vez por carga y en orden de lectura: titular, entradilla, acciones y
+   credencial, 80 ms entre uno y otro.
+
+   El titular es el LCP y por eso NO parte de opacidad 0: solo sube. Un
+   elemento invisible no cuenta como pintado, y partir de 0 retrasaría la
+   métrica exactamente lo que dura la animación. */
+@keyframes portada-subir {
+  from {
+    transform: translateY(12px);
+  }
+}
+
+@keyframes portada-halo {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada h1 {
+    animation: portada-subir 700ms var(--ease-out) both;
+  }
+
+  .portada-entradilla,
+  .portada-acciones,
+  .portada-credencial {
+    animation: entrar var(--t-entrada) var(--ease-out) both;
+  }
+
+  .portada-entradilla {
+    animation-delay: 80ms;
+  }
+
+  .portada-acciones {
+    animation-delay: 160ms;
+  }
+
+  .portada-credencial {
+    animation-delay: 240ms;
+  }
+
+  .portada::before {
+    animation: portada-halo 1600ms var(--ease-out) both;
+  }
+}
+
+:root[data-movimiento='reducido'] .portada::before,
+:root[data-movimiento='reducido'] :is(.portada h1, .portada-entradilla, .portada-acciones, .portada-credencial) {
+  animation: none;
+}
+
+:root[data-movimiento='reducido'] .rotativo-palabra {
+  transition: none;
 }
 
 .portada-interior {
@@ -68,13 +186,14 @@
   padding: var(--e-6);
 }
 
-/* ---- las cuatro capas del dibujo ----
+/* ---- las capas del dibujo ----
    Cada una tiene su propio peso porque el orden de lectura importa: primero
    se ve el trazo, y solo después se entiende que detrás hay una construcción. */
 
-.onda-guias {
-  stroke: var(--linea);
-  stroke-width: 0.12;
+.onda-guias,
+.onda-cuadro {
+  stroke: color-mix(in srgb, var(--marca) 45%, var(--linea));
+  stroke-width: 0.1;
   fill: none;
 }
 
@@ -92,34 +211,29 @@
   fill: var(--texto-suave);
   font-family: var(--fuente-datos);
   font-size: 1.1px;
-  letter-spacing: 0.04em;
 }
 
 /* ============================================================================
  * La construcción, construyéndose.
  *
- * El dibujo explica que el símbolo está hecho con una recta y dos
- * circunferencias. Animarlo en ese mismo orden no es adorno: es la explicación
- * ocurriendo. Primero aparecen los ejes, después se trazan las dos
- * circunferencias, se marcan sus centros y solo entonces la onda recorre el
- * camino que esas guías dejaron preparado.
+ * El dibujo explica que el símbolo sale de la serie de Fibonacci. Animarlo en
+ * ese orden es la explicación ocurriendo: aparece la recta de base, se trazan
+ * los cuadrados del mayor al menor, se clavan los centros y solo entonces la
+ * voluta recorre el camino que esas guías dejaron preparado.
  *
- * Pasa la compuerta de las cuatro preguntas: se ve **una vez por carga**
- * —frecuencia rara, que es donde cabe el presupuesto de deleite—, su propósito
- * es explicativo, y por ser narrativa puede durar más que los 300 ms que manda
- * la interfaz. Los 7 s se gastan en una sola pieza y en ninguna otra.
+ * Se ve una vez por carga, su propósito es explicativo y por ser narrativa
+ * puede durar más que los 300 ms de la interfaz: los 7 s se gastan en esta
+ * pieza y en ninguna otra.
  *
- * Tan lenta es deliberado: a 2,4 s la construcción pasaba antes de que nadie
- * se diera cuenta de que había algo que mirar. A este ritmo se lee como una
- * mano dibujando, que es lo que se quería contar.
+ * Las longitudes de guion llegan del JSX como `--largo` (perímetro de cada
+ * cuadrado, largo de la voluta) y el orden como `--i`, así que aquí no hay un
+ * solo número de la geometría que mantener a mano.
  *
- * Las longitudes de guion son las circunferencias reales, 2πr: 47.12 para la
- * mayor y 23.56 para la menor. Si se tocan los radios en el JSX, hay que
- * recalcularlas aquí o el trazado quedará a medias.
+ * `stroke-dasharray` solo existe DENTRO de la animación: quien tenga el
+ * movimiento reducido ve el dibujo terminado y no líneas punteadas.
  *
- * `stroke-dasharray` solo existe DENTRO de la animación. Fuera de ella las
- * circunferencias son continuas, así que quien tenga el movimiento reducido ve
- * el dibujo terminado y no un círculo punteado.
+ * El reparto de tiempos es el mismo que usa `marca-interactiva.js` en sus
+ * tramos; si cambia uno, cambia el otro.
  * ========================================================================= */
 
 @keyframes onda-aparecer {
@@ -143,51 +257,32 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .portada-construccion .onda-guias {
-    animation: onda-aparecer 1400ms var(--ease-out) both;
+    animation: onda-aparecer 1000ms var(--ease-out) both;
   }
 
-  /* Cada circunferencia se dibuja sola. El retardo de la menor empieza antes
-     de que termine la mayor: encadenado, no por turnos, que se siente lento. */
-  .portada-construccion .onda-circulo-mayor {
-    --largo: 47.12;
+  /* Encadenados, no por turnos: cada cuadrado empieza antes de que termine
+     el anterior, que por turnos se siente lento. */
+  .portada-construccion .onda-cuadro {
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 2000ms var(--ease-in-out) 900ms both;
-  }
-
-  .portada-construccion .onda-circulo-menor {
-    --largo: 23.56;
-    stroke-dasharray: var(--largo);
-    animation: onda-trazar 1700ms var(--ease-in-out) 2400ms both;
+    animation: onda-trazar 1100ms var(--ease-in-out) calc(600ms + var(--i) * 600ms) both;
   }
 
   /* Los centros aparecen como quien clava el compás. `transform-box: fill-box`
-     es obligatorio en SVG: sin él el origen de la escala es el lienzo entero y
-     los puntos salen disparados desde la esquina. */
+     es obligatorio en SVG: sin él el origen de la escala es el lienzo entero. */
   .portada-construccion .onda-centros circle {
     transform-box: fill-box;
     transform-origin: center;
-    animation: onda-centro 600ms var(--ease-out) both;
+    animation: onda-centro 500ms var(--ease-out) calc(3100ms + var(--i) * 150ms) both;
   }
 
-  .portada-construccion .onda-centros circle:first-child {
-    animation-delay: 2900ms;
-  }
-
-  .portada-construccion .onda-centros circle:last-child {
-    animation-delay: 3300ms;
-  }
-
-  /* El trazo definitivo, al final y sin prisa: es el protagonista y lo que la
-     persona recuerda. 45 es su longitud, la misma que usa la marca de la
-     barra. */
+  /* El trazo definitivo, al final y sin prisa: es lo que la persona recuerda. */
   .portada-construccion .onda-trazo {
-    --largo: 45;
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 2800ms var(--ease-out) 3700ms both;
+    animation: onda-trazar 2600ms var(--ease-out) 3800ms both;
   }
 
   .portada-construccion .onda-cota {
-    animation: onda-aparecer 900ms var(--ease-out) 6200ms both;
+    animation: onda-aparecer 900ms var(--ease-out) 6100ms both;
   }
 }
 
@@ -202,23 +297,13 @@
  * Al arrastrar, `marca-interactiva.js` escribe los mismos valores que la
  * animación. Para que no peleen, el primer toque pone `construccion-manual` y
  * con ella las animaciones de entrada dejan de existir. */
-.construccion-manual .onda-guias,
-.construccion-manual .onda-circulo-mayor,
-.construccion-manual .onda-circulo-menor,
-.construccion-manual .onda-centros circle,
-.construccion-manual .onda-trazo,
-.construccion-manual .onda-cota {
+.construccion-manual * {
   animation: none;
 }
 
 /* Al soltar, el dibujo vuelve entero con una transición corta en vez de saltar.
    La clase la quita el propio JavaScript en el siguiente toque. */
-.construccion-soltando .onda-guias,
-.construccion-soltando .onda-circulo-mayor,
-.construccion-soltando .onda-circulo-menor,
-.construccion-soltando .onda-centros circle,
-.construccion-soltando .onda-trazo,
-.construccion-soltando .onda-cota {
+.construccion-soltando * {
   transition:
     stroke-dashoffset 420ms var(--ease-out),
     opacity 300ms var(--ease-out),

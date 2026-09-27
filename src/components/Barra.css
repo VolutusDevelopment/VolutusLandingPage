@@ -2,27 +2,50 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  /* Translúcida con desenfoque: al pasar sobre la zona de plano se oscurece
-     sola, sin conmutar el tema con JavaScript. */
-  background: color-mix(in srgb, var(--fondo) 82%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--linea);
+  /* Sin fondo propio: lo que tapa el contenido son la marca y la cápsula, cada
+     una con su vidrio. */
+  pointer-events: none;
 }
 
 .barra-interior {
-  height: 64px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--e-6);
+  gap: var(--e-4);
+}
+
+/* El vidrio de las dos piezas. Translúcido sobre el fondo de cielo, así que al
+   pasar sobre la zona de plano se oscurece solo, sin JavaScript. */
+.barra-marca,
+.barra-capsula {
+  pointer-events: auto;
+  background: color-mix(in srgb, var(--superficie) 72%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 999px;
 }
 
 .barra-marca {
   color: var(--texto);
   text-decoration: none;
-  /* El lockup queda por debajo de los 44 px de alto de la barra, así que el
-     área táctil se estira con padding sin mover el dibujo. */
-  padding-block: var(--e-2);
+  /* El lockup queda por debajo de los 44 px, así que el área táctil se estira
+     con padding sin mover el dibujo. */
+  padding: var(--e-2) var(--e-4) var(--e-2) var(--e-3);
+}
+
+.barra-capsula {
+  display: flex;
+  align-items: center;
+  gap: var(--e-6);
+  padding: var(--e-1) var(--e-1) var(--e-1) var(--e-6);
+  border: 1px solid color-mix(in srgb, var(--linea) 70%, transparent);
+  box-shadow: 0 8px 24px -12px rgb(21 21 21 / 0.25);
+}
+
+.barra-accion {
+  padding-inline: var(--e-4);
+  font-size: var(--texto-sm);
 }
 
 /**
@@ -36,9 +59,9 @@
  * cabe el presupuesto de deleite—, su propósito es explicativo, y al ser
  * narrativo puede durar más que los 300 ms de la interfaz.
  *
- * 45 es la longitud del trazo: la recta de 9 más las dos semicircunferencias,
- * π·7.5 + π·3.75 ≈ 35.3. Se redondea hacia arriba para que el guion cubra el
- * recorrido entero sin dejar un resto visible al final.
+ * `--largo` es la longitud del trazo y la pone `Marca.jsx`, calculada con la
+ * geometría y redondeada hacia arriba para que el guion cubra el recorrido
+ * entero sin dejar un resto visible al final.
  *
  * Solo se anima en la barra. El mismo lockup está en el pie, y allí se queda
  * quieto: repetir el gesto en la misma visita lo convertiría en un tic.
@@ -55,13 +78,13 @@
  */
 @keyframes trazar-onda {
   from {
-    stroke-dashoffset: 45;
+    stroke-dashoffset: var(--largo);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .barra-marca svg path {
-    stroke-dasharray: 45;
+    stroke-dasharray: var(--largo);
     animation: trazar-onda 900ms var(--ease-out) both;
   }
 }
@@ -104,8 +127,13 @@
    El nombre no se pierde para quien usa lector de pantalla: el enlace conserva
    su `aria-label`. */
 @media (max-width: 479px) {
-  .barra-marca [translate='no'] {
+  .barra-marca [translate='no'],
+  .barra-accion {
     display: none;
+  }
+
+  .barra-capsula {
+    padding-inline: var(--e-4);
   }
 
   .barra-enlaces {

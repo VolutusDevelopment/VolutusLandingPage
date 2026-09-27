@@ -2,6 +2,9 @@
 packages:
   - '.'
 
+allowBuilds:
+  esbuild: true
+
 # esbuild necesita su script postinstall para validar el binario nativo
 onlyBuiltDependencies:
   - esbuild

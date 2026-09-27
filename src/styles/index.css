@@ -119,13 +119,13 @@
    * el contorno desaparece: los dos elementos perdían el anillo por completo.
    * Lo destapó recorrer la página con el tabulador midiendo el contraste en
    * cada parada, no la vista. */
-  --foco: #116492;
-  --accion: #116492;
+  --foco: #2b5f73;
+  --accion: #2b5f73;
   --sobre-accion: #ffffff;
-  --linea: #d6e2ec;
+  --linea: #d9e3e7;
   --superficie: #ffffff;
-  --texto: #0a1a2a;
-  --texto-suave: #47607a;
+  --texto: #151515;
+  --texto-suave: #4d5c63;
 
   /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
@@ -170,29 +170,33 @@
      texto claro encima. */
   color-scheme: light;
 
-  --fondo: #f6f9fc;
+  --fondo: #f5f8f9;
   --superficie: #ffffff;
-  --texto: #0a1a2a;
-  --texto-suave: #47607a;
-  --linea: #d6e2ec;
+  --texto: #151515;
+  --texto-suave: #4d5c63;
+  --linea: #d9e3e7;
 
-  /* La marca NUNCA es texto ni botón sobre claro: da 2.48:1. Solo superficies. */
-  --marca: #38a9e8;
-  --accion: #116492;
-  --accion-hover: #0f5780;
-  --accion-activa: #0c4565;
+  /* La marca NUNCA es texto ni botón sobre claro: da 3.90:1. Solo trazos y
+     superficies, donde basta 3:1. */
+  --marca: #448597;
+  --accion: #2b5f73;
+  --accion-hover: #2a5060;
+  --accion-activa: #1f3f4d;
   --sobre-accion: #ffffff;
+  /* El halo de la portada: la luz de las dos zonas, petróleo y bosque. */
+  --halo-a: #bfdde3;
+  --halo-b: #bae0cf;
 
   --exito: #12714b;
   --aviso: #8a5a00;
   --error: #b3261e;
 
-  --foco: #116492;
+  --foco: #2b5f73;
 }
 
 /* ============ Tema plano: la página demuestra ============
-   Índice de proyectos y métricas. Sobre este fondo la marca sí llega a 6.71:1,
-   así que aquí es el color de acción y no hace falta el azul oscurecido.
+   Índice de proyectos y métricas. Sobre este fondo la marca sí llega a 8.80:1,
+   así que aquí es el color de acción y no hace falta la versión oscurecida.
 
    Igual que arriba: con el tema forzado a oscuro, las zonas de cielo se pintan
    con estos valores y la página entera queda en plano. */
@@ -200,23 +204,25 @@
 :root[data-tema='oscuro'] .zona-cielo {
   color-scheme: dark;
 
-  --fondo: #0a1a2a;
-  --superficie: #122638;
-  --texto: #e6eef6;
-  --texto-suave: #9db2c6;
-  --linea: #1e3348;
+  --fondo: #0c221d;
+  --superficie: #13302a;
+  --texto: #eef3f1;
+  --texto-suave: #a3bdb3;
+  --linea: #1f3d35;
 
-  --marca: #38a9e8;
-  --accion: #38a9e8;
-  --accion-hover: #6dc0ef;
-  --accion-activa: #8fd0f4;
-  --sobre-accion: #0a1a2a;
+  --marca: #8cc9b1;
+  --accion: #8cc9b1;
+  --accion-hover: #bae0cf;
+  --accion-activa: #dbf0e5;
+  --sobre-accion: #0c221d;
+  --halo-a: #152b37;
+  --halo-b: #183c33;
 
   --exito: #4fcf96;
   --aviso: #e8b14c;
   --error: #ff8a80;
 
-  --foco: #38a9e8;
+  --foco: #8cc9b1;
 }
 
 /* ============ Base ============ */
@@ -234,11 +240,11 @@ html {
      scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
      no en token porque <html> está por encima de cualquier zona y no hereda
      ninguna; con el tema oscuro forzado se cambia abajo. */
-  background: #f6f9fc;
+  background: #f5f8f9;
 }
 
 :root[data-tema='oscuro'] {
-  background: #0a1a2a;
+  background: #0c221d;
 }
 
 /* La otra vía: quien lo pide en el panel de esta página. Hace exactamente lo
@@ -554,7 +560,9 @@ svg {
   min-height: 44px;
   padding: 0 var(--e-6);
   border: 1px solid transparent;
-  border-radius: var(--radio);
+  /* Píldora, como la cápsula de la barra: el botón es lo único redondo de la
+     página y por eso se reconoce como botón antes de leerlo. */
+  border-radius: 999px;
   font-family: inherit;
   font-size: var(--texto-base);
   font-weight: 400;

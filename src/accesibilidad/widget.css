@@ -50,27 +50,27 @@
   width: 48px;
   height: 48px;
   margin-left: auto;
-  border: 1px solid var(--linea, #d6e2ec);
+  border: 1px solid var(--linea, #d9e3e7);
   border-radius: var(--radio, 4px);
   background: var(--superficie, #ffffff);
-  color: var(--accion, #116492);
+  color: var(--accion, #2b5f73);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
 .a11y-boton:hover {
-  border-color: var(--accion, #116492);
+  border-color: var(--accion, #2b5f73);
 }
 
 .a11y-panel {
   width: min(17rem, calc(100vw - 32px));
   margin-bottom: 8px;
   padding: 16px;
-  border: 1px solid var(--linea, #d6e2ec);
+  border: 1px solid var(--linea, #d9e3e7);
   border-radius: var(--radio, 4px);
   background: var(--superficie, #ffffff);
-  color: var(--texto, #0a1a2a);
+  color: var(--texto, #151515);
 
   /* Crece DESDE el botón, no desde su propio centro: el origen está en la
      esquina inferior derecha, que es justo donde está el disparador. Eso es lo
@@ -134,7 +134,7 @@
   padding: 0;
   margin-bottom: 6px;
   font-size: 13px;
-  color: var(--texto-suave, #47607a);
+  color: var(--texto-suave, #4d5c63);
 }
 
 .a11y-opciones {
@@ -162,7 +162,7 @@
   justify-content: center;
   min-height: 44px;
   padding: 0 6px;
-  border: 1px solid var(--linea, #d6e2ec);
+  border: 1px solid var(--linea, #d9e3e7);
   border-radius: var(--radio, 4px);
   font-size: 13px;
   text-align: center;
@@ -172,8 +172,8 @@
 }
 
 .a11y-opcion input:checked + span {
-  border-color: var(--accion, #116492);
-  background: var(--accion, #116492);
+  border-color: var(--accion, #2b5f73);
+  background: var(--accion, #2b5f73);
   color: var(--sobre-accion, #ffffff);
 }
 
@@ -181,23 +181,23 @@
    esto, navegar el widget con teclado sería navegar a ciegas — en el widget de
    accesibilidad. */
 .a11y-opcion input:focus-visible + span {
-  outline: 2px solid var(--foco, #116492);
+  outline: 2px solid var(--foco, #2b5f73);
   outline-offset: 2px;
 }
 
 .a11y-restablecer {
   width: 100%;
   min-height: 44px;
-  border: 1px solid var(--linea, #d6e2ec);
+  border: 1px solid var(--linea, #d9e3e7);
   border-radius: var(--radio, 4px);
   background: transparent;
-  color: var(--texto, #0a1a2a);
+  color: var(--texto, #151515);
   font: inherit;
   font-size: 13px;
   cursor: pointer;
 }
 
 .a11y-restablecer:hover {
-  border-color: var(--accion, #116492);
-  color: var(--accion, #116492);
+  border-color: var(--accion, #2b5f73);
+  color: var(--accion, #2b5f73);
 }

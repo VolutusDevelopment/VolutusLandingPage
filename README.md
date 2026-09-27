@@ -1,71 +1,19 @@
-# Volutus — Landing Page
+# Es necesario pulir la propuesta actual, a esto le falta movimiento, identidad y atracción al usuario. 
 
-Landing page de Volutus, construida con React y Vite, con pre-renderizado estático para SEO y rendimiento.
+# Hago una recopilación de componentes que me gustan de un par de páginas que encontré por ahí. 
 
-[Diseño de referencia en Canva](https://www.canva.com/design/DAHPg0F3exU/gsNlD7AkpXAVVIyV5ObjTQ/edit?ui=eyJFIjp7Im0iOnRydWUsIkE_IjoibiJ9LCJLIjp7IkEiOiIyYTZiZDgyMy1mY2UyLTRlYTMtYTdmMi1kMTM0OTA2N2RhMDEifX0)
+### Me gusta como presenta el navbar transparente https://aquavoice.com/
+![alt text](image-5.png) ![alt text](image-6.png)
 
-![1784174150425](image/README/1784174150425.png)![1784174195927](image/README/1784174195927.png)
 
-## Stack
+### Me gusta mucho el cambio de palabras del header de https://customer.io/ 
+![alt text](image.png) ![alt text](image-1.png)
 
-- React 19 — solo en build: se usa como motor de plantillas para el prerender.
-- Vite 7
-- CSS puro (tokens y componentes en [DESIGN.md](DESIGN.md))
-- JavaScript vanilla en el cliente ([src/client.js](src/client.js))
+### me gusta tambien la estructura general de https://www.moderntreasury.com/. creo que como presenta su header más su animación inicial es un buen encanche. Tambien el como presenta sus cards y la paleta de colores de este.
 
-## Arquitectura
+### de https://allfeat.org/ me gusta como presenta las cards de sus características ![alt text](image-2.png)![alt text](image-3.png) al igual que su footer ![alt text](image-4.png)
 
-En producción **React no se envía al navegador**. El script de build:
 
-1. `vite build` — genera el bundle cliente en `dist/`.
-2. `vite build --ssr src/entry-server.jsx` — genera el bundle SSR en `.prerender/`.
-3. `node scripts/prerender.mjs` — inyecta el HTML de `<App />` en
-   `dist/index.html` e inlinea el CSS en un `<style>` (elimina la request
-   bloqueante del critical path).
+quiero que busques las páginas web de las referencias y haz lo mejor posible para que los efectos sean lo más parecidos posibles. los difuminados de la transparencia que no sean bruscos, deben ser como la referencia. Que el efecto de cambio de palabra salga igual a la referencia, con una cascada de letras que vayan saliendo de desde abajo e inmediatamente lleguen otras letras.
 
-El único JS que llega al cliente es `src/client.js` (vanilla), que engancha
-sobre el HTML prerenderizado: typewriter del hero, reveal on-scroll, tabs de
-"Quiénes Somos", validación del formulario (envío por `mailto:`) y Vercel Web
-Analytics vía snippet oficial (sin paquete npm).
-
-En desarrollo el root llega vacío y React monta la App en el navegador
-(`src/dev.jsx`); Vite elimina ese bloque del bundle de producción.
-
-## Comandos
-
-```bash
-pnpm install       # instalar dependencias
-pnpm dev           # servidor de desarrollo
-pnpm build         # build de producción + pre-render
-pnpm preview       # previsualizar el build
-```
-
-## Estructura
-
-```
-index.html              # shell HTML: meta SEO, Open Graph, JSON-LD, preload de fuente
-scripts/
-  prerender.mjs         # inyecta el HTML prerenderizado e inlinea el CSS
-src/
-  App.jsx               # composición de la página
-  main.js               # entrada del cliente (estilos + init)
-  client.js             # comportamiento en el navegador (vanilla JS)
-  entry-server.jsx      # entrada del prerender (renderToString)
-  dev.jsx               # montaje de React solo en desarrollo
-  components/           # secciones (Nav, Hero, About, Services, Projects, Contact, Footer) con su CSS
-  data/                 # contenido estático (servicios, proyectos)
-  styles/               # tokens y estilos base (index.css) + orden de la cascada (main.css)
-public/
-  fonts/                # Archivo variable autohospedada (woff2)
-  image/                # imágenes optimizadas (webp con srcset)
-  robots.txt, sitemap.xml, llms.txt
-```
-
-## SEO
-
-- HTML completo prerenderizado (sin depender de JS para indexar).
-- Meta description, canonical, Open Graph, Twitter Card y JSON-LD
-  (`WebSite` + `Organization`) en `index.html`.
-- `robots.txt`, `sitemap.xml` y `llms.txt` en `public/`.
-- Imágenes con `srcset`, dimensiones explícitas y `loading="lazy"` fuera
-  del viewport inicial; la imagen del hero con `fetchpriority="high"`.
+cuando termines sube tus cambios a la rama de rediseño/diego

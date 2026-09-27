@@ -1,78 +1,78 @@
+import { VOLUTA } from './Marca.jsx'
+
 /**
- * La onda, dibujada con su construcción a la vista.
+ * La voluta, dibujada con su construcción a la vista.
  *
- * Sustituye a la fotografía de la portada. El motivo no es estético sino de
- * argumento: el titular promete software **que puedes abrir y revisar**, y una
- * foto de una nube no dice nada de eso. Esto sí — es la marca enseñando cómo
- * está hecha, con los círculos y las tangentes que la generan todavía puestos.
- * La misma idea que la página vende, aplicada a su propio símbolo.
+ * El titular promete software **que puedes abrir y revisar**, y esto es la
+ * marca haciendo lo mismo consigo misma: se ven los cuadrados de Fibonacci que
+ * la generan (lados 8, 5, 3 y 2), el centro de cada arco y la recta de entrada.
+ * Cada arco vive en su cuadrado y su radio es el lado; la razón entre vecinos
+ * tiende a φ.
  *
- * Está permitido por §6, que autoriza «gráfica vectorial propia: la onda de
- * marca, diagramas e iconos de trazo, en SVG inline, de un solo color, sin
- * degradados». Y evita lo que A.1 prohíbe: no hay estética de terminal ni
- * adorno, solo geometría.
+ * No es un adorno que se le parece: todo sale de `VOLUTA`, el mismo cálculo que
+ * pinta la barra y el favicon. Si alguien mide el dibujo, cuadra. Y si la serie
+ * cambia, esto cambia solo, con sus longitudes de animación incluidas.
  *
- * Todo lo que se dibuja es la construcción real de `Marca.jsx`, no un adorno
- * que se le parece:
- *
- *   · circunferencia mayor  centro (12.75, 12)     radio 7.5
- *   · circunferencia menor  centro (12.75, 8.25)   radio 3.75  — la mitad
- *   · la recta y = 19.5, tangente a la mayor en su punto más bajo
- *
- * Si alguien mide el dibujo, cuadra. Esa es la gracia.
- *
- * Pesa alrededor de 1 kB dentro del HTML y sustituye a una imagen de 7 kB con
- * su petición: la portada carga menos que antes.
+ * Va en SVG dentro del HTML: sin petición y alrededor de 1,5 kB.
  */
 
-const MAYOR = { cx: 12.75, cy: 12, r: 7.5 }
-const MENOR = { cx: 12.75, cy: 8.25, r: 3.75 }
+const desfase = VOLUTA.puntos.length - VOLUTA.arcos.length - 1
+const base = VOLUTA.puntos[0][1]
 
-const TRAZO = 'M3.75 19.5 H12.75 A7.5 7.5 0 0 0 12.75 4.5 A3.75 3.75 0 0 0 12.75 12'
+// Cada cuadrado tiene por esquinas el inicio del arco, su centro, su final y
+// la esquina opuesta al centro.
+const CUADROS = VOLUTA.arcos.map(({ centro, r, serie }, i) => {
+  const inicio = VOLUTA.puntos[i + desfase]
+  const fin = VOLUTA.puntos[i + desfase + 1]
+  const esquina = [inicio[0] + fin[0] - centro[0], inicio[1] + fin[1] - centro[1]]
+  // La cota va entre el centro y la esquina, lejos del trazo.
+  const cota = [centro[0] + (esquina[0] - centro[0]) * 0.4, centro[1] + (esquina[1] - centro[1]) * 0.4]
+  return {
+    puntos: [inicio, centro, fin, esquina].map((p) => p.join(',')).join(' '),
+    perimetro: Math.ceil(r * 4),
+    centro,
+    cota,
+    serie,
+  }
+})
 
 export default function ConstruccionDeLaOnda({ className }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 25.5 24"
+      viewBox="0 0 24 24"
       fill="none"
       role="img"
-      aria-label="El símbolo de Volutus dibujado con su construcción geométrica: dos circunferencias, una del doble de radio que la otra, y la recta tangente que las enlaza en un solo trazo."
+      aria-label="El símbolo de Volutus con su construcción: una recta y cuatro cuartos de circunferencia de radios 8, 5, 3 y 2, la serie de Fibonacci, cada uno dentro de su cuadrado."
     >
-      {/* La retícula de construcción. Va en el color de línea y muy fina: está
-          para que se vea que existe, no para competir con el trazo. */}
-      <g className="onda-guias">
-        <line x1="0.75" y1="19.5" x2="24.75" y2="19.5" strokeDasharray="1 1.5" />
-        <line x1={MAYOR.cx} y1="1.2" x2={MAYOR.cx} y2="22.8" strokeDasharray="1 1.5" />
+      <line className="onda-guias" x1="0.5" y1={base} x2="23.5" y2={base} strokeDasharray="0.6 0.9" />
 
-        {/* Cada circunferencia lleva su clase porque cada una se traza sola, y
-            en orden: primero la que define el arco grande. Si aquí cambian los
-            radios, hay que recalcular su longitud (2πr) en Portada.css. */}
-        <circle className="onda-circulo-mayor" cx={MAYOR.cx} cy={MAYOR.cy} r={MAYOR.r} />
-        <circle className="onda-circulo-menor" cx={MENOR.cx} cy={MENOR.cy} r={MENOR.r} />
-
-        {/* Los radios que fijan cada arco. Verticales los dos, que es justo lo
-            que hace que los empalmes no tengan esquina. */}
-        <line x1={MAYOR.cx} y1={MAYOR.cy} x2={MAYOR.cx} y2={MAYOR.cy + MAYOR.r} />
-        <line x1={MENOR.cx} y1={MENOR.cy} x2={MENOR.cx - MENOR.r} y2={MENOR.cy} />
-      </g>
+      {/* Los cuadrados se trazan uno detrás de otro, del mayor al menor: es el
+          orden en que la serie se lee hacia dentro. */}
+      {CUADROS.map(({ puntos, perimetro }, i) => (
+        <polygon key={puntos} className="onda-cuadro" points={puntos} style={{ '--largo': perimetro, '--i': i }} />
+      ))}
 
       <g className="onda-centros">
-        <circle cx={MAYOR.cx} cy={MAYOR.cy} r="0.42" />
-        <circle cx={MENOR.cx} cy={MENOR.cy} r="0.42" />
+        {CUADROS.map(({ centro }, i) => (
+          <circle key={centro.join()} cx={centro[0]} cy={centro[1]} r="0.32" style={{ '--i': i }} />
+        ))}
       </g>
 
-      {/* El trazo definitivo, encima de todo y en el color de marca. */}
-      <path className="onda-trazo" d={TRAZO} strokeLinecap="round" />
+      <path className="onda-trazo" d={VOLUTA.d} strokeLinecap="round" style={{ '--largo': VOLUTA.longitud }} />
 
-      {/* Las cotas de los dos radios, en la familia de datos. Son los únicos
-          números del dibujo y son los de verdad. */}
-      <text className="onda-cota" x={MAYOR.cx + 0.6} y={MAYOR.cy + 4.6}>
-        r
-      </text>
-      <text className="onda-cota" x={MENOR.cx - 2.9} y={MENOR.cy - 0.5}>
-        r/2
-      </text>
+      {CUADROS.map(({ cota, serie }) => (
+        <text
+          key={serie}
+          className="onda-cota"
+          x={cota[0]}
+          y={cota[1]}
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {serie}
+        </text>
+      ))}
     </svg>
   )
 }

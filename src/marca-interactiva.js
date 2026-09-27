@@ -25,23 +25,27 @@
  * el dibujo se construirá en un orden al arrastrarlo y en otro al cargar.
  */
 
-// Longitudes de trazo: las circunferencias reales (2πr) y el largo de la onda.
-// Si cambian los radios en ConstruccionDeLaOnda.jsx, cambian aquí.
-const LARGO = { mayor: 47.12, menor: 23.56, trazo: 45 }
-
 // Cada pieza entra en su tramo del recorrido, solapándose como en la entrada.
+// Los cuadrados y los centros se reparten el suyo por orden, igual que su
+// `animation-delay` en el CSS.
 const TRAMOS = {
-  guias: [0, 0.16],
-  mayor: [0.1, 0.46],
-  menor: [0.36, 0.62],
-  centros: [0.56, 0.68],
-  trazo: [0.6, 0.95],
-  cotas: [0.9, 1],
+  guias: [0, 0.14],
+  cuadro: (i) => [0.08 + i * 0.085, 0.24 + i * 0.085],
+  centro: (i) => [0.44 + i * 0.02, 0.52 + i * 0.02],
+  trazo: [0.54, 0.91],
+  cotas: [0.87, 1],
 }
 
 /** Cuánto ha avanzado `p` dentro del tramo [a, b], acotado entre 0 y 1. */
 function avance(p, [a, b]) {
   return Math.min(1, Math.max(0, (p - a) / (b - a)))
+}
+
+/** Trazo parcial: la longitud la trae cada pieza en su `--largo`. */
+function trazar(el, fraccion) {
+  const largo = parseFloat(el.style.getPropertyValue('--largo'))
+  el.style.strokeDasharray = largo
+  el.style.strokeDashoffset = largo * (1 - fraccion)
 }
 
 export default function initMarcaInteractiva() {
@@ -54,30 +58,20 @@ export default function initMarcaInteractiva() {
     matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const guias = svg.querySelector('.onda-guias')
-  const mayor = svg.querySelector('.onda-circulo-mayor')
-  const menor = svg.querySelector('.onda-circulo-menor')
+  const cuadros = [...svg.querySelectorAll('.onda-cuadro')]
   const centros = [...svg.querySelectorAll('.onda-centros circle')]
   const cotas = [...svg.querySelectorAll('.onda-cota')]
   const trazo = svg.querySelector('.onda-trazo')
-  if (!guias || !mayor || !menor || !trazo) return
+  if (!guias || !trazo) return
 
   /** Pinta el dibujo en el punto `p` del recorrido, de 0 a 1. */
   function pintar(p) {
     guias.style.opacity = avance(p, TRAMOS.guias)
+    cuadros.forEach((el, i) => trazar(el, avance(p, TRAMOS.cuadro(i))))
+    trazar(trazo, avance(p, TRAMOS.trazo))
 
-    for (const [el, largo, tramo] of [
-      [mayor, LARGO.mayor, TRAMOS.mayor],
-      [menor, LARGO.menor, TRAMOS.menor],
-      [trazo, LARGO.trazo, TRAMOS.trazo],
-    ]) {
-      el.style.strokeDasharray = largo
-      el.style.strokeDashoffset = largo * (1 - avance(p, tramo))
-    }
-
-    // Los dos centros entran uno detrás del otro dentro de su propio tramo.
-    const c = avance(p, TRAMOS.centros)
     centros.forEach((el, i) => {
-      const suyo = Math.min(1, Math.max(0, (c - i * 0.35) / 0.65))
+      const suyo = avance(p, TRAMOS.centro(i))
       el.style.opacity = suyo
       el.style.transform = `scale(${0.2 + 0.8 * suyo})`
     })

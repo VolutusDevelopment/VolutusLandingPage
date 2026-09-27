@@ -1,19 +1,20 @@
 import Marca from './Marca.jsx'
 
 /**
- * Barra de navegación (DESIGN-BRIEF §7: «reposo, fija al desplazar»).
+ * Barra de navegación: la marca suelta a la izquierda y, a la derecha, una
+ * cápsula flotante con las dos anclas y la acción principal.
  *
- * No lleva la acción principal. §4 lo fija en dos apariciones y solo dos: el
- * botón de la portada y el formulario del final. Una barra que persigue al
- * visitante con el mismo botón es ruido en una página que se lee en un minuto.
+ * La barra en sí no tiene fondo: lo único que tapa el contenido al desplazar
+ * son las dos piezas, cada una con su vidrio translúcido. Así la portada
+ * respira hasta arriba y la navegación se lee como un objeto encima de la
+ * página, no como una franja que la corta.
  *
- * Tampoco lleva menú desplegable en móvil: hay dos anclas. Un hamburguesa aquí
- * sería JavaScript de navegación en la portada que abre alguien desde WhatsApp,
- * y el presupuesto de §8 es de 15 KB para todo el sitio.
+ * Lleva la acción principal porque la cápsula la hace discreta: un botón
+ * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
+ * cartel que persigue al visitante. En S se retira y quedan las anclas.
  *
- * Vive siempre en tema cielo aunque flote sobre la zona de plano: el fondo es
- * translúcido con desenfoque, así que al pasar sobre el corte se oscurece sola
- * sin que haya que conmutarle el tema con JavaScript.
+ * Sigue sin menú desplegable en móvil: son dos anclas y un botón, y un
+ * hamburguesa sería JavaScript de navegación que el presupuesto de §8 no paga.
  */
 export default function Barra({ enHome = true }) {
   // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
@@ -36,7 +37,7 @@ export default function Barra({ enHome = true }) {
           <Marca />
         </a>
 
-        <nav aria-label="Secciones">
+        <nav className="barra-capsula" aria-label="Secciones">
           <ul className="barra-enlaces">
             <li>
               <a href={ancla('proyectos')}>Proyectos</a>
@@ -45,6 +46,9 @@ export default function Barra({ enHome = true }) {
               <a href={ancla('proceso')}>Cómo trabajamos</a>
             </li>
           </ul>
+          <a className="boton boton-primario barra-accion" href={ancla('contacto')}>
+            Cuéntanos tu proyecto
+          </a>
         </nav>
       </div>
     </header>

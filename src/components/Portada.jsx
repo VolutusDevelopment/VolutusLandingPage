@@ -40,8 +40,25 @@ export default function Portada() {
               Que no diga a qué se dedica Volutus es deliberado, no un olvido:
               §2 dice que el visitante llega sabiéndolo porque acaba de hablar
               con uno de los socios. Gastar el titular en explicar el rubro es
-              gastarlo en lo único que ya sabe. */}
-          <h1>Eso que hoy haces a mano, funcionando solo.</h1>
+              gastarlo en lo único que ya sabe.
+
+              El «cómo» rota entre las formas en que ese trabajo se hace hoy.
+              El HTML trae una sola frase completa —la que leen buscadores y
+              lectores de pantalla—; las demás viven en `data-palabras` y las
+              pone `titular-rotativo.js`. `data-reserva` es la más larga y
+              reserva su alto desde el primer pintado, así que el titular no
+              salta al cambiar de palabra. */}
+          <h1>
+            Eso que hoy haces{' '}
+            <span
+              className="rotativo"
+              data-reserva="en una planilla,"
+              data-palabras="a mano,|en una planilla,|por WhatsApp,|en papel,"
+            >
+              <span className="rotativo-palabra">a mano,</span>
+            </span>{' '}
+            funcionando solo.
+          </h1>
 
           {/* La entradilla contesta tres de las cuatro preocupaciones de §2 en
               dos frases: qué tengo que entregar yo («en tus palabras»), en
@@ -97,7 +114,8 @@ export default function Portada() {
               Solo se muestra donde hay puntero fino; en táctil el CSS la
               esconde, porque ahí el gesto es arrastrar. */}
           <figcaption className="portada-pie dato">
-            Una recta, dos circunferencias. Nuestro símbolo, con la construcción a la vista.
+            Una recta y cuatro arcos de radios 8, 5, 3 y 2: la serie de Fibonacci. Nuestro
+            símbolo, con la construcción a la vista.
             <span className="portada-pie-gesto"> Muévete sobre él y lo construyes tú.</span>
           </figcaption>
         </figure>
