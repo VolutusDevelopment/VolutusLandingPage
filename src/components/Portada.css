@@ -231,11 +231,22 @@
        solo con el horizontal, que es el del gesto. Sin esto, arrastrar de lado
        en un teléfono movería la página en vez del dibujo. */
     touch-action: pan-y;
+  }
+
+  /* El cursor solo cambia cuando el dibujo ya responde. Antes de eso sería
+     una promesa que no se cumple: invita a mover el ratón sobre algo que
+     todavía está ocupado contando su historia. La clase la pone el JavaScript
+     al terminar la entrada. */
+  .construccion-lista {
     cursor: crosshair;
   }
 
   /* La pista solo aparece donde hay puntero que pasar. En táctil el gesto es
-     arrastrar, y eso el dedo lo descubre solo. */
+     arrastrar, y eso el dedo lo descubre solo.
+     
+     Ocupa su sitio desde el principio y solo cambia de opacidad: si apareciera
+     de golpe empujaría el texto de al lado y sería un salto de diseño en el
+     único sitio donde llevamos midiendo cero. */
   .portada-pie-gesto {
     display: none;
   }
@@ -243,6 +254,14 @@
   @media (hover: hover) and (pointer: fine) {
     .portada-pie-gesto {
       display: inline;
+      opacity: 0;
+      transition: opacity 500ms var(--ease-out);
+    }
+
+    /* El dibujo y el pie son hermanos dentro de la figura, así que el
+       combinador de hermano alcanza sin necesidad de `:has()`. */
+    .construccion-lista ~ .portada-pie .portada-pie-gesto {
+      opacity: 1;
     }
   }
 }

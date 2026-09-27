@@ -1,9 +1,10 @@
 /**
  * La construcción de la marca, bajo el dedo.
  *
- * Después de que la secuencia de entrada termina sola, el dibujo queda
- * disponible para arrastrar: la posición horizontal del puntero decide cuánto
- * de la construcción se ve, desde el lienzo vacío hasta la onda terminada.
+ * La secuencia de entrada se ve entera, sin que nadie pueda cortarla. Cuando
+ * termina, el dibujo queda vivo: la posición horizontal del puntero decide
+ * cuánto de la construcción se ve, desde el lienzo vacío hasta la onda
+ * terminada.
  *
  * **Responde al puntero sin tener que agarrarlo.** La primera versión exigía
  * mantener pulsado, y eso la hacía invisible: casi nadie prueba a arrastrar un
@@ -93,11 +94,38 @@ export default function initMarcaInteractiva() {
 
   let arrastrando = false
 
+  /**
+   * La primera construcción no se interrumpe.
+   *
+   * Es una secuencia de siete segundos que cuenta algo, y basta que el ratón
+   * pase por encima sin querer para deshacerla antes de que nadie la haya
+   * visto. Hasta que termina sola, el dibujo no responde; después, sí.
+   *
+   * El final se detecta por `animationend` de las cotas, que son lo último en
+   * entrar. El temporizador es el respaldo para cuando ese evento no llega: si
+   * la pestaña está en segundo plano el navegador no corre la animación, y sin
+   * él el dibujo se quedaría inerte para siempre.
+   */
+  let listo = false
+
+  function habilitar() {
+    if (listo) return
+    listo = true
+    svg.classList.add('construccion-lista')
+  }
+
+  const ultima = svg.querySelector('.onda-cota')
+  if (quieto() || !ultima) {
+    habilitar()
+  } else {
+    ultima.addEventListener('animationend', habilitar, { once: true })
+    setTimeout(habilitar, 9000)
+  }
+
   /** Toma el mando del dibujo y lo pinta según dónde esté el puntero. */
   function seguir(evento) {
-    // Corta la animación de entrada: sin esto, el CSS y este código pelearían
-    // por las mismas propiedades. Al ser la secuencia de 7 s, lo normal es que
-    // todavía esté corriendo cuando alguien llega con el ratón.
+    // Deja fuera de juego lo que quede de la animación: sin esto, el CSS y
+    // este código pelearían por las mismas propiedades.
     svg.classList.add('construccion-manual')
     svg.classList.remove('construccion-soltando')
 
@@ -106,7 +134,7 @@ export default function initMarcaInteractiva() {
   }
 
   svg.addEventListener('pointermove', (evento) => {
-    if (quieto()) return
+    if (!listo || quieto()) return
 
     // Con ratón o lápiz basta pasar por encima. Con el dedo no hay «encima»:
     // ahí solo manda mientras se arrastra.
@@ -117,7 +145,7 @@ export default function initMarcaInteractiva() {
   })
 
   svg.addEventListener('pointerdown', (evento) => {
-    if (quieto()) return
+    if (!listo || quieto()) return
     arrastrando = true
     svg.setPointerCapture(evento.pointerId)
     seguir(evento)
@@ -125,6 +153,7 @@ export default function initMarcaInteractiva() {
 
   for (const fin of ['pointerup', 'pointercancel', 'pointerleave']) {
     svg.addEventListener(fin, () => {
+      if (!listo) return
       arrastrando = false
       soltar()
     })
