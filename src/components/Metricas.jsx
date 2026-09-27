@@ -113,14 +113,35 @@ export default function Metricas() {
           </span>
         </p>
 
+        {/* Tres pasos, y el primero es el enlace.
+
+            «Compruébalo tú» sin decir cómo es una invitación que nadie recoge:
+            quien no ha medido una página nunca no sabe si le van a pedir
+            instalar algo, registrarse o entender un informe. Los tres pasos
+            existen para quitar de en medio esas tres dudas antes de que
+            aparezcan, y por eso dicen lo que NO hay que hacer —escribir nada,
+            registrarse— tanto como lo que sí.
+
+            El enlace lleva la URL puesta y PageSpeed arranca solo al abrirlo,
+            así que el primer paso es un toque. Eso es lo que hace que el tercero
+            —medir la suya— parezca poco trabajo. */}
+        <p className="metricas-comprobar entra">Hazla tú, ahora</p>
+        <ol className="pasos-prueba entra">
+          <li>
+            <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
+              Abre PageSpeed Insights con esta página
+            </a>
+            . Arranca sola: no hay que escribir nada ni registrarse.
+          </li>
+          <li>Espera medio minuto. Salen las mismas cuatro notas de arriba, de 0 a 100.</li>
+          <li>Cambia la dirección por la de tu página y vuelve a medir.</li>
+        </ol>
+
         {/* Las condiciones van escritas porque el resultado de quien repita la
             prueba dependerá de su conexión, y encontrarse un 97 sin saber por
             qué gasta más confianza de la que cuesta esta línea. */}
         <p className="metricas-pie entra">
-          Medido en un celular, con una conexión 4G simulada.{' '}
-          <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
-            Mide esta página en PageSpeed Insights
-          </a>
+          Nuestras cuatro notas están medidas en un celular, con una conexión 4G simulada.
         </p>
       </div>
     </section>
