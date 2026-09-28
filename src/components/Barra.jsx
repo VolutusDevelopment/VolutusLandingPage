@@ -9,6 +9,11 @@ import Marca from './Marca.jsx'
  * respira hasta arriba y la navegación se lee como un objeto encima de la
  * página, no como una franja que la corta.
  *
+ * Detrás va el velo: cuatro capas de desenfoque creciente, cada una con su
+ * máscara, que funden lo que pasa por debajo sin un borde donde cortarse. Al
+ * pasar sobre una sección oscura, `barra.js` cambia la zona de la barra y el
+ * vidrio se oscurece con ella.
+ *
  * Lleva la acción principal porque la cápsula la hace discreta: un botón
  * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
  * cartel que persigue al visitante. En S se retira y quedan las anclas.
@@ -25,6 +30,12 @@ export default function Barra({ enHome = true }) {
 
   return (
     <header className="barra zona-cielo">
+      <div className="barra-velo" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <div className="contenedor barra-interior">
         {/* En la portada la marca sube al principio; fuera de ella, vuelve a
             la portada. Es la única forma de salir del documento legal con el

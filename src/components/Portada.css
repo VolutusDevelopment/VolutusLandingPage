@@ -1,40 +1,43 @@
 .portada {
-  /* La barra mide 64 px y es sticky, así que el aire de arriba se mide desde
-     debajo de ella. */
-  padding-block: var(--e-12) var(--e-16);
+  padding-block: var(--e-12) var(--e-8);
   position: relative;
-  /* El halo vive detrás de todo sin salirse de la sección: `isolation` crea
+  /* La rejilla vive detrás de todo sin salirse de la sección: `isolation` crea
      el apilamiento para su z-index negativo y `clip` evita el scroll lateral
      sin crear un contenedor de scroll. */
   isolation: isolate;
   overflow: clip;
+  text-align: center;
 }
 
-/* ---- el halo ----
-   La profundidad de la portada: dos luces difusas, una petróleo y otra bosque,
-   los dos colores de la página. Es CSS puro, sin imagen, y entra una sola vez
-   escalando y fundiéndose, que es lo único que anima: `transform` y
-   `opacity`. */
+/* ---- la rejilla ----
+   Papel milimetrado en la esquina de arriba, que se apaga hacia el centro: la
+   página se lee como un plano de trabajo sin que la rejilla compita con el
+   titular. CSS puro, sin imagen. */
 .portada::before {
   content: '';
   position: absolute;
   z-index: -1;
-  inset: -20% -10% auto 35%;
-  height: 120%;
-  background:
-    radial-gradient(40% 45% at 60% 40%, var(--halo-a), transparent 70%),
-    radial-gradient(35% 40% at 35% 65%, var(--halo-b), transparent 70%);
+  inset: 0 0 auto auto;
+  width: min(60%, 820px);
+  height: 640px;
+  background-image:
+    linear-gradient(var(--linea) 1px, transparent 1px),
+    linear-gradient(90deg, var(--linea) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: right top;
+  mask-image: radial-gradient(ellipse at right top, #000, transparent 70%);
+  opacity: 0.7;
   pointer-events: none;
 }
 
 /* ---- la palabra que rota ----
-   Es un bloque de rejilla con dos ocupantes en la misma celda: la palabra
-   visible y, invisible, la más larga de la lista. La celda mide siempre lo que
-   la más larga, así que el titular reserva su alto desde el primer pintado y
-   no salta cuando cambia la palabra — ni en móvil, donde puede ocupar dos
-   líneas. */
+   Un bloque de rejilla con dos ocupantes en la misma celda: la palabra visible
+   y, invisible, la más larga de la lista. La celda mide siempre lo que la más
+   larga, así que el titular reserva su alto desde el primer pintado y no salta
+   cuando cambia la palabra — ni en móvil, donde puede ocupar dos líneas. */
 .rotativo {
   display: grid;
+  justify-items: center;
   color: var(--accion);
 }
 
@@ -48,42 +51,59 @@
   grid-area: 1 / 1;
 }
 
-/* Cada palabra recorta las letras que entran y salen. El relleno de abajo deja
-   sitio a los descendentes (la «p» de «papel») sin cortarlos en reposo. */
+/* Una palabra no se parte entre líneas: la frase solo corta entre palabras. */
 .rotativo-trozo {
   display: inline-block;
-  overflow: clip;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
+  white-space: nowrap;
 }
 
-/* Cada letra es su propia caja para poder desplazarse sola. */
+/* Cada letra tiene su propia caja, y es la caja la que recorta: la letra se
+   esconde al cruzar su propio borde, no el de la palabra. El relleno deja
+   sitio a los descendentes (la «p» de «papel») y el margen negativo lo
+   devuelve, así que en reposo no mueve nada. `clip` y no `hidden`: con
+   `hidden` la línea base de la caja pasaría a su borde inferior. */
+.rotativo-caja {
+  display: inline-block;
+  overflow: clip;
+  padding-block: 0.1em 0.16em;
+  margin-block: -0.1em -0.16em;
+}
+
 .rotativo-letra {
   display: inline-block;
-  animation: 700ms cubic-bezier(0.65, 0, 0.35, 1) calc(var(--relevo, 0ms) + var(--i) * 28ms) both;
 }
 
+/* La que se va acelera hacia arriba y, al llegar, se apaga: a −80 % aún
+   asomaría el pie de la letra por el borde de su caja. */
 .rotativo-sale .rotativo-letra {
-  animation-name: letra-sale;
+  animation: letra-sale 220ms cubic-bezier(0.42, 0, 1, 1) calc(var(--i) * 25ms) forwards;
 }
 
-.rotativo-entra {
-  --relevo: 120ms;
-}
-
+/* La que llega entra rápido y frena largo. Hasta que le toca, espera
+   invisible: con `both` se queda en su primer fotograma. */
 .rotativo-entra .rotativo-letra {
-  animation-name: letra-entra;
+  animation: letra-entra 410ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 32ms) both;
 }
 
 @keyframes letra-sale {
+  99% {
+    opacity: 1;
+  }
+
   to {
-    transform: translateY(-115%);
+    transform: translateY(-80%);
+    opacity: 0;
   }
 }
 
 @keyframes letra-entra {
   from {
-    transform: translateY(115%);
+    transform: translateY(80%);
+    opacity: 0;
+  }
+
+  1% {
+    opacity: 1;
   }
 }
 
@@ -97,13 +117,6 @@
 @keyframes portada-subir {
   from {
     transform: translateY(12px);
-  }
-}
-
-@keyframes portada-halo {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
   }
 }
 
@@ -129,29 +142,27 @@
   .portada-credencial {
     animation-delay: 240ms;
   }
-
-  .portada::before {
-    animation: portada-halo 1600ms var(--ease-out) both;
-  }
 }
 
-:root[data-movimiento='reducido'] .portada::before,
 :root[data-movimiento='reducido'] :is(.portada h1, .portada-entradilla, .portada-acciones, .portada-credencial) {
   animation: none;
 }
 
-.portada-interior {
-  display: grid;
-  gap: var(--e-12);
+.portada-texto {
+  max-width: 56rem;
+  margin-inline: auto;
 }
 
 .portada-entradilla {
-  margin-top: var(--e-6);
+  margin: var(--e-6) auto 0;
+  max-width: 40rem;
+  text-wrap: balance;
 }
 
 .portada-acciones {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--e-3);
   margin-top: var(--e-8);
 }
@@ -168,11 +179,10 @@
    dibujarse una. Lo que la sostiene es el enlace al código. */
 .portada-credencial {
   display: flex;
+  justify-content: center;
   align-items: baseline;
   gap: var(--e-3);
-  margin-top: var(--e-8);
-  padding-top: var(--e-6);
-  border-top: 1px solid var(--linea);
+  margin: var(--e-6) auto 0;
   font-size: var(--texto-sm);
   color: var(--texto-suave);
   max-width: 34rem;
@@ -186,220 +196,159 @@
   color: var(--accion);
 }
 
-.portada-figura {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--e-4);
-}
-
-.portada-construccion {
-  width: 100%;
-  height: auto;
-  /* El dibujo vive sobre la superficie y no sobre el fondo: así se lee como
-     una lámina, que es lo que es, y no como algo suelto sobre la página. */
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
-  padding: var(--e-6);
-}
-
-/* ---- las capas del dibujo ----
-   Cada una tiene su propio peso porque el orden de lectura importa: primero
-   se ve el trazo, y solo después se entiende que detrás hay una construcción. */
-
-.onda-guias,
-.onda-cuadro {
-  stroke: color-mix(in srgb, var(--marca) 45%, var(--linea));
-  stroke-width: 0.1;
-  fill: none;
-}
-
-.onda-centros {
-  fill: var(--texto-suave);
-}
-
-.onda-trazo {
-  stroke: var(--marca);
-  stroke-width: 1.1;
-  fill: none;
-}
-
-.onda-cota {
-  fill: var(--texto-suave);
-  font-family: var(--fuente-datos);
-  font-size: 1.1px;
-}
-
 /* ============================================================================
- * La construcción, construyéndose.
+ * El dibujo de las conexiones.
  *
- * El dibujo explica que el símbolo sale de la serie de Fibonacci. Animarlo en
- * ese orden es la explicación ocurriendo: aparece la recta de base, se trazan
- * los cuadrados del mayor al menor, se clavan los centros y solo entonces la
- * voluta recorre el camino que esas guías dejaron preparado.
+ * Se ve a lo ancho y se apaga por los lados y por abajo: las rutas siguen más
+ * allá de sus etiquetas y se pierden, así que el dibujo no tiene un borde
+ * donde parezca recortado.
  *
- * Se ve una vez por carga, su propósito es explicativo y por ser narrativa
- * puede durar más que los 300 ms de la interfaz: los 7 s se gastan en esta
- * pieza y en ninguna otra.
- *
- * Las longitudes de guion llegan del JSX como `--largo` (perímetro de cada
- * cuadrado, largo de la voluta) y el orden como `--i`, así que aquí no hay un
- * solo número de la geometría que mantener a mano.
- *
- * `stroke-dasharray` solo existe DENTRO de la animación: quien tenga el
- * movimiento reducido ve el dibujo terminado y no líneas punteadas.
- *
- * El reparto de tiempos es el mismo que usa `marca-interactiva.js` en sus
- * tramos; si cambia uno, cambia el otro.
+ * En móvil no se encoge hasta volverse ilegible: mantiene un ancho mínimo y se
+ * centra, y lo que sobra por los lados es justo lo que la máscara ya apagaba.
  * ========================================================================= */
 
-@keyframes onda-aparecer {
-  from {
-    opacity: 0;
-  }
+.portada-dibujo {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--e-12);
 }
 
-@keyframes onda-trazar {
+.conexiones {
+  flex-shrink: 0;
+  width: max(100%, 680px);
+  max-width: 1000px;
+  height: auto;
+  overflow: visible;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(#000 78%, transparent);
+  mask-composite: intersect;
+}
+
+.ruta-linea,
+.ruta-luz {
+  fill: none;
+}
+
+.ruta-linea {
+  stroke: var(--linea);
+  stroke-width: 1.2;
+}
+
+/* La luz recorre la ruta desde el nodo hasta el borde. Al apagarse se
+   desvanece primero y solo entonces vuelve al principio, así que nunca se ve
+   retroceder. */
+.ruta-luz {
+  stroke: var(--accion);
+  stroke-width: 1.6;
+  stroke-dasharray: var(--largo);
+  stroke-dashoffset: var(--largo);
+  opacity: 0;
+  transition:
+    opacity 400ms var(--ease-out),
+    stroke-dashoffset 0s 400ms;
+}
+
+.ruta.activa .ruta-luz {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition: stroke-dashoffset 1100ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ruta-etiqueta rect {
+  fill: var(--etiqueta);
+  transition: fill 300ms var(--ease-out);
+}
+
+.ruta-etiqueta text {
+  fill: var(--texto);
+  font-family: var(--fuente-datos);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  transition: fill 300ms var(--ease-out);
+}
+
+/* La etiqueta se rellena cuando la luz la alcanza: `--llega` es la fracción
+   del trazo que hay hasta ella. */
+.ruta.activa .ruta-etiqueta :is(rect, text) {
+  transition-delay: calc(var(--llega) * 700ms);
+}
+
+.ruta.activa .ruta-etiqueta rect {
+  fill: var(--accion);
+}
+
+.ruta.activa .ruta-etiqueta text {
+  fill: var(--sobre-accion);
+}
+
+.conexiones-nodo rect {
+  fill: var(--texto);
+}
+
+.conexiones-nodo path {
+  fill: none;
+  stroke: var(--fondo);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+/* ---- la entrada del dibujo ----
+   El nodo aparece, la voluta se traza dentro, y las rutas salen de él una
+   detrás de otra; cada etiqueta aparece cuando su línea ya va en camino. Se ve
+   una vez por carga. */
+@keyframes conexion-trazar {
   from {
     stroke-dashoffset: var(--largo);
   }
 }
 
-@keyframes onda-centro {
+@keyframes conexion-aparecer {
   from {
     opacity: 0;
-    transform: scale(0.2);
+    transform: scale(0.8);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .portada-construccion .onda-guias {
-    animation: onda-aparecer 1000ms var(--ease-out) both;
-  }
-
-  /* Encadenados, no por turnos: cada cuadrado empieza antes de que termine
-     el anterior, que por turnos se siente lento. */
-  .portada-construccion .onda-cuadro {
-    stroke-dasharray: var(--largo);
-    animation: onda-trazar 1100ms var(--ease-in-out) calc(600ms + var(--i) * 600ms) both;
-  }
-
-  /* Los centros aparecen como quien clava el compás. `transform-box: fill-box`
-     es obligatorio en SVG: sin él el origen de la escala es el lienzo entero. */
-  .portada-construccion .onda-centros circle {
+  .conexiones-nodo,
+  .ruta-etiqueta {
     transform-box: fill-box;
     transform-origin: center;
-    animation: onda-centro 500ms var(--ease-out) calc(3100ms + var(--i) * 150ms) both;
   }
 
-  /* El trazo definitivo, al final y sin prisa: es lo que la persona recuerda. */
-  .portada-construccion .onda-trazo {
+  .conexiones-nodo {
+    animation: conexion-aparecer 500ms var(--ease-out) 200ms both;
+  }
+
+  .conexiones-nodo path {
     stroke-dasharray: var(--largo);
-    animation: onda-trazar 2600ms var(--ease-out) 3800ms both;
+    animation: conexion-trazar 900ms var(--ease-out) 450ms both;
   }
 
-  .portada-construccion .onda-cota {
-    animation: onda-aparecer 900ms var(--ease-out) 6100ms both;
+  .ruta-linea {
+    stroke-dasharray: var(--largo);
+    animation: conexion-trazar 1200ms var(--ease-out) calc(500ms + var(--i) * 80ms) both;
+  }
+
+  .ruta-etiqueta {
+    animation: conexion-aparecer 400ms var(--ease-out) calc(750ms + var(--i) * 80ms) both;
   }
 }
 
-/* Con el movimiento reducido no hay secuencia: el dibujo ya está hecho. */
-:root[data-movimiento='reducido'] .portada-construccion * {
+:root[data-movimiento='reducido'] .conexiones * {
   animation: none;
-  stroke-dasharray: none;
+  transition: none;
 }
 
-/* ---- el dibujo bajo el dedo ----
- *
- * Al arrastrar, `marca-interactiva.js` escribe los mismos valores que la
- * animación. Para que no peleen, el primer toque pone `construccion-manual` y
- * con ella las animaciones de entrada dejan de existir. */
-.construccion-manual * {
-  animation: none;
-}
-
-/* Al soltar, el dibujo vuelve entero con una transición corta en vez de saltar.
-   La clase la quita el propio JavaScript en el siguiente toque. */
-.construccion-soltando * {
-  transition:
-    stroke-dashoffset 420ms var(--ease-out),
-    opacity 300ms var(--ease-out),
-    transform 300ms var(--ease-out);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .portada-construccion {
-    /* `pan-y` deja pasar el desplazamiento vertical de la página y se queda
-       solo con el horizontal, que es el del gesto. Sin esto, arrastrar de lado
-       en un teléfono movería la página en vez del dibujo. */
-    touch-action: pan-y;
-  }
-
-  /* El cursor solo cambia cuando el dibujo ya responde. Antes de eso sería
-     una promesa que no se cumple: invita a mover el ratón sobre algo que
-     todavía está ocupado contando su historia. La clase la pone el JavaScript
-     al terminar la entrada. */
-  .construccion-lista {
-    cursor: crosshair;
-  }
-
-  /* La pista solo aparece donde hay puntero que pasar. En táctil el gesto es
-     arrastrar, y eso el dedo lo descubre solo.
-     
-     Ocupa su sitio desde el principio y solo cambia de opacidad: si apareciera
-     de golpe empujaría el texto de al lado y sería un salto de diseño en el
-     único sitio donde llevamos midiendo cero. */
-  .portada-pie-gesto {
-    display: none;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .portada-pie-gesto {
-      display: inline;
-      opacity: 0;
-      transition: opacity 500ms var(--ease-out);
-    }
-
-    /* El dibujo y el pie son hermanos dentro de la figura, así que el
-       combinador de hermano alcanza sin necesidad de `:has()`. */
-    .construccion-lista ~ .portada-pie .portada-pie-gesto {
-      opacity: 1;
-    }
+@media (prefers-reduced-motion: reduce) {
+  .conexiones * {
+    transition: none;
   }
 }
 
-.portada-pie {
-  font-size: var(--texto-xs);
-  color: var(--texto-suave);
-  text-wrap: balance;
-}
-
-/* En la zona de plano la marca pasa a ser el color de acción, y el dibujo
-   necesita que su trazo siga destacando: ahí ya cumple contraste. */
-@media (max-width: 1023px) {
-  .portada-construccion {
-    /* En móvil el dibujo se reduce: el texto manda y esto acompaña. */
-    padding: var(--e-6);
-    max-width: 22rem;
-    margin-inline: auto;
-  }
-
-  .portada-pie {
-    text-align: center;
-  }
-}
-
-/* En L el texto y la foto se abren a dos columnas. El texto va primero en el
-   marcado y primero en pantalla: la foto acompaña, no encabeza. */
 @media (min-width: 1024px) {
   .portada {
-    padding-block: var(--e-16) var(--e-24);
-  }
-
-  .portada-interior {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: var(--e-16);
+    padding-block: var(--e-16) var(--e-12);
   }
 }

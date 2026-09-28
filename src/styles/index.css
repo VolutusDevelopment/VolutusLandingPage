@@ -104,6 +104,10 @@
   --e-16: 64px;
   --e-24: 96px;
 
+  /* Lo que ocupa la barra fija. Lo leen el scroll a anclas y todo lo que se
+     pega arriba al desplazar, para quedar siempre por debajo de ella. */
+  --barra-alto: 64px;
+
   --ancho-maximo: 1200px;
   --margen-lateral: 24px;
   --medida-lectura: 68ch;
@@ -127,9 +131,11 @@
   --texto: #151515;
   --texto-suave: #4d5c63;
 
-  /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
-     con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
+  /* Dos radios. El pequeño es el de los controles —campos, capturas—; el de
+     tarjeta es el de las superficies de color, que sin esquina se leerían como
+     bandas cortadas y no como objetos. */
   --radio: 4px;
+  --radio-tarjeta: 12px;
 
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
      `ease-out` a secas apenas se distingue de lineal.
@@ -148,6 +154,12 @@
   --t-pulsar: 160ms;
   --t-panel: 180ms;
   --t-entrada: 500ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --barra-alto: 84px;
+  }
 }
 
 /* ============ Tema cielo: la página promete ============
@@ -170,11 +182,16 @@
      texto claro encima. */
   color-scheme: light;
 
-  --fondo: #f5f8f9;
+  --fondo: #ffffff;
   --superficie: #ffffff;
   --texto: #151515;
   --texto-suave: #4d5c63;
-  --linea: #d9e3e7;
+  --linea: #dfe6e8;
+  /* Las superficies tintadas: el color vive en las tarjetas, no en la página,
+     que se queda en blanco para que cada una se lea como un objeto. */
+  --tinte-a: #f0f8f9;
+  --tinte-b: #f8f5f4;
+  --etiqueta: #dbefe6;
 
   /* La marca NUNCA es texto ni botón sobre claro: da 3.90:1. Solo trazos y
      superficies, donde basta 3:1. */
@@ -183,9 +200,15 @@
   --accion-hover: #2a5060;
   --accion-activa: #1f3f4d;
   --sobre-accion: #ffffff;
-  /* El halo de la portada: la luz de las dos zonas, petróleo y bosque. */
-  --halo-a: #bfdde3;
-  --halo-b: #bae0cf;
+
+  /* El vidrio de la barra. El brillo es la luz que entra por arriba y las
+     sombras interiores dibujan el canto sin necesidad de un borde. */
+  --vidrio: rgb(255 255 255 / 0.72);
+  --vidrio-brillo: rgb(255 255 255 / 0.34);
+  --vidrio-canto:
+    inset 0 1px 0 rgb(255 255 255 / 0.92), inset 0 -1px 0 rgb(255 255 255 / 0.4),
+    inset 0 0 0 0.5px rgb(0 0 0 / 0.05), 0 1px 2px rgb(0 0 0 / 0.03), 0 10px 28px -12px rgb(0 0 0 / 0.12);
+  --vidrio-halo: rgb(255 255 255 / 0.22);
 
   --exito: #12714b;
   --aviso: #8a5a00;
@@ -215,8 +238,16 @@
   --accion-hover: #bae0cf;
   --accion-activa: #dbf0e5;
   --sobre-accion: #0c221d;
-  --halo-a: #152b37;
-  --halo-b: #183c33;
+  --tinte-a: #13302a;
+  --tinte-b: #183c33;
+  --etiqueta: #1f3d35;
+
+  --vidrio: rgb(14 17 24 / 0.42);
+  --vidrio-brillo: rgb(255 255 255 / 0.16);
+  --vidrio-canto:
+    inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 -1px 0 rgb(255 255 255 / 0.08),
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px -14px rgb(0 0 0 / 0.55);
+  --vidrio-halo: rgb(10 12 18 / 0.3);
 
   --exito: #4fcf96;
   --aviso: #e8b14c;
@@ -234,13 +265,13 @@
 
 html {
   scroll-behavior: smooth;
-  /* La barra mide 64 px; el ancla no debe quedar debajo de ella. */
-  scroll-padding-top: 80px;
+  /* El ancla no debe quedar debajo de la barra. */
+  scroll-padding-top: calc(var(--barra-alto) + var(--e-4));
   /* El fondo del documento es el de la portada: lo que se ve al rebotar el
      scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
      no en token porque <html> está por encima de cualquier zona y no hereda
      ninguna; con el tema oscuro forzado se cambia abajo. */
-  background: #f5f8f9;
+  background: #ffffff;
 }
 
 :root[data-tema='oscuro'] {
@@ -548,7 +579,7 @@ svg {
 }
 
 /* ============ Componentes (§7) ============
-   Ninguno lleva sombra. La jerarquía la dan el color de superficie y 1 px de
+   Ninguno lleva sombra: la jerarquía la dan el tinte de la superficie y la
    línea. Todos funcionan en los dos temas sin variante propia. */
 
 .boton {
@@ -627,8 +658,13 @@ svg {
 }
 
 .tarjeta {
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
+  background: var(--tinte-a);
+  border-radius: var(--radio-tarjeta);
   padding: var(--e-6);
+}
+
+@media (min-width: 1024px) {
+  .tarjeta {
+    padding: var(--e-8);
+  }
 }

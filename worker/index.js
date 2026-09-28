@@ -52,7 +52,7 @@ function paginaDeRespuesta(mensaje, estado) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Volutus</title>
 <style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;
-background:#f5f8f9;color:#151515;font:17px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}
+background:#ffffff;color:#151515;font:17px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}
 main{max-width:34rem;text-align:center}p{margin:0 0 24px;color:${color}}
 a{display:inline-flex;align-items:center;min-height:44px;padding:0 24px;border-radius:4px;
 background:#2b5f73;color:#fff;text-decoration:none}</style></head>

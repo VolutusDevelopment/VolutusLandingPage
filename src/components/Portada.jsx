@@ -1,5 +1,4 @@
-import ConstruccionDeLaOnda from './ConstruccionDeLaOnda.jsx'
-
+import Conexiones from './Conexiones.jsx'
 
 /**
  * Portada (DESIGN-BRIEF §4, bloque 1). Tema cielo: aquí la página promete.
@@ -10,11 +9,11 @@ import ConstruccionDeLaOnda from './ConstruccionDeLaOnda.jsx'
  * pantalla en un móvil de 360 px, la pieza se reduce. El texto gana siempre,
  * porque es lo único que casi todos van a leer.
  *
- * **La fotografía se fue.** Era una nube volutus real, y bien recortada se veía
- * bien, pero no argumentaba nada. La sustituye el símbolo con su construcción
- * geométrica a la vista, que dice sobre la propia marca lo mismo que la página
- * dice de su obra: está construida y puedes comprobar cómo. De paso es SVG
- * dentro del HTML, así que es una petición menos y 6 kB menos.
+ * **La composición es centrada y la pieza visual va debajo, a lo ancho.** El
+ * titular manda solo en la primera pantalla y el dibujo lo continúa: las
+ * formas manuales que la frase va nombrando, conectadas al símbolo. Cuando la
+ * palabra cambia, se enciende su ruta, así que el dibujo no decora el titular:
+ * lo ilustra.
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
@@ -99,26 +98,10 @@ export default function Portada() {
             </span>
           </p>
         </div>
+      </div>
 
-        {/* Aquí había una fotografía de una nube. Se fue porque no argumentaba
-            nada: una foto bonita no demuestra que sepas construir.
-
-            Lo que la sustituye es el símbolo con su construcción a la vista.
-            No hay que descargar nada —es SVG dentro del HTML— y hace sobre la
-            marca la misma demostración que el índice de obra hace sobre el
-            trabajo: está construido y puedes comprobar cómo. */}
-        <figure className="portada-figura">
-          <ConstruccionDeLaOnda className="portada-construccion" />
-          {/* La pista del gesto va aquí y no como globo flotante: quien no la
-              lea no se pierde nada, porque el dibujo acaba completo igual.
-              Solo se muestra donde hay puntero fino; en táctil el CSS la
-              esconde, porque ahí el gesto es arrastrar. */}
-          <figcaption className="portada-pie dato">
-            Una recta y cuatro arcos de radios 8, 5, 3 y 2: la serie de Fibonacci. Nuestro
-            símbolo, con la construcción a la vista.
-            <span className="portada-pie-gesto"> Muévete sobre él y lo construyes tú.</span>
-          </figcaption>
-        </figure>
+      <div className="portada-dibujo">
+        <Conexiones />
       </div>
     </section>
   )

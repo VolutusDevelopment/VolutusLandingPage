@@ -1,4 +1,6 @@
 
+import { VOLUTA } from './Marca.jsx'
+
 /**
  * Qué hacemos y cómo lo hacemos (DESIGN-BRIEF §4, bloque 4). Segundo corte de
  * tema: la página vuelve a cielo, porque vuelve a hablar con el visitante en
@@ -14,6 +16,11 @@
  * Las tecnologías no aparecen. §4 las degrada a pie de página y prohíbe usarlas
  * como argumento de venta: los cuatro encargos se nombran por el resultado que
  * recibe el cliente, «una app Android en producción» y no «Kotlin».
+ *
+ * Los pasos son tarjetas que se apilan al desplazar: cada una se queda pegada
+ * arriba y la siguiente sube por encima, mientras la de detrás se encoge y se
+ * apaga. El orden se lee con el cuerpo —uno encima del otro— y no hay que
+ * contar filas. Todo el efecto es CSS atado al scroll (ver Proceso.css).
  *
  * ────────────────────────────────────────────────────────────────────────────
  * LOS PLAZOS ESTÁN RESERVADOS, NO OLVIDADOS. §4 exige que el proceso lleve
@@ -61,6 +68,32 @@ const NO_ACEPTAMOS = [
   'Licitaciones con meses de papeleo. Para cuando aprueban, el problema ya cambió.',
 ]
 
+// Cuatro volutas, una dentro de otra, todas con el mismo ojo: es la
+// ilustración de cada paso, la marca repetida hasta volverse curvas de nivel.
+// Cada tarjeta la gira un cuarto de vuelta más, así ninguna se ve igual a la
+// de atrás cuando se apilan.
+const ESCALAS = [1, 0.78, 0.56, 0.34]
+const [OJO_X, OJO_Y] = VOLUTA.puntos.at(-1)
+
+function Lamina({ giro }) {
+  return (
+    <div className="paso-lamina" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <g transform={`rotate(${giro} 12 12)`}>
+          {ESCALAS.map((escala) => (
+            <path
+              key={escala}
+              d={VOLUTA.d}
+              transform={`translate(${OJO_X * (1 - escala)} ${OJO_Y * (1 - escala)}) scale(${escala})`}
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 export default function Proceso() {
   return (
     <section id="proceso" className="seccion zona-cielo corte-de-zona proceso">
@@ -72,18 +105,21 @@ export default function Proceso() {
           que casi nadie contesta.
         </p>
 
-        <ol className="pasos">
+        <ol className="pasos" style={{ '--pasos': PASOS.length }}>
           {PASOS.map((paso, i) => (
-            <li key={paso.titulo} className="paso entra">
-              <span className="paso-numero dato" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <div className="paso-cuerpo">
-                <h3>{paso.titulo}</h3>
-                <p className="paso-pones">
-                  <span className="paso-pones-etiqueta">Pones tú:</span> {paso.ponesTu}
-                </p>
-                {paso.plazo && <p className="paso-plazo dato">{paso.plazo}</p>}
+            <li key={paso.titulo} className="paso" style={{ '--i': i }}>
+              <div className="paso-carta zona-plano">
+                <div className="paso-cuerpo">
+                  <span className="paso-numero dato" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3>{paso.titulo}</h3>
+                  <p className="paso-pones">
+                    <span className="paso-pones-etiqueta">Pones tú:</span> {paso.ponesTu}
+                  </p>
+                  {paso.plazo && <p className="paso-plazo dato">{paso.plazo}</p>}
+                </div>
+                <Lamina giro={i * 90} />
               </div>
             </li>
           ))}

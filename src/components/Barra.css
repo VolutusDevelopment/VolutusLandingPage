@@ -7,74 +7,152 @@
   pointer-events: none;
 }
 
-/* El velo de arriba: el contenido que pasa por debajo no se corta contra un
-   borde, se desenfoca y se funde poco a poco. Son dos capas con desenfoque
-   distinto y cada una se desvanece hacia abajo con su máscara; apiladas, el
-   desenfoque crece de forma progresiva hacia el borde superior en vez de
-   empezar de golpe. Van detrás de la marca y la cápsula, que llevan su propio
-   vidrio encima. */
-.barra::before,
-.barra::after {
-  content: '';
-  position: absolute;
+/* ---- el velo ----
+   Cuatro capas, de 2 a 20 px de desenfoque. Cada una se apaga antes que la
+   anterior, así que el desenfoque crece de forma continua hacia el borde de
+   arriba en lugar de empezar de golpe: no hay línea donde el contenido pasa de
+   nítido a borroso.
+
+   Solo aparece cuando hay algo debajo. Arriba del todo no tapa nada y apagaría
+   la portada; la opacidad la lleva el propio scroll, sin JavaScript. Va en
+   cada capa y no en el contenedor: un padre con opacidad se vuelve la raíz del
+   desenfoque, y las capas no verían la página que tienen detrás. */
+.barra-velo {
+  position: fixed;
+  inset: 0 0 auto;
   z-index: -1;
-  inset: 0 0 -32px;
+  height: calc(var(--barra-alto) + 48px);
 }
 
-.barra::before {
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  mask-image: linear-gradient(to bottom, #000 50%, transparent);
+.barra-velo span {
+  position: absolute;
+  inset: 0;
 }
 
-.barra::after {
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--fondo) 55%, transparent), transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  mask-image: linear-gradient(to bottom, #000 15%, transparent 70%);
+.barra-velo span:nth-child(1) {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask-image: linear-gradient(#000 0, #000 60%, transparent);
+}
+
+.barra-velo span:nth-child(2) {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  mask-image: linear-gradient(#000 0, #000 38%, transparent 72%);
+}
+
+.barra-velo span:nth-child(3) {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  mask-image: linear-gradient(#000 0, #000 20%, transparent 48%);
+}
+
+.barra-velo span:nth-child(4) {
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  mask-image: linear-gradient(#000 0, #000 6%, transparent 28%);
+}
+
+@keyframes velo-aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .barra-velo span {
+    animation: velo-aparecer linear both;
+    animation-timeline: scroll();
+    animation-range: 0 48px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .barra-velo {
+    display: none;
+  }
 }
 
 .barra-interior {
-  height: 72px;
+  height: var(--barra-alto);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--e-4);
 }
 
-/* El vidrio de las dos piezas. Translúcido sobre el fondo de cielo, así que al
-   pasar sobre la zona de plano se oscurece solo, sin JavaScript. */
 .barra-marca,
 .barra-capsula {
+  position: relative;
+  isolation: isolate;
   pointer-events: auto;
-  background: color-mix(in srgb, var(--superficie) 72%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 999px;
 }
 
+/* El vidrio va en pseudoelementos detrás del contenido: si lo llevara la
+   propia pieza, su `backdrop-filter` desenfocaría también el velo y el vidrio
+   se vería doble. */
+.barra-marca::before,
+.barra-capsula::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-color 200ms var(--ease-out);
+}
+
+/* La marca no lleva pastilla: un halo del mismo vidrio que se apaga en
+   círculo, así el nombre se lee sobre cualquier cosa sin parecer un botón. */
 .barra-marca {
+  display: flex;
+  align-items: center;
+  /* El lockup queda por debajo de los 44 px; el área táctil se estira sin
+     mover el dibujo. */
+  min-height: 44px;
   color: var(--texto);
   text-decoration: none;
-  /* Sin canto: la sombra del mismo color que el vidrio difumina el borde de
-     la pastilla, así que la marca se lee como un halo y no como un botón. */
-  box-shadow: 0 0 16px 8px color-mix(in srgb, var(--superficie) 60%, transparent);
-  /* El lockup queda por debajo de los 44 px, así que el área táctil se estira
-     con padding sin mover el dibujo. */
-  padding: var(--e-2) var(--e-4) var(--e-2) var(--e-3);
+}
+
+.barra-marca::before {
+  inset: -12px -16px;
+  background-color: var(--vidrio-halo);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  mask-image: radial-gradient(closest-side, #000 40%, transparent);
 }
 
 .barra-capsula {
   display: flex;
   align-items: center;
   gap: var(--e-6);
-  padding: var(--e-1) var(--e-1) var(--e-1) var(--e-6);
-  border: 1px solid color-mix(in srgb, var(--linea) 70%, transparent);
-  box-shadow: 0 8px 24px -12px rgb(21 21 21 / 0.25);
+  height: 64px;
+  padding: 0 var(--e-2) 0 var(--e-8);
+  border-radius: 999px;
+}
+
+.barra-capsula::before {
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--vidrio);
+  background-image: linear-gradient(var(--vidrio-brillo), transparent 62%);
+  box-shadow: var(--vidrio-canto);
+  backdrop-filter: blur(44px) saturate(1.8);
+  -webkit-backdrop-filter: blur(44px) saturate(1.8);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .barra-marca::before {
+    backdrop-filter: none;
+  }
+
+  .barra-capsula::before {
+    background-color: var(--fondo);
+    backdrop-filter: none;
+  }
 }
 
 .barra-accion {
-  padding-inline: var(--e-4);
+  min-height: 48px;
+  padding-inline: var(--e-6);
   font-size: var(--texto-sm);
 }
 
@@ -163,6 +241,7 @@
   }
 
   .barra-capsula {
+    height: 48px;
     padding-inline: var(--e-4);
   }
 

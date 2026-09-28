@@ -47,8 +47,10 @@
   flex-direction: column;
   gap: var(--e-6);
   /* La tarjeta respira más que las del índice de proyectos: aquí dentro hay
-     que escribir, y un formulario apretado se siente como un trámite. */
+     que escribir, y un formulario apretado se siente como un trámite. El tinte
+     cálido la separa de las tarjetas de obra, que son frías. */
   padding: var(--e-8);
+  background: var(--tinte-b);
 }
 
 /* Nombre y correo comparten fila desde que hay ancho para los dos. Es lo que
@@ -81,10 +83,9 @@
   font-family: inherit;
   font-size: var(--texto-base);
   color: var(--texto);
-  /* El campo es un hueco en la tarjeta, no otra tarjeta encima. Blanco sobre
-     blanco no se ve: se tiñe levemente con el color de texto, que funciona
-     igual en los dos temas sin declarar dos valores. */
-  background: color-mix(in srgb, var(--texto) 4%, transparent);
+  /* El campo es un hueco blanco en la tarjeta tintada: se lee como el sitio
+     donde se escribe sin necesidad de sombra. */
+  background: var(--superficie);
   border: 1px solid var(--linea);
   border-radius: var(--radio);
   padding: var(--e-3) var(--e-4);

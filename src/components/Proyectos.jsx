@@ -1,10 +1,11 @@
 import { PROYECTOS } from '../data/proyectos.js'
 
 /**
- * Índice de obra (DESIGN-BRIEF §4, bloque 2). Aquí ocurre el primer corte de
- * tema: la página pasa a plano porque cambia el registro del discurso — deja de
- * prometer y empieza a demostrar (A.3). El corte es una línea, nunca un
- * degradado.
+ * Índice de obra (DESIGN-BRIEF §4, bloque 2). La página sigue en blanco y el
+ * color vive en las tarjetas: el proyecto con jurado externo va en bosque
+ * —la única tarjeta oscura, porque es lo único validado por un tercero— y los
+ * otros dos en tintes fríos y cálidos, así cada uno se lee como un objeto
+ * aparte y no como filas de una tabla.
  *
  * Cada proyecto pinta solo los enlaces que tiene. Un proyecto sin ninguno no
  * llega hasta aquí: lo filtra el propio archivo de datos, donde está explicada
@@ -43,7 +44,7 @@ export default function Proyectos() {
   ]
 
   return (
-    <section id="proyectos" className="seccion zona-plano corte-de-zona proyectos">
+    <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
         <p className="antetitulo entra">Obra abierta</p>
         <h2 className="entra">Tres cosas que puedes abrir ahora mismo.</h2>
@@ -60,7 +61,7 @@ export default function Proyectos() {
           No tienes que creernos: cada proyecto va con su enlace o su código.
         </p>
 
-        <article className="tarjeta proyecto proyecto-destacado entra">
+        <article className="tarjeta proyecto proyecto-destacado zona-plano entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que
               validó un tercero, y es el motivo de que este proyecto encabece. */}
           <p className="proyecto-credencial dato">{destacado.credencial}</p>

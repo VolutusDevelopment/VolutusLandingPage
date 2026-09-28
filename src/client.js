@@ -10,7 +10,7 @@
 // navegador envía y recarga. Esto solo valida antes y evita la recarga.
 
 import { montarAccesibilidad } from './accesibilidad/widget.js'
-import initMarcaInteractiva from './marca-interactiva.js'
+import initBarra from './barra.js'
 import initMedidores from './medidores.js'
 import initTitularRotativo from './titular-rotativo.js'
 
@@ -128,7 +128,7 @@ function initFormulario() {
 export default function init() {
   initFormulario()
   montarAccesibilidad()
-  initMarcaInteractiva()
+  initBarra()
   initMedidores()
   initTitularRotativo()
 }

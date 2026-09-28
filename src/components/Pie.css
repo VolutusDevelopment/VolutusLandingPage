@@ -1,60 +1,95 @@
 .pie {
   background: var(--fondo);
   color: var(--texto);
-  border-top: 1px solid var(--linea);
-  padding-block: var(--e-16) 0;
+  padding-block: var(--e-12) var(--e-6);
 }
 
-.pie-interior {
-  display: grid;
-  gap: var(--e-12);
+/* ---- el logotipo ----
+   Mide lo que mide el contenedor: el tamaño de letra sale de su propio ancho
+   (`cqi`), así que el nombre llena la fila en cualquier pantalla sin un solo
+   punto de corte. Va apagado, casi del color del fondo: es una firma, no un
+   titular. */
+.pie-logotipo {
+  container-type: inline-size;
+  overflow: clip;
+  color: color-mix(in srgb, var(--texto) 16%, var(--fondo));
 }
 
-/* ---- identidad ---- */
-
-.pie-lema {
-  margin-top: var(--e-4);
-  max-width: 34ch;
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-}
-
-.pie-correo {
-  margin-top: var(--e-6);
-  font-size: var(--texto-sm);
-}
-
-.pie-correo a {
-  display: inline-flex;
+.pie-logotipo-cuerpo {
+  display: flex;
   align-items: center;
-  min-height: 44px;
+  gap: 0.06em;
+  font-size: 22cqi;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
 }
 
-/* ---- columnas de enlaces ---- */
+.pie-logotipo-cuerpo::after {
+  content: 'volutus';
+  /* El descendente no existe en «volutus», así que la caja se ajusta a la
+     altura de las letras y no deja aire muerto debajo. */
+  margin-block: -0.12em -0.2em;
+}
 
-/* Flex y no `grid` con `auto-fit`: la rejilla vive en una pista de ancho
-   automático, y sin un ancho definido que repartir `auto-fit` colapsa y deja
-   las tres columnas una debajo de otra. Con flex cada columna mide lo suyo y
-   solo baja de línea cuando de verdad no cabe. */
+.pie-logotipo-onda {
+  flex-shrink: 0;
+  width: 0.92em;
+  height: 0.92em;
+}
+
+/* El nombre sube desde su propio borde al asomar, atado al scroll: cero
+   JavaScript, y si la persona vuelve hacia arriba se deshace por el mismo
+   camino. */
+@keyframes logotipo-subir {
+  from {
+    transform: translateY(45%);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .pie-logotipo-cuerpo {
+      animation: logotipo-subir linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+:root[data-movimiento='reducido'] .pie-logotipo-cuerpo {
+  animation: none;
+}
+
+/* ---- columnas de enlaces ----
+   Separadas por una línea discontinua, que marca el grupo sin pesar como un
+   borde: los enlaces siguen siendo lo que se ve. */
 .pie-columnas {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--e-8) var(--e-12);
-  align-items: start;
+  row-gap: var(--e-8);
+  margin-top: var(--e-12);
 }
 
 .pie-columna {
-  min-width: 7rem;
+  min-width: 9rem;
+  padding-inline: var(--e-6);
+  border-left: 1px dashed var(--linea);
+}
+
+.pie-columna:first-child {
+  padding-left: 0;
+  border-left: 0;
 }
 
 .pie-titulo {
   margin: 0 0 var(--e-2);
+  font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--texto-suave);
-  font-family: var(--fuente-datos);
 }
 
 .pie-columna ul {
@@ -69,41 +104,49 @@
   /* 44 px de área táctil: en una lista vertical de enlaces cortos, sin esto
      los blancos quedan pegados y el dedo falla. */
   min-height: 44px;
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
+  color: var(--texto);
   text-decoration: none;
 }
 
-.pie-columna a:hover {
+.pie-columna a:hover,
+.pie-cierre a:hover {
   color: var(--accion);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 /* ---- línea de cierre ---- */
-
 .pie-cierre {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--e-2) var(--e-6);
   margin-top: var(--e-12);
-  padding-block: var(--e-6);
-  border-top: 1px solid var(--linea);
-}
-
-.pie-cierre p {
-  margin: 0;
+  padding-top: var(--e-4);
+  border-top: 1px dashed var(--linea);
   font-size: var(--texto-xs);
   color: var(--texto-suave);
 }
 
-/* La identidad se lleva más ancho que los enlaces: es lo que sostiene el pie,
-   y los enlaces son listas cortas que no necesitan medio ancho de página. */
-@media (min-width: 900px) {
-  .pie-interior {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--e-24);
-    align-items: start;
-  }
+.pie-cierre p {
+  margin: 0;
+}
 
-  .pie-columnas {
-    gap: var(--e-8) var(--e-16);
+.pie-cierre a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--texto-suave);
+  text-decoration: none;
+}
+
+/* En S las tres columnas no caben en fila: bajan de a una y pierden la línea
+   que las separa, que en vertical ya no separa nada. */
+@media (max-width: 559px) {
+  .pie-columna {
+    flex-basis: 100%;
+    padding-left: 0;
+    border-left: 0;
   }
 }
