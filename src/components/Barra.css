@@ -7,6 +7,33 @@
   pointer-events: none;
 }
 
+/* El velo de arriba: el contenido que pasa por debajo no se corta contra un
+   borde, se desenfoca y se funde poco a poco. Son dos capas con desenfoque
+   distinto y cada una se desvanece hacia abajo con su máscara; apiladas, el
+   desenfoque crece de forma progresiva hacia el borde superior en vez de
+   empezar de golpe. Van detrás de la marca y la cápsula, que llevan su propio
+   vidrio encima. */
+.barra::before,
+.barra::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 -32px;
+}
+
+.barra::before {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent);
+}
+
+.barra::after {
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--fondo) 55%, transparent), transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(to bottom, #000 15%, transparent 70%);
+}
+
 .barra-interior {
   height: 72px;
   display: flex;
@@ -29,6 +56,9 @@
 .barra-marca {
   color: var(--texto);
   text-decoration: none;
+  /* Sin canto: la sombra del mismo color que el vidrio difumina el borde de
+     la pastilla, así que la marca se lee como un halo y no como un botón. */
+  box-shadow: 0 0 16px 8px color-mix(in srgb, var(--superficie) 60%, transparent);
   /* El lockup queda por debajo de los 44 px, así que el área táctil se estira
      con padding sin mover el dibujo. */
   padding: var(--e-2) var(--e-4) var(--e-2) var(--e-3);
