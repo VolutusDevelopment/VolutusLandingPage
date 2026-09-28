@@ -2,41 +2,41 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 7862,
+        "alto": 9359,
         "desborda": false,
         "h1": 172.75,
-        "bloquesQueEntran": 19,
+        "bloquesQueEntran": 22,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 6400,
+        "alto": 7920,
         "desborda": false,
         "h1": 174.1875,
-        "bloquesQueEntran": 19,
+        "bloquesQueEntran": 22,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 5899,
+        "alto": 7078,
         "desborda": false,
         "h1": 246.234375,
-        "bloquesQueEntran": 19,
+        "bloquesQueEntran": 22,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 5899,
+        "alto": 7078,
         "desborda": false,
         "h1": 246.234375,
-        "bloquesQueEntran": 19,
+        "bloquesQueEntran": 22,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/privacidad": {
       "movil": {
-        "alto": 6884,
+        "alto": 6932,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -44,7 +44,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 4599,
+        "alto": 4647,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -52,7 +52,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4687,
+        "alto": 4735,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -60,7 +60,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4687,
+        "alto": 4735,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,

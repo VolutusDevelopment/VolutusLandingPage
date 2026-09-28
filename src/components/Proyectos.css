@@ -50,19 +50,11 @@
   font-size: var(--texto-sm);
 }
 
-/* Captura de producto. `width` y `height` van en el HTML, así que el hueco
-   está reservado antes de que la imagen llegue y el CLS es 0. */
-.proyecto-captura {
-  margin-top: var(--e-6);
-  width: 100%;
-  height: auto;
-  border-radius: var(--radio-tarjeta);
-}
-
 @media (min-width: 1024px) {
   .proyectos-resto {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Tantas columnas como tarjetas: una sola ocupa la fila entera. */
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     gap: var(--e-6);
     /* Cada tarjeta mide lo que ocupa su contenido. Sin esto la rejilla iguala
        las alturas y la que no lleva captura se estira con un vacío debajo del
@@ -73,5 +65,227 @@
 
   .proyectos-resto .proyecto {
     margin-top: var(--e-6);
+  }
+}
+
+/* ============================================================================
+ * La vitrina.
+ *
+ * Una composición desordenada a propósito: la cabecera arriba a la izquierda,
+ * una tarjeta ancha debajo, una alta a la derecha que sube hasta la cabecera y
+ * baja más que la ancha, una tercera corrida hacia dentro y una cuarta pegada
+ * al borde derecho. Nada queda alineado con todo, y por eso el ojo las recorre.
+ *
+ * Cada tarjeta es una ventana sobre el producto: el texto arriba y la captura
+ * abajo, cortada por el borde inferior. El fondo mezcla el tono de la tarjeta
+ * con su color de marca en dos luces difusas, sin imagen.
+ * ========================================================================= */
+
+.vitrina {
+  display: grid;
+  gap: var(--e-4);
+  margin-top: var(--e-12);
+  /* Los trazos al margen se pintan dentro de tarjetas de plano, pero quedan
+     sobre la página: toman el color de acción de la vitrina, que se resuelve
+     aquí y baja ya calculado. */
+  --chispa: var(--accion);
+}
+
+.vitrina-cabecera h3 {
+  font-size: var(--texto-xl);
+  margin-bottom: var(--e-3);
+}
+
+.vitrina-cabecera .proyecto-enlaces {
+  margin-top: var(--e-3);
+}
+
+.vista {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  padding: var(--e-8) var(--e-6) 0;
+  color: var(--texto);
+  background:
+    radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--marca) 35%, transparent), transparent 70%),
+    radial-gradient(80% 90% at 0% 100%, var(--lamina), transparent 70%),
+    var(--fondo);
+}
+
+.vista-texto {
+  max-width: 26rem;
+}
+
+.vista h4 {
+  margin: 0 0 var(--e-2);
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.vista p {
+  color: var(--texto-suave);
+}
+
+/* La captura asoma desde abajo: el marco la corta en recto contra el borde
+   inferior de la tarjeta, así que se lee como algo que sigue más allá. */
+.vista-marco {
+  flex: 1;
+  margin-top: var(--e-6);
+  overflow: clip;
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+}
+
+.vista-marco img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Los teléfonos no se estiran: van centrados y a su tamaño. */
+.vista-alta .vista-marco,
+.vista-desplazada .vista-marco {
+  border-radius: 0;
+}
+
+.vista-alta .vista-marco img,
+.vista-desplazada .vista-marco img {
+  width: min(100%, 18rem);
+  margin-inline: auto;
+}
+
+/* La captura del cliente trae su teléfono, pero con las esquinas del fondo
+   blanco donde se tomó: el radio las recorta a la curva del propio marco. */
+.vista-alta .vista-marco img {
+  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
+}
+
+/* La app no trae el marco del teléfono en la captura: se lo pone el borde. */
+.vista-desplazada .vista-marco img {
+  border: 8px solid #151515;
+  border-bottom: 0;
+  border-radius: 36px 36px 0 0;
+}
+
+.vista-ancha .vista-marco {
+  max-height: 22rem;
+}
+
+.vista-derecha .vista-marco {
+  max-height: 16rem;
+}
+
+.vista-alta .vista-marco,
+.vista-desplazada .vista-marco {
+  max-height: 24rem;
+}
+
+/* Los trazos al margen: solo donde la composición se desordena, en L. */
+.chispa {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .vitrina {
+    grid-template-columns: 1fr 1fr minmax(0, 0.95fr);
+    grid-template-areas:
+      'cabecera cabecera alta'
+      'ancha ancha alta'
+      'desplazada desplazada alta'
+      '. derecha derecha';
+  }
+
+  .vitrina-cabecera {
+    grid-area: cabecera;
+    align-self: end;
+    padding-bottom: var(--e-4);
+  }
+
+  .vista {
+    padding: var(--e-12) var(--e-12) 0;
+  }
+
+  .vista-ancha {
+    grid-area: ancha;
+    min-height: 30rem;
+  }
+
+  /* Sube hasta la cabecera y cae por debajo de la ancha: es la que rompe la
+     alineación de las otras dos. */
+  .vista-alta {
+    grid-area: alta;
+    align-self: start;
+    min-height: 44rem;
+    padding-inline: var(--e-8);
+  }
+
+  /* El teléfono se apoya en el borde de abajo, no en el texto: el hueco lo
+     absorbe el aire entre los dos, como en las otras tarjetas. */
+  .vista-alta .vista-marco {
+    flex: none;
+    margin-top: auto;
+    max-height: 30rem;
+  }
+
+  .vista-derecha {
+    grid-area: derecha;
+  }
+
+  .vista-desplazada {
+    grid-area: desplazada;
+    margin-left: 12%;
+    min-height: 24rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--e-8);
+    padding-right: var(--e-8);
+  }
+
+  .vista-desplazada .vista-texto {
+    padding-bottom: var(--e-12);
+  }
+
+  .vista-desplazada .vista-marco {
+    margin-top: 0;
+    align-self: end;
+  }
+
+  .vista-desplazada .vista-marco img {
+    width: 17rem;
+  }
+
+  .chispa {
+    display: block;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    stroke: var(--chispa);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  .vista-ancha .chispa {
+    right: 24px;
+    bottom: -44px;
+    transform: rotate(180deg);
+  }
+
+  .vista-alta .chispa {
+    top: -40px;
+    left: -40px;
+  }
+
+  .vista-desplazada .chispa {
+    top: -8px;
+    left: -48px;
+    transform: rotate(-30deg);
+  }
+
+  .vista-derecha .chispa {
+    top: -36px;
+    right: -36px;
+    transform: rotate(90deg);
   }
 }

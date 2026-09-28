@@ -11,11 +11,9 @@ import { PROYECTOS } from '../data/proyectos.js'
  * llega hasta aquí: lo filtra el propio archivo de datos, donde está explicada
  * la regla y el estado verificado de cada uno.
  *
- * Los dos huecos de captura son los que §6 reserva para los productos en
- * desarrollo. Hasta que lleguen las imágenes se ocupan con un marcador sobrio
- * del sistema —superficie, línea de 1 px y etiqueta—, nunca con una imagen de
- * relleno. El hueco ya tiene su proporción 16:10 fija, así que la captura real
- * entra sin mover un píxel: el CLS es 0 antes y después.
+ * Un proyecto con capturas se enseña como vitrina: una tarjeta por cada cara
+ * del producto. Sin capturas se sostiene con su texto y su enlace, que es
+ * lo que exige §4; nunca con un marcador vacío en lugar de la imagen.
  */
 
 function Enlaces({ sitio, repositorio, nombre }) {
@@ -37,6 +35,63 @@ function Enlaces({ sitio, repositorio, nombre }) {
   )
 }
 
+// La forma de cada vista sale de su orden: la primera ancha, la segunda alta,
+// la tercera corrida hacia dentro y la cuarta pegada a la derecha. Juntas arman
+// la composición desordenada.
+const FORMAS = ['ancha', 'alta', 'desplazada', 'derecha']
+
+// Tres trazos cortos, como los que se hacen a mano al margen para señalar algo.
+function Chispa() {
+  return (
+    <svg className="chispa" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <path d="M6 22 L15 25 M12 8 L18 18 M26 4 L25 15" />
+    </svg>
+  )
+}
+
+/**
+ * Un proyecto que se enseña por dentro: su cabecera y una tarjeta por cada
+ * cara del producto, con su captura real, que sale por el borde de abajo
+ * como si la tarjeta fuera una ventana sobre él. Cada tarjeta es una zona de
+ * plano con su tono, así que el texto hereda colores que ya pasan contraste.
+ */
+function Vitrina({ proyecto }) {
+  return (
+    <article className="vitrina">
+      <div className="vitrina-cabecera entra">
+        <h3>{proyecto.nombre}</h3>
+        <p className="proyecto-resumen">{proyecto.resumen}</p>
+        <Enlaces {...proyecto} />
+      </div>
+
+      {proyecto.vistas.map(({ titulo, texto, tono, imagen }, i) => (
+        <section
+          key={titulo}
+          className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
+        >
+          <Chispa />
+          <div className="vista-texto">
+            <h4>{titulo}</h4>
+            <p>{texto}</p>
+          </div>
+          <div className="vista-marco">
+            <img
+              src={imagen.src}
+              srcSet={imagen.srcSet}
+              sizes={imagen.sizes}
+              width={imagen.ancho}
+              height={imagen.alto}
+              alt={imagen.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </section>
+      ))}
+    </article>
+  )
+}
+
 export default function Proyectos() {
   const [destacado, ...resto] = [
     ...PROYECTOS.filter((p) => p.destacado),
@@ -46,8 +101,7 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <p className="antetitulo entra">Obra abierta</p>
-        <h2 className="entra">Tres cosas que puedes abrir ahora mismo.</h2>
+        <h2 className="entra">Un vistazo a nuestro trabajo</h2>
         {/* La versión anterior abría anunciando lo que falta: «no hay logos de
             clientes ni testimonios, porque todavía no hay clientes». Era
             honesta, pero dejaba al lector pensando en los clientes que no hay
@@ -70,30 +124,15 @@ export default function Proyectos() {
           <Enlaces {...destacado} />
         </article>
 
+        {resto.filter((p) => p.vistas).map((proyecto) => (
+          <Vitrina key={proyecto.id} proyecto={proyecto} />
+        ))}
+
         <div className="proyectos-resto">
-          {resto.map((proyecto) => (
+          {resto.filter((p) => !p.vistas).map((proyecto) => (
             <article key={proyecto.id} className="tarjeta proyecto entra">
               <h3>{proyecto.nombre}</h3>
               <p className="proyecto-resumen">{proyecto.resumen}</p>
-
-              {/* La captura solo aparece si existe. Un marcador «en camino»
-                  ocupando el elemento más grande de la tarjeta resta en vez de
-                  sumar: la sección se llama «obra abierta» y un recuadro vacío
-                  es lo contrario de enseñar obra. Un proyecto sin captura se
-                  sostiene con su texto y su enlace, que es lo que exige §4. */}
-              {proyecto.captura && (
-                <img
-                  className="proyecto-captura"
-                  src={proyecto.captura.src}
-                  srcSet={proyecto.captura.srcSet}
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                  width={proyecto.captura.ancho}
-                  height={proyecto.captura.alto}
-                  alt={proyecto.captura.alt}
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
 
               <Enlaces {...proyecto} />
             </article>

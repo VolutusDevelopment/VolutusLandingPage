@@ -570,9 +570,12 @@ svg {
 
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
    entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
-   siendo los momentos que más respiran de la página. */
-.zona-plano + .zona-plano,
-.zona-cielo + .zona-cielo:not(.corte-de-zona) {
+   siendo los momentos que más respiran de la página.
+
+   Solo entre secciones: las zonas también se ponen en tarjetas, y dos
+   tarjetas de plano seguidas no deben perder su relleno. */
+.seccion.zona-plano + .seccion.zona-plano,
+.seccion.zona-cielo + .seccion.zona-cielo:not(.corte-de-zona) {
   padding-top: 0;
 }
 
