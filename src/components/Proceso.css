@@ -72,24 +72,12 @@
   color: var(--texto-suave);
 }
 
-/* La lámina: un color de la paleta por paso y la voluta repetida encima. */
+/* La lámina: el color del tono de la carta y la voluta repetida encima. */
 .paso-lamina {
   min-height: 180px;
   display: grid;
   place-items: center;
-  background: var(--lamina, #543b4e);
-}
-
-.paso:nth-child(2) .paso-lamina {
-  --lamina: #2b5f73;
-}
-
-.paso:nth-child(3) .paso-lamina {
-  --lamina: #1f5c4b;
-}
-
-.paso:nth-child(4) .paso-lamina {
-  --lamina: #3d4a5c;
+  background: var(--lamina);
 }
 
 .paso-lamina svg {

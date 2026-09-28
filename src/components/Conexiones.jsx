@@ -19,16 +19,18 @@ import { VOLUTA } from './Marca.jsx'
 
 const NODO = { x: 464, y: 134, lado: 72 }
 
+// `tono`: el color de la paleta de la ruta; las que se encienden llevan uno
+// que aguanta texto blanco encima, porque la etiqueta se rellena con él.
 // `hasta`: del nodo al centro de la etiqueta. `sigue`: de ahí al borde. La
 // etiqueta se pinta encima de la línea, que pasa por debajo sin cortarse.
 const RUTAS = [
-  { texto: 'A mano', ruta: 0, hasta: [[464, 178], [200, 178]], sigue: [[0, 178]] },
-  { texto: 'Planilla', ruta: 1, hasta: [[464, 152], [420, 152], [420, 80], [320, 80]], sigue: [[40, 80]] },
-  { texto: 'WhatsApp', ruta: 2, hasta: [[512, 134], [512, 46], [660, 46]], sigue: [[960, 46]] },
-  { texto: 'Papel', ruta: 3, hasta: [[488, 206], [488, 244], [370, 244], [370, 280]], sigue: [[370, 360]] },
-  { texto: 'Correo', hasta: [[536, 156], [812, 156]], sigue: [[1000, 156]] },
-  { texto: 'Cuaderno', hasta: [[536, 188], [640, 188], [640, 250]], sigue: [[640, 360]] },
-  { texto: 'Llamadas', hasta: [[512, 206], [512, 324]], sigue: [[512, 360]] },
+  { texto: 'A mano', tono: 'pizarra', ruta: 0, hasta: [[464, 178], [200, 178]], sigue: [[0, 178]] },
+  { texto: 'Planilla', tono: 'bosque', ruta: 1, hasta: [[464, 152], [420, 152], [420, 80], [320, 80]], sigue: [[40, 80]] },
+  { texto: 'WhatsApp', tono: 'petroleo', ruta: 2, hasta: [[512, 134], [512, 46], [660, 46]], sigue: [[960, 46]] },
+  { texto: 'Papel', tono: 'ciruela', ruta: 3, hasta: [[488, 206], [488, 244], [370, 244], [370, 280]], sigue: [[370, 360]] },
+  { texto: 'Correo', tono: 'marca', hasta: [[536, 156], [812, 156]], sigue: [[1000, 156]] },
+  { texto: 'Cuaderno', tono: 'ciruela', hasta: [[536, 188], [640, 188], [640, 250]], sigue: [[640, 360]] },
+  { texto: 'Llamadas', tono: 'petroleo', hasta: [[512, 206], [512, 324]], sigue: [[512, 360]] },
 ]
 
 const largo = (puntos) =>
@@ -48,14 +50,16 @@ export default function Conexiones() {
       role="img"
       aria-label="A mano, planilla, WhatsApp, papel, correo, cuaderno y llamadas: todas las formas en que hoy se hace el trabajo, conectadas a Volutus."
     >
-      {RUTAS.map(({ texto, ruta, hasta, sigue }, i) => {
+      {RUTAS.map(({ texto, tono, ruta, hasta, sigue }, i) => {
         const camino = [...hasta, ...sigue]
         const [x, y] = hasta.at(-1)
         const w = ancho(texto)
         const total = Math.ceil(largo(camino))
         // `--llega` es la fracción del trazo en que la luz alcanza la
         // etiqueta: el CSS la usa para rellenarla justo en ese instante.
-        const estilo = { '--i': i, '--largo': total, '--llega': (largo(hasta) / total).toFixed(2) }
+        const estilo = {
+          '--tono': `var(--${tono})`,
+          '--i': i, '--largo': total, '--llega': (largo(hasta) / total).toFixed(2) }
         return (
           <g key={texto} className="ruta" data-ruta={ruta} style={estilo}>
             <path className="ruta-linea" d={trazo(camino)} />

@@ -61,7 +61,7 @@ export default function Proyectos() {
           Cada uno con su enlace o su código.
         </p>
 
-        <article className="tarjeta proyecto proyecto-destacado zona-plano entra">
+        <article className="tarjeta proyecto proyecto-destacado zona-plano tono-ciruela entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que
               validó un tercero, y es el motivo de que este proyecto encabece. */}
           <p className="proyecto-credencial dato">{destacado.credencial}</p>

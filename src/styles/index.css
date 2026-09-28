@@ -191,7 +191,6 @@
      que se queda en blanco para que cada una se lea como un objeto. */
   --tinte-a: #f0f8f9;
   --tinte-b: #f8f5f4;
-  --etiqueta: #dbefe6;
 
   /* La marca NUNCA es texto ni botón sobre claro: da 3.90:1. Solo trazos y
      superficies, donde basta 3:1. */
@@ -200,6 +199,12 @@
   --accion-hover: #2a5060;
   --accion-activa: #1f3f4d;
   --sobre-accion: #ffffff;
+  /* La paleta de las láminas, para dar color sin gastar la acción. Todas
+     pasan 7:1 sobre blanco y con blanco encima. */
+  --ciruela: #543b4e;
+  --petroleo: #2b5f73;
+  --bosque: #1f5c4b;
+  --pizarra: #3d4a5c;
 
   /* El vidrio de la barra. El brillo es la luz que entra por arriba y las
      sombras interiores dibujan el canto sin necesidad de un borde. */
@@ -238,9 +243,12 @@
   --accion-hover: #bae0cf;
   --accion-activa: #dbf0e5;
   --sobre-accion: #0c221d;
+  --ciruela: #e2b6cf;
+  --petroleo: #8fc6d9;
+  --bosque: #8cc9b1;
+  --pizarra: #b4c6e0;
   --tinte-a: #13302a;
   --tinte-b: #183c33;
-  --etiqueta: #1f3d35;
 
   --vidrio: rgb(14 17 24 / 0.42);
   --vidrio-brillo: rgb(255 255 255 / 0.16);
@@ -254,6 +262,62 @@
   --error: #ff8a80;
 
   --foco: #8cc9b1;
+
+  /* El color de lámina del tono: en plano el bosque. */
+  --lamina: #1f5c4b;
+}
+
+/* ============ Tonos del plano ============
+   Los otros colores de la paleta, para que no todo lo oscuro sea bosque. Solo
+   cambian superficies, texto suave y acción; el resto lo hereda de
+   `.zona-plano`. Con el tema forzado a claro pierden frente a la regla de
+   arriba, que es más específica, y solo queda la lámina. Todos pasan 6.6:1. */
+.zona-plano.tono-ciruela {
+  --fondo: #1f141c;
+  --superficie: #2c1d28;
+  --tinte-a: #2c1d28;
+  --tinte-b: #352431;
+  --linea: #3d2a38;
+  --texto-suave: #c7b0bf;
+  --marca: #e2b6cf;
+  --accion: #e2b6cf;
+  --accion-hover: #eed3e2;
+  --accion-activa: #f7e9f1;
+  --sobre-accion: #1f141c;
+  --foco: #e2b6cf;
+  --lamina: #543b4e;
+}
+
+.zona-plano.tono-petroleo {
+  --fondo: #0a1e27;
+  --superficie: #112b36;
+  --tinte-a: #112b36;
+  --tinte-b: #163441;
+  --linea: #1d3c4a;
+  --texto-suave: #a2bfcb;
+  --marca: #8fc6d9;
+  --accion: #8fc6d9;
+  --accion-hover: #bcdde8;
+  --accion-activa: #ddeef4;
+  --sobre-accion: #0a1e27;
+  --foco: #8fc6d9;
+  --lamina: #2b5f73;
+}
+
+.zona-plano.tono-pizarra {
+  --fondo: #13171e;
+  --superficie: #1c222b;
+  --tinte-a: #1c222b;
+  --tinte-b: #242b36;
+  --linea: #2c3441;
+  --texto-suave: #b0b9c6;
+  --marca: #b4c6e0;
+  --accion: #b4c6e0;
+  --accion-hover: #d2ddec;
+  --accion-activa: #e9eef6;
+  --sobre-accion: #13171e;
+  --foco: #b4c6e0;
+  --lamina: #3d4a5c;
 }
 
 /* ============ Base ============ */

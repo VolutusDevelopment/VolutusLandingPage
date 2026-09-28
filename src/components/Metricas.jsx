@@ -59,7 +59,7 @@ const PRUEBA = `https://pagespeed.web.dev/analyze?url=${encodeURIComponent(`${OR
 
 export default function Metricas() {
   return (
-    <section id="metricas" className="seccion zona-plano metricas">
+    <section id="metricas" className="seccion zona-plano tono-petroleo metricas">
       <div className="contenedor">
         <p className="antetitulo entra">Medido, no prometido</p>
         {/* El titular lleva el número y dice de qué página habla. «Las cuatro

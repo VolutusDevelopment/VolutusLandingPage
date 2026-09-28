@@ -30,6 +30,20 @@
   pointer-events: none;
 }
 
+/* ---- el resplandor ----
+   Dos focos de la paleta detrás del titular, turquesa y ciruela, tan tenues
+   que tiñen el blanco sin llegar a ser un color. */
+.portada::after {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(40rem 26rem at 12% 8%, color-mix(in srgb, var(--marca) 14%, transparent), transparent),
+    radial-gradient(36rem 24rem at 88% 42%, color-mix(in srgb, var(--ciruela) 11%, transparent), transparent);
+  pointer-events: none;
+}
+
 /* ---- la palabra que rota ----
    Un bloque de rejilla con dos ocupantes en la misma celda: la palabra visible
    y, invisible, la más larga de la lista. La celda mide siempre lo que la más
@@ -38,7 +52,8 @@
 .rotativo {
   display: grid;
   justify-items: center;
-  color: var(--accion);
+  color: var(--tono, var(--accion));
+  transition: color 300ms var(--ease-out);
 }
 
 .rotativo::before {
@@ -193,7 +208,7 @@
   font-size: var(--texto-lg);
   font-weight: 800;
   line-height: 1;
-  color: var(--accion);
+  color: var(--ciruela);
 }
 
 /* ============================================================================
@@ -239,7 +254,7 @@
    desvanece primero y solo entonces vuelve al principio, así que nunca se ve
    retroceder. */
 .ruta-luz {
-  stroke: var(--accion);
+  stroke: var(--tono);
   stroke-width: 1.6;
   stroke-dasharray: var(--largo);
   stroke-dashoffset: var(--largo);
@@ -256,7 +271,7 @@
 }
 
 .ruta-etiqueta rect {
-  fill: var(--etiqueta);
+  fill: color-mix(in srgb, var(--tono) 16%, var(--fondo));
   transition: fill 300ms var(--ease-out);
 }
 
@@ -275,7 +290,7 @@
 }
 
 .ruta.activa .ruta-etiqueta rect {
-  fill: var(--accion);
+  fill: var(--tono);
 }
 
 .ruta.activa .ruta-etiqueta text {

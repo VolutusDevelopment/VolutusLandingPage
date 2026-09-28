@@ -57,8 +57,14 @@ export default function initTitularRotativo() {
 
   const palabras = rotativo.dataset.palabras.split('|')
   const rutas = document.querySelectorAll('[data-ruta]')
+  // La palabra toma el tono de su ruta: el color se lee en el titular y en el
+  // dibujo a la vez.
   const encender = (indice) =>
-    rutas.forEach((ruta) => ruta.classList.toggle('activa', ruta.dataset.ruta === String(indice)))
+    rutas.forEach((ruta) => {
+      const activa = ruta.dataset.ruta === String(indice)
+      ruta.classList.toggle('activa', activa)
+      if (activa) rotativo.style.setProperty('--tono', ruta.style.getPropertyValue('--tono'))
+    })
 
   const fija = document.createElement('span')
   fija.className = 'solo-lectores'

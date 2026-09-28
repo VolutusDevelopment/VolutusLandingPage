@@ -25,6 +25,9 @@ import { VOLUTA } from './Marca.jsx'
  * ────────────────────────────────────────────────────────────────────────────
  */
 
+/* Un tono de la paleta por paso: la carta entera, no solo la lámina. */
+const TONOS = ['tono-ciruela', 'tono-petroleo', '', 'tono-pizarra']
+
 const PASOS = [
   {
     titulo: 'Nos cuentas el problema',
@@ -84,7 +87,7 @@ export default function Proceso() {
         <ol className="pasos" style={{ '--pasos': PASOS.length }}>
           {PASOS.map((paso, i) => (
             <li key={paso.titulo} className="paso" style={{ '--i': i }}>
-              <div className="paso-carta zona-plano">
+              <div className={`paso-carta zona-plano ${TONOS[i]}`}>
                 <div className="paso-cuerpo">
                   <span className="paso-numero dato" aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
