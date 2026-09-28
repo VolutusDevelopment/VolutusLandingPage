@@ -37,8 +37,7 @@ export default function Contacto() {
           <p className="antetitulo entra">Cuéntanos</p>
           <h2 className="entra">¿Qué estás resolviendo a mano?</h2>
           <p className="entradilla contacto-entradilla">
-            No hace falta que sepas cómo se resuelve. Con el problema en tus palabras nos basta
-            para contestarte algo útil.
+            No hace falta que sepas cómo se resuelve: con el problema en tus palabras basta.
           </p>
 
           {/* Qué pasa DESPUÉS de enviar, que es lo que la persona se está

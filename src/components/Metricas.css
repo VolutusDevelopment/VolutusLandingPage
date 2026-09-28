@@ -186,78 +186,16 @@
   color: var(--marca);
 }
 
-/* ---- los tres pasos para repetir la prueba ----
+/* ---- el pie: la prueba y sus condiciones ----
  *
- * Numerados de verdad, en un `<ol>`: es un procedimiento con orden, y quien lo
- * escuche con un lector de pantalla tiene que oír «lista de tres elementos» y
- * no tres frases sueltas.
- *
- * En una fila de tres cuando cabe, apilados cuando no. Sin recuadros: tres
- * números y tres frases bastan para que se lea como un paso a paso, y A.2
- * prohíbe el exceso de recuadros con información.
- *
- * El número va en la mono y en el color de marca. Es la única excepción a «la
- * mono solo para datos reales» (§6) que se permite aquí, y se permite porque
- * marca el hueco por donde entra la vista: sin él las tres frases se leen como
- * un párrafo partido. */
-
-.metricas-comprobar {
-  margin: var(--e-12) auto 0;
-  max-width: none;
-  font-size: var(--texto-sm);
-  color: var(--texto);
-  text-align: center;
-}
-
-.pasos-prueba {
-  counter-reset: paso;
-  list-style: none;
-  margin: var(--e-6) auto 0;
-  padding: 0;
-  display: grid;
-  gap: var(--e-4);
-  max-width: 52rem;
-  text-align: left;
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-}
-
-@media (min-width: 760px) {
-  .pasos-prueba {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--e-8);
-  }
-}
-
-.pasos-prueba li {
-  counter-increment: paso;
-  /* El número va fuera del flujo del texto, no en una celda. Con `display:
-     grid` aquí, cada hijo del `li` se vuelve celda: el enlace del primer paso
-     se iba a su propia columna y el resto de la frase caía debajo. */
-  position: relative;
-  padding-left: var(--e-6);
-  line-height: 1.5;
-}
-
-.pasos-prueba li::before {
-  content: counter(paso);
-  position: absolute;
-  left: 0;
-  font-family: var(--fuente-datos);
-  color: var(--marca);
-}
-
-/* ---- el pie: condiciones y la prueba ----
- *
- * Va en el paso más pequeño y en tinta suave: es la letra chica de la sección,
- * no un cuarto argumento. El enlace se deja como enlace de texto y no como
- * botón a propósito — §4 reserva las dos apariciones de llamada a la acción
- * para el formulario, y esto no lleva a ningún sitio nuestro. */
+ * Letra chica de la sección, no un argumento más. El enlace se deja como
+ * enlace de texto y no como botón: §4 reserva las llamadas a la acción para el
+ * formulario, y esto no lleva a ningún sitio nuestro. */
 
 .metricas-pie {
   margin: var(--e-8) auto 0;
   max-width: none;
-  font-size: var(--texto-xs);
+  font-size: var(--texto-sm);
   color: var(--texto-suave);
   text-align: center;
 }

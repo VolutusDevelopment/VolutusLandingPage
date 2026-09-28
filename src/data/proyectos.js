@@ -35,14 +35,14 @@ export const PROYECTOS = [
     destacado: true,
     credencial: 'Segundo lugar, hackathon de IA agéntica',
     resumen:
-      'Un agente que recibe una alerta de infraestructura, reúne el contexto disperso en varios sistemas y propone el diagnóstico con la evidencia que lo sostiene.',
+      'Recibe una alerta de infraestructura, reúne el contexto de varios sistemas y propone el diagnóstico con su evidencia.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
   },
   {
     id: 'ponlenota',
     nombre: 'PonleNota',
     resumen:
-      'Plataforma NFC para negocios locales: el cliente toca con el móvil, valora en menos de un minuto y se lleva un cupón para volver.',
+      'Plataforma NFC para negocios: el cliente valora en un minuto y se lleva un cupón para volver.',
     sitio: 'https://ponlenota.cl',
     // Captura real del producto en línea, tomada el 25-09-2026. El hueco solo
     // existe cuando hay algo con qué llenarlo: un marcador vacío ocupando el

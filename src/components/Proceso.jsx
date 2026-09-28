@@ -2,20 +2,13 @@
 import { VOLUTA } from './Marca.jsx'
 
 /**
- * Qué hacemos y cómo lo hacemos (DESIGN-BRIEF §4, bloque 4). Segundo corte de
- * tema: la página vuelve a cielo, porque vuelve a hablar con el visitante en
- * vez de enseñarle datos.
+ * Cómo trabajamos (DESIGN-BRIEF §4, bloque 4). Segundo corte de tema: la
+ * página vuelve a cielo, porque vuelve a hablar con el visitante en vez de
+ * enseñarle datos.
  *
- * Es UN bloque, no dos, y el orden no es negociable: **el cómo manda y el qué
- * va subordinado.** Partirlos en dos secciones es lo que haría crecer la página
- * sin motivo, y el *cómo* es lo que contesta la pregunta que el visitante trae
- * de verdad. §2 lo dice sin rodeos: la objeción más valiosa de las cuatro es
- * «¿qué tengo que entregarles yo?», y casi ninguna página de software la
- * responde. Por eso cada paso declara qué pone el cliente.
- *
- * Las tecnologías no aparecen. §4 las degrada a pie de página y prohíbe usarlas
- * como argumento de venta: los cuatro encargos se nombran por el resultado que
- * recibe el cliente, «una app Android en producción» y no «Kotlin».
+ * Qué hacemos ya lo dice la portada; aquí solo queda el cómo, que contesta la
+ * objeción más valiosa de §2: «¿qué tengo que entregarles yo?». Por eso cada
+ * paso declara, en una línea, qué pone el cliente.
  *
  * Los pasos son tarjetas que se apilan al desplazar: cada una se queda pegada
  * arriba y la siguiente sube por encima, mientras la de detrás se encoge y se
@@ -32,40 +25,27 @@ import { VOLUTA } from './Marca.jsx'
  * ────────────────────────────────────────────────────────────────────────────
  */
 
-const ENCARGOS = [
-  'Un producto web en producción, con su panel y sus usuarios.',
-  'Una app Android publicada y funcionando.',
-  'Un agente de IA conectado a los sistemas que ya usas.',
-  'Un indexador que reúne datos dispersos en un solo lugar consultable.',
-]
-
 const PASOS = [
   {
     titulo: 'Nos cuentas el problema',
-    ponesTu: 'El problema en tus palabras. No hace falta que sepas cómo se resuelve.',
+    ponesTu: 'El problema en tus palabras.',
     plazo: null,
   },
   {
     titulo: 'Te mandamos alcance y precio',
-    ponesTu: 'Una decisión: seguimos o no. Sin compromiso hasta aquí.',
+    ponesTu: 'Decidir si seguimos. Sin compromiso.',
     plazo: null,
   },
   {
     titulo: 'Construimos por entregas revisables',
-    ponesTu: 'Media hora cada entrega para mirarlo y decirnos qué está mal.',
+    ponesTu: 'Media hora por entrega para revisarla.',
     plazo: null,
   },
   {
     titulo: 'Lo ponemos en producción y te lo entregamos',
-    ponesTu: 'Los accesos necesarios. El código y las cuentas quedan a tu nombre.',
+    ponesTu: 'Los accesos. El código queda a tu nombre.',
     plazo: null,
   },
-]
-
-const NO_ACEPTAMOS = [
-  'Encargos para mañana. Lo que se hace con prisa se paga dos veces.',
-  'Competir por ser los más baratos. Hay quien cobra menos, y se nota.',
-  'Licitaciones con meses de papeleo. Para cuando aprueban, el problema ya cambió.',
 ]
 
 // Cuatro volutas, una dentro de otra, todas con el mismo ojo: es la
@@ -99,11 +79,7 @@ export default function Proceso() {
     <section id="proceso" className="seccion zona-cielo corte-de-zona proceso">
       <div className="contenedor">
         <p className="antetitulo entra">Cómo trabajamos</p>
-        <h2 className="entra">En qué te estás metiendo, antes de escribirnos.</h2>
-        <p className="entradilla proceso-entradilla entra">
-          Cuatro pasos, y en cada uno está dicho qué pones tú. Es la pregunta que más incomoda y la
-          que casi nadie contesta.
-        </p>
+        <h2 className="entra">Cuatro pasos, y en cada uno qué pones tú.</h2>
 
         <ol className="pasos" style={{ '--pasos': PASOS.length }}>
           {PASOS.map((paso, i) => (
@@ -124,26 +100,6 @@ export default function Proceso() {
             </li>
           ))}
         </ol>
-
-        <div className="proceso-columnas entra">
-          <div>
-            <h3>Qué construimos</h3>
-            <ul className="lista">
-              {ENCARGOS.map((e) => (
-                <li key={e}>{e}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3>Qué no tomamos</h3>
-            <ul className="lista">
-              {NO_ACEPTAMOS.map((e) => (
-                <li key={e}>{e}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
       </div>
     </section>
   )

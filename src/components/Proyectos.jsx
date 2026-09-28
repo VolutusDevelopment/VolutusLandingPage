@@ -58,7 +58,7 @@ export default function Proyectos() {
             credencial que hay —obra abierta— en una invitación: no te pido que
             me creas, te pido que lo abras. */}
         <p className="entradilla proyectos-entradilla entra">
-          No tienes que creernos: cada proyecto va con su enlace o su código.
+          Cada uno con su enlace o su código.
         </p>
 
         <article className="tarjeta proyecto proyecto-destacado zona-plano entra">

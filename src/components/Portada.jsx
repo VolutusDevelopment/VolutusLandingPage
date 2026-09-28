@@ -59,13 +59,11 @@ export default function Portada() {
             funcionando solo.
           </h1>
 
-          {/* La entradilla contesta tres de las cuatro preocupaciones de §2 en
-              dos frases: qué tengo que entregar yo («en tus palabras»), en
-              cuánto tiempo, y cuánto cuesta. La cuarta —qué hacen— la contesta
-              el índice de obra que viene justo debajo. */}
+          {/* La entradilla dice qué hacemos y qué pasa al escribirnos: dos
+              frases y ninguna más. */}
           <p className="entradilla portada-entradilla">
-            Cuéntanos el problema en tus palabras. En menos de 48 horas hábiles tienes alcance,
-            plazo y un precio real.
+            Hacemos webs, apps y agentes de IA a medida. Nos cuentas el problema y en 48 horas
+            hábiles tienes alcance, plazo y precio.
           </p>
 
           <div className="portada-acciones">
