@@ -71,10 +71,9 @@
 /* ============================================================================
  * La vitrina.
  *
- * Una composición desordenada a propósito: la cabecera arriba a la izquierda,
- * una tarjeta ancha debajo, una alta a la derecha que sube hasta la cabecera y
- * baja más que la ancha, una tercera corrida hacia dentro y una cuarta pegada
- * al borde derecho. Nada queda alineado con todo, y por eso el ojo las recorre.
+ * En L, la cabecera arriba a la izquierda con dos tarjetas anchas debajo, y a
+ * la derecha la app, que sube hasta la cabecera y queda fija mientras pasan
+ * las otras dos. Una cuarta, fuera de esa rejilla, cierra a todo el ancho.
  *
  * Cada tarjeta es una ventana sobre el producto: el texto arriba y la captura
  * abajo, cortada por el borde inferior. El fondo mezcla el tono de la tarjeta
@@ -89,6 +88,11 @@
      sobre la página: toman el color de acción de la vitrina, que se resuelve
      aquí y baja ya calculado. */
   --chispa: var(--accion);
+}
+
+.vitrina-rejilla {
+  display: grid;
+  gap: var(--e-4);
 }
 
 .vitrina-cabecera h3 {
@@ -144,41 +148,72 @@
 }
 
 /* Los teléfonos no se estiran: van centrados y a su tamaño. */
-.vista-alta .vista-marco,
 .vista-desplazada .vista-marco {
   border-radius: 0;
-}
-
-.vista-alta .vista-marco img,
-.vista-desplazada .vista-marco img {
-  width: min(100%, 18rem);
-  margin-inline: auto;
+  max-height: 24rem;
 }
 
 /* La captura del cliente trae su teléfono, pero con las esquinas del fondo
    blanco donde se tomó: el radio las recorta a la curva del propio marco. */
-.vista-alta .vista-marco img {
+.vista-desplazada .vista-marco img {
+  width: min(100%, 18rem);
+  margin-inline: auto;
   border-radius: 13% 13% 0 0 / 6% 6% 0 0;
 }
 
-/* La app no trae el marco del teléfono en la captura: se lo pone el borde. */
-.vista-desplazada .vista-marco img {
+/* La app no trae el marco del teléfono en la captura: el borde lo dibuja el
+   propio marco, que queda quieto, y el inicio completo corre por dentro. Es
+   contenedor para que el recorrido se mida contra su alto, sea cual sea. */
+.vista-alta .vista-marco {
+  container-type: size;
+  flex: none;
+  width: min(100%, 18rem);
+  height: 24rem;
+  margin-inline: auto;
   border: 8px solid #151515;
   border-bottom: 0;
   border-radius: 36px 36px 0 0;
+  view-timeline: --app block;
 }
 
 .vista-ancha .vista-marco {
   max-height: 22rem;
 }
 
-.vista-derecha .vista-marco {
+.vista-cierre .vista-marco {
   max-height: 16rem;
 }
 
-.vista-alta .vista-marco,
-.vista-desplazada .vista-marco {
-  max-height: 24rem;
+/* Al bajar por la página, el inicio corre dentro del teléfono de arriba abajo.
+   Sin soporte o con movimiento reducido se queda quieto en su parte de arriba,
+   que ya se entiende sola. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .vista-alta .vista-marco img {
+      animation: recorrer-app linear both;
+      animation-timeline: --app;
+      animation-range: cover 45% cover 85%;
+    }
+  }
+
+  /* En L la tarjeta queda fija mientras pasan el sitio y el cliente, y el
+     recorrido dura exactamente eso: termina antes de que asome el panel. */
+  @media screen and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .vista-alta .vista-marco img {
+      animation-timeline: --columna-app;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+
+:root[data-movimiento='reducido'] .vista-alta .vista-marco img {
+  animation: none;
+}
+
+@keyframes recorrer-app {
+  to {
+    translate: 0 calc(-100% + 100cqh);
+  }
 }
 
 /* Los trazos al margen: solo donde la composición se desordena, en L. */
@@ -186,14 +221,46 @@
   display: none;
 }
 
+/* En M los dos teléfonos van lado a lado: apilados dejan media tarjeta vacía
+   a cada costado. El resto ocupa el ancho completo. */
+@media (min-width: 650px) {
+  .vitrina-rejilla {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vitrina-cabecera,
+  .vista-ancha {
+    grid-column: 1 / -1;
+  }
+
+  /* Las dos tarjetas miden lo que la más alta: el teléfono más corto se apoya
+     en el borde de abajo y el hueco queda entre el texto y la captura. */
+  .vista-alta,
+  .vista-desplazada {
+    justify-content: space-between;
+  }
+
+  .vista-desplazada .vista-marco {
+    flex: none;
+  }
+}
+
 @media (min-width: 1024px) {
-  .vitrina {
+  .vitrina-rejilla {
+    timeline-scope: --columna-app;
     grid-template-columns: 1fr 1fr minmax(0, 0.95fr);
     grid-template-areas:
       'cabecera cabecera alta'
       'ancha ancha alta'
-      'desplazada desplazada alta'
-      '. derecha derecha';
+      'desplazada desplazada alta';
+  }
+
+  /* La columna de la app, vacía: la tarjeta se queda fija arriba y esto es lo
+     que marca cuánto scroll dura su recorrido. */
+  .vitrina-rejilla::before {
+    content: '';
+    grid-area: alta;
+    view-timeline: --columna-app block;
   }
 
   .vitrina-cabecera {
@@ -211,30 +278,48 @@
     min-height: 30rem;
   }
 
-  /* Sube hasta la cabecera y cae por debajo de la ancha: es la que rompe la
-     alineación de las otras dos. */
+  /* Queda fija bajo la barra mientras dura la rejilla, y se va con el cliente
+     justo antes de que llegue el cierre. */
   .vista-alta {
     grid-area: alta;
     align-self: start;
-    min-height: 44rem;
+    position: sticky;
+    top: calc(var(--barra-alto) + var(--e-4));
     padding-inline: var(--e-8);
   }
 
-  /* El teléfono se apoya en el borde de abajo, no en el texto: el hueco lo
-     absorbe el aire entre los dos, como en las otras tarjetas. */
+  /* Un teléfono de verdad: entero, con sus proporciones, y del alto que deje
+     la ventana para que la tarjeta quepa completa mientras está fija. */
   .vista-alta .vista-marco {
-    flex: none;
-    margin-top: auto;
-    max-height: 30rem;
+    width: auto;
+    height: clamp(20rem, 100dvh - 24rem, 36rem);
+    aspect-ratio: 9 / 19.5;
+    margin-bottom: var(--e-8);
+    border-bottom: 8px solid #151515;
+    border-radius: 36px;
+    view-timeline: none;
   }
 
-  .vista-derecha {
-    grid-area: derecha;
+  /* Cierra la vitrina a todo el ancho: el texto a un lado y el panel, que es
+     ancho, al otro, apoyado en el borde de abajo como las demás capturas. */
+  .vista-cierre {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--e-8);
+  }
+
+  .vista-cierre .vista-texto {
+    padding-bottom: var(--e-12);
+  }
+
+  .vista-cierre .vista-marco {
+    margin-top: 0;
+    align-self: end;
+    max-height: none;
   }
 
   .vista-desplazada {
     grid-area: desplazada;
-    margin-left: 12%;
     min-height: 24rem;
     display: grid;
     grid-template-columns: 1fr auto;
@@ -283,7 +368,7 @@
     transform: rotate(-30deg);
   }
 
-  .vista-derecha .chispa {
+  .vista-cierre .chispa {
     top: -36px;
     right: -36px;
     transform: rotate(90deg);

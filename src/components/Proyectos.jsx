@@ -17,6 +17,7 @@ import { PROYECTOS } from '../data/proyectos.js'
  */
 
 function Enlaces({ sitio, repositorio, nombre }) {
+  if (!sitio && !repositorio) return null
   return (
     <p className="proyecto-enlaces">
       {sitio && (
@@ -35,10 +36,10 @@ function Enlaces({ sitio, repositorio, nombre }) {
   )
 }
 
-// La forma de cada vista sale de su orden: la primera ancha, la segunda alta,
-// la tercera corrida hacia dentro y la cuarta pegada a la derecha. Juntas arman
-// la composición desordenada.
-const FORMAS = ['ancha', 'alta', 'desplazada', 'derecha']
+// La forma de cada vista sale de su orden: la primera ancha, la segunda corrida
+// hacia dentro, la tercera alta y la cuarta cierra a todo el ancho. Juntas
+// arman la composición desordenada.
+const FORMAS = ['ancha', 'desplazada', 'alta', 'cierre']
 
 // Tres trazos cortos, como los que se hacen a mano al margen para señalar algo.
 function Chispa() {
@@ -56,38 +57,64 @@ function Chispa() {
  * plano con su tono, así que el texto hereda colores que ya pasan contraste.
  */
 function Vitrina({ proyecto }) {
+  // Si el resumen nombra el dominio del sitio, el enlace va en esas mismas
+  // palabras y sobra el «Abrir el sitio» aparte. Si no lo nombra, el enlace
+  // aparte se queda: el sitio nunca se pierde.
+  const dominio = proyecto.sitio && new URL(proyecto.sitio).hostname
+  const [antes, ...despues] = proyecto.resumen.split(dominio)
+  const enLinea = dominio && despues.length > 0
+
+  const tarjetas = proyecto.vistas.map(({ titulo, texto, tono, imagen }, i) => (
+    <section
+      key={titulo}
+      className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
+    >
+      <Chispa />
+      <div className="vista-texto">
+        <h4>{titulo}</h4>
+        <p>{texto}</p>
+      </div>
+      <div className="vista-marco">
+        <img
+          src={imagen.src}
+          srcSet={imagen.srcSet}
+          sizes={imagen.sizes}
+          width={imagen.ancho}
+          height={imagen.alto}
+          alt={imagen.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </section>
+  ))
+  // El cierre va fuera de la rejilla: la tarjeta fija de la app se suelta al
+  // final de su contenedor, y así lo hace antes de llegar a él.
+  const cierre = FORMAS.indexOf('cierre')
+
   return (
     <article className="vitrina">
-      <div className="vitrina-cabecera entra">
-        <h3>{proyecto.nombre}</h3>
-        <p className="proyecto-resumen">{proyecto.resumen}</p>
-        <Enlaces {...proyecto} />
+      <div className="vitrina-rejilla">
+        <div className="vitrina-cabecera entra">
+          <h3>{proyecto.nombre}</h3>
+          <p className="proyecto-resumen">
+            {enLinea ? (
+              <>
+                {antes}
+                <a href={proyecto.sitio} rel="noopener">
+                  {dominio}
+                </a>
+                {despues.join(dominio)}
+              </>
+            ) : (
+              proyecto.resumen
+            )}
+          </p>
+          <Enlaces {...proyecto} sitio={enLinea ? null : proyecto.sitio} />
+        </div>
+        {tarjetas.slice(0, cierre)}
       </div>
-
-      {proyecto.vistas.map(({ titulo, texto, tono, imagen }, i) => (
-        <section
-          key={titulo}
-          className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
-        >
-          <Chispa />
-          <div className="vista-texto">
-            <h4>{titulo}</h4>
-            <p>{texto}</p>
-          </div>
-          <div className="vista-marco">
-            <img
-              src={imagen.src}
-              srcSet={imagen.srcSet}
-              sizes={imagen.sizes}
-              width={imagen.ancho}
-              height={imagen.alto}
-              alt={imagen.alt}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </section>
-      ))}
+      {tarjetas.slice(cierre)}
     </article>
   )
 }
@@ -101,19 +128,7 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <h2 className="entra">Un vistazo a nuestro trabajo</h2>
-        {/* La versión anterior abría anunciando lo que falta: «no hay logos de
-            clientes ni testimonios, porque todavía no hay clientes». Era
-            honesta, pero dejaba al lector pensando en los clientes que no hay
-            justo al entrar en la sección que tiene que convencerlo.
-
-            Esta dice lo mismo sin confesar nada. §3 pide no aparentar
-            trayectoria; no pide declarar la que falta. Y convierte la única
-            credencial que hay —obra abierta— en una invitación: no te pido que
-            me creas, te pido que lo abras. */}
-        <p className="entradilla proyectos-entradilla entra">
-          Cada uno con su enlace o su código.
-        </p>
+        <h2 className="entra">Echa un vistazo a nuestro trabajo</h2>
 
         <article className="tarjeta proyecto proyecto-destacado zona-plano tono-ciruela entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que

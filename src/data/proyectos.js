@@ -28,21 +28,10 @@
 
 export const PROYECTOS = [
   {
-    id: 'hackathon',
-    nombre: 'Agente de respuesta a incidentes',
-    // Es la única prueba validada por un tercero que existe hoy, así que va
-    // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
-    destacado: true,
-    credencial: 'Segundo lugar, hackathon de IA agéntica',
-    resumen:
-      'Recibe una alerta de infraestructura, reúne el contexto de varios sistemas y propone el diagnóstico con su evidencia.',
-    repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
-  },
-  {
     id: 'ponlenota',
     nombre: 'PonleNota',
     resumen:
-      'Plataforma NFC para negocios: el cliente valora en un minuto y se lleva un cupón para volver.',
+      'Ayuda a los negocios a conseguir más reseñas en Google con un QR o una tarjeta NFC.',
     sitio: 'https://ponlenota.cl',
     // Las tres caras del producto, cada una con su captura real. Sin `vistas`
     // un proyecto se pinta como tarjeta simple; con ellas, como vitrina (ver
@@ -57,7 +46,7 @@ export const PROYECTOS = [
     vistas: [
       {
         titulo: 'El sitio',
-        texto: 'Explica el producto y vende los planes. Hecho para aparecer en Google.',
+        texto: 'Explica el producto y vende los planes. Pensado para aparecer en Google.',
         tono: 'petroleo',
         imagen: {
           src: '/image/ponlenota-1280.webp',
@@ -70,12 +59,12 @@ export const PROYECTOS = [
       },
       {
         titulo: 'Lo que ve el cliente',
-        texto: 'Toca la tarjeta, valora en un minuto y se lleva un cupón. Sin descargar nada.',
+        texto: 'Acerca el teléfono a la tarjeta o escanea el QR, valora en un minuto y se lleva un cupón. Sin descargar nada.',
         tono: 'ciruela',
         imagen: {
           src: '/image/ponlenota-cliente-320.webp',
           srcSet: '/image/ponlenota-cliente-320.webp 320w, /image/ponlenota-cliente-628.webp 628w',
-          sizes: '(min-width: 1024px) 18rem, 70vw',
+          sizes: '(min-width: 650px) 18rem, 70vw',
           ancho: 320,
           alto: 700,
           alt: 'Un teléfono con la valoración de Café Luna: cinco estrellas, el agradecimiento y los botones para dejar la opinión en Google o pedir el beneficio.',
@@ -83,14 +72,14 @@ export const PROYECTOS = [
       },
       {
         titulo: 'La app del negocio',
-        texto: 'Toques, valoraciones y cupones en el teléfono del dueño. App Android.',
+        texto: 'Tu negocio, tu equipo, tus tarjetas NFC y tus cupones, desde el teléfono o la tablet. Disponible en Android y iOS.',
         imagen: {
           src: '/image/ponlenota-app-640.webp',
           srcSet: '/image/ponlenota-app-640.webp 640w, /image/ponlenota-app-960.webp 960w',
-          sizes: '(min-width: 1024px) 20rem, 70vw',
+          sizes: '(min-width: 650px) 18rem, 70vw',
           ancho: 640,
-          alto: 831,
-          alt: 'El inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, y la campaña activa.',
+          alto: 1536,
+          alt: 'El inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, los accesos rápidos y la campaña activa de un café americano gratis.',
         },
       },
       {
@@ -108,11 +97,27 @@ export const PROYECTOS = [
       },
     ],
   },
+
+  {
+    id: 'hackathon',
+    nombre: 'Agente de IA para incidentes de infraestructura',
+    // Es la única prueba validada por un tercero que existe hoy, así que va
+    // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
+    destacado: true,
+    credencial: '2.º lugar · Hackathon de Huawei Cloud y Kostra AI',
+    resumen:
+      'Atiende las alertas de infraestructura por su cuenta: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia.',
+    repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
+  },
+
+
+
+  
   {
     id: 'carflip',
-    nombre: 'CarFlip',
+    nombre: 'PROYECTO CarFlip',
     resumen:
-      'Rastrea varios sitios de venta de autos y los deja todos consultables en un solo lugar.',
+      'Un centro recopilador de vehiculos usados que busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]
