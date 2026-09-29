@@ -28,7 +28,7 @@ function Enlaces({ sitio, repositorio, nombre }) {
       )}
       {repositorio && (
         <a href={repositorio} rel="noopener">
-          Ver el código
+          Ver el código fuente
           <span className="solo-lectores"> de {nombre}</span>
         </a>
       )}

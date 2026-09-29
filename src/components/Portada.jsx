@@ -74,27 +74,6 @@ export default function Portada() {
               Ver los tres proyectos
             </a>
           </div>
-
-          {/* La única credencial que validó un tercero. Va DEBAJO de los
-              botones y no encima: no compite con la acción principal, la
-              respalda.
-
-              Una línea, no un párrafo. Railway resuelve la confianza con una
-              rejilla de logos que se lee de un vistazo; nosotros no tenemos
-              logos que poner, pero sí podemos dejar de contarlo en prosa.
-              «Jurado externo» se queda porque es lo que la separa de una
-              medalla que cualquiera se dibuja. */}
-          <p className="portada-credencial">
-            <span className="portada-credencial-marca dato" aria-hidden="true">
-              2.º
-            </span>
-            <span>
-              Hackathon de IA agéntica, jurado externo.{' '}
-              <a href="https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS" rel="noopener">
-                Ver el código
-              </a>
-            </span>
-          </p>
         </div>
       </div>
 

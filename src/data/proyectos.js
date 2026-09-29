@@ -31,7 +31,7 @@ export const PROYECTOS = [
     id: 'ponlenota',
     nombre: 'PonleNota',
     resumen:
-      'Ayuda a los negocios a conseguir más reseñas en Google con un QR o una tarjeta NFC.',
+      'ponlenota.cl se enfoca en ayudar a los negocios a conseguir más reseñas en Google con un QR o una tarjeta NFC.',
     sitio: 'https://ponlenota.cl',
     // Las tres caras del producto, cada una con su captura real. Sin `vistas`
     // un proyecto se pinta como tarjeta simple; con ellas, como vitrina (ver
@@ -98,15 +98,17 @@ export const PROYECTOS = [
     ],
   },
 
+
+
   {
     id: 'hackathon',
-    nombre: 'Agente de IA para incidentes de infraestructura',
+    nombre: 'Hackathon Huawei Cloud',
     // Es la única prueba validada por un tercero que existe hoy, así que va
     // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: '2.º lugar · Hackathon de Huawei Cloud y Kostra AI',
+    credencial: '2.º lugar en Hackathon de Huawei Cloud y Kostra AI',
     resumen:
-      'Atiende las alertas de infraestructura por su cuenta: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia.',
+      'Se realizó una Agente de IA que que atiende las alertas de infraestructura por su cuenta; reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia en tiempo real usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
   },
 
@@ -115,9 +117,9 @@ export const PROYECTOS = [
   
   {
     id: 'carflip',
-    nombre: 'PROYECTO CarFlip',
+    nombre: 'CarFlip',
     resumen:
-      'Un centro recopilador de vehiculos usados que busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
+      'Carflip.cl es un proyecto que tiene como fin recopilar vehiculos usados en un solo lugar y busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]
