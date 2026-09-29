@@ -295,8 +295,98 @@
   }
 
   .portada-interior {
-    grid-template-columns: 1fr 1fr;
+    /* El texto se lleva un poco más que la mitad. A partes iguales la columna
+       medía 544 px y «por WhatsApp,» —partida en letras para la palabra que
+       rota— mide 546: bajaba a dos líneas y las palabras cortas dejaban una
+       línea vacía debajo. */
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
     align-items: center;
     gap: var(--e-16);
+  }
+}
+
+/* ---- la palabra que rota ----
+   Un bloque de rejilla con dos ocupantes en la misma celda: la palabra visible
+   y, invisible, la más larga de la lista. La celda mide siempre lo que la más
+   larga, así que el titular reserva su alto desde el primer pintado y no salta
+   cuando cambia la palabra — ni en móvil, donde puede ocupar dos líneas. */
+.rotativo {
+  display: grid;
+  /* Sin kerning, para que la reserva mida lo mismo que la palabra animada.
+     Al partirla en una caja por letra el navegador ya no ajusta los pares
+     («Wh», «ll»), la palabra se ensancha unos píxeles y, al límite de la
+     columna, bajaba a otra línea que la reserva no preveía: el titular
+     saltaba de alto en cada cambio. Sin kerning en las dos, miden igual. */
+  font-kerning: none;
+  /* En la rama de Diego el titular va centrado y aquí va a la izquierda:
+     la palabra se alinea con el resto de la frase. */
+  justify-items: start;
+  color: var(--tono, var(--accion));
+  transition: color 300ms var(--ease-out);
+}
+
+.rotativo::before {
+  content: attr(data-reserva);
+  visibility: hidden;
+}
+
+.rotativo::before,
+.rotativo-palabra {
+  grid-area: 1 / 1;
+}
+
+/* Una palabra no se parte entre líneas: la frase solo corta entre palabras. */
+.rotativo-trozo {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Cada letra tiene su propia caja, y es la caja la que recorta: la letra se
+   esconde al cruzar su propio borde, no el de la palabra. El relleno deja
+   sitio a los descendentes (la «p» de «papel») y el margen negativo lo
+   devuelve, así que en reposo no mueve nada. `clip` y no `hidden`: con
+   `hidden` la línea base de la caja pasaría a su borde inferior. */
+.rotativo-caja {
+  display: inline-block;
+  overflow: clip;
+  padding-block: 0.1em 0.16em;
+  margin-block: -0.1em -0.16em;
+}
+
+.rotativo-letra {
+  display: inline-block;
+}
+
+/* La que se va acelera hacia arriba y, al llegar, se apaga: a −80 % aún
+   asomaría el pie de la letra por el borde de su caja. */
+.rotativo-sale .rotativo-letra {
+  animation: letra-sale 220ms cubic-bezier(0.42, 0, 1, 1) calc(var(--i) * 25ms) forwards;
+}
+
+/* La que llega entra rápido y frena largo. Hasta que le toca, espera
+   invisible: con `both` se queda en su primer fotograma. */
+.rotativo-entra .rotativo-letra {
+  animation: letra-entra 410ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 32ms) both;
+}
+
+@keyframes letra-sale {
+  99% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-80%);
+    opacity: 0;
+  }
+}
+
+@keyframes letra-entra {
+  from {
+    transform: translateY(80%);
+    opacity: 0;
+  }
+
+  1% {
+    opacity: 1;
   }
 }

@@ -41,7 +41,23 @@ export default function Portada() {
               §2 dice que el visitante llega sabiéndolo porque acaba de hablar
               con uno de los socios. Gastar el titular en explicar el rubro es
               gastarlo en lo único que ya sabe. */}
-          <h1>Eso que hoy haces a mano, funcionando solo.</h1>
+          {/* La palabra del medio rota entre las formas en que hoy se resuelve
+              esto a mano (§2). El HTML trae «a mano,» y sin JavaScript o con
+              movimiento reducido se queda así; `data-reserva` es la más ancha
+              —medida sin kerning, que es como se anima: «por WhatsApp,» y no
+              «en una planilla,»— para que el titular reserve su alto desde el
+              primer pintado y no salte al cambiar. Viene de la rama de Diego (`titular-rotativo.js`). */}
+          <h1>
+            Eso que hoy haces{' '}
+            <span
+              className="rotativo"
+              data-reserva="por WhatsApp,"
+              data-palabras="a mano,|en una planilla,|por WhatsApp,|en papel,"
+            >
+              <span className="rotativo-palabra">a mano,</span>
+            </span>{' '}
+            funcionando solo.
+          </h1>
 
           {/* La entradilla contesta tres de las cuatro preocupaciones de §2 en
               dos frases: qué tengo que entregar yo («en tus palabras»), en
