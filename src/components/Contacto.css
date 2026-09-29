@@ -1,43 +1,22 @@
 .contacto-interior {
   display: grid;
-  gap: var(--e-12);
+  /* 32 px entre el texto y la tarjeta en móvil, donde van uno encima del
+     otro y cada píxel es desplazamiento; 48 cuando van lado a lado. */
+  gap: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .contacto-interior {
+    gap: var(--e-12);
+  }
 }
 
 .contacto-entradilla {
   margin-top: var(--e-4);
 }
 
-/* Los tres puntos de lo que pasa después de enviar. Viñeta propia en el color
-   de acción, igual que la del bloque de proceso: un solo vocabulario gráfico
-   para las dos listas de la página. */
-.contacto-promesas {
-  list-style: none;
-  margin: var(--e-8) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--e-3);
-}
-
-.contacto-promesas li {
-  position: relative;
-  padding-left: var(--e-6);
-  color: var(--texto-suave);
-  font-size: var(--texto-sm);
-}
-
-.contacto-promesas li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 10px;
-  height: 1px;
-  background: var(--accion);
-}
-
 .contacto-alternativa {
-  margin-top: var(--e-8);
+  margin-top: var(--e-4);
   font-size: var(--texto-sm);
   color: var(--texto-suave);
 }
@@ -45,10 +24,20 @@
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: var(--e-6);
-  /* La tarjeta respira más que las del índice de proyectos: aquí dentro hay
-     que escribir, y un formulario apretado se siente como un trámite. */
-  padding: var(--e-8);
+  /* 8 px entre campos, y no 24: cada campo obligatorio ya lleva debajo la
+     línea reservada para su error, que hace de separación. Sumadas, las dos
+     cosas daban casi 50 px entre campo y campo: el formulario ocupaba medio
+     celular. */
+  gap: var(--e-2);
+  padding: var(--e-6);
+}
+
+/* En pantallas grandes la tarjeta recupera el relleno: ahí sobra sitio y un
+   formulario apretado se siente como un trámite. */
+@media (min-width: 1024px) {
+  .formulario {
+    padding: var(--e-8);
+  }
 }
 
 /* Nombre y correo comparten fila desde que hay ancho para los dos. Es lo que
@@ -56,7 +45,7 @@
    entera de alto. */
 .formulario-fila {
   display: grid;
-  gap: var(--e-4);
+  gap: var(--e-2);
 }
 
 @media (min-width: 560px) {
@@ -77,6 +66,7 @@
 }
 
 .campo input,
+.campo select,
 .campo textarea {
   font-family: inherit;
   font-size: var(--texto-base);
@@ -105,6 +95,7 @@
 /* Al escribir, el campo se aclara y el borde se tiñe: dice cuál de los tres
    está activo sin recurrir a una sombra. */
 .campo input:focus,
+.campo select:focus,
 .campo textarea:focus {
   background: var(--superficie);
   border-color: var(--accion);
@@ -116,6 +107,7 @@
 }
 
 .campo input:hover,
+.campo select:hover,
 .campo textarea:hover {
   border-color: color-mix(in srgb, var(--accion) 40%, var(--linea));
 }
@@ -189,4 +181,33 @@
     gap: var(--e-16);
     align-items: start;
   }
+}
+
+/* El menú de servicios. Sin la flecha del sistema, que en cada navegador es
+   distinta, y con una propia dibujada en el color del texto suave: así el
+   campo se parece a sus vecinos y sigue diciendo que se despliega. */
+.campo select {
+  appearance: none;
+  padding-right: var(--e-8);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--texto-suave) 50%),
+    linear-gradient(135deg, var(--texto-suave) 50%, transparent 50%);
+  background-position:
+    right var(--e-4) top 50%,
+    right calc(var(--e-4) - 5px) top 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* Mientras nadie elige, el texto va apagado igual que el marcador de
+   posición de los otros campos. */
+.campo select:has(option[value='']:checked) {
+  color: color-mix(in srgb, var(--texto-suave) 62%, transparent);
+}
+
+/* Un campo sin línea de error —el menú, que es opcional— deja ese mismo
+   hueco debajo, para que el ritmo entre campos sea parejo. */
+.campo:not(:has(.campo-error)) {
+  padding-bottom: calc(var(--texto-sm) * 1.3 + var(--e-2));
 }

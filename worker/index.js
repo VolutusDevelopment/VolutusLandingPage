@@ -1,3 +1,4 @@
+import { SERVICIOS } from '../src/lib/servicios.js'
 /**
  * El Worker que entrega el formulario de contacto.
  *
@@ -97,6 +98,10 @@ async function manejarContacto(request, env) {
   const nombre = limpiar(datos.get('nombre'), LIMITES.nombre)
   const correo = limpiar(datos.get('correo'), LIMITES.correo)
   const proyecto = limpiar(datos.get('proyecto'), LIMITES.proyecto)
+  // Opcional. Solo vale si es uno de los de la lista: lo que no coincida se
+  // descarta sin rechazar el envío, porque perder un mensaje por un menú
+  // manipulado no protege nada y deja a alguien sin respuesta.
+  const servicio = SERVICIOS.find((s) => s === limpiar(datos.get('servicio'), 40)) ?? null
 
   if (!nombre || !proyecto || !CORREO_VALIDO.test(correo)) {
     return responder(request, MENSAJES.invalido, 400)
@@ -122,8 +127,10 @@ async function manejarContacto(request, env) {
         // Responder al correo contesta a quien escribió, no al remitente
         // técnico. Es lo que hace que el compromiso de 48 horas sea un clic.
         reply_to: correo,
-        subject: `Nuevo mensaje de ${nombre}`,
-        text: `${proyecto}\n\n—\n${nombre}\n${correo}`,
+        // El servicio va en el asunto: es lo primero que se ve en la bandeja
+        // y lo que decide cuál de los dos socios contesta.
+        subject: servicio ? `Nuevo mensaje de ${nombre} · ${servicio}` : `Nuevo mensaje de ${nombre}`,
+        text: `${servicio ? `Necesita: ${servicio}\n\n` : ''}${proyecto}\n\n—\n${nombre}\n${correo}`,
       }),
     })
 

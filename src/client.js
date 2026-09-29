@@ -21,7 +21,10 @@ const MENSAJES = {
   nombre: 'Falta tu nombre.',
   correo: 'Falta tu correo.',
   correoInvalido: 'Ese correo no parece válido, revísalo.',
-  proyecto: 'Cuéntanos qué necesitas, aunque sea en una línea.',
+  // Corto como los otros dos: la reserva bajo el campo es de una línea, y un
+  // aviso de dos (a 360 px ya lo era) empuja el botón justo cuando el dedo va
+  // hacia él.
+  proyecto: 'Falta el problema.',
   enviado: 'Mensaje enviado. Te respondemos en menos de 48 horas hábiles.',
   fallo: 'No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl.',
 }

@@ -1,3 +1,5 @@
+import { SERVICIOS } from '../lib/servicios.js'
+
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5). Tema cielo: aquí la página convierte.
@@ -36,27 +38,19 @@ export default function Contacto() {
         <div>
           <p className="antetitulo entra">Cuéntanos</p>
           <h2 className="entra">¿Qué estás resolviendo a mano?</h2>
+          {/* Antes eran 65 palabras antes del primer campo: una entradilla de dos
+              frases, tres promesas en lista y la línea del correo. Las tres
+              promesas dicen una sola cosa —quién, cuándo y con qué te
+              contestamos— y caben en una frase. «En tus palabras» sustituye a
+              «no hace falta que sepas cómo se resuelve», que decía lo mismo en
+              el doble, y va en la etiqueta del mensaje, que es donde se escribe.
+              El compromiso de las 48 horas es el de §5, sin cambios. */}
           <p className="entradilla contacto-entradilla">
-            No hace falta que sepas cómo se resuelve. Con el problema en tus palabras nos basta
-            para contestarte algo útil.
+            Te responde una persona en menos de 48 horas hábiles, con un rango de precio real.
           </p>
 
-          {/* Qué pasa DESPUÉS de enviar, que es lo que la persona se está
-              preguntando con el dedo sobre el botón. Es el patrón de Linear en
-              su página de contacto: la columna de al lado del formulario no
-              repite la oferta, responde la duda de enviar.
-
-              Tres puntos y no cinco: cada uno es un compromiso, y un
-              compromiso que no se cumple cuesta más que no haberlo escrito. */}
-          <ul className="contacto-promesas">
-            <li>Te responde una persona, no un autocontestador.</li>
-            <li>Va con un rango de precio real, no «depende».</li>
-            <li>En menos de 48 horas hábiles.</li>
-          </ul>
-
           <p className="contacto-alternativa">
-            ¿Prefieres el correo directo?{' '}
-            <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
+            O escríbenos a <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
           </p>
         </div>
 
@@ -103,19 +97,37 @@ export default function Contacto() {
             </div>
           </div>
 
+          {/* Opcional a propósito: sirve para repartir el mensaje, no para
+              filtrar a nadie, y quien no sabe qué pedir no debe quedarse
+              atascado aquí. Las tres opciones son las que la página respalda
+              con obra —la web y la app de PonleNota, el agente del hackathon—;
+              «Otro» recoge el resto. La primera opción está desactivada, así
+              que si nadie elige, el campo simplemente no se envía. */}
           <div className="campo">
-            <label htmlFor="proyecto">Qué necesitas</label>
+            <label htmlFor="servicio">Qué necesitas</label>
+            <select id="servicio" name="servicio" defaultValue="">
+              <option value="" disabled>
+                Elige una opción
+              </option>
+              {SERVICIOS.map((servicio) => (
+                <option key={servicio}>{servicio}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="campo">
+            <label htmlFor="proyecto">El problema, en tus palabras</label>
             {/* El marcador de posición enseña QUÉ clase de respuesta sirve, que
                 es la duda real de quien se queda mirando un recuadro vacío. */}
             <textarea
               id="proyecto"
               name="proyecto"
-              rows="5"
-              placeholder="Tenemos las reservas en un cuaderno y se nos pierden. Queremos que el cliente reserve solo."
+              rows="3"
+              placeholder="Anotamos las reservas en un cuaderno y se nos pierden."
               required
             />
             <p className="campo-error" id="error-proyecto" hidden>
-              Cuéntanos qué necesitas, aunque sea en una línea.
+              Falta el problema.
             </p>
           </div>
 

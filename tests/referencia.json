@@ -2,41 +2,41 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 8061,
+        "alto": 9773,
         "desborda": false,
-        "h1": 129.5625,
-        "bloquesQueEntran": 27,
+        "h1": 172.75,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 6410,
+        "alto": 7697,
         "desborda": false,
-        "h1": 116.125,
-        "bloquesQueEntran": 27,
+        "h1": 174.1875,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4991,
+        "alto": 6766,
         "desborda": false,
-        "h1": 328.3125,
-        "bloquesQueEntran": 27,
+        "h1": 410.390625,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4991,
+        "alto": 6766,
         "desborda": false,
-        "h1": 328.3125,
-        "bloquesQueEntran": 27,
+        "h1": 410.390625,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/privacidad": {
       "movil": {
-        "alto": 6915,
+        "alto": 6817,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -71,11 +71,11 @@
   },
   "foco": {
     "/": {
-      "paradas": 25,
+      "paradas": 27,
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 16,
+      "paradas": 17,
       "sinAnillo": 0
     }
   }
