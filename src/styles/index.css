@@ -131,6 +131,15 @@
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
+  /* Las tarjetas de proyectos y de «Cómo trabajamos», traídas de la rama de
+     Diego, van a 12 px. Es su decisión para esos dos bloques y se acota a
+     ellos: el resto del sitio sigue en el radio de arriba. */
+  --radio-tarjeta: 12px;
+
+  /* Lo que mide la barra. Las cartas de «Cómo trabajamos» se pegan debajo de
+     ella al apilarse, y sin esto quedarían tapadas por su borde de abajo. */
+  --barra-alto: 65px;
+
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
      `ease-out` a secas apenas se distingue de lineal.
 
@@ -188,6 +197,10 @@
   --error: #b3261e;
 
   --foco: #116492;
+
+  /* Superficies tintadas de las tarjetas de proyectos. */
+  --tinte-a: #ffffff;
+  --tinte-b: #eef4f9;
 }
 
 /* ============ Tema plano: la página demuestra ============
@@ -217,6 +230,65 @@
   --error: #ff8a80;
 
   --foco: #38a9e8;
+
+  /* Superficies tintadas y lámina de las tarjetas sin tono propio (el paso 03
+     y «La app del negocio»). En la rama de Diego el plano es verde bosque;
+     aquí sigue siendo el azul del brief, así que salen en azul. */
+  --tinte-a: #122638;
+  --tinte-b: #16304a;
+  --lamina: #1d4a6e;
+}
+
+/* ============ Tonos del plano ============
+   Traídos tal cual de la rama de Diego con la vitrina de PonleNota y
+   «Cómo trabajamos». Solo cambian superficies, texto suave y acción; el resto
+   lo hereda de `.zona-plano`. Todos pasan 6.6:1. */
+.zona-plano.tono-ciruela {
+  --fondo: #1f141c;
+  --superficie: #2c1d28;
+  --tinte-a: #2c1d28;
+  --tinte-b: #352431;
+  --linea: #3d2a38;
+  --texto-suave: #c7b0bf;
+  --marca: #e2b6cf;
+  --accion: #e2b6cf;
+  --accion-hover: #eed3e2;
+  --accion-activa: #f7e9f1;
+  --sobre-accion: #1f141c;
+  --foco: #e2b6cf;
+  --lamina: #543b4e;
+}
+
+.zona-plano.tono-petroleo {
+  --fondo: #0a1e27;
+  --superficie: #112b36;
+  --tinte-a: #112b36;
+  --tinte-b: #163441;
+  --linea: #1d3c4a;
+  --texto-suave: #a2bfcb;
+  --marca: #8fc6d9;
+  --accion: #8fc6d9;
+  --accion-hover: #bcdde8;
+  --accion-activa: #ddeef4;
+  --sobre-accion: #0a1e27;
+  --foco: #8fc6d9;
+  --lamina: #2b5f73;
+}
+
+.zona-plano.tono-pizarra {
+  --fondo: #13171e;
+  --superficie: #1c222b;
+  --tinte-a: #1c222b;
+  --tinte-b: #242b36;
+  --linea: #2c3441;
+  --texto-suave: #b0b9c6;
+  --marca: #b4c6e0;
+  --accion: #b4c6e0;
+  --accion-hover: #d2ddec;
+  --accion-activa: #e9eef6;
+  --sobre-accion: #13171e;
+  --foco: #b4c6e0;
+  --lamina: #3d4a5c;
 }
 
 /* ============ Base ============ */
@@ -470,7 +542,11 @@ svg {
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
    entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
    siendo los momentos que más respiran de la página. */
-.zona-plano + .zona-plano,
+/* Las tarjetas de la vitrina de proyectos también son zonas de plano, y dos
+   seguidas perdían su relleno de arriba. Se excluyen solo ellas: acotar la
+   regla a `.seccion` —como en la rama de Diego— devolvía el relleno al
+   `main` y al pie de /privacidad, que no son secciones y crecían 112 px. */
+.zona-plano + .zona-plano:not(.vista),
 .zona-cielo + .zona-cielo:not(.corte-de-zona) {
   padding-top: 0;
 }

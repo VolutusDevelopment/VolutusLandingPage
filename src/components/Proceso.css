@@ -1,29 +1,58 @@
-.proceso-entradilla {
-  margin-top: var(--e-4);
-}
+/* ============================================================================
+ * Los pasos, apilándose.
+ *
+ * Cada paso se pega bajo la barra y el siguiente sube por encima. La tarjeta
+ * que queda detrás se encoge y se apaga mientras la tapan, así que la pila
+ * nunca se ve como un canto de tarjetas amontonadas: solo la de arriba existe.
+ *
+ * Cero JavaScript. La lista entera declara una línea de tiempo de vista y cada
+ * tarjeta ocupa su tramo de ella: la tarjeta `i` de `n` se va entre `i/n` y
+ * `(i+1)/n` del recorrido de salida de la lista. Sin soporte para animaciones
+ * atadas al scroll, las tarjetas se siguen apilando —eso es `sticky`— y solo
+ * se pierde el encogerse.
+ * ========================================================================= */
 
 .pasos {
   list-style: none;
   margin: var(--e-12) 0 0;
   padding: 0;
+  display: grid;
+  gap: var(--e-6);
+  view-timeline-name: --pasos;
 }
 
 .paso {
+  position: sticky;
+  top: calc(var(--barra-alto) + var(--e-6));
+}
+
+.paso-carta {
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: var(--e-4);
-  padding-block: var(--e-6);
-  border-top: 1px solid var(--linea);
+  overflow: clip;
+  border-radius: var(--radio-tarjeta);
+  background: var(--tinte-a);
+  color: var(--texto);
+  transform-origin: 50% 0;
+  /* El canto de arriba se enciende en el color de marca y se apaga hacia los
+     lados: es lo que separa una tarjeta de la de detrás cuando se solapan. */
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--marca) 55%, transparent);
+}
+
+.paso-cuerpo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--e-3);
+  padding: var(--e-8) var(--e-6);
 }
 
 .paso-numero {
   font-size: var(--texto-sm);
-  color: var(--accion);
-  line-height: 1.5;
+  color: var(--marca);
 }
 
 .paso-cuerpo h3 {
-  margin-bottom: var(--e-2);
+  font-size: var(--texto-xl);
 }
 
 /* «Pones tú» es lo que diferencia este bloque de cualquier otra página de
@@ -39,15 +68,47 @@
 }
 
 .paso-plazo {
-  margin-top: var(--e-2);
   font-size: var(--texto-sm);
   color: var(--texto-suave);
 }
 
-.proceso-columnas {
+/* La lámina: el color del tono de la carta y la voluta repetida encima. */
+.paso-lamina {
+  min-height: 180px;
   display: grid;
-  gap: var(--e-12);
-  margin-top: var(--e-16);
+  place-items: center;
+  background: var(--lamina);
+}
+
+.paso-lamina svg {
+  width: 70%;
+  max-width: 260px;
+  stroke: rgb(255 255 255 / 0.55);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+@keyframes paso-atras {
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .paso:not(:last-child) .paso-carta {
+      animation: paso-atras linear both;
+      animation-timeline: --pasos;
+      animation-range:
+        exit-crossing calc(var(--i) / var(--pasos) * 100%)
+        exit-crossing calc((var(--i) + 1) / var(--pasos) * 100%);
+    }
+  }
+}
+
+:root[data-movimiento='reducido'] .paso-carta {
+  animation: none;
 }
 
 .lista {
@@ -76,14 +137,13 @@
   background: var(--accion);
 }
 
-@media (min-width: 1024px) {
-  .paso {
-    grid-template-columns: 56px 1fr;
-    gap: var(--e-8);
+@media (min-width: 768px) {
+  .paso-carta {
+    grid-template-columns: 1fr 1fr;
+    min-height: 340px;
   }
 
-  .proceso-columnas {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--e-16);
+  .paso-cuerpo {
+    padding: var(--e-12);
   }
 }

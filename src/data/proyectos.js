@@ -28,38 +28,98 @@
 
 export const PROYECTOS = [
   {
-    id: 'hackathon',
-    nombre: 'Agente de respuesta a incidentes',
-    // Es la única prueba validada por un tercero que existe hoy, así que va
-    // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
-    destacado: true,
-    credencial: 'Segundo lugar, hackathon de IA agéntica',
-    resumen:
-      'Un agente que recibe una alerta de infraestructura, reúne el contexto disperso en varios sistemas y propone el diagnóstico con la evidencia que lo sostiene.',
-    repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
-  },
-  {
     id: 'ponlenota',
     nombre: 'PonleNota',
     resumen:
-      'Plataforma NFC para negocios locales: el cliente toca con el móvil, valora en menos de un minuto y se lleva un cupón para volver.',
+      'ponlenota.cl se enfoca en ayudar a los negocios a conseguir más reseñas en Google con un QR o una tarjeta NFC.',
     sitio: 'https://ponlenota.cl',
-    // Captura real del producto en línea, tomada el 25-09-2026. El hueco solo
-    // existe cuando hay algo con qué llenarlo: un marcador vacío ocupando el
-    // elemento más grande de la sección resta en vez de sumar.
-    captura: {
-      src: '/image/ponlenota-1280.webp',
-      srcSet: '/image/ponlenota-760.webp 760w, /image/ponlenota-1280.webp 1280w',
-      ancho: 1280,
-      alto: 800,
-      alt: 'La portada de PonleNota: el titular «Opiniones privadas. Reseñas en Google» junto a una tarjeta con la valoración media de un café de ejemplo.',
-    },
+    // Las tres caras del producto, cada una con su captura real. Sin `vistas`
+    // un proyecto se pinta como tarjeta simple; con ellas, como vitrina (ver
+    // `Vitrina` en Proyectos.jsx). El orden fija la forma: ancha, alta,
+    // desplazada y a la derecha. Sin `tono` la tarjeta queda en el bosque de
+    // la zona de plano.
+    //
+    // La web es de ponlenota.cl (25-09-2026). El cliente es la demo de la
+    // propia web, sin guardar nada. La app y el panel son las pantallas reales
+    // de Android y de la web, pintadas con un negocio de ejemplo (Café Luna) y
+    // datos inventados: ningún dato de un cliente real.
+    vistas: [
+      {
+        titulo: 'El sitio',
+        texto: 'Explica el producto y vende los planes. Pensado para aparecer en Google.',
+        tono: 'petroleo',
+        imagen: {
+          src: '/image/ponlenota-1280.webp',
+          srcSet: '/image/ponlenota-760.webp 760w, /image/ponlenota-1280.webp 1280w',
+          sizes: '(min-width: 1024px) 50vw, 100vw',
+          ancho: 1280,
+          alto: 800,
+          alt: 'La portada de ponlenota.cl: el titular «Opiniones privadas. Reseñas en Google» junto a una tarjeta con la valoración media de un café de ejemplo.',
+        },
+      },
+      {
+        titulo: 'Lo que ve el cliente',
+        texto: 'Acerca el teléfono a la tarjeta o escanea el QR, valora en un minuto y se lleva un cupón. Sin descargar nada.',
+        tono: 'ciruela',
+        imagen: {
+          src: '/image/ponlenota-cliente-320.webp',
+          srcSet: '/image/ponlenota-cliente-320.webp 320w, /image/ponlenota-cliente-628.webp 628w',
+          sizes: '(min-width: 650px) 18rem, 70vw',
+          ancho: 320,
+          alto: 700,
+          alt: 'Un teléfono con la valoración de Café Luna: cinco estrellas, el agradecimiento y los botones para dejar la opinión en Google o pedir el beneficio.',
+        },
+      },
+      {
+        titulo: 'La app del negocio',
+        texto: 'Tu negocio, tu equipo, tus tarjetas NFC y tus cupones, desde el teléfono o la tablet. Disponible en Android y iOS.',
+        imagen: {
+          src: '/image/ponlenota-app-640.webp',
+          srcSet: '/image/ponlenota-app-640.webp 640w, /image/ponlenota-app-960.webp 960w',
+          sizes: '(min-width: 650px) 18rem, 70vw',
+          ancho: 640,
+          alto: 1536,
+          alt: 'El inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, los accesos rápidos y la campaña activa de un café americano gratis.',
+        },
+      },
+      {
+        titulo: 'El panel web',
+        texto: 'Lo mismo que la app, en el computador de la caja: toques por día y cómo va el mes.',
+        tono: 'pizarra',
+        imagen: {
+          src: '/image/ponlenota-panel-1280.webp',
+          srcSet: '/image/ponlenota-panel-760.webp 760w, /image/ponlenota-panel-1280.webp 1280w',
+          sizes: '(min-width: 1024px) 50vw, 100vw',
+          ancho: 1280,
+          alto: 524,
+          alt: 'El resumen del panel web de PonleNota para Café Luna: 1240 taps, 486 valoraciones, 212 cupones emitidos y 97 canjeados, con el gráfico de taps por día de los últimos 30 días.',
+        },
+      },
+    ],
   },
+
+
+
+  {
+    id: 'hackathon',
+    nombre: 'Hackathon Huawei Cloud',
+    // Es la única prueba validada por un tercero que existe hoy, así que va
+    // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
+    destacado: true,
+    credencial: '2.º lugar en Hackathon de Huawei Cloud y Kostra AI',
+    resumen:
+      'Se realizó una Agente de IA que que atiende las alertas de infraestructura por su cuenta; reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia en tiempo real usando servicios MaaS.',
+    repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
+  },
+
+
+
+  
   {
     id: 'carflip',
     nombre: 'CarFlip',
     resumen:
-      'Rastrea varios sitios de venta de autos y los deja todos consultables en un solo lugar.',
+      'Carflip.cl es un proyecto que tiene como fin recopilar vehiculos usados en un solo lugar y busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]
