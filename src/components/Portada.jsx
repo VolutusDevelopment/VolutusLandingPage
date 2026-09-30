@@ -8,11 +8,12 @@
  * porque es lo único que casi todos van a leer.
  *
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
- * rollo que da nombre a la marca, de puntos, con luz, sombra y un filo dorado,
- * girando despacio sobre su eje (ver nubes-lienzo.js). En L y XL ocupa el lado derecho y el texto va a la
- * izquierda; en M y S va arriba y el texto debajo, sin empujarlo nunca. La
- * página baja por las horas del día hasta la noche del pie (DESIGN-BRIEF
- * A.8).
+ * rollo que da nombre a la marca, en volumen y de puntos finos, con luz,
+ * sombra y un filo dorado, rodando despacio sobre su eje; el cursor la mueve
+ * como viento (ver nubes-lienzo.js). En L y XL es la base de la portada, a
+ * todo el ancho, y el titular va centrado sobre el cielo; en M y S va arriba
+ * y el texto debajo, sin empujarlo nunca. La página baja por las horas del día hasta la
+ * noche del pie (DESIGN-BRIEF A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.

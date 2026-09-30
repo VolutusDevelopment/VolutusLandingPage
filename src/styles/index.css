@@ -266,9 +266,12 @@
     inset 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px -14px rgb(0 0 0 / 0.55);
   --vidrio-halo: rgb(10 12 18 / 0.3);
 
-  --nube-luz: #e6eef6;
-  --nube-sombra: #3c5a7c;
-  --nube-borde: #e8b14c;
+  /* La nube de noche. El titular claro va encima de ella, así que la nube es
+     oscura, con luz de luna y filo plateado: sobre su cara más clara el texto
+     da 7.2:1 y la acción 3.2:1, que basta para un titular. */
+  --nube-luz: #34506e;
+  --nube-sombra: #16293d;
+  --nube-borde: #7f9bb8;
   --mar-hondo: #155a86;
   --mar-cresta: #38a9e8;
   --mar-espuma: #d9f0fc;
@@ -341,21 +344,24 @@
    Solo aplican sin tema forzado: quien elige claro u oscuro en el panel de
    accesibilidad recibe las dos zonas de siempre.
 
-   La mañana: cielo azul vivo que se aclara hacia el texto, acción en azul
-   hondo de cielo y el sol dorado. Con el azul más intenso de arriba de fondo, el
-   texto da 10.2:1, el suave 5.3:1 y la acción 4.61:1; blanco sobre la acción,
-   7.99:1. */
+   La mañana: un azul intenso arriba que se aclara hasta el blanco de la
+   sección siguiente (`#f6f9fc`, sin costura), acción en azul hondo y el sol
+   dorado. El azul intenso vive detrás de la barra y el logo: el logo da
+   5.1:1 y la barra, con su vidrio, 12.8:1 el texto y 6.7:1 el suave. Donde
+   empieza el titular —nunca antes del 15 % del alto—, el texto da 6.5:1 y la
+   acción, que colorea su primera línea, 4.2:1 (es texto grande: pide 3:1).
+   Blanco sobre la acción, 11.2:1. */
 :root:not([data-tema]) .hora-manana {
   --texto-suave: #2f4a63;
-  --accion: #0e5580;
-  --accion-hover: #0a4470;
-  --accion-activa: #083a60;
-  --foco: #0e5580;
+  --accion: #093d66;
+  --accion-hover: #073355;
+  --accion-activa: #052a47;
+  --foco: #093d66;
   --sol: rgb(255 248 232 / 0.55);
   --nube-luz: #ffffff;
-  --nube-sombra: #3f628c;
+  --nube-sombra: #6a8cb2;
   --nube-borde: #ffd48a;
-  --fondo-hora: linear-gradient(#8ccdf2, #b3def6 45%, #eef8fc);
+  --fondo-hora: linear-gradient(#2b8de4, #5eaaec 20%, #a6d2f5 42%, #e2f0fb 70%, #f6f9fc);
 }
 
 /* La noche: azul que se hunde hacia el borde de la página y un mar bajo la

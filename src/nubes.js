@@ -12,6 +12,9 @@
  * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
  * de la trama, en px CSS, lo da `--nubes-celda`.
  *
+ * El cielo además escucha al cursor: le cuenta al pintor por dónde pasa sobre
+ * su sección, y el pintor lo vuelve viento.
+ *
  * Qué NO hace, a propósito:
  *
  *   - Nada antes del LCP. Arranca después de `load`, cuando el navegador está
@@ -20,7 +23,8 @@
  *     sigue entera.
  *   - Nada fuera de pantalla. Se para al salir del viewport y con la pestaña
  *     oculta.
- *   - Nada con movimiento reducido. Pinta un solo fotograma, quieto.
+ *   - Nada con movimiento reducido. Pinta un solo fotograma, quieto, y el
+ *     cursor no lo mueve.
  */
 
 import { quieto } from './lib/movimiento.js'
@@ -66,11 +70,38 @@ function montar(pintor, lienzo, id) {
     pintor.postMessage({ tipo: 'activa', id, valor: visible && !document.hidden })
   }
 
+  // Solo ratón o lápiz: con el dedo, moverse es desplazar la página. Como
+  // mucho un aviso por fotograma, y la caja del lienzo se lee en ese
+  // fotograma, no en cada evento.
+  function seguirCursor() {
+    const seccion = lienzo.closest('section')
+    let cursor = null
+    const soplar = () => {
+      if (visible && !quieto()) {
+        const caja = lienzo.getBoundingClientRect()
+        const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
+        pintor.postMessage({ tipo: 'viento', id, x: (cursor.x - caja.left) * dpr, y: (cursor.y - caja.top) * dpr })
+      }
+      cursor = null
+    }
+    seccion.addEventListener(
+      'pointermove',
+      (evento) => {
+        if (evento.pointerType === 'touch') return
+        if (!cursor) requestAnimationFrame(soplar)
+        cursor = { x: evento.clientX, y: evento.clientY }
+      },
+      { passive: true },
+    )
+    seccion.addEventListener('pointerleave', () => pintor.postMessage({ tipo: 'viento', id, fuera: true }))
+  }
+
   const offscreen = lienzo.transferControlToOffscreen()
   const mar = lienzo.dataset.vista === 'mar'
   pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar }, [offscreen])
   colorear()
   medir()
+  if (!mar) seguirCursor()
 
   new ResizeObserver(medir).observe(lienzo)
   new IntersectionObserver(([entrada]) => {

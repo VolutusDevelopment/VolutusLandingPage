@@ -950,7 +950,7 @@ ilustración.
 
 | Sección | Hora | Fondo | Texto y acción | Estado |
 | --- | --- | --- | --- | --- |
-| Portada y barra | Mañana | Azul cielo vivo que se aclara hacia abajo (`#8CCDF2` → `#B3DEF6` → `#EEF8FC`) y sol dorado arriba a la derecha | Texto `#0A1A2A`; secundario `#2F4A63`; acción en **verde bosque** `#1D5B3A` | Hecho |
+| Portada y barra | Mañana | Azul intenso arriba que se aclara hasta el blanco de la página (`#2B8DE4` → `#5EAAEC` → `#A6D2F5` → `#E2F0FB` → `#F6F9FC`), con la nube como base que se funde en ese blanco, y sol dorado arriba a la derecha | Texto `#0A1A2A`; secundario `#2F4A63`; acción en azul hondo `#093D66` | Hecho |
 | Proyectos | Media mañana | Celeste pálido a blanco cálido | Texto oscuro | Pendiente |
 | Métricas | Tarde | Crema dorada | Texto oscuro | Pendiente |
 | Servicios | Atardecer | Durazno a naranja | Texto oscuro | Pendiente |
@@ -970,8 +970,10 @@ ilustración.
    `--fondo-hora`; la barra copia la hora de lo que tiene debajo.
 4. **Cada hora es un sistema completo y verificado.** Texto, secundario y
    acción pasan 4.5:1 sobre el punto más desfavorable de su degradado. La
-   mañana: texto 10.2:1, secundario 5.3:1, acción 4.65:1, blanco sobre acción
-   8.05:1.
+   mañana es la excepción medida: su azul intenso vive detrás de la barra y
+   el logo, que dan 12.8:1 (sobre el vidrio) y 5.1:1; donde empieza el
+   titular, el texto da 6.5:1 y la acción 4.2:1, en texto grande. Blanco
+   sobre acción, 11.2:1.
 5. **El tema forzado manda.** Con claro u oscuro elegido en el panel de
    accesibilidad, las horas no aplican y vuelven las dos zonas.
 
@@ -979,11 +981,18 @@ ilustración.
 (`src/nubes-lienzo.js`), en un Web Worker y sin tocar el hilo principal:
 
 - *Portada:* **una volutus, no un cúmulo.** La nube en rollo que da nombre a
-  la marca (como el Morning Glory): un tubo largo que entra grande por el
-  borde derecho y se aleja achicándose, girando despacio sobre su eje, con un
-  segundo rollo más lejano y tenue detrás. Lomo al sol blanco con filo
-  dorado, vientre azul pizarra del que cuelgan jirones. A la derecha del texto
-  en L y XL; arriba en M y S.
+  la marca (como el Morning Glory), en volumen de verdad sobre una trama de
+  puntos finos: la cabeza, enorme y redonda, a la izquierda del centro, y el
+  cuerpo que cruza la pantalla y sale por la derecha, rodando despacio sobre
+  su eje mientras sus bultos hierven. Lomo al sol blanco con filo dorado y
+  una base que se vuelve bruma y se funde con el blanco de la página (la
+  referencia es deta.surf). En L y XL es la base de la portada, a todo el
+  ancho, y el titular va centrado sobre el cielo; en M y S va arriba y el
+  texto debajo. El cursor es viento, y es un roce: la empuja apenas, deja
+  remolinos chicos y se aquieta en menos de un segundo. Con movimiento
+  reducido queda quieta y no reacciona. En el tema oscuro forzado es una nube
+  de noche, oscura y con filo plateado, para que el titular claro se lea
+  encima.
 - *Pie:* el mar de noche. Olas que ruedan hacia el frente, espuma plateada en
   las crestas, el reflejo de la luna al centro y las sombras de las nubes
   pasando encima.

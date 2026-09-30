@@ -31,45 +31,30 @@
   padding-block: var(--e-8);
 }
 
-/* La nube empieza debajo de la barra: ni ella ni el texto quedan tapados. El
-   rollo necesita un lienzo casi cuadrado para crecer hacia su extremo
-   cercano; en una franja baja se aplasta en una cuña. Por eso en S y M mide
-   media pantalla de alto, que deja al titular entrar en la primera, y nunca
-   depende del ancho de la pantalla.
+.portada-texto {
+  max-width: 36rem;
+}
 
-   Y tiene ancho mínimo: por debajo de él el rollo se encogería hasta ser un
-   detalle. En pantallas angostas el lienzo se sale por la izquierda —se
-   alinea a la derecha y `overflow: clip` de la portada lo recorta—, así que
-   se pierde el extremo lejano, que igual se desvanece, y el cercano sigue
-   enorme. */
+/* La nube empieza debajo de la barra: ni ella ni el texto quedan tapados. El
+   rollo se mide en altos del lienzo, así que es el alto el que decide su
+   tamaño. Por eso en S y M mide media pantalla de alto, que deja al titular
+   entrar en la primera, y nunca depende del ancho de la pantalla. */
 .portada-cielo {
   position: relative;
   flex: none;
-  align-self: flex-end;
-  width: max(100%, 44rem);
   height: 50svh;
   margin-top: var(--barra-alto);
-  --nubes-celda: 5;
+  --nubes-celda: 3;
   --nubes-luz: var(--nube-luz);
   --nubes-sombra: var(--nube-sombra);
   --nubes-borde: var(--nube-borde);
   --nubes-alfa: 1;
 }
 
-/* En S el rollo recortado no se entendía: se suelta el ancho mínimo para que
-   quepa entero, y la trama baja de 5 a 4 px: más fina se deshace en ruido y
-   el rollo deja de leerse. */
-@media (max-width: 479px) {
-  .portada-cielo {
-    width: 100%;
-    --nubes-celda: 4;
-  }
-}
-
-/* En L y XL el texto va a la izquierda y la nube ocupa el lado derecho de la
-   pantalla, detrás de todo: el titular queda centrado en alto. En L el ancho
-   mínimo la mete bajo el final del titular, pero ahí solo llega el extremo
-   lejano, que se desvanece. */
+/* En L y XL la nube es la base de la portada: su lienzo ocupa el 62 % de
+   abajo, a todo el ancho, y su bruma se funde con el blanco de la sección
+   siguiente. El titular va centrado, más ancho para que quepa en tres
+   líneas, sobre el cielo limpio; los botones caen sobre el lomo iluminado. */
 @media (min-width: 1024px) {
   .portada-escena {
     justify-content: center;
@@ -81,16 +66,23 @@
 
   .portada-cielo {
     position: absolute;
-    /* `flex-end` también alinea a un absoluto: lo encogería a alto 0. */
-    align-self: auto;
-    height: auto;
-    inset: var(--barra-alto) 0 0 auto;
-    width: max(58%, 40rem);
+    inset: auto 0 0;
+    height: 62%;
     margin: 0;
   }
 
   .portada-interior {
     position: relative;
+  }
+
+  .portada-texto {
+    max-width: 66rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .portada-acciones {
+    justify-content: center;
   }
 }
 
@@ -229,10 +221,6 @@
   animation: none;
 }
 
-.portada-texto {
-  max-width: 36rem;
-}
-
 .portada-entradilla {
   margin: var(--e-6) auto 0;
   max-width: 40rem;
@@ -244,6 +232,12 @@
   flex-wrap: wrap;
   gap: var(--e-3);
   margin-top: var(--e-8);
+}
+
+/* El secundario puede caer sobre la nube: sin fondo, su texto se pierde entre
+   los puntos del vientre. Lleva el vidrio de la barra. */
+.portada-acciones .boton-secundario {
+  background: var(--vidrio);
 }
 
 /* En S los botones van a ancho completo: el pulgar no tiene que apuntar. */
