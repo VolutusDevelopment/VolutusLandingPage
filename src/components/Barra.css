@@ -198,15 +198,45 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .barra-marca svg path {
+  .barra-marca .marca-onda path {
     stroke-dasharray: var(--largo);
     animation: trazar-onda 900ms var(--ease-out) both;
   }
+
+  /* En el logotipo la ola no es un trazo sino una trama: en vez de dibujarse,
+     rompe de izquierda a derecha, desde la S hacia la voluta. `clip-path`
+     repinta sin recalcular layout y ocurre una vez por carga. */
+  .barra-marca .logotipo-puntos {
+    animation: romper-ola 900ms 150ms var(--ease-out) both;
+  }
 }
 
-:root[data-movimiento='reducido'] .barra-marca svg path {
+@keyframes romper-ola {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+:root[data-movimiento='reducido'] .barra-marca .marca-onda path,
+:root[data-movimiento='reducido'] .barra-marca .logotipo-puntos {
   animation: none;
   stroke-dasharray: none;
+}
+
+/* El logotipo mide por su alto: las mayúsculas quedan cerca de los 19 px, el
+   mismo peso visual que tenía la palabra suelta. */
+.marca-logotipo {
+  display: block;
+  height: 38px;
+  width: auto;
+  --logotipo-puntos: color-mix(in srgb, currentColor 80%, transparent);
+}
+
+.marca-onda {
+  display: none;
 }
 
 .barra-enlaces {
@@ -242,9 +272,13 @@
    El nombre no se pierde para quien usa lector de pantalla: el enlace conserva
    su `aria-label`. */
 @media (max-width: 479px) {
-  .barra-marca [translate='no'],
+  .marca-logotipo,
   .barra-accion {
     display: none;
+  }
+
+  .marca-onda {
+    display: block;
   }
 
   .barra-capsula {

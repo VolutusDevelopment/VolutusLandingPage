@@ -1,4 +1,5 @@
 import { espiralFibonacci } from '../lib/espiral.js'
+import { LETRAS, TRAMAS } from '../lib/logotipo.js'
 
 /**
  * La marca: la voluta más el wordmark.
@@ -41,22 +42,35 @@ export function Onda({ size = 24, className }) {
 }
 
 /**
- * El lockup horizontal: símbolo + palabra, la versión de la barra y el pie.
+ * El logotipo: la palabra y la ola en una sola pieza. La ola no va aparte,
+ * nace en la S y rompe en voluta.
  *
- * La palabra va en minúsculas, en 700 y con el tracking cerrado: se lee como un
- * nombre y no como un rótulo, y comparte la familia de titulares del sitio en
- * lugar de cargar una fuente propia.
+ * Las letras toman `currentColor` y la trama también, a menos que quien lo usa
+ * defina `--logotipo-puntos`; así funciona sobre cualquier zona sin conocerla.
+ * `trama` elige el tamaño de punto: «gruesa» para la barra, «fina» en grande.
+ */
+export function Logotipo({ trama = 'fina', className }) {
+  const { viewBox, puntos } = TRAMAS[trama]
+  return (
+    <svg className={className} viewBox={viewBox} aria-hidden="true" focusable="false">
+      <path className="logotipo-puntos" d={puntos} fill="var(--logotipo-puntos, currentColor)" />
+      <path d={LETRAS} fill="currentColor" />
+    </svg>
+  )
+}
+
+/**
+ * La marca de la barra y del pie.
+ *
+ * En M y más el logotipo completo. En S no cabe junto a los dos enlaces, así
+ * que la barra muestra solo la onda (A.5, «símbolo solo»); las dos piezas
+ * viajan en el HTML y el CSS decide cuál se ve, sin JavaScript.
  */
 export default function Marca({ className }) {
   return (
-    <span className={className} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-      <Onda size={26} />
-      <span
-        translate="no"
-        style={{ fontWeight: 700, fontSize: '21px', letterSpacing: '-0.03em', lineHeight: 1 }}
-      >
-        volutus
-      </span>
+    <span className={className} style={{ display: 'inline-flex', alignItems: 'center' }}>
+      <Logotipo trama="gruesa" className="marca-logotipo" />
+      <Onda size={26} className="marca-onda" />
     </span>
   )
 }

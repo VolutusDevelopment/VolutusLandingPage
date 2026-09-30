@@ -16,26 +16,16 @@
 }
 
 .pie-logotipo-cuerpo {
-  display: flex;
-  align-items: center;
-  gap: 0.06em;
-  font-size: 22cqi;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
+  display: block;
 }
 
-.pie-logotipo-cuerpo::after {
-  content: 'volutus';
-  /* El descendente no existe en «volutus», así que la caja se ajusta a la
-     altura de las letras y no deja aire muerto debajo. */
-  margin-block: -0.12em -0.2em;
-}
-
-.pie-logotipo-onda {
-  flex-shrink: 0;
-  width: 0.92em;
-  height: 0.92em;
+/* El logotipo a todo el ancho, con la trama fina: a este tamaño se ven los
+   puntos uno por uno y la ola se lee como lo que es. */
+.pie-logotipo-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  --logotipo-puntos: color-mix(in srgb, currentColor 70%, transparent);
 }
 
 /* El nombre sube desde su propio borde al asomar, atado al scroll: cero

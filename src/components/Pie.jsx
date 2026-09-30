@@ -1,4 +1,4 @@
-import { Onda } from './Marca.jsx'
+import { Logotipo } from './Marca.jsx'
 import { CORREO_DE_CONTACTO } from './Contacto.jsx'
 import { PROYECTOS } from '../data/proyectos.js'
 
@@ -47,7 +47,7 @@ export default function Pie({ enHome = true }) {
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
-            <Onda className="pie-logotipo-onda" />
+            <Logotipo className="pie-logotipo-svg" />
           </span>
         </div>
 
