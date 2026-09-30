@@ -9,10 +9,11 @@
 }
 
 /* ---- la escena ----
-   Una sola pieza y un mensaje. En móvil, la nube arriba y el texto debajo; el
-   `::after` es el contrapeso de la nube: los dos se reparten lo que el texto
-   no usa, así que nadie calcula dónde va el titular. `svh` y no `vh`: en
-   móvil es el alto con la barra del navegador visible. */
+   Una sola pieza y un mensaje. En móvil, la nube arriba y el texto debajo:
+   la nube se queda con lo que el texto no usa, así que la portada entera
+   —gancho, titular y botones— cabe en la primera pantalla y nadie calcula
+   dónde va el titular. El `::after` guarda el aire mínimo bajo los botones.
+   `svh` y no `vh`: en móvil es el alto con la barra del navegador visible. */
 .portada-escena {
   display: flex;
   flex-direction: column;
@@ -21,7 +22,8 @@
 
 .portada-escena::after {
   content: '';
-  flex: 1 0 var(--e-8);
+  flex: none;
+  height: var(--e-8);
 }
 
 .portada-interior {
@@ -32,14 +34,22 @@
   max-width: 36rem;
 }
 
+/* El gancho. Si en S no cabe en una línea, se parte entre sus dos frases y no
+   deja una palabra suelta. */
+.portada .antetitulo span {
+  display: inline-block;
+}
+
 /* La nube empieza debajo de la barra: ni ella ni el texto quedan tapados. El
    rollo se mide en altos del lienzo, así que es el alto el que decide su
-   tamaño. Por eso en S y M mide media pantalla de alto, que deja al titular
-   entrar en la primera, y nunca depende del ancho de la pantalla. */
+   tamaño y nunca depende del ancho de la pantalla. Crece hasta media pantalla
+   con lo que el texto deja libre; en un teléfono bajo se encoge antes que
+   empujar los botones fuera, hasta un mínimo en que aún se lee como nube. */
 .portada-cielo {
   position: relative;
-  flex: none;
-  height: 50svh;
+  flex: 1 1 0;
+  min-height: 6rem;
+  max-height: 50svh;
   margin-top: var(--barra-alto);
   --nubes-celda: 3;
   --nubes-luz: var(--nube-luz);
@@ -65,6 +75,7 @@
     position: absolute;
     inset: 0 0 auto;
     height: 88%;
+    max-height: none;
     margin: 0;
   }
 
@@ -78,6 +89,10 @@
     text-align: center;
   }
 
+  .portada .antetitulo {
+    margin-inline: auto;
+  }
+
   .portada-acciones {
     justify-content: center;
   }
@@ -88,10 +103,23 @@
    y, invisible, la más larga de la lista. La celda mide siempre lo que la más
    larga, así que el titular reserva su alto desde el primer pintado y no salta
    cuando cambia la palabra — ni en móvil, donde puede ocupar dos líneas. */
+/* La línea se funde por arriba y por abajo: las letras aparecen y se van por
+   un degradé, no por un corte. La franja cae fuera de la línea —el relleno la
+   añade y el margen negativo la devuelve, así que no mueve nada— y en reposo
+   no apaga ninguna letra, ni la «g» de «páginas». */
 .rotativo {
+  --franja: 0.15em;
   display: grid;
-  color: var(--tono, var(--accion));
-  transition: color 300ms var(--ease-out);
+  color: var(--accion);
+  padding-block: var(--franja);
+  margin-block: calc(var(--franja) * -1);
+  overflow: clip;
+  mask-image: linear-gradient(
+    transparent,
+    #000 var(--franja),
+    #000 calc(100% - var(--franja)),
+    transparent
+  );
 }
 
 .rotativo::before {
@@ -115,53 +143,36 @@
   white-space: nowrap;
 }
 
-/* Cada letra tiene su propia caja, y es la caja la que recorta: la letra se
-   esconde al cruzar su propio borde, no el de la palabra. El relleno deja
-   sitio a los descendentes (la «p» de «papel») y el margen negativo lo
-   devuelve, así que en reposo no mueve nada. `clip` y no `hidden`: con
-   `hidden` la línea base de la caja pasaría a su borde inferior. */
-.rotativo-caja {
-  display: inline-block;
-  overflow: clip;
-  padding-block: 0.1em 0.16em;
-  margin-block: -0.1em -0.16em;
-}
-
 .rotativo-letra {
   display: inline-block;
 }
 
-/* La que se va acelera hacia arriba y, al llegar, se apaga: a −80 % aún
-   asomaría el pie de la letra por el borde de su caja. */
-.rotativo-sale .rotativo-letra {
-  animation: letra-sale 220ms cubic-bezier(0.42, 0, 1, 1) calc(var(--i) * 25ms) forwards;
+/* Las dos frases se mueven a la vez, como un rodillo: la que se va sube y la
+   que llega la empuja desde abajo, con la misma curva y el mismo escalón, así
+   que nunca queda la línea vacía. La que llega espera en su primer fotograma
+   (`both`) hasta que le toca. */
+.rotativo-sale .rotativo-letra,
+.rotativo-entra .rotativo-letra {
+  animation: 600ms cubic-bezier(0.65, 0, 0.35, 1) calc(var(--i) * 25ms) both;
 }
 
-/* La que llega entra rápido y frena largo. Hasta que le toca, espera
-   invisible: con `both` se queda en su primer fotograma. */
+.rotativo-sale .rotativo-letra {
+  animation-name: letra-sale;
+}
+
 .rotativo-entra .rotativo-letra {
-  animation: letra-entra 410ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 32ms) both;
+  animation-name: letra-entra;
 }
 
 @keyframes letra-sale {
-  99% {
-    opacity: 1;
-  }
-
   to {
-    transform: translateY(-80%);
-    opacity: 0;
+    transform: translateY(calc(-100% - var(--franja)));
   }
 }
 
 @keyframes letra-entra {
   from {
-    transform: translateY(80%);
-    opacity: 0;
-  }
-
-  1% {
-    opacity: 1;
+    transform: translateY(calc(100% + var(--franja)));
   }
 }
 
@@ -252,156 +263,6 @@
   font-weight: 800;
   line-height: 1;
   color: var(--ciruela);
-}
-
-/* ============================================================================
- * El dibujo de las conexiones.
- *
- * Se ve a lo ancho y se apaga por los lados y por abajo: las rutas siguen más
- * allá de sus etiquetas y se pierden, así que el dibujo no tiene un borde
- * donde parezca recortado.
- *
- * En móvil no se encoge hasta volverse ilegible: mantiene un ancho mínimo y se
- * centra, y lo que sobra por los lados es justo lo que la máscara ya apagaba.
- * ========================================================================= */
-
-.portada-dibujo {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--e-12);
-}
-
-.conexiones {
-  flex-shrink: 0;
-  width: max(100%, 680px);
-  max-width: 1000px;
-  height: auto;
-  overflow: visible;
-  mask-image:
-    linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent),
-    linear-gradient(#000 78%, transparent);
-  mask-composite: intersect;
-}
-
-.ruta-linea,
-.ruta-luz {
-  fill: none;
-}
-
-.ruta-linea {
-  stroke: var(--linea);
-  stroke-width: 1.2;
-}
-
-/* La luz recorre la ruta desde el nodo hasta el borde. Al apagarse se
-   desvanece primero y solo entonces vuelve al principio, así que nunca se ve
-   retroceder. */
-.ruta-luz {
-  stroke: var(--tono);
-  stroke-width: 1.6;
-  stroke-dasharray: var(--largo);
-  stroke-dashoffset: var(--largo);
-  opacity: 0;
-  transition:
-    opacity 400ms var(--ease-out),
-    stroke-dashoffset 0s 400ms;
-}
-
-.ruta.activa .ruta-luz {
-  stroke-dashoffset: 0;
-  opacity: 1;
-  transition: stroke-dashoffset 1100ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ruta-etiqueta rect {
-  fill: color-mix(in srgb, var(--tono) 16%, var(--fondo));
-  transition: fill 300ms var(--ease-out);
-}
-
-.ruta-etiqueta text {
-  fill: var(--texto);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  transition: fill 300ms var(--ease-out);
-}
-
-/* La etiqueta se rellena cuando la luz la alcanza: `--llega` es la fracción
-   del trazo que hay hasta ella. */
-.ruta.activa .ruta-etiqueta :is(rect, text) {
-  transition-delay: calc(var(--llega) * 700ms);
-}
-
-.ruta.activa .ruta-etiqueta rect {
-  fill: var(--tono);
-}
-
-.ruta.activa .ruta-etiqueta text {
-  fill: var(--sobre-accion);
-}
-
-.conexiones-nodo rect {
-  fill: var(--texto);
-}
-
-.conexiones-nodo path {
-  fill: none;
-  stroke: var(--fondo);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-}
-
-/* ---- la entrada del dibujo ----
-   El nodo aparece, la voluta se traza dentro, y las rutas salen de él una
-   detrás de otra; cada etiqueta aparece cuando su línea ya va en camino. Se ve
-   una vez por carga. */
-@keyframes conexion-trazar {
-  from {
-    stroke-dashoffset: var(--largo);
-  }
-}
-
-@keyframes conexion-aparecer {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .conexiones-nodo,
-  .ruta-etiqueta {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  .conexiones-nodo {
-    animation: conexion-aparecer 500ms var(--ease-out) 200ms both;
-  }
-
-  .conexiones-nodo path {
-    stroke-dasharray: var(--largo);
-    animation: conexion-trazar 900ms var(--ease-out) 450ms both;
-  }
-
-  .ruta-linea {
-    stroke-dasharray: var(--largo);
-    animation: conexion-trazar 1200ms var(--ease-out) calc(500ms + var(--i) * 80ms) both;
-  }
-
-  .ruta-etiqueta {
-    animation: conexion-aparecer 400ms var(--ease-out) calc(750ms + var(--i) * 80ms) both;
-  }
-}
-
-:root[data-movimiento='reducido'] .conexiones * {
-  animation: none;
-  transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .conexiones * {
-    transition: none;
-  }
 }
 
 @media (min-width: 1024px) {

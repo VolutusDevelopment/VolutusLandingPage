@@ -1,4 +1,9 @@
 .barra {
+  /* El cambio de tono al pasar de un fondo a otro: el logo, las letras de la
+     cápsula y sus halos lo hacen con la misma duración y la misma curva, así
+     que cambian juntos. Entra y sale suave: acompaña al scroll sin
+     parpadear. */
+  --t-tono: 280ms;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -97,7 +102,7 @@
   position: absolute;
   z-index: -1;
   pointer-events: none;
-  transition: background-color 200ms var(--ease-out);
+  transition: background-color var(--t-tono) var(--ease-in-out);
 }
 
 /* La marca no lleva pastilla: un halo del mismo vidrio con forma de píldora
@@ -112,6 +117,7 @@
   min-height: 44px;
   color: var(--texto);
   text-decoration: none;
+  transition: color var(--t-tono) var(--ease-in-out);
 }
 
 .barra-marca::before {
@@ -128,23 +134,128 @@
   mask-composite: intersect;
 }
 
+/* Más baja que la franja de la barra y con el botón de contorno: es una
+   herramienta a mano, no un segundo titular. Cápsula de 52 px, y el indicador
+   y el botón de 44 px a 4 px del canto: las tres curvas son concéntricas. */
+/* El vidrio de la cápsula es uno solo: no tiene modo claro ni oscuro. Es un
+   cristal casi incoloro que deja ver la zona que pasa por detrás, y lo único
+   que cambia al pasar de un fondo a otro es el color de las letras: la
+   cápsula toma la zona de lo que tiene justo detrás (barra.js), igual que el
+   logo toma la del suyo. */
 .barra-capsula {
+  --cristal: rgb(255 255 255 / 0.22);
+  --cristal-reflejo: #fff;
+  --cristal-interior: rgb(0 0 0 / 0.12);
+  --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
+  --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
+  --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
   display: flex;
   align-items: center;
-  gap: var(--e-6);
-  height: 64px;
-  padding: 0 var(--e-2) 0 var(--e-8);
+  gap: var(--e-2);
+  height: 52px;
+  padding: 0 var(--e-1);
   border-radius: 999px;
 }
 
+/* ---- el vidrio ----
+   Ningún reflejo está puesto a ojo: salen de la óptica de una losa de vidrio
+   (n = 1.5) con un bisel redondeado de b = 12 px en todo el contorno. A una
+   distancia d del canto, la superficie se inclina un ángulo θ con
+   sin θ = (b − d) / b.
+
+   Fresnel (Schlick): R(θ) = R₀ + (1 − R₀)(1 − cos θ)⁵, R₀ = ((n−1)/(n+1))² = 4 %.
+   De frente el vidrio refleja un 4 % —la capa base— y hacia el canto, rasante,
+   casi todo:
+       d   0.5    1.5    2.5    3.5   px
+       R   21.9   7.5    4.9    4.2   %
+   Las sombras interiores cubren la franja [0, spread) y se apilan, así que el
+   alfa de cada una se despeja para que la suma dé R(d) sobre la base:
+   aⱼ = 1 − (1 − Rⱼ)/(1 − Rⱼ₊₁). La cuarta (0.2 %) no llega a un escalón de
+   8 bits (0.39 %) y no se pinta. Siguen la forma de la píldora, extremos
+   redondos incluidos.
+
+   Reflexión total interna (Snell): ángulo crítico asin(1/n) = 41.8°. Donde el
+   bisel se inclina más, d < b(1 − 1/n) = 4 px, la luz de atrás no sale hacia
+   el ojo y la franja muestra el interior del vidrio: la línea oscura que
+   todo canto de vidrio tiene por dentro del brillo.
+
+   Especular (Blinn–Phong): la luz del cielo cae desde arriba y se mira de
+   frente, así que brilla donde la normal está a 45°: d = b(1 − sin 45°) =
+   3.5 px del canto de arriba. El perfil es cos⁶⁰(θ − 45°), vidrio pulido:
+       d   1     2     3     3.5   4     5     6     7    px
+       I   1     30    89    100   91    45    12    0    %
+   El sol satura, así que el pico se recorta al 90 %. El bisel de abajo mira
+   al suelo y no brilla.
+
+   Lo que se refleja es el entorno (`--cristal-reflejo`): el cielo que hay
+   sobre la página, que es el mismo pase lo que pase por detrás. El
+   desenfoque es la dispersión del vidrio esmerilado.
+
+   Solo la cara está esmerilada: el bisel está pulido, y por eso es más claro
+   en sus 12 px y deja ver el fondo que refracta (la lente de Barra.jsx). El
+   texto nunca entra en esa franja, así que su contraste lo sigue sosteniendo
+   el esmerilado de la cara. */
 .barra-capsula::before {
   inset: 0;
   border-radius: inherit;
-  background-color: var(--vidrio);
-  background-image: linear-gradient(var(--vidrio-brillo), transparent 62%);
-  box-shadow: var(--vidrio-canto);
+  background-image:
+    linear-gradient(
+      transparent 1px,
+      color-mix(in srgb, var(--cristal-reflejo) 27%, transparent) 2px,
+      color-mix(in srgb, var(--cristal-reflejo) 80%, transparent) 3px,
+      color-mix(in srgb, var(--cristal-reflejo) 90%, transparent) 3.5px,
+      color-mix(in srgb, var(--cristal-reflejo) 82%, transparent) 4px,
+      color-mix(in srgb, var(--cristal-reflejo) 41%, transparent) 5px,
+      color-mix(in srgb, var(--cristal-reflejo) 11%, transparent) 6px,
+      transparent 7px
+    ),
+    linear-gradient(color-mix(in srgb, var(--cristal-reflejo) 4%, transparent) 0 0),
+    linear-gradient(
+      var(--cristal-bisel),
+      var(--cristal) 12px,
+      var(--cristal) calc(100% - 12px),
+      var(--cristal-bisel)
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--cristal-reflejo) 15.5%, transparent),
+    inset 0 0 0 2px color-mix(in srgb, var(--cristal-reflejo) 2.8%, transparent),
+    inset 0 0 0 3px color-mix(in srgb, var(--cristal-reflejo) 0.7%, transparent),
+    inset 0 0 2px 3px var(--cristal-interior),
+    var(--cristal-sombra);
   backdrop-filter: blur(44px) saturate(1.8);
   -webkit-backdrop-filter: blur(44px) saturate(1.8);
+}
+
+/* La refracción del bisel (el filtro `#lente` de Barra.jsx). Solo Chromium
+   acepta un filtro SVG en `backdrop-filter`, y CSS no tiene forma de
+   preguntarlo: `barra.js` pone la clase. Con la lente el desenfoque baja a
+   28 px: un esmerilado de 44 px no deja nada que se pueda ver torcerse, y por
+   debajo de 28 un titular que cruza por detrás compite con las letras. Sin
+   ella, el vidrio de arriba queda tal cual. */
+.barra-lente {
+  position: absolute;
+}
+
+.barra-refracta .barra-capsula::before {
+  backdrop-filter: url(#lente) blur(28px) saturate(1.8);
+}
+
+/* El vidrio se condensa con el scroll. Arriba del todo, sobre la portada, la
+   cápsula casi se funde con el cielo y el titular manda; en los primeros
+   48 px recupera el cuerpo que necesita para leerse sobre contenido. Lo lleva
+   el propio scroll, como el velo: sin JavaScript. */
+@keyframes vidrio-condensar {
+  from {
+    opacity: 0.65;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .barra-capsula::before {
+    animation: vidrio-condensar linear both;
+    animation-timeline: scroll();
+    animation-range: 0 48px;
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -152,17 +263,26 @@
     backdrop-filter: none;
   }
 
-  .barra-capsula::before {
+  .barra-capsula::before,
+  .barra-refracta .barra-capsula::before {
     background-color: var(--fondo);
     backdrop-filter: none;
+    animation: none;
   }
 }
 
+/* El contorno sale del color del texto y no de `--linea`, que sobre el vidrio
+   claro desaparece y dejaría el botón como un tercer enlace. */
 .barra-accion {
   white-space: nowrap;
-  min-height: 48px;
-  padding-inline: var(--e-6);
+  padding-inline: var(--e-4);
   font-size: var(--texto-sm);
+  border-color: color-mix(in srgb, currentColor 24%, transparent);
+  transition:
+    color var(--t-tono) var(--ease-in-out),
+    text-shadow var(--t-tono) var(--ease-in-out),
+    border-color var(--t-tono) var(--ease-in-out),
+    transform var(--t-pulsar) var(--ease-out);
 }
 
 /* Solo se anima en la barra: en el pie el logotipo se queda quieto, porque
@@ -201,23 +321,112 @@
 .barra-enlaces {
   display: flex;
   align-items: center;
-  gap: var(--e-6);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* Sobre un fondo oscuro, el logo y las letras van en blanco puro y no en el
+   claro de la zona: sobre el cristal, el claro se lee gris. Con el tema
+   forzado a claro la zona de plano es clara, así que ahí no aplica. */
+:root:not([data-tema='claro']) :is(.barra-marca, .barra-capsula).zona-plano,
+:root[data-tema='oscuro'] :is(.barra-marca, .barra-capsula) {
+  --texto: #fff;
+}
+
+/* El cristal es incoloro, así que por detrás pasa de todo, también un
+   titular grande del mismo tono que las letras. Cada letra lleva un halo del
+   fondo de su zona (lo que macOS llama vibrancy): separa la letra de lo que
+   cruza por detrás sin teñir el vidrio. Cambia con la zona, como la letra. */
+.barra-capsula :is(.barra-enlaces a, .barra-accion) {
+  text-shadow:
+    0 0 4px var(--fondo),
+    0 0 12px var(--fondo);
+}
+
+/* El aire entre enlaces es su propio relleno: así el indicador cubre el
+   enlace entero y no solo la palabra. */
 .barra-enlaces a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  padding-inline: var(--e-4);
+  border-radius: 999px;
   font-size: var(--texto-sm);
-  color: var(--texto-suave);
+  /* `--texto` y no `--texto-suave`: el cristal es casi incoloro, así que el
+     contraste lo pone la zona de detrás, y el tono suave no llega a 4.5:1
+     sobre el cielo de la portada. */
+  color: var(--texto);
   text-decoration: none;
+  transition:
+    color var(--t-tono) var(--ease-in-out),
+    text-shadow var(--t-tono) var(--ease-in-out),
+    background-color 200ms var(--ease-out);
 }
 
-.barra-enlaces a:hover {
-  color: var(--accion);
+/* ---- el indicador ----
+   Una sola píldora que viaja al enlace bajo el cursor o con el foco y, si no
+   hay ninguno, descansa en el de la sección actual (`aria-current`, que pone
+   barra.js). Anchor Positioning: el enlace que corresponde se declara ancla y
+   la píldora se estira entre sus cuatro bordes, así que el mismo trazo mide
+   «Proyectos» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
+   de largo y vuelve: el gesto de algo con masa, no de un salto.
+
+   Sin soporte, cada enlace pinta su propio fondo: el mismo resultado, sin el
+   viaje. */
+@supports not (anchor-name: --a) {
+  .barra-enlaces a:is(:hover, :focus-visible, [aria-current]) {
+    background-color: var(--indicador);
+  }
+}
+
+@supports (anchor-name: --a) {
+  .barra-capsula::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    position-anchor: --indicador;
+    inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
+    border-radius: 999px;
+    background-color: var(--indicador);
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      inset 450ms cubic-bezier(0.34, 1.25, 0.64, 1),
+      opacity 200ms var(--ease-out),
+      background-color var(--t-tono) var(--ease-in-out);
+  }
+
+  .barra-enlaces a:is(:hover, :focus-visible, [aria-current]) {
+    anchor-name: --indicador;
+  }
+
+  /* Mientras se señala otro enlace, la sección actual cede el ancla. */
+  .barra-enlaces:has(a:is(:hover, :focus-visible)) a[aria-current]:not(:hover, :focus-visible) {
+    anchor-name: none;
+  }
+
+  .barra-capsula:has(a:is(:hover, :focus-visible, [aria-current]))::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra-capsula::before {
+    animation: none;
+  }
+
+  .barra-capsula::after {
+    transition: opacity 200ms var(--ease-out);
+  }
+}
+
+:root[data-movimiento='reducido'] .barra-capsula::before {
+  animation: none;
+}
+
+:root[data-movimiento='reducido'] .barra-capsula::after {
+  transition: opacity 200ms var(--ease-out);
 }
 
 /* Por debajo de 640 px el logotipo, los dos enlaces y el botón no caben en
@@ -237,15 +446,11 @@
 
   .barra-capsula {
     height: 48px;
-    padding-inline: var(--e-4);
-  }
-
-  .barra-enlaces {
-    gap: var(--e-4);
+    padding-inline: 2px;
   }
 
   .barra-enlaces a {
-    font-size: var(--texto-sm);
+    padding-inline: var(--e-3);
     white-space: nowrap;
   }
 }

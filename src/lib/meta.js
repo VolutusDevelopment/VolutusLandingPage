@@ -22,9 +22,9 @@ export const ORIGEN = 'https://volutus.cl'
 export const PAGINAS = {
   '/': {
     archivo: 'index.html',
-    titulo: 'Volutus, desarrollo de software en Chile',
+    titulo: 'Páginas web, apps y agentes de IA en Chile — Volutus',
     descripcion:
-      'Eso que hoy haces a mano, funcionando solo. Cuéntanos el problema y en 48 horas hábiles tienes alcance, plazo y precio. Cada proyecto con su enlace o su código.',
+      'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. En 48 horas hábiles tienes alcance, plazo y precio.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',

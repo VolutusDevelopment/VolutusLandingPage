@@ -30,46 +30,44 @@ export default function Portada() {
 
         <div className="contenedor portada-interior">
           <div className="portada-texto">
-            {/* El titular anterior —«Eso que hoy haces a mano, funcionando
-                solo»— nombraba la herramienta y no el trabajo: nadie se
-                reconocía en «eso». Este nombra las dos cosas —«tus pedidos por
-                WhatsApp»—, que es lo que contesta la primera objeción de §2:
-                «¿eso me sirve a mí?». «Sistema» es la palabra con que el
-                cliente pide esto. Pasa el test de «Ahora puedes…»: «ahora
-                puedes tener tus pedidos en un sistema que trabaja solo».
+            {/* El gancho va de antetítulo y el titular dice lo que hacemos,
+                sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
+                de `lib/servicios.js` (menos la ley de datos, que no es algo que
+                se cree). Cada uno cabe en una línea a 360 px: por eso
+                «automatización» y no «automatizaciones», que no cabe y, como
+                una palabra no se parte, desbordaría.
 
-                Que no diga a qué se dedica Volutus es deliberado, no un olvido:
-                §2 dice que el visitante llega sabiéndolo porque acaba de hablar
-                con uno de los socios. Gastar el titular en explicar el rubro es
-                gastarlo en lo único que ya sabe.
-
-                Rotan cuatro trabajos, cada uno con la herramienta de su ruta en
-                el dibujo y en el mismo orden (`data-ruta`). «Tus» va dentro de
-                cada frase: el rotativo es un bloque propio y, suelto, ocuparía
-                una línea entera. El HTML trae una sola frase completa —la que
-                leen buscadores y lectores de pantalla—; las demás viven en
-                `data-palabras` y las pone `titular-rotativo.js`.
-                `data-reserva` es la más larga y reserva su alto desde el primer
-                pintado, así que el titular no salta al cambiar de frase. */}
+                Buscadores y lectores de pantalla leen la lista entera y fija,
+                con los nombres que la gente busca («aplicaciones», «agentes de
+                inteligencia artificial»); el rotativo es solo para la vista.
+                `data-reserva` es la frase más larga y reserva su alto desde el
+                primer pintado, así que el titular no salta al cambiar. */}
+            <p className="antetitulo">
+              El mundo avanza. <span>No te quedes atrás.</span>
+            </p>
             <h1>
+              Creamos{' '}
+              <span className="solo-lectores">
+                páginas web, tiendas online, aplicaciones, agentes de inteligencia artificial y
+                automatizaciones
+              </span>
               <span
                 className="rotativo"
-                data-reserva="Tus planillas de inventario,"
-                data-palabras="Tus cotizaciones a mano,|Tus planillas de inventario,|Tus pedidos por WhatsApp,|Tus fichas de papel,"
+                aria-hidden="true"
+                data-reserva="automatización"
+                data-palabras="páginas web|tiendas online|apps|agentes de IA|automatización"
               >
-                <span className="rotativo-palabra">Tus cotizaciones a mano,</span>
+                <span className="rotativo-palabra">páginas web</span>
               </span>{' '}
-              en un sistema que trabaja solo.
+              para tu negocio.
             </h1>
 
             <div className="portada-acciones">
               <a className="boton boton-primario" href="#contacto">
                 Cuéntanos tu proyecto
               </a>
-              <a className="boton boton-secundario" href="#proyectos">
-                Ver los tres proyectos
-              </a>
             </div>
+
           </div>
         </div>
       </div>
