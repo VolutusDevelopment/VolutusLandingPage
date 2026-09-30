@@ -43,7 +43,7 @@ export default function Pie({ enHome = true }) {
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
 
   return (
-    <footer className="pie zona-plano">
+    <footer className="pie zona-plano hora-noche">
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
@@ -76,18 +76,19 @@ export default function Pie({ enHome = true }) {
             </li>
           </Columna>
         </nav>
-
-        <div className="pie-cierre">
-          <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
-          <a href="/privacidad">Privacidad</a>
-        </div>
       </div>
 
-      {/* La página termina en el suelo de la portada, de noche: las sombras de
-          las nubes cruzándolo. Va después de todo el texto para no tener nada
-          encima. */}
-      <div className="pie-suelo">
-        <canvas className="nubes" data-vista="suelo" aria-hidden="true" />
+      {/* La página termina de noche, en el mar que hay bajo la nube de la
+          portada: la base de la nube. Nace en la línea de cierre y se va
+          haciendo agua hacia el borde de la página. */}
+      <div className="pie-mar">
+        <canvas className="nubes" data-vista="mar" aria-hidden="true" />
+        <div className="contenedor">
+          <div className="pie-cierre">
+            <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
+            <a href="/privacidad">Privacidad</a>
+          </div>
+        </div>
       </div>
     </footer>
   )

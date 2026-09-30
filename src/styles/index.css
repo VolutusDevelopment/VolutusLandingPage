@@ -217,6 +217,17 @@
   /* Superficies tintadas de las tarjetas de proyectos. */
   --tinte-a: #ffffff;
   --tinte-b: #eef4f9;
+
+  /* La nube y el mar (src/nubes.js) cuando la hora del día no aplica: con el
+     tema forzado desde el panel de accesibilidad. En hex: el lienzo los lee
+     tal cual. La nube: cara al sol celeste, vientre azul pizarra y filo
+     dorado. */
+  --nube-luz: #b9dcf2;
+  --nube-sombra: #56779b;
+  --nube-borde: #e0b870;
+  --mar-hondo: #116492;
+  --mar-cresta: #38a9e8;
+  --mar-espuma: #9fd3f2;
 }
 
 /* ============ Tema plano: la página demuestra ============
@@ -254,6 +265,16 @@
     inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 -1px 0 rgb(255 255 255 / 0.08),
     inset 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px -14px rgb(0 0 0 / 0.55);
   --vidrio-halo: rgb(10 12 18 / 0.3);
+
+  /* La nube de noche. El titular claro va encima de ella, así que la nube es
+     oscura, con luz de luna y filo plateado: sobre su cara más clara el texto
+     da 7.2:1 y la acción 3.2:1, que basta para un titular. */
+  --nube-luz: #34506e;
+  --nube-sombra: #16293d;
+  --nube-borde: #7f9bb8;
+  --mar-hondo: #155a86;
+  --mar-cresta: #38a9e8;
+  --mar-espuma: #d9f0fc;
 
   /* Superficies tintadas y lámina de las tarjetas sin tono propio (el paso 03
      y «La app del negocio»). En la rama de Diego el plano es verde bosque;
@@ -313,6 +334,44 @@
   --sobre-accion: #13171e;
   --foco: #b4c6e0;
   --lamina: #3d4a5c;
+}
+
+/* ============ Las horas del día (DESIGN-BRIEF A.8) ============
+   La página es un día: la portada es la mañana y el pie es la noche. Cada
+   hora trae su fondo (`--fondo-hora`, que pinta quien lo use) y lo que cambia
+   de su zona; el resto lo hereda de ella. La barra lleva la mañana para que
+   su botón sea el mismo que el de la portada.
+   Solo aplican sin tema forzado: quien elige claro u oscuro en el panel de
+   accesibilidad recibe las dos zonas de siempre.
+
+   La mañana: un azul intenso arriba que se aclara hasta el blanco de la
+   sección siguiente (`#f6f9fc`, sin costura), acción en azul hondo y el sol
+   dorado. El azul intenso vive detrás de la barra y el logo: el logo da
+   5.1:1 y la barra, con su vidrio, 12.8:1 el texto y 6.7:1 el suave. Donde
+   empieza el titular —nunca antes del 15 % del alto—, el texto da 6.5:1 y la
+   acción, que colorea su primera línea, 4.2:1 (es texto grande: pide 3:1).
+   Blanco sobre la acción, 11.2:1. */
+:root:not([data-tema]) .hora-manana {
+  --texto-suave: #2f4a63;
+  --accion: #093d66;
+  --accion-hover: #073355;
+  --accion-activa: #052a47;
+  --foco: #093d66;
+  --sol: rgb(255 248 232 / 0.55);
+  --nube-luz: #ffffff;
+  --nube-sombra: #6a8cb2;
+  --nube-borde: #ffd48a;
+  --fondo-hora: linear-gradient(#2b8de4, #5eaaec 20%, #a6d2f5 42%, #e2f0fb 70%, #f6f9fc);
+}
+
+/* La noche: azul que se hunde hacia el borde de la página y un mar bajo la
+   luna, crestas azules y espuma plateada. El texto suave sobre el fondo más
+   hondo da 8.9:1. */
+:root:not([data-tema]) .hora-noche {
+  --mar-hondo: #0e2c47;
+  --mar-cresta: #3b86bf;
+  --mar-espuma: #eef3ff;
+  --fondo-hora: linear-gradient(#0a1a2a, #050d18);
 }
 
 /* ============ Base ============ */
@@ -547,7 +606,7 @@ svg {
 
 /* Ritmo vertical de sección. Móvil primero (§8): el caso principal es S. */
 .seccion {
-  background: var(--fondo);
+  background: var(--fondo-hora, var(--fondo));
   color: var(--texto);
   padding-block: var(--e-16);
 }

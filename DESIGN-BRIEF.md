@@ -707,6 +707,7 @@ tener dueño ni fecha.
 | 11 | 2026-09-13 | No se publican precios en la página | Publicar un precio de entrada ("desde $X"), que el asesor recomendaba para filtrar y para sostener la promesa de ser directos. Coste asumido: la página no responde la objeción que más pesa, y esa promesa queda rebajada | Rodrigo |
 | 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
 | 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
+| 14 | 2026-09-30 | La página es un día: mañana en la portada, noche en el pie (A.8). Pendiente del voto de Rodrigo, ver pregunta 9 | Los dos temas con corte seco (A.3 y A.4): la portada se veía monocromática y no contaba nada. Las filas de nubes de ilustración con contorno: pedían atención en vez de acompañar el mensaje | Diego |
 
 ---
 
@@ -722,6 +723,7 @@ tener dueño ni fecha.
 | 6 | ¿Qué plazos reales se publican en el bloque 4? | Que el equipo defina horquillas por tipo de proyecto | La objeción del tiempo |
 | 7 | Presupuesto y fecha de publicación | Decisión de los socios | La planificación entera |
 | 8 | Voto del socio en las decisiones 6, 7, 8, 11 y en el tuteo | Que las revise y confirme | Riesgo de reabrir decisiones ya cerradas |
+| 9 | ¿Se confirma el recorrido del día (A.8), que reemplaza el corte seco de A.3 y A.4? | Voto de Rodrigo | Las horas de proyectos, métricas, servicios y contacto |
 
 ---
 
@@ -805,6 +807,9 @@ idealmente un logo, utilizables en la página.
 
 ### A.3 Dirección cromática: cielo que desciende a plano `[~]`
 
+> **Propuesta de reemplazo en A.8 (2026-09-30).** Si se confirma, la regla 1
+> de abajo (corte seco, sin degradado) deja de aplicar.
+
 **Decisión de dirección (Rodrigo, con acuerdo pendiente del socio):** combinar
 las direcciones A y B como un recorrido, no como una mezcla.
 
@@ -833,6 +838,9 @@ mantiene:**
 y voto explícito del socio.
 
 ### A.4 Punto de corte del tema `[x]`
+
+> **Propuesta de reemplazo en A.8 (2026-09-30).** Si se confirma, los dos
+> cortes secos se sustituyen por el recorrido de las horas del día.
 
 **Cerrado (acuerdo de ambos socios, 2026-09-13): opción B, corte en la mitad
 con retorno.**
@@ -920,3 +928,74 @@ familia sino del uso:**
    lo contrario de los titulares. Ese contraste es lo que lo vuelve una marca
    y no un texto.
 4. Geist Mono se reserva para números y datos reales. Nunca como decoración.
+
+### A.8 La página es un día `[~]`
+
+**Propuesta de Diego (2026-09-30), plan a seguir.** Pendiente del voto de
+Rodrigo (pregunta abierta 9). Reemplaza el corte seco de A.3 y A.4.
+
+**La idea.** Volutus es una nube, y la página recorre un día bajo ella: abre
+en una mañana viva, se vuelve naranja con el atardecer a medida que se baja y
+termina de noche en el pie, que es el mar, la base de la nube. El color
+avanza con el scroll porque avanza la hora, no por adorno.
+
+**Cómo debe sentirse la portada.** Llamativa sin exigir atención: una sola
+pieza y un mensaje claro, patrones calmados y realistas, con profundidad de
+color. La referencia es la portada de dnacapital.com: una superficie de
+puntos finos a un lado, el titular al otro, nada más. **La pieza es una
+volutus** —la nube en rollo—, nunca un cúmulo genérico; sin contornos de
+ilustración.
+
+**El recorrido.**
+
+| Sección | Hora | Fondo | Texto y acción | Estado |
+| --- | --- | --- | --- | --- |
+| Portada y barra | Mañana | Azul intenso arriba que se aclara hasta el blanco de la página (`#2B8DE4` → `#5EAAEC` → `#A6D2F5` → `#E2F0FB` → `#F6F9FC`), con la nube como base que se funde en ese blanco, y sol dorado arriba a la derecha | Texto `#0A1A2A`; secundario `#2F4A63`; acción en azul hondo `#093D66` | Hecho |
+| Proyectos | Media mañana | Celeste pálido a blanco cálido | Texto oscuro | Pendiente |
+| Métricas | Tarde | Crema dorada | Texto oscuro | Pendiente |
+| Servicios | Atardecer | Durazno a naranja | Texto oscuro | Pendiente |
+| Contacto | Crepúsculo | Azul profundo con el último naranja en el horizonte | Texto claro | Pendiente |
+| Pie | Noche | Azul noche (`#0A1A2A` → `#050D18`) y el mar bajo la luna | Texto claro | Hecho |
+
+**Reglas que se derivan de esto:**
+
+1. **El paso entre horas es continuo.** El fondo de cada sección es un
+   degradado que termina en el color con que empieza la siguiente. Es la
+   excepción declarada a «degradados» de A.2: son degradados de cielo, de una
+   sola familia de color, nunca RGB ni unicornio.
+2. **Sin morado, igual que en A.2.** El crepúsculo es azul profundo y naranja;
+   las sombras de la nube son azul pizarra.
+3. **Sin JavaScript para el color.** Cada sección declara su hora con una
+   clase (`hora-manana`, `hora-noche`, …) que trae sus tokens y su
+   `--fondo-hora`; la barra copia la hora de lo que tiene debajo.
+4. **Cada hora es un sistema completo y verificado.** Texto, secundario y
+   acción pasan 4.5:1 sobre el punto más desfavorable de su degradado. La
+   mañana es la excepción medida: su azul intenso vive detrás de la barra y
+   el logo, que dan 12.8:1 (sobre el vidrio) y 5.1:1; donde empieza el
+   titular, el texto da 6.5:1 y la acción 4.2:1, en texto grande. Blanco
+   sobre acción, 11.2:1.
+5. **El tema forzado manda.** Con claro u oscuro elegido en el panel de
+   accesibilidad, las horas no aplican y vuelven las dos zonas.
+
+**La nube y el mar** son el mismo shader de trama de puntos
+(`src/nubes-lienzo.js`), en un Web Worker y sin tocar el hilo principal:
+
+- *Portada:* **una volutus, no un cúmulo.** La nube en rollo que da nombre a
+  la marca (como el Morning Glory), en volumen de verdad sobre una trama de
+  puntos finos: la cabeza, enorme y redonda, a la izquierda del centro, y el
+  cuerpo que cruza la pantalla y sale por la derecha, rodando despacio sobre
+  su eje mientras sus bultos hierven. Lomo al sol blanco con filo dorado y
+  una base que se vuelve bruma y se funde con el blanco de la página (la
+  referencia es deta.surf). En L y XL es la base de la portada, a todo el
+  ancho, y el titular va centrado sobre el cielo; en M y S va arriba y el
+  texto debajo. El cursor es viento, y es un roce: la empuja apenas, deja
+  remolinos chicos y se aquieta en menos de un segundo. Con movimiento
+  reducido queda quieta y no reacciona. En el tema oscuro forzado es una nube
+  de noche, oscura y con filo plateado, para que el titular claro se lea
+  encima.
+- *Pie:* el mar de noche. Olas que ruedan hacia el frente, espuma plateada en
+  las crestas, el reflejo de la luna al centro y las sombras de las nubes
+  pasando encima.
+
+Medido tras la portada y el pie (2026-09-30, Lighthouse móvil): 100 / 100 /
+100 / 100, TBT 90 ms, LCP 1.2 s, CLS 0.

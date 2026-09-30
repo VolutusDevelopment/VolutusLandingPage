@@ -1,20 +1,26 @@
 .pie {
-  background: var(--fondo);
+  background: var(--fondo-hora, var(--fondo));
   color: var(--texto);
   padding-top: var(--e-12);
 }
 
-/* ---- el suelo ----
-   Una franja al final, sin texto encima: el horizonte arriba y el frente
-   contra el borde de la página. Más tenue que el de la portada, porque aquí
-   el protagonista es el logotipo. */
-.pie-suelo {
+/* ---- el mar ----
+   Volutus es la nube; esto es lo que tiene debajo. Nace en la línea de cierre
+   sin borde: una máscara lineal lo lleva de nada, bajo el copyright, a pleno
+   contra el borde de la página. Así no se lee como un cuadro pegado al final. */
+.pie-mar {
   position: relative;
-  height: clamp(120px, 16vw, 220px);
-  margin-top: var(--e-6);
-  --nubes-cerca: var(--marca);
-  --nubes-lejos: var(--linea);
-  --nubes-alfa: 0.55;
+  margin-top: var(--e-12);
+  padding-bottom: clamp(160px, 22vw, 300px);
+  --nubes-celda: 6;
+  --nubes-luz: var(--mar-cresta);
+  --nubes-sombra: var(--mar-hondo);
+  --nubes-borde: var(--mar-espuma);
+  --nubes-alfa: 0.9;
+}
+
+.pie-mar .nubes {
+  mask-image: linear-gradient(transparent, #000 75%);
 }
 
 /* ---- el logotipo ----
@@ -117,14 +123,15 @@
   text-underline-offset: 3px;
 }
 
-/* ---- línea de cierre ---- */
+/* ---- línea de cierre ----
+   Va encima del mar: posicionada, para que el lienzo no la tape. */
 .pie-cierre {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: var(--e-2) var(--e-6);
-  margin-top: var(--e-12);
   padding-top: var(--e-4);
   border-top: 1px dashed var(--linea);
   font-size: var(--texto-xs);
@@ -143,12 +150,43 @@
   text-decoration: none;
 }
 
-/* En S las tres columnas no caben en fila: bajan de a una y pierden la línea
-   que las separa, que en vertical ya no separa nada. */
+/* En S las tres columnas no caben en fila, y apiladas de a una el pie se
+   vuelve una lista eterna: Página y Obra van lado a lado, y el correo, que es
+   largo, baja a todo el ancho. */
 @media (max-width: 559px) {
+  .pie {
+    padding-top: var(--e-8);
+  }
+
+  .pie-columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e-6) var(--e-4);
+    margin-top: var(--e-8);
+  }
+
   .pie-columna {
-    flex-basis: 100%;
-    padding-left: 0;
+    min-width: 0;
+    padding-inline: 0;
     border-left: 0;
+  }
+
+  .pie-columna:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .pie-columna a {
+    font-size: var(--texto-sm);
+    line-height: 1.3;
+  }
+
+  /* Con la trama de 6 px caben pocas olas en el ancho: se afina. */
+  .pie-mar {
+    margin-top: var(--e-8);
+    --nubes-celda: 4;
+  }
+
+  .pie-cierre {
+    gap: 0 var(--e-4);
   }
 }
