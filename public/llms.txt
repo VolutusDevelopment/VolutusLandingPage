@@ -1,7 +1,7 @@
 # Volutus
 
-> Empresa de desarrollo de software en Chile. Dejamos funcionando solo eso que
-> hoy resuelves a mano. Cada afirmación de esta página va con su enlace o su
+> Empresa de desarrollo de software en Chile. Creamos páginas web, tiendas
+> online, apps, agentes de IA y automatizaciones para negocios. Cada afirmación de esta página va con su enlace o su
 > código: si no se puede comprobar, no se dice.
 
 Volutus es una página única, en español de Chile. Existe para que quien haya
