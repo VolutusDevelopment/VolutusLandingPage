@@ -1,14 +1,16 @@
 /**
- * Las nubes y sus sombras: la trama del logotipo, viva.
+ * Las nubes y el mar: la trama del logotipo, viva.
  *
  * Este archivo es solo la mitad de la página. El dibujo —el shader, WebGL, el
  * bucle de fotogramas— vive en un Web Worker (`nubes-lienzo.js`) con un
  * OffscreenCanvas, así que el hilo principal nunca espera a la GPU. Aquí solo
  * se mide, se leen los colores y se avisa de lo que cambia.
  *
- * Cada `canvas.nubes` dice qué cara mira con `data-vista`: `cielo` (las nubes)
- * o `suelo` (sus sombras). El color lo toma de `--nubes-cerca`,
- * `--nubes-lejos` y `--nubes-alfa`, que el CSS resuelve según la zona.
+ * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes) o
+ * `mar` (el agua bajo ellas). El color lo toma de `--nubes-luz`,
+ * `--nubes-sombra`, `--nubes-borde` y `--nubes-alfa`, que el CSS resuelve
+ * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
+ * de la trama, en px CSS, lo da `--nubes-celda`.
  *
  * Qué NO hace, a propósito:
  *
@@ -23,9 +25,8 @@
 
 import { quieto } from './lib/movimiento.js'
 
-// Lado de la celda de la trama, en px CSS, y el tope de densidad de píxeles:
-// por encima de 1.5 los puntos no se ven mejor y el costo sigue creciendo.
-const CELDA = 9
+// Tope de densidad de píxeles: por encima de 1.5 los puntos no se ven mejor y
+// el costo sigue creciendo.
 const DPR_MAXIMO = 1.5
 
 const rgb = (hex) => {
@@ -38,12 +39,13 @@ function montar(pintor, lienzo, id) {
 
   function medir() {
     const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
+    const celda = parseFloat(getComputedStyle(lienzo).getPropertyValue('--nubes-celda'))
     pintor.postMessage({
       tipo: 'medir',
       id,
       ancho: Math.round(lienzo.clientWidth * dpr),
       alto: Math.round(lienzo.clientHeight * dpr),
-      celda: Math.round(CELDA * dpr),
+      celda: Math.round(celda * dpr),
     })
   }
 
@@ -53,8 +55,9 @@ function montar(pintor, lienzo, id) {
     pintor.postMessage({
       tipo: 'colores',
       id,
-      cerca: rgb(valor('--nubes-cerca')),
-      lejos: rgb(valor('--nubes-lejos')),
+      luz: rgb(valor('--nubes-luz')),
+      sombra: rgb(valor('--nubes-sombra')),
+      borde: rgb(valor('--nubes-borde')),
       alfa: parseFloat(valor('--nubes-alfa')),
     })
   }
@@ -64,8 +67,8 @@ function montar(pintor, lienzo, id) {
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
-  const cielo = lienzo.dataset.vista === 'cielo'
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, cielo }, [offscreen])
+  const mar = lienzo.dataset.vista === 'mar'
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar }, [offscreen])
   colorear()
   medir()
 

@@ -68,7 +68,9 @@ export const SERVICIOS = [
   },
   {
     id: 'automatizacion',
-    nombre: 'Automatizaciones',
+    // Con guion suave: a 300 px la palabra no cabe entera en su ficha y se
+    // parte ahí, con guion, en vez de empujar la página hacia el lado.
+    nombre: 'Automatiza\u00adciones',
     opcion: 'Una automatización',
     texto:
       'Lo que hoy copias de una planilla a otra o reenvías por WhatsApp pasa solo, sin que nadie lo toque.',

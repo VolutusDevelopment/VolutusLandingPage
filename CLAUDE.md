@@ -153,7 +153,7 @@ Ser eficiente con el uso de recursos.
 
 Cuando sea necesario obtener información del proyecto, utilizar el Vault de Obsidian ubicado en:
 
-`C:\VaultObsidian`
+`C:\VaultObsidianVolutus`
 
 Utilizar esa documentación como fuente de verdad antes de asumir información.
 

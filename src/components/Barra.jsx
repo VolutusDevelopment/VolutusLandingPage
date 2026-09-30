@@ -29,7 +29,7 @@ export default function Barra({ enHome = true }) {
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
 
   return (
-    <header className="barra zona-cielo">
+    <header className="barra zona-cielo hora-manana">
       <div className="barra-velo" aria-hidden="true">
         <span />
         <span />

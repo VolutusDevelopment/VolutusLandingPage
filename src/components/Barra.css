@@ -105,6 +105,7 @@
    parecer un botón. */
 .barra-marca {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   /* El lockup queda por debajo de los 44 px; el área táctil se estira sin
      mover el dibujo. */
@@ -227,8 +228,8 @@
   }
 }
 
-/* En S el logotipo se queda, más bajo: con los dos enlaces cabe en una línea
-   desde 320 px. */
+/* En S el logotipo se queda, más bajo, y con los dos enlaces cabe en una
+   línea. */
 @media (max-width: 479px) {
   .marca-logotipo {
     height: 26px;
@@ -246,6 +247,15 @@
   .barra-enlaces a {
     font-size: var(--texto-sm);
     white-space: nowrap;
+  }
+}
+
+/* Por debajo de 420 px la cápsula no cabe junto al logotipo sin apretarlo:
+   se retira y queda solo la marca. Las secciones siguen a un desplazamiento,
+   y el pie repite los enlaces. */
+@media (max-width: 419px) {
+  .barra-capsula {
+    display: none;
   }
 }
 

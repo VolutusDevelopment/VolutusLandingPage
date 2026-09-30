@@ -7,12 +7,12 @@
  * pantalla en un móvil de 360 px, la pieza se reduce. El texto gana siempre,
  * porque es lo único que casi todos van a leer.
  *
- * **La primera pantalla es una escena: el cielo arriba, el suelo abajo y el
- * titular en medio.** Son dos bandas separadas (ver nubes.js): arriba pasan
- * nubes de puntos con el viento; abajo, sus sombras cruzan el suelo. Es el
- * mismo campo de nubes visto desde las dos caras, así que cada nube que pasa
- * deja su sombra. Entre las dos queda aire limpio para el texto, y las bandas
- * se reparten lo que el texto no usa de la pantalla, sin empujarlo nunca.
+ * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
+ * rollo que da nombre a la marca, de puntos, con luz, sombra y un filo dorado,
+ * girando despacio sobre su eje (ver nubes-lienzo.js). En L y XL ocupa el lado derecho y el texto va a la
+ * izquierda; en M y S va arriba y el texto debajo, sin empujarlo nunca. La
+ * página baja por las horas del día hasta la noche del pie (DESIGN-BRIEF
+ * A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
@@ -21,9 +21,9 @@
  */
 export default function Portada() {
   return (
-    <section id="portada" className="seccion zona-cielo portada">
+    <section id="portada" className="seccion zona-cielo hora-manana portada">
       <div className="portada-escena">
-        <div className="portada-banda portada-cielo">
+        <div className="portada-cielo">
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
         </div>
 
@@ -70,10 +70,6 @@ export default function Portada() {
               </a>
             </div>
           </div>
-        </div>
-
-        <div className="portada-banda portada-suelo">
-          <canvas className="nubes" data-vista="suelo" aria-hidden="true" />
         </div>
       </div>
     </section>

@@ -66,6 +66,17 @@ export default function initTitularRotativo() {
       if (activa) rotativo.style.setProperty('--tono', ruta.style.getPropertyValue('--tono'))
     })
 
+  // El CSS reserva el alto con la frase más larga, pero en pantallas angostas
+  // la más alta puede ser otra: «cotizaciones» no cabe junto a nada y parte
+  // la frase en tres líneas. Se reservan todas, invisibles en la misma celda,
+  // y la celda mide lo que la más alta.
+  for (const texto of palabras) {
+    const reserva = document.createElement('span')
+    reserva.className = 'rotativo-reserva'
+    reserva.textContent = texto
+    rotativo.append(reserva)
+  }
+
   const fija = document.createElement('span')
   fija.className = 'solo-lectores'
   fija.textContent = palabra.textContent

@@ -4,62 +4,104 @@
   margin-top: calc(-1 * var(--barra-alto));
   padding-block: 0 var(--e-8);
   position: relative;
-  /* El resplandor vive detrás de todo sin salirse de la sección: `isolation`
-     crea el apilamiento para su z-index negativo y `clip` evita el scroll
-     lateral sin crear un contenedor de scroll. */
+  /* El sol vive detrás de todo sin salirse de la sección: `isolation` crea el
+     apilamiento para su z-index negativo y `clip` evita el scroll lateral sin
+     crear un contenedor de scroll. */
   isolation: isolate;
   overflow: clip;
-  text-align: center;
 }
 
 /* ---- la escena ----
-   La pantalla entera: el cielo arriba, el suelo abajo y el texto en medio.
-   Las dos bandas se reparten lo que el texto no usa, así que el titular queda
-   al centro sin que nadie calcule dónde. `svh` y no `vh`: en móvil es el alto
-   con la barra del navegador visible. */
+   Una sola pieza y un mensaje. En móvil, la nube arriba y el texto debajo; el
+   `::after` es el contrapeso de la nube: los dos se reparten lo que el texto
+   no usa, así que nadie calcula dónde va el titular. `svh` y no `vh`: en
+   móvil es el alto con la barra del navegador visible. */
 .portada-escena {
   display: flex;
   flex-direction: column;
   min-height: 100svh;
 }
 
+.portada-escena::after {
+  content: '';
+  flex: 1 0 var(--e-8);
+}
+
 .portada-interior {
   padding-block: var(--e-8);
 }
 
-.portada-banda {
-  position: relative;
-  flex: 1 0 6rem;
-}
+/* La nube empieza debajo de la barra: ni ella ni el texto quedan tapados. El
+   rollo necesita un lienzo casi cuadrado para crecer hacia su extremo
+   cercano; en una franja baja se aplasta en una cuña. Por eso en S y M mide
+   media pantalla de alto, que deja al titular entrar en la primera, y nunca
+   depende del ancho de la pantalla.
 
-/* El cielo empieza debajo de la barra, así que su mínimo la incluye: el texto
-   nunca queda tapado por ella. Las nubes van tenues, en marca. */
+   Y tiene ancho mínimo: por debajo de él el rollo se encogería hasta ser un
+   detalle. En pantallas angostas el lienzo se sale por la izquierda —se
+   alinea a la derecha y `overflow: clip` de la portada lo recorta—, así que
+   se pierde el extremo lejano, que igual se desvanece, y el cercano sigue
+   enorme. */
 .portada-cielo {
-  flex-basis: calc(var(--barra-alto) + var(--e-12));
-  --nubes-lejos: var(--marca);
-  --nubes-alfa: 0.45;
+  position: relative;
+  flex: none;
+  align-self: flex-end;
+  width: max(100%, 44rem);
+  height: 50svh;
+  margin-top: var(--barra-alto);
+  --nubes-celda: 6;
+  --nubes-luz: var(--nube-luz);
+  --nubes-sombra: var(--nube-sombra);
+  --nubes-borde: var(--nube-borde);
+  --nubes-alfa: 0.95;
 }
 
-/* El suelo: trama fina al sol, en marca, y la sombra la engrosa hacia
-   petróleo. Se apaga al pie para no cortarse contra la sección siguiente. */
-.portada-suelo {
-  mask-image: linear-gradient(#000 70%, transparent);
-  --nubes-cerca: var(--accion);
-  --nubes-lejos: var(--marca);
-  --nubes-alfa: 0.9;
+/* En S el rollo recortado no se entendía: se suelta el ancho mínimo para que
+   quepa entero, y la trama de 6 px, tosca en un lienzo angosto, se afina. */
+@media (max-width: 479px) {
+  .portada-cielo {
+    width: 100%;
+    --nubes-celda: 3;
+  }
 }
 
-/* ---- el resplandor ----
-   Dos focos de la paleta detrás del titular, turquesa y ciruela, tan tenues
-   que tiñen el blanco sin llegar a ser un color. */
+/* En L y XL el texto va a la izquierda y la nube ocupa el lado derecho de la
+   pantalla, detrás de todo: el titular queda centrado en alto. En L el ancho
+   mínimo la mete bajo el final del titular, pero ahí solo llega el extremo
+   lejano, que se desvanece. */
+@media (min-width: 1024px) {
+  .portada-escena {
+    justify-content: center;
+  }
+
+  .portada-escena::after {
+    content: none;
+  }
+
+  .portada-cielo {
+    position: absolute;
+    /* `flex-end` también alinea a un absoluto: lo encogería a alto 0. */
+    align-self: auto;
+    height: auto;
+    inset: var(--barra-alto) 0 0 auto;
+    width: max(58%, 40rem);
+    margin: 0;
+  }
+
+  .portada-interior {
+    position: relative;
+  }
+}
+
+/* ---- el sol ----
+   Un resplandor cálido arriba a la derecha, detrás de la nube: de ahí le
+   llega la luz. Solo existe en la mañana (`--sol`). */
 .portada::after {
   content: '';
   position: absolute;
   z-index: -2;
   inset: 0;
-  background:
-    radial-gradient(40rem 26rem at 12% 8%, color-mix(in srgb, var(--marca) 14%, transparent), transparent),
-    radial-gradient(36rem 24rem at 88% 42%, color-mix(in srgb, var(--ciruela) 11%, transparent), transparent);
+  background: radial-gradient(40rem 30rem at 85% 8%, var(--sol, transparent), transparent);
   pointer-events: none;
 }
 
@@ -70,17 +112,21 @@
    cuando cambia la palabra — ni en móvil, donde puede ocupar dos líneas. */
 .rotativo {
   display: grid;
-  justify-items: center;
   color: var(--tono, var(--accion));
   transition: color 300ms var(--ease-out);
 }
 
 .rotativo::before {
   content: attr(data-reserva);
+}
+
+.rotativo::before,
+.rotativo-reserva {
   visibility: hidden;
 }
 
 .rotativo::before,
+.rotativo-reserva,
 .rotativo-palabra {
   grid-area: 1 / 1;
 }
@@ -183,8 +229,7 @@
 }
 
 .portada-texto {
-  max-width: 56rem;
-  margin-inline: auto;
+  max-width: 36rem;
 }
 
 .portada-entradilla {
@@ -196,7 +241,6 @@
 .portada-acciones {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: var(--e-3);
   margin-top: var(--e-8);
 }
