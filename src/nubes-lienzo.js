@@ -10,9 +10,10 @@
  * imprenta. Cada lienzo dice qué mira:
  *
  *   - `cielo`: una volutus, la nube en rollo que da nombre a la marca. Un
- *     tubo largo que entra grande por el borde derecho y se aleja achicándose,
- *     girando sobre su eje, con un segundo rollo más lejano detrás. El lomo da al sol, el vientre
- *     queda en sombra y deja colgar jirones; el filo iluminado se dora.
+ *     tubo largo en perspectiva: el extremo cercano entra enorme por el borde
+ *     derecho y el resto se aleja hacia un punto de fuga a la izquierda,
+ *     girando sobre su eje. El lomo da al sol, el vientre queda en sombra y
+ *     deja colgar jirones; el filo iluminado se dora.
  *   - `mar`: el agua bajo la nube, con el horizonte arriba. Las olas ruedan
  *     hacia el frente, la espuma asoma en las crestas, la luz deja su reflejo
  *     al centro y las sombras de las nubes pasan por encima.
@@ -39,23 +40,28 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     las cinco para que el borde se deshaga en jirones y no en una mancha.
 //     Cada octava gira el dominio: sin el giro, las rejillas del ruido se
 //     alinean y la nube se ve hecha de cuadrados.
-//   - Cielo: dos rollos paralelos, como vienen las volutus de verdad: uno
-//     lejano, arriba, fino y tenue, y el protagonista delante, que lo tapa.
-//     `u` recorre el lienzo de izquierda a derecha, del extremo lejano de cada
-//     rollo al cercano. El radio `R` crece con el cuadrado de `u`: el extremo
-//     cercano es enorme y el borde del lienzo lo corta, como algo más grande
-//     que el cuadro. Eso es lo que la hace imponente. El radio ondula a lo largo del tubo para que el lomo
-//     no sea una recta. `v` es la altura dentro
-//     del tubo, de -1 en el lomo a 1 en el vientre, y `asin(v)` el ángulo
-//     sobre su sección: el ruido se muestrea en (largo del tubo, ángulo) y el
+//   - Cielo: un solo rollo, en perspectiva de verdad. `s` es su escala en
+//     cada columna: 1 en el borde derecho y lineal hacia un punto de fuga que
+//     queda fuera del lienzo por la izquierda, así que el lomo y el vientre son
+//     rectas que convergen —lo que el ojo reconoce como un tubo que se aleja—.
+//     El eje baja hacia el horizonte (72 % del alto) y el radio del extremo
+//     cercano es el 42 % del alto: el borde lo corta, como algo más grande que
+//     el cuadro. `largo` es la profundidad (1/s), así que la textura se
+//     aprieta a lo lejos como en una foto. Solo la mitad de arriba ondula con
+//     `lobulos`, los bultos redondos del borde de ataque. `v` es la altura
+//     dentro del tubo, de -1 en el lomo a 1 en el vientre, y `asin(v)` el
+//     ángulo sobre su sección: el ruido se muestrea en (largo, ángulo) y el
 //     ángulo avanza con el tiempo, así que la textura rueda sobre el eje en vez
 //     de desplazarse; fuera del tubo el ángulo sigue creciendo con `v`, sin
-//     costura. La densidad es el grosor del cilindro más el ruido, que casi no
-//     toca el lomo —liso y redondo, como un rollo— y pesa en el vientre para
-//     que cuelguen jirones. La luz viene de
-//     arriba: el lomo es `luz`, el vientre `sombra`, y donde la cara al sol
-//     es fina el color se dora. El tamaño del punto sigue a la densidad y el
-//     extremo lejano se apaga en el aire.
+//     costura. La densidad es la sección del cilindro más el ruido, que casi no
+//     toca el lomo —liso y redondo— y pesa en el vientre para que cuelguen
+//     jirones. La luz (`sol`) suma dos cosas: la del cilindro con el sol
+//     arriba y la del ruido, que resta la densidad un poco más hacia el sol
+//     —si hay menos nube entre el punto y la luz, está iluminado—; con eso
+//     cada bulto tiene su cara clara y su sombra. Donde la nube es fina y le
+//     da el sol, el color se dora; a lo lejos se funde con `luz`, que es el
+//     aire. El tamaño del punto sigue a la densidad y el extremo lejano se
+//     apaga.
 //   - Mar: `y` va de 0 en el horizonte (arriba) a 1 en el borde de abajo, y
 //     cerca del horizonte todo se apaga. El plano está en perspectiva, con
 //     la distancia `z` creciendo hacia el horizonte. La altura del agua suma
@@ -89,22 +95,25 @@ void main() {
   vec3 color = luz;
   if (mar < 0.5) {
     float u = c.x / res.x;
-    for (int i = 0; i < 2; i++) {
-      float k = float(i);
-      float largo = sqrt(u) * 9.0 + t * 0.01 + 31.0 * k;
-      float R = mix(0.1, 0.4, u * u) * mix(0.5, 1.0, k) * (0.9 + 0.25 * ruido(vec2(largo * 0.6, 3.0))) * res.y;
-      float v = (c.y - (mix(0.5, 0.56, u) - 0.3 * (1.0 - k)) * res.y) / R;
-      if (abs(v) < 1.7) {
-        float angulo = asin(clamp(v, -1.0, 1.0)) + v - clamp(v, -1.0, 1.0);
-        float n = fbm(vec2(largo, angulo * 2.2 - t * 0.3));
-        float d = sqrt(max(1.0 - v * v, 0.0)) + (n - 0.5) * mix(0.5, 1.6, smoothstep(-0.6, 1.5, v)) - 0.2;
-        if (d > 0.0) {
-          float cuerpo = smoothstep(0.0, 0.5, d);
-          float cara = clamp(0.45 - v + (n - 0.5) * 0.9, 0.0, 1.0);
-          color = mix(mix(sombra, luz, cara), borde, cara * (1.0 - cuerpo) * 0.8);
-          r = celda * 0.5 * mix(0.12, 1.0, sqrt(cuerpo)) * mix(0.8, 1.0, k);
-          a = alfa * smoothstep(0.0, 0.25, u) * mix(0.5, 1.0, k);
-        }
+    float s = (u + 0.2) / 1.2;
+    float largo = 1.4 / s + t * 0.02;
+    float lobulos = 0.6 * ruido(vec2(largo * 1.2, 3.0)) + 0.4 * ruido(vec2(largo * 3.0, 9.0));
+    float dy = c.y - (0.72 - 0.34 * s) * res.y;
+    float v = dy / (0.42 * s * res.y * (dy < 0.0 ? 0.8 + 0.4 * lobulos : 1.0));
+    if (abs(v) < 1.5) {
+      float vc = clamp(v, -1.0, 1.0);
+      float seccion = sqrt(1.0 - vc * vc);
+      vec2 q = vec2(largo, (asin(vc) + v - vc) * 1.7 - t * 0.3);
+      float n = fbm(q);
+      float d = seccion + (n - 0.5) * mix(0.3, 1.0, smoothstep(0.0, 1.4, v)) - 0.12;
+      if (d > 0.0) {
+        float cuerpo = smoothstep(0.0, 0.45, d);
+        float sol = smoothstep(-0.3, 1.0, 0.5 * seccion - 0.8 * vc + 1.8 * (n - fbm(q - vec2(0.0, 0.3))));
+        color = mix(sombra, luz, sol);
+        color = mix(color, borde, 0.9 * (1.0 - cuerpo) * smoothstep(0.3, 0.9, sol));
+        color = mix(color, luz, 0.45 * (1.0 - s));
+        r = celda * 0.5 * mix(0.1, 1.0, sqrt(cuerpo));
+        a = alfa * smoothstep(0.0, 0.3, u);
       }
     }
   } else {

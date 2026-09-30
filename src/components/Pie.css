@@ -12,7 +12,7 @@
   position: relative;
   margin-top: var(--e-12);
   padding-bottom: clamp(160px, 22vw, 300px);
-  --nubes-celda: 9;
+  --nubes-celda: 6;
   --nubes-luz: var(--mar-cresta);
   --nubes-sombra: var(--mar-hondo);
   --nubes-borde: var(--mar-espuma);
@@ -180,10 +180,10 @@
     line-height: 1.3;
   }
 
-  /* Con la trama de 9 px caben pocas olas en el ancho: se afina. */
+  /* Con la trama de 6 px caben pocas olas en el ancho: se afina. */
   .pie-mar {
     margin-top: var(--e-8);
-    --nubes-celda: 5;
+    --nubes-celda: 4;
   }
 
   .pie-cierre {

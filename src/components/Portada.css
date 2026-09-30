@@ -49,19 +49,20 @@
   width: max(100%, 44rem);
   height: 50svh;
   margin-top: var(--barra-alto);
-  --nubes-celda: 6;
+  --nubes-celda: 5;
   --nubes-luz: var(--nube-luz);
   --nubes-sombra: var(--nube-sombra);
   --nubes-borde: var(--nube-borde);
-  --nubes-alfa: 0.95;
+  --nubes-alfa: 1;
 }
 
 /* En S el rollo recortado no se entendía: se suelta el ancho mínimo para que
-   quepa entero, y la trama de 6 px, tosca en un lienzo angosto, se afina. */
+   quepa entero, y la trama baja de 5 a 4 px: más fina se deshace en ruido y
+   el rollo deja de leerse. */
 @media (max-width: 479px) {
   .portada-cielo {
     width: 100%;
-    --nubes-celda: 3;
+    --nubes-celda: 4;
   }
 }
 
