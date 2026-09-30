@@ -56,6 +56,12 @@ function Chispa() {
  * como si la tarjeta fuera una ventana sobre él. Cada tarjeta es una zona de
  * plano con su tono, así que el texto hereda colores que ya pasan contraste.
  */
+const SIN_SCRIPT = `
+.vitrina.plegada .vista { display: flex !important; }
+.vitrina.plegada .vitrina-rejilla::before { display: block !important; }
+.vitrina-abrir { display: none !important; }
+`
+
 function Vitrina({ proyecto }) {
   // Si el resumen nombra el dominio del sitio, el enlace va en esas mismas
   // palabras y sobra el «Abrir el sitio» aparte. Si no lo nombra, el enlace
@@ -93,9 +99,17 @@ function Vitrina({ proyecto }) {
   const cierre = FORMAS.indexOf('cierre')
 
   return (
-    <article className="vitrina">
+    // Plegada por defecto: abierta ocupa varias pantallas y tapaba el resto de
+    // la obra. La cabecera se queda a la vista con un botón que la despliega;
+    // lo mueve `vitrina.js`. Sin JavaScript, la hoja de `<noscript>` la deja
+    // abierta y esconde el botón, que ahí no haría nada.
+    <article className="vitrina plegada" id={proyecto.id}>
       <div className="vitrina-rejilla">
-        <div className="vitrina-cabecera entra">
+        {/* La cabecera es una burbuja más de la sección, como las de al lado,
+            y se pulsa entera: el botón se estira por encima de toda la
+            tarjeta (ver `.vitrina-abrir::after`). El enlace a ponlenota.cl
+            queda por encima del botón y se sigue pudiendo abrir aparte. */}
+        <div className="vitrina-cabecera tarjeta entra">
           <h3>{proyecto.nombre}</h3>
           <p className="proyecto-resumen">
             {enLinea ? (
@@ -111,10 +125,26 @@ function Vitrina({ proyecto }) {
             )}
           </p>
           <Enlaces {...proyecto} sitio={enLinea ? null : proyecto.sitio} />
+          <button
+            type="button"
+            className="vitrina-abrir"
+            aria-expanded="false"
+            aria-controls={proyecto.id}
+          >
+            <span className="vitrina-abrir-texto">Ver {proyecto.nombre} por dentro</span>
+            <span className="vitrina-abrir-flecha" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </button>
         </div>
         {tarjetas.slice(0, cierre)}
       </div>
       {tarjetas.slice(cierre)}
+      <noscript>
+        <style dangerouslySetInnerHTML={{ __html: SIN_SCRIPT }} />
+      </noscript>
     </article>
   )
 }

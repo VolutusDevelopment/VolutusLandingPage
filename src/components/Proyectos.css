@@ -98,7 +98,9 @@
 .vitrina {
   display: grid;
   gap: var(--e-4);
-  margin-top: var(--e-12);
+  /* La misma separación que las otras tarjetas de obra (`.proyecto`): la
+     cabecera es una burbuja más y no debe despegarse de sus vecinas. */
+  margin-top: var(--e-8);
   /* Los trazos al margen se pintan dentro de tarjetas de plano, pero quedan
      sobre la página: toman el color de acción de la vitrina, que se resuelve
      aquí y baja ya calculado. */
@@ -111,7 +113,6 @@
 }
 
 .vitrina-cabecera h3 {
-  font-size: var(--texto-xl);
   margin-bottom: var(--e-3);
 }
 
@@ -278,10 +279,11 @@
     view-timeline: --columna-app block;
   }
 
+  /* Es una tarjeta: sin el relleno recortado que tenía cuando era texto
+     suelto sobre la página, y arriba de su celda, junto a la tarjeta alta. */
   .vitrina-cabecera {
     grid-area: cabecera;
-    align-self: end;
-    padding-bottom: var(--e-4);
+    align-self: start;
   }
 
   .vista {
@@ -389,3 +391,109 @@
     transform: rotate(90deg);
   }
 }
+
+/* ---- la vitrina plegada ----
+ *
+ * Abierta ocupa varias pantallas y empujaba el resto de la obra muy abajo.
+ * Plegada queda la cabecera —nombre, resumen y enlace al sitio— con un botón
+ * que la despliega. Las tarjetas salen de la maqueta, y en escritorio la
+ * rejilla vuelve a una columna: sin la tarjeta alta a la derecha, la cabecera
+ * se quedaría en dos tercios con un hueco al lado. */
+
+.vitrina.plegada .vista,
+.vitrina.plegada .vitrina-rejilla::before {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .vitrina.plegada .vitrina-rejilla {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'cabecera';
+  }
+}
+
+/* La cabecera plegable es una burbuja como las del resto de la obra. Todo
+   su contorno responde: el botón es una línea de texto, pero su `::after` se
+   estira sobre la tarjeta entera. */
+.vitrina-cabecera {
+  position: relative;
+  transition: background-color 200ms var(--ease-out);
+}
+
+/* Los enlaces de dentro —el de ponlenota.cl— quedan por encima de esa capa y
+   se pueden abrir sin desplegar nada. */
+.vitrina-cabecera a {
+  position: relative;
+  z-index: 1;
+}
+
+.vitrina-abrir {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-3);
+  margin-top: var(--e-6);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--accion);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vitrina-abrir::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radio-tarjeta);
+}
+
+.vitrina-abrir-flecha {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--tinte-b);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.vitrina-abrir-flecha svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 300ms var(--ease-out);
+}
+
+/* La flecha mira hacia donde va a pasar algo: abajo para abrir, arriba para
+   cerrar. */
+.vitrina-abrir[aria-expanded='true'] .vitrina-abrir-flecha svg {
+  transform: rotate(180deg);
+}
+
+/* Al pasar por cualquier punto de la burbuja, la flecha se enciende. Solo con
+   ratón: en táctil el hover se queda pegado después del toque. */
+@media (hover: hover) {
+  .vitrina-cabecera:has(.vitrina-abrir:hover) .vitrina-abrir-flecha {
+    background: var(--accion);
+    color: var(--sobre-accion);
+  }
+
+  .vitrina-cabecera:has(.vitrina-abrir:hover) {
+    background: color-mix(in srgb, var(--accion) 4%, var(--tinte-a));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitrina-cabecera,
+  .vitrina-abrir-flecha,
+  .vitrina-abrir-flecha svg {
+    transition: none;
+  }
+}
+

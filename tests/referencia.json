@@ -2,41 +2,41 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 9773,
+        "alto": 6505,
         "desborda": false,
         "h1": 172.75,
-        "bloquesQueEntran": 23,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 7697,
+        "alto": 5693,
         "desborda": false,
         "h1": 174.1875,
-        "bloquesQueEntran": 23,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 6766,
+        "alto": 4660,
         "desborda": false,
         "h1": 410.390625,
-        "bloquesQueEntran": 23,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 6766,
+        "alto": 4660,
         "desborda": false,
         "h1": 410.390625,
-        "bloquesQueEntran": 23,
+        "bloquesQueEntran": 24,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/privacidad": {
       "movil": {
-        "alto": 6817,
+        "alto": 6520,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -44,7 +44,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 4562,
+        "alto": 4326,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -52,7 +52,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4360,
+        "alto": 4124,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -60,7 +60,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4360,
+        "alto": 4124,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -71,7 +71,7 @@
   },
   "foco": {
     "/": {
-      "paradas": 27,
+      "paradas": 35,
       "sinAnillo": 0
     },
     "/privacidad": {

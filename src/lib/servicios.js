@@ -27,7 +27,7 @@ export const SERVICIOS = [
     opcion: 'Una página web',
     texto:
       'Abre rápido en el celular, aparece en Google y dice lo que vendes sin rodeos. Como esta, que saca 100 de 100.',
-    enlace: { texto: 'Ver la web de PonleNota', href: '#proyectos' },
+    enlace: { texto: 'Ver la web de PonleNota', href: '#ponlenota' },
     // Pantallazo de ponlenota.cl del 29-09-2026, recortado a 16:9. Si la web
     // cambia, se vuelve a sacar: una captura vieja de un cliente es una prueba
     // que ya no prueba nada.
@@ -53,7 +53,7 @@ export const SERVICIOS = [
     opcion: 'Una app',
     texto:
       'Para tu equipo o para tus clientes, en el navegador o en el celular, conectada a los datos que ya tienes.',
-    enlace: { texto: 'Ver la app de PonleNota', href: '#proyectos' },
+    enlace: { texto: 'Ver la app de PonleNota', href: '#ponlenota' },
   },
   {
     id: 'agente',

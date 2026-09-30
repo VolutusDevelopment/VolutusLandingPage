@@ -14,6 +14,7 @@ import initMarcaInteractiva from './marca-interactiva.js'
 import initMedidores from './medidores.js'
 import initTitularRotativo from './titular-rotativo.js'
 import initServicios from './servicios.js'
+import initVitrina from './vitrina.js'
 
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -136,4 +137,5 @@ export default function init() {
   initMedidores()
   initTitularRotativo()
   initServicios()
+  initVitrina()
 }
