@@ -105,11 +105,12 @@ function Vitrina({ proyecto }) {
     // abierta y esconde el botón, que ahí no haría nada.
     <article className="vitrina plegada" id={proyecto.id}>
       <div className="vitrina-rejilla">
-        {/* La cabecera es una burbuja más de la sección, como las de al lado,
-            y se pulsa entera: el botón se estira por encima de toda la
-            tarjeta (ver `.vitrina-abrir::after`). El enlace a ponlenota.cl
-            queda por encima del botón y se sigue pudiendo abrir aparte. */}
-        <div className="vitrina-cabecera tarjeta entra">
+        {/* La cabecera es una tarjeta del mismo estilo que las que despliega
+            —plano oscuro, esquinas de 28 px y los dos degradados—, así se lee
+            como la tapa de lo que hay dentro. Se pulsa entera: el botón se
+            estira sobre toda la tarjeta (ver `.vitrina-abrir::after`). El
+            enlace a ponlenota.cl queda por encima y se abre aparte. */}
+        <div className="vitrina-cabecera zona-plano entra">
           <h3>{proyecto.nombre}</h3>
           <p className="proyecto-resumen">
             {enLinea ? (

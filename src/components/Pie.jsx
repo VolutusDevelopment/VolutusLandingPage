@@ -1,28 +1,25 @@
-import Marca from './Marca.jsx'
+import { Logotipo } from './Marca.jsx'
 import { CORREO_DE_CONTACTO } from './Contacto.jsx'
 import { PROYECTOS } from '../data/proyectos.js'
 
 /**
  * Pie.
  *
- * Sigue en cielo y forma un solo bloque de cierre con el formulario. Que no
- * cambie de tema no es un olvido: A.4 fija **dos** cortes en toda la página y
- * los dos están gastados, así que un pie oscuro sería un tercero. Es la
- * diferencia con el de PonleNota, que sí es navy porque su página reparte los
- * fondos de otra manera.
+ * Cierra la página en plano, oscuro, con el nombre a todo lo ancho: es lo
+ * último que se ve y se queda como una firma. Debajo, los enlaces agrupados por
+ * para qué sirven y separados por líneas discontinuas, y la línea legal.
  *
- * De ahí sí se toma la anatomía, que es lo que aquí faltaba: a la izquierda la
- * identidad —marca, una línea de qué somos y el correo—, a la derecha los
- * enlaces agrupados por para qué sirven. Antes era una fila plana donde el
- * aviso legal y el enlace de privacidad pesaban lo mismo.
+ * El logotipo grande es decoración: la marca ya enlaza a la portada desde la
+ * barra, así que aquí no es un enlace y se esconde del lector de pantalla. La
+ * palabra va en `content` del CSS y no en el HTML, para que no compita con el
+ * titular como texto de la página.
  *
- * **La columna de obra se genera desde `PROYECTOS`.** No es floritura: es la
- * misma lista que pinta el índice, así que el día que un proyecto entre o
- * salga, el pie se entera solo. Un pie con enlaces a obra que ya no está es
- * exactamente lo que esta página no se puede permitir.
+ * **La columna de obra se genera desde `PROYECTOS`.** Es la misma lista que
+ * pinta el índice, así que el día que un proyecto entre o salga, el pie se
+ * entera solo.
  *
  * Sigue sin llevar perfiles personales de GitHub ni LinkedIn: §4 lo prohíbe.
- * Lo que se enlaza es el código, y eso es justamente la columna del medio.
+ * Lo que se enlaza es el código, y eso es justamente la columna de obra.
  */
 
 const ANCLAS = [
@@ -46,21 +43,12 @@ export default function Pie({ enHome = true }) {
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
 
   return (
-    <footer className="pie zona-cielo">
-      <div className="contenedor pie-interior">
-        <div className="pie-identidad">
-          <a className="pie-marca" href="/" aria-label="Volutus, ir a la portada">
-            <Marca />
-          </a>
-
-          <p className="pie-lema">
-            Software que puedes abrir y revisar. Cuéntanos qué necesitas y te respondemos en menos
-            de 48 horas hábiles.
-          </p>
-
-          <p className="pie-correo">
-            <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
-          </p>
+    <footer className="pie zona-plano">
+      <div className="contenedor">
+        <div className="pie-logotipo" aria-hidden="true">
+          <span className="pie-logotipo-cuerpo">
+            <Logotipo className="pie-logotipo-svg" />
+          </span>
         </div>
 
         <nav className="pie-columnas" aria-label="Pie de página">
@@ -82,16 +70,24 @@ export default function Pie({ enHome = true }) {
             ))}
           </Columna>
 
-          <Columna titulo="Legal">
+          <Columna titulo="Escríbenos">
             <li>
-              <a href="/privacidad">Privacidad</a>
+              <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
             </li>
           </Columna>
         </nav>
+
+        <div className="pie-cierre">
+          <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
+          <a href="/privacidad">Privacidad</a>
+        </div>
       </div>
 
-      <div className="contenedor pie-cierre">
-        <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
+      {/* La página termina en el suelo de la portada, de noche: las sombras de
+          las nubes cruzándolo. Va después de todo el texto para no tener nada
+          encima. */}
+      <div className="pie-suelo">
+        <canvas className="nubes" data-vista="suelo" aria-hidden="true" />
       </div>
     </footer>
   )

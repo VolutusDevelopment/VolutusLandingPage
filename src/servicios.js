@@ -13,6 +13,12 @@ export default function initServicios() {
   const servicios = [...document.querySelectorAll('.servicio')]
   if (!servicios.length) return
 
+  // La vuelta es cosa del escritorio, donde hay columnas que girar; en el
+  // celular el panel cambia debajo de las fichas. Y nunca con menos movimiento.
+  const conGiro = () =>
+    matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches &&
+    document.documentElement.dataset.movimiento !== 'reducido'
+
   function abrir(elegido) {
     for (const servicio of servicios) {
       const abierto = servicio === elegido
@@ -31,7 +37,17 @@ export default function initServicios() {
     panel.setAttribute('role', 'region')
     panel.setAttribute('aria-labelledby', boton.id)
     boton.addEventListener('click', () => {
-      if (!servicio.classList.contains('activo')) abrir(servicio)
+      if (servicio.classList.contains('activo')) return
+      abrir(servicio)
+      if (!conGiro()) return
+      // El giro solo al pulsar, no al cargar. La clase se quita y se vuelve a
+      // poner para que la animación arranque de cero en cada clic.
+      servicio.classList.remove('gira')
+      void servicio.offsetWidth
+      servicio.classList.add('gira')
+    })
+    servicio.addEventListener('animationend', (evento) => {
+      if (evento.animationName === 'servicio-rota') servicio.classList.remove('gira')
     })
   }
 

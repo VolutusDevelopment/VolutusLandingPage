@@ -135,10 +135,10 @@
      12 px, y se acota a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
 
-  /* Lo que mide la barra. Lo que se queda pegado al desplazar —la tarjeta
-     de la app en la vitrina de proyectos— se pega debajo de ella, y sin esto
-     quedaría tapado por su borde de abajo. */
-  --barra-alto: 65px;
+  /* Lo que ocupa la barra fija (la de la rama de Diego). Lo leen el scroll a
+     anclas y lo que se pega arriba al desplazar —la tarjeta de la app en la
+     vitrina—, para quedar siempre por debajo de ella. */
+  --barra-alto: 64px;
 
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
      `ease-out` a secas apenas se distingue de lineal.
@@ -157,6 +157,12 @@
   --t-pulsar: 160ms;
   --t-panel: 180ms;
   --t-entrada: 500ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --barra-alto: 84px;
+  }
 }
 
 /* ============ Tema cielo: la página promete ============
@@ -187,6 +193,7 @@
 
   /* La marca NUNCA es texto ni botón sobre claro: da 2.48:1. Solo superficies. */
   --marca: #38a9e8;
+  --ciruela: #543b4e;
   --accion: #116492;
   --accion-hover: #0f5780;
   --accion-activa: #0c4565;
@@ -197,6 +204,15 @@
   --error: #b3261e;
 
   --foco: #116492;
+
+  /* El vidrio de la barra (rama de Diego). El brillo es la luz que entra por
+     arriba y las sombras interiores dibujan el canto sin necesidad de borde. */
+  --vidrio: rgb(255 255 255 / 0.72);
+  --vidrio-brillo: rgb(255 255 255 / 0.34);
+  --vidrio-canto:
+    inset 0 1px 0 rgb(255 255 255 / 0.92), inset 0 -1px 0 rgb(255 255 255 / 0.4),
+    inset 0 0 0 0.5px rgb(0 0 0 / 0.05), 0 1px 2px rgb(0 0 0 / 0.03), 0 10px 28px -12px rgb(0 0 0 / 0.12);
+  --vidrio-halo: rgb(255 255 255 / 0.22);
 
   /* Superficies tintadas de las tarjetas de proyectos. */
   --tinte-a: #ffffff;
@@ -220,6 +236,7 @@
   --linea: #1e3348;
 
   --marca: #38a9e8;
+  --ciruela: #e2b6cf;
   --accion: #38a9e8;
   --accion-hover: #6dc0ef;
   --accion-activa: #8fd0f4;
@@ -230,6 +247,13 @@
   --error: #ff8a80;
 
   --foco: #38a9e8;
+
+  --vidrio: rgb(14 17 24 / 0.42);
+  --vidrio-brillo: rgb(255 255 255 / 0.16);
+  --vidrio-canto:
+    inset 0 1px 0 rgb(255 255 255 / 0.3), inset 0 -1px 0 rgb(255 255 255 / 0.08),
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px -14px rgb(0 0 0 / 0.55);
+  --vidrio-halo: rgb(10 12 18 / 0.3);
 
   /* Superficies tintadas y lámina de las tarjetas sin tono propio (el paso 03
      y «La app del negocio»). En la rama de Diego el plano es verde bosque;
@@ -300,8 +324,8 @@
 
 html {
   scroll-behavior: smooth;
-  /* La barra mide 64 px; el ancla no debe quedar debajo de ella. */
-  scroll-padding-top: 80px;
+  /* El ancla cae por debajo de la barra, que mide distinto según la pantalla. */
+  scroll-padding-top: calc(var(--barra-alto) + var(--e-4));
   /* El fondo del documento es el de la portada: lo que se ve al rebotar el
      scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
      no en token porque <html> está por encima de cualquier zona y no hereda
@@ -692,6 +716,24 @@ svg {
 .boton:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+/* El lienzo de las nubes (src/nubes.js). Ocupa su contenedor sin mover el
+   layout y aparece con un fundido cuando pinta su primer fotograma; hasta
+   entonces, o sin WebGL, es transparente. El color lo decide quien lo
+   contiene, con `--nubes-cerca`, `--nubes-lejos` y `--nubes-alfa`. */
+.nubes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease-out);
+  pointer-events: none;
+}
+
+.nubes.vivo {
+  opacity: 1;
 }
 
 .tarjeta {

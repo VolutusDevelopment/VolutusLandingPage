@@ -116,7 +116,8 @@
      ser una ficha de la rejilla y el panel, una pieza aparte que se va al
      final y ocupa las dos columnas. Es un `div` sin papel propio, así que
      quitarlo de la maqueta no le quita nada al lector de pantalla. */
-  .servicio {
+  .servicio,
+  .servicio-cara {
     display: contents;
   }
 
@@ -182,6 +183,14 @@
 
   .servicio.activo {
     flex-grow: 3;
+  }
+
+  /* La cara ocupa la columna entera: es la que se estira y la que rota. */
+  .servicio-cara {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
   }
 
   /* Cerrada, la columna entera es el botón: el título que lo envuelve se
@@ -300,4 +309,28 @@
   height: 100%;
   object-fit: cover;
   object-position: top left;
+}
+
+/* ---- el giro al pulsar (escritorio) ----
+ *
+ * Al elegir una columna se quita el nombre vertical y aparece el contenido
+ * DE PIE —girado 90°, como estaba el nombre— y rota hasta quedar horizontal
+ * mientras la columna se ensancha. Es una rotación plana y no un volteo en 3D:
+ * el volteo se leía como un espejo.
+ *
+ * Gira sobre su centro. Así, al principio, un contenido más ancho que la
+ * columna se ve de pie a lo largo de ella, y termina de tumbarse justo cuando
+ * la columna ya tiene su ancho. Misma curva y casi la misma duración que el
+ * ensanche (500 ms), para que las dos cosas ocurran a la vez. */
+@keyframes servicio-rota {
+  from {
+    transform: rotate(90deg);
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .servicio.gira .servicio-cara {
+    transform-origin: 50% 50%;
+    animation: servicio-rota 520ms var(--ease-in-out);
+  }
 }

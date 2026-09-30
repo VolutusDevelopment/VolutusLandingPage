@@ -417,7 +417,20 @@
    estira sobre la tarjeta entera. */
 .vitrina-cabecera {
   position: relative;
-  transition: background-color 200ms var(--ease-out);
+  border-radius: 28px;
+  padding: var(--e-8) var(--e-6);
+  color: var(--texto);
+  background:
+    radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--marca) 35%, transparent), transparent 70%),
+    radial-gradient(80% 90% at 0% 100%, var(--lamina), transparent 70%),
+    var(--fondo);
+  transition: filter 200ms var(--ease-out);
+}
+
+@media (min-width: 1024px) {
+  .vitrina-cabecera {
+    padding: var(--e-12);
+  }
 }
 
 /* Los enlaces de dentro —el de ponlenota.cl— quedan por encima de esa capa y
@@ -445,7 +458,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--radio-tarjeta);
+  border-radius: inherit;
 }
 
 .vitrina-abrir-flecha {
@@ -454,7 +467,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--tinte-b);
+  /* Tinte de acción y no de superficie: sobre la tarjeta oscura un círculo
+     del color del fondo desaparecía, y es justo la pieza que invita. */
+  background: color-mix(in srgb, var(--accion) 20%, transparent);
   transition:
     background-color 200ms var(--ease-out),
     color 200ms var(--ease-out);
@@ -485,7 +500,7 @@
   }
 
   .vitrina-cabecera:has(.vitrina-abrir:hover) {
-    background: color-mix(in srgb, var(--accion) 4%, var(--tinte-a));
+    filter: brightness(1.12);
   }
 }
 
@@ -497,3 +512,21 @@
   }
 }
 
+
+/* ---- el despliegue ----
+ *
+ * La vitrina crece y se encoge en altura en vez de aparecer de golpe. La altura
+ * de llegada no se conoce en CSS —depende del ancho y de las capturas—, así
+ * que `vitrina.js` la mide, la fija en píxeles durante el viaje y la suelta al
+ * llegar. Mientras dura, lo que sobresale se recorta: se ve como una tapa que
+ * se abre sobre el contenido. */
+.vitrina.desplegando {
+  overflow: hidden;
+  transition: height 650ms var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitrina.desplegando {
+    transition: none;
+  }
+}

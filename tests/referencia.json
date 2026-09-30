@@ -2,7 +2,7 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 6505,
+        "alto": 6558,
         "desborda": false,
         "h1": 172.75,
         "bloquesQueEntran": 24,
@@ -10,7 +10,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 5693,
+        "alto": 5758,
         "desborda": false,
         "h1": 174.1875,
         "bloquesQueEntran": 24,
@@ -18,7 +18,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4660,
+        "alto": 4723,
         "desborda": false,
         "h1": 410.390625,
         "bloquesQueEntran": 24,
@@ -26,7 +26,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4660,
+        "alto": 4723,
         "desborda": false,
         "h1": 410.390625,
         "bloquesQueEntran": 24,
@@ -36,7 +36,7 @@
     },
     "/privacidad": {
       "movil": {
-        "alto": 6520,
+        "alto": 6519,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -44,7 +44,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 4326,
+        "alto": 4357,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -52,7 +52,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4124,
+        "alto": 4155,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -60,7 +60,7 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4124,
+        "alto": 4155,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -71,11 +71,11 @@
   },
   "foco": {
     "/": {
-      "paradas": 35,
+      "paradas": 36,
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 17,
+      "paradas": 18,
       "sinAnillo": 0
     }
   }

@@ -139,48 +139,52 @@ export default function Servicios() {
         >
           {SERVICIOS.map((servicio, i) => (
             <div key={servicio.id} className={`servicio${i === 0 ? ' activo' : ''}`}>
-              <h3 className="servicio-titulo">
-                <button type="button" className="servicio-boton" id={`servicio-${servicio.id}-boton`}>
-                  <Icono id={servicio.id} />
-                  <span className="servicio-nombre">{servicio.nombre}</span>
-                </button>
-              </h3>
+              {/* La cara de la tarjeta: título y contenido juntos, para que la
+                  rotación al abrir los gire como una sola pieza. */}
+              <div className="servicio-cara">
+                <h3 className="servicio-titulo">
+                  <button type="button" className="servicio-boton" id={`servicio-${servicio.id}-boton`}>
+                    <Icono id={servicio.id} />
+                    <span className="servicio-nombre">{servicio.nombre}</span>
+                  </button>
+                </h3>
 
-              <div className="servicio-panel" id={`servicio-${servicio.id}`}>
-                {/* En el celular el nombre de arriba es una ficha pequeña de la
-                    rejilla, así que el panel repite el nombre como título.
-                    Para el lector de pantalla ya lo dice el botón. */}
-                <p className="servicio-panel-titulo" aria-hidden="true">
-                  {servicio.nombre}
-                </p>
-                <p className="servicio-texto">{servicio.texto}</p>
-                {servicio.enlace && (
-                  <p>
-                    <a
-                      className="boton boton-secundario"
-                      href={servicio.enlace.href}
-                      {...(servicio.enlace.href.startsWith('http') && { rel: 'noopener' })}
-                    >
-                      {servicio.enlace.texto}
-                    </a>
+                <div className="servicio-panel" id={`servicio-${servicio.id}`}>
+                  {/* En el celular el nombre de arriba es una ficha pequeña de la
+                      rejilla, así que el panel repite el nombre como título.
+                      Para el lector de pantalla ya lo dice el botón. */}
+                  <p className="servicio-panel-titulo" aria-hidden="true">
+                    {servicio.nombre}
                   </p>
-                )}
-                {servicio.imagen ? (
-                  <div className="servicio-captura">
-                    <img
-                      src={servicio.imagen.src}
-                      srcSet={servicio.imagen.srcSet}
-                      sizes="(min-width: 1024px) 40rem, 100vw"
-                      width={servicio.imagen.ancho}
-                      height={servicio.imagen.alto}
-                      alt={servicio.imagen.alt}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                ) : (
-                  <Lamina giro={i * 90} tono={TONOS[i]} />
-                )}
+                  <p className="servicio-texto">{servicio.texto}</p>
+                  {servicio.enlace && (
+                    <p>
+                      <a
+                        className="boton boton-secundario"
+                        href={servicio.enlace.href}
+                        {...(servicio.enlace.href.startsWith('http') && { rel: 'noopener' })}
+                      >
+                        {servicio.enlace.texto}
+                      </a>
+                    </p>
+                  )}
+                  {servicio.imagen ? (
+                    <div className="servicio-captura">
+                      <img
+                        src={servicio.imagen.src}
+                        srcSet={servicio.imagen.srcSet}
+                        sizes="(min-width: 1024px) 40rem, 100vw"
+                        width={servicio.imagen.ancho}
+                        height={servicio.imagen.alto}
+                        alt={servicio.imagen.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <Lamina giro={i * 90} tono={TONOS[i]} />
+                  )}
+                </div>
               </div>
             </div>
           ))}
