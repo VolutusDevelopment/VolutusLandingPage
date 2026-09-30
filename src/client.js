@@ -9,7 +9,6 @@
 // funciona sin él: el <form> lleva method y action, así que sin JavaScript el
 // navegador envía y recarga. Esto solo valida antes y evita la recarga.
 
-import { montarAccesibilidad } from './accesibilidad/widget.js'
 import initMedidores from './medidores.js'
 import initTitularRotativo from './titular-rotativo.js'
 import initServicios from './servicios.js'
@@ -133,7 +132,6 @@ function initFormulario() {
 
 export default function init() {
   initFormulario()
-  montarAccesibilidad()
   initMedidores()
   initTitularRotativo()
   initServicios()

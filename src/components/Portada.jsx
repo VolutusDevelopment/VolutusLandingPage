@@ -10,9 +10,9 @@
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
  * rollo que da nombre a la marca, en volumen y de puntos finos, con luz,
  * sombra y un filo dorado, rodando despacio sobre su eje; el cursor la mueve
- * como viento (ver nubes-lienzo.js). En L y XL es la base de la portada, a
- * todo el ancho, y el titular va centrado sobre el cielo; en M y S va arriba
- * y el texto debajo, sin empujarlo nunca. La página baja por las horas del día hasta la
+ * como viento (ver nubes-lienzo.js). En L y XL cruza la portada en
+ * perspectiva, detrás del titular centrado; en M y S va arriba y el texto
+ * debajo, sin empujarlo nunca. La página baja por las horas del día hasta la
  * noche del pie (DESIGN-BRIEF A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo

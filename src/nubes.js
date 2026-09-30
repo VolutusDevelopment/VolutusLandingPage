@@ -70,9 +70,10 @@ function montar(pintor, lienzo, id) {
     pintor.postMessage({ tipo: 'activa', id, valor: visible && !document.hidden })
   }
 
-  // Solo ratón o lápiz: con el dedo, moverse es desplazar la página. Como
-  // mucho un aviso por fotograma, y la caja del lienzo se lee en ese
-  // fotograma, no en cada evento.
+  // Ratón y lápiz por `pointermove`; el dedo por `touchmove`, que sigue
+  // llegando mientras la página se desplaza (`pointermove` se cancela en
+  // cuanto empieza el scroll). Nada impide desplazar. Como mucho un aviso por
+  // fotograma, y la caja del lienzo se lee en ese fotograma, no en cada evento.
   function seguirCursor() {
     const seccion = lienzo.closest('section')
     let cursor = null
@@ -84,16 +85,16 @@ function montar(pintor, lienzo, id) {
       }
       cursor = null
     }
-    seccion.addEventListener(
-      'pointermove',
-      (evento) => {
-        if (evento.pointerType === 'touch') return
-        if (!cursor) requestAnimationFrame(soplar)
-        cursor = { x: evento.clientX, y: evento.clientY }
-      },
-      { passive: true },
-    )
-    seccion.addEventListener('pointerleave', () => pintor.postMessage({ tipo: 'viento', id, fuera: true }))
+    const seguir = ({ clientX, clientY }) => {
+      if (!cursor) requestAnimationFrame(soplar)
+      cursor = { x: clientX, y: clientY }
+    }
+    const soltar = () => pintor.postMessage({ tipo: 'viento', id, fuera: true })
+    const pasivo = { passive: true }
+    seccion.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
+    seccion.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
+    seccion.addEventListener('pointerleave', soltar)
+    seccion.addEventListener('touchend', soltar, pasivo)
   }
 
   const offscreen = lienzo.transferControlToOffscreen()

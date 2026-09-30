@@ -13,7 +13,6 @@
 import { readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { PREFLIGHT } from '../src/accesibilidad/preflight.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 
@@ -64,10 +63,6 @@ function cabecera(ruta, { titulo, descripcion }) {
   const d = atributo(descripcion)
 
   return [
-    // El preflight va PRIMERO y es síncrono: aplica el tema y el tamaño de
-    // texto guardados antes de que el navegador pinte nada. Más abajo, o
-    // diferido, produce un fogonazo del tema claro antes del oscuro.
-    `<script>${PREFLIGHT}</script>`,
     `<title>${t}</title>`,
     `<meta name="description" content="${d}" />`,
     `<link rel="canonical" href="${canonical}" />`,

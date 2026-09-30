@@ -114,15 +114,8 @@ const APARTADOS = [
     contenido: (
       <>
         <p>
-          Si usas el panel de accesibilidad —el botón de la esquina— para cambiar el tamaño del
-          texto, el tema o el movimiento, esas tres preferencias se guardan en el almacenamiento
-          local de tu navegador para que no tengas que elegirlas otra vez en cada visita.
-        </p>
-        <p>
-          <strong>Esa información no sale de tu equipo.</strong> No es una cookie, no viaja al
-          servidor, no la recibimos nosotros y no identifica a nadie: son tres valores como
-          «texto grande» y «tema oscuro». Puedes borrarla en cualquier momento pulsando
-          «Restablecer» en el propio panel, o limpiando los datos del sitio desde tu navegador.
+          Este sitio no guarda preferencias de accesibilidad en el almacenamiento local de tu
+          navegador.
         </p>
       </>
     ),

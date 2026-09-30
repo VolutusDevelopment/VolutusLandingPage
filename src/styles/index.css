@@ -344,24 +344,23 @@
    Solo aplican sin tema forzado: quien elige claro u oscuro en el panel de
    accesibilidad recibe las dos zonas de siempre.
 
-   La mañana: un azul intenso arriba que se aclara hasta el blanco de la
-   sección siguiente (`#f6f9fc`, sin costura), acción en azul hondo y el sol
-   dorado. El azul intenso vive detrás de la barra y el logo: el logo da
-   5.1:1 y la barra, con su vidrio, 12.8:1 el texto y 6.7:1 el suave. Donde
-   empieza el titular —nunca antes del 15 % del alto—, el texto da 6.5:1 y la
-   acción, que colorea su primera línea, 4.2:1 (es texto grande: pide 3:1).
-   Blanco sobre la acción, 11.2:1. */
+   La mañana: un cielo azul que se sostiene hasta pasada la mitad y solo
+   entonces se aclara hasta el blanco de la sección siguiente (`#f6f9fc`, sin
+   costura), con la acción en azul hondo. El azul intenso vive detrás de la
+   barra y el logo: el logo da 5.1:1 y la barra, con su vidrio, 12.8:1 el
+   texto y 6.7:1 el suave. Donde empieza el titular —nunca antes del 35 % del
+   alto—, el texto da 6.8:1 y la acción, que colorea su primera línea, 4.4:1
+   (es texto grande: pide 3:1). Blanco sobre la acción, 11.2:1. */
 :root:not([data-tema]) .hora-manana {
   --texto-suave: #2f4a63;
   --accion: #093d66;
   --accion-hover: #073355;
   --accion-activa: #052a47;
   --foco: #093d66;
-  --sol: rgb(255 248 232 / 0.55);
   --nube-luz: #ffffff;
   --nube-sombra: #6a8cb2;
   --nube-borde: #ffd48a;
-  --fondo-hora: linear-gradient(#2b8de4, #5eaaec 20%, #a6d2f5 42%, #e2f0fb 70%, #f6f9fc);
+  --fondo-hora: linear-gradient(#2b8de4, #4d9fea 28%, #7cbcf1 52%, #c2e1f8 76%, #f6f9fc 94%);
 }
 
 /* La noche: azul que se hunde hacia el borde de la página y un mar bajo la
