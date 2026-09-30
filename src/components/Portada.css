@@ -4,10 +4,7 @@
   margin-top: calc(-1 * var(--barra-alto));
   padding-block: 0 var(--e-8);
   position: relative;
-  /* El sol vive detrás de todo sin salirse de la sección: `isolation` crea el
-     apilamiento para su z-index negativo y `clip` evita el scroll lateral sin
-     crear un contenedor de scroll. */
-  isolation: isolate;
+  /* `clip` evita el scroll lateral sin crear un contenedor de scroll. */
   overflow: clip;
 }
 
@@ -51,10 +48,10 @@
   --nubes-alfa: 1;
 }
 
-/* En L y XL la nube es la base de la portada: su lienzo ocupa el 62 % de
-   abajo, a todo el ancho, y su bruma se funde con el blanco de la sección
-   siguiente. El titular va centrado, más ancho para que quepa en tres
-   líneas, sobre el cielo limpio; los botones caen sobre el lomo iluminado. */
+/* En L y XL la nube es el fondo de la portada: su lienzo cubre casi todo el
+   alto y el rollo, en perspectiva, entra enorme por abajo a la izquierda y
+   se aleja hacia arriba a la derecha, pasando detrás del titular. El titular
+   va centrado, más ancho para que quepa en tres líneas. */
 @media (min-width: 1024px) {
   .portada-escena {
     justify-content: center;
@@ -66,8 +63,8 @@
 
   .portada-cielo {
     position: absolute;
-    inset: auto 0 0;
-    height: 62%;
+    inset: 0 0 auto;
+    height: 88%;
     margin: 0;
   }
 
@@ -84,18 +81,6 @@
   .portada-acciones {
     justify-content: center;
   }
-}
-
-/* ---- el sol ----
-   Un resplandor cálido arriba a la derecha, detrás de la nube: de ahí le
-   llega la luz. Solo existe en la mañana (`--sol`). */
-.portada::after {
-  content: '';
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  background: radial-gradient(40rem 30rem at 85% 8%, var(--sol, transparent), transparent);
-  pointer-events: none;
 }
 
 /* ---- la palabra que rota ----

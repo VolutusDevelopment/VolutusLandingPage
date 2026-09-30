@@ -10,11 +10,12 @@
  * imprenta. Cada lienzo dice qué mira:
  *
  *   - `cielo`: una volutus, la nube en rollo que da nombre a la marca, en
- *     volumen de verdad. La cabeza, enorme y redonda, a la izquierda del
- *     centro; el cuerpo cruza el lienzo y sale por la derecha, rodando sobre
- *     su eje. El lomo da al sol, levanta bultos y torres y se dora en el filo;
- *     el vientre queda en sombra. El cursor es viento: la abre a su paso, deja
- *     remolinos detrás y la nube se vuelve a cerrar sola.
+ *     volumen de verdad y en perspectiva: entra enorme por la izquierda y se
+ *     aleja en diagonal hacia el horizonte de la derecha, rodando sobre su
+ *     eje. El lomo da al sol, levanta bultos y torres y se dora en el filo;
+ *     el vientre queda en sombra. El cursor, o el dedo, es una flecha en el
+ *     aire: la corta a su paso, deja una estela revuelta y la nube se vuelve a
+ *     cerrar sola.
  *   - `mar`: el agua bajo la nube, con el horizonte arriba. Las olas ruedan
  *     hacia el frente, la espuma asoma en las crestas, la luz deja su reflejo
  *     al centro y las sombras de las nubes pasan por encima.
@@ -31,11 +32,14 @@
 const INTERVALO = 33
 // El instante que se congela con movimiento reducido: uno con nubes.
 const QUIETO_EN = 4000
-// El rastro del cursor: los últimos tramos que recorrió y cada cuánto entra
-// uno nuevo. 12 tramos de 80 ms guardan un segundo de camino, y a esa edad el
-// viento ya casi se calmó: el tramo que se pisa no deja un salto.
-const TRAMOS = 12
-const CADA_TRAMO = 80
+// El rastro del cursor: los últimos tramos que recorrió, cada cuánto entra uno
+// nuevo y lo mínimo que tiene que avanzar, en px del lienzo. Un tramo por
+// fotograma, así que la punta responde sin esperar. 24 guardan casi un
+// segundo de camino; más viejo, lo que queda es estela que ya se ensanchó y
+// el tramo que se pisa no deja un salto.
+const TRAMOS = 24
+const CADA_TRAMO = 33
+const PASO_MINIMO = 2
 
 const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
@@ -49,18 +53,22 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     que no se calcula por píxel sino por celda: `CAMPO` pinta una textura
 //     con un texel por celda (color y cobertura) y `TRAMA` dibuja con ella los
 //     puntos a resolución completa. Todo va en altos del lienzo, para que la
-//     cabeza sea redonda con cualquier proporción.
-//   - `CAMPO`, la forma: `tubo` da, para cada x, lo que sobra de la cabeza,
-//     la altura del eje y el radio. Es un tubo con cabeza semiesférica, de
-//     radio 0.3 altos que crece un cuarto hacia la derecha —el cuerpo se
-//     acerca y sale del cuadro—, con el eje al 55 % del alto. La cabeza queda
-//     a un décimo del ancho de su borde: en un lienzo ancho la nube cubre casi
-//     todo, como la base que es, y en uno angosto sigue entera. En
-//     `densidad`, `base` es 1 en el eje y 0 en la superficie, y encima va
-//     `borla`: ruido 3D con valor absoluto en cada octava —bultos redondos con
-//     pliegues finos, la coliflor de un cúmulo—, que pesa en el lomo, más
-//     donde se levantan `torres`, y se calma en la punta para que la cabeza se
-//     lea redonda.
+//     sección sea redonda con cualquier proporción.
+//   - `CAMPO`, la forma: un rollo en perspectiva. Entra enorme por la
+//     izquierda, cerca de quien mira, y se aleja en diagonal hacia el
+//     horizonte de la derecha, donde está el sol. `tubo` da, para cada x, la
+//     distancia recorrida a lo largo del rollo, la altura del eje y el radio.
+//     Radio y eje escalan con `f`, que es 1 en el borde izquierdo y se achica
+//     hacia la derecha: el radio va de 0.4 altos a casi nada y el eje sube
+//     hacia el 30 % del alto, así que todo converge como hacia un punto de
+//     fuga. Pasados 2.1 altos (solo en pantallas muy anchas), `f` se queda en
+//     un 15 %: más fino, el rollo sería un hilo y su ruido quedaría más apretado
+//     que las celdas. La distancia a lo largo es la integral de 1/radio, así que los
+//     bultos se achican con la lejanía igual que el grosor. En `densidad`,
+//     `base` es 1 en el eje y 0 en la superficie, y encima va `borla`: ruido
+//     3D con valor absoluto en cada octava —bultos redondos con pliegues
+//     finos, la coliflor de un cúmulo—, que pesa en el lomo y más donde se
+//     levantan `torres`.
 //   - `ruido3` lee una textura de ruido 2D que genera este worker: su canal G
 //     es el R desplazado (37, 17) por cada capa en z, así que una sola lectura
 //     trae dos capas y basta mezclarlas. Es varias veces más barato que
@@ -77,21 +85,28 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     de polvo oscurece los bordes finos, que es lo que le dibuja el relieve a
 //     cada bulto. La luz ambiente es mayor en el lomo que en el vientre. El
 //     brillo resultante va de `sombra` a `luz`, y donde la nube es fina y le
-//     da el sol se dora con `borde` (`oro`). Hacia el borde de abajo la nube
-//     se vuelve bruma: se aclara hacia `luz` y se desvanece, así que su base
-//     se funde con el blanco de la página en vez de terminar en un vientre
-//     oscuro. Hacia el de arriba solo se desvanece, para que el lienzo no
-//     corte en seco las torres más altas.
-//   - El viento del cursor: `tramos` son los últimos tramos que recorrió, en
-//     px del lienzo, y `edades` su edad y lo que duraron. Cada tramo empuja la
-//     nube en su dirección, la hace girar a cada lado —un par de remolinos que
-//     se abren tras el cursor— y le quita densidad donde pasó (`hueco`). Es un
-//     roce, no un golpe: la velocidad se satura (`v / (1 + |v|)`), así que un
-//     gesto brusco no arrastra más que uno firme, el alcance es de unos pocos
-//     centésimos del alto y la densidad baja a lo sumo a la mitad. Todo se
-//     apaga con la edad y se ensancha, como aire que se aquieta. Depende
-//     solo de la posición en pantalla, así que se calcula una vez por celda y
-//     desplaza el rayo entero.
+//     da el sol se dora con `borde` (`oro`). Como la nube lejana se ve más
+//     chica, las distancias hacia el sol y la opacidad de cada paso se miden
+//     en su tamaño real (`escala`): si no, el tramo lejano saldría más
+//     transparente y más oscuro. Además se aclara hacia `luz` con la
+//     distancia, como la bruma del aire. La nube flota sola en el cielo,
+//     así que termina donde termina: el vientre queda en su sombra, bien
+//     definido. Los bordes del lienzo solo se desvanecen para no cortar en
+//     seco una torre alta o un bulto que se asome.
+//   - El viento del cursor, una flecha que rompe el aire: `tramos` son los
+//     últimos tramos que recorrió, en px del lienzo, y `edades` su edad y lo
+//     que duraron. `fuerza` crece con la rapidez: un gesto lento apenas roza
+//     la nube y uno rápido la corta. Cada tramo nace fino (`ancho`) y se
+//     ensancha al envejecer. Recién pasada la punta abre un canal (`hueco`)
+//     que se cierra en medio segundo; detrás, el `desorden` revuelve la nube
+//     con un desplazamiento de ruido 2D que hierve (`caos`), y se calma en unos
+//     dos segundos. Nada empuja en la dirección del trazo ni gira en torno a
+//     él: eso cizalla la nube a lo largo del camino y deja rayas rectas. La
+//     estela se mide desde un punto torcido por el mismo ruido, así que sus
+//     bordes salen rotos y no como una regla, y donde dos tramos se tocan se
+//     toma el mayor, no la suma, o cada unión sería un agujero.
+//     Depende solo de la posición en pantalla, así que se calcula una vez por
+//     celda y desplaza el rayo entero.
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
 //     área proporcional a la cobertura, como una trama de imprenta.
 //   - Mar: `y` va de 0 en el horizonte (arriba) a 1 en el borde de abajo, y
@@ -235,7 +250,7 @@ uniform vec3 luz, sombra, borde;
 uniform sampler2D ruido;
 uniform vec4 tramos[${TRAMOS}];
 uniform vec2 edades[${TRAMOS}];
-float ancho, cabeza, torres;
+float torres;
 mat2 giro;
 float ruido3(vec3 x) {
   vec3 i = floor(x), f = fract(x);
@@ -254,48 +269,47 @@ float borla(vec3 p, int octavas) {
   return v;
 }
 vec3 tubo(float x) {
-  float k = clamp((x - cabeza) / (ancho - cabeza), 0.0, 1.0);
-  return vec3(min(x - cabeza, 0.0), 0.55 - 0.05 * k, 0.3 + 0.075 * k);
+  float f = exp(-0.9 * min(x, 2.1));
+  return vec3((1.0 / f - 1.0) / 0.36 + max(x - 2.1, 0.0) / (0.4 * f), 0.3 + 0.28 * f, 0.4 * f);
 }
 float densidad(vec3 p, int octavas) {
   vec3 e = tubo(p.x);
-  vec3 d = vec3(e.x, p.y - e.y, p.z) / e.z;
+  vec2 d = vec2(p.y - e.y, p.z) / e.z;
   float base = 1.0 - length(d);
   if (base < -0.9) return 0.0;
-  vec3 q = vec3(p.x / 0.3 + t * 0.04, giro * d.yz) * 1.7;
-  float relieve = mix(0.55, 1.1 * torres, smoothstep(0.2, -0.8, d.y)) * mix(0.5, 1.0, smoothstep(-1.0, -0.3, d.x));
+  vec3 q = vec3(e.x + t * 0.04, giro * d) * 1.7;
+  float relieve = mix(0.55, 1.1 * torres, smoothstep(0.2, -0.8, d.x));
   return clamp(2.0 * (base + (borla(q, octavas) - 0.35) * relieve), 0.0, 1.0);
 }
 void main() {
   vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
-  ancho = res.x / res.y;
-  cabeza = 0.3 + 0.1 * ancho;
   giro = mat2(cos(t * 0.09), sin(t * 0.09), -sin(t * 0.09), cos(t * 0.09));
-  vec2 viento = vec2(0.0);
-  float hueco = 0.0;
+  vec2 caos = vec2(ruido3(vec3(p * 12.0, t * 0.8)), ruido3(vec3(p * 12.0 + 5.3, t * 0.8))) - 0.5;
+  vec2 torcido = p + 0.06 * caos;
+  float hueco = 0.0, desorden = 0.0;
   for (int i = 0; i < ${TRAMOS}; i++) {
-    vec2 edad = edades[i];
-    if (edad.x > 3.0) continue;
+    float edad = edades[i].x;
+    if (edad > 2.5) continue;
     vec2 a = tramos[i].xy / res.y, ab = tramos[i].zw / res.y - a;
-    vec2 v = ab / edad.y;
-    v /= 1.0 + length(v);
-    vec2 dp = p - a - ab * clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
-    float alcance = 0.03 + 0.025 * edad.x;
-    float g = exp(-dot(dp, dp) / (alcance * alcance) - edad.x / 0.5);
-    viento += g * (0.04 * v + 0.03 * vec2(-dp.y, dp.x) * (dp.x * v.y - dp.y * v.x) / (alcance * alcance));
-    hueco += g * 0.35 * length(v);
+    float fuerza = 0.15 + 0.85 * smoothstep(0.15, 1.5, length(ab) / edades[i].y);
+    vec2 dp = torcido - a - ab * clamp(dot(torcido - a, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
+    float grosor = 0.035 + 0.08 * edad;
+    float g = fuerza * exp(-dot(dp, dp) / (grosor * grosor) - edad / 0.7);
+    hueco = max(hueco, g * exp(-edad / 0.35));
+    desorden = max(desorden, g * smoothstep(0.0, 0.3, edad));
   }
-  p -= viento;
-  float abre = exp(-1.2 * hueco * (0.5 + ruido3(vec3(p * 14.0, t * 0.5))));
+  p -= 0.25 * desorden * caos;
+  float abre = exp(-4.0 * hueco * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
   vec3 e = tubo(p.x);
-  vec2 d = vec2(e.x, p.y - e.y);
-  float cuerda = 3.0 * e.z * e.z - dot(d, d);
+  float dy = p.y - e.y;
+  float cuerda = 3.0 * e.z * e.z - dy * dy;
   if (cuerda <= 0.0) {
     gl_FragColor = vec4(0.0);
     return;
   }
-  torres = 0.6 + 0.8 * ruido3(vec3(p.x * 2.0 + t * 0.02, 4.0, 7.0));
-  vec3 sol = normalize(vec3(0.55, -0.75, 0.25));
+  torres = 0.6 + 0.8 * ruido3(vec3(e.x * 0.6 + t * 0.02, 4.0, 7.0));
+  float escala = e.z / 0.3;
+  vec3 sol = normalize(vec3(0.55, -0.75, 0.25)) * escala;
   float z = sqrt(cuerda), dz = 2.0 * z / 28.0;
   float transmite = 1.0, brillo = 0.0, oro = 0.0;
   for (int i = 0; i < 28; i++) {
@@ -309,8 +323,8 @@ void main() {
         lejos *= 3.0;
       }
       float directa = exp(-18.0 * hondo);
-      float ambiente = mix(0.12, 0.45, smoothstep(0.4, -0.8, d.y / e.z));
-      float opacidad = 1.0 - exp(-60.0 * rho * dz);
+      float ambiente = mix(0.12, 0.45, smoothstep(0.4, -0.8, dy / e.z));
+      float opacidad = 1.0 - exp(-60.0 * rho * dz / escala);
       brillo += transmite * opacidad * (ambiente + 1.3 * directa * (1.0 - exp(-6.0 * rho)));
       oro += transmite * opacidad * directa * (1.0 - smoothstep(0.0, 0.4, rho));
       transmite *= 1.0 - opacidad;
@@ -320,8 +334,8 @@ void main() {
   float cubre = max(1.0 - transmite, 1e-3);
   vec3 color = mix(sombra, luz, smoothstep(0.15, 1.3, brillo / cubre));
   color = mix(color, borde, 0.8 * clamp(oro / cubre, 0.0, 1.0) * (1.0 - smoothstep(0.2, 0.8, cubre)));
-  color = mix(color, luz, 0.9 * smoothstep(0.55, 0.95, p.y));
-  gl_FragColor = vec4(color, (1.0 - transmite) * smoothstep(0.0, 0.1, p.y) * (1.0 - smoothstep(0.7, 1.0, p.y)));
+  color = mix(color, luz, 0.35 * (1.0 - e.z / 0.4));
+  gl_FragColor = vec4(color, (1.0 - transmite) * smoothstep(0.0, 0.1, p.y) * (1.0 - smoothstep(0.93, 1.0, p.y)));
 }`
 
 const TRAMA = `precision highp float;
@@ -456,9 +470,9 @@ function fijar(escena, poner) {
   }
 }
 
-// Un tramo nuevo cada `CADA_TRAMO`, del punto anterior al actual. La
-// duración topa en 0.1 s: si el cursor estuvo quieto y de pronto se mueve, el
-// tramo es ese movimiento y no la espera.
+// Un tramo nuevo cada `CADA_TRAMO`, del punto anterior al actual, si avanzó
+// al menos `PASO_MINIMO`. La duración topa en 0.1 s: si el cursor estuvo
+// quieto y de pronto se mueve, el tramo es ese movimiento y no la espera.
 function soplar(escena, { x, y, fuera }) {
   const ahora = performance.now()
   const { previo } = escena
@@ -466,7 +480,7 @@ function soplar(escena, { x, y, fuera }) {
     escena.previo = null
   } else if (!previo) {
     escena.previo = { x, y, t: ahora }
-  } else if (ahora - previo.t >= CADA_TRAMO) {
+  } else if (ahora - previo.t >= CADA_TRAMO && Math.hypot(x - previo.x, y - previo.y) >= PASO_MINIMO) {
     const i = escena.siguiente
     escena.tramos.set([previo.x, previo.y, x, y], i * 4)
     escena.nacidos[i] = ahora
