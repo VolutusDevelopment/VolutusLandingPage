@@ -4,6 +4,8 @@ dist
 .prerender
 *.local
 .DS_Store
+.vercel
+.env
 .playwright-mcp
 
 # Secretos locales del Worker. Aquí va RESEND_API_KEY para `wrangler dev`, y en
