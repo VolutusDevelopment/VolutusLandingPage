@@ -32,14 +32,16 @@
 const INTERVALO = 33
 // El instante que se congela con movimiento reducido: uno con nubes.
 const QUIETO_EN = 4000
-// El rastro del cursor: los últimos tramos que recorrió, cada cuánto entra uno
-// nuevo y lo mínimo que tiene que avanzar, en px del lienzo. Un tramo por
-// fotograma, así que la punta responde sin esperar. 24 guardan casi un
-// segundo de camino; más viejo, lo que queda es estela que ya se ensanchó y
-// el tramo que se pisa no deja un salto.
-const TRAMOS = 24
-const CADA_TRAMO = 33
-const PASO_MINIMO = 2
+// El aire bajo la nube (ver `simular`). El paso de tiempo es fijo, el de un
+// fotograma: con uno real, una pestaña que se atasca daría un salto enorme.
+// Cada celda del fluido cubre 3×3 celdas de la trama. La presión se resuelve
+// con 20 vueltas de Jacobi, que bastan para que el aire no se comprima a la
+// vista. La ráfaga del cursor topa en `RAPIDEZ_MAXIMA` altos por segundo, así
+// que un tirón brusco no revienta la simulación.
+const DT = INTERVALO / 1000
+const CELDAS_POR_AIRE = 3
+const VUELTAS_DE_PRESION = 20
+const RAPIDEZ_MAXIMA = 2
 
 const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
@@ -93,20 +95,31 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     así que termina donde termina: el vientre queda en su sombra, bien
 //     definido. Los bordes del lienzo solo se desvanecen para no cortar en
 //     seco una torre alta o un bulto que se asome.
-//   - El viento del cursor, una flecha que rompe el aire: `tramos` son los
-//     últimos tramos que recorrió, en px del lienzo, y `edades` su edad y lo
-//     que duraron. `fuerza` crece con la rapidez: un gesto lento apenas roza
-//     la nube y uno rápido la corta. Cada tramo nace fino (`ancho`) y se
-//     ensancha al envejecer. Recién pasada la punta abre un canal (`hueco`)
-//     que se cierra en medio segundo; detrás, el `desorden` revuelve la nube
-//     con un desplazamiento de ruido 2D que hierve (`caos`), y se calma en unos
-//     dos segundos. Nada empuja en la dirección del trazo ni gira en torno a
-//     él: eso cizalla la nube a lo largo del camino y deja rayas rectas. La
-//     estela se mide desde un punto torcido por el mismo ruido, así que sus
-//     bordes salen rotos y no como una regla, y donde dos tramos se tocan se
-//     toma el mayor, no la suma, o cada unión sería un agujero.
-//     Depende solo de la posición en pantalla, así que se calcula una vez por
-//     celda y desplaza el rayo entero.
+//   - El viento: `CAMPO` lee en su celda el `estado` del aire (ver el fluido,
+//     más abajo) y corre el rayo entero lo que el aire movió la nube; donde
+//     entró aire seco, la adelgaza, con un ruido que le rompe el borde.
+//   - El fluido: aire de verdad, en una rejilla chica, con *Stable Fluids*
+//     (Stam, 1999) y *vorticity confinement* (Fedkiw, Stam y Jensen, 2001).
+//     Las velocidades van en altos por segundo y las derivadas en celdas, que
+//     da el mismo resultado salvo una escala, y la proyección no la ve. Cada
+//     paso es una ley:
+//       · `FUERZA`: el cursor empuja el aire a lo largo del tramo que recorrió
+//         en el fotograma. El radio y la velocidad escalan con la `cercania`
+//         de la nube bajo el cursor: el mismo soplo mueve remolinos grandes en
+//         la parte cercana y chicos en la lejana, como visto de lejos.
+//       · `ROTOR` y `CONFINA`: la vorticidad, y una fuerza que la devuelve a
+//         los remolinos que la rejilla gruesa iría borrando. Así los bordes del
+//         chorro se enrollan y un gesto rápido deja una estela turbulenta.
+//       · `DIVERGENCIA`, `PRESION` y `GRADIENTE`: el aire no se comprime. Se
+//         resuelve la presión y se le resta su gradiente a la velocidad: el
+//         aire delante del cursor se aparta y lo rodea, y detrás se cierra.
+//       · `ADVECCION`: el aire se lleva a sí mismo (semi-lagrangiana) y pierde
+//         velocidad con la viscosidad, así que se calma solo.
+//       · `ESTADO`: el aire se lleva lo que la nube guarda de él. En `rg` va
+//         cuánto la movió, que se relaja hacia cero porque el frente de viento
+//         que forma la volutus la vuelve a armar, y topa en 0.06 altos. En `b`
+//         va el aire seco que la turbulencia mezcla dentro (*entrainment*):
+//         nace donde el rotor es fuerte y se evapora en un segundo.
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
 //     área proporcional a la cobertura, como una trama de imprenta.
 //   - Mar: `y` va de 0 en el horizonte (arriba) a 1 en el borde de abajo, y
@@ -163,6 +176,14 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 const PUNTO = `
 float punto(vec2 px, vec2 c, float r) {
   return 1.0 - smoothstep(r - 0.75, r + 0.75, length(px - c));
+}`
+
+// `cercania`: la escala de profundidad del rollo en cada x, en altos. 1 en el
+// borde izquierdo, y a partir de `FONDO` se queda en un 15 %.
+const PERSPECTIVA = `
+const float FONDO = 2.1;
+float cercania(float x) {
+  return exp(-0.9 * min(x, FONDO));
 }`
 
 const MAR = `precision highp float;
@@ -247,9 +268,8 @@ const CAMPO = `precision highp float;
 uniform vec2 res;
 uniform float t, celda;
 uniform vec3 luz, sombra, borde;
-uniform sampler2D ruido;
-uniform vec4 tramos[${TRAMOS}];
-uniform vec2 edades[${TRAMOS}];
+uniform sampler2D ruido, estado;
+${PERSPECTIVA}
 float torres;
 mat2 giro;
 float ruido3(vec3 x) {
@@ -269,8 +289,8 @@ float borla(vec3 p, int octavas) {
   return v;
 }
 vec3 tubo(float x) {
-  float f = exp(-0.9 * min(x, 2.1));
-  return vec3((1.0 / f - 1.0) / 0.36 + max(x - 2.1, 0.0) / (0.4 * f), 0.3 + 0.28 * f, 0.4 * f);
+  float f = cercania(x);
+  return vec3((1.0 / f - 1.0) / 0.36 + max(x - FONDO, 0.0) / (0.4 * f), 0.3 + 0.28 * f, 0.4 * f);
 }
 float densidad(vec3 p, int octavas) {
   vec3 e = tubo(p.x);
@@ -284,22 +304,9 @@ float densidad(vec3 p, int octavas) {
 void main() {
   vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
   giro = mat2(cos(t * 0.09), sin(t * 0.09), -sin(t * 0.09), cos(t * 0.09));
-  vec2 caos = vec2(ruido3(vec3(p * 12.0, t * 0.8)), ruido3(vec3(p * 12.0 + 5.3, t * 0.8))) - 0.5;
-  vec2 torcido = p + 0.06 * caos;
-  float hueco = 0.0, desorden = 0.0;
-  for (int i = 0; i < ${TRAMOS}; i++) {
-    float edad = edades[i].x;
-    if (edad > 2.5) continue;
-    vec2 a = tramos[i].xy / res.y, ab = tramos[i].zw / res.y - a;
-    float fuerza = 0.15 + 0.85 * smoothstep(0.15, 1.5, length(ab) / edades[i].y);
-    vec2 dp = torcido - a - ab * clamp(dot(torcido - a, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
-    float grosor = 0.035 + 0.08 * edad;
-    float g = fuerza * exp(-dot(dp, dp) / (grosor * grosor) - edad / 0.7);
-    hueco = max(hueco, g * exp(-edad / 0.35));
-    desorden = max(desorden, g * smoothstep(0.0, 0.3, edad));
-  }
-  p -= 0.25 * desorden * caos;
-  float abre = exp(-4.0 * hueco * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
+  vec3 aire = texture2D(estado, p * vec2(res.y / res.x, 1.0)).xyz;
+  p -= aire.xy;
+  float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
   vec3 e = tubo(p.x);
   float dy = p.y - e.y;
   float cuerda = 3.0 * e.z * e.z - dy * dy;
@@ -351,6 +358,78 @@ void main() {
   gl_FragColor = vec4(m.rgb * a, a);
 }`
 
+// El fluido, una pasada por ley (ver arriba). `en` lee la celda vecina.
+const MALLA = `precision highp float;
+uniform vec2 malla;
+uniform float dt;
+uniform sampler2D uno, dos, tres;
+vec4 en(sampler2D s, float x, float y) {
+  return texture2D(s, (gl_FragCoord.xy + vec2(x, y)) / malla);
+}`
+
+const FUERZA = `${MALLA}
+${PERSPECTIVA}
+uniform vec4 tramo;
+uniform vec2 empuje;
+void main() {
+  vec2 p = gl_FragCoord.xy / malla.y, a = tramo.xy, ab = tramo.zw - a;
+  vec2 d = p - a - ab * clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
+  float f = cercania(tramo.z), r = max(0.03 * f, 1.5 / malla.y);
+  gl_FragColor = vec4(en(uno, 0.0, 0.0).xy + 0.4 * f * empuje * exp(-dot(d, d) / (r * r)), 0.0, 1.0);
+}`
+
+const ROTOR = `${MALLA}
+void main() {
+  float w = en(uno, 1.0, 0.0).y - en(uno, -1.0, 0.0).y - en(uno, 0.0, 1.0).x + en(uno, 0.0, -1.0).x;
+  gl_FragColor = vec4(0.5 * w, 0.0, 0.0, 1.0);
+}`
+
+const CONFINA = `${MALLA}
+void main() {
+  vec2 n = 0.5 * vec2(abs(en(dos, 0.0, 1.0).x) - abs(en(dos, 0.0, -1.0).x), abs(en(dos, 1.0, 0.0).x) - abs(en(dos, -1.0, 0.0).x));
+  n /= length(n) + 1e-4;
+  gl_FragColor = vec4(en(uno, 0.0, 0.0).xy + dt * 6.0 * en(dos, 0.0, 0.0).x * vec2(n.x, -n.y), 0.0, 1.0);
+}`
+
+const DIVERGENCIA = `${MALLA}
+void main() {
+  float d = en(uno, 1.0, 0.0).x - en(uno, -1.0, 0.0).x + en(uno, 0.0, 1.0).y - en(uno, 0.0, -1.0).y;
+  gl_FragColor = vec4(0.5 * d, 0.0, 0.0, 1.0);
+}`
+
+const PRESION = `${MALLA}
+void main() {
+  float vecinas = en(uno, 1.0, 0.0).x + en(uno, -1.0, 0.0).x + en(uno, 0.0, 1.0).x + en(uno, 0.0, -1.0).x;
+  gl_FragColor = vec4(0.25 * (vecinas - en(dos, 0.0, 0.0).x), 0.0, 0.0, 1.0);
+}`
+
+const GRADIENTE = `${MALLA}
+void main() {
+  vec2 g = vec2(en(uno, 1.0, 0.0).x - en(uno, -1.0, 0.0).x, en(uno, 0.0, 1.0).x - en(uno, 0.0, -1.0).x);
+  gl_FragColor = vec4(en(dos, 0.0, 0.0).xy - 0.5 * g, 0.0, 1.0);
+}`
+
+// `atras`: de dónde vino, hace un paso, el aire de esta celda. Las velocidades
+// van en altos por segundo y la textura mide `malla.x / malla.y` altos de ancho.
+const ATRAS = `${MALLA}
+vec2 atras() {
+  return gl_FragCoord.xy / malla - dt * en(uno, 0.0, 0.0).xy * malla.y / malla;
+}`
+
+const ADVECCION = `${ATRAS}
+void main() {
+  gl_FragColor = vec4(texture2D(uno, atras()).xy * exp(-dt / 0.8), 0.0, 1.0);
+}`
+
+const ESTADO = `${ATRAS}
+void main() {
+  vec3 antes = texture2D(dos, atras()).xyz;
+  vec2 movio = (antes.xy + dt * en(uno, 0.0, 0.0).xy) * exp(-dt / 2.5);
+  movio *= min(1.0, 0.06 / (length(movio) + 1e-6));
+  float seco = antes.z * exp(-dt) + dt * 4.0 * abs(en(tres, 0.0, 0.0).x);
+  gl_FragColor = vec4(movio, min(seco, 1.0), 1.0);
+}`
+
 // `requestAnimationFrame` dentro de un worker es reciente; sin él, un reloj.
 const cuadro = self.requestAnimationFrame ?? ((f) => setTimeout(() => f(performance.now()), 16))
 
@@ -363,9 +442,10 @@ const inicio = performance.now()
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
-const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'tramos', 'edades']
+const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'estado']
+const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
-function compilar(gl, fragmentos) {
+function compilar(gl, fragmentos, uniforms = UNIFORMS) {
   const programa = gl.createProgram()
   for (const [tipo, fuente] of [
     [gl.VERTEX_SHADER, VERTICES],
@@ -380,7 +460,7 @@ function compilar(gl, fragmentos) {
   gl.linkProgram(programa)
   if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) return null
   const u = { programa }
-  for (const nombre of UNIFORMS) u[nombre] = gl.getUniformLocation(programa, nombre)
+  for (const nombre of uniforms) u[nombre] = gl.getUniformLocation(programa, nombre)
   return u
 }
 
@@ -405,26 +485,74 @@ function texturaDeRuido(gl) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
 }
 
-// La textura de una celda por texel, en la unidad 1, y el framebuffer que
-// escribe en ella. Su tamaño lo pone `medir`.
-function laminaDeCampo(gl) {
-  const lamina = gl.createTexture()
-  gl.activeTexture(gl.TEXTURE1)
-  gl.bindTexture(gl.TEXTURE_2D, lamina)
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
+// Una textura con el framebuffer que escribe en ella, en la unidad activa. La
+// del campo guarda bytes y no se filtra: una celda por texel. Las del aire
+// guardan medio float y se leen interpoladas. El tamaño lo pone `medir`.
+function lamina(gl, tipo, filtro) {
+  const textura = gl.createTexture()
+  gl.bindTexture(gl.TEXTURE_2D, textura)
   for (const [clave, valor] of [
-    [gl.TEXTURE_MIN_FILTER, gl.NEAREST],
-    [gl.TEXTURE_MAG_FILTER, gl.NEAREST],
+    [gl.TEXTURE_MIN_FILTER, filtro],
+    [gl.TEXTURE_MAG_FILTER, filtro],
     [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
     [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE],
   ]) {
     gl.texParameteri(gl.TEXTURE_2D, clave, valor)
   }
-  const fbo = gl.createFramebuffer()
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, lamina, 0)
+  const hoja = { textura, tipo, fbo: gl.createFramebuffer() }
+  dimensionar(gl, hoja, 1, 1)
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hoja.fbo)
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, textura, 0)
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-  return fbo
+  return hoja
+}
+
+function dimensionar(gl, hoja, ancho, alto) {
+  gl.bindTexture(gl.TEXTURE_2D, hoja.textura)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, alto, 0, gl.RGBA, hoja.tipo, null)
+}
+
+// El aire: sus programas y sus láminas, en las unidades 2 a 4. Velocidad,
+// presión y estado van en pares, porque una pasada no puede leer la lámina en
+// la que escribe: se lee `[0]`, se escribe `[1]` y se dan vuelta. Sin texturas
+// de medio float que se puedan filtrar y pintar, no hay viento: `CAMPO` lee
+// entonces una unidad vacía, que da cero, y la nube se pinta igual.
+function montarAire(gl) {
+  const medio = gl.getExtension('OES_texture_half_float')
+  if (!medio || !gl.getExtension('OES_texture_half_float_linear')) return null
+  gl.getExtension('EXT_color_buffer_half_float')
+  gl.activeTexture(gl.TEXTURE2)
+  const nueva = () => lamina(gl, medio.HALF_FLOAT_OES, gl.LINEAR)
+  const prueba = nueva()
+  gl.bindFramebuffer(gl.FRAMEBUFFER, prueba.fbo)
+  const pinta = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+  if (!pinta) return null
+
+  const fuentes = { FUERZA, ROTOR, CONFINA, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
+  const programas = {}
+  for (const [nombre, fuente] of Object.entries(fuentes)) {
+    const u = compilar(gl, fuente, UNIFORMS_DEL_AIRE)
+    if (!u) return null
+    gl.useProgram(u.programa)
+    gl.uniform1i(u.uno, 2)
+    gl.uniform1i(u.dos, 3)
+    gl.uniform1i(u.tres, 4)
+    gl.uniform1f(u.dt, DT)
+    programas[nombre] = u
+  }
+  return {
+    programas,
+    velocidad: [prueba, nueva()],
+    presion: [nueva(), nueva()],
+    estado: [nueva(), nueva()],
+    rotor: nueva(),
+    divergencia: nueva(),
+  }
+}
+
+function laminasDelAire(aire) {
+  return [...aire.velocidad, ...aire.presion, ...aire.estado, aire.rotor, aire.divergencia]
 }
 
 function montar(id, lienzo, mar) {
@@ -447,18 +575,17 @@ function montar(id, lienzo, mar) {
 
   const escena = { id, gl, programas, activa: false, vivo: false }
   if (!mar) {
+    const [campo, trama] = programas
     texturaDeRuido(gl)
-    escena.fbo = laminaDeCampo(gl)
-    gl.useProgram(programas[1].programa)
-    gl.uniform1i(programas[1].campo, 1)
-    // El rastro: cada tramo es (x0, y0, x1, y1), y cuándo nació y cuánto duró.
-    // Nacidos hace mucho, al principio ninguno sopla.
-    escena.tramos = new Float32Array(TRAMOS * 4)
-    escena.nacidos = new Float64Array(TRAMOS).fill(-1e9)
-    escena.duraciones = new Float32Array(TRAMOS).fill(1)
-    escena.edades = new Float32Array(TRAMOS * 2)
-    escena.siguiente = 0
+    gl.activeTexture(gl.TEXTURE1)
+    escena.campo = lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST)
+    gl.useProgram(campo.programa)
+    gl.uniform1i(campo.estado, 2)
+    gl.useProgram(trama.programa)
+    gl.uniform1i(trama.campo, 1)
+    escena.aire = montarAire(gl)
     escena.previo = null
+    escena.tramo = null
   }
   escenas.set(id, escena)
 }
@@ -470,46 +597,89 @@ function fijar(escena, poner) {
   }
 }
 
-// Un tramo nuevo cada `CADA_TRAMO`, del punto anterior al actual, si avanzó
-// al menos `PASO_MINIMO`. La duración topa en 0.1 s: si el cursor estuvo
-// quieto y de pronto se mueve, el tramo es ese movimiento y no la espera.
+// Junta lo que el cursor recorrió desde el último fotograma: `simular` lo
+// sopla de una vez, como un tramo.
 function soplar(escena, { x, y, fuera }) {
-  const ahora = performance.now()
-  const { previo } = escena
   if (fuera || quieto) {
     escena.previo = null
-  } else if (!previo) {
-    escena.previo = { x, y, t: ahora }
-  } else if (ahora - previo.t >= CADA_TRAMO && Math.hypot(x - previo.x, y - previo.y) >= PASO_MINIMO) {
-    const i = escena.siguiente
-    escena.tramos.set([previo.x, previo.y, x, y], i * 4)
-    escena.nacidos[i] = ahora
-    escena.duraciones[i] = Math.min((ahora - previo.t) / 1000, 0.1)
-    escena.siguiente = (i + 1) % TRAMOS
-    escena.previo = { x, y, t: ahora }
+    return
   }
+  const punto = { x, y, t: performance.now() }
+  if (escena.previo && !escena.tramo) escena.tramo = { desde: escena.previo }
+  if (escena.tramo) escena.tramo.hasta = punto
+  escena.previo = punto
+}
+
+// Un paso del aire (ver el fluido, arriba). La velocidad del gesto es su
+// tramo sobre lo que tardó, entre 1/60 y 0.1 s: si el cursor estuvo quieto y
+// de pronto se mueve, cuenta el movimiento y no la espera. Se gira al azar
+// unos grados: un flujo perfectamente simétrico no desprende remolinos, y en
+// el aire real nada lo es.
+function simular(escena) {
+  const { gl, aire, tramo } = escena
+  const { programas: p, velocidad, presion, estado } = aire
+  const pasada = (u, destino, ...entradas) => {
+    gl.useProgram(u.programa)
+    entradas.forEach((hoja, i) => {
+      gl.activeTexture(gl.TEXTURE2 + i)
+      gl.bindTexture(gl.TEXTURE_2D, hoja.textura)
+    })
+    gl.bindFramebuffer(gl.FRAMEBUFFER, destino.fbo)
+    gl.drawArrays(gl.TRIANGLES, 0, 3)
+  }
+  gl.viewport(0, 0, ...aire.malla)
+
+  if (tramo?.hasta) {
+    const { desde, hasta } = tramo
+    const alto = gl.canvas.height
+    const segundos = Math.min(Math.max((hasta.t - desde.t) / 1000, 1 / 60), 0.1)
+    const vx = (hasta.x - desde.x) / alto / segundos
+    const vy = (hasta.y - desde.y) / alto / segundos
+    const tope = Math.min(1, RAPIDEZ_MAXIMA / (Math.hypot(vx, vy) || 1))
+    const giro = (Math.random() - 0.5) * 0.3
+    gl.useProgram(p.FUERZA.programa)
+    gl.uniform4f(p.FUERZA.tramo, desde.x / alto, desde.y / alto, hasta.x / alto, hasta.y / alto)
+    gl.uniform2f(
+      p.FUERZA.empuje,
+      tope * (vx * Math.cos(giro) - vy * Math.sin(giro)),
+      tope * (vx * Math.sin(giro) + vy * Math.cos(giro)),
+    )
+    pasada(p.FUERZA, velocidad[1], velocidad[0])
+    velocidad.reverse()
+    escena.tramo = null
+  }
+
+  pasada(p.ROTOR, aire.rotor, velocidad[0])
+  pasada(p.CONFINA, velocidad[1], velocidad[0], aire.rotor)
+  velocidad.reverse()
+  pasada(p.DIVERGENCIA, aire.divergencia, velocidad[0])
+  for (let i = 0; i < VUELTAS_DE_PRESION; i++) {
+    pasada(p.PRESION, presion[1], presion[0], aire.divergencia)
+    presion.reverse()
+  }
+  pasada(p.GRADIENTE, velocidad[1], presion[0], velocidad[0])
+  velocidad.reverse()
+  pasada(p.ADVECCION, velocidad[1], velocidad[0])
+  velocidad.reverse()
+  pasada(p.ESTADO, estado[1], velocidad[0], estado[0], aire.rotor)
+  estado.reverse()
+
+  gl.activeTexture(gl.TEXTURE2)
+  gl.bindTexture(gl.TEXTURE_2D, estado[0].textura)
 }
 
 function pintar(escena, ahora) {
   const { gl, programas } = escena
-  const t = (ahora - inicio) / 1000
+  if (escena.aire && !quieto) simular(escena)
   gl.useProgram(programas[0].programa)
-  gl.uniform1f(programas[0].t, t)
-  if (escena.fbo) {
-    const [campo, trama] = programas
-    const reloj = performance.now()
-    for (let i = 0; i < TRAMOS; i++) {
-      escena.edades[i * 2] = (reloj - escena.nacidos[i]) / 1000
-      escena.edades[i * 2 + 1] = escena.duraciones[i]
-    }
-    gl.uniform4fv(campo.tramos, escena.tramos)
-    gl.uniform2fv(campo.edades, escena.edades)
-    gl.bindFramebuffer(gl.FRAMEBUFFER, escena.fbo)
+  gl.uniform1f(programas[0].t, (ahora - inicio) / 1000)
+  if (escena.campo) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
     gl.viewport(0, 0, ...escena.rejilla)
     gl.drawArrays(gl.TRIANGLES, 0, 3)
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-    gl.useProgram(trama.programa)
+    gl.useProgram(programas[1].programa)
   }
   gl.drawArrays(gl.TRIANGLES, 0, 3)
   if (!escena.vivo) {
@@ -542,9 +712,22 @@ onmessage = ({ data }) => {
     gl.canvas.width = data.ancho
     gl.canvas.height = data.alto
     escena.rejilla = [Math.ceil(data.ancho / data.celda), Math.ceil(data.alto / data.celda)]
-    if (escena.fbo) {
+    if (escena.campo) {
       gl.activeTexture(gl.TEXTURE1)
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ...escena.rejilla, 0, gl.RGBA, gl.UNSIGNED_BYTE, null)
+      dimensionar(gl, escena.campo, ...escena.rejilla)
+    }
+    const { aire } = escena
+    if (aire) {
+      // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
+      const alto = Math.max(8, Math.round(escena.rejilla[1] / CELDAS_POR_AIRE))
+      aire.malla = [Math.max(8, Math.round((alto * data.ancho) / data.alto)), alto]
+      gl.activeTexture(gl.TEXTURE2)
+      for (const hoja of laminasDelAire(aire)) dimensionar(gl, hoja, ...aire.malla)
+      gl.bindTexture(gl.TEXTURE_2D, aire.estado[0].textura)
+      for (const u of Object.values(aire.programas)) {
+        gl.useProgram(u.programa)
+        gl.uniform2f(u.malla, ...aire.malla)
+      }
     }
     gl.viewport(0, 0, data.ancho, data.alto)
     fijar(escena, (gl, u) => {
@@ -562,7 +745,7 @@ onmessage = ({ data }) => {
     })
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
-  if (escena?.fbo && data.tipo === 'viento') {
+  if (escena?.campo && data.tipo === 'viento') {
     soplar(escena, data)
     return
   }
