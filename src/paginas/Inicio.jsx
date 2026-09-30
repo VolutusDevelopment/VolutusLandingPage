@@ -2,7 +2,7 @@ import Barra from '../components/Barra.jsx'
 import Portada from '../components/Portada.jsx'
 import Proyectos from '../components/Proyectos.jsx'
 import Metricas from '../components/Metricas.jsx'
-import Proceso from '../components/Proceso.jsx'
+import Servicios from '../components/Servicios.jsx'
 import Contacto from '../components/Contacto.jsx'
 import Pie from '../components/Pie.jsx'
 
@@ -35,7 +35,7 @@ export default function Inicio() {
         <Portada />
         <Proyectos />
         <Metricas />
-        <Proceso />
+        <Servicios />
         <Contacto />
       </main>
 

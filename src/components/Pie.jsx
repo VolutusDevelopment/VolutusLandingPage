@@ -27,7 +27,7 @@ import { PROYECTOS } from '../data/proyectos.js'
 
 const ANCLAS = [
   ['proyectos', 'Proyectos'],
-  ['proceso', 'Cómo trabajamos'],
+  ['servicios', 'Servicios'],
   ['contacto', 'Contacto'],
 ]
 

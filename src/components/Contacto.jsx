@@ -1,4 +1,4 @@
-import { SERVICIOS } from '../lib/servicios.js'
+import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
 
 
 /**
@@ -99,9 +99,9 @@ export default function Contacto() {
 
           {/* Opcional a propósito: sirve para repartir el mensaje, no para
               filtrar a nadie, y quien no sabe qué pedir no debe quedarse
-              atascado aquí. Las tres opciones son las que la página respalda
-              con obra —la web y la app de PonleNota, el agente del hackathon—;
-              «Otro» recoge el resto. La primera opción está desactivada, así
+              atascado aquí. Las opciones son los servicios de la sección de
+              arriba, sacados de la misma lista (`lib/servicios.js`), y «Otro»
+              recoge el resto. La primera opción está desactivada, así
               que si nadie elige, el campo simplemente no se envía. */}
           <div className="campo">
             <label htmlFor="servicio">Qué necesitas</label>
@@ -109,8 +109,8 @@ export default function Contacto() {
               <option value="" disabled>
                 Elige una opción
               </option>
-              {SERVICIOS.map((servicio) => (
-                <option key={servicio}>{servicio}</option>
+              {OPCIONES_DE_CONTACTO.map((opcion) => (
+                <option key={opcion}>{opcion}</option>
               ))}
             </select>
           </div>

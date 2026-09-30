@@ -26,9 +26,9 @@ import { espiralFibonacci } from '../lib/espiral.js'
 const TRAZO_DE_LA_ONDA = 'M3.75 19.5 H12.75 A7.5 7.5 0 0 0 12.75 4.5 A3.75 3.75 0 0 0 12.75 12'
 
 /**
- * La voluta de Fibonacci que ilustra cada paso de «Cómo trabajamos». Viene de
- * la rama de Diego junto con el bloque; aquí solo se exporta para Proceso y no
- * sustituye al símbolo de esta rama, que sigue siendo `Onda`.
+ * La voluta de Fibonacci que ilustra cada panel de servicios. Viene de la rama
+ * de Diego; aquí solo se exporta para `Servicios.jsx` y no sustituye al
+ * símbolo de esta rama, que sigue siendo `Onda`.
  */
 export const VOLUTA = espiralFibonacci([8, 5, 3, 2], { recta: 5 })
 

@@ -1,4 +1,4 @@
-import { SERVICIOS } from '../src/lib/servicios.js'
+import { OPCIONES_DE_CONTACTO } from '../src/lib/servicios.js'
 /**
  * El Worker que entrega el formulario de contacto.
  *
@@ -101,7 +101,7 @@ async function manejarContacto(request, env) {
   // Opcional. Solo vale si es uno de los de la lista: lo que no coincida se
   // descarta sin rechazar el envío, porque perder un mensaje por un menú
   // manipulado no protege nada y deja a alguien sin respuesta.
-  const servicio = SERVICIOS.find((s) => s === limpiar(datos.get('servicio'), 40)) ?? null
+  const servicio = OPCIONES_DE_CONTACTO.find((s) => s === limpiar(datos.get('servicio'), 40)) ?? null
 
   if (!nombre || !proyecto || !CORREO_VALIDO.test(correo)) {
     return responder(request, MENSAJES.invalido, 400)

@@ -93,7 +93,7 @@
   color: var(--accion);
 }
 
-/* En S no caben el lockup completo y dos enlaces: a 360 px «Cómo trabajamos»
+/* En S no caben el lockup completo y dos enlaces: a 360 px el enlace del medio
    partía en dos líneas y apretaba la marca contra el borde.
 
    Lo que se retira es la palabra, no la navegación, y no es un apaño: A.5

@@ -42,7 +42,7 @@ export default function Barra({ enHome = true }) {
               <a href={ancla('proyectos')}>Proyectos</a>
             </li>
             <li>
-              <a href={ancla('proceso')}>Cómo trabajamos</a>
+              <a href={ancla('servicios')}>Servicios</a>
             </li>
           </ul>
         </nav>

@@ -131,13 +131,13 @@
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
-  /* Las tarjetas de proyectos y de «Cómo trabajamos», traídas de la rama de
-     Diego, van a 12 px. Es su decisión para esos dos bloques y se acota a
-     ellos: el resto del sitio sigue en el radio de arriba. */
+  /* Las tarjetas de proyectos (de la rama de Diego) y de servicios van a
+     12 px, y se acota a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
 
-  /* Lo que mide la barra. Las cartas de «Cómo trabajamos» se pegan debajo de
-     ella al apilarse, y sin esto quedarían tapadas por su borde de abajo. */
+  /* Lo que mide la barra. Lo que se queda pegado al desplazar —la tarjeta
+     de la app en la vitrina de proyectos— se pega debajo de ella, y sin esto
+     quedaría tapado por su borde de abajo. */
   --barra-alto: 65px;
 
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
@@ -240,8 +240,8 @@
 }
 
 /* ============ Tonos del plano ============
-   Traídos tal cual de la rama de Diego con la vitrina de PonleNota y
-   «Cómo trabajamos». Solo cambian superficies, texto suave y acción; el resto
+   Traídos tal cual de la rama de Diego con la vitrina de PonleNota; los usan
+   también las láminas de servicios. Solo cambian superficies, texto suave y acción; el resto
    lo hereda de `.zona-plano`. Todos pasan 6.6:1. */
 .zona-plano.tono-ciruela {
   --fondo: #1f141c;
