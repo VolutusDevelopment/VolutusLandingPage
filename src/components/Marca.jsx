@@ -1,4 +1,4 @@
-import { espiralFibonacci } from '../lib/espiral.js'
+import { VOLUTA } from '../lib/espiral.js'
 import { LETRAS, TRAMAS } from '../lib/logotipo.js'
 
 /**
@@ -7,19 +7,14 @@ import { LETRAS, TRAMAS } from '../lib/logotipo.js'
  * El símbolo es una sola línea que entra recta y se enrolla en cuatro cuartos
  * de circunferencia con radios 8, 5, 3 y 2 —la serie de Fibonacci—, así que
  * la razón entre arcos vecinos es ≈ φ. No hay un número dibujado a ojo: el
- * trazo lo calcula `espiralFibonacci`, y los empalmes no tienen esquina porque
- * cada centro está sobre el radio con que termina el arco anterior.
- *
- * Se queda en 8·5·3·2 a propósito. Los arcos 1 y 1 del final completan la
- * serie, pero a 16 px se empastan en una mancha; una vuelta completa se sigue
- * leyendo como una ola que rompe.
+ * trazo lo calcula `espiralFibonacci` (ver `VOLUTA` en src/lib/espiral.js), y
+ * los empalmes no tienen esquina porque cada centro está sobre el radio con
+ * que termina el arco anterior.
  *
  * Un solo trazo, un solo color, heredado de `currentColor`: quien la usa decide
  * el color con `color`. El largo viaja como `--largo` para que la animación de
  * la barra no tenga que conocer la geometría.
  */
-
-export const VOLUTA = espiralFibonacci([8, 5, 3, 2], { recta: 5 })
 
 export function Onda({ size = 24, className }) {
   return (

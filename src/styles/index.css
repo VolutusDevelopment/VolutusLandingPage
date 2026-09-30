@@ -1,8 +1,9 @@
 /* ============================================================================
    Volutus, capa de tokens y base.
 
-   Todo lo que hay aquí sale de DESIGN-BRIEF.md §6, §7 y §8. Los valores no se
-   eligen aquí: se copian de allí, que es el documento que manda sobre el código.
+   Todo lo que hay aquí está documentado en DESIGN.md, el sistema de diseño
+   vigente; el porqué de cada decisión vive en DESIGN-BRIEF.md. Un valor que
+   cambie aquí se cambia también allí.
 
    La decisión que da forma a este archivo es la A.4: la página tiene DOS TEMAS
    DE ZONA, cielo y plano, y no un modo oscuro conmutable. Por eso los tokens de
@@ -16,62 +17,55 @@
    ============================================================================ */
 
 /* ============ Tipografía autohospedada ============
-   Geist y Geist Mono, subset latino, eje de peso recortado a 400-800 porque
-   A.7 prohíbe 500 y 600. Las dos juntas pesan 36 KB. */
+   Archivo, la familia del logotipo, es la única del sitio: titulares, texto y
+   datos. Subset latino con el eje de peso recortado a 400-800, porque solo se
+   usan 400 y 800. Pesa 33 KB. La itálica no se carga: es exclusiva del
+   logotipo, que va convertido a trazos (DESIGN.md, Marca). */
 @font-face {
-  font-family: 'Geist';
+  font-family: 'Archivo';
   font-style: normal;
   font-weight: 400 800;
   font-display: swap;
-  src: url('/fonts/geist-latin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 400 800;
-  font-display: swap;
-  src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+  src: url('/fonts/archivo-latin.woff2') format('woff2');
 }
 
 /**
- * Respaldo con métricas calzadas a Geist.
+ * Respaldo con métricas calzadas a Archivo.
  *
  * `font-display: swap` pinta el texto de inmediato con la fuente del sistema y
- * lo cambia cuando llega Geist. Eso evita el texto invisible, pero produce el
+ * lo cambia cuando llega Archivo. Eso evita el texto invisible, pero produce el
  * otro defecto: al cambiar, las líneas se recolocan porque Arial no mide lo
  * mismo. El CLS que mide Lighthouse sale 0 —el salto ocurre dentro de bloques
  * que ya tenían su alto— pero se VE, y es el último movimiento de la página
  * que nadie pidió.
  *
  * Esta cara no descarga nada: toma la Arial local y la deforma para que ocupe
- * exactamente lo que ocupará Geist. Mientras la real viaja, el texto ya está
+ * exactamente lo que ocupará Archivo. Mientras la real viaja, el texto ya está
  * en su sitio definitivo.
  *
- * Los números están medidos, no copiados. Con el mismo párrafo a 100 px, Geist
- * mide 4572 px y Arial 4419: de ahí el 103.47 %. Las otras tres salen de las
- * métricas del propio archivo —ascenso 920, descenso 220, interlínea 100 sobre
- * 1000 de em— divididas por ese mismo factor, porque se aplican DESPUÉS del
- * ajuste de tamaño.
+ * Los números están medidos, no copiados. Sumando los avances de un mismo
+ * párrafo de la página, Archivo 400 mide 165.07 em y Arial 167.43: de ahí el
+ * 98.59 %. Las otras tres salen de las métricas del propio archivo —ascenso
+ * 878, descenso 210, interlínea 0 sobre 1000 de em— divididas por ese mismo
+ * factor, porque se aplican DESPUÉS del ajuste de tamaño.
  *
  * Se ancla a Arial y no a `system-ui` a propósito: Arial existe en todas las
  * plataformas, así que el cálculo vale igual en Windows, Mac y Android.
  */
 @font-face {
-  font-family: 'Geist respaldo';
+  font-family: 'Archivo respaldo';
   src: local('Arial'), local('Helvetica'), local('Liberation Sans');
-  size-adjust: 103.47%;
-  ascent-override: 88.92%;
-  descent-override: 21.26%;
-  line-gap-override: 9.66%;
+  size-adjust: 98.59%;
+  ascent-override: 89.06%;
+  descent-override: 21.3%;
+  line-gap-override: 0%;
 }
 
 /* ============ Tokens que no dependen del tema ============ */
 :root {
   /* El respaldo calzado va SEGUNDO, antes que las fuentes del sistema: es el
-     que se usa durante el viaje de Geist, y el único que mide igual que ella. */
-  --fuente-texto: 'Geist', 'Geist respaldo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+     que se usa durante el viaje de Archivo, y el único que mide igual que ella. */
+  --fuente-texto: 'Archivo', 'Archivo respaldo', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
      esta tabla es un tamaño que nadie decidió.
@@ -86,12 +80,13 @@
   --texto-base: calc(17px * var(--escala, 1));
   --texto-lg: calc(22px * var(--escala, 1));
   --texto-xl: calc(34px * var(--escala, 1));
-  /* El mínimo baja de 48 a 40 px. Medido contra diez landings de referencia en
-     un móvil de 390: Linear usa 38, Raycast 36, Clerk 32, Cal 40 — éramos el
-     más grande y el que más líneas gastaba, cuatro. A 40 px el titular entra
-     en tres y devuelve una línea entera de pantalla. En escritorio no cambia
-     nada: ahí manda el 7vw y el techo de 76. */
-  --texto-2xl: calc(clamp(40px, 7vw, 76px) * var(--escala, 1));
+  /* El mínimo es 36 px. Medido contra diez landings de referencia en un móvil
+     de 390: Linear usa 38, Raycast 36, Clerk 32, Cal 40. Archivo 800 es más
+     ancha que Geist, y a 40 px «Eso que hoy haces» ya no cabía en 342 px: el
+     titular gastaba cuatro líneas. A 36 px vuelve a tres y devuelve una línea
+     entera de pantalla. En escritorio no cambia nada: ahí manda el 7vw y el
+     techo de 76. */
+  --texto-2xl: calc(clamp(36px, 7vw, 76px) * var(--escala, 1));
 
   /* Escala de espaciado, múltiplos de 4 (§6). */
   --e-1: 4px;
@@ -192,7 +187,7 @@
   --tinte-a: #f0f8f9;
   --tinte-b: #f8f5f4;
 
-  /* La marca NUNCA es texto ni botón sobre claro: da 3.90:1. Solo trazos y
+  /* La marca NUNCA es texto ni botón sobre claro: da 4.16:1. Solo trazos y
      superficies, donde basta 3:1. */
   --marca: #448597;
   --accion: #2b5f73;
@@ -586,9 +581,8 @@ svg {
 }
 
 /* Antetítulo de sección. Es un <p>, no un encabezado: no entra en la jerarquía
-   de títulos. En mono porque es una etiqueta, no prosa. */
+   de títulos. En mayúsculas espaciadas porque es una etiqueta, no prosa. */
 .antetitulo {
-  font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   font-weight: 400;
   letter-spacing: 0.14em;
@@ -604,7 +598,6 @@ svg {
 }
 
 .dato {
-  font-family: var(--fuente-datos);
   font-variant-numeric: tabular-nums;
 }
 
@@ -722,6 +715,24 @@ svg {
 .boton:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+/* El lienzo de las nubes (src/nubes.js). Ocupa su contenedor sin mover el
+   layout y aparece con un fundido cuando pinta su primer fotograma; hasta
+   entonces, o sin WebGL, es transparente. El color lo decide quien lo
+   contiene, con `--nubes-cerca`, `--nubes-lejos` y `--nubes-alfa`. */
+.nubes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease-out);
+  pointer-events: none;
+}
+
+.nubes.vivo {
+  opacity: 1;
 }
 
 .tarjeta {

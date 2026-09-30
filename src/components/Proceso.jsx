@@ -1,5 +1,5 @@
 
-import { VOLUTA } from './Marca.jsx'
+import { VOLUTA } from '../lib/espiral.js'
 
 /**
  * Cómo trabajamos (DESIGN-BRIEF §4, bloque 4). Segundo corte de tema: la

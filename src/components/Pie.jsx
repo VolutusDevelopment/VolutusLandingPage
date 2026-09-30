@@ -82,6 +82,13 @@ export default function Pie({ enHome = true }) {
           <a href="/privacidad">Privacidad</a>
         </div>
       </div>
+
+      {/* La página termina en el suelo de la portada, de noche: las sombras de
+          las nubes cruzándolo. Va después de todo el texto para no tener nada
+          encima. */}
+      <div className="pie-suelo">
+        <canvas className="nubes" data-vista="suelo" aria-hidden="true" />
+      </div>
     </footer>
   )
 }

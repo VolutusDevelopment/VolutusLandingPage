@@ -19,6 +19,8 @@
  * (`data-ruta` en `Conexiones.jsx`), que es lo que ata el dibujo a la frase.
  */
 
+import { quieto } from './lib/movimiento.js'
+
 const PAUSA = 2600
 // Deben coincidir con `.rotativo-letra` en Portada.css.
 const SALIDA = 220
@@ -71,10 +73,6 @@ export default function initTitularRotativo() {
   fija.textContent = palabra.textContent
   rotativo.before(fija)
   rotativo.setAttribute('aria-hidden', 'true')
-
-  const quieto = () =>
-    document.documentElement.dataset.movimiento === 'reducido' ||
-    matchMedia('(prefers-reduced-motion: reduce)').matches
 
   let actual = 0
   const inicial = enLetras(palabra.textContent)

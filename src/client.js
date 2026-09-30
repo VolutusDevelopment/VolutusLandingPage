@@ -12,6 +12,7 @@
 import { montarAccesibilidad } from './accesibilidad/widget.js'
 import initBarra from './barra.js'
 import initMedidores from './medidores.js'
+import initNubes from './nubes.js'
 import initTitularRotativo from './titular-rotativo.js'
 
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -131,4 +132,5 @@ export default function init() {
   initBarra()
   initMedidores()
   initTitularRotativo()
+  initNubes()
 }

@@ -38,6 +38,8 @@
  * mismo control con la otra mano.
  */
 
+import { quieto } from './lib/movimiento.js'
+
 // La construcción, y lo que separa la salida de un anillo de la del siguiente.
 // Cuatro arrancando a la vez se leen como una imagen que aparece, no como
 // cuatro medidas que se toman.
@@ -94,10 +96,6 @@ function prepararMedidor(medidor) {
   if (!largo || !tope || Number.isNaN(real)) return null
 
   const suya = nota.textContent
-
-  const quieto = () =>
-    document.documentElement.dataset.movimiento === 'reducido' ||
-    matchMedia('(prefers-reduced-motion: reduce)').matches
 
   let marco = 0
   let pintada = real

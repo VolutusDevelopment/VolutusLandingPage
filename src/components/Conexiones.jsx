@@ -1,4 +1,4 @@
-import { VOLUTA } from './Marca.jsx'
+import { VOLUTA } from '../lib/espiral.js'
 
 /**
  * Las formas en que hoy se hace el trabajo, conectadas a un solo sitio.
@@ -38,9 +38,17 @@ const largo = (puntos) =>
 
 const trazo = (puntos) => 'M' + puntos.map((p) => p.join(' ')).join(' L')
 
-// Geist Mono avanza 0,6 em por carácter; con 13 px y 0,1 em de tracking, cada
-// letra ocupa 9,1 unidades. La etiqueta se mide sola, sin tocar el DOM.
-const ancho = (texto) => Math.round(texto.length * 9.1 + 24)
+// Archivo es proporcional: cada mayúscula avanza distinto. Estos son sus
+// avances a 400, en milésimas de em, leídos de archivo-latin.woff2. Con 13 px
+// y 0,1 em de tracking, cada letra ocupa su avance más 1,3 unidades, y la
+// etiqueta suma 12 de aire por lado. Se mide sola, sin tocar el DOM.
+const MAYUSCULAS = ' ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
+const AVANCES = [
+  209, 682, 698, 728, 734, 677, 612, 796, 736, 267, 559, 662, 536, 847, 736, 736, 788, 665, 788, 727, 673, 606,
+  731, 648, 924, 680, 655, 635,
+]
+const ancho = (texto) =>
+  Math.round([...texto.toUpperCase()].reduce((t, c) => t + (AVANCES[MAYUSCULAS.indexOf(c)] ?? 736) * 0.013 + 1.3, 24))
 
 export default function Conexiones() {
   return (

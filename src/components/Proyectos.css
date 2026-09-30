@@ -15,8 +15,9 @@
 }
 
 /* La credencial es el único dato de la página validado por un tercero, así que
-   lleva mono y el color de marca —que sobre plano sí pasa contraste (6.71:1)—.
-   Sobre cielo esto sería ilegible; por eso esta tarjeta es la de plano. */
+   va en mayúsculas espaciadas y en el color de marca —que sobre plano sí pasa
+   contraste (6.71:1)—. Sobre cielo esto sería ilegible; por eso esta tarjeta
+   es la de plano. */
 .proyecto-credencial {
   font-size: var(--texto-xs);
   letter-spacing: 0.1em;

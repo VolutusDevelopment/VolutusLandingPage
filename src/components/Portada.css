@@ -1,33 +1,52 @@
 .portada {
-  padding-block: var(--e-12) var(--e-8);
+  /* La escena pasa por debajo de la barra: el cielo llega hasta el borde de
+     arriba de la pantalla y la barra flota encima con su vidrio. */
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-block: 0 var(--e-8);
   position: relative;
-  /* La rejilla vive detrás de todo sin salirse de la sección: `isolation` crea
-     el apilamiento para su z-index negativo y `clip` evita el scroll lateral
-     sin crear un contenedor de scroll. */
+  /* El resplandor vive detrás de todo sin salirse de la sección: `isolation`
+     crea el apilamiento para su z-index negativo y `clip` evita el scroll
+     lateral sin crear un contenedor de scroll. */
   isolation: isolate;
   overflow: clip;
   text-align: center;
 }
 
-/* ---- la rejilla ----
-   Papel milimetrado en la esquina de arriba, que se apaga hacia el centro: la
-   página se lee como un plano de trabajo sin que la rejilla compita con el
-   titular. CSS puro, sin imagen. */
-.portada::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0 0 auto auto;
-  width: min(60%, 820px);
-  height: 640px;
-  background-image:
-    linear-gradient(var(--linea) 1px, transparent 1px),
-    linear-gradient(90deg, var(--linea) 1px, transparent 1px);
-  background-size: 36px 36px;
-  background-position: right top;
-  mask-image: radial-gradient(ellipse at right top, #000, transparent 70%);
-  opacity: 0.7;
-  pointer-events: none;
+/* ---- la escena ----
+   La pantalla entera: el cielo arriba, el suelo abajo y el texto en medio.
+   Las dos bandas se reparten lo que el texto no usa, así que el titular queda
+   al centro sin que nadie calcule dónde. `svh` y no `vh`: en móvil es el alto
+   con la barra del navegador visible. */
+.portada-escena {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.portada-interior {
+  padding-block: var(--e-8);
+}
+
+.portada-banda {
+  position: relative;
+  flex: 1 0 6rem;
+}
+
+/* El cielo empieza debajo de la barra, así que su mínimo la incluye: el texto
+   nunca queda tapado por ella. Las nubes van tenues, en marca. */
+.portada-cielo {
+  flex-basis: calc(var(--barra-alto) + var(--e-12));
+  --nubes-lejos: var(--marca);
+  --nubes-alfa: 0.45;
+}
+
+/* El suelo: trama fina al sol, en marca, y la sombra la engrosa hacia
+   petróleo. Se apaga al pie para no cortarse contra la sección siguiente. */
+.portada-suelo {
+  mask-image: linear-gradient(#000 70%, transparent);
+  --nubes-cerca: var(--accion);
+  --nubes-lejos: var(--marca);
+  --nubes-alfa: 0.9;
 }
 
 /* ---- el resplandor ----
@@ -277,7 +296,6 @@
 
 .ruta-etiqueta text {
   fill: var(--texto);
-  font-family: var(--fuente-datos);
   font-size: 13px;
   letter-spacing: 0.1em;
   transition: fill 300ms var(--ease-out);
@@ -363,7 +381,7 @@
 }
 
 @media (min-width: 1024px) {
-  .portada {
-    padding-block: var(--e-16) var(--e-12);
+  .portada-interior {
+    padding-block: var(--e-12);
   }
 }

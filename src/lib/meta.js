@@ -24,7 +24,7 @@ export const PAGINAS = {
     archivo: 'index.html',
     titulo: 'Volutus, desarrollo de software en Chile',
     descripcion:
-      'Eso que hoy haces a mano, funcionando solo. Cuéntanos el problema y en 48 horas hábiles tienes alcance, plazo y precio. Cada proyecto con su enlace o su código.',
+      'Tus cotizaciones, pedidos y planillas, en un sistema que trabaja solo. Cuéntanos el problema y en 48 horas hábiles tienes alcance, plazo y precio.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',

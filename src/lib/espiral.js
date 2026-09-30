@@ -83,3 +83,10 @@ export function espiralFibonacci(radios, { recta = 0, lado = 24, margen = 2 } = 
 
   return { d, puntos: puntos.map(ajustar), arcos: arcosAjustados, longitud: Math.ceil(longitud), escala }
 }
+
+/**
+ * El símbolo de Volutus. Se queda en 8·5·3·2 a propósito: los arcos 1 y 1 del
+ * final completan la serie, pero a 16 px se empastan en una mancha; una vuelta
+ * completa se sigue leyendo como una ola que rompe.
+ */
+export const VOLUTA = espiralFibonacci([8, 5, 3, 2], { recta: 5 })

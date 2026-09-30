@@ -51,7 +51,7 @@ código se ajusta a él, no al revés.
 | Personas que deciden | Rodrigo y su socio. **Desempata Rodrigo** (delegado explícitamente, 2026-09-13) |
 | Fecha de inicio | *pendiente* |
 | Fecha objetivo de publicación | *pendiente* |
-| Última actualización de este documento | 2026-09-13 |
+| Última actualización de este documento | 2026-09-29 |
 
 
 ---
@@ -388,6 +388,9 @@ empresa y es comida para rastreadores de spam.
 
 ### Color `[x]`
 
+> **Reemplazado por la decisión #14 (2026-09-29).** La paleta es la de las láminas: cielo con marca `#448597` y acción `#2b5f73`; plano bosque con los tonos ciruela, petróleo y pizarra. Valores vigentes en `DESIGN.md`.
+
+
 La página usa **dos temas por zona**, no un modo oscuro conmutable. El corte
 está definido en el anexo A.4: la portada y el cierre van en *cielo*, la zona
 de demostración va en *plano*.
@@ -437,6 +440,9 @@ Los semánticos son independientes del acento y no se usan como color de marca.
 
 ### Tipografía `[x]`
 
+> **Reemplazado por la decisión #15 (2026-09-29).** Archivo es la única familia del sitio; Geist y Geist Mono salen. Valores vigentes en `DESIGN.md`.
+
+
 | Rol | Familia | Grosores | De dónde se carga |
 | --- | --- | --- | --- |
 | Titulares y wordmark | Geist | 400, 800 | Autohospedada, `woff2` variable con subset latino |
@@ -463,6 +469,9 @@ Reglas de uso, obligatorias (razón en el anexo A.7):
 
 ### Espaciado y forma `[x]`
 
+> **Reemplazado por la decisión #17 (2026-09-29).** Radios 4 / 12 / píldora en vez de 4 px uniforme. Valores vigentes en `DESIGN.md`.
+
+
 | Concepto | Valor |
 | --- | --- |
 | Unidad base de espaciado | 4 px, escala de 4 a 96 |
@@ -487,6 +496,9 @@ para lo que de verdad tiene que destacar, que en esta página es la acción
 principal y los datos de la zona de plano.
 
 ### Imagen y gráfica `[x]`
+
+> **Reemplazado por la decisión #18 (2026-09-29).** La pieza atmosférica es el mar con nubes en trama de puntos (shader), no una imagen; el logo y sus archivos, decisión #16. Valores vigentes en `DESIGN.md`.
+
 
 **Regla de las dos capas.** Es la que resuelve la tensión entre "sin sombras ni
 degradados" y "que no se vea pobre":
@@ -707,6 +719,11 @@ tener dueño ni fecha.
 | 11 | 2026-09-13 | No se publican precios en la página | Publicar un precio de entrada ("desde $X"), que el asesor recomendaba para filtrar y para sostener la promesa de ser directos. Coste asumido: la página no responde la objeción que más pesa, y esa promesa queda rebajada | Rodrigo |
 | 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
 | 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
+| 14 | 2026-09-29 | Paleta de las láminas: cielo blanco con marca `#448597` y acción `#2b5f73`; plano bosque `#0c221d` con tonos ciruela, petróleo y pizarra. Revisa #7 y la prohibición del morado de A.2: la ciruela `#543b4e` es un tono apagado y solo se usa como tono de zona | El celeste `#38A9E8` con `#116492` de §6, y quedarse en un solo azul, que dejaba la página sin identidad | Diego |
+| 15 | 2026-09-29 | Archivo, la familia del logotipo, en todo el sitio; sin Geist ni Geist Mono. Solo 400 y 800, y la itálica exclusiva del logotipo. Revierte #6 | Mantener Geist (riesgo de «plantilla Vercel» ya registrado) y cargar Archivo solo para titulares: dos familias que mantener | Diego |
+| 16 | 2026-09-29 | Logotipo: `VOLUTUS` en Archivo 800 itálica a trazos, con una ola de trama de puntos que nace en la S y rompe en voluta. El símbolo solo sigue siendo la voluta de un trazo (favicon, barra en S). Geometría congelada en `src/lib/logotipo.js` y kit en `public/marca/` | Símbolo más palabra en Geist por separado (A.5), que se leía como texto y no como marca | Diego |
+| 17 | 2026-09-29 | Radios 4 px en controles, 12 px en tarjetas y píldora en botones. Revisa #8 | Radio 4 px uniforme: las superficies de color sin esquina se leían como bandas cortadas | Diego |
+| 18 | 2026-09-29 | La pieza atmosférica es un shader: mar y nubes en trama de puntos. En la portada, la primera pantalla es una escena a lo ancho, con el titular al centro entre nubes y el mar debajo; en el pie, una franja de mar. Todo el WebGL va en un Web Worker, arranca después del LCP y se pausa fuera de pantalla. Revisa #9 y la «pieza contenida» de §4 | La nube fotorrealista en imagen (#9) y un degradado fluido animado, el recurso más común de las plantillas | Diego |
 
 ---
 
@@ -852,6 +869,9 @@ conversión y más frágil en accesibilidad).
 
 ### A.5 Estructura del logo `[x]`
 
+> **Reemplazado por la decisión #16 (2026-09-29).** El lockup es el logotipo con trama: la palabra y la ola en una sola pieza. Valores vigentes en `DESIGN.md`.
+
+
 **Cerrado:** la marca es un **lockup**, símbolo más palabra, y el símbolo tiene
 que sostenerse solo.
 
@@ -878,6 +898,9 @@ queda descartado.
 
 ### A.6 Forma del símbolo `[x]`
 
+> **Reemplazado por la decisión #16 (2026-09-29).** La onda de un trazo sigue siendo el símbolo solo; en el logotipo la ola va en trama de puntos. Valores vigentes en `DESIGN.md`.
+
+
 **Cerrado (voto de ambos socios, 2026-09-13): la onda.**
 
 Una sola línea continua que se enrolla sobre sí misma, construida con
@@ -892,6 +915,9 @@ empresa, está mal construida. La precisión geométrica es lo que la hace
 propia, no la curva en sí.
 
 ### A.7 Tipografía `[x]`
+
+> **Reemplazado por la decisión #15 (2026-09-29).** Archivo en todo el sitio. Valores vigentes en `DESIGN.md`.
+
 
 **Cerrado (decisión de Rodrigo, 2026-09-13): Geist y Geist Mono.**
 
