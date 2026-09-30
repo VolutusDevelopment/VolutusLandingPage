@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { PREFLIGHT } from '../src/accesibilidad/preflight.js'
+import { SERVICIOS } from '../src/lib/servicios.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 
@@ -22,7 +23,7 @@ const { render, PAGINAS } = await import(new URL('../.prerender/entry-server.js'
 const ORIGEN = 'https://volutus.cl'
 const IMAGEN = `${ORIGEN}/image/og-volutus.jpg`
 const ALT_IMAGEN =
-  'Tarjeta de Volutus sobre una nube volutus al atardecer: el titular «Construimos software que puedes abrir y revisar».'
+  'El logotipo de Volutus sobre fondo claro y el titular «Tus cotizaciones a mano, en un sistema que trabaja solo.»'
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -40,14 +41,36 @@ function datosEstructurados(ruta, canonical, titulo) {
   const grafo =
     ruta === '/'
       ? [
-          { '@type': 'WebSite', name: 'Volutus', url: `${ORIGEN}/`, inLanguage: 'es-CL' },
           {
-            '@type': 'Organization',
+            '@type': 'WebSite',
+            '@id': `${ORIGEN}/#sitio`,
             name: 'Volutus',
             url: `${ORIGEN}/`,
-            description: 'Empresa de desarrollo de software en Chile.',
+            inLanguage: 'es-CL',
+            publisher: { '@id': `${ORIGEN}/#organizacion` },
+          },
+          {
+            // ProfessionalService además de Organization: es lo que dice que
+            // esto se contrata, y el catálogo nombra los mismos servicios que
+            // la sección de la página.
+            '@type': ['Organization', 'ProfessionalService'],
+            '@id': `${ORIGEN}/#organizacion`,
+            name: 'Volutus',
+            url: `${ORIGEN}/`,
+            logo: `${ORIGEN}/apple-touch-icon.png`,
+            image: IMAGEN,
+            description:
+              'Desarrollo de software a medida en Chile: páginas web, tiendas online, aplicaciones, agentes de IA y automatizaciones.',
             email: 'contacto@volutus.cl',
-            areaServed: 'CL',
+            areaServed: { '@type': 'Country', name: 'Chile' },
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: 'Servicios',
+              itemListElement: SERVICIOS.map(({ nombre }) => ({
+                '@type': 'Offer',
+                itemOffered: { '@type': 'Service', name: nombre },
+              })),
+            },
           },
         ]
       : [{ '@type': 'WebPage', name: titulo, url: canonical, inLanguage: 'es-CL' }]

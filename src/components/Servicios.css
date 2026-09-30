@@ -6,6 +6,13 @@
    de las cerradas, 500 ms de transición. En el celular, fichas separadas 8 px,
    la elegida en blanco y las demás en gris. */
 
+/* Dice en palabras lo que el titular deja implícito: es la frase con que se
+   busca este servicio, y sin ella la página no la nombra en ningún lado. */
+.servicios-entradilla {
+  max-width: 40rem;
+  margin-top: var(--e-4);
+}
+
 .servicios-lista {
   margin-top: var(--e-12);
   padding: var(--e-1);

@@ -108,7 +108,7 @@ export const PROYECTOS = [
     destacado: true,
     credencial: '2.º lugar en Hackathon de Huawei Cloud y Kostra AI',
     resumen:
-      'Se realizó una Agente de IA que que atiende las alertas de infraestructura por su cuenta; reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia en tiempo real usando servicios MaaS.',
+      'Un agente de IA que atiende las alertas de infraestructura por su cuenta; reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia en tiempo real usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
   },
 
@@ -119,7 +119,7 @@ export const PROYECTOS = [
     id: 'carflip',
     nombre: 'CarFlip',
     resumen:
-      'Carflip.cl es un proyecto que tiene como fin recopilar vehiculos usados en un solo lugar y busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
+      'CarFlip reúne en un solo lugar los autos usados publicados en varios sitios de venta, para que vender un auto no dependa de pagar por aparecer más veces.',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]

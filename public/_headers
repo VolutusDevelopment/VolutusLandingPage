@@ -1,0 +1,19 @@
+# Headers de los archivos estáticos (Cloudflare Workers Static Assets).
+# Las respuestas del Worker (/api/contacto) no pasan por aquí.
+#
+# Sin CSP todavía: el preflight del tema es un <script> inline y el CSS va
+# incrustado, así que una política útil necesita hashes generados en el build.
+
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# Llevan el hash en el nombre: si cambian, cambia la URL.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

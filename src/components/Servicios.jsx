@@ -130,6 +130,9 @@ export default function Servicios() {
       <div className="contenedor">
         <p className="antetitulo entra">Servicios</p>
         <h2 className="entra">Lo que construimos.</h2>
+        <p className="entradilla servicios-entradilla entra">
+          Desarrollo de software a medida en Chile, para negocios que hoy lo resuelven a mano.
+        </p>
 
         {/* `--fila-paneles`: la fila que sigue a las fichas en el celular,
             donde se apilan todos los paneles (ver Servicios.css). */}
