@@ -3,13 +3,15 @@ import { PAGINAS } from '../lib/meta.js'
 import { ARRIBA, COLORES } from '../lib/pato.js'
 
 /**
- * La 404. Cloudflare la sirve en cualquier dirección que no existe
- * (`not_found_handling` en wrangler.jsonc), así que todos sus enlaces son
- * absolutos: puede aparecer a cualquier profundidad.
+ * Las páginas de error: la 404 y la de los 5xx. Son la misma pantalla, la nube
+ * de la portada con el aviso y una sola salida, y ninguna lleva pie: son un
+ * alto, no una página que se recorre. Cada una ocupa la pantalla entera.
  *
- * Es el arranque de la caída y nada más: la nube de la portada, el aviso y las
- * salidas, y debajo el mar. Ocupa la pantalla entera para que el pie no asome
- * a medio entrar al cargar.
+ * Las dos pueden aparecer en cualquier dirección, así que todos sus enlaces
+ * son absolutos. La 404 la sirve Cloudflare donde no hay archivo
+ * (`not_found_handling` en wrangler.jsonc). La de los 5xx sale en /500 y solo
+ * Cloudflare puede servirla en sus errores, con una Custom Error Rule, que pide
+ * plan Pro (ver README).
  *
  * Y un juego: «Jugar» deshace la volutus en cúmulos repartidos por el cielo y
  * suelta patos desde dentro de ellos, como los del Duck Hunt desde el pasto; el
@@ -18,13 +20,23 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * los puntos de ella tapan los del pato. El botón llega oculto, porque sin
  * JavaScript no sirve, y flota sobre el cielo para que aparecer no mueva nada.
  */
-export default function NoEncontrada() {
-  const { descripcion } = PAGINAS['/404']
+export function NoEncontrada() {
+  return <PaginaDeError ruta="/404" antetitulo="Error 404" titulo="Esta página no existe." />
+}
+
+// Una sola para todos los 5xx, así que no dice el código: dice de quién es la
+// falla.
+export function ErrorDelServidor() {
+  return <PaginaDeError ruta="/500" antetitulo="Error del servidor" titulo="Algo falló de nuestro lado." />
+}
+
+function PaginaDeError({ ruta, antetitulo, titulo }) {
+  const { descripcion } = PAGINAS[ruta]
 
   return (
-    <Pagina>
-      <section className="seccion zona-cielo hora-manana no-encontrada">
-        <div className="no-encontrada-cielo">
+    <Pagina pie={false}>
+      <section className="seccion zona-cielo hora-manana pagina-error">
+        <div className="pagina-error-cielo">
           <canvas className="patos" aria-hidden="true" />
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
           <button className="boton boton-secundario jugar" type="button" hidden>
@@ -33,11 +45,11 @@ export default function NoEncontrada() {
           </button>
         </div>
 
-        <div className="contenedor no-encontrada-texto">
-          <p className="antetitulo">Error 404</p>
-          <h1>Esta página no existe.</h1>
+        <div className="contenedor pagina-error-texto">
+          <p className="antetitulo">{antetitulo}</p>
+          <h1>{titulo}</h1>
           <p className="entradilla">{descripcion}</p>
-          <p className="no-encontrada-salidas">
+          <p className="pagina-error-salidas">
             <a className="boton boton-primario" href="/">
               Volver al inicio
             </a>

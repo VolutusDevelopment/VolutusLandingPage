@@ -1,5 +1,6 @@
 /**
- * El juego de la 404: un Duck Hunt con la nube.
+ * El juego de las páginas de error, la 404 y la de los 5xx: un Duck Hunt con
+ * la nube.
  *
  * Al empezar, la volutus se deshace en cúmulos repartidos por el cielo, y los
  * patos salen de dentro de ellos, como los del original desde el pasto. Vuelan
@@ -23,13 +24,16 @@
  * que, dentro de ella, los puntos de la nube tapan justo los del pato y solo se
  * le ve donde se abre.
  *
+ * El pato que se escapa después de que le dispararon se burla antes de irse:
+ * vuela al claro del cielo más lejos de las nubes, se agranda y se ríe en un
+ * globo, «JA JA JA». Es lo que en el original hace el perro.
+ *
  * Las medidas van en altos del lienzo de la nube, como todo lo de la nube: así
  * el juego cuesta lo mismo en cualquier pantalla.
  *
- * Qué NO hace: moverse sin que nadie mire. Si un pato se escapa sin un solo
- * disparo, el juego termina solo; con movimiento reducido no se ofrece, y si
- * se activa a mitad de partida, termina con el pato siguiente y la volutus
- * vuelve sin transición.
+ * La partida no tiene fin: sigue hasta «Terminar». Con movimiento reducido no
+ * se ofrece, y si se activa a mitad de partida, termina con el pato siguiente
+ * y la volutus vuelve sin transición.
  */
 
 import { DPR_MAXIMO } from './nubes.js'
@@ -52,6 +56,13 @@ const SUELO = 0.8
 // La tolerancia del disparo, en px. Con el dedo es el doble: tapa justo lo que
 // apunta.
 const MARGEN = 10
+// La burla: lo que tarda en llegar al claro, lo que dura la risa, cuántas
+// veces se agranda como mucho y desde qué holgura (ver `claro`) el cielo ya
+// está despejado: el relieve de la nube pasa un poco su elipse.
+const LLEGADA = 0.5
+const RISA = 2
+const GRANDE = 3
+const LIBRE = 1.3
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
 // jirones. Cada uno va en su franja del ancho, de izquierda a derecha, corrido
@@ -81,9 +92,22 @@ const POR_ANCHO = [
 // 1.6 × 1/1.8 abajo, la base aplanada (ver `cumulo` en nubes-lienzo.js).
 const AREA = (Math.PI * 1.6 * (1 + 1 / 1.8)) / 2
 
-// Las cifras del contador, en 3×5 leídas por filas: el bit 14 es la esquina
-// de arriba a la izquierda.
-const CIFRAS = [0x7b6f, 0x2c97, 0x73e7, 0x73cf, 0x5bc9, 0x79cf, 0x79ef, 0x7249, 0x7bef, 0x7bcf]
+// Las letras del contador y de la burla, en 3×5 leídas por filas: el bit 14 es
+// la esquina de arriba a la izquierda. Mayúsculas, como en el NES.
+const GLIFOS = {
+  0: 0x7b6f,
+  1: 0x2c97,
+  2: 0x73e7,
+  3: 0x73cf,
+  4: 0x5bc9,
+  5: 0x79cf,
+  6: 0x79ef,
+  7: 0x7249,
+  8: 0x7bef,
+  9: 0x7bcf,
+  A: 0x2bed,
+  J: 0x126a,
+}
 
 // Lo que se mide y se pinta. Se arma con el primer «Jugar».
 let escena = null
@@ -129,7 +153,8 @@ function medir() {
   lienzo.height = Math.round(lienzo.clientHeight * dpr)
   if (celda !== escena.celda) {
     const [arriba, abajo, herido, cae] = [ARRIBA, ABAJO, HERIDO, CAE].map((filas) => pintarCuadro(filas, celda))
-    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, contador: null })
+    const globo = pintarCuadro(filasDelGlobo(), celda)
+    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], globo, contador: null })
   }
   escena.dpr = dpr
   escena.alto = lienzo.height
@@ -233,6 +258,7 @@ function soltar() {
     // El primer giro espera a que haya salido de la nube.
     giro: 1 + Math.random() * 0.6,
     disparos: 0,
+    escala: 1,
   }
   animar()
 }
@@ -274,11 +300,25 @@ function mover(dt) {
   const rapidez = VELOCIDAD * Math.min(2, ACELERA ** cazados) * alto
   if (p.estado === 'huye') {
     p.y -= 1.5 * rapidez * dt
-    if (p.y < -cuadros.arriba.height) fin()
+    if (p.y < -cuadros.arriba.height * p.escala) fin()
     return
   }
+  // Se burla: va al claro mientras crece por saltos enteros, que no lo sacan
+  // de la rejilla, se ríe y se va, grande.
+  if (p.estado === 'burla') {
+    const llegada = Math.min(1, p.t / LLEGADA)
+    p.x = p.desde.x + (p.hasta.x - p.desde.x) * llegada
+    p.y = p.desde.y + (p.hasta.y - p.desde.y) * llegada
+    p.escala = Math.max(1, Math.ceil(llegada * p.grande))
+    if (p.t > LLEGADA + RISA) Object.assign(p, { estado: 'huye', t: 0 })
+    return
+  }
+  // Se acabó su tiempo. Si le dispararon y no le dieron, se burla antes de
+  // irse: se acerca, por eso crece, y pasa delante de las nubes.
   if (p.t > VIDA) {
-    Object.assign(p, { estado: 'huye', solo: true })
+    const destino = p.disparos && claro()
+    Object.assign(p, destino ? { estado: 'burla', t: 0, mira: 1, desde: { x: p.x, y: p.y }, ...destino } : { estado: 'huye' })
+    escena.cielo.classList.toggle('burlando', Boolean(destino))
     return
   }
 
@@ -299,21 +339,71 @@ function mover(dt) {
   p.y += vy * rapidez * dt
 }
 
-// El pato salió de la pantalla, por arriba o por abajo. Si se fue solo, por
-// tiempo, sin que nadie le disparara, no hay nadie jugando. El que huye porque
-// se pulsó «Terminar» no cuenta: puede que ya haya otra partida.
-function fin() {
-  if (pato.estado === 'cae') soplar(true)
-  const abandonado = pato.solo && !pato.disparos
-  pato = null
-  if (jugando && abandonado) terminar()
-  else if (jugando) espera = setTimeout(soltar, 800)
+// El claro donde se burla: el lugar del pato grande con su globo al lado más
+// lejos de toda nube. La distancia va en radios de cada nube, desde su centro
+// hasta el punto más cercano de la caja, y desde `LIBRE` es cielo despejado.
+// La caja va de la barra al borde de abajo del cielo, que suele ser lo más
+// despejado, sin tocar los costados ni «Jugar». Prueba al triple y después al
+// doble; si en ninguno hay cielo despejado, se queda con lo mejor que
+// encontró.
+function claro() {
+  const { lienzo, celda, techo, globo, boton, dpr, alto, cuadros } = escena
+  const forma = valorForma(performance.now())
+  const nubes = escena.cumulos.map((c) => cumulo(c, forma).map((medida) => medida * alto))
+  const aire = 4 * celda
+  const jugar = [
+    boton.offsetLeft * dpr - aire,
+    boton.offsetTop * dpr - aire,
+    (boton.offsetLeft + boton.offsetWidth) * dpr + aire,
+    (boton.offsetTop + boton.offsetHeight) * dpr + aire,
+  ]
+  const entre = (valor, desde, hasta) => Math.min(Math.max(valor, desde), hasta)
+
+  let mejor = null
+  for (let grande = GRANDE; grande > 1 && !(mejor?.holgura >= LIBRE); grande--) {
+    const [gx, gy] = globoJunto(0, 0, grande)
+    const ancho = gx + globo.width
+    const altoCaja = Math.max(cuadros.arriba.height * grande, gy + globo.height)
+    for (let y = techo; y + altoCaja <= lienzo.height; y += aire) {
+      for (let x = aire; x + ancho <= lienzo.width - aire; x += aire) {
+        if (x < jugar[2] && x + ancho > jugar[0] && y < jugar[3] && y + altoCaja > jugar[1]) continue
+        const holgura = Math.min(
+          ...nubes.map(([cx, cy, r]) =>
+            Math.hypot((entre(cx, x, x + ancho) - cx) / (1.6 * r), (entre(cy, y, y + altoCaja) - cy) / r),
+          ),
+        )
+        if (!mejor || holgura > mejor.holgura) mejor = { holgura, grande, x, y }
+      }
+    }
+  }
+  if (!mejor) return null
+  const { grande, x, y } = mejor
+  const { width, height } = cuadros.arriba
+  return { grande, hasta: { x: x + (width * grande) / 2, y: y + (height * grande) / 2 } }
 }
 
+// Dónde va el globo, a partir de la esquina del pato: a su derecha, con la
+// punta de la cola (la fila `PUNTA`) junto al pico, que está en la quinta fila
+// del cuadro.
+function globoJunto(x, y, escala) {
+  const { celda } = escena
+  return [x + (ARRIBA[0].length * escala + 1) * celda, y + (5 * escala - PUNTA) * celda]
+}
+
+// El pato salió de la pantalla, por arriba o por abajo. Si se sigue jugando,
+// sale otro.
+function fin() {
+  if (pato.estado === 'cae') soplar(true)
+  escena.cielo.classList.remove('burlando')
+  pato = null
+  if (jugando) espera = setTimeout(soltar, 800)
+}
+
+// El que se burló ya se escapó: aunque siga a la vista, no se le puede dar.
 function disparar(evento) {
   if (!pato || evento.button) return
   pato.disparos++
-  if (pato.estado !== 'vuela' && pato.estado !== 'huye') return
+  if ((pato.estado !== 'vuela' && pato.estado !== 'huye') || pato.escala > 1) return
   const { lienzo, dpr, cuadros } = escena
   const caja = lienzo.getBoundingClientRect()
   const margen = MARGEN * dpr * (evento.pointerType === 'touch' ? 2 : 1)
@@ -342,31 +432,48 @@ function pintar() {
 }
 
 function pintarPato() {
-  const { ctx, cuadros, celda, lienzo, alto } = escena
+  const { ctx, cuadros, celda, lienzo, alto, globo } = escena
   const p = pato
+  const { arriba, abajo } = p.escala > 1 ? agrandados(p.escala) : cuadros
   let cuadro = cuadros.herido
   let mira = p.mira
   if (p.estado === 'cae') {
     cuadro = cuadros.cae
     mira = Math.floor(p.t / VUELTA) % 2 ? -1 : 1
   } else if (p.estado !== 'herido') {
-    cuadro = Math.floor(p.t * ALETEO) % 2 ? cuadros.abajo : cuadros.arriba
+    cuadro = Math.floor(p.t * ALETEO) % 2 ? abajo : arriba
   }
   // La esquina va sobre la rejilla de la nube, y al caer se desvanece en el
   // último tramo, donde se acaba el cielo.
   const x = Math.round((p.x - cuadro.width / 2) / celda) * celda
   const y = Math.round((p.y - cuadro.height / 2) / celda) * celda
-  ctx.globalAlpha = Math.min(1, (lienzo.height - p.y) / (0.15 * alto))
+  ctx.globalAlpha = p.estado === 'cae' ? Math.min(1, (lienzo.height - p.y) / (0.15 * alto)) : 1
   ctx.setTransform(mira, 0, 0, 1, mira < 0 ? x + cuadro.width : x, y)
   ctx.drawImage(cuadro, 0, 0)
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.globalAlpha = 1
+  if (p.estado === 'burla' && p.t > LLEGADA) ctx.drawImage(globo, ...globoJunto(x, y, p.escala))
+}
+
+// El pato a `escala` puntos por punto, para la burla. Grande solo vuela, así
+// que bastan las alas arriba y abajo.
+function agrandados(escala) {
+  const { grandes, celda } = escena
+  grandes[escala] ??= {
+    arriba: pintarCuadro(agrandar(ARRIBA, escala), celda),
+    abajo: pintarCuadro(agrandar(ABAJO, escala), celda),
+  }
+  return grandes[escala]
+}
+
+function agrandar(filas, escala) {
+  return filas.flatMap((fila) => Array(escala).fill([...fila].map((letra) => letra.repeat(escala)).join('')))
 }
 
 // Arriba a la derecha, bajo la barra y alineado con el borde del botón.
 function pintarContador() {
   const { ctx, celda, techo, derecha } = escena
-  escena.contador ??= pintarCuadro(filasDelContador(cazados), celda)
+  escena.contador ??= pintarCuadro(filasDeTexto(String(cazados), 'b'), celda)
   const { contador } = escena
   ctx.drawImage(contador, Math.round((derecha - contador.width) / celda) * celda, techo + 4 * celda)
 }
@@ -390,16 +497,32 @@ function pintarCuadro(filas, celda) {
   return lienzo
 }
 
-// El contador como un cuadro más, en blanco: cada píxel de la cifra son 2×2
-// puntos, con uno libre entre cifras.
-function filasDelContador(n) {
+// Un texto como cuadro, en la letra de `GLIFOS` y del color dado: cada píxel
+// de la letra son 2×2 puntos, con uno libre entre letras. El espacio es solo
+// ese hueco, doble.
+function filasDeTexto(texto, color) {
   return Array.from({ length: 10 }, (_, y) =>
-    [...String(n)]
-      .map((cifra) => {
+    [...texto]
+      .map((letra) => {
+        if (letra === ' ') return ''
         let fila = ''
-        for (let x = 0; x < 6; x++) fila += (CIFRAS[cifra] >> (14 - 3 * (y >> 1) - (x >> 1))) & 1 ? 'b' : '.'
+        for (let x = 0; x < 6; x++) fila += (GLIFOS[letra] >> (14 - 3 * (y >> 1) - (x >> 1))) & 1 ? color : '.'
         return fila
       })
       .join('..'),
   )
+}
+
+// El globo de la burla: «JA JA JA» en negro sobre blanco, con borde y una cola
+// a la izquierda que apunta al pico. La punta de la cola es la primera columna
+// de la fila `PUNTA`, la del medio (ver `globoJunto`).
+const PUNTA = 8
+
+function filasDelGlobo() {
+  const texto = filasDeTexto('JA JA JA', 'k').map((fila) => `kbbb${fila.replaceAll('.', 'b')}bbbk`)
+  const ancho = texto[0].length
+  const aire = `k${'b'.repeat(ancho - 2)}k`
+  const cuerpo = ['k'.repeat(ancho), aire, aire, ...texto, aire, aire, 'k'.repeat(ancho)]
+  const cola = { [PUNTA - 1]: '.kk', [PUNTA]: 'kbb', [PUNTA + 1]: '.kk' }
+  return cuerpo.map((fila, y) => (cola[y] ? `${cola[y]}b${fila.slice(1)}` : `...${fila}`))
 }

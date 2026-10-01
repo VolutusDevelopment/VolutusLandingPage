@@ -12,9 +12,9 @@
  * `privacidad.html` en `/privacidad` sin extensión, así que la ruta limpia del
  * canonical es la que el visitante ve en la barra del navegador.
  *
- * `indexar: false` es para la 404: se sirve en cualquier dirección que no
- * existe, así que no tiene una URL propia que declarar ni debe aparecer en un
- * buscador.
+ * `indexar: false` es para las páginas de error, la 404 y la de los 5xx: se
+ * sirven en cualquier dirección, así que no tienen una URL propia que declarar
+ * ni deben aparecer en un buscador.
  */
 
 export const ORIGEN = 'https://volutus.cl'
@@ -43,6 +43,12 @@ export const PAGINAS = {
     titulo: 'Página no encontrada — Volutus',
     descripcion:
       'Puede que el enlace esté mal escrito o que la página se haya movido. Desde aquí puedes volver a la portada, ver los proyectos o escribirnos.',
+    indexar: false,
+  },
+  '/500': {
+    archivo: '500.html',
+    titulo: 'Error del servidor — Volutus',
+    descripcion: 'No fue nada que hicieras: el servidor tuvo un problema. Prueba de nuevo en un momento.',
     indexar: false,
   },
 }

@@ -72,8 +72,9 @@ function cabecera(ruta, { archivo, titulo, descripcion, indexar = true }) {
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
 
-  // La 404 no tiene URL propia ni vida en buscadores: título, descripción y la
-  // orden de no indexarla. Sin canonical, sin tarjeta para compartir.
+  // Las páginas de error no tienen URL propia ni vida en buscadores: título,
+  // descripción y la orden de no indexarlas. Sin canonical, sin tarjeta para
+  // compartir.
   if (!indexar) return [...basicas, `<meta name="robots" content="noindex" />`].join('\n    ')
 
   const canonical = canonicalDe(ruta)

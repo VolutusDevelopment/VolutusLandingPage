@@ -1,11 +1,11 @@
-/* La 404. Ver NoEncontrada.jsx.
+/* Las páginas de error, la 404 y la de los 5xx. Ver PaginaDeError.jsx.
 
-   El cielo de la mañana con el aviso abajo, donde ya se aclaró y el texto se
-   lee. La nube se queda con todo lo que el texto deja libre, desde el borde
-   de arriba de la pantalla —pasa detrás del vidrio de la barra, como la
-   portada en L y XL— hasta el aviso: es el campo del juego. A cualquier
-   ancho. */
-.no-encontrada {
+   Una pantalla y nada más, sin pie: el cielo de la mañana con el aviso abajo,
+   donde ya se aclaró y el texto se lee. La nube se queda con todo lo que el
+   texto deja libre, desde el borde de arriba de la pantalla —pasa detrás del
+   vidrio de la barra, como la portada en L y XL— hasta el aviso: es el campo
+   del juego. A cualquier ancho. */
+.pagina-error {
   display: flex;
   flex-direction: column;
   min-height: 100svh;
@@ -14,7 +14,7 @@
   overflow: clip;
 }
 
-.no-encontrada-cielo {
+.pagina-error-cielo {
   position: relative;
   flex: 1 1 0;
   min-height: calc(var(--barra-alto) + 8rem);
@@ -44,11 +44,19 @@
   touch-action: manipulation;
 }
 
+/* El pato que se burla se acerca —por eso crece— y pasa delante de la nube,
+   así se le ve entero aunque no encuentre un claro despejado. «Jugar» queda
+   siempre encima. */
+.burlando .patos {
+  z-index: 1;
+}
+
 /* «Jugar» flota abajo a la derecha del cielo, alineado con el borde del
    texto, así que aparecer no mueve nada. Lleva el vidrio de la barra para
    leerse sobre la nube. */
 .jugar {
   position: absolute;
+  z-index: 1;
   right: max(var(--margen-lateral), (100% - var(--ancho-maximo)) / 2 + var(--margen-lateral));
   bottom: var(--e-4);
   background: var(--vidrio);
@@ -75,15 +83,15 @@
   }
 }
 
-.no-encontrada-texto {
+.pagina-error-texto {
   padding-top: var(--e-8);
 }
 
-.no-encontrada-texto .entradilla {
+.pagina-error-texto .entradilla {
   margin-top: var(--e-4);
 }
 
-.no-encontrada-salidas {
+.pagina-error-salidas {
   display: flex;
   flex-wrap: wrap;
   gap: var(--e-3);

@@ -25,12 +25,23 @@ En producción **React no se envía al navegador**. El script de build:
    `<head>`, el HTML de React y el CSS incrustado. Genera también `sitemap.xml`
    y `_headers`.
 
-Las páginas son `/`, `/nosotros`, `/privacidad` y la 404. Agregar una es una
-entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES` (entry-server.jsx).
+Las páginas son `/`, `/nosotros`, `/privacidad` y las de error: la 404 y la de
+los 5xx, en `/500`. Agregar una es una entrada en `PAGINAS` (meta.js) y otra en
+`COMPONENTES` (entry-server.jsx).
+
+**La página de los 5xx no se sirve todavía.** Cloudflare sirve el sitio y el
+Worker solo atiende `/api/*`, así que un 5xx que vea un visitante lo genera
+Cloudflare, y solo Cloudflare puede reemplazar su página: con una
+[Custom Error Rule](https://developers.cloudflare.com/rules/custom-errors/), que
+pide plan Pro (la zona está en Free). Al pasar a Pro: en Rules → Custom Errors,
+crear un asset desde `https://volutus.cl/500` y una regla que lo sirva cuando el
+código de respuesta sea 500 o mayor. Cloudflare incrusta el CSS y el JS en el
+asset; el texto y el cielo se ven igual, pero hay que comprobar que la nube y
+el juego arranquen, porque el juego se descarga con una ruta relativa.
 
 El JS del cliente engancha sobre el HTML prerenderizado: validación del
 formulario, medidores, titular rotativo, paneles de servicios, vitrina, barra y
-nubes, y el botón «Jugar» de la 404, que descarga el juego de los patos
+nubes, y el botón «Jugar» de las páginas de error, que descarga el juego de los patos
 ([src/patos.js](src/patos.js)) recién al pulsarlo y deshace la volutus en
 cúmulos mientras se juega. El formulario envía a
 `POST /api/contacto`, que el Worker reenvía por correo con Resend.
@@ -62,7 +73,7 @@ scripts/
   prerender.mjs         # un HTML por página, sitemap.xml y _headers
   verificar.mjs         # verificación con Playwright
 src/
-  paginas/              # Inicio, Nosotros, Privacidad y la 404
+  paginas/              # Inicio, Nosotros, Privacidad y las de error (404 y 5xx)
   components/           # secciones con su CSS
   data/                 # proyectos
   lib/                  # metadatos, servicios, seguridad y geometría de la marca
@@ -80,6 +91,6 @@ public/
 - HTML completo prerenderizado (sin depender de JS para indexar).
 - Meta description, canonical, Open Graph, Twitter Card y JSON-LD por página,
   desde [src/lib/meta.js](src/lib/meta.js).
-- `sitemap.xml` generado desde las páginas indexables; la 404 lleva `noindex`.
+- `sitemap.xml` generado desde las páginas indexables; las de error llevan `noindex`.
 - Imágenes con `srcset`, dimensiones explícitas y `loading="lazy"` fuera del
   viewport inicial.

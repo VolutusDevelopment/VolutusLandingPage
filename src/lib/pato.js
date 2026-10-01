@@ -1,8 +1,9 @@
 /**
- * El pato de la 404, cuadro por cuadro. Lo usan dos: el juego (src/patos.js),
- * que lo pinta con los puntos de la trama de la nube, y el botón que lo abre
- * (NoEncontrada.jsx), que lleva el mismo pato punto por punto. Un solo dibujo
- * para los dos, así el botón no puede prometer otro pato.
+ * El pato de las páginas de error, cuadro por cuadro. Lo usan dos: el juego
+ * (src/patos.js), que lo pinta con los puntos de la trama de la nube, y el
+ * botón que lo abre (PaginaDeError.jsx), que lleva el mismo pato punto por
+ * punto. Un solo dibujo para los dos, así el botón no puede prometer otro
+ * pato.
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la
