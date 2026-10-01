@@ -130,8 +130,21 @@ function initFormulario() {
   })
 }
 
+/**
+ * El juego de la 404 (src/patos.js). Casi nadie lo abre, así que no pesa en la
+ * carga: se descarga al pulsar «Jugar», y cada pulsación lo empieza o lo
+ * termina. Sin JavaScript el botón no sirve, por eso llega oculto.
+ */
+function initPatos() {
+  const boton = document.querySelector('.jugar')
+  if (!boton) return
+  boton.hidden = false
+  boton.addEventListener('click', () => import('./patos.js').then((juego) => juego.alternar(boton)))
+}
+
 export default function init() {
   initFormulario()
+  initPatos()
   initMedidores()
   initTitularRotativo()
   initServicios()

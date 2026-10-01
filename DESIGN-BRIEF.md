@@ -717,6 +717,7 @@ tener dueño ni fecha.
 | 18 | 2026-09-30 | El contacto con la composición de surgehq.ai/enterprise: tarjeta oscura con el relato y tarjeta clara con el formulario; «Qué necesitas» en pastillas de selección múltiple | El menú desplegable de una sola opción | Diego |
 | 19 | 2026-09-30 | El pie entra y sale como el de funkhaus.io: el interior baja y aparece, y las letras del logotipo caen de a una, atadas al scroll y sin JavaScript | El logotipo que subía de una pieza | Diego |
 | 20 | 2026-09-30 | Página 404 con la nube, cabeceras de seguridad con una CSP estricta y `security.txt` | — | Diego |
+| 21 | 2026-10-01 | La 404 trae un Duck Hunt: «Jugar» suelta patos desde dentro de la nube, y el que se caza cae a través de ella moviendo su aire con la misma simulación que el cursor. El código del juego se descarga recién al pulsar, y el botón lleva el mismo pato, punto por punto. Los patos van en la trama de puntos de la nube, pero con los colores del NES: excepción declarada a la paleta | Que salieran solos al cargar, que es movimiento que nadie pidió, y patos en la paleta de la marca | Diego |
 
 ---
 

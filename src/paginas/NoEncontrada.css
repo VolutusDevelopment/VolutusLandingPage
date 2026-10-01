@@ -24,6 +24,57 @@
   --nubes-alfa: 1;
 }
 
+/* El juego (src/patos.js). Los patos van detrás de la nube, para salir de
+   dentro de ella y caer a través, y su lienzo sube detrás de la barra hasta el
+   borde de la pantalla: un pato que huye se va por debajo de ella en vez de
+   cortarse a media altura. Solo recibe el puntero mientras se juega, y sin el
+   zoom del doble toque: dos tiros seguidos no agrandan la página. */
+.patos {
+  position: absolute;
+  top: calc(-1 * var(--barra-alto));
+  left: 0;
+  width: 100%;
+  height: calc(100% + var(--barra-alto));
+  pointer-events: none;
+}
+
+.cazando .patos {
+  pointer-events: auto;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+/* «Jugar» flota abajo a la derecha del cielo, alineado con el borde del
+   texto, así que aparecer no mueve nada. Lleva el vidrio de la barra para
+   leerse sobre la nube. */
+.jugar {
+  position: absolute;
+  right: max(var(--margen-lateral), (100% - var(--ancho-maximo)) / 2 + var(--margen-lateral));
+  bottom: var(--e-4);
+  background: var(--vidrio);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+}
+
+/* El pato del juego a dos píxeles por punto: sus 16 × 13 celdas. */
+.jugar svg {
+  width: 32px;
+  height: 26px;
+}
+
+/* `.boton` fija `display` y le ganaría al atributo. Con movimiento reducido el
+   juego no se ofrece: la nube tampoco se mueve. */
+.jugar[hidden],
+:root[data-movimiento='reducido'] .jugar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jugar {
+    display: none;
+  }
+}
+
 .no-encontrada-texto {
   padding-top: var(--e-8);
 }
