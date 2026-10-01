@@ -125,12 +125,7 @@ export default function Barra({ enHome = true, ruta }) {
 
         <nav className="barra-capsula" aria-label="Secciones">
           <ul className="barra-enlaces">
-            <li>
-              <a href={ancla('proyectos')}>Proyectos</a>
-            </li>
-            <li>
-              <a href={ancla('servicios')}>Servicios</a>
-            </li>
+            
             <li>
               {/* Una página y no una sección: en ella el indicador descansa
                   desde el HTML, sin esperar a barra.js. */}
@@ -138,10 +133,16 @@ export default function Barra({ enHome = true, ruta }) {
                 Nosotros
               </a>
             </li>
-          </ul>
-          <a className="boton boton-secundario barra-accion" href={ancla('contacto')}>
-            Cuéntanos tu proyecto
-          </a>
+            <li>
+              <a href={ancla('proyectos')}>Proyectos</a>
+            </li>
+            <li>
+              <a href={ancla('servicios')}>Servicios</a>
+            </li>
+            <li>
+              <a href={ancla('contacto')}>Cuéntanos tu proyecto</a>
+            </li>
+          </ul>          
         </nav>
       </div>
       <Lente />

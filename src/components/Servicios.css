@@ -3,8 +3,8 @@
 
    De la original se copia el gesto, no las medidas: paneles superpuestos con
    el canto redondeado, el elegido entero y los demás asomando en una franja,
-   800 ms de transición en la curva lenta de los dos extremos y el contenido
-   que aparece cuando el panel ya llegó. */
+   800 ms de transición en la curva lenta de los dos extremos. El contenido no
+   espera a nadie: ya está en el panel y viaja con él. */
 
 .paneles {
   list-style: none;
@@ -12,16 +12,104 @@
   padding: 0;
 }
 
+/* Metal cepillado, solo con degradados: un reflejo en diagonal que se apaga
+   hacia una sombra, sobre líneas verticales finísimas. No pesa nada ni se
+   anima, así que el deslizamiento sigue siendo solo `transform`. */
 .servicio {
+  --metal:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0) 10%,
+      rgb(255 255 255 / 0.08) 35%,
+      rgb(255 255 255 / 0) 55%,
+      rgb(0 0 0 / 0.22)
+    ),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
+  --anillo: rgb(255 255 255 / 0.8);
+  --filo: inset 0 -1px 0 rgb(255 255 255 / 0.08);
   position: relative;
-  background: var(--panel, var(--superficie));
+  background: var(--metal), var(--panel);
   color: var(--texto);
+  /* El filo de luz del canto y, debajo, el anillo de selección, apagado. */
+  box-shadow: var(--filo), inset 0 0 0 2px transparent;
+  transition: box-shadow 300ms var(--ease-out);
 }
 
-/* El tercer panel es de cielo, como el primero y el quinto, pero un punto más
-   azul: tres blancos iguales se leían como uno solo partido. */
-.panel-tinte {
+/* El elegido se enmarca con un anillo claro que sigue su canto redondeado: se
+   ve de un vistazo cuál está abierto sin tapar nada. */
+.servicio.activo {
+  box-shadow: var(--filo), inset 0 0 0 2px var(--anillo);
+}
+
+/* Al pasar por una franja cerrada asoma el mismo anillo, tenue: dice que esa
+   pieza también se puede elegir. */
+@media (hover: hover) {
+  .servicio:not(.activo):has(.servicio-boton:hover) {
+    box-shadow: var(--filo), inset 0 0 0 2px color-mix(in srgb, var(--anillo) 40%, transparent);
+  }
+}
+
+/* Del morado al azul: un barrido de un panel a otro, como el de un metal
+   anodizado. Todos llevan texto blanco, que da 4.7:1 o más en el punto más
+   claro del reflejo; un blanco translúcido ya no llega, así que el texto
+   suave es blanco y se distingue por su tamaño. */
+.servicio.zona-plano {
+  --texto: #ffffff;
+  --texto-suave: #ffffff;
+  --accion: #ffffff;
+  --foco: #ffffff;
+  --linea: rgb(255 255 255 / 0.3);
+}
+
+.servicio:nth-child(1) {
+  --panel: #5a2d8c;
+}
+
+.servicio:nth-child(2) {
+  --panel: #583b9e;
+}
+
+.servicio:nth-child(3) {
+  --panel: #4c4aa8;
+}
+
+.servicio:nth-child(4) {
+  --panel: #3d59ad;
+}
+
+.servicio:nth-child(5) {
+  --panel: #2d64a8;
+}
+
+.servicio:nth-child(6) {
+  --panel: #1b6a96;
+}
+
+/* Con el tema forzado a claro los tonos dan paso al blanco: se alternan blanco
+   y tinte para que el canto se siga leyendo, el metal pasa a reflejo blanco
+   con sombra azulada y el anillo, al azul de acción. */
+:root[data-tema='claro'] .servicio {
+  --metal:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0) 10%,
+      rgb(255 255 255 / 0.6) 35%,
+      rgb(255 255 255 / 0) 55%,
+      rgb(10 26 42 / 0.06)
+    ),
+    repeating-linear-gradient(90deg, rgb(10 26 42 / 0.02) 0 1px, transparent 1px 3px);
   --panel: var(--tinte-b);
+  --anillo: var(--accion);
+}
+
+:root[data-tema='claro'] .servicio:nth-child(odd) {
+  --panel: var(--superficie);
+}
+
+/* La cabecera del panel abierto solo existe en escritorio: en el apilado la
+   hace el propio botón. */
+.servicio-cabecera {
+  display: none;
 }
 
 .servicio-titulo {
@@ -183,29 +271,59 @@
     height: 34rem;
     overflow: clip;
     border-radius: var(--radio-panel);
+    /* Los paneles se arrastran en horizontal (servicios.js): el desplazamiento
+       vertical sigue siendo del navegador, el horizontal es nuestro. */
+    cursor: grab;
+    touch-action: pan-y;
   }
 
+  /* Mientras se arrastra, el panel va pegado al puntero: sin transición que lo
+     haga ir a la zaga, y sin seleccionar texto por el camino. */
+  .paneles.arrastrando {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .paneles.arrastrando .servicio,
+  .paneles.arrastrando .servicio-boton {
+    cursor: inherit;
+    transition: none;
+  }
+
+  /* El panel que se va descubriendo ya enseña su contenido. */
+  .paneles.arrastrando .servicio-panel {
+    visibility: visible;
+    transition: none;
+  }
+
+  /* Cada panel nace un canto antes, bajo el redondeo del anterior: así lo que
+     asoma por las esquinas es el panel de abajo y no el fondo de la sección.
+     El primero sobresale por la izquierda y la lista lo recorta. */
   .servicio {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(var(--i) * var(--franja));
-    width: calc(100% - (var(--n) - 1) * var(--franja));
+    left: calc(var(--i) * var(--franja) - var(--radio-panel));
+    width: calc(100% - (var(--n) - 1) * var(--franja) + var(--radio-panel));
     z-index: calc(var(--n) - var(--i));
     display: flex;
     flex-direction: column;
+    --filo: inset -1px 0 0 rgb(255 255 255 / 0.08);
     border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
-    transition: transform 800ms var(--ease-in-out);
+    transition:
+      transform 800ms var(--ease-in-out),
+      box-shadow 300ms var(--ease-out);
   }
 
   /* Los que van antes del elegido se corren hasta dejar asomar solo su franja. */
   .servicio:has(~ .activo) {
-    transform: translateX(calc(-100% + var(--franja)));
+    transform: translateX(calc(-100% + var(--franja) + var(--radio-panel)));
   }
 
-  /* Cerrado, el botón es la franja que asoma: el borde derecho del panel, de
-     arriba abajo, con el icono, el nombre de pie y el número al fondo. */
-  .servicio:not(.activo) .servicio-boton {
+  /* El botón es siempre la franja del borde derecho, abierto o cerrado: de
+     arriba abajo, el icono, el nombre de pie y el número al fondo. Como no
+     cambia de sitio, abrir no reacomoda nada. */
+  .servicio-boton {
     position: absolute;
     top: 0;
     right: 0;
@@ -216,8 +334,26 @@
     padding: var(--e-8) 0 var(--e-6);
   }
 
-  .servicio:not(.activo) .servicio-nombre {
+  .servicio-nombre {
     writing-mode: vertical-rl;
+  }
+
+  .servicio-boton .servicio-icono,
+  .servicio-nombre {
+    transition: opacity 300ms var(--ease-out);
+  }
+
+  /* Abierto, el nombre de la franja se funde con el fondo: ya lo dice la
+     cabecera. Sigue en el árbol de accesibilidad, así que el botón conserva
+     su nombre. El número se queda. */
+  .servicio.activo .servicio-boton .servicio-icono,
+  .servicio.activo .servicio-nombre {
+    opacity: 0;
+  }
+
+  /* Abierto, el botón no hace nada: muestra la mano de arrastrar de la lista. */
+  .servicio.activo .servicio-boton {
+    cursor: inherit;
   }
 
   .servicio-numero {
@@ -231,44 +367,30 @@
     }
   }
 
-  /* Abierto, el botón es la cabecera del panel y deja de responder. El número
-     se queda en la franja de la derecha, donde estaba al cerrar. */
-  .servicio.activo .servicio-titulo {
-    padding: var(--e-8) calc(var(--franja) + var(--e-6)) 0 var(--e-12);
-  }
-
-  .servicio.activo .servicio-boton {
-    cursor: default;
-  }
-
-  .servicio.activo .servicio-nombre {
+  .servicio-cabecera {
+    display: flex;
+    align-items: center;
+    gap: var(--e-3);
+    margin-bottom: var(--e-6);
     font-size: var(--texto-xl);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
-  .servicio.activo .servicio-numero {
-    position: absolute;
-    right: 0;
-    bottom: var(--e-6);
-    width: var(--franja);
-    text-align: center;
-  }
-
-  /* El contenido aparece cuando el panel ya llegó, y se va antes de que se
-     vaya él: sin texto viajando por la pantalla. */
+  /* El contenido está siempre y viaja con su panel. Los cerrados solo se
+     esconden del foco cuando ya terminaron de taparse. */
   .servicio-panel {
     flex: 1;
-    padding: var(--e-6) calc(var(--franja) + var(--e-6)) var(--e-8) var(--e-12);
-    opacity: 0;
+    padding: var(--e-8) calc(var(--franja) + var(--e-6)) var(--e-8)
+      calc(var(--e-12) + var(--radio-panel));
     visibility: hidden;
-    transition:
-      opacity 200ms var(--ease-out),
-      visibility 0s linear 200ms;
+    transition: visibility 0s linear 800ms;
   }
 
   .servicio.activo .servicio-panel {
-    opacity: 1;
     visibility: visible;
-    transition: opacity 500ms var(--ease-out) 350ms;
+    transition: none;
   }
 
   .servicio-contenido {
@@ -286,7 +408,9 @@
 @media (prefers-reduced-motion: reduce) {
   .servicio,
   .servicio-panel,
-  .servicio.activo .servicio-panel {
+  .servicio.activo .servicio-panel,
+  .servicio-boton .servicio-icono,
+  .servicio-nombre {
     transition: none;
   }
 }

@@ -70,13 +70,12 @@ export default function Contacto() {
               de otro alarga el formulario sin necesidad. En S vuelven a una. */}
           <div className="formulario-fila">
             <div className="campo">
-              <label htmlFor="nombre">Tu nombre</label>
               <input
                 id="nombre"
                 name="nombre"
                 type="text"
                 autoComplete="name"
-                placeholder="Ana Soto"
+                placeholder="Tu Nombre"
                 required
               />
               <p className="campo-error" id="error-nombre" hidden>
@@ -85,7 +84,6 @@ export default function Contacto() {
             </div>
 
             <div className="campo">
-              <label htmlFor="correo">Tu correo</label>
               <input
                 id="correo"
                 name="correo"
@@ -94,7 +92,7 @@ export default function Contacto() {
                 autoComplete="email"
                 spellCheck="false"
                 autoCapitalize="off"
-                placeholder="ana@tuempresa.cl"
+                placeholder="tu@correo.cl"
                 required
               />
               <p className="campo-error" id="error-correo" hidden>
@@ -110,7 +108,7 @@ export default function Contacto() {
               de más arriba, sacados de la misma lista (`lib/servicios.js`), y
               «Otro» recoge el resto. */}
           <fieldset className="campo opciones">
-            <legend>Qué necesitas</legend>
+            <legend>Dinos lo qué necesitas</legend>
             <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
                 <label key={opcion} className="chip">
@@ -158,9 +156,6 @@ export default function Contacto() {
             <button className="boton boton-primario formulario-enviar" type="submit">
               Enviar mensaje
             </button>
-            <a className="boton boton-secundario" href={`mailto:${CORREO_DE_CONTACTO}`}>
-              {CORREO_DE_CONTACTO}
-            </a>
           </div>
 
           {/* `role="status"` para que un lector de pantalla anuncie el

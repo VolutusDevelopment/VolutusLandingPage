@@ -29,22 +29,70 @@
   color: var(--texto-suave);
 }
 
-/* La credencial es el único dato de la página validado por un tercero, así que
-   lleva mono y el color de marca —que sobre plano sí pasa contraste (6.71:1)—.
-   Sobre cielo esto sería ilegible; por eso esta tarjeta es la de plano. */
+/* El segundo lugar va en plata, el metal de su puesto, igual en los dos temas.
+   Trae sus propios tokens: sobre el tono más oscuro del degradado (#bcc3cb)
+   el texto suave pasa 5.7:1 y los enlaces 7.1:1. */
+.proyectos .proyecto-destacado {
+  color-scheme: light;
+  --texto: #15191e;
+  --texto-suave: #3a424c;
+  --accion: #1d3550;
+  --accion-hover: #10243a;
+  --accion-activa: #0a1828;
+  --foco: #1d3550;
+  color: var(--texto);
+  background: linear-gradient(135deg, #f4f6f8 0%, #d6dbe1 40%, #eef1f4 55%, #bcc3cb 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 12px 32px -16px rgb(21 25 30 / 0.35);
+}
+
+/* La credencial es el único dato de la página validado por un tercero: va
+   primero, con una medalla que dice el puesto antes de leer nada. */
 .proyecto-credencial {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  margin: 0 0 var(--e-6);
+}
+
+.proyecto-credencial strong {
+  display: block;
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.proyecto-evento {
+  display: block;
   font-size: var(--texto-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--marca);
-  margin: 0 0 var(--e-3);
+  color: var(--texto-suave);
 }
 
-.proyecto-destacado {
-  /* Hereda los tokens de plano: fondo bosque, texto claro, y la marca en el
-     color que sobre bosque sí pasa contraste. */
-  background: var(--fondo);
+/* Anillo de metal pulido con el centro liso, donde va el número. */
+.proyecto-medalla {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  font-size: var(--texto-xl);
+  font-weight: 800;
+  line-height: 1;
   color: var(--texto);
+  background:
+    radial-gradient(circle, #eef1f4 58%, transparent 60%),
+    conic-gradient(from 210deg, #f7f9fb, #8a939e, #eef1f4, #7d8692, #f7f9fb);
+  box-shadow: 0 4px 12px -4px rgb(21 25 30 / 0.4);
+}
+
+@media (min-width: 1024px) {
+  .proyecto-medalla {
+    width: 5rem;
+  }
 }
 
 .proyectos-resto .proyecto:nth-child(2) {

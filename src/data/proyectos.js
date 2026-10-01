@@ -117,7 +117,7 @@ export const PROYECTOS = [
     // Es la única prueba validada por un tercero que existe hoy, así que va
     // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: '2.º lugar en Hackathon de Huawei Cloud y Kostra AI',
+    credencial: { puesto: "2°", titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
     resumen:
       'Un agente de IA que atiende por su cuenta las alertas de infraestructura: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia, en tiempo real, usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',

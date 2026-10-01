@@ -310,9 +310,9 @@
 }
 
 /* ============ Tonos del plano ============
-   Traídos tal cual de la rama de Diego con la vitrina de PonleNota; los usan
-   también las láminas de servicios. Solo cambian superficies, texto suave y acción; el resto
-   lo hereda de `.zona-plano`. Todos pasan 6.6:1. */
+   Traídos tal cual de la rama de Diego con la vitrina de PonleNota. Solo
+   cambian superficies, texto suave y acción; el resto lo hereda de
+   `.zona-plano`. Todos pasan 6.6:1. */
 .zona-plano.tono-ciruela {
   --fondo: #1f141c;
   --superficie: #2c1d28;
@@ -680,11 +680,12 @@ svg {
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
    entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
    siendo los momentos que más respiran de la página. */
-/* Las tarjetas de la vitrina de proyectos también son zonas de plano, y dos
-   seguidas perdían su relleno de arriba. Se excluyen solo ellas: acotar la
+/* Las tarjetas de la vitrina de proyectos y los paneles de servicios también
+   son zonas de plano, y dos seguidas perdían su relleno de arriba. Se excluyen
+   solo ellas: acotar la
    regla a `.seccion` —como en la rama de Diego— devolvía el relleno al
    `main` y al pie de /privacidad, que no son secciones y crecían 112 px. */
-.zona-plano + .zona-plano:not(.vista),
+.zona-plano + .zona-plano:not(.vista, .servicio),
 .zona-cielo + .zona-cielo:not(.corte-de-zona) {
   padding-top: 0;
 }

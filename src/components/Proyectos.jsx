@@ -2,8 +2,8 @@ import { PROYECTOS } from '../data/proyectos.js'
 
 /**
  * Índice de obra (DESIGN-BRIEF §4, bloque 2). La página sigue en blanco y el
- * color vive en las tarjetas: el proyecto con jurado externo va en bosque
- * —la única tarjeta oscura, porque es lo único validado por un tercero— y los
+ * color vive en las tarjetas: el proyecto con jurado externo va en plata
+ * —el color de su puesto, porque es lo único validado por un tercero— y los
  * otros dos en tintes fríos y cálidos, así cada uno se lee como un objeto
  * aparte y no como filas de una tabla.
  *
@@ -161,12 +161,21 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <h2 className="entra">Echa un vistazo a nuestro trabajo</h2>
+        <h2 className="entra">Echa un vistazo a nuestros proyectos y logros</h2>
 
-        <article className="tarjeta proyecto proyecto-destacado zona-plano tono-ciruela entra">
+        <article className="tarjeta proyecto proyecto-destacado entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que
-              validó un tercero, y es el motivo de que este proyecto encabece. */}
-          <p className="proyecto-credencial dato">{destacado.credencial}</p>
+              validó un tercero, y es el motivo de que este proyecto encabece.
+              La medalla repite el puesto en grande; el texto lo dice entero. */}
+          <p className="proyecto-credencial">
+            <span className="proyecto-medalla dato" aria-hidden="true">
+              {destacado.credencial.puesto}
+            </span>
+            <span>
+              <strong>{destacado.credencial.titulo}</strong>{' '}
+              <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
+            </span>
+          </p>
           <h3>{destacado.nombre}</h3>
           <p className="proyecto-resumen">{destacado.resumen}</p>
           <Enlaces {...destacado} />
