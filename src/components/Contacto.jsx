@@ -1,65 +1,71 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
-
+import Icono from './Icono.jsx'
 
 /**
- * Contacto (DESIGN-BRIEF §4, bloque 5). Tema cielo: aquí la página convierte.
+ * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
+ * hondura de la caída, justo antes del mar, y la composición es la del
+ * formulario de surgehq.ai/enterprise: a la izquierda, una tarjeta oscura con
+ * el titular y los problemas que trae quien llega; a la derecha, el formulario
+ * en una tarjeta clara montada encima, que sobresale por arriba y por abajo.
  *
- * Es la única acción que la página quiere que ocurra (§1), así que no compite
- * con nada: sin panel que se despliega, sin pasos, sin pastillas de opciones.
- * Tres campos y un botón. Cada campo que se agrega aquí cuesta mensajes.
+ * Que el formulario sea claro no es un adorno: A.4 descartó bajar la página
+ * entera a oscuro porque dejaba los campos sobre fondo oscuro, peor para
+ * convertir y más frágil en accesibilidad. La tarjeta clara deja caer la
+ * página hasta el mar sin pagar ese precio.
  *
  * **Funciona sin JavaScript**, que es requisito de §8: el `<form>` lleva
  * `method="post"` y `action`, así que sin JS el navegador envía y recarga. El
- * JavaScript de `client.js` solo mejora la validación y evita la recarga.
+ * JavaScript de `client.js` solo mejora la validación y evita la recarga. Las
+ * opciones de «Qué necesitas» son casillas nativas: se marcan y se envían sin
+ * una línea de código.
  *
  * Los mensajes de error están escritos en el HTML servido y ocultos con
  * `hidden`, no creados al vuelo. Ojo: `hidden` por sí solo NO reserva espacio
  * —es `display: none`— y durante un tiempo eso movió el botón de enviar hacia
  * abajo en cuanto aparecía el primer error. El hueco lo reserva el CSS, que le
  * devuelve el `display` y lo esconde con `visibility`.
- *
- * ────────────────────────────────────────────────────────────────────────────
- * EL DESTINO NO EXISTE TODAVÍA. `/api/contacto` es el endpoint que este
- * formulario espera, y hoy no hay ninguno: el repositorio despliega a
- * Cloudflare Workers sirviendo solo `dist/` (wrangler.jsonc), mientras que §10
- * y §11 del brief dan por hecho Vercel con Resend. Esa contradicción es la
- * única decisión que falta para que la página esté completa, y hasta que se
- * tome NO se puede publicar: un formulario que no entrega el mensaje es peor
- * que no tenerlo.
- * ────────────────────────────────────────────────────────────────────────────
  */
 
 export const CORREO_DE_CONTACTO = 'contacto@volutus.cl'
 
+// Lo que trae quien llega (§2), dicho como lo diría: cada problema es uno de
+// los servicios visto desde el otro lado del mostrador.
+const PROBLEMAS = [
+  { icono: 'automatizacion', texto: 'Copias datos de una planilla a otra, a mano.' },
+  { icono: 'web', texto: 'Te buscan en Google y no te encuentran.' },
+  { icono: 'agente', texto: 'Respondes lo mismo todo el día por WhatsApp.' },
+]
+
 export default function Contacto() {
   return (
-    <section id="contacto" className="seccion zona-cielo contacto">
+    <section id="contacto" className="seccion zona-plano hondura-3 contacto">
       <div className="contenedor contacto-interior">
-        <div>
+        <div className="contacto-relato">
           <p className="antetitulo entra">Cuéntanos</p>
           <h2 className="entra">¿Qué estás resolviendo a mano?</h2>
-          {/* Antes eran 65 palabras antes del primer campo: una entradilla de dos
-              frases, tres promesas en lista y la línea del correo. Las tres
-              promesas dicen una sola cosa —quién, cuándo y con qué te
-              contestamos— y caben en una frase. «En tus palabras» sustituye a
-              «no hace falta que sepas cómo se resuelve», que decía lo mismo en
-              el doble, y va en la etiqueta del mensaje, que es donde se escribe.
-              El compromiso de las 48 horas es el de §5, sin cambios. */}
+          {/* Una frase: quién te contesta y cuándo. El compromiso de las 48
+              horas es el de §5, sin cambios. */}
           <p className="entradilla contacto-entradilla">
-            Te responde una persona en menos de 48 horas hábiles, con un rango de precio real.
+            Te responde una persona en menos de 48 horas hábiles.
           </p>
 
-          <p className="contacto-alternativa">
-            O escríbenos a <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
+          <ul className="contacto-problemas">
+            {PROBLEMAS.map(({ icono, texto }) => (
+              <li key={icono}>
+                <Icono id={icono} className="contacto-icono" />
+                {texto}
+              </li>
+            ))}
+          </ul>
+
+          <p className="contacto-nosotros">
+            <a href="/nosotros">Conoce quiénes somos</a>
           </p>
         </div>
 
-        {/* El formulario vive dentro de una tarjeta y no suelto sobre el fondo.
-            Es lo que hacen Supabase y Linear, y el motivo se ve al comparar:
-            sobre un fondo casi blanco, unos campos blancos no se distinguen y
-            el bloque entero se lee como texto con rayas. Dentro de una
-            superficie con su borde, el formulario es un objeto. */}
-        <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>
+        <form className="formulario tarjeta zona-cielo" method="post" action="/api/contacto" noValidate>
+          <h3 className="formulario-titulo">Escríbenos</h3>
+
           {/* Nombre y correo en dos columnas: son cortos y ponerlos uno debajo
               de otro alarga el formulario sin necesidad. En S vuelven a una. */}
           <div className="formulario-fila">
@@ -99,21 +105,21 @@ export default function Contacto() {
 
           {/* Opcional a propósito: sirve para repartir el mensaje, no para
               filtrar a nadie, y quien no sabe qué pedir no debe quedarse
-              atascado aquí. Las opciones son los servicios de la sección de
-              arriba, sacados de la misma lista (`lib/servicios.js`), y «Otro»
-              recoge el resto. La primera opción está desactivada, así
-              que si nadie elige, el campo simplemente no se envía. */}
-          <div className="campo">
-            <label htmlFor="servicio">Qué necesitas</label>
-            <select id="servicio" name="servicio" defaultValue="">
-              <option value="" disabled>
-                Elige una opción
-              </option>
+              atascado aquí. Se puede marcar más de una, porque una tienda
+              suele venir con su automatización. Las opciones son los servicios
+              de más arriba, sacados de la misma lista (`lib/servicios.js`), y
+              «Otro» recoge el resto. */}
+          <fieldset className="campo opciones">
+            <legend>Qué necesitas</legend>
+            <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
-                <option key={opcion}>{opcion}</option>
+                <label key={opcion} className="chip">
+                  <input type="checkbox" name="servicio" value={opcion} />
+                  {opcion}
+                </label>
               ))}
-            </select>
-          </div>
+            </div>
+          </fieldset>
 
           <div className="campo">
             <label htmlFor="proyecto">El problema, en tus palabras</label>
@@ -145,11 +151,17 @@ export default function Contacto() {
             <input id="empresa" name="empresa" type="text" tabIndex={-1} autoComplete="off" />
           </div>
 
-          {/* Regla 4 de §7: al enviar no desaparece ni encoge. El ancho lo fija
-              el texto más largo de los dos estados, reservado desde el HTML. */}
-          <button className="boton boton-primario formulario-enviar" type="submit">
-            Enviar mensaje
-          </button>
+          {/* Regla 4 de §7: al enviar no desaparece ni encoge. El correo va al
+              lado, como segunda puerta para quien prefiere escribir desde el
+              suyo: es la acción secundaria aceptable de §1. */}
+          <div className="formulario-acciones">
+            <button className="boton boton-primario formulario-enviar" type="submit">
+              Enviar mensaje
+            </button>
+            <a className="boton boton-secundario" href={`mailto:${CORREO_DE_CONTACTO}`}>
+              {CORREO_DE_CONTACTO}
+            </a>
+          </div>
 
           {/* `role="status"` para que un lector de pantalla anuncie el
               resultado sin que el foco salte. Vive en el HTML servido, vacío. */}

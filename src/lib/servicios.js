@@ -25,42 +25,32 @@ export const SERVICIOS = [
     id: 'web',
     nombre: 'Páginas web',
     opcion: 'Una página web',
-    texto:
-      'Abre rápido en el celular, aparece en Google y dice lo que vendes sin rodeos. Como esta, que saca 100 de 100.',
+    texto: 'Como esta, que saca 100 de 100 en las cuatro pruebas de Google.',
+    puntos: ['Abre rápido en el celular', 'Aparece en Google', 'Dice lo que vendes sin rodeos'],
     enlace: { texto: 'Ver la web de PonleNota', href: '#ponlenota' },
-    // Pantallazo de ponlenota.cl del 29-09-2026, recortado a 16:9. Si la web
-    // cambia, se vuelve a sacar: una captura vieja de un cliente es una prueba
-    // que ya no prueba nada.
-    imagen: {
-      src: '/image/servicio-web-1280.webp',
-      srcSet: '/image/servicio-web-760.webp 760w, /image/servicio-web-1280.webp 1280w',
-      ancho: 1280,
-      alto: 720,
-      alt: 'Portada de ponlenota.cl: «Opiniones privadas. Reseñas en Google.», con el resumen de valoraciones de un café de ejemplo.',
-    },
   },
   {
     id: 'tienda',
     nombre: 'Tiendas online',
     opcion: 'Una tienda online',
-    texto:
-      'Tu catálogo, el carro y el pago con tarjeta, en una tienda rápida en el celular que administras tú.',
+    texto: 'Una tienda rápida en el celular, que administras tú.',
+    puntos: ['Tu catálogo', 'El carro de compra', 'El pago con tarjeta'],
     enlace: null,
   },
   {
     id: 'app',
     nombre: 'Aplicaciones',
     opcion: 'Una app',
-    texto:
-      'Para tu equipo o para tus clientes, en el navegador o en el celular, conectada a los datos que ya tienes.',
+    texto: 'Para tu equipo o para tus clientes.',
+    puntos: ['En el navegador', 'En el celular', 'Conectada a los datos que ya tienes'],
     enlace: { texto: 'Ver la app de PonleNota', href: '#ponlenota' },
   },
   {
     id: 'agente',
     nombre: 'Agentes de IA',
     opcion: 'Un agente de IA',
-    texto:
-      'Contesta y resuelve lo repetitivo con tu información, a cualquier hora. El nuestro salió segundo en un hackathon con jurado externo.',
+    texto: 'El nuestro salió segundo en un hackathon con jurado externo.',
+    puntos: ['Contesta y resuelve lo repetitivo', 'Con tu información', 'A cualquier hora'],
     enlace: {
       texto: 'Ver el código del agente',
       href: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
@@ -72,16 +62,16 @@ export const SERVICIOS = [
     // parte ahí, con guion, en vez de empujar la página hacia el lado.
     nombre: 'Automatiza\u00adciones',
     opcion: 'Una automatización',
-    texto:
-      'Lo que hoy copias de una planilla a otra o reenvías por WhatsApp pasa solo, sin que nadie lo toque.',
+    texto: 'Lo que hoy haces a mano pasa solo, sin que nadie lo toque.',
+    puntos: ['Lo que copias de una planilla a otra', 'Lo que reenvías por WhatsApp'],
     enlace: null,
   },
   {
     id: 'datos',
     nombre: 'Ley de datos',
     opcion: 'Adaptarme a la ley de datos',
-    texto:
-      'La Ley 21.719 rige desde el 1 de diciembre de 2026. Adaptamos la parte técnica de tu web: consentimiento, privacidad y solo los datos necesarios.',
+    texto: 'La Ley 21.719 rige desde el 1 de diciembre de 2026. Adaptamos la parte técnica de tu web.',
+    puntos: ['Consentimiento', 'Privacidad', 'Solo los datos necesarios'],
     enlace: { texto: 'Ver nuestra política', href: '/privacidad' },
   },
 ]

@@ -127,13 +127,22 @@
   --texto: #0a1a2a;
   --texto-suave: #47607a;
 
+  /* El fondo de cielo, visible también desde una zona de plano: lo necesita el
+     corte de la caída, que pinta el claro de arriba dentro de una sección
+     honda. */
+  --fondo-claro: #f6f9fc;
+
   /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
-  /* Las tarjetas de proyectos (de la rama de Diego) y de servicios van a
-     12 px, y se acota a ellas: el resto del sitio sigue en el radio de arriba. */
+  /* Las tarjetas (proyectos, cifras, contacto, equipo) van a 12 px, y se acota
+     a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
+
+  /* Los paneles de servicios y la vitrina de proyectos son objetos grandes, y
+     a su escala 12 px se lee como esquina recta. */
+  --radio-panel: 28px;
 
   /* Lo que ocupa la barra fija (la de la rama de Diego). Lo leen el scroll a
      anclas y lo que se pega arriba al desplazar —la tarjeta de la app en la
@@ -363,6 +372,29 @@
   --mar-cresta: #3b86bf;
   --mar-espuma: #eef3ff;
   --fondo-hora: linear-gradient(#0a1a2a, #050d18);
+}
+
+/* ============ La caída ============
+   La página cae de la nube al mar y nunca vuelve a subir. Pasado el único
+   corte de claro a oscuro, cada sección es un poco más honda que la anterior:
+   empieza en el color donde terminó la de arriba y acaba en el que abre la de
+   abajo, así que no hay costura entre ellas. La última llega al #0a1a2a donde
+   empieza el mar del pie.
+
+   Solo cambian el fondo; el resto es el tema plano. El punto más claro, el
+   arranque de la primera, es el que fija el límite: ahí el texto da 11:1, el
+   secundario 5.9:1 y la acción 4.9:1. Un azul más claro bajaba la acción de
+   4.5:1. */
+:root:not([data-tema]) .hondura-1 {
+  --fondo-hora: linear-gradient(#173350, #132c45);
+}
+
+:root:not([data-tema]) .hondura-2 {
+  --fondo-hora: linear-gradient(#132c45, #0f2338);
+}
+
+:root:not([data-tema]) .hondura-3 {
+  --fondo-hora: linear-gradient(#0f2338, #0a1a2a);
 }
 
 /* ============ Base ============ */

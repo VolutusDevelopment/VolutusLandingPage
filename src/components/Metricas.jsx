@@ -2,8 +2,8 @@ import Medidor from './Medidor.jsx'
 import { ORIGEN } from '../lib/meta.js'
 
 /**
- * Métricas (DESIGN-BRIEF §4, bloque 3). Sigue en plano: la página todavía está
- * demostrando.
+ * Métricas (DESIGN-BRIEF §4, bloque 3). Aquí la página cruza su único corte de
+ * claro a oscuro y empieza a caer hacia el mar: es la primera hondura.
  *
  * **Por qué los números son los de esta misma página y no los de un cliente.**
  * §3 fija una regla de la que cuelga toda la credibilidad del sitio: cada
@@ -20,7 +20,7 @@ import { ORIGEN } from '../lib/meta.js'
  * Ahora las cuatro puntuaciones son cuatro medidores que se llenan al entrar, y
  * la explicación de cada prueba cabe en una línea bajo su anillo. Las tres
  * cifras duras que no van sobre cien —lo que tarda, lo que pesa, cuánto se
- * mueve— quedan en una sola línea al pie, que es donde no estorban.
+ * mueve— son las tarjetas que tapan el corte (ver `Corte`).
  *
  * Medido con Lighthouse el 27-09-2026 sobre el build de producción, en móvil
  * con 4G simulado. Si el build engorda, estos números mienten: se vuelven a
@@ -57,9 +57,44 @@ const PRUEBAS = [
 // sin él, «medido» es otra cosa que hay que creerse.
 const PRUEBA = `https://pagespeed.web.dev/analyze?url=${encodeURIComponent(`${ORIGEN}/`)}`
 
+// «78 kB» no le dice nada a nadie sin con qué compararlo, y la foto que ese
+// mismo teléfono acaba de sacar pesa cuarenta veces más.
+const CIFRAS = [
+  { dato: '1,2 s', texto: 'en abrir con datos móviles' },
+  { dato: '78 kB', texto: 'la página entera, menos que una foto' },
+  { dato: '0', texto: 'saltos mientras carga' },
+]
+
+/**
+ * El corte de claro a oscuro, tapado por las tres cifras (la referencia es
+ * surgehq.ai/enterprise). La franja pinta su mitad de arriba del color de
+ * Proyectos y deja ver abajo el de esta sección, así que las tarjetas quedan a
+ * caballo del corte midan lo que midan: no hay alturas que calcular.
+ *
+ * Las tarjetas son de cielo: blancas, como un trozo de la página de arriba que
+ * cae sobre la de abajo.
+ */
+function Corte() {
+  return (
+    <div className="corte">
+      <div className="contenedor">
+        <ul className="cifras zona-cielo">
+          {CIFRAS.map(({ dato, texto }) => (
+            <li key={dato} className="cifra entra">
+              <b className="dato">{dato}</b> {texto}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
 export default function Metricas() {
   return (
-    <section id="metricas" className="seccion zona-plano metricas">
+    <section id="metricas" className="seccion zona-plano hondura-1 metricas">
+      <Corte />
+
       <div className="contenedor">
         <p className="antetitulo entra">Medido, no prometido</p>
         {/* El titular lleva el número y dice de qué página habla. «Las cuatro
@@ -96,46 +131,19 @@ export default function Metricas() {
           ))}
         </ul>
 
-        {/* Las tres cifras que no van sobre cien. En una línea, con separadores
-            en vez de tres tarjetas: ninguna necesita su propio párrafo.
-
-            «78 kB» no le dice nada a nadie sin con qué compararlo, y la foto
-            que ese mismo teléfono acaba de sacar pesa cuarenta veces más. */}
-        <p className="metricas-duras entra">
-          <span>
-            <b className="dato">1,2 s</b> en abrir con datos móviles
-          </span>
-          <span>
-            <b className="dato">78 kB</b> la página entera, menos que una foto
-          </span>
-          <span>
-            <b className="dato">0</b> saltos mientras carga
-          </span>
-        </p>
-
-        {/* Tres pasos, y el primero es el enlace.
-
-            «Compruébalo tú» sin decir cómo es una invitación que nadie recoge:
-            quien no ha medido una página nunca no sabe si le van a pedir
-            instalar algo, registrarse o entender un informe. Los tres pasos
-            existen para quitar de en medio esas tres dudas antes de que
-            aparezcan, y por eso dicen lo que NO hay que hacer —escribir nada,
-            registrarse— tanto como lo que sí.
+        {/* Una línea y el enlace. «Compruébalo tú» sin decir cómo es una
+            invitación que nadie recoge, así que dice lo que quita las dudas de
+            quien nunca ha medido una página: que arranca sola y que no pide
+            registrarse. Medir la suya ya lo propone la entradilla.
 
             El enlace lleva la URL puesta y PageSpeed arranca solo al abrirlo,
-            así que el primer paso es un toque. Eso es lo que hace que el tercero
-            —medir la suya— parezca poco trabajo. */}
-        <p className="metricas-comprobar entra">Hazla tú, ahora</p>
-        <ol className="pasos-prueba entra">
-          <li>
-            <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
-              Abre PageSpeed Insights con esta página
-            </a>
-            . Arranca sola: no hay que escribir nada ni registrarse.
-          </li>
-          <li>Espera medio minuto. Salen las mismas cuatro notas de arriba, de 0 a 100.</li>
-          <li>Cambia la dirección por la de tu página y vuelve a medir.</li>
-        </ol>
+            así que comprobarlo es un toque. */}
+        <p className="metricas-comprobar entra">
+          <a href={PRUEBA} target="_blank" rel="noopener noreferrer">
+            Abre PageSpeed Insights con esta página
+          </a>
+          . Arranca sola: no hay que escribir nada ni registrarse.
+        </p>
 
         {/* Las condiciones van escritas porque el resultado de quien repita la
             prueba dependerá de su conexión, y encontrarse un 97 sin saber por
