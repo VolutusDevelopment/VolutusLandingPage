@@ -42,7 +42,7 @@ export const PAGINAS = {
     archivo: '404.html',
     titulo: 'Página no encontrada — Volutus',
     descripcion:
-      'Puede que el enlace esté mal escrito o que la página se haya movido. Desde aquí puedes volver a la portada, ver los proyectos o escribirnos.',
+      'Puede que el enlace esté mal escrito o que la página se haya movido. Desde aquí puedes volver al inicio.',
     indexar: false,
   },
   '/500': {

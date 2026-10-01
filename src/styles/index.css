@@ -700,7 +700,7 @@ svg {
    de títulos. En mono porque es una etiqueta, no prosa. */
 .antetitulo {
   font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
+  font-size: var(--texto-sm);
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
