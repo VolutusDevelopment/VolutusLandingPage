@@ -120,11 +120,42 @@
   margin-top: var(--e-3);
 }
 
+/* Cómo funciona: tres pasos con su número en la mono y en el color de acción,
+   que es lo primero que encuentra la vista al bajar por la tapa. */
+.vitrina-pasos-titulo {
+  margin: var(--e-6) 0 var(--e-3);
+}
+
+.vitrina-pasos {
+  counter-reset: paso;
+  list-style: none;
+  display: grid;
+  gap: var(--e-3);
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+}
+
+.vitrina-pasos li {
+  counter-increment: paso;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--e-2);
+}
+
+.vitrina-pasos li::before {
+  content: counter(paso, decimal-leading-zero);
+  font-family: var(--fuente-datos);
+  color: var(--accion);
+}
+
 .vista {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 28px;
+  border-radius: var(--radio-panel);
   padding: var(--e-8) var(--e-6) 0;
   color: var(--texto);
   background:
@@ -417,7 +448,7 @@
    estira sobre la tarjeta entera. */
 .vitrina-cabecera {
   position: relative;
-  border-radius: 28px;
+  border-radius: var(--radio-panel);
   padding: var(--e-8) var(--e-6);
   color: var(--texto);
   background:
@@ -520,8 +551,13 @@
  * que `vitrina.js` la mide, la fija en píxeles durante el viaje y la suelta al
  * llegar. Mientras dura, lo que sobresale se recorta: se ve como una tapa que
  * se abre sobre el contenido. */
+/* `clip` y no `hidden`: `hidden` vuelve la vitrina un contenedor con scroll
+   propio mientras dura el viaje. La tarjeta fija de la app se pegaba entonces
+   a la vitrina y no a la pantalla —nacía 100 px más abajo y saltaba a su sitio
+   al llegar— y las entradas de las demás tarjetas, atadas al scroll, medían
+   contra la vitrina: se veían durante el viaje y se apagaban al final. */
 .vitrina.desplegando {
-  overflow: hidden;
+  overflow: clip;
   transition: height 650ms var(--ease-in-out);
 }
 

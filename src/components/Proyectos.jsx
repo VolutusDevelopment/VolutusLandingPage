@@ -125,6 +125,18 @@ function Vitrina({ proyecto }) {
               proyecto.resumen
             )}
           </p>
+          {/* Cómo funciona va en la tapa y no dentro: quien no la abre se
+              lleva igual lo que el producto hace, en tres pasos. */}
+          {proyecto.pasos && (
+            <>
+              <p className="antetitulo vitrina-pasos-titulo">Cómo funciona</p>
+              <ol className="vitrina-pasos">
+                {proyecto.pasos.map((paso) => (
+                  <li key={paso}>{paso}</li>
+                ))}
+              </ol>
+            </>
+          )}
           <Enlaces {...proyecto} sitio={enLinea ? null : proyecto.sitio} />
           <button
             type="button"
