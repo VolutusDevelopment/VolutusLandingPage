@@ -26,13 +26,7 @@ export default function NoEncontrada() {
           <p className="entradilla">{descripcion}</p>
           <p className="no-encontrada-salidas">
             <a className="boton boton-primario" href="/">
-              Volver a la portada
-            </a>
-            <a className="boton boton-secundario" href="/#proyectos">
-              Ver proyectos
-            </a>
-            <a className="boton boton-secundario" href="/#contacto">
-              Escríbenos
+              Volver al inicio
             </a>
           </p>
         </div>
