@@ -7,7 +7,7 @@
 //   node scripts/verificar.mjs --actualizar    reescribe la referencia
 //
 // Necesita el sitio servido en http://127.0.0.1:8787 (wrangler dev) y
-// Playwright disponible. No es dependencia del repo: se invoca con npx.
+// Chromium de Playwright instalado (`pnpm exec playwright install chromium`).
 //
 // **Por qué medidas y no capturas.** Un diff de píxeles sobre una página con
 // fotografía y tipografía web da falsos positivos cada vez que cambia el
@@ -24,7 +24,9 @@
 // Cada comprobación de aquí existe porque su fallo ya ocurrió.
 
 import { readFileSync, writeFileSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
+
+import { chromium } from 'playwright'
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8787'
 const REFERENCIA = fileURLToPath(new URL('../tests/referencia.json', import.meta.url))
@@ -34,42 +36,13 @@ const actualizar = process.argv.includes('--actualizar')
 // y entre sistemas; lo que importa es que no cambien de golpe.
 const MARGEN = 24
 
-// Playwright no es dependencia del repo: instalarlo arrastra los navegadores
-// enteros y esta comprobación se corre a mano, no en cada build.
-//
-// Se busca primero como módulo normal y, si no está, donde diga PLAYWRIGHT.
-// NODE_PATH no sirve aquí: los módulos ESM no lo consultan.
-//
-//   PLAYWRIGHT=/ruta/a/node_modules/playwright \
-//   CHROMIUM=/ruta/a/chrome.exe \
-//   node scripts/verificar.mjs
-let chromium
-try {
-  // Una ruta absoluta no es un especificador válido para import(): en Windows
-  // `C:/...` se interpreta como un protocolo. Hay que pasarla como file://.
-  const desde = process.env.PLAYWRIGHT ? pathToFileURL(process.env.PLAYWRIGHT).href : 'playwright'
-  ;({ chromium } = await import(desde))
-} catch {
-  console.error(
-    'Falta Playwright.\n' +
-      '  npm i playwright && npx playwright install chromium\n' +
-      'Si ya lo tienes en otro sitio, apúntalo:\n' +
-      '  PLAYWRIGHT=/ruta/a/node_modules/playwright node scripts/verificar.mjs\n'
-  )
-  process.exit(2)
-}
-
 const ANCHOS = [
   ['movil', 390, 844],
   ['tablet', 768, 1024],
   ['escritorio', 1440, 900],
 ]
 
-// CHROMIUM permite usar un binario ya presente en la máquina en vez de bajar
-// otro: Playwright espera una compilación concreta y no siempre está.
-const navegador = await chromium.launch(
-  process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {}
-)
+const navegador = await chromium.launch()
 
 async function medir(ruta, ancho, alto, tema) {
   const ctx = await navegador.newContext({ viewport: { width: ancho, height: alto } })

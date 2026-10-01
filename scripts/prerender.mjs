@@ -13,15 +13,13 @@
 import { readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
+import { tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 
 const { render, PAGINAS } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const ORIGEN = 'https://volutus.cl'
-const IMAGEN = `${ORIGEN}/image/og-volutus.jpg`
-const ALT_IMAGEN =
-  'Tarjeta de Volutus sobre una nube volutus al atardecer: el titular «Construimos software que puedes abrir y revisar».'
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -57,10 +55,12 @@ function datosEstructurados(ruta, canonical, titulo) {
   })}</script>`
 }
 
-function cabecera(ruta, { titulo, descripcion }) {
+function cabecera(ruta, { archivo, titulo, descripcion }) {
   const canonical = ruta === '/' ? `${ORIGEN}/` : `${ORIGEN}${ruta}`
   const t = atributo(titulo)
   const d = atributo(descripcion)
+  const imagen = `${ORIGEN}${tarjetaDe(archivo)}`
+  const alt = atributo(`El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
 
   return [
     `<title>${t}</title>`,
@@ -72,14 +72,16 @@ function cabecera(ruta, { titulo, descripcion }) {
     `<meta property="og:description" content="${d}" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:locale" content="es_CL" />`,
-    `<meta property="og:image" content="${IMAGEN}" />`,
+    `<meta property="og:image" content="${imagen}" />`,
+    `<meta property="og:image:type" content="image/jpeg" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="${atributo(ALT_IMAGEN)}" />`,
+    `<meta property="og:image:alt" content="${alt}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${t}" />`,
     `<meta name="twitter:description" content="${d}" />`,
-    `<meta name="twitter:image" content="${IMAGEN}" />`,
+    `<meta name="twitter:image" content="${imagen}" />`,
+    `<meta name="twitter:image:alt" content="${alt}" />`,
     datosEstructurados(ruta, canonical, titulo),
   ].join('\n    ')
 }

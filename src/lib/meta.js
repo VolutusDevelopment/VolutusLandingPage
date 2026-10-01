@@ -40,3 +40,13 @@ export function metaDe(ruta) {
 
   return { ...pagina, canonical: ruta === '/' ? `${ORIGEN}/` : `${ORIGEN}${ruta}` }
 }
+
+/** El título sin la marca, que es lo que va escrito en la tarjeta para compartir. */
+export const tituloCorto = (titulo) => titulo.replace(/ — Volutus$/, '')
+
+/**
+ * La tarjeta para compartir de cada página, derivada de su archivo para que
+ * `scripts/tarjetas-og.mjs`, que la genera, y el prerender, que la enlaza,
+ * no puedan nombrarla distinto.
+ */
+export const tarjetaDe = (archivo) => `/image/og/${archivo.replace(/.html$/, '')}.jpg`
