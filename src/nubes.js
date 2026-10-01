@@ -15,7 +15,8 @@
  * El cielo además escucha al cursor: le cuenta al pintor por dónde pasa sobre
  * su sección, y el pintor lo vuelve viento. Lo mismo con lo que la página haga
  * pasar por la nube —los patos de la 404—, que lo avisa con un evento `soplo`
- * en el lienzo.
+ * en el lienzo. Y el juego de la 404 cambia la forma de la nube con un evento
+ * `forma`, que aquí solo se reenvía al pintor (ver patos.js).
  *
  * Qué NO hace, a propósito:
  *
@@ -137,6 +138,7 @@ function montar(pintor, lienzo, id) {
       if (!ajeno) ceder(true)
       soplar(x, y)
     })
+    lienzo.addEventListener('forma', ({ detail }) => pintor.postMessage({ tipo: 'forma', id, ...detail }))
   }
 
   new ResizeObserver(medir).observe(lienzo)

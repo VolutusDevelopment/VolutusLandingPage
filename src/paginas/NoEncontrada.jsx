@@ -11,8 +11,9 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * salidas, y debajo el mar. Ocupa la pantalla entera para que el pie no asome
  * a medio entrar al cargar.
  *
- * Y un juego: «Jugar» suelta patos desde dentro de la nube, como los del Duck
- * Hunt desde el pasto, y el que se caza cae a través de ella (src/patos.js).
+ * Y un juego: «Jugar» deshace la volutus en cúmulos repartidos por el cielo y
+ * suelta patos desde dentro de ellos, como los del Duck Hunt desde el pasto; el
+ * que se caza cae a través de la nube (src/patos.js).
  * Su lienzo va antes que el de la nube para quedar detrás: dentro de la nube,
  * los puntos de ella tapan los del pato. El botón llega oculto, porque sin
  * JavaScript no sirve, y flota sobre el cielo para que aparecer no mueva nada.

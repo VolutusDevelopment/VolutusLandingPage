@@ -31,7 +31,8 @@ entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES` (entry-server.jsx).
 El JS del cliente engancha sobre el HTML prerenderizado: validación del
 formulario, medidores, titular rotativo, paneles de servicios, vitrina, barra y
 nubes, y el botón «Jugar» de la 404, que descarga el juego de los patos
-([src/patos.js](src/patos.js)) recién al pulsarlo. El formulario envía a
+([src/patos.js](src/patos.js)) recién al pulsarlo y deshace la volutus en
+cúmulos mientras se juega. El formulario envía a
 `POST /api/contacto`, que el Worker reenvía por correo con Resend.
 
 Las cabeceras de seguridad viven en [src/lib/seguridad.js](src/lib/seguridad.js):

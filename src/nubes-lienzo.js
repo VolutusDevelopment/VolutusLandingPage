@@ -24,7 +24,8 @@
  * `borde` (el filo dorado en el cielo, la espuma en el mar).
  *
  * Recibe de la página (nubes.js) los lienzos, sus medidas, sus colores, si
- * están a la vista y por dónde pasa el cursor; le devuelve `vivo` cuando un lienzo ya tiene su primer
+ * están a la vista, por dónde pasa el cursor y, en el juego de la 404, la
+ * forma del cielo; le devuelve `vivo` cuando un lienzo ya tiene su primer
  * fotograma.
  */
 
@@ -79,6 +80,18 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     (`giro`, una vuelta cada ~70 s), así que la superficie rueda; deriva
 //     despacio a lo largo, y cada octava se corre un poco más que la anterior,
 //     así que los bultos hierven en vez de ser una textura pegada.
+//   - Los cúmulos, solo en el juego de la 404 (patos.js): la volutus se
+//     deshace en hasta diez nubes sueltas, `cumulos`, cada una con su centro
+//     y su radio en altos. `forma` dice cuánto va: en 0 el shader no las mira
+//     y en 1 no mira el rollo. En medio, el rollo se evapora mientras ellas se
+//     condensan donde estaba y viajan a su lugar; el viaje lo lleva patos.js,
+//     que le pasa las posiciones de cada fotograma. Cada cúmulo es un
+//     elipsoide 1.6 veces más ancho que alto, con la base aplanada, y encima
+//     la misma `borla` del rollo, con su propia semilla y corriendo en
+//     profundidad: los bultos hierven en su sitio en vez de rodar. La luz es la
+//     misma; lo que el rollo saca de su eje y su radio (`marco`), el cúmulo lo
+//     saca de su centro y el suyo, así que la bruma aclara más a los chicos,
+//     que se leen lejanos.
 //   - La luz: el rayo de cada celda entra de frente (cámara ortográfica) y
 //     cruza la nube en 28 pasos, de adelante hacia atrás, hasta que casi no
 //     queda transmitancia. En cada paso, tres muestras hacia el sol —arriba a
@@ -266,8 +279,8 @@ void main() {
 
 const CAMPO = `precision highp float;
 uniform vec2 res;
-uniform float t, celda;
-uniform vec3 luz, sombra, borde;
+uniform float t, celda, forma;
+uniform vec3 luz, sombra, borde, cumulos[10];
 uniform sampler2D ruido, estado;
 ${PERSPECTIVA}
 float torres;
@@ -292,7 +305,7 @@ vec3 tubo(float x) {
   float f = cercania(x);
   return vec3((1.0 / f - 1.0) / 0.36 + max(x - FONDO, 0.0) / (0.4 * f), 0.3 + 0.28 * f, 0.4 * f);
 }
-float densidad(vec3 p, int octavas) {
+float rollo(vec3 p, int octavas) {
   vec3 e = tubo(p.x);
   vec2 d = vec2(p.y - e.y, p.z) / e.z;
   float base = 1.0 - length(d);
@@ -301,6 +314,31 @@ float densidad(vec3 p, int octavas) {
   float relieve = mix(0.55, 1.1 * torres, smoothstep(0.2, -0.8, d.x));
   return clamp(2.0 * (base + (borla(q, octavas) - 0.35) * relieve), 0.0, 1.0);
 }
+float cumulo(vec3 p, int octavas) {
+  float base = -1.0, semilla = 0.0;
+  vec3 cerca = vec3(0.0);
+  for (int i = 0; i < 10; i++) {
+    vec3 c = cumulos[i];
+    if (c.z <= 0.0) continue;
+    vec3 local = vec3(p.xy - c.xy, p.z) / c.z;
+    float b = 1.0 - length(vec3(local.x / 1.6, local.y * (local.y > 0.0 ? 1.8 : 1.0), local.z));
+    if (b > base) {
+      base = b;
+      cerca = local;
+      semilla = float(i);
+    }
+  }
+  if (base < -0.9) return 0.0;
+  vec3 q = cerca * 1.7 + vec3(semilla * 7.3, semilla * 3.1, t * 0.04);
+  float relieve = mix(0.55, 1.1 * torres, smoothstep(0.2, -0.8, cerca.y));
+  return clamp(2.0 * (base + (borla(q, octavas) - 0.35) * relieve), 0.0, 1.0);
+}
+float densidad(vec3 p, int octavas) {
+  float rho = 0.0;
+  if (forma < 1.0) rho = rollo(p, octavas) * (1.0 - smoothstep(0.1, 0.6, forma));
+  if (forma > 0.0) rho = max(rho, cumulo(p, octavas) * smoothstep(0.0, 0.3, forma));
+  return rho;
+}
 void main() {
   vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
   giro = mat2(cos(t * 0.09), sin(t * 0.09), -sin(t * 0.09), cos(t * 0.09));
@@ -308,14 +346,30 @@ void main() {
   p -= aire.xy;
   float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
   vec3 e = tubo(p.x);
-  float dy = p.y - e.y;
-  float cuerda = 3.0 * e.z * e.z - dy * dy;
+  vec2 marco = vec2(p.y - e.y, e.z);
+  float cuerda = forma < 1.0 ? 3.0 * e.z * e.z - marco.x * marco.x : 0.0;
+  if (forma > 0.0) {
+    vec2 nube = marco;
+    float mejor = -1e9;
+    for (int i = 0; i < 10; i++) {
+      vec3 c = cumulos[i];
+      if (c.z <= 0.0) continue;
+      vec2 d = vec2((p.x - c.x) / 1.6, p.y - c.y);
+      float suya = 3.0 * c.z * c.z - dot(d, d);
+      cuerda = max(cuerda, suya);
+      if (suya / (c.z * c.z) > mejor) {
+        mejor = suya / (c.z * c.z);
+        nube = vec2(p.y - c.y, c.z);
+      }
+    }
+    marco = mix(marco, nube, forma);
+  }
   if (cuerda <= 0.0) {
     gl_FragColor = vec4(0.0);
     return;
   }
   torres = 0.6 + 0.8 * ruido3(vec3(e.x * 0.6 + t * 0.02, 4.0, 7.0));
-  float escala = e.z / 0.3;
+  float escala = marco.y / 0.3;
   vec3 sol = normalize(vec3(0.55, -0.75, 0.25)) * escala;
   float z = sqrt(cuerda), dz = 2.0 * z / 28.0;
   float transmite = 1.0, brillo = 0.0, oro = 0.0;
@@ -330,7 +384,7 @@ void main() {
         lejos *= 3.0;
       }
       float directa = exp(-18.0 * hondo);
-      float ambiente = mix(0.12, 0.45, smoothstep(0.4, -0.8, dy / e.z));
+      float ambiente = mix(0.12, 0.45, smoothstep(0.4, -0.8, marco.x / marco.y));
       float opacidad = 1.0 - exp(-60.0 * rho * dz / escala);
       brillo += transmite * opacidad * (ambiente + 1.3 * directa * (1.0 - exp(-6.0 * rho)));
       oro += transmite * opacidad * directa * (1.0 - smoothstep(0.0, 0.4, rho));
@@ -341,7 +395,7 @@ void main() {
   float cubre = max(1.0 - transmite, 1e-3);
   vec3 color = mix(sombra, luz, smoothstep(0.15, 1.3, brillo / cubre));
   color = mix(color, borde, 0.8 * clamp(oro / cubre, 0.0, 1.0) * (1.0 - smoothstep(0.2, 0.8, cubre)));
-  color = mix(color, luz, 0.35 * (1.0 - e.z / 0.4));
+  color = mix(color, luz, 0.35 * (1.0 - marco.y / 0.4));
   gl_FragColor = vec4(color, (1.0 - transmite) * smoothstep(0.0, 0.1, p.y) * (1.0 - smoothstep(0.93, 1.0, p.y)));
 }`
 
@@ -442,7 +496,7 @@ const inicio = performance.now()
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
-const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'estado']
+const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'estado', 'forma', 'cumulos']
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
 function compilar(gl, fragmentos, uniforms = UNIFORMS) {
@@ -742,6 +796,12 @@ onmessage = ({ data }) => {
       gl.uniform3fv(u.sombra, data.sombra)
       gl.uniform3fv(u.borde, data.borde)
       gl.uniform1f(u.alfa, data.alfa)
+    })
+  }
+  if (escena && data.tipo === 'forma') {
+    fijar(escena, (gl, u) => {
+      gl.uniform1f(u.forma, data.valor)
+      gl.uniform3fv(u.cumulos, data.cumulos)
     })
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor

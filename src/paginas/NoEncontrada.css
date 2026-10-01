@@ -1,22 +1,23 @@
 /* La 404. Ver NoEncontrada.jsx.
 
-   La misma escena que la portada en el celular: el cielo de la mañana sube
-   detrás de la barra, la nube arriba con lo que el texto deja libre y el aviso
-   abajo, donde el cielo ya se aclaró y el texto se lee. A cualquier ancho. */
+   El cielo de la mañana con el aviso abajo, donde ya se aclaró y el texto se
+   lee. La nube se queda con todo lo que el texto deja libre, desde el borde
+   de arriba de la pantalla —pasa detrás del vidrio de la barra, como la
+   portada en L y XL— hasta el aviso: es el campo del juego. A cualquier
+   ancho. */
 .no-encontrada {
   display: flex;
   flex-direction: column;
   min-height: 100svh;
   margin-top: calc(-1 * var(--barra-alto));
-  padding-block: var(--barra-alto) var(--e-12);
+  padding-block: 0 var(--e-12);
   overflow: clip;
 }
 
 .no-encontrada-cielo {
   position: relative;
   flex: 1 1 0;
-  min-height: 8rem;
-  max-height: 50svh;
+  min-height: calc(var(--barra-alto) + 8rem);
   --nubes-celda: 3;
   --nubes-luz: var(--nube-luz);
   --nubes-sombra: var(--nube-sombra);
@@ -25,16 +26,15 @@
 }
 
 /* El juego (src/patos.js). Los patos van detrás de la nube, para salir de
-   dentro de ella y caer a través, y su lienzo sube detrás de la barra hasta el
-   borde de la pantalla: un pato que huye se va por debajo de ella en vez de
+   dentro de ella y caer a través, en un lienzo que calza con el suyo: la misma
+   rejilla de puntos. Un pato que huye se va por debajo de la barra en vez de
    cortarse a media altura. Solo recibe el puntero mientras se juega, y sin el
    zoom del doble toque: dos tiros seguidos no agrandan la página. */
 .patos {
   position: absolute;
-  top: calc(-1 * var(--barra-alto));
-  left: 0;
+  inset: 0;
   width: 100%;
-  height: calc(100% + var(--barra-alto));
+  height: 100%;
   pointer-events: none;
 }
 

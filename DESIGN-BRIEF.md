@@ -718,6 +718,7 @@ tener dueño ni fecha.
 | 19 | 2026-09-30 | El pie entra y sale como el de funkhaus.io: el interior baja y aparece, y las letras del logotipo caen de a una, atadas al scroll y sin JavaScript | El logotipo que subía de una pieza | Diego |
 | 20 | 2026-09-30 | Página 404 con la nube, cabeceras de seguridad con una CSP estricta y `security.txt` | — | Diego |
 | 21 | 2026-10-01 | La 404 trae un Duck Hunt: «Jugar» suelta patos desde dentro de la nube, y el que se caza cae a través de ella moviendo su aire con la misma simulación que el cursor. El código del juego se descarga recién al pulsar, y el botón lleva el mismo pato, punto por punto. Los patos van en la trama de puntos de la nube, pero con los colores del NES: excepción declarada a la paleta | Que salieran solos al cargar, que es movimiento que nadie pidió, y patos en la paleta de la marca | Diego |
+| 22 | 2026-10-01 | En la 404 la nube ocupa todo el cielo sobre el aviso. «Jugar» deshace la volutus en cúmulos de buen tiempo repartidos por el ancho (10 en XL, 8 en L, 6 en M, 4 en S) sin perder material: entre todos cubren la misma área que el rollo. «Terminar» los vuelve a juntar. La transición se ve, y los patos salen de los cúmulos sin esperar a que lleguen. Excepción declarada a «una volutus, no un cúmulo», solo mientras se juega. El aire y la luz de la nube no cambian | La volutus como único escenario del juego: gruesa a la izquierda y un hilo a la derecha, los patos quedaban todos de un lado. La trama a 2 px. Siete cúmulos de tamaño fijo, que se quedaban con un tercio de la nube | Diego |
 
 ---
 
