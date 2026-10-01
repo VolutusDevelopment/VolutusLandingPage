@@ -13,7 +13,10 @@
  * de la trama, en px CSS, lo da `--nubes-celda`.
  *
  * El cielo además escucha al cursor: le cuenta al pintor por dónde pasa sobre
- * su sección, y el pintor lo vuelve viento.
+ * su sección, y el pintor lo vuelve viento. Lo mismo con lo que la página haga
+ * pasar por la nube —los patos de la 404—, que lo avisa con un evento `soplo`
+ * en el lienzo. Y el juego de la 404 cambia la forma de la nube con un evento
+ * `forma`, que aquí solo se reenvía al pintor (ver patos.js).
  *
  * Qué NO hace, a propósito:
  *
@@ -30,8 +33,9 @@
 import { quieto } from './lib/movimiento.js'
 
 // Tope de densidad de píxeles: por encima de 1.5 los puntos no se ven mejor y
-// el costo sigue creciendo.
-const DPR_MAXIMO = 1.5
+// el costo sigue creciendo. Los patos (patos.js) lo usan para caer en la misma
+// rejilla de puntos.
+export const DPR_MAXIMO = 1.5
 
 const rgb = (hex) => {
   const n = parseInt(hex.trim().slice(1), 16)
@@ -70,6 +74,30 @@ function montar(pintor, lienzo, id) {
     pintor.postMessage({ tipo: 'activa', id, valor: visible && !document.hidden })
   }
 
+  // El pintor lleva un solo trazo de viento, y no solo lo sopla el cursor: un
+  // pato de la 404 que cae también, con un evento `soplo` en el lienzo. Mientras
+  // cae, el viento es suyo y el cursor calla; si no, el pintor uniría los
+  // puntos de los dos en una ráfaga de uno al otro. Al cambiar de dueño se
+  // corta el trazo y se calla 50 ms, lo que tarda el pintor (a 30 fps) en
+  // llevarse lo que quedaba del anterior.
+  let ajeno = false
+  let callado = 0
+
+  function ceder(aAjeno) {
+    ajeno = aAjeno
+    callado = performance.now() + 50
+    pintor.postMessage({ tipo: 'viento', id, fuera: true })
+  }
+
+  // Un punto del viento, en coordenadas de la ventana: el pintor lo quiere en
+  // píxeles de su lienzo.
+  function soplar(x, y) {
+    if (!visible || quieto() || performance.now() < callado) return
+    const caja = lienzo.getBoundingClientRect()
+    const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
+    pintor.postMessage({ tipo: 'viento', id, x: (x - caja.left) * dpr, y: (y - caja.top) * dpr })
+  }
+
   // Ratón y lápiz por `pointermove`; el dedo por `touchmove`, que sigue
   // llegando mientras la página se desplaza (`pointermove` se cancela en
   // cuanto empieza el scroll). Nada impide desplazar. Como mucho un aviso por
@@ -77,19 +105,17 @@ function montar(pintor, lienzo, id) {
   function seguirCursor() {
     const seccion = lienzo.closest('section')
     let cursor = null
-    const soplar = () => {
-      if (visible && !quieto()) {
-        const caja = lienzo.getBoundingClientRect()
-        const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
-        pintor.postMessage({ tipo: 'viento', id, x: (cursor.x - caja.left) * dpr, y: (cursor.y - caja.top) * dpr })
-      }
+    const soplarCursor = () => {
+      if (!ajeno) soplar(cursor.x, cursor.y)
       cursor = null
     }
     const seguir = ({ clientX, clientY }) => {
-      if (!cursor) requestAnimationFrame(soplar)
+      if (!cursor) requestAnimationFrame(soplarCursor)
       cursor = { x: clientX, y: clientY }
     }
-    const soltar = () => pintor.postMessage({ tipo: 'viento', id, fuera: true })
+    const soltar = () => {
+      if (!ajeno) pintor.postMessage({ tipo: 'viento', id, fuera: true })
+    }
     const pasivo = { passive: true }
     seccion.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
     seccion.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
@@ -102,7 +128,18 @@ function montar(pintor, lienzo, id) {
   pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar }, [offscreen])
   colorear()
   medir()
-  if (!mar) seguirCursor()
+  if (!mar) {
+    seguirCursor()
+    lienzo.addEventListener('soplo', ({ detail: { x, y, fuera } }) => {
+      if (fuera) {
+        if (ajeno) ceder(false)
+        return
+      }
+      if (!ajeno) ceder(true)
+      soplar(x, y)
+    })
+    lienzo.addEventListener('forma', ({ detail }) => pintor.postMessage({ tipo: 'forma', id, ...detail }))
+  }
 
   new ResizeObserver(medir).observe(lienzo)
   new IntersectionObserver(([entrada]) => {

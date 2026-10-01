@@ -12,8 +12,11 @@ import Pie from './Pie.jsx'
  * clic.
  *
  * `ruta` marca en la barra el enlace de la página en la que se está.
+ *
+ * `pie` en falso lo quita: las páginas de error son una sola pantalla, sin
+ * caída que recorrer.
  */
-export default function Pagina({ enHome = false, ruta, className, children }) {
+export default function Pagina({ enHome = false, ruta, className, pie = true, children }) {
   return (
     <>
       <a className="salto" href="#contenido">
@@ -26,7 +29,7 @@ export default function Pagina({ enHome = false, ruta, className, children }) {
         {children}
       </main>
 
-      <Pie enHome={enHome} />
+      {pie && <Pie enHome={enHome} />}
     </>
   )
 }

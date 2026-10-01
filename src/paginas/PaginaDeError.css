@@ -1,0 +1,99 @@
+/* Las páginas de error, la 404 y la de los 5xx. Ver PaginaDeError.jsx.
+
+   Una pantalla y nada más, sin pie: el cielo de la mañana con el aviso abajo,
+   donde ya se aclaró y el texto se lee. La nube se queda con todo lo que el
+   texto deja libre, desde el borde de arriba de la pantalla —pasa detrás del
+   vidrio de la barra, como la portada en L y XL— hasta el aviso: es el campo
+   del juego. A cualquier ancho. */
+.pagina-error {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-block: 0 var(--e-12);
+  overflow: clip;
+}
+
+.pagina-error-cielo {
+  position: relative;
+  flex: 1 1 0;
+  min-height: calc(var(--barra-alto) + 8rem);
+  --nubes-celda: 3;
+  --nubes-luz: var(--nube-luz);
+  --nubes-sombra: var(--nube-sombra);
+  --nubes-borde: var(--nube-borde);
+  --nubes-alfa: 1;
+}
+
+/* El juego (src/patos.js). Los patos van detrás de la nube, para salir de
+   dentro de ella y caer a través, en un lienzo que calza con el suyo: la misma
+   rejilla de puntos. Un pato que huye se va por debajo de la barra en vez de
+   cortarse a media altura. Solo recibe el puntero mientras se juega, y sin el
+   zoom del doble toque: dos tiros seguidos no agrandan la página. */
+.patos {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cazando .patos {
+  pointer-events: auto;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+/* El pato que se burla se acerca —por eso crece— y pasa delante de la nube,
+   así se le ve entero aunque no encuentre un claro despejado. «Jugar» queda
+   siempre encima. */
+.burlando .patos {
+  z-index: 1;
+}
+
+/* «Jugar» flota abajo a la derecha del cielo, alineado con el borde del
+   texto, así que aparecer no mueve nada. Lleva el vidrio de la barra para
+   leerse sobre la nube. */
+.jugar {
+  position: absolute;
+  z-index: 1;
+  right: max(var(--margen-lateral), (100% - var(--ancho-maximo)) / 2 + var(--margen-lateral));
+  bottom: var(--e-4);
+  background: var(--vidrio);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+}
+
+/* El pato del juego a dos píxeles por punto: sus 16 × 13 celdas. */
+.jugar svg {
+  width: 32px;
+  height: 26px;
+}
+
+/* `.boton` fija `display` y le ganaría al atributo. Con movimiento reducido el
+   juego no se ofrece: la nube tampoco se mueve. */
+.jugar[hidden],
+:root[data-movimiento='reducido'] .jugar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jugar {
+    display: none;
+  }
+}
+
+.pagina-error-texto {
+  padding-top: var(--e-8);
+}
+
+.pagina-error-texto .entradilla {
+  margin-top: var(--e-4);
+}
+
+.pagina-error-salidas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}

@@ -9,6 +9,11 @@ export default defineConfig({
   // mínimo y hace que cada página sea indexable por sí misma.
   build: {
     target: 'es2022',
+    // El polyfill sirve a los <link rel="modulepreload"> del HTML en
+    // navegadores viejos, y ningún HTML lleva uno: era peso muerto. Quitarlo
+    // descuenta parte del ayudante que Vite agrega por el `import()` del juego
+    // de la 404 (src/client.js).
+    modulePreload: { polyfill: false },
   },
   esbuild: {
     legalComments: 'none',
