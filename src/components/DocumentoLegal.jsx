@@ -1,5 +1,4 @@
-import Barra from './Barra.jsx'
-import Pie from './Pie.jsx'
+import Pagina from './Pagina.jsx'
 import { PAGINAS } from '../lib/meta.js'
 
 /**
@@ -28,44 +27,31 @@ export default function DocumentoLegal({ ruta, actualizado, apartados }) {
   const { descripcion } = PAGINAS[ruta]
 
   return (
-    <>
-      <a className="salto" href="#contenido">
-        Saltar al contenido
-      </a>
+    <Pagina className="zona-cielo legal">
+      <div className="contenedor legal-interior">
+        <header className="legal-cabecera">
+          {/* La marca de la barra ya vuelve a la portada, pero eso hay que
+              adivinarlo. Un documento legal es donde más fácil se pierde
+              alguien, así que la salida se dice con todas sus letras. */}
+          <a className="legal-volver" href="/">
+            <span aria-hidden="true">←</span> Volver a la portada
+          </a>
 
-      {/* `enHome={false}` es lo que convierte los anclas del menú y del pie en
-          `/#proyectos`. Sin él apuntan a secciones que esta página no tiene y
-          el error no se ve hasta que alguien hace clic. */}
-      <Barra enHome={false} />
+          <p className="antetitulo">Legal</p>
+          <h1>Privacidad y protección de datos</h1>
+          <p className="entradilla legal-entradilla">{descripcion}</p>
+          <p className="legal-fecha dato">Última actualización: {actualizado}</p>
+        </header>
 
-      <main id="contenido" className="zona-cielo legal">
-        <div className="contenedor legal-interior">
-          <header className="legal-cabecera">
-            {/* La marca de la barra ya vuelve a la portada, pero eso hay que
-                adivinarlo. Un documento legal es donde más fácil se pierde
-                alguien, así que la salida se dice con todas sus letras. */}
-            <a className="legal-volver" href="/">
-              <span aria-hidden="true">←</span> Volver a la portada
-            </a>
-
-            <p className="antetitulo">Legal</p>
-            <h1>Privacidad y protección de datos</h1>
-            <p className="entradilla legal-entradilla">{descripcion}</p>
-            <p className="legal-fecha dato">Última actualización: {actualizado}</p>
-          </header>
-
-          {apartados.map(({ titulo, contenido }, indice) => (
-            <section key={titulo} className="legal-apartado">
-              <h2>
-                {indice + 1}. {titulo}
-              </h2>
-              {contenido}
-            </section>
-          ))}
-        </div>
-      </main>
-
-      <Pie enHome={false} />
-    </>
+        {apartados.map(({ titulo, contenido }, indice) => (
+          <section key={titulo} className="legal-apartado">
+            <h2>
+              {indice + 1}. {titulo}
+            </h2>
+            {contenido}
+          </section>
+        ))}
+      </div>
+    </Pagina>
   )
 }

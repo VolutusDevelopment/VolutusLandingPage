@@ -3,16 +3,22 @@
   "compatibility_date": "2026-08-17",
 
   // El Worker existe por una sola ruta, POST /api/contacto (worker/index.js).
-  // Cloudflare sirve `dist/` directamente y solo invoca el Worker cuando la
-  // petición no corresponde a ningún archivo, así que la portada no paga nada
-  // por que esto exista.
+  // Cloudflare sirve `dist/` directamente y solo invoca el Worker para /api/* y
+  // para lo que no corresponde a ningún archivo, así que la portada no paga
+  // nada por que esto exista.
   "main": "worker/index.js",
 
   "assets": {
     "directory": "./dist",
     // El binding es lo que permite al Worker devolver el sitio estático para
     // cualquier ruta que no sea la suya.
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Una ruta que no existe recibe dist/404.html con estado 404.
+    "not_found_handling": "404-page",
+    // Con la 404 activa, Cloudflare ya no invoca el Worker en una navegación
+    // que no encuentra archivo, y el formulario enviado sin JavaScript es una
+    // navegación: sin esta línea, recibiría la 404 en vez de llegar aquí.
+    "run_worker_first": ["/api/*"]
   },
 
   "observability": {

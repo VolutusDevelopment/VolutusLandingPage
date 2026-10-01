@@ -1,51 +1,54 @@
 # Volutus
 
 > Empresa de desarrollo de software en Chile. Creamos páginas web, tiendas
-> online, apps, agentes de IA y automatizaciones para negocios. Cada afirmación de esta página va con su enlace o su
-> código: si no se puede comprobar, no se dice.
+> online, apps, agentes de IA y automatizaciones para negocios. Cada afirmación
+> de este sitio va con su enlace o su código: si no se puede comprobar, no se
+> dice.
 
-Volutus es una página única, en español de Chile. Existe para que quien haya
-hablado con el equipo pueda comprobar la obra antes de seguir.
+El sitio está en español de Chile. Existe para que quien haya hablado con el
+equipo pueda comprobar la obra antes de seguir.
 
-Contacto: contacto@volutus.cl — respuesta en menos de 48 horas hábiles.
+Contacto: contacto@volutus.cl — respuesta de una persona en menos de 48 horas
+hábiles.
 
-## Secciones
+## Páginas
 
-- [Portada](https://volutus.cl/#portada): qué hacemos y qué hacer
+- [Portada](https://volutus.cl/): qué hacemos, la obra, las métricas y el formulario
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
-- [Métricas](https://volutus.cl/#metricas): lo que pesa esta página, medido
-- [Cómo trabajamos](https://volutus.cl/#proceso): los cuatro pasos y qué pone el cliente
+- [Métricas](https://volutus.cl/#metricas): lo que tarda y pesa la portada, medido
+- [Servicios](https://volutus.cl/#servicios): los seis servicios, cada uno con su prueba cuando la hay
 - [Contacto](https://volutus.cl/#contacto): el formulario
+- [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 
 ## Proyectos
 
 Solo entra lo que se puede abrir. Un proyecto sin repositorio público ni sitio
-en línea no aparece en la página.
+en línea no aparece en el sitio.
 
-- Agente de respuesta a incidentes: segundo lugar en una hackathon de IA
-  agéntica, con jurado externo. Código en
+- Agente de respuesta a incidentes: segundo lugar en el hackathon de Huawei
+  Cloud y Kostra AI, con jurado externo. Código en
   https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS
-- PonleNota: plataforma NFC de valoraciones y cupones para negocios locales, en
-  línea en https://ponlenota.cl
-- CarFlip: indexador de automotores que rastrea varios sitios de venta. Código
-  en https://github.com/DiegoPyLL/CarFlip
+- PonleNota: reseñas en Google para negocios locales, con una tarjeta NFC o un
+  QR, una app para el negocio y un panel web. En línea en https://ponlenota.cl
+- CarFlip: portal chileno de autos usados donde publican particulares y
+  automotoras. Código en https://github.com/DiegoPyLL/CarFlip
 
-## Qué construimos
+## Servicios
 
-- Un producto web en producción, con su panel y sus usuarios
-- Una app Android publicada y funcionando
-- Un agente de IA conectado a los sistemas que el cliente ya usa
-- Un indexador que reúne datos dispersos en un solo lugar consultable
+- Páginas web
+- Tiendas online
+- Aplicaciones
+- Agentes de IA
+- Automatizaciones
+- Adaptación técnica a la Ley 21.719 de protección de datos
 
 ## Qué no tomamos
 
 - Encargos urgentes para el día siguiente
-- Competencia por precio más bajo
 - Procesos de proveedor de empresa grande
 
-## Lo que esta página no dice
+## Lo que este sitio no dice
 
 No hay clientes que hayan pagado todavía, así que no hay testimonios, logos ni
-casos de estudio, y no se insinúan. Tampoco se publican precios: se responden
-con un rango real en la primera contestación al formulario.
+casos de estudio, y no se insinúan.

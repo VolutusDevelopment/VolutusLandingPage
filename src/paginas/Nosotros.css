@@ -1,0 +1,120 @@
+/* Quiénes somos. Ver Nosotros.jsx. */
+
+.nosotros-entradilla {
+  margin-top: var(--e-4);
+}
+
+.nosotros-parrafo {
+  margin-top: var(--e-4);
+  color: var(--texto-suave);
+}
+
+/* ---- el nombre y la construcción del símbolo ---- */
+
+.nosotros-origen {
+  display: grid;
+  gap: var(--e-12);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .nosotros-origen {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.construccion {
+  width: min(100%, 22rem);
+  justify-self: center;
+  view-timeline: --construccion block;
+}
+
+/* Las guías, a media tinta: se tienen que ver, pero por detrás de la voluta. */
+.construccion-cuadrado {
+  stroke: color-mix(in srgb, var(--texto-suave) 45%, transparent);
+  stroke-width: 1px;
+}
+
+/* El radio en la mono: aquí sí es un dato. */
+.construccion-radio {
+  font-family: var(--fuente-datos);
+  font-size: 1.1px;
+  fill: var(--texto-suave);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* El grosor va en unidades del dibujo (24 de lado): a su tamaño máximo son
+   unos 3 px, como el trazo de la marca. */
+.construccion-voluta {
+  stroke: var(--marca);
+  stroke-width: 0.22;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+}
+
+/* La voluta se traza al asomar, del borde hacia el ojo, atada al scroll: es
+   la construcción que el dibujo explica. Sin soporte, al imprimir o con
+   movimiento reducido se ve entera. */
+@keyframes voluta-trazar {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .construccion-voluta {
+      animation: voluta-trazar linear both;
+      animation-timeline: --construccion;
+      animation-range: entry 20% cover 50%;
+    }
+  }
+}
+
+/* ---- las tres piezas de la marca ---- */
+
+.nosotros-marca {
+  list-style: none;
+  display: grid;
+  gap: var(--e-8);
+  margin: var(--e-16) 0 0;
+  padding: var(--e-8) 0 0;
+  border-top: 1px solid var(--linea);
+}
+
+@media (min-width: 640px) {
+  .nosotros-marca {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.nosotros-marca p {
+  margin-top: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+/* ---- cómo somos ---- */
+
+.nosotros-rasgos {
+  list-style: none;
+  max-width: var(--medida-lectura);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--linea);
+}
+
+.nosotros-rasgos li {
+  padding-block: var(--e-4);
+  border-bottom: 1px solid var(--linea);
+  font-size: var(--texto-lg);
+  line-height: 1.4;
+}
+
+.nosotros-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}

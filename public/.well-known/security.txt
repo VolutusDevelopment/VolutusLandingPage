@@ -1,0 +1,4 @@
+Contact: mailto:contacto@volutus.cl
+Expires: 2027-09-29T23:59:59.000Z
+Preferred-Languages: es, en
+Canonical: https://volutus.cl/.well-known/security.txt

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--
-      El <head> de esta página lo completa el prerender (scripts/prerender.mjs)
-      a partir de src/lib/meta.js: título, descripción, canonical, Open Graph y
-      el fragmento de accesibilidad que corre antes del primer pintado. Aquí
-      solo queda lo que es idéntico en todas las páginas.
+      Este archivo es la plantilla de TODAS las páginas: el prerender
+      (scripts/prerender.mjs) escribe con él un HTML por ruta y completa el
+      <head> a partir de src/lib/meta.js: título, descripción, canonical, Open
+      Graph y datos estructurados. Aquí solo queda lo que es idéntico en todas.
 
       Es a propósito. Tener el título escrito a mano en cada HTML es lo que hace
       que un día la description del buscador diga una cosa y la página otra.
@@ -19,6 +19,9 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%232B5F73'/%3E%3Cg transform='translate(2.16 2.16) scale(0.82)'%3E%3Cpath d='M2 22 L9.69 22 A12.31 12.31 0 0 0 22 9.69 A7.69 7.69 0 0 0 14.31 2 A4.62 4.62 0 0 0 9.69 6.62 A3.08 3.08 0 0 0 12.77 9.69' fill='none' stroke='%23FFFFFF' stroke-width='2.6' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E"
     />
+    <!-- El mismo símbolo a sangre y sin transparencia, para la pantalla de
+         inicio del iPhone: iOS no usa el SVG y redondea las esquinas solo. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#f6f9fc" />
 
     <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
