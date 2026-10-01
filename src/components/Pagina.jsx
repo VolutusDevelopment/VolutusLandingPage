@@ -10,15 +10,17 @@ import Pie from './Pie.jsx'
  * portada tienen que ser `/#proyectos`: un `#proyectos` pelado apunta a una
  * sección que la página no tiene, y el error no se ve hasta que alguien hace
  * clic.
+ *
+ * `ruta` marca en la barra el enlace de la página en la que se está.
  */
-export default function Pagina({ enHome = false, className, children }) {
+export default function Pagina({ enHome = false, ruta, className, children }) {
   return (
     <>
       <a className="salto" href="#contenido">
         Saltar al contenido
       </a>
 
-      <Barra enHome={enHome} />
+      <Barra enHome={enHome} ruta={ruta} />
 
       <main id="contenido" className={className}>
         {children}

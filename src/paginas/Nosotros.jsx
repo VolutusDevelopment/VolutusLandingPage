@@ -71,7 +71,7 @@ export default function Nosotros() {
   const { descripcion } = PAGINAS['/nosotros']
 
   return (
-    <Pagina className="nosotros">
+    <Pagina ruta="/nosotros" className="nosotros">
       <section className="seccion zona-cielo nosotros-cabecera">
         <div className="contenedor">
           <p className="antetitulo">Nosotros</p>

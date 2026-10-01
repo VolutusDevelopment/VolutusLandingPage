@@ -185,9 +185,9 @@
   text-decoration: none;
 }
 
-/* En S las tres columnas no caben en fila, y apiladas de a una el pie se
-   vuelve una lista eterna: Página y Obra van lado a lado, y el correo, que es
-   largo, baja a todo el ancho. */
+/* En S las cuatro columnas no caben en fila, y apiladas de a una el pie se
+   vuelve una lista eterna: van de a dos, y el correo, que es largo, baja a
+   todo el ancho. */
 @media (max-width: 559px) {
   .pie {
     padding-top: var(--e-8);

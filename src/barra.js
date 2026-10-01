@@ -113,7 +113,8 @@ export default function initBarra() {
   barra.querySelectorAll('.barra-marca, .barra-capsula').forEach((pieza) => vigilarDetras(pieza, fondos))
 
   // Solo las secciones que tienen enlace: fuera de ellas no se marca ninguno.
-  const enlaces = [...barra.querySelectorAll('.barra-enlaces a')]
+  // El enlace a otra página no es una sección: su `aria-current` viene del HTML.
+  const enlaces = [...barra.querySelectorAll('.barra-enlaces a[href*="#"]')]
   const destinos = enlaces.map((enlace) => document.getElementById(enlace.hash.slice(1)))
   vigilarFranja(destinos.filter(Boolean), '-33% 0px -66% 0px', (actual) => {
     enlaces.forEach((enlace, i) => {

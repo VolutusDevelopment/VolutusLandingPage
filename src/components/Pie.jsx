@@ -60,6 +60,15 @@ export default function Pie({ enHome = true }) {
             ))}
           </Columna>
 
+          <Columna titulo="Volutus">
+            <li>
+              <a href="/nosotros">Quiénes somos</a>
+            </li>
+            <li>
+              <a href="/privacidad">Privacidad</a>
+            </li>
+          </Columna>
+
           <Columna titulo="Obra">
             {PROYECTOS.map((p) => (
               <li key={p.id}>

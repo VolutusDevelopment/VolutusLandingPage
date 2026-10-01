@@ -44,7 +44,7 @@ En desarrollo el root llega vacío y React monta la portada en el navegador
 
 ```bash
 pnpm install                    # instalar dependencias
-pnpm dev                        # servidor de desarrollo (solo la portada)
+pnpm dev                        # servidor de desarrollo (todas las páginas)
 pnpm build                      # build de producción + pre-render
 npx wrangler dev                # el sitio construido con el Worker, en :8787
 pnpm verificar                  # medidas, enlaces y foco contra tests/referencia.json

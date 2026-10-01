@@ -67,7 +67,8 @@ function Lente() {
 
 /**
  * Barra de navegación: la marca suelta a la izquierda y, a la derecha, una
- * cápsula flotante con las dos anclas y la acción principal.
+ * cápsula flotante con las dos anclas, el enlace a /nosotros y la acción
+ * principal.
  *
  * La barra en sí no tiene fondo: lo único que tapa el contenido al desplazar
  * son las dos piezas, cada una con su vidrio translúcido. Así la portada
@@ -92,10 +93,10 @@ function Lente() {
  * nunca pesa más que el titular, y el botón relleno de la portada es el que
  * manda. En S se retira y quedan las anclas.
  *
- * Sigue sin menú desplegable en móvil: son dos anclas y un botón, y un
+ * Sigue sin menú desplegable en móvil: son tres enlaces y un botón, y un
  * hamburguesa sería JavaScript de navegación que el presupuesto de §8 no paga.
  */
-export default function Barra({ enHome = true }) {
+export default function Barra({ enHome = true, ruta }) {
   // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
   // `#proyectos` resuelve a `/privacidad#proyectos`, que no existe. El enlace
   // parece correcto hasta que alguien lo pulsa, que es el peor momento para
@@ -129,6 +130,13 @@ export default function Barra({ enHome = true }) {
             </li>
             <li>
               <a href={ancla('servicios')}>Servicios</a>
+            </li>
+            <li>
+              {/* Una página y no una sección: en ella el indicador descansa
+                  desde el HTML, sin esperar a barra.js. */}
+              <a href="/nosotros" aria-current={ruta === '/nosotros' ? 'page' : undefined}>
+                Nosotros
+              </a>
             </li>
           </ul>
           <a className="boton boton-secundario barra-accion" href={ancla('contacto')}>
