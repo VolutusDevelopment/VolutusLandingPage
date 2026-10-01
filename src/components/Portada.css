@@ -98,6 +98,14 @@
   }
 }
 
+/* La palabra que rota no se parte, y la más larga («AUTOMATIZACIÓN») mide
+   10.6 em en Archivo mayúscula con su espaciado: en S el titular se achica lo
+   justo para que quepa entre los márgenes. Desde ~470 px manda el paso de
+   siempre. */
+.portada h1 {
+  font-size: min(var(--texto-2xl), calc((100vw - 2 * var(--margen-lateral)) / 10.6));
+}
+
 /* ---- la palabra que rota ----
    Un bloque de rejilla con dos ocupantes en la misma celda: la palabra visible
    y, invisible, la más larga de la lista. La celda mide siempre lo que la más

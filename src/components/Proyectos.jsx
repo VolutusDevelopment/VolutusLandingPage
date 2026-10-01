@@ -41,15 +41,6 @@ function Enlaces({ sitio, repositorio, nombre }) {
 // arman la composición desordenada.
 const FORMAS = ['ancha', 'desplazada', 'alta', 'cierre']
 
-// Tres trazos cortos, como los que se hacen a mano al margen para señalar algo.
-function Chispa() {
-  return (
-    <svg className="chispa" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path d="M6 22 L15 25 M12 8 L18 18 M26 4 L25 15" />
-    </svg>
-  )
-}
-
 /**
  * Un proyecto que se enseña por dentro: su cabecera y una tarjeta por cada
  * cara del producto, con su captura real, que sale por el borde de abajo
@@ -75,7 +66,6 @@ function Vitrina({ proyecto }) {
       key={titulo}
       className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
     >
-      <Chispa />
       <div className="vista-texto">
         <h4>{titulo}</h4>
         <p>{texto}</p>

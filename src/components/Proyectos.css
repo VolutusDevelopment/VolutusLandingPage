@@ -101,10 +101,6 @@
   /* La misma separación que las otras tarjetas de obra (`.proyecto`): la
      cabecera es una burbuja más y no debe despegarse de sus vecinas. */
   margin-top: var(--e-8);
-  /* Los trazos al margen se pintan dentro de tarjetas de plano, pero quedan
-     sobre la página: toman el color de acción de la vitrina, que se resuelve
-     aquí y baja ya calculado. */
-  --chispa: var(--accion);
 }
 
 .vitrina-rejilla {
@@ -263,11 +259,6 @@
   }
 }
 
-/* Los trazos al margen: solo donde la composición se desordena, en L. */
-.chispa {
-  display: none;
-}
-
 /* En M los dos teléfonos van lado a lado: apilados dejan media tarjeta vacía
    a cada costado. El resto ocupa el ancho completo. */
 @media (min-width: 650px) {
@@ -388,39 +379,6 @@
     width: 17rem;
   }
 
-  .chispa {
-    display: block;
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    stroke: var(--chispa);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    pointer-events: none;
-  }
-
-  .vista-ancha .chispa {
-    right: 24px;
-    bottom: -44px;
-    transform: rotate(180deg);
-  }
-
-  .vista-alta .chispa {
-    top: -40px;
-    left: -40px;
-  }
-
-  .vista-desplazada .chispa {
-    top: -8px;
-    left: -48px;
-    transform: rotate(-30deg);
-  }
-
-  .vista-cierre .chispa {
-    top: -36px;
-    right: -36px;
-    transform: rotate(90deg);
-  }
 }
 
 /* ---- la vitrina plegada ----

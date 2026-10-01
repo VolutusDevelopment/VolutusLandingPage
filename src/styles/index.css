@@ -34,6 +34,16 @@
   src: url('/fonts/geist-mono-latin.woff2') format('woff2');
 }
 
+/* La fuente del logotipo, solo para los h1: así el titular se ladea lo mismo
+   que la marca (10°). Una sola cara, la que se usa. */
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/archivo-italica-latin.woff2') format('woff2');
+}
+
 /**
  * Respaldo con métricas calzadas a Geist.
  *
@@ -64,6 +74,20 @@
   ascent-override: 88.92%;
   descent-override: 21.26%;
   line-gap-override: 9.66%;
+}
+
+/* Lo mismo para Archivo, medido igual: el titular en mayúscula a 100 px mide
+   9792 px en Archivo y 9466 en Arial negra itálica (103.44 %); ascenso 878 y
+   descenso 210 sobre 1000, divididos por ese factor. */
+@font-face {
+  font-family: 'Archivo respaldo';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Arial Bold Italic'), local('Arial-BoldItalicMT');
+  size-adjust: 103.44%;
+  ascent-override: 84.88%;
+  descent-override: 20.3%;
+  line-gap-override: 0%;
 }
 
 /* ============ Tokens que no dependen del tema ============ */
@@ -461,8 +485,16 @@ h3 {
   margin: 0;
 }
 
+/* Los h1 hablan como el logotipo: Archivo negra itálica, en mayúscula y con
+   su mismo aire entre letras. En el logotipo «VOLUTUS» mide 534.9 de tinta
+   con un em de 100; la fuente sola, 495.9: 6.5 por cada uno de los seis
+   espacios. */
 h1 {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-2xl);
+  font-style: italic;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
 }
 
 h2 {
