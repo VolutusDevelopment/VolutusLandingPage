@@ -47,7 +47,7 @@ export default function Pie({ enHome = true }) {
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
-            <Logotipo className="pie-logotipo-svg" />
+            <Logotipo className="pie-logotipo-svg" porLetra />
           </span>
         </div>
 
