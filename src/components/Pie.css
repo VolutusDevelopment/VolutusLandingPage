@@ -30,7 +30,6 @@
    titular. */
 .pie-logotipo {
   container-type: inline-size;
-  overflow: clip;
   color: color-mix(in srgb, var(--texto) 16%, var(--fondo));
 }
 
@@ -47,27 +46,63 @@
   --logotipo-puntos: color-mix(in srgb, currentColor 70%, transparent);
 }
 
-/* El nombre sube desde su propio borde al asomar, atado al scroll: cero
-   JavaScript, y si la persona vuelve hacia arriba se deshace por el mismo
-   camino. */
-@keyframes logotipo-subir {
+/* ---- la entrada y la salida ----
+   La del pie de funkhaus.io, atada al scroll: cero JavaScript, y si la persona
+   vuelve hacia arriba se deshace por el mismo camino. Son dos movimientos sobre
+   la misma línea de tiempo, la del pie desde que asoma hasta que terminó de
+   entrar:
+
+   - El interior baja desde un quinto de su alto más arriba y aparece.
+   - Cada letra cae por su cuenta, desde más arriba cuanto más a la derecha
+     está, y se enciende de 0.4 a pleno: la palabra llega al mar letra por
+     letra, y la ola la última. Es el final de la caída que empezó en la nube.
+
+   Nada se recorta. En la original las letras salen de detrás de un borde que
+   se ve; aquí el contacto y el pie son del mismo azul, y un recorte en medio
+   de ese azul se leía como una línea invisible que rebanaba la ola. Las
+   letras llegan desde transparentes, así que no hace falta esconderlas: la
+   cascada es corta para que ninguna pase por encima del formulario.
+
+   El rango acaba en `entry 100%`: el pie entero a la vista, o arriba del todo
+   si es más alto que la pantalla. Así se completa siempre, aunque al final de
+   la página no quede scroll para subirlo más. La curva es la de la original
+   (power1.out). */
+@keyframes pie-asomar {
   from {
-    transform: translateY(45%);
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+}
+
+@keyframes letra-caer {
+  from {
+    transform: translateY(calc(var(--i) * -5%));
+    opacity: 0.4;
   }
 }
 
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
-    .pie-logotipo-cuerpo {
-      animation: logotipo-subir linear both;
-      animation-timeline: view();
+    .pie {
+      view-timeline: --pie block;
+    }
+
+    .pie > .contenedor {
+      animation: pie-asomar cubic-bezier(0.5, 1, 0.89, 1) both;
+      animation-timeline: --pie;
+      animation-range: entry 0% entry 100%;
+    }
+
+    /* El porcentaje es del alto del logotipo entero (`view-box`), el mismo
+       para todas las letras y para la ola: la cascada guarda su forma en el
+       celular y en una pantalla de 1440. */
+    .pie-logotipo-svg path {
+      transform-box: view-box;
+      animation: letra-caer cubic-bezier(0.5, 1, 0.89, 1) both;
+      animation-timeline: --pie;
       animation-range: entry 0% entry 100%;
     }
   }
-}
-
-:root[data-movimiento='reducido'] .pie-logotipo-cuerpo {
-  animation: none;
 }
 
 /* ---- columnas de enlaces ----
@@ -150,9 +185,9 @@
   text-decoration: none;
 }
 
-/* En S las tres columnas no caben en fila, y apiladas de a una el pie se
-   vuelve una lista eterna: Página y Obra van lado a lado, y el correo, que es
-   largo, baja a todo el ancho. */
+/* En S las cuatro columnas no caben en fila, y apiladas de a una el pie se
+   vuelve una lista eterna: van de a dos, y el correo, que es largo, baja a
+   todo el ancho. */
 @media (max-width: 559px) {
   .pie {
     padding-top: var(--e-8);

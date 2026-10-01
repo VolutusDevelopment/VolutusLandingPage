@@ -2,8 +2,8 @@ import { PROYECTOS } from '../data/proyectos.js'
 
 /**
  * Índice de obra (DESIGN-BRIEF §4, bloque 2). La página sigue en blanco y el
- * color vive en las tarjetas: el proyecto con jurado externo va en bosque
- * —la única tarjeta oscura, porque es lo único validado por un tercero— y los
+ * color vive en las tarjetas: el proyecto con jurado externo va en plata
+ * —el color de su puesto, porque es lo único validado por un tercero— y los
  * otros dos en tintes fríos y cálidos, así cada uno se lee como un objeto
  * aparte y no como filas de una tabla.
  *
@@ -41,15 +41,6 @@ function Enlaces({ sitio, repositorio, nombre }) {
 // arman la composición desordenada.
 const FORMAS = ['ancha', 'desplazada', 'alta', 'cierre']
 
-// Tres trazos cortos, como los que se hacen a mano al margen para señalar algo.
-function Chispa() {
-  return (
-    <svg className="chispa" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path d="M6 22 L15 25 M12 8 L18 18 M26 4 L25 15" />
-    </svg>
-  )
-}
-
 /**
  * Un proyecto que se enseña por dentro: su cabecera y una tarjeta por cada
  * cara del producto, con su captura real, que sale por el borde de abajo
@@ -75,7 +66,6 @@ function Vitrina({ proyecto }) {
       key={titulo}
       className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
     >
-      <Chispa />
       <div className="vista-texto">
         <h4>{titulo}</h4>
         <p>{texto}</p>
@@ -125,6 +115,18 @@ function Vitrina({ proyecto }) {
               proyecto.resumen
             )}
           </p>
+          {/* Cómo funciona va en la tapa y no dentro: quien no la abre se
+              lleva igual lo que el producto hace, en tres pasos. */}
+          {proyecto.pasos && (
+            <>
+              <p className="antetitulo vitrina-pasos-titulo">Cómo funciona</p>
+              <ol className="vitrina-pasos">
+                {proyecto.pasos.map((paso) => (
+                  <li key={paso}>{paso}</li>
+                ))}
+              </ol>
+            </>
+          )}
           <Enlaces {...proyecto} sitio={enLinea ? null : proyecto.sitio} />
           <button
             type="button"
@@ -159,12 +161,21 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <h2 className="entra">Echa un vistazo a nuestro trabajo</h2>
+        <h2 className="entra">Echa un vistazo a nuestros proyectos y logros</h2>
 
-        <article className="tarjeta proyecto proyecto-destacado zona-plano tono-ciruela entra">
+        <article className="tarjeta proyecto proyecto-destacado entra">
           {/* La credencial va ANTES del nombre: es lo único de esta página que
-              validó un tercero, y es el motivo de que este proyecto encabece. */}
-          <p className="proyecto-credencial dato">{destacado.credencial}</p>
+              validó un tercero, y es el motivo de que este proyecto encabece.
+              La medalla repite el puesto en grande; el texto lo dice entero. */}
+          <p className="proyecto-credencial">
+            <span className="proyecto-medalla dato" aria-hidden="true">
+              {destacado.credencial.puesto}
+            </span>
+            <span>
+              <strong>{destacado.credencial.titulo}</strong>{' '}
+              <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
+            </span>
+          </p>
           <h3>{destacado.nombre}</h3>
           <p className="proyecto-resumen">{destacado.resumen}</p>
           <Enlaces {...destacado} />

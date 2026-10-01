@@ -59,7 +59,7 @@ export default function Portada() {
               >
                 <span className="rotativo-palabra">páginas web</span>
               </span>{' '}
-              para tu negocio.
+              para tu negocio
             </h1>
 
             <div className="portada-acciones">

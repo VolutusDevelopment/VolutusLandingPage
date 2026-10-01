@@ -2,41 +2,75 @@
   "rutas": {
     "/": {
       "movil": {
-        "alto": 6558,
+        "alto": 7119,
         "desborda": false,
-        "h1": 172.75,
-        "bloquesQueEntran": 24,
+        "h1": 129.5625,
+        "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 5758,
+        "alto": 5997,
         "desborda": false,
         "h1": 174.1875,
-        "bloquesQueEntran": 24,
+        "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4723,
+        "alto": 5334,
         "desborda": false,
-        "h1": 410.390625,
-        "bloquesQueEntran": 24,
+        "h1": 246.234375,
+        "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4723,
+        "alto": 5334,
         "desborda": false,
-        "h1": 410.390625,
-        "bloquesQueEntran": 24,
+        "h1": 246.234375,
+        "bloquesQueEntran": 25,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/nosotros": {
+      "movil": {
+        "alto": 3521,
+        "desborda": false,
+        "h1": 43.1875,
+        "bloquesQueEntran": 16,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 2737,
+        "desborda": false,
+        "h1": 58.0625,
+        "bloquesQueEntran": 16,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "escritorio": {
+        "alto": 2883,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 16,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "oscuro": {
+        "alto": 2883,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/privacidad": {
       "movil": {
-        "alto": 6519,
+        "alto": 6191,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
@@ -44,7 +78,7 @@
         "ocultosAlImprimir": 0
       },
       "tablet": {
-        "alto": 4357,
+        "alto": 4326,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -52,7 +86,7 @@
         "ocultosAlImprimir": 0
       },
       "escritorio": {
-        "alto": 4155,
+        "alto": 4542,
         "desborda": false,
         "h1": 36.71875,
         "bloquesQueEntran": 0,
@@ -60,9 +94,43 @@
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4155,
+        "alto": 4542,
         "desborda": false,
         "h1": 36.71875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/no-existe": {
+      "movil": {
+        "alto": 1495,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 1694,
+        "desborda": false,
+        "h1": 58.0625,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "escritorio": {
+        "alto": 1787,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "oscuro": {
+        "alto": 1787,
+        "desborda": false,
+        "h1": 82.078125,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
@@ -71,11 +139,19 @@
   },
   "foco": {
     "/": {
-      "paradas": 36,
+      "paradas": 39,
+      "sinAnillo": 0
+    },
+    "/nosotros": {
+      "paradas": 15,
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 18,
+      "paradas": 16,
+      "sinAnillo": 0
+    },
+    "/no-existe": {
+      "paradas": 16,
       "sinAnillo": 0
     }
   }

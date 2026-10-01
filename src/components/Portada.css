@@ -32,6 +32,7 @@
 
 .portada-texto {
   max-width: 36rem;
+  container-type: inline-size;
 }
 
 /* El gancho. Si en S no cabe en una línea, se parte entre sus dos frases y no
@@ -96,6 +97,14 @@
   .portada-acciones {
     justify-content: center;
   }
+}
+
+/* La palabra que rota no se parte, y la más larga («AUTOMATIZACIÓN») mide
+   10.6 em en Archivo mayúscula con su espaciado: el titular se achica lo justo
+   para que quepa en el ancho del texto (`cqi`), que en S son los márgenes y en
+   M el tope de 36rem. Si sobra, manda el paso de siempre. */
+.portada h1 {
+  font-size: min(var(--texto-2xl), 100cqi / 10.6);
 }
 
 /* ---- la palabra que rota ----

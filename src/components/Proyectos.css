@@ -29,22 +29,70 @@
   color: var(--texto-suave);
 }
 
-/* La credencial es el único dato de la página validado por un tercero, así que
-   lleva mono y el color de marca —que sobre plano sí pasa contraste (6.71:1)—.
-   Sobre cielo esto sería ilegible; por eso esta tarjeta es la de plano. */
+/* El segundo lugar va en plata, el metal de su puesto, igual en los dos temas.
+   Trae sus propios tokens: sobre el tono más oscuro del degradado (#bcc3cb)
+   el texto suave pasa 5.7:1 y los enlaces 7.1:1. */
+.proyectos .proyecto-destacado {
+  color-scheme: light;
+  --texto: #15191e;
+  --texto-suave: #3a424c;
+  --accion: #1d3550;
+  --accion-hover: #10243a;
+  --accion-activa: #0a1828;
+  --foco: #1d3550;
+  color: var(--texto);
+  background: linear-gradient(135deg, #f4f6f8 0%, #d6dbe1 40%, #eef1f4 55%, #bcc3cb 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 12px 32px -16px rgb(21 25 30 / 0.35);
+}
+
+/* La credencial es el único dato de la página validado por un tercero: va
+   primero, con una medalla que dice el puesto antes de leer nada. */
 .proyecto-credencial {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  margin: 0 0 var(--e-6);
+}
+
+.proyecto-credencial strong {
+  display: block;
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.proyecto-evento {
+  display: block;
   font-size: var(--texto-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--marca);
-  margin: 0 0 var(--e-3);
+  color: var(--texto-suave);
 }
 
-.proyecto-destacado {
-  /* Hereda los tokens de plano: fondo bosque, texto claro, y la marca en el
-     color que sobre bosque sí pasa contraste. */
-  background: var(--fondo);
+/* Anillo de metal pulido con el centro liso, donde va el número. */
+.proyecto-medalla {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  font-size: var(--texto-xl);
+  font-weight: 800;
+  line-height: 1;
   color: var(--texto);
+  background:
+    radial-gradient(circle, #eef1f4 58%, transparent 60%),
+    conic-gradient(from 210deg, #f7f9fb, #8a939e, #eef1f4, #7d8692, #f7f9fb);
+  box-shadow: 0 4px 12px -4px rgb(21 25 30 / 0.4);
+}
+
+@media (min-width: 1024px) {
+  .proyecto-medalla {
+    width: 5rem;
+  }
 }
 
 .proyectos-resto .proyecto:nth-child(2) {
@@ -101,10 +149,6 @@
   /* La misma separación que las otras tarjetas de obra (`.proyecto`): la
      cabecera es una burbuja más y no debe despegarse de sus vecinas. */
   margin-top: var(--e-8);
-  /* Los trazos al margen se pintan dentro de tarjetas de plano, pero quedan
-     sobre la página: toman el color de acción de la vitrina, que se resuelve
-     aquí y baja ya calculado. */
-  --chispa: var(--accion);
 }
 
 .vitrina-rejilla {
@@ -120,11 +164,42 @@
   margin-top: var(--e-3);
 }
 
+/* Cómo funciona: tres pasos con su número en la mono y en el color de acción,
+   que es lo primero que encuentra la vista al bajar por la tapa. */
+.vitrina-pasos-titulo {
+  margin: var(--e-6) 0 var(--e-3);
+}
+
+.vitrina-pasos {
+  counter-reset: paso;
+  list-style: none;
+  display: grid;
+  gap: var(--e-3);
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+}
+
+.vitrina-pasos li {
+  counter-increment: paso;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--e-2);
+}
+
+.vitrina-pasos li::before {
+  content: counter(paso, decimal-leading-zero);
+  font-family: var(--fuente-datos);
+  color: var(--accion);
+}
+
 .vista {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 28px;
+  border-radius: var(--radio-panel);
   padding: var(--e-8) var(--e-6) 0;
   color: var(--texto);
   background:
@@ -230,11 +305,6 @@
   to {
     translate: 0 calc(-100% + 100cqh);
   }
-}
-
-/* Los trazos al margen: solo donde la composición se desordena, en L. */
-.chispa {
-  display: none;
 }
 
 /* En M los dos teléfonos van lado a lado: apilados dejan media tarjeta vacía
@@ -357,39 +427,6 @@
     width: 17rem;
   }
 
-  .chispa {
-    display: block;
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    stroke: var(--chispa);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    pointer-events: none;
-  }
-
-  .vista-ancha .chispa {
-    right: 24px;
-    bottom: -44px;
-    transform: rotate(180deg);
-  }
-
-  .vista-alta .chispa {
-    top: -40px;
-    left: -40px;
-  }
-
-  .vista-desplazada .chispa {
-    top: -8px;
-    left: -48px;
-    transform: rotate(-30deg);
-  }
-
-  .vista-cierre .chispa {
-    top: -36px;
-    right: -36px;
-    transform: rotate(90deg);
-  }
 }
 
 /* ---- la vitrina plegada ----
@@ -417,7 +454,7 @@
    estira sobre la tarjeta entera. */
 .vitrina-cabecera {
   position: relative;
-  border-radius: 28px;
+  border-radius: var(--radio-panel);
   padding: var(--e-8) var(--e-6);
   color: var(--texto);
   background:
@@ -520,8 +557,13 @@
  * que `vitrina.js` la mide, la fija en píxeles durante el viaje y la suelta al
  * llegar. Mientras dura, lo que sobresale se recorta: se ve como una tapa que
  * se abre sobre el contenido. */
+/* `clip` y no `hidden`: `hidden` vuelve la vitrina un contenedor con scroll
+   propio mientras dura el viaje. La tarjeta fija de la app se pegaba entonces
+   a la vitrina y no a la pantalla —nacía 100 px más abajo y saltaba a su sitio
+   al llegar— y las entradas de las demás tarjetas, atadas al scroll, medían
+   contra la vitrina: se veían durante el viaje y se apagaban al final. */
 .vitrina.desplegando {
-  overflow: hidden;
+  overflow: clip;
   transition: height 650ms var(--ease-in-out);
 }
 

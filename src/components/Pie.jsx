@@ -47,7 +47,7 @@ export default function Pie({ enHome = true }) {
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
-            <Logotipo className="pie-logotipo-svg" />
+            <Logotipo className="pie-logotipo-svg" porLetra />
           </span>
         </div>
 
@@ -58,6 +58,15 @@ export default function Pie({ enHome = true }) {
                 <a href={ancla(id)}>{texto}</a>
               </li>
             ))}
+          </Columna>
+
+          <Columna titulo="Volutus">
+            <li>
+              <a href="/nosotros">Quiénes somos</a>
+            </li>
+            <li>
+              <a href="/privacidad">Privacidad</a>
+            </li>
           </Columna>
 
           <Columna titulo="Obra">

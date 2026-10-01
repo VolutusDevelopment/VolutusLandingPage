@@ -53,7 +53,7 @@ function html(titulo) {
 </style></head><body>
   <svg viewBox="${viewBox}" aria-hidden="true">
     <path d="${puntos}" fill="currentColor" />
-    <path d="${LETRAS}" fill="currentColor" />
+    <path d="${LETRAS.join('')}" fill="currentColor" />
   </svg>
   <h1>${titulo}</h1>
   <p>volutus.cl</p>

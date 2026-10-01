@@ -34,6 +34,16 @@
   src: url('/fonts/geist-mono-latin.woff2') format('woff2');
 }
 
+/* La fuente del logotipo, solo para los h1: así el titular se ladea lo mismo
+   que la marca (10°). Una sola cara, la que se usa. */
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/archivo-italica-latin.woff2') format('woff2');
+}
+
 /**
  * Respaldo con métricas calzadas a Geist.
  *
@@ -64,6 +74,20 @@
   ascent-override: 88.92%;
   descent-override: 21.26%;
   line-gap-override: 9.66%;
+}
+
+/* Lo mismo para Archivo, medido igual: el titular en mayúscula a 100 px mide
+   9792 px en Archivo y 9466 en Arial negra itálica (103.44 %); ascenso 878 y
+   descenso 210 sobre 1000, divididos por ese factor. */
+@font-face {
+  font-family: 'Archivo respaldo';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Arial Bold Italic'), local('Arial-BoldItalicMT');
+  size-adjust: 103.44%;
+  ascent-override: 84.88%;
+  descent-override: 20.3%;
+  line-gap-override: 0%;
 }
 
 /* ============ Tokens que no dependen del tema ============ */
@@ -127,13 +151,22 @@
   --texto: #0a1a2a;
   --texto-suave: #47607a;
 
+  /* El fondo de cielo, visible también desde una zona de plano: lo necesita el
+     corte de la caída, que pinta el claro de arriba dentro de una sección
+     honda. */
+  --fondo-claro: #f6f9fc;
+
   /* Radio 4 px, uniforme en todo el sitio. Se descartó la esquina recta (dura
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
-  /* Las tarjetas de proyectos (de la rama de Diego) y de servicios van a
-     12 px, y se acota a ellas: el resto del sitio sigue en el radio de arriba. */
+  /* Las tarjetas (proyectos, cifras, contacto, equipo) van a 12 px, y se acota
+     a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
+
+  /* Los paneles de servicios y la vitrina de proyectos son objetos grandes, y
+     a su escala 12 px se lee como esquina recta. */
+  --radio-panel: 28px;
 
   /* Lo que ocupa la barra fija (la de la rama de Diego). Lo leen el scroll a
      anclas y lo que se pega arriba al desplazar —la tarjeta de la app en la
@@ -277,9 +310,9 @@
 }
 
 /* ============ Tonos del plano ============
-   Traídos tal cual de la rama de Diego con la vitrina de PonleNota; los usan
-   también las láminas de servicios. Solo cambian superficies, texto suave y acción; el resto
-   lo hereda de `.zona-plano`. Todos pasan 6.6:1. */
+   Traídos tal cual de la rama de Diego con la vitrina de PonleNota. Solo
+   cambian superficies, texto suave y acción; el resto lo hereda de
+   `.zona-plano`. Todos pasan 6.6:1. */
 .zona-plano.tono-ciruela {
   --fondo: #1f141c;
   --superficie: #2c1d28;
@@ -365,6 +398,29 @@
   --fondo-hora: linear-gradient(#0a1a2a, #050d18);
 }
 
+/* ============ La caída ============
+   La página cae de la nube al mar y nunca vuelve a subir. Pasado el único
+   corte de claro a oscuro, cada sección es un poco más honda que la anterior:
+   empieza en el color donde terminó la de arriba y acaba en el que abre la de
+   abajo, así que no hay costura entre ellas. La última llega al #0a1a2a donde
+   empieza el mar del pie.
+
+   Solo cambian el fondo; el resto es el tema plano. El punto más claro, el
+   arranque de la primera, es el que fija el límite: ahí el texto da 11:1, el
+   secundario 5.9:1 y la acción 4.9:1. Un azul más claro bajaba la acción de
+   4.5:1. */
+:root:not([data-tema]) .hondura-1 {
+  --fondo-hora: linear-gradient(#173350, #132c45);
+}
+
+:root:not([data-tema]) .hondura-2 {
+  --fondo-hora: linear-gradient(#132c45, #0f2338);
+}
+
+:root:not([data-tema]) .hondura-3 {
+  --fondo-hora: linear-gradient(#0f2338, #0a1a2a);
+}
+
 /* ============ Base ============ */
 *,
 *::before,
@@ -429,8 +485,16 @@ h3 {
   margin: 0;
 }
 
+/* Los h1 hablan como el logotipo: Archivo negra itálica, en mayúscula y con
+   su mismo aire entre letras. En el logotipo «VOLUTUS» mide 534.9 de tinta
+   con un em de 100; la fuente sola, 495.9: 6.5 por cada uno de los seis
+   espacios. */
 h1 {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-2xl);
+  font-style: italic;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
 }
 
 h2 {
@@ -616,11 +680,12 @@ svg {
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
    entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
    siendo los momentos que más respiran de la página. */
-/* Las tarjetas de la vitrina de proyectos también son zonas de plano, y dos
-   seguidas perdían su relleno de arriba. Se excluyen solo ellas: acotar la
+/* Las tarjetas de la vitrina de proyectos y los paneles de servicios también
+   son zonas de plano, y dos seguidas perdían su relleno de arriba. Se excluyen
+   solo ellas: acotar la
    regla a `.seccion` —como en la rama de Diego— devolvía el relleno al
    `main` y al pie de /privacidad, que no son secciones y crecían 112 px. */
-.zona-plano + .zona-plano:not(.vista),
+.zona-plano + .zona-plano:not(.vista, .servicio),
 .zona-cielo + .zona-cielo:not(.corte-de-zona) {
   padding-top: 0;
 }

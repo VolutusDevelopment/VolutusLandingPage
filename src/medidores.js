@@ -88,7 +88,9 @@ function prepararMedidor(medidor) {
 
   // El largo de la circunferencia lo pone el componente en una variable de
   // CSS; el valor y su tope, en atributos. Nada se vuelve a calcular aquí.
-  const largo = parseFloat(getComputedStyle(relleno).getPropertyValue('--vuelta'))
+  // Se lee del `style` en línea: `getComputedStyle` obligaría a calcular los
+  // estilos de la página entera para leer un número que está escrito ahí.
+  const largo = parseFloat(relleno.style.getPropertyValue('--vuelta'))
   const tope = Number(medidor.dataset.tope)
   const real = Number(medidor.dataset.valor) / tope
   if (!largo || !tope || Number.isNaN(real)) return null

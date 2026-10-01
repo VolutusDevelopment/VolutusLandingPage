@@ -252,6 +252,9 @@ cómo lo hacemos". Condiciones para que no se descontrole:
 5. Las tecnologías dejan de ser protagonistas. Si aparecen, es como pie de
    página, nunca como argumento de venta.
 
+> **Reemplazado por la decisión 16 (2026-09-30), pendiente del voto de
+> Rodrigo:** los socios aparecen en `/nosotros` con nombre, rol y foto.
+
 **Personas en la página** `[x]`: **no aparece ninguna.** Sin nombres, sin
 retratos, sin firmas, **y sin enlaces a perfiles personales de GitHub o
 LinkedIn**. Habla la empresa en primera persona del plural. Un apartado "sobre
@@ -665,7 +668,7 @@ Nada más.
 
 | No entra | Cuándo se revisa |
 | --- | --- |
-| Apartado "sobre nosotros" con personas | Cuando haya clientes y convenga poner cara |
+| ~~Apartado "sobre nosotros" con personas~~ | Entró en `/nosotros` con la decisión 16 (2026-09-30) |
 | Precios publicados | Cuando el equipo sepa con certeza cuánto cobra |
 | Blog o artículos | Solo si alguna vez se decide apostar por búsqueda, que hoy no es el caso |
 | Casos de estudio | Cuando exista el primer cliente que pague y autorice contarlo |
@@ -708,6 +711,12 @@ tener dueño ni fecha.
 | 12 | 2026-09-13 | La página es de respaldo, no de captación por búsqueda | Apostar el proyecto al SEO: dominio nuevo y sin obra publicada no compite por búsquedas genéricas en este plazo | Ambos |
 | 13 | 2026-09-13 | Solo entran proyectos con enlace abrible; la obra se transfiere a la organización | Mantener seis tarjetas no verificables y repositorios a nombre personal | Ambos |
 | 14 | 2026-09-30 | La página es un día: mañana en la portada, noche en el pie (A.8). Pendiente del voto de Rodrigo, ver pregunta 9 | Los dos temas con corte seco (A.3 y A.4): la portada se veía monocromática y no contaba nada. Las filas de nubes de ilustración con contorno: pedían atención en vez de acompañar el mensaje | Diego |
+| 15 | 2026-09-30 | La página es una caída: empieza en la nube de la portada y termina en el mar del pie, sin volver a aclararse. Un solo corte de claro a oscuro, entre Proyectos y Métricas, tapado por las tarjetas de las cifras; desde ahí cada sección es más honda que la anterior (`hondura-1` a `hondura-3`) hasta el mar. El formulario va en una tarjeta clara, que resuelve lo que A.4 temía del descenso sin retorno. Concreta A.8 en azules. Pendiente del voto de Rodrigo | El retorno a cielo de A.4, que hacía rebotar la página, y los tonos cálidos de las horas intermedias de A.8 | Diego |
+| 16 | 2026-09-30 | «Quiénes somos» en `/nosotros`, con nombre, rol y foto de los socios, y el origen del nombre contado solo con hechos comprobables. Reemplaza la decisión de §4 «Personas en la página». Pendiente del voto de Rodrigo | Seguir sin personas, como fijaba §4 | Diego |
+| 17 | 2026-09-30 | Servicios en paneles numerados superpuestos (referencia: vwlab.io), con el radio de 28 px que ya usaba la vitrina | El acordeón copiado de orderful.com | Diego |
+| 18 | 2026-09-30 | El contacto con la composición de surgehq.ai/enterprise: tarjeta oscura con el relato y tarjeta clara con el formulario; «Qué necesitas» en pastillas de selección múltiple | El menú desplegable de una sola opción | Diego |
+| 19 | 2026-09-30 | El pie entra y sale como el de funkhaus.io: el interior baja y aparece, y las letras del logotipo caen de a una, atadas al scroll y sin JavaScript | El logotipo que subía de una pieza | Diego |
+| 20 | 2026-09-30 | Página 404 con la nube, cabeceras de seguridad con una CSP estricta y `security.txt` | — | Diego |
 
 ---
 
@@ -933,6 +942,11 @@ familia sino del uso:**
 
 **Propuesta de Diego (2026-09-30), plan a seguir.** Pendiente del voto de
 Rodrigo (pregunta abierta 9). Reemplaza el corte seco de A.3 y A.4.
+
+> **Concretada por la decisión 15 (2026-09-30): la página es una caída.** De
+> la nube al mar sin volver a subir, con un solo corte —el de Proyectos a
+> Métricas, tapado por las tarjetas de cifras— y desde ahí azules cada vez más
+> hondos. Las horas cálidas de la tabla de abajo quedan sin aplicar.
 
 **La idea.** Volutus es una nube, y la página recorre un día bajo ella: abre
 en una mañana viva, se vuelve naranja con el atardecer a medida que se baja y

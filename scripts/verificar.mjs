@@ -192,7 +192,9 @@ async function enlacesRotos(ruta) {
 const actual = { rutas: {}, foco: {} }
 const enlaces = []
 
-for (const ruta of ['/', '/privacidad']) {
+// `/no-existe` es la 404: Cloudflare la sirve en cualquier dirección que no
+// existe, así que se mide en una que no existe y no en /404.
+for (const ruta of ['/', '/nosotros', '/privacidad', '/no-existe']) {
   actual.rutas[ruta] = {}
   for (const [nombre, ancho, alto] of ANCHOS) {
     actual.rutas[ruta][nombre] = await medir(ruta, ancho, alto, null)

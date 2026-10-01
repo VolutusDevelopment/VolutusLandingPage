@@ -1,4 +1,5 @@
 import { OPCIONES_DE_CONTACTO } from '../src/lib/servicios.js'
+import { CABECERAS } from '../src/lib/seguridad.js'
 /**
  * El Worker que entrega el formulario de contacto.
  *
@@ -6,6 +7,9 @@ import { OPCIONES_DE_CONTACTO } from '../src/lib/servicios.js'
  * Worker existe por una sola ruta, `POST /api/contacto`, que es la única acción
  * que DESIGN-BRIEF §1 quiere que ocurra en toda la página. Todo lo demás cae al
  * binding de assets sin tocar nada.
+ *
+ * Sus respuestas llevan a mano las cabeceras de `lib/seguridad.js`: el
+ * `_headers` del sitio solo cubre lo que Cloudflare sirve directo.
  *
  * §10 y §11 del brief daban por hecho Vercel con una función serverless. El
  * repositorio despliega a Cloudflare Workers, así que la integración con Resend
@@ -58,7 +62,7 @@ main{max-width:34rem;text-align:center}p{margin:0 0 24px;color:${color}}
 a{display:inline-flex;align-items:center;min-height:44px;padding:0 24px;border-radius:4px;
 background:#116492;color:#fff;text-decoration:none}</style></head>
 <body><main><p>${mensaje}</p><a href="/">Volver a la página</a></main></body></html>`,
-    { status: estado, headers: { 'content-type': 'text/html; charset=utf-8' } }
+    { status: estado, headers: { ...CABECERAS, 'content-type': 'text/html; charset=utf-8' } }
   )
 }
 
@@ -68,7 +72,7 @@ function responder(request, mensaje, estado) {
 
   return new Response(JSON.stringify({ mensaje }), {
     status: estado,
-    headers: { 'content-type': 'application/json; charset=utf-8' },
+    headers: { ...CABECERAS, 'content-type': 'application/json; charset=utf-8' },
   })
 }
 
@@ -78,7 +82,7 @@ function limpiar(valor, tope) {
 
 async function manejarContacto(request, env) {
   if (request.method !== 'POST') {
-    return new Response('Método no permitido', { status: 405, headers: { allow: 'POST' } })
+    return new Response('Método no permitido', { status: 405, headers: { ...CABECERAS, allow: 'POST' } })
   }
 
   let datos
@@ -98,10 +102,14 @@ async function manejarContacto(request, env) {
   const nombre = limpiar(datos.get('nombre'), LIMITES.nombre)
   const correo = limpiar(datos.get('correo'), LIMITES.correo)
   const proyecto = limpiar(datos.get('proyecto'), LIMITES.proyecto)
-  // Opcional. Solo vale si es uno de los de la lista: lo que no coincida se
-  // descarta sin rechazar el envío, porque perder un mensaje por un menú
-  // manipulado no protege nada y deja a alguien sin respuesta.
-  const servicio = OPCIONES_DE_CONTACTO.find((s) => s === limpiar(datos.get('servicio'), 40)) ?? null
+  // Opcional, y se puede marcar más de uno. Solo valen los de la lista: lo que
+  // no coincida se descarta sin rechazar el envío, porque perder un mensaje por
+  // una casilla manipulada no protege nada y deja a alguien sin respuesta.
+  const marcados = datos
+    .getAll('servicio')
+    .slice(0, OPCIONES_DE_CONTACTO.length)
+    .map((valor) => limpiar(valor, 40))
+  const servicio = OPCIONES_DE_CONTACTO.filter((opcion) => marcados.includes(opcion)).join(' · ') || null
 
   if (!nombre || !proyecto || !CORREO_VALIDO.test(correo)) {
     return responder(request, MENSAJES.invalido, 400)
@@ -127,8 +135,8 @@ async function manejarContacto(request, env) {
         // Responder al correo contesta a quien escribió, no al remitente
         // técnico. Es lo que hace que el compromiso de 48 horas sea un clic.
         reply_to: correo,
-        // El servicio va en el asunto: es lo primero que se ve en la bandeja
-        // y lo que decide cuál de los dos socios contesta.
+        // Los servicios van en el asunto: es lo primero que se ve en la
+        // bandeja y lo que decide cuál de los dos socios contesta.
         subject: servicio ? `Nuevo mensaje de ${nombre} · ${servicio}` : `Nuevo mensaje de ${nombre}`,
         text: `${servicio ? `Necesita: ${servicio}\n\n` : ''}${proyecto}\n\n—\n${nombre}\n${correo}`,
       }),
@@ -150,9 +158,19 @@ export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url)
 
-    if (pathname === '/api/contacto') return manejarContacto(request, env)
+    if (pathname === '/api/contacto') {
+      // Un error que se escape no puede terminar en la página genérica de
+      // Cloudflare: quien escribió tiene que saber que su mensaje no salió y
+      // por dónde escribirnos.
+      try {
+        return await manejarContacto(request, env)
+      } catch (error) {
+        console.error('contacto: error inesperado', error)
+        return responder(request, MENSAJES.fallo, 500)
+      }
+    }
 
-    // Todo lo demás es el sitio estático.
+    // Todo lo demás es el sitio estático, con su página 404 si no existe.
     return env.ASSETS.fetch(request)
   },
 }

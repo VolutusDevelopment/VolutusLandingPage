@@ -9,4 +9,11 @@ if (import.meta.env.DEV) {
   renderApp()
 }
 
-init()
+// El arranque espera al primer pintado: `requestAnimationFrame` corre justo
+// antes de pintar y el `setTimeout` de dentro, justo después. Si el script
+// llega antes que el pintado —pasa a veces, depende de lo que tarde en leerse
+// el HTML—, la primera medida que toma (la barra mide su posición) obliga al
+// navegador a calcular estilos y maqueta de toda la página dentro de la misma
+// tarea: 70 ms más de bloqueo en un móvil medio. Esperando un fotograma, ese
+// trabajo lo hace el pintado, que lo iba a hacer igual.
+requestAnimationFrame(() => setTimeout(init))

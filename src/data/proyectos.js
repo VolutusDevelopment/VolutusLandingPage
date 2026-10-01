@@ -31,8 +31,17 @@ export const PROYECTOS = [
     id: 'ponlenota',
     nombre: 'PonleNota',
     resumen:
-      'ponlenota.cl se enfoca en ayudar a los negocios a conseguir más reseñas en Google con un QR o una tarjeta NFC.',
+      'ponlenota.cl convierte cada visita a un negocio local en una valoración privada y, si el cliente quiere, en una reseña en Google.',
     sitio: 'https://ponlenota.cl',
+    // Cómo funciona, a la vista aunque la vitrina esté plegada: es lo que
+    // necesita entender quien no la abre. El cupón va en su propia frase y con
+    // su propio «si»: no depende de la reseña, porque Google prohíbe premiar
+    // reseñas y PonleNota está hecho así a propósito.
+    pasos: [
+      'El cliente acerca el teléfono a una tarjeta NFC o escanea un QR. No descarga nada ni crea una cuenta.',
+      'Pone su nota, de 1 a 5. Esa nota la ve solo el negocio.',
+      'Si quiere, publica su opinión en Google. Si el negocio ofrece un beneficio, se lleva un cupón para volver.',
+    ],
     // Las tres caras del producto, cada una con su captura real. Sin `vistas`
     // un proyecto se pinta como tarjeta simple; con ellas, como vitrina (ver
     // `Vitrina` en Proyectos.jsx). El orden fija la forma: ancha, alta,
@@ -59,7 +68,7 @@ export const PROYECTOS = [
       },
       {
         titulo: 'Lo que ve el cliente',
-        texto: 'Acerca el teléfono a la tarjeta o escanea el QR, valora en un minuto y se lleva un cupón. Sin descargar nada.',
+        texto: 'Se abre en el navegador: primero las estrellas, sin pedirle nada. Al final elige si deja su opinión en Google o pide su beneficio.',
         tono: 'ciruela',
         imagen: {
           src: '/image/ponlenota-cliente-320.webp',
@@ -72,7 +81,9 @@ export const PROYECTOS = [
       },
       {
         titulo: 'La app del negocio',
-        texto: 'Tu negocio, tu equipo, tus tarjetas NFC y tus cupones, desde el teléfono o la tablet. Disponible en Android y iOS.',
+        // Solo Android: la de iPhone existe, pero sin TestFlight ni prueba con
+        // NFC real todavía, así que no se anuncia.
+        texto: 'El negocio, el equipo, las tarjetas NFC y los cupones, desde un teléfono o una tablet Android. Es la que graba las tarjetas.',
         imagen: {
           src: '/image/ponlenota-app-640.webp',
           srcSet: '/image/ponlenota-app-640.webp 640w, /image/ponlenota-app-960.webp 960w',
@@ -84,7 +95,7 @@ export const PROYECTOS = [
       },
       {
         titulo: 'El panel web',
-        texto: 'Lo mismo que la app, en el computador de la caja: toques por día y cómo va el mes.',
+        texto: 'Casi todo lo de la app, en el computador de la caja: valoraciones, cupones, campañas y cómo va el mes.',
         tono: 'pizarra',
         imagen: {
           src: '/image/ponlenota-panel-1280.webp',
@@ -106,9 +117,9 @@ export const PROYECTOS = [
     // Es la única prueba validada por un tercero que existe hoy, así que va
     // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: '2.º lugar en Hackathon de Huawei Cloud y Kostra AI',
+    credencial: { puesto: "2°", titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
     resumen:
-      'Se realizó una Agente de IA que que atiende las alertas de infraestructura por su cuenta; reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia en tiempo real usando servicios MaaS.',
+      'Un agente de IA que atiende por su cuenta las alertas de infraestructura: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia, en tiempo real, usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
   },
 
@@ -119,7 +130,7 @@ export const PROYECTOS = [
     id: 'carflip',
     nombre: 'CarFlip',
     resumen:
-      'Carflip.cl es un proyecto que tiene como fin recopilar vehiculos usados en un solo lugar y busca democratizar la venta de autos sin que se tenga que pagar por salir más veces. (Mejorar)',
+      'Un portal chileno de autos usados donde publican particulares y automotoras. Sobre su propio catálogo calcula estadísticas de mercado y detecta oportunidades.',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
   },
 ]

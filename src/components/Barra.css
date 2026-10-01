@@ -429,17 +429,17 @@
   transition: opacity 200ms var(--ease-out);
 }
 
-/* Por debajo de 640 px el logotipo, los dos enlaces y el botón no caben en
+/* Por debajo de 768 px el logotipo, los tres enlaces y el botón no caben en
    una fila: se retira el botón, que sigue a mano en la portada. */
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .barra-accion {
     display: none;
   }
 }
 
-/* En S el logotipo se queda, más bajo, y con los dos enlaces cabe en una
-   línea. */
-@media (max-width: 479px) {
+/* Por debajo de 560 px el logotipo se queda, más bajo, y con los tres
+   enlaces cabe en una línea. */
+@media (max-width: 559px) {
   .marca-logotipo {
     height: 26px;
   }
@@ -452,6 +452,14 @@
   .barra-enlaces a {
     padding-inline: var(--e-3);
     white-space: nowrap;
+  }
+}
+
+/* En S los enlaces se juntan un poco más: el área táctil sigue en 44 px de
+   alto y el indicador los cubre enteros igual. */
+@media (max-width: 479px) {
+  .barra-enlaces a {
+    padding-inline: var(--e-2);
   }
 }
 

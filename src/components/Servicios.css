@@ -1,16 +1,115 @@
-/* Servicios. El diseño es el de «Support For Any Business Type» de
-   orderful.com; ver Servicios.jsx para el porqué de cada pantalla.
+/* Servicios: paneles numerados con la mecánica del acordeón de vwlab
+   (anima-vw.netlify.app, `.accd`); ver Servicios.jsx para el porqué.
 
-   Las medidas salen de medir la original con Playwright: marco gris con 4 px
-   de relleno y 4 px entre columnas, columna abierta con flex 3 frente a 0,5
-   de las cerradas, 500 ms de transición. En el celular, fichas separadas 8 px,
-   la elegida en blanco y las demás en gris. */
+   De la original se copia el gesto, no las medidas: paneles superpuestos con
+   el canto redondeado, el elegido entero y los demás asomando en una franja,
+   800 ms de transición en la curva lenta de los dos extremos. El contenido no
+   espera a nadie: ya está en el panel y viaja con él. */
 
-.servicios-lista {
-  margin-top: var(--e-12);
-  padding: var(--e-1);
-  border-radius: var(--radio-tarjeta);
-  background: var(--tinte-b);
+.paneles {
+  list-style: none;
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+/* Metal cepillado, solo con degradados: un reflejo en diagonal que se apaga
+   hacia una sombra, sobre líneas verticales finísimas. No pesa nada ni se
+   anima, así que el deslizamiento sigue siendo solo `transform`. */
+.servicio {
+  --metal:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0) 10%,
+      rgb(255 255 255 / 0.08) 35%,
+      rgb(255 255 255 / 0) 55%,
+      rgb(0 0 0 / 0.22)
+    ),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
+  --anillo: rgb(255 255 255 / 0.8);
+  --filo: inset 0 -1px 0 rgb(255 255 255 / 0.08);
+  position: relative;
+  background: var(--metal), var(--panel);
+  color: var(--texto);
+  /* El filo de luz del canto y, debajo, el anillo de selección, apagado. */
+  box-shadow: var(--filo), inset 0 0 0 2px transparent;
+  transition: box-shadow 300ms var(--ease-out);
+}
+
+/* El elegido se enmarca con un anillo claro que sigue su canto redondeado: se
+   ve de un vistazo cuál está abierto sin tapar nada. */
+.servicio.activo {
+  box-shadow: var(--filo), inset 0 0 0 2px var(--anillo);
+}
+
+/* Al pasar por una franja cerrada asoma el mismo anillo, tenue: dice que esa
+   pieza también se puede elegir. */
+@media (hover: hover) {
+  .servicio:not(.activo):has(.servicio-boton:hover) {
+    box-shadow: var(--filo), inset 0 0 0 2px color-mix(in srgb, var(--anillo) 40%, transparent);
+  }
+}
+
+/* Del morado al azul: un barrido de un panel a otro, como el de un metal
+   anodizado. Todos llevan texto blanco, que da 4.7:1 o más en el punto más
+   claro del reflejo; un blanco translúcido ya no llega, así que el texto
+   suave es blanco y se distingue por su tamaño. */
+.servicio.zona-plano {
+  --texto: #ffffff;
+  --texto-suave: #ffffff;
+  --accion: #ffffff;
+  --foco: #ffffff;
+  --linea: rgb(255 255 255 / 0.3);
+}
+
+.servicio:nth-child(1) {
+  --panel: #5a2d8c;
+}
+
+.servicio:nth-child(2) {
+  --panel: #583b9e;
+}
+
+.servicio:nth-child(3) {
+  --panel: #4c4aa8;
+}
+
+.servicio:nth-child(4) {
+  --panel: #3d59ad;
+}
+
+.servicio:nth-child(5) {
+  --panel: #2d64a8;
+}
+
+.servicio:nth-child(6) {
+  --panel: #1b6a96;
+}
+
+/* Con el tema forzado a claro los tonos dan paso al blanco: se alternan blanco
+   y tinte para que el canto se siga leyendo, el metal pasa a reflejo blanco
+   con sombra azulada y el anillo, al azul de acción. */
+:root[data-tema='claro'] .servicio {
+  --metal:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0) 10%,
+      rgb(255 255 255 / 0.6) 35%,
+      rgb(255 255 255 / 0) 55%,
+      rgb(10 26 42 / 0.06)
+    ),
+    repeating-linear-gradient(90deg, rgb(10 26 42 / 0.02) 0 1px, transparent 1px 3px);
+  --panel: var(--tinte-b);
+  --anillo: var(--accion);
+}
+
+:root[data-tema='claro'] .servicio:nth-child(odd) {
+  --panel: var(--superficie);
+}
+
+/* La cabecera del panel abierto solo existe en escritorio: en el apilado la
+   hace el propio botón. */
+.servicio-cabecera {
+  display: none;
 }
 
 .servicio-titulo {
@@ -21,17 +120,28 @@
 }
 
 .servicio-boton {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
   width: 100%;
+  min-height: 44px;
+  padding: 0;
   font: inherit;
-  color: var(--texto-suave);
+  color: inherit;
+  text-align: left;
   background: none;
-  border: 1px solid transparent;
-  border-radius: var(--radio-tarjeta);
+  border: 0;
   cursor: pointer;
   /* El toque no espera a ver si es un doble toque, y Android no pinta su
-     recuadro encima: la respuesta ya la da la ficha al cambiar de color. */
+     recuadro encima: la respuesta ya la da el panel al abrirse. */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Hacia dentro: la lista recorta lo que se sale, y un anillo hacia fuera se
+   perdía contra el canto del panel. */
+.servicio-boton:focus-visible {
+  outline-offset: -4px;
 }
 
 .servicio-icono {
@@ -40,297 +150,267 @@
   flex-shrink: 0;
 }
 
-.servicio-panel {
-  display: none;
-  flex-direction: column;
-  gap: var(--e-4);
-  border-radius: var(--radio-tarjeta);
-  background: var(--superficie);
-}
-
-.servicio.activo .servicio-panel {
-  display: flex;
-}
-
-.servicio-panel-titulo {
-  margin: 0;
-  font-size: var(--texto-xl);
+.servicio-nombre {
+  font-size: var(--texto-lg);
+  font-weight: 800;
   line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--texto);
+  letter-spacing: -0.02em;
+}
+
+/* El número gigante es la firma de la referencia. Va en Geist y no en la mono:
+   no es un dato, es la marca del panel. */
+.servicio-numero {
+  margin-left: auto;
+  font-size: var(--texto-2xl);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  transition: color 300ms var(--ease-out);
 }
 
 .servicio-texto {
-  margin: 0;
-  max-width: 34rem;
+  font-size: var(--texto-lg);
+  line-height: 1.4;
+}
+
+/* Los puntos, numerados en círculo como en la original. */
+.servicio-puntos {
+  counter-reset: punto;
+  list-style: none;
+  margin: var(--e-6) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--e-3);
+  font-size: var(--texto-sm);
   color: var(--texto-suave);
 }
 
-.servicio-panel .boton {
-  width: 100%;
-  text-align: center;
+.servicio-puntos li {
+  counter-increment: punto;
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
 }
 
-/* La lámina ocupa el sitio de la foto de Orderful. Es la ilustración que ya
-   usaba «Cómo trabajamos»: aquí no hay fotos de producto para cada servicio y
-   un recuadro vacío en su lugar es lo que §4 prohíbe. */
-/* Pegadas al fondo del panel en las dos pantallas. En el celular todos los
-   paneles miden lo que el más alto, para que cambiar de servicio no mueva la
-   página; con la imagen abajo, lo que sobra queda entre el botón y la imagen
-   y no como un hueco blanco al final. */
-.servicio-lamina,
-.servicio-captura {
-  aspect-ratio: 16 / 9;
-  margin-top: auto;
-}
-
-.servicio-lamina {
+.servicio-puntos li::before {
+  content: counter(punto);
   display: grid;
   place-items: center;
-  border-radius: var(--radio);
-  background: var(--lamina);
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto);
 }
 
-.servicio-lamina svg {
-  width: 62%;
-  max-width: 260px;
-  stroke: rgb(255 255 255 / 0.55);
-  stroke-width: 1.2;
-  stroke-linecap: round;
+.servicio-enlace {
+  margin-top: var(--e-6);
 }
 
-/* ---- el celular y la tableta: fichas y un panel debajo ---- */
+/* ---- el celular y la tableta: el apilado en vertical ---- */
 
 @media (max-width: 1023px) {
-  .servicios-lista {
-    display: grid;
-    /* Dos columnas y no tres como la original: con seis servicios,
-       «Automatizaciones» no cabía en una ficha de tres ni a 412 px. Se partía
-       con guion y la fila de abajo salía más alta que la de arriba.
-       `minmax(0, 1fr)` para que ninguna columna se estire por su palabra. */
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--e-2);
+  .servicio {
+    z-index: calc(var(--n) - var(--i));
+    padding: var(--e-4) var(--e-6);
+    border-radius: 0 0 var(--radio-panel) var(--radio-panel);
   }
 
-  /* El envoltorio de cada servicio desaparece de la maqueta: el título pasa a
-     ser una ficha de la rejilla y el panel, una pieza aparte que se va al
-     final y ocupa las dos columnas. Es un `div` sin papel propio, así que
-     quitarlo de la maqueta no le quita nada al lector de pantalla. */
-  .servicio,
-  .servicio-cara {
-    display: contents;
+  .servicio:first-child {
+    border-radius: var(--radio-panel);
   }
 
-  .servicio-boton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--e-2);
-    height: 100%;
-    padding: var(--e-3) var(--e-2);
-    font-size: var(--texto-sm);
-    line-height: 1.2;
-    background: color-mix(in srgb, var(--texto) 7%, var(--tinte-b));
-    transition:
-      background-color 300ms var(--ease-out),
-      color 300ms var(--ease-out);
+  /* Cada panel nace bajo el canto redondeado del de arriba, que lo tapa. */
+  .servicio + .servicio {
+    margin-top: calc(-1 * var(--radio-panel));
+    padding-top: calc(var(--radio-panel) + var(--e-4));
   }
 
-  .servicio.activo .servicio-boton {
-    color: var(--texto);
-    background: var(--superficie);
-  }
-
-  /* Todos los paneles en la misma celda, debajo de las fichas, y a la vista
-     solo el elegido. Los demás no se quitan de la maqueta: se vuelven
-     invisibles —y con eso desaparecen también para el lector de pantalla—
-     pero siguen ocupando su sitio. Así la zona mide siempre lo que el panel
-     más alto y cambiar de servicio no mueve nada de lo que hay debajo. Con
-     `display: none` cada toque subía o bajaba la página entera. */
+  /* El panel se despliega con la fila de la rejilla, de 0fr a 1fr: anima un
+     alto que no se conoce de antemano sin medir nada con JavaScript. */
   .servicio-panel {
-    display: flex;
+    display: grid;
+    grid-template-rows: 0fr;
     visibility: hidden;
-    grid-column: 1 / -1;
-    grid-row: var(--fila-paneles);
-    padding: var(--e-6);
+    transition:
+      grid-template-rows 400ms var(--ease-in-out),
+      visibility 0s linear 400ms;
   }
 
   .servicio.activo .servicio-panel {
+    grid-template-rows: 1fr;
     visibility: visible;
+    transition: grid-template-rows 400ms var(--ease-in-out);
+  }
+
+  .servicio-contenido {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .servicio-texto {
+    padding-top: var(--e-4);
+  }
+
+  .servicio-enlace {
+    padding-bottom: var(--e-2);
   }
 }
 
-/* ---- escritorio: el acordeón horizontal ---- */
+/* ---- escritorio: los paneles superpuestos ---- */
 
 @media (min-width: 1024px) {
-  .servicios-lista {
-    display: flex;
-    gap: var(--e-1);
-    min-height: 36rem;
-  }
-
-  .servicio {
+  /* `overflow: clip` y no `hidden`: recorta lo que se corre a la izquierda sin
+     volver la lista un contenedor con scroll propio. */
+  .paneles {
+    --franja: 6.5rem;
     position: relative;
+    height: 34rem;
+    overflow: clip;
+    border-radius: var(--radio-panel);
+    /* Los paneles se arrastran en horizontal (servicios.js): el desplazamiento
+       vertical sigue siendo del navegador, el horizontal es nuestro. */
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  /* Mientras se arrastra, el panel va pegado al puntero: sin transición que lo
+     haga ir a la zaga, y sin seleccionar texto por el camino. */
+  .paneles.arrastrando {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .paneles.arrastrando .servicio,
+  .paneles.arrastrando .servicio-boton {
+    cursor: inherit;
+    transition: none;
+  }
+
+  /* El panel que se va descubriendo ya enseña su contenido. */
+  .paneles.arrastrando .servicio-panel {
+    visibility: visible;
+    transition: none;
+  }
+
+  /* Cada panel nace un canto antes, bajo el redondeo del anterior: así lo que
+     asoma por las esquinas es el panel de abajo y no el fondo de la sección.
+     El primero sobresale por la izquierda y la lista lo recorta. */
+  .servicio {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--i) * var(--franja) - var(--radio-panel));
+    width: calc(100% - (var(--n) - 1) * var(--franja) + var(--radio-panel));
+    z-index: calc(var(--n) - var(--i));
     display: flex;
     flex-direction: column;
-    flex: 0.5 1 0;
-    min-width: 0;
-    overflow: hidden;
-    border-radius: var(--radio-tarjeta);
-    background: var(--superficie);
-    transition: flex-grow 500ms var(--ease-in-out);
-  }
-
-  .servicio.activo {
-    flex-grow: 3;
-  }
-
-  /* La cara ocupa la columna entera: es la que se estira y la que rota. */
-  .servicio-cara {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* Cerrada, la columna entera es el botón: el título que lo envuelve se
-     estira hasta abajo y el botón con él. Sin esto el botón medía lo que su
-     texto —unos 300 de 568 px— y el tercio de abajo de la columna ni se
-     resaltaba al pasar ni respondía al clic. */
-  .servicio:not(.activo) .servicio-titulo {
-    display: flex;
-    flex: 1;
-  }
-
-  /* Cerrada: el icono arriba, apagado, y el nombre de arriba abajo. */
-  .servicio-boton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--e-4);
-    height: 100%;
-    padding: var(--e-8) var(--e-4);
+    --filo: inset -1px 0 0 rgb(255 255 255 / 0.08);
+    border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
     transition:
-      background-color 300ms var(--ease-out),
-      border-color 300ms var(--ease-out);
+      transform 800ms var(--ease-in-out),
+      box-shadow 300ms var(--ease-out);
   }
 
-  .servicio-boton .servicio-icono {
-    opacity: 0.4;
+  /* Los que van antes del elegido se corren hasta dejar asomar solo su franja. */
+  .servicio:has(~ .activo) {
+    transform: translateX(calc(-100% + var(--franja) + var(--radio-panel)));
+  }
+
+  /* El botón es siempre la franja del borde derecho, abierto o cerrado: de
+     arriba abajo, el icono, el nombre de pie y el número al fondo. Como no
+     cambia de sitio, abrir no reacomoda nada. */
+  .servicio-boton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--franja);
+    flex-direction: column;
+    gap: var(--e-4);
+    padding: var(--e-8) 0 var(--e-6);
   }
 
   .servicio-nombre {
     writing-mode: vertical-rl;
-    font-size: var(--texto-xl);
-    line-height: 1;
-    letter-spacing: -0.02em;
   }
 
-  /* El resalte al pasar, como en Orderful: fondo un punto más claro y el
-     borde en el color de marca. Solo con ratón: en el táctil el hover se
-     queda pegado tras el toque, y la original lo sufre. */
+  .servicio-boton .servicio-icono,
+  .servicio-nombre {
+    transition: opacity 300ms var(--ease-out);
+  }
+
+  /* Abierto, el nombre de la franja se funde con el fondo: ya lo dice la
+     cabecera. Sigue en el árbol de accesibilidad, así que el botón conserva
+     su nombre. El número se queda. */
+  .servicio.activo .servicio-boton .servicio-icono,
+  .servicio.activo .servicio-nombre {
+    opacity: 0;
+  }
+
+  /* Abierto, el botón no hace nada: muestra la mano de arrastrar de la lista. */
+  .servicio.activo .servicio-boton {
+    cursor: inherit;
+  }
+
+  .servicio-numero {
+    margin: auto 0 0;
+    font-size: clamp(5rem, 7vw, 6.5rem);
+  }
+
   @media (hover: hover) {
-    .servicio:not(.activo) .servicio-boton:hover {
-      background: color-mix(in srgb, var(--texto) 3%, var(--superficie));
-      border-color: var(--marca);
+    .servicio:not(.activo) .servicio-boton:hover .servicio-numero {
+      color: var(--accion);
     }
   }
 
-  /* Abierta: el botón pasa a ser la cabecera del panel —nombre en horizontal
-     y el icono arriba a la derecha— y deja de responder. */
-  .servicio.activo .servicio-titulo {
-    padding: var(--e-8) var(--e-8) 0;
+  .servicio-cabecera {
+    display: flex;
+    align-items: center;
+    gap: var(--e-3);
+    margin-bottom: var(--e-6);
+    font-size: var(--texto-xl);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
-  .servicio.activo .servicio-boton {
-    flex-direction: row;
-    height: auto;
-    padding: 0 var(--e-12) 0 0;
-    color: var(--texto);
-    cursor: default;
-  }
-
-  .servicio.activo .servicio-boton .servicio-icono {
-    position: absolute;
-    top: var(--e-8);
-    right: var(--e-8);
-    opacity: 1;
-  }
-
-  .servicio.activo .servicio-nombre {
-    writing-mode: horizontal-tb;
-    letter-spacing: -0.03em;
-  }
-
-  .servicio-panel-titulo {
-    display: none;
-  }
-
-  /* El panel no se reacomoda mientras la columna crece: tiene su ancho de
-     llegada desde el primer fotograma y la columna lo va descubriendo. En
-     Orderful el texto se recoloca línea a línea durante la transición. */
+  /* El contenido está siempre y viaja con su panel. Los cerrados solo se
+     esconden del foco cuando ya terminaron de taparse. */
   .servicio-panel {
     flex: 1;
-    min-width: 30rem;
-    padding: var(--e-6) var(--e-8) var(--e-8);
+    padding: var(--e-8) calc(var(--franja) + var(--e-6)) var(--e-8)
+      calc(var(--e-12) + var(--radio-panel));
+    visibility: hidden;
+    transition: visibility 0s linear 800ms;
   }
 
-  .servicio-panel .boton {
-    width: auto;
-    align-self: flex-start;
+  .servicio.activo .servicio-panel {
+    visibility: visible;
+    transition: none;
   }
 
+  .servicio-contenido {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 36rem;
+  }
+
+  .servicio-puntos {
+    margin-top: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .servicio,
-  .servicio-boton {
+  .servicio-panel,
+  .servicio.activo .servicio-panel,
+  .servicio-boton .servicio-icono,
+  .servicio-nombre {
     transition: none;
-  }
-}
-
-:root[data-movimiento='reducido'] .servicio,
-:root[data-movimiento='reducido'] .servicio-boton {
-  transition: none;
-}
-
-/* La captura de un proyecto real, donde la hay. Recortada por arriba: lo que
-   se reconoce de una web es su cabecera y su titular. */
-.servicio-captura {
-  overflow: hidden;
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
-  background: var(--tinte-b);
-}
-
-.servicio-captura img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top left;
-}
-
-/* ---- el giro al pulsar (escritorio) ----
- *
- * Al elegir una columna se quita el nombre vertical y aparece el contenido
- * DE PIE —girado 90°, como estaba el nombre— y rota hasta quedar horizontal
- * mientras la columna se ensancha. Es una rotación plana y no un volteo en 3D:
- * el volteo se leía como un espejo.
- *
- * Gira sobre su centro. Así, al principio, un contenido más ancho que la
- * columna se ve de pie a lo largo de ella, y termina de tumbarse justo cuando
- * la columna ya tiene su ancho. Misma curva y casi la misma duración que el
- * ensanche (500 ms), para que las dos cosas ocurran a la vez. */
-@keyframes servicio-rota {
-  from {
-    transform: rotate(90deg);
-  }
-}
-
-@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-  .servicio.gira .servicio-cara {
-    transform-origin: 50% 50%;
-    animation: servicio-rota 520ms var(--ease-in-out);
   }
 }
