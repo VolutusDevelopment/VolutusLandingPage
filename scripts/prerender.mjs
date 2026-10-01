@@ -21,7 +21,7 @@
 import { readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { ORIGEN, PAGINAS, canonicalDe } from '../src/lib/meta.js'
+import { ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
@@ -30,9 +30,6 @@ const dist = `${root}dist/`
 const { render } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const ORGANIZACION = `${ORIGEN}/#organizacion`
-const IMAGEN = `${ORIGEN}/image/og-volutus.jpg`
-const ALT_IMAGEN =
-  'La portada de Volutus: la nube volutus sobre un cielo de mañana y el titular «Creamos páginas web para tu negocio».'
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -70,7 +67,7 @@ function datosEstructurados(ruta, canonical, titulo) {
   })}</script>`
 }
 
-function cabecera(ruta, { titulo, descripcion, indexar = true }) {
+function cabecera(ruta, { archivo, titulo, descripcion, indexar = true }) {
   const t = atributo(titulo)
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
@@ -80,6 +77,8 @@ function cabecera(ruta, { titulo, descripcion, indexar = true }) {
   if (!indexar) return [...basicas, `<meta name="robots" content="noindex" />`].join('\n    ')
 
   const canonical = canonicalDe(ruta)
+  const imagen = `${ORIGEN}${tarjetaDe(archivo)}`
+  const alt = atributo(`El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
   return [
     ...basicas,
     `<link rel="canonical" href="${canonical}" />`,
@@ -89,14 +88,16 @@ function cabecera(ruta, { titulo, descripcion, indexar = true }) {
     `<meta property="og:description" content="${d}" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:locale" content="es_CL" />`,
-    `<meta property="og:image" content="${IMAGEN}" />`,
+    `<meta property="og:image" content="${imagen}" />`,
+    `<meta property="og:image:type" content="image/jpeg" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="${atributo(ALT_IMAGEN)}" />`,
+    `<meta property="og:image:alt" content="${alt}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${t}" />`,
     `<meta name="twitter:description" content="${d}" />`,
-    `<meta name="twitter:image" content="${IMAGEN}" />`,
+    `<meta name="twitter:image" content="${imagen}" />`,
+    `<meta name="twitter:image:alt" content="${alt}" />`,
     datosEstructurados(ruta, canonical, titulo),
   ].join('\n    ')
 }
