@@ -60,7 +60,7 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
           </div>
           <p className="pagina-error-salidas">
             <a className="boton boton-primario" href="/">
-              Inicio
+              Volver al inicio
             </a>
             <button className="boton boton-secundario jugar" type="button" data-empieza={empiezaSolo || undefined} hidden>
               <Pato />
