@@ -6,12 +6,10 @@
 
 /* ---- el mar ----
    Volutus es la nube; esto es lo que tiene debajo (src/lib/mar.js). Va en la
-   franja de abajo, bajo las columnas, con la trama fina de la nube. No tiene
-   borde: el agua termina en su horizonte, y lo que queda arriba es aire para
-   las crestas que pasan la altura de los ojos y asoman sobre él. Ese aire es
-   el doble de lo que sube la cresta más alta, y el cielo del lienzo es
-   transparente y no recibe clics: su mitad de arriba se mete bajo la línea
-   legal y el agua queda cerca de ella. */
+   franja de abajo, bajo la línea legal, con la trama fina de la nube. No tiene
+   borde: el agua termina en su horizonte, al 15 % del alto del lienzo, y lo
+   de arriba es cielo transparente que no recibe clics. Dos tercios de ese
+   cielo se meten bajo la línea legal, así que el agua queda cerca de ella. */
 .pie-mar {
   position: relative;
   --alto-mar: clamp(200px, 26vw, 380px);
@@ -125,98 +123,120 @@
   }
 }
 
-/* ---- columnas de enlaces ----
-   Centradas bajo el nombre y separadas por una línea discontinua, que marca el
-   grupo sin pesar como un borde: los enlaces siguen siendo lo que se ve. */
-.pie-columnas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  row-gap: var(--e-8);
+/* ---- el contenido ----
+   Centrado bajo el nombre, en tres niveles que se leen de un vistazo: el
+   correo, que es la acción; los enlaces secundarios, y la línea legal. */
+.pie-contacto {
   margin-top: var(--e-12);
   text-align: center;
 }
 
-.pie-columna {
-  min-width: 9rem;
-  padding-inline: var(--e-6);
-  border-left: 1px dashed var(--linea);
+.pie-contacto .antetitulo {
+  max-width: none;
+  margin-bottom: var(--e-2);
 }
 
-.pie-columna:first-child {
-  border-left: 0;
+/* El correo, grande: del tamaño de un h2 en pantallas anchas y lo justo para
+   que quepa en una línea en un celular de 360 px. El subrayado está siempre,
+   tenue, porque es un enlace; al pasar encima se enciende y la flecha avanza
+   un paso hacia donde lleva. La flecha es un bloque en línea para que el
+   subrayado no la cruce, y el alto de línea da los 44 px del dedo. */
+.pie-correo {
+  display: inline-block;
+  line-height: 44px;
+  font-size: clamp(var(--texto-lg), 6vw, var(--texto-xl));
+  letter-spacing: -0.02em;
+  color: var(--texto);
+  text-decoration: underline 1px var(--linea);
+  text-underline-offset: 0.2em;
+  transition:
+    color 200ms var(--ease-out),
+    text-decoration-color 200ms var(--ease-out);
 }
 
-.pie-titulo {
-  margin: 0 0 var(--e-2);
-  font-size: var(--texto-xs);
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.pie-correo:hover {
+  color: var(--accion);
+  text-decoration-color: currentColor;
+}
+
+.pie-correo span {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pie-correo span {
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .pie-correo:hover span {
+    transform: translateX(0.15em);
+  }
+}
+
+/* Los enlaces secundarios, en una sola línea separada por puntos medios: el
+   punto va en `content` con texto alternativo vacío, así el lector de
+   pantalla no lo lee. 44 px de alto cada uno, para el dedo. */
+.pie-enlaces ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: var(--e-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pie-enlaces li + li::before {
+  content: '·' / '';
+  margin-inline: var(--e-3);
   color: var(--texto-suave);
 }
 
-.pie-columna ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.pie-enlaces li {
+  display: flex;
+  align-items: center;
 }
 
-.pie-columna a {
+.pie-enlaces a {
   display: inline-flex;
   align-items: center;
-  /* 44 px de área táctil: en una lista vertical de enlaces cortos, sin esto
-     los blancos quedan pegados y el dedo falla. */
+  gap: 0.25em;
   min-height: 44px;
+  font-size: var(--texto-sm);
   color: var(--texto);
   text-decoration: none;
 }
 
-/* El correo es el contacto directo: un punto más grande que el resto. */
-.pie-columna a[href^="mailto:"] {
-  font-size: var(--texto-lg);
-}
-
-.pie-columna a:hover {
+.pie-enlaces a:hover {
   color: var(--accion);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 /* ---- línea legal ----
-   Bajo las columnas, al centro y cerca de ellas: es lo último que se lee
-   antes del mar. */
+   Al centro y cerca de los enlaces: es lo último que se lee antes del mar. */
 .pie-legal {
-  margin: var(--e-4) auto 0;
+  margin: var(--e-2) auto 0;
   text-align: center;
   font-size: var(--texto-xs);
   color: var(--texto-suave);
 }
 
-/* En S las dos columnas no caben en fila con el correo y la línea legal: van
-   una sobre otra, sin la línea que las separa. */
+/* En S los tres enlaces pueden no caber en una línea, y un punto medio al
+   principio de la segunda se ve suelto: ahí se separan solo por aire. */
 @media (max-width: 559px) {
   .pie {
     padding-top: var(--e-8);
   }
 
-  .pie-columnas {
-    row-gap: var(--e-6);
+  .pie-contacto {
     margin-top: var(--e-8);
   }
 
-  .pie-columna {
-    flex-basis: 100%;
-    padding-inline: 0;
-    border-left: 0;
+  .pie-enlaces ul {
+    column-gap: var(--e-6);
   }
 
-  .pie-columna a {
-    font-size: var(--texto-sm);
-    line-height: 1.3;
-  }
-
-  .pie-columna a[href^="mailto:"] {
-    font-size: var(--texto-base);
+  .pie-enlaces li + li::before {
+    content: none;
   }
 }
