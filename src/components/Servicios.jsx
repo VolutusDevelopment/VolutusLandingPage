@@ -3,8 +3,8 @@ import Icono from './Icono.jsx'
 
 /**
  * Servicios: seis paneles numerados, con la mecánica del acordeón de la
- * vitrina de vwlab.io (anima-vw.netlify.app, sección `.accd`). Es la segunda
- * hondura de la caída.
+ * vitrina de vwlab.io (anima-vw.netlify.app, sección `.accd`). Va justo
+ * después de la portada, todavía en el cielo.
  *
  * - **En escritorio, paneles superpuestos.** Todos miden lo mismo y cada uno
  *   empieza una franja más a la derecha que el anterior, por debajo de él y
@@ -38,7 +38,7 @@ const SIN_SCRIPT = `
 
 export default function Servicios() {
   return (
-    <section id="servicios" className="seccion zona-plano hondura-2 servicios">
+    <section id="servicios" className="seccion zona-cielo servicios">
       <div className="contenedor">
         <h1 className="entra">Nuestros Servicios</h1>
 

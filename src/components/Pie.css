@@ -11,7 +11,8 @@
 .pie-mar {
   position: relative;
   margin-top: var(--e-12);
-  padding-bottom: clamp(160px, 22vw, 300px);
+  --alto-mar: clamp(160px, 22vw, 300px);
+  padding-bottom: var(--alto-mar);
   --nubes-celda: 6;
   --nubes-luz: var(--mar-cresta);
   --nubes-sombra: var(--mar-hondo);

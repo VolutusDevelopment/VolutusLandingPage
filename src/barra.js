@@ -99,7 +99,7 @@ function vigilarDetras(pieza, fondos) {
 
 export default function initBarra() {
   const barra = document.querySelector('.barra')
-  const zonas = document.querySelectorAll('main > .seccion, .pie')
+  const zonas = document.querySelectorAll('.seccion, .pie')
   if (!barra || !zonas.length) return
 
   // La lente (Barra.jsx) va en `backdrop-filter`, y un filtro SVG ahí solo lo
@@ -109,7 +109,7 @@ export default function initBarra() {
 
   vigilarFranja(zonas, '-4% 0px -95% 0px', (debajo) => tomarZona(barra, debajo))
 
-  const fondos = document.querySelectorAll('main > .seccion, main .zona-plano, .pie')
+  const fondos = document.querySelectorAll('.seccion, main .zona-plano, .pie')
   barra.querySelectorAll('.barra-marca, .barra-capsula').forEach((pieza) => vigilarDetras(pieza, fondos))
 
   // Solo las secciones que tienen enlace: fuera de ellas no se marca ninguno.

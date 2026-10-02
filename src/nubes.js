@@ -8,7 +8,8 @@
  *
  * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes) o
  * `mar` (el agua bajo ellas). El color lo toma de `--nubes-luz`,
- * `--nubes-sombra`, `--nubes-borde` y `--nubes-alfa`, que el CSS resuelve
+ * `--nubes-sombra`, `--nubes-borde`, `--nubes-alfa` y `--nubes-agua` (el mar
+ * relleno de su color hondo, solo de día), que el CSS resuelve
  * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
  * de la trama, en px CSS, lo da `--nubes-celda`.
  *
@@ -67,6 +68,7 @@ function montar(pintor, lienzo, id) {
       sombra: rgb(valor('--nubes-sombra')),
       borde: rgb(valor('--nubes-borde')),
       alfa: parseFloat(valor('--nubes-alfa')),
+      agua: parseFloat(valor('--nubes-agua')) || 0,
     })
   }
 

@@ -37,13 +37,15 @@ function Columna({ titulo, children }) {
   )
 }
 
-export default function Pie({ enHome = true }) {
+// `dia` lo pone la home: ahí el pie cierra el espejo de la portada y es de día
+// (ver `.caida` en Contacto.css). En las demás páginas sigue siendo la noche.
+export default function Pie({ enHome = true, dia = false }) {
   // El mismo cuidado que en la barra: un ancla suelta fuera de la portada
   // apunta a una sección que esa página no tiene.
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
 
   return (
-    <footer className="pie zona-plano hora-noche">
+    <footer className={`pie ${dia ? 'zona-cielo hora-manana' : 'zona-plano hora-noche'}`}>
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
@@ -72,7 +74,7 @@ export default function Pie({ enHome = true }) {
           <Columna titulo="Obra">
             {PROYECTOS.map((p) => (
               <li key={p.id}>
-                <a href={p.sitio ?? p.repositorio} rel="noopener">
+                <a href={p.sitio ?? p.repositorio ?? p.publicacion} rel="noopener">
                   {p.nombre}
                 </a>
               </li>

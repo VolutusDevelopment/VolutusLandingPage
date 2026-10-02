@@ -134,10 +134,10 @@ export default function Barra({ enHome = true, ruta }) {
               </a>
             </li>
             <li>
-              <a href={ancla('proyectos')}>Proyectos</a>
+              <a href={ancla('servicios')}>Servicios</a>
             </li>
             <li>
-              <a href={ancla('servicios')}>Servicios</a>
+              <a href={ancla('proyectos')}>Proyectos</a>
             </li>
             <li>
               <a href={ancla('contacto')}>Cuéntanos tu proyecto</a>

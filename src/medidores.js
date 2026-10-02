@@ -312,7 +312,7 @@ function prepararMedidor(medidor) {
 }
 
 export default function initMedidores() {
-  const fila = document.querySelector('.medidores')
+  const fila = document.querySelector('.promesas')
   if (!fila) return
 
   const mandos = [...fila.querySelectorAll('.medidor')].map(prepararMedidor).filter(Boolean)

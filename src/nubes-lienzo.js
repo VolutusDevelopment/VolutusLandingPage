@@ -201,7 +201,7 @@ float cercania(float x) {
 
 const MAR = `precision highp float;
 uniform vec2 res;
-uniform float t, celda, alfa;
+uniform float t, celda, alfa, agua;
 uniform vec3 luz, sombra, borde;
 ${PUNTO}
 float azar(vec2 p) {
@@ -274,7 +274,9 @@ void main() {
   color = mix(color, sombra, 0.6 * nubada);
   float r = celda * 0.5 * mix(0.15, 1.0, alto) * mix(0.5, 1.0, y) * (1.0 - 0.3 * nubada);
   float a = alfa * smoothstep(0.0, 0.2, y) * punto(px, c, r);
-  gl_FragColor = vec4(color * a, a);
+  // agua rellena entre los puntos con el color hondo: el mar de día, que
+  // si no dejaría ver el cielo por los huecos. De noche vale 0.
+  gl_FragColor = vec4(color * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
 }`
 
 const CAMPO = `precision highp float;
@@ -496,7 +498,7 @@ const inicio = performance.now()
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
-const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'estado', 'forma', 'cumulos']
+const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'agua', 'luz', 'sombra', 'borde', 'campo', 'estado', 'forma', 'cumulos']
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
 function compilar(gl, fragmentos, uniforms = UNIFORMS) {
@@ -796,6 +798,7 @@ onmessage = ({ data }) => {
       gl.uniform3fv(u.sombra, data.sombra)
       gl.uniform3fv(u.borde, data.borde)
       gl.uniform1f(u.alfa, data.alfa)
+      gl.uniform1f(u.agua, data.agua)
     })
   }
   if (escena && data.tipo === 'forma') {
