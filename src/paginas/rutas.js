@@ -1,7 +1,7 @@
 import Inicio from './Inicio.jsx'
 import Nosotros from './Nosotros.jsx'
 import Privacidad from './Privacidad.jsx'
-import { ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
+import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 
 // Cada ruta declarada en PAGINAS (lib/meta.js) necesita su componente. El mapa
 // se indexa por ruta y no por archivo para que la fuente de verdad siga siendo
@@ -13,4 +13,5 @@ export const COMPONENTES = {
   '/privacidad': Privacidad,
   '/404': NoEncontrada,
   '/500': ErrorDelServidor,
+  '/pato': CazaDePatos,
 }

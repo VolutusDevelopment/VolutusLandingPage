@@ -17,7 +17,8 @@
  * está cada cúmulo. Así el juego sabe siempre dónde están y no espera a que
  * lleguen: un pato puede salir de una nube que todavía viaja.
  *
- * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina.
+ * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /pato
+ * empieza solo, en cuanto la nube pinta.
  *
  * Los patos (src/lib/pato.js) se dibujan con la trama de la nube: cada píxel
  * del sprite es un punto de su rejilla —la misma celda y el mismo origen—, así
@@ -27,6 +28,9 @@
  * El pato que se escapa después de que le dispararon se burla antes de irse:
  * vuela al claro del cielo más lejos de las nubes, se agranda y se ríe en un
  * globo, «JA JA JA». Es lo que en el original hace el perro.
+ *
+ * Al cazar 30 patos sale uno más a reclamar: vuela al claro y dice, en tres
+ * líneas, «MATASTE A / TODA MI / FAMILIA». Después la partida sigue.
  *
  * Las medidas van en altos del lienzo de la nube, como todo lo de la nube: así
  * el juego cuesta lo mismo en cualquier pantalla.
@@ -63,6 +67,11 @@ const LLEGADA = 0.5
 const RISA = 2
 const GRANDE = 3
 const LIBRE = 1.3
+// Al cazar estos, sale el que reclama por su familia. Una sola vez por
+// partida.
+const META = 2
+// Lo que dice el que reclama, en líneas para que el globo quepa en el cielo.
+const RECLAMO = ['FELICIDADES,','MATASTE A', 'TODA MI', 'FAMILIA']
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
 // jirones. Cada uno va en su franja del ancho, de izquierda a derecha, corrido
@@ -106,7 +115,17 @@ const GLIFOS = {
   8: 0x7bef,
   9: 0x7bcf,
   A: 0x2bed,
+  C: 0x3923,
+  D: 0x6b6e,
+  E: 0x79a7,
+  F: 0x79a4,
+  I: 0x7497,
   J: 0x126a,
+  L: 0x4927,
+  M: 0x5fed,
+  O: 0x2b6a,
+  S: 0x388e,
+  T: 0x7492,
 }
 
 // Lo que se mide y se pinta. Se arma con el primer «Jugar».
@@ -154,7 +173,8 @@ function medir() {
   if (celda !== escena.celda) {
     const [arriba, abajo, herido, cae] = [ARRIBA, ABAJO, HERIDO, CAE].map((filas) => pintarCuadro(filas, celda))
     const globo = pintarCuadro(filasDelGlobo(), celda)
-    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], globo, contador: null })
+    const globoFamilia = pintarCuadro(filasDelGlobo(RECLAMO), celda)
+    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], globo, globoFamilia, contador: null })
   }
   escena.dpr = dpr
   escena.alto = lienzo.height
@@ -227,6 +247,7 @@ function empezar() {
   jugando = true
   cazados = 0
   escena.contador = null
+  escena.reclamo = false
   escena.boton.lastElementChild.textContent = 'Terminar'
   escena.cielo.classList.add('cazando')
   cambiarForma(1)
@@ -236,6 +257,7 @@ function empezar() {
 function terminar() {
   jugando = false
   clearTimeout(espera)
+  escena.reclamo = false
   escena.boton.lastElementChild.textContent = 'Jugar'
   escena.cielo.classList.remove('cazando')
   if (pato?.estado === 'vuela') pato.estado = 'huye'
@@ -260,6 +282,32 @@ function soltar() {
     disparos: 0,
     escala: 1,
   }
+  animar()
+}
+
+// El que reclama por su familia: sale de un cúmulo y va directo al claro a
+// decirlo, como la burla. Si no hay un claro para su globo, sigue el juego.
+function soltarReclamo() {
+  const { alto, cumulos, globoFamilia, cielo } = escena
+  const destino = claro(globoFamilia)
+  if (!destino) {
+    if (jugando) espera = setTimeout(soltar, 800)
+    return
+  }
+  const [x, y] = cumulo(cumulos[Math.floor(Math.random() * cumulos.length)], valorForma(performance.now()))
+  pato = {
+    x: x * alto,
+    y: y * alto,
+    mira: 1,
+    estado: 'burla',
+    t: 0,
+    disparos: 0,
+    escala: 1,
+    mensaje: 'familia',
+    desde: { x: x * alto, y: y * alto },
+    ...destino,
+  }
+  cielo.classList.add('burlando')
   animar()
 }
 
@@ -346,8 +394,8 @@ function mover(dt) {
 // despejado, sin tocar los costados ni «Jugar». Prueba al triple y después al
 // doble; si en ninguno hay cielo despejado, se queda con lo mejor que
 // encontró.
-function claro() {
-  const { lienzo, celda, techo, globo, boton, dpr, alto, cuadros } = escena
+function claro(globo = escena.globo) {
+  const { lienzo, celda, techo, boton, dpr, alto, cuadros } = escena
   const forma = valorForma(performance.now())
   const nubes = escena.cumulos.map((c) => cumulo(c, forma).map((medida) => medida * alto))
   const aire = 4 * celda
@@ -391,12 +439,23 @@ function globoJunto(x, y, escala) {
 }
 
 // El pato salió de la pantalla, por arriba o por abajo. Si se sigue jugando,
-// sale otro.
+// sale otro. Al caer el de la meta, antes sale el que reclama por su familia.
 function fin() {
-  if (pato.estado === 'cae') soplar(true)
+  const eraFamilia = pato.mensaje === 'familia'
+  const cayo = pato.estado === 'cae'
+  if (cayo) soplar(true)
   escena.cielo.classList.remove('burlando')
   pato = null
-  if (jugando) espera = setTimeout(soltar, 800)
+  if (!jugando) {
+    escena.reclamo = false
+    return
+  }
+  if (escena.reclamo && cayo && !eraFamilia) {
+    escena.reclamo = false
+    soltarReclamo()
+    return
+  }
+  espera = setTimeout(soltar, 800)
 }
 
 // El que se burló ya se escapó: aunque siga a la vista, no se le puede dar.
@@ -413,6 +472,7 @@ function disparar(evento) {
   Object.assign(pato, { estado: 'herido', t: 0 })
   cazados++
   escena.contador = null
+  if (cazados === META) escena.reclamo = true
 }
 
 // El aire que mueve el pato al caer, para la nube, en coordenadas de la
@@ -432,8 +492,9 @@ function pintar() {
 }
 
 function pintarPato() {
-  const { ctx, cuadros, celda, lienzo, alto, globo } = escena
+  const { ctx, cuadros, celda, lienzo, alto } = escena
   const p = pato
+  const globo = p.mensaje === 'familia' ? escena.globoFamilia : escena.globo
   const { arriba, abajo } = p.escala > 1 ? agrandados(p.escala) : cuadros
   let cuadro = cuadros.herido
   let mira = p.mira
@@ -513,16 +574,26 @@ function filasDeTexto(texto, color) {
   )
 }
 
-// El globo de la burla: «JA JA JA» en negro sobre blanco, con borde y una cola
-// a la izquierda que apunta al pico. La punta de la cola es la primera columna
-// de la fila `PUNTA`, la del medio (ver `globoJunto`).
+// El globo de la burla: una o varias líneas en negro sobre blanco, con borde
+// y una cola a la izquierda que apunta al pico. La punta de la cola es la
+// primera columna de la fila `PUNTA`, la del medio (ver `globoJunto`): cae en
+// la primera línea, así que el reclamo de tres líneas lo apunta igual.
 const PUNTA = 8
 
-function filasDelGlobo() {
-  const texto = filasDeTexto('JA JA JA', 'k').map((fila) => `kbbb${fila.replaceAll('.', 'b')}bbbk`)
-  const ancho = texto[0].length
+function filasDelGlobo(lineas = ['JA JA JA']) {
+  const lineasLista = Array.isArray(lineas) ? lineas : [lineas]
+  const ancha = Math.max(...lineasLista.map((linea) => filasDeTexto(linea, 'k')[0].length))
+  const textos = lineasLista.map((linea) =>
+    filasDeTexto(linea, 'k').map((fila) => `kbbb${fila.replaceAll('.', 'b')}${'b'.repeat(ancha - fila.length)}bbbk`),
+  )
+  const ancho = textos[0][0].length
   const aire = `k${'b'.repeat(ancho - 2)}k`
-  const cuerpo = ['k'.repeat(ancho), aire, aire, ...texto, aire, aire, 'k'.repeat(ancho)]
+  const cuerpo = ['k'.repeat(ancho), aire, aire]
+  textos.forEach((texto, i) => {
+    if (i) cuerpo.push(aire, aire)
+    cuerpo.push(...texto)
+  })
+  cuerpo.push(aire, aire, 'k'.repeat(ancho))
   const cola = { [PUNTA - 1]: '.kk', [PUNTA]: 'kbb', [PUNTA + 1]: '.kk' }
   return cuerpo.map((fila, y) => (cola[y] ? `${cola[y]}b${fila.slice(1)}` : `...${fila}`))
 }

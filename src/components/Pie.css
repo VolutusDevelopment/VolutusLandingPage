@@ -5,23 +5,40 @@
 }
 
 /* ---- el mar ----
-   Volutus es la nube; esto es lo que tiene debajo. Nace en la línea de cierre
-   sin borde: una máscara lineal lo lleva de nada, bajo el copyright, a pleno
-   contra el borde de la página. Así no se lee como un cuadro pegado al final. */
+   Volutus es la nube; esto es lo que tiene debajo (src/lib/mar.js). Va en la
+   franja de abajo, bajo la línea de cierre, con la trama fina de la nube. No
+   tiene borde: el agua termina en su horizonte, y lo que queda arriba es aire
+   para las crestas que pasan la altura de los ojos y asoman sobre él. Por eso
+   el copyright nunca queda sobre agua. */
 .pie-mar {
   position: relative;
   margin-top: var(--e-12);
-  --alto-mar: clamp(160px, 22vw, 300px);
+  --alto-mar: clamp(200px, 26vw, 380px);
   padding-bottom: var(--alto-mar);
-  --nubes-celda: 6;
+  --nubes-celda: 3;
   --nubes-luz: var(--mar-cresta);
   --nubes-sombra: var(--mar-hondo);
   --nubes-borde: var(--mar-espuma);
-  --nubes-alfa: 0.9;
+  --nubes-alfa: 1;
 }
 
 .pie-mar .nubes {
-  mask-image: linear-gradient(transparent, #000 75%);
+  inset: auto 0 0;
+  height: var(--alto-mar);
+}
+
+/* El pato que sale a nadar al minuto (src/nubes.js): el pintor lo dibuja en el
+   agua y esto es su enlace, del tamaño de sus 16 × 13 puntos, que lo sigue
+   desde el borde de arriba del mar. El anillo de foco va en espuma, que se ve
+   sobre el agua. */
+.pato-del-mar {
+  position: absolute;
+  top: calc(100% - var(--alto-mar));
+  left: 0;
+  width: calc(var(--nubes-celda) * 16px);
+  height: calc(var(--nubes-celda) * 13px);
+  cursor: crosshair;
+  --foco: var(--mar-espuma);
 }
 
 /* ---- el logotipo ----
@@ -159,10 +176,8 @@
   text-underline-offset: 3px;
 }
 
-/* ---- línea de cierre ----
-   Va encima del mar: posicionada, para que el lienzo no la tape. */
+/* ---- línea de cierre ---- */
 .pie-cierre {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -216,10 +231,8 @@
     line-height: 1.3;
   }
 
-  /* Con la trama de 6 px caben pocas olas en el ancho: se afina. */
   .pie-mar {
     margin-top: var(--e-8);
-    --nubes-celda: 4;
   }
 
   .pie-cierre {

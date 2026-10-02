@@ -41,10 +41,16 @@
   box-shadow: var(--filo), inset 0 0 0 2px var(--anillo);
 }
 
-/* Al pasar por una franja cerrada asoma el mismo anillo, tenue: dice que esa
-   pieza también se puede elegir. */
+/* Una pieza cerrada se abre con un clic en cualquier parte (servicios.js), y
+   al pasar por ella asoma el mismo anillo, tenue: dice que esa pieza también
+   se puede elegir. Va en la pieza y no en el botón porque en escritorio la
+   pieza se asoma bajo el cursor y lo deja fuera de la franja. */
+.servicio:not(.activo) {
+  cursor: pointer;
+}
+
 @media (hover: hover) {
-  .servicio:not(.activo):has(.servicio-boton:hover) {
+  .servicio:not(.activo):hover {
     box-shadow: var(--filo), inset 0 0 0 2px color-mix(in srgb, var(--anillo) 40%, transparent);
   }
 }
@@ -263,10 +269,26 @@
 /* ---- escritorio: los paneles superpuestos ---- */
 
 @media (min-width: 1024px) {
+  /* La cartera se inclina hacia el cursor, como la tarjeta NFC de
+     ponlenota.cl: se hunde el punto al que apunta. servicios.js solo escribe
+     los dos ángulos; la perspectiva y la suavidad son de aquí. La perspectiva
+     va dentro del `transform` para que el punto de fuga sea el centro de la
+     cartera, y como solo cambia `transform`, el compositor la recoloca sin
+     layout ni repintado. Sin cursor no hay capa: en táctil no se inclina. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .cartera {
+      transform: perspective(1800px) rotateX(var(--giro-x, 0deg)) rotateY(var(--giro-y, 0deg));
+      transition: transform var(--t-panel) var(--ease-out);
+    }
+  }
+
   /* `overflow: clip` y no `hidden`: recorta lo que se corre a la izquierda sin
      volver la lista un contenedor con scroll propio. */
   .paneles {
     --franja: 6.5rem;
+    /* Menos que el aire antes del texto del abierto (--e-12): la franja que
+       se asoma sobre él no lo tapa. */
+    --asomo: 1.5rem;
     position: relative;
     height: 34rem;
     overflow: clip;
@@ -312,12 +334,38 @@
     border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
     transition:
       transform 800ms var(--ease-in-out),
+      translate 800ms var(--ease-in-out),
       box-shadow 300ms var(--ease-out);
   }
 
-  /* Los que van antes del elegido se corren hasta dejar asomar solo su franja. */
+  /* Los que van antes del elegido se corren hasta dejar asomar solo su franja.
+     Su asomo (el de abajo) es hacia la derecha, por donde vuelven al abrirse. */
   .servicio:has(~ .activo) {
+    --sentido: 1;
     transform: translateX(calc(-100% + var(--franja) + var(--radio-panel)));
+  }
+
+  /* El asomo. Al pasar por una franja cerrada, lo que movería el clic se
+     asoma un poco hacia donde iría, como una tarjeta que sale de la cartera.
+     Son las mismas piezas que arrastra servicios.js: a la izquierda del
+     abierto, la franja y las que la siguen hasta él; a la derecha, el abierto
+     y las que tapan la franja. Va en `translate`, que se suma al `transform`
+     del corrimiento y del arrastre sin pisarlo.
+
+     Entra en 300 ms, como toda respuesta al cursor, pero se recoge con la
+     curva del corrimiento (la de la base): al abrir, asomo y corrimiento
+     terminan juntos y la pieza no recula antes de salir. Al arrastrar,
+     servicios.js lo deja fijo donde estaba y esta regla se aparta: su
+     transición no puede alcanzar al panel que va pegado al puntero. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .paneles:not(.arrastrando) > .servicio:is(:hover, :hover ~ *):has(~ .activo),
+    .paneles:not(.arrastrando) > .servicio:is(.activo, .activo ~ *):has(~ :hover) {
+      translate: calc(var(--sentido, -1) * var(--asomo)) 0;
+      transition:
+        transform 800ms var(--ease-in-out),
+        translate 300ms var(--ease-out),
+        box-shadow 300ms var(--ease-out);
+    }
   }
 
   /* El botón es siempre la franja del borde derecho, abierto o cerrado: de
@@ -338,19 +386,6 @@
     writing-mode: vertical-rl;
   }
 
-  .servicio-boton .servicio-icono,
-  .servicio-nombre {
-    transition: opacity 300ms var(--ease-out);
-  }
-
-  /* Abierto, el nombre de la franja se funde con el fondo: ya lo dice la
-     cabecera. Sigue en el árbol de accesibilidad, así que el botón conserva
-     su nombre. El número se queda. */
-  .servicio.activo .servicio-boton .servicio-icono,
-  .servicio.activo .servicio-nombre {
-    opacity: 0;
-  }
-
   /* Abierto, el botón no hace nada: muestra la mano de arrastrar de la lista. */
   .servicio.activo .servicio-boton {
     cursor: inherit;
@@ -362,7 +397,7 @@
   }
 
   @media (hover: hover) {
-    .servicio:not(.activo) .servicio-boton:hover .servicio-numero {
+    .servicio:not(.activo):hover .servicio-numero {
       color: var(--accion);
     }
   }
@@ -408,9 +443,18 @@
 @media (prefers-reduced-motion: reduce) {
   .servicio,
   .servicio-panel,
-  .servicio.activo .servicio-panel,
-  .servicio-boton .servicio-icono,
-  .servicio-nombre {
+  .servicio.activo .servicio-panel {
     transition: none;
   }
+}
+
+/* La otra vía, la del panel de accesibilidad: ninguna pieza se asoma y la
+   cartera no se inclina. El `px` hace falta: `calc(-1 * 0)` es un número y no
+   una longitud, y dejaría inválido el `translate`. */
+:root[data-movimiento='reducido'] .paneles {
+  --asomo: 0px;
+}
+
+:root[data-movimiento='reducido'] .cartera {
+  transform: none;
 }

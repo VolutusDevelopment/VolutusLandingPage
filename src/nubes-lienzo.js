@@ -16,18 +16,24 @@
  *     el vientre queda en sombra. El cursor, o el dedo, es una flecha en el
  *     aire: la corta a su paso, deja una estela revuelta y la nube se vuelve a
  *     cerrar sola.
- *   - `mar`: el agua bajo la nube, con el horizonte arriba. Las olas ruedan
- *     hacia el frente, la espuma asoma en las crestas, la luz deja su reflejo
- *     al centro y las sombras de las nubes pasan por encima.
+ *   - `mar`: el agua bajo la nube, mirada desde muy cerca de ella. Las olas
+ *     llegan de frente con su física de verdad, rompen y dejan espuma, el sol
+ *     brilla en ellas, y las crestas que pasan la altura de los ojos asoman
+ *     sobre el horizonte. El cursor, o el dedo, toca el agua y deja anillos y
+ *     estela, y al minuto sale a nadar un pato. La física y su shader viven en
+ *     lib/mar.js.
  *
  * Los colores son tres, y cada vista los usa a su modo: `luz`, `sombra` y
- * `borde` (el filo dorado en el cielo, la espuma en el mar).
+ * `borde` (el filo dorado en el cielo, la espuma y los destellos en el mar).
  *
  * Recibe de la página (nubes.js) los lienzos, sus medidas, sus colores, si
- * están a la vista, por dónde pasa el cursor y, en el juego de la 404, la
- * forma del cielo; le devuelve `vivo` cuando un lienzo ya tiene su primer
- * fotograma.
+ * están a la vista, por dónde pasa el cursor, cuándo sale el pato y, en el
+ * juego de la 404, la forma del cielo; le devuelve `vivo` cuando un lienzo ya
+ * tiene su primer fotograma y, en el mar, dónde va el pato.
  */
+
+import { FUENTES, MAR, OJOS, VIDA, alAgua, alLienzo, camara, casco, flotar } from './lib/mar.js'
+import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
 const INTERVALO = 33
@@ -43,20 +49,40 @@ const DT = INTERVALO / 1000
 const CELDAS_POR_AIRE = 3
 const VUELTAS_DE_PRESION = 20
 const RAPIDEZ_MAXIMA = 2
+// Lo que toca el mar (ver lib/mar.js). El cursor deja un impulso cada
+// `CADA_TOQUE` s mientras se mueve, y el pato uno cada `CADA_ESTELA` s, cada
+// uno en su tramo de `fuentes`. Cada tramo dura lo que vive un anillo, así que
+// un impulso nuevo solo pisa a uno que ya se apagó. La fuerza del cursor crece
+// con su rapidez sobre el agua, hasta `RAPIDEZ_DEL_TOQUE` m/s; tocar sin
+// arrastrar es una `GOTA`, y el pato al salir a flote, también. Más allá de
+// `ALCANCE` m, los anillos no se verían.
+const TOQUES = 18
+const CADA_TOQUE = VIDA / TOQUES
+const CADA_ESTELA = VIDA / (FUENTES - TOQUES)
+const FUERZA_POR_RAPIDEZ = 0.01
+const RAPIDEZ_DEL_TOQUE = 3
+const GOTA = 0.05
+const ESTELA = 0.005
+const ALCANCE = 30
+// El pato del mar nada a `NADO` m/s, con la línea de flotación al 45 % de la
+// franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s.
+const NADO = 0.3
+const HUNDIDO = 0.35
+const SALIDA = 0.9
 
 const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
 // El shader viaja tal cual al navegador —el minificador no entra en el
 // texto—, así que sus explicaciones van aquí y no dentro:
 //
-//   - `ruido`: ruido de valor en 2D, el del mar.
 //   - `PUNTO`: un círculo con borde suavizado de 1.5 px en el centro de su
-//     celda. Lo usan el mar y la trama del cielo.
-//   - Cielo, en dos pasadas. La nube es un volumen y recorrerlo es caro, así
-//     que no se calcula por píxel sino por celda: `CAMPO` pinta una textura
-//     con un texel por celda (color y cobertura) y `TRAMA` dibuja con ella los
-//     puntos a resolución completa. Todo va en altos del lienzo, para que la
-//     sección sea redonda con cualquier proporción.
+//     celda. Lo usa `TRAMA`.
+//   - Dos pasadas, en el cielo y en el mar. Recorrer la nube o el agua es
+//     caro, así que no se calcula por píxel sino por celda: `CAMPO` (o `MAR`,
+//     en lib/mar.js) pinta una textura con un texel por celda —color y
+//     cobertura— y `TRAMA` dibuja con ella los puntos a resolución completa.
+//     En el cielo todo va en altos del lienzo, para que la sección sea redonda
+//     con cualquier proporción.
 //   - `CAMPO`, la forma: un rollo en perspectiva. Entra enorme por la
 //     izquierda, cerca de quien mira, y se aleja en diagonal hacia el
 //     horizonte de la derecha, donde está el sol. `tubo` da, para cada x, la
@@ -134,58 +160,11 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //         va el aire seco que la turbulencia mezcla dentro (*entrainment*):
 //         nace donde el rotor es fuerte y se evapora en un segundo.
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
-//     área proporcional a la cobertura, como una trama de imprenta.
-//   - Mar: `y` va de 0 en el horizonte (arriba) a 1 en el borde de abajo, y
-//     cerca del horizonte todo se apaga. El plano está en perspectiva, con
-//     la distancia `z` creciendo hacia el horizonte. A lo ancho, `x` se
-//     comprime suave en los extremos, como una foto panorámica: el pie mide
-//     5 o 6 veces su alto, y sin eso los costados se miran a más de 60°,
-//     donde las olas que vienen de frente se ven de perfil y barren de lado.
-//     En móvil casi no actúa; en los extremos de una pantalla ancha, las olas
-//     salen el doble de anchas. `lejos` lleva un punto
-//     del rayo a la escala de las olas y las agranda con la distancia: en el
-//     borde de abajo no cambian y al fondo visible miden más del doble. Con
-//     la perspectiva sola, el fondo quedaba en olas de pocos puntos que se
-//     arrastraban a 2 o 3 px/s, y todo el movimiento se juntaba abajo y en
-//     los costados; más largas, las del fondo se ven y, como su fase avanza
-//     al mismo ritmo, corren más, como la mar de fondo. Es altamar, así que
-//     manda la `marejada`: tres trenes de olas largas, cada uno con su rumbo,
-//     que se cruzan y ruedan hacia el frente; los más largos van más lento,
-//     como en agua honda. Cada tren es `1 - |sen|`, con la punta apenas
-//     redondeada: cresta aguda y valle ancho, y donde dos crestas se cruzan
-//     sale un pico.
-//     Un seno tuerce el dominio para que las crestas no sean rectas. Sin más,
-//     el dibujo solo se desplazaría y el ojo lo adivina; el mar no se repite.
-//     Dos ruidos lentos lo impiden, y se leen una vez por punto, en `plano`
-//     —donde el rayo tocaría el agua quieta—, no en cada paso de la marcha:
-//     varían tan despacio que da igual. `desfase` corre la fase de cada tren
-//     por su cuenta y con su propia deriva, así que las crestas se doblan, se
-//     adelantan o se atrasan, y los picos nacen y se deshacen donde los trenes
-//     se cruzan. `altura` va por grupos: tramos de mar más gruesa que avanzan
-//     más lento que las crestas, que los atraviesan creciendo y apagándose.
-//     Para que los picos tapen lo que tienen detrás, el rayo de cada punto se
-//     marcha contra el relieve —16 pasos entre la altura de la cresta más alta
-//     y el nivel del mar, `baja` es lo que el rayo desciende por unidad de
-//     distancia— y el cruce se afina interpolando. `roce` es lo rasante que el
-//     rayo pega en el agua, con la normal del relieve: la cara que mira de
-//     frente refleja poco y queda honda; el lomo y el agua lejana, vistos de
-//     canto, reflejan el cielo y se aclaran. Se mide como si cada columna
-//     mirara al frente: con el rayo de verdad, los costados de una pantalla
-//     ancha se ven tan de canto que el reflejo satura, todos los puntos salen
-//     claros y la ola que pasa no los cambia. Encima va el picado del viento:
-//     `ola` es una octava de crestas agudas con el dominio torcido por el
-//     ruido para que no se lea como una rejilla, y `olas` suma tres, cada una
-//     más fina, en dos trenes que avanzan con la marejada —si fueran uno
-//     contra el otro, el agua temblaría en su sitio, como una piscina—. La
-//     escala del picado es el doble de apretada en profundidad que a lo
-//     ancho: vistas a ras, las olas son más anchas que altas, y es más fuerte
-//     en las crestas que en los valles; la marejada lo arrastra adelante y
-//     atrás al pasar, en vez de dejarlo deslizarse parejo. `cara` es su
-//     pendiente hacia el horizonte y le da el grano a cada cara. La luz de
-//     `roce` topa antes del blanco: el agua es azul y solo el picado sobre las
-//     crestas llega a espuma. El reflejo es una franja central donde las
-//     crestas brillan, y encima pasan, grandes y lentas, las sombras de las
-//     nubes.
+//     área proporcional a la cobertura, como una trama de imprenta. En el mar
+//     (`relleno`) pinta además el agua entre los puntos, con `sombra`: el alfa
+//     del campo dice si la celda es agua (de 0.5 a 1) o no (de 0 a 0.498), y
+//     el borde del agua se suaviza entre las cuatro celdas vecinas, para que la
+//     silueta de una cresta contra el cielo no salga escalonada.
 const PUNTO = `
 float punto(vec2 px, vec2 c, float r) {
   return 1.0 - smoothstep(r - 0.75, r + 0.75, length(px - c));
@@ -197,86 +176,6 @@ const PERSPECTIVA = `
 const float FONDO = 2.1;
 float cercania(float x) {
   return exp(-0.9 * min(x, FONDO));
-}`
-
-const MAR = `precision highp float;
-uniform vec2 res;
-uniform float t, celda, alfa, agua;
-uniform vec3 luz, sombra, borde;
-${PUNTO}
-float azar(vec2 p) {
-  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
-float ruido(vec2 p) {
-  vec2 i = floor(p), f = fract(p);
-  f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(azar(i), azar(i + vec2(1, 0)), f.x), mix(azar(i + vec2(0, 1)), azar(i + 1.0), f.x), f.y);
-}
-float ola(vec2 p, float picado) {
-  p += 2.0 * ruido(p);
-  vec2 v = 1.0 - abs(sin(p));
-  v = mix(v, abs(cos(p)), v);
-  return pow(1.0 - pow(v.x * v.y, 0.65), picado);
-}
-float olas(vec2 p, float avance) {
-  float h = 0.0, w = 1.0, picado = 4.0;
-  for (int i = 0; i < 3; i++) {
-    h += w * (ola(p + avance * vec2(-0.3, 1.0), picado) + ola(p + avance * vec2(0.4, 1.4), picado));
-    p = mat2(1.6, 1.2, -1.2, 1.6) * p;
-    w *= 0.3;
-    picado = mix(picado, 1.0, 0.2);
-  }
-  return h;
-}
-float marejada(vec2 q, float t, vec3 desfase) {
-  q += 0.25 * sin(q.yx * vec2(2.1, 1.3) + t * 0.2);
-  vec3 f = vec3(dot(q, vec2(0.5, 1.0)) * 5.0, dot(q, vec2(-0.6, 1.0)) * 6.5, dot(q, vec2(0.1, 1.0)) * 9.0) + t * vec3(0.8, 0.9, 1.1) + desfase;
-  vec3 s = sin(f * 0.5);
-  s = 1.0 - sqrt(s * s + 0.04);
-  return dot(s * s, vec3(1.0, 0.8, 0.5)) / 2.3;
-}
-vec2 lejos(float x, float z) {
-  return vec2(x, 1.6) * z * 1.54 / (1.0 + 0.6 * z);
-}
-void main() {
-  vec2 px = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y);
-  vec2 c = (floor(px / celda) + 0.5) * celda;
-  float y = c.y / res.y;
-  float x = (c.x - res.x * 0.5) / res.y;
-  x /= sqrt(1.0 + x * x / 12.25);
-  float baja = y + 0.1;
-  vec2 plano = lejos(x, 1.0 / baja);
-  float altura = 0.38 * (0.75 + 0.55 * smoothstep(0.2, 0.8, ruido(0.4 * plano + vec2(0.016, 0.08) * t)));
-  vec3 desfase = 4.5 * vec3(
-    ruido(0.5 * plano + vec2(0.05, 0.11) * t),
-    ruido(0.5 * plano + vec2(-0.09, 0.07) * t + 7.0),
-    ruido(0.7 * plano + vec2(0.02, -0.08) * t + 13.0));
-  float z = (1.0 - altura) / baja, paso = altura / baja / 16.0;
-  float antes = 1.0 - baja * z - altura * marejada(lejos(x, z), t, desfase);
-  for (int i = 0; i < 16; i++) {
-    float d = 1.0 - baja * (z + paso) - altura * marejada(lejos(x, z + paso), t, desfase);
-    if (d < 0.0) { z += paso * antes / (antes - d); break; }
-    z += paso;
-    antes = d;
-  }
-  vec2 q = lejos(x, z);
-  float fondo = marejada(q, t, desfase);
-  vec2 pendiente = altura * vec2(1.0, 1.6) * (vec2(marejada(q + vec2(0.02, 0.0), t, desfase), marejada(q + vec2(0.0, 0.02), t, desfase)) - fondo) / 0.02;
-  float roce = 1.0 - dot(normalize(vec3(-pendiente.x, 1.0, -pendiente.y)), normalize(vec3(0.0, baja, -1.0)));
-  vec2 p = q * vec2(7.0, 14.0) + vec2(0.0, 1.5 * fondo);
-  float h = olas(p, t * 0.3);
-  float cara = h - olas(p + vec2(0.0, 0.3), t * 0.3);
-  float alto = clamp(0.15 + 0.57 * smoothstep(0.05, 0.6, roce) + mix(0.6, 1.0, fondo) * (0.25 * (h - 1.0) + 0.4 * cara), 0.0, 1.0);
-  float nubada = smoothstep(0.55, 0.75, ruido(vec2(q.x * 0.6 + t * 0.12, q.y * 0.4)));
-  float reflejo = (1.0 - smoothstep(0.0, 0.1 + 0.2 * y, abs(c.x / res.x - 0.5))) * (1.0 - nubada);
-  vec3 color = mix(sombra, luz, smoothstep(0.2, 0.7, alto));
-  color = mix(color, borde, max(smoothstep(0.78, 0.95, alto), reflejo * smoothstep(0.55, 0.8, alto)));
-  color = mix(color, sombra, 0.6 * nubada);
-  float r = celda * 0.5 * mix(0.15, 1.0, alto) * mix(0.5, 1.0, y) * (1.0 - 0.3 * nubada);
-  float a = alfa * smoothstep(0.0, 0.2, y) * punto(px, c, r);
-  // agua rellena entre los puntos con el color hondo: el mar de día, que
-  // si no dejaría ver el cielo por los huecos. De noche vale 0.
-  gl_FragColor = vec4(color * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
 }`
 
 const CAMPO = `precision highp float;
@@ -403,15 +302,26 @@ void main() {
 
 const TRAMA = `precision highp float;
 uniform vec2 res, rejilla;
-uniform float celda, alfa;
+uniform float celda, alfa, relleno;
+uniform vec3 sombra;
 uniform sampler2D campo;
 ${PUNTO}
+vec4 celdaEn(vec2 xy) {
+  return texture2D(campo, (xy + 0.5) / rejilla);
+}
 void main() {
   vec2 px = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y);
   vec2 celdaXY = floor(px / celda);
-  vec4 m = texture2D(campo, (celdaXY + 0.5) / rejilla);
-  float a = alfa * step(0.02, m.a) * punto(px, (celdaXY + 0.5) * celda, celda * 0.5 * sqrt(m.a));
-  gl_FragColor = vec4(m.rgb * a, a);
+  vec4 m = celdaEn(celdaXY);
+  float area = m.a, agua = 0.0;
+  if (relleno > 0.0) {
+    area = 2.0 * m.a - step(0.5, m.a);
+    vec2 q = px / celda - 0.5, i = floor(q), f = fract(q);
+    vec4 mojadas = step(0.5, vec4(celdaEn(i).a, celdaEn(i + vec2(1.0, 0.0)).a, celdaEn(i + vec2(0.0, 1.0)).a, celdaEn(i + 1.0).a));
+    agua = smoothstep(0.3, 0.7, mix(mix(mojadas.x, mojadas.y, f.x), mix(mojadas.z, mojadas.w, f.x), f.y));
+  }
+  float a = alfa * step(0.02, area) * punto(px, (celdaXY + 0.5) * celda, celda * 0.5 * sqrt(area));
+  gl_FragColor = vec4(m.rgb * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
 }`
 
 // El fluido, una pasada por ley (ver arriba). `en` lee la celda vecina.
@@ -498,7 +408,10 @@ const inicio = performance.now()
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
-const UNIFORMS = ['res', 'rejilla', 't', 'celda', 'alfa', 'agua', 'luz', 'sombra', 'borde', 'campo', 'estado', 'forma', 'cumulos']
+const UNIFORMS = [
+  'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
+  'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'fuentes', 'pato',
+]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
 function compilar(gl, fragmentos, uniforms = UNIFORMS) {
@@ -520,8 +433,9 @@ function compilar(gl, fragmentos, uniforms = UNIFORMS) {
   return u
 }
 
-// La textura de `ruido3`, en la unidad 0. Con semilla fija, así que la nube es
-// la misma en cada visita. El canal G es el R desplazado (37, 17).
+// La textura de `ruido3` en el cielo y de la espuma en el mar, en la unidad 0.
+// Con semilla fija, así que la nube es la misma en cada visita. El canal G es
+// el R desplazado (37, 17).
 function texturaDeRuido(gl) {
   const lado = 256
   const datos = new Uint8Array(lado * lado * 4)
@@ -611,6 +525,31 @@ function laminasDelAire(aire) {
   return [...aire.velocidad, ...aire.presion, ...aire.estado, aire.rotor, aire.divergencia]
 }
 
+// El pato que nada en el mar (lib/pato.js), en la unidad 2: un texel por
+// punto, transparente donde no hay pato.
+function texturaDelPato(gl) {
+  const ancho = NADA[0].length
+  const datos = new Uint8Array(ancho * NADA.length * 4)
+  NADA.forEach((fila, y) =>
+    [...fila].forEach((letra, x) => {
+      if (!COLORES[letra]) return
+      const n = parseInt(COLORES[letra].slice(1), 16)
+      datos.set([n >> 16, (n >> 8) & 255, n & 255, 255], (y * ancho + x) * 4)
+    }),
+  )
+  gl.activeTexture(gl.TEXTURE2)
+  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, NADA.length, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
+  for (const [clave, valor] of [
+    [gl.TEXTURE_MIN_FILTER, gl.NEAREST],
+    [gl.TEXTURE_MAG_FILTER, gl.NEAREST],
+    [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
+    [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE],
+  ]) {
+    gl.texParameteri(gl.TEXTURE_2D, clave, valor)
+  }
+}
+
 function montar(id, lienzo, mar) {
   // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
   // WebGL por software y cada fotograma cuesta CPU que la persona necesita
@@ -620,7 +559,7 @@ function montar(id, lienzo, mar) {
     powerPreference: 'low-power',
     failIfMajorPerformanceCaveat: true,
   })
-  const programas = gl && (mar ? [compilar(gl, MAR)] : [compilar(gl, CAMPO), compilar(gl, TRAMA)])
+  const programas = gl && [compilar(gl, mar ? MAR : CAMPO), compilar(gl, TRAMA)]
   if (!programas || programas.includes(null)) return
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
@@ -629,16 +568,23 @@ function montar(id, lienzo, mar) {
   gl.enableVertexAttribArray(0)
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
-  const escena = { id, gl, programas, activa: false, vivo: false }
-  if (!mar) {
-    const [campo, trama] = programas
-    texturaDeRuido(gl)
-    gl.activeTexture(gl.TEXTURE1)
-    escena.campo = lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST)
-    gl.useProgram(campo.programa)
+  const [campo, trama] = programas
+  texturaDeRuido(gl)
+  gl.activeTexture(gl.TEXTURE1)
+  const escena = { id, gl, programas, mar, activa: false, vivo: false, campo: lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST) }
+  gl.useProgram(trama.programa)
+  gl.uniform1i(trama.campo, 1)
+  gl.uniform1f(trama.relleno, mar ? 1 : 0)
+  gl.useProgram(campo.programa)
+  if (mar) {
+    texturaDelPato(gl)
+    gl.uniform1i(campo.pato, 2)
+    escena.fuentes = new Float32Array(4 * FUENTES)
+    escena.toques = { desde: 0, cuantos: TOQUES, siguiente: 0, ultimo: null }
+    escena.estela = { desde: TOQUES, cuantos: FUENTES - TOQUES, siguiente: 0 }
+    escena.pato = null
+  } else {
     gl.uniform1i(campo.estado, 2)
-    gl.useProgram(trama.programa)
-    gl.uniform1i(trama.campo, 1)
     escena.aire = montarAire(gl)
     escena.previo = null
     escena.tramo = null
@@ -664,6 +610,66 @@ function soplar(escena, { x, y, fuera }) {
   if (escena.previo && !escena.tramo) escena.tramo = { desde: escena.previo }
   if (escena.tramo) escena.tramo.hasta = punto
   escena.previo = punto
+}
+
+// Los segundos del reloj de los shaders, el `t` de cada fotograma.
+const reloj = () => (performance.now() - inicio) / 1000
+
+// Un impulso en el agua, en el lugar que le toca dentro de su tramo de
+// `fuentes`.
+function impulso(escena, tramo, { x, z }, fuerza, t) {
+  escena.fuentes.set([x, z, t, fuerza], 4 * (tramo.desde + tramo.siguiente))
+  tramo.siguiente = (tramo.siguiente + 1) % tramo.cuantos
+}
+
+// El cursor sobre el mar: donde su rayo toca el agua deja un impulso cada
+// `CADA_TOQUE` s mientras se mueve, con la fuerza de su rapidez, y una gota al
+// tocar. Quieto, no mueve nada.
+function tocar(escena, { x, y, fuera, gota }) {
+  const { toques } = escena
+  const punto = !fuera && !quieto && escena.camara && alAgua(escena.camara, x, y)
+  if (!punto || Math.hypot(punto.x, punto.z) > ALCANCE) {
+    toques.ultimo = null
+    return
+  }
+  const t = reloj()
+  if (gota) impulso(escena, toques, punto, GOTA, t)
+  const { ultimo } = toques
+  if (ultimo && t - ultimo.t < CADA_TOQUE) return
+  if (ultimo) {
+    const rapidez = Math.hypot(punto.x - ultimo.x, punto.z - ultimo.z) / (t - ultimo.t)
+    impulso(escena, toques, punto, FUERZA_POR_RAPIDEZ * Math.min(rapidez, RAPIDEZ_DEL_TOQUE), t)
+  }
+  toques.ultimo = { ...punto, t }
+}
+
+// Un paso del pato del mar. Nada a lo ancho y da la vuelta antes de salir de
+// cuadro, o cuando se le antoja, cada 10 a 20 s. Flota donde lo lleva el agua
+// (`flotar`) y, la primera vez que se pinta, sale a flote desde abajo con una
+// gota. Le dice al shader dónde va su esquina, en celdas, hacia dónde mira y a
+// qué distancia está (ver `MAR`), y a la página dónde va, para que su enlace
+// lo siga.
+function nadar(escena, t) {
+  const { gl, pato, camara: vista, celda, programas } = escena
+  const profundidad = (vista.focal * OJOS) / (0.45 * (vista.alto - vista.horizonte))
+  const orilla = ((vista.ancho / 2 - 12 * celda) * profundidad) / vista.focal
+  pato.lado += (pato.mira * NADO * DT) / orilla
+  if ((pato.vuelta -= DT) < 0 || pato.lado * pato.mira > 0.85) {
+    pato.mira = -pato.mira
+    pato.vuelta = 10 + 10 * Math.random()
+  }
+  pato.nace ??= t
+  const salida = Math.min((t - pato.nace) / SALIDA, 1)
+  const lugar = flotar(pato.lado * orilla, profundidad, t, escena.escala)
+  lugar.y -= HUNDIDO * (1 - salida) ** 3
+  if (t === pato.nace || t - pato.estela >= CADA_ESTELA) {
+    impulso(escena, escena.estela, lugar, t === pato.nace ? GOTA : ESTELA, t)
+    pato.estela = t
+  }
+  const [x, y] = alLienzo(vista, lugar)
+  const esquina = [Math.round(x / celda) - FLOTACION[0], Math.round(y / celda) - FLOTACION[1]]
+  gl.uniform4f(programas[0].nado, ...esquina, pato.mira, Math.hypot(lugar.x, lugar.z))
+  postMessage({ tipo: 'pato', id: escena.id, x: esquina[0] * celda, y: esquina[1] * celda, visible: salida === 1 })
 }
 
 // Un paso del aire (ver el fluido, arriba). La velocidad del gesto es su
@@ -725,18 +731,25 @@ function simular(escena) {
 }
 
 function pintar(escena, ahora) {
-  const { gl, programas } = escena
+  const { gl, programas: [campo, trama] } = escena
+  const t = (ahora - inicio) / 1000
   if (escena.aire && !quieto) simular(escena)
-  gl.useProgram(programas[0].programa)
-  gl.uniform1f(programas[0].t, (ahora - inicio) / 1000)
-  if (escena.campo) {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
-    gl.viewport(0, 0, ...escena.rejilla)
-    gl.drawArrays(gl.TRIANGLES, 0, 3)
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-    gl.useProgram(programas[1].programa)
+  gl.useProgram(campo.programa)
+  gl.uniform1f(campo.t, t)
+  if (escena.mar) {
+    // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
+    const vista = escena.camara
+    vista.ojos = OJOS + casco(t)
+    gl.uniform3f(campo.camara, vista.focal, vista.horizonte, vista.ojos)
+    if (escena.pato) nadar(escena, t)
+    gl.uniform4fv(campo.fuentes, escena.fuentes)
   }
+  gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
+  gl.viewport(0, 0, ...escena.rejilla)
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+  gl.useProgram(trama.programa)
   gl.drawArrays(gl.TRIANGLES, 0, 3)
   if (!escena.vivo) {
     escena.vivo = true
@@ -768,10 +781,12 @@ onmessage = ({ data }) => {
     gl.canvas.width = data.ancho
     gl.canvas.height = data.alto
     escena.rejilla = [Math.ceil(data.ancho / data.celda), Math.ceil(data.alto / data.celda)]
-    if (escena.campo) {
-      gl.activeTexture(gl.TEXTURE1)
-      dimensionar(gl, escena.campo, ...escena.rejilla)
-    }
+    gl.activeTexture(gl.TEXTURE1)
+    dimensionar(gl, escena.campo, ...escena.rejilla)
+    // El mar mira con una cámara a la medida del lienzo (lib/mar.js), que se
+    // fija en cada fotograma. `escala` es la del detalle de las olas.
+    const vista = escena.mar && camara(data.ancho, data.alto)
+    if (vista) Object.assign(escena, { camara: vista, celda: data.celda, escala: (vista.focal * OJOS) / data.celda })
     const { aire } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
@@ -790,6 +805,7 @@ onmessage = ({ data }) => {
       gl.uniform2f(u.res, data.ancho, data.alto)
       gl.uniform2f(u.rejilla, ...escena.rejilla)
       gl.uniform1f(u.celda, data.celda)
+      if (vista) gl.uniform1f(u.escala, escena.escala)
     })
   }
   if (escena && data.tipo === 'colores') {
@@ -798,7 +814,6 @@ onmessage = ({ data }) => {
       gl.uniform3fv(u.sombra, data.sombra)
       gl.uniform3fv(u.borde, data.borde)
       gl.uniform1f(u.alfa, data.alfa)
-      gl.uniform1f(u.agua, data.agua)
     })
   }
   if (escena && data.tipo === 'forma') {
@@ -808,8 +823,13 @@ onmessage = ({ data }) => {
     })
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
-  if (escena?.campo && data.tipo === 'viento') {
-    soplar(escena, data)
+  if (escena?.mar && data.tipo === 'pato') {
+    escena.pato = { lado: Math.random() * 1.2 - 0.6, mira: Math.random() < 0.5 ? -1 : 1, vuelta: 15, nace: null, estela: 0 }
+  }
+  // El cursor es viento en el cielo, y en el mar toca el agua.
+  if (escena && data.tipo === 'cursor') {
+    if (escena.mar) tocar(escena, data)
+    else soplar(escena, data)
     return
   }
 

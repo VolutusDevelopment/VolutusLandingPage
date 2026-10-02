@@ -25,9 +25,10 @@ En producción **React no se envía al navegador**. El script de build:
    `<head>`, el HTML de React y el CSS incrustado. Genera también `sitemap.xml`
    y `_headers`.
 
-Las páginas son `/`, `/nosotros`, `/privacidad` y las de error: la 404 y la de
-los 5xx, en `/500`. Agregar una es una entrada en `PAGINAS` (meta.js) y otra en
-`COMPONENTES` (entry-server.jsx).
+Las páginas son `/`, `/nosotros`, `/privacidad`, las de error —la 404 y la de
+los 5xx, en `/500`— y `/pato`, el juego al que lleva el pato que sale a nadar en
+el mar del pie al minuto de visita (sin indexar). Agregar una es una entrada en
+`PAGINAS` (meta.js) y otra en `COMPONENTES` (paginas/rutas.js).
 
 **La página de los 5xx no se sirve todavía.** Cloudflare sirve el sitio y el
 Worker solo atiende `/api/*`, así que un 5xx que vea un visitante lo genera

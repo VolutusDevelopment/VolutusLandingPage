@@ -12,9 +12,10 @@
  * `privacidad.html` en `/privacidad` sin extensión, así que la ruta limpia del
  * canonical es la que el visitante ve en la barra del navegador.
  *
- * `indexar: false` es para las páginas de error, la 404 y la de los 5xx: se
- * sirven en cualquier dirección, así que no tienen una URL propia que declarar
- * ni deben aparecer en un buscador.
+ * `indexar: false` es para las páginas de error, la 404 y la de los 5xx, que
+ * se sirven en cualquier dirección y no tienen una URL propia que declarar, y
+ * para /pato, el juego al que lleva el pato del mar: es un secreto, no algo
+ * que buscar. Ninguna debe aparecer en un buscador.
  */
 
 export const ORIGEN = 'https://volutus.cl'
@@ -49,6 +50,12 @@ export const PAGINAS = {
     archivo: '500.html',
     titulo: 'Error del servidor — Volutus',
     descripcion: 'No fue nada que hicieras: el servidor tuvo un problema. Prueba de nuevo en un momento.',
+    indexar: false,
+  },
+  '/pato': {
+    archivo: 'pato.html',
+    titulo: 'Caza de patos — Volutus',
+    descripcion: 'Un pato te trajo desde el mar. Los demás salen de la nube: dispárales hasta que pulses «Terminar».',
     indexar: false,
   },
 }

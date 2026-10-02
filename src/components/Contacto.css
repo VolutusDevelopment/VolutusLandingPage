@@ -22,29 +22,17 @@
 }
 
 /* El pie de día. Sobre el azul medio, el texto suave y la acción de la
-   mañana no llegan a 4.5:1, así que todo va en la tinta de texto. El mar
-   pinta sus olas en un solo azul marino, más hondo que el cielo, para que se
-   lea como agua y no como más cielo; la espuma sigue siendo clara. */
+   mañana no llegan a 4.5:1, así que todo va en la tinta de texto. El mar es
+   cobalto hondo, para que se lea como agua y no como más cielo: el relleno
+   da 3.8:1 contra el azul del final del cielo, y hasta el reflejo del cielo
+   en el agua (`--mar-cresta`) va más oscuro que él. La espuma, casi blanca. */
 :root:not([data-tema]) .caida > .pie {
   --texto-suave: var(--texto);
   --accion: var(--texto);
   --linea: color-mix(in srgb, var(--texto) 30%, transparent);
-  --mar-hondo: #0b3d6b;
-  --mar-cresta: #3b86bf;
-  --mar-espuma: #eef3ff;
-}
-
-/* El mar de día es agua de un solo color: el shader rellena entre sus puntos
-   con `--mar-hondo` (`--nubes-agua`). Empieza bajo la línea de cierre, sin la
-   máscara que lo funde de noche, así que el horizonte es un borde neto. */
-:root:not([data-tema]) .caida .pie-mar {
-  --nubes-agua: 1;
-}
-
-:root:not([data-tema]) .caida .pie-mar .nubes {
-  inset: auto 0 0;
-  height: var(--alto-mar);
-  mask-image: none;
+  --mar-hondo: #06305f;
+  --mar-cresta: #2f80d0;
+  --mar-espuma: #f1f7ff;
 }
 
 /* La firma grande, apagada contra el cielo: blanco translúcido, como una

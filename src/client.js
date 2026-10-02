@@ -15,6 +15,7 @@ import initServicios from './servicios.js'
 import initVitrina from './vitrina.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
+import { quieto } from './lib/movimiento.js'
 
 const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -131,15 +132,31 @@ function initFormulario() {
 }
 
 /**
- * El juego de las páginas de error (src/patos.js). Casi nadie lo abre, así que
- * no pesa en la carga: se descarga al pulsar «Jugar», y cada pulsación lo
- * empieza o lo termina. Sin JavaScript el botón no sirve, por eso llega oculto.
+ * El juego de las páginas de error y de /pato (src/patos.js). Casi nadie lo
+ * abre, así que no pesa en la carga: se descarga al pulsar «Jugar», y cada
+ * pulsación lo empieza o lo termina. Sin JavaScript el botón no sirve, por eso
+ * llega oculto.
  */
 function initPatos() {
   const boton = document.querySelector('.jugar')
   if (!boton) return
   boton.hidden = false
-  boton.addEventListener('click', () => import('./patos.js').then((juego) => juego.alternar(boton)))
+  const alternar = () => import('./patos.js').then((juego) => juego.alternar(boton))
+  boton.addEventListener('click', alternar)
+  if (boton.dataset.empieza && !quieto()) empezarSolo(boton, alternar)
+}
+
+/**
+ * En /pato la partida empieza sola: llegar desde el pato del mar ya es pedirla.
+ * Espera a que la nube pinte (`vivo`, ver nubes.js), porque antes no escucha
+ * los cambios de forma del juego. Si la persona pulsa antes, manda ella. Sin
+ * WebGL la nube nunca pinta, y queda «Jugar».
+ */
+function empezarSolo(boton, alternar) {
+  const nube = boton.parentElement.querySelector('.nubes')
+  if (nube.classList.contains('vivo')) return alternar()
+  nube.addEventListener('vivo', alternar, { once: true })
+  boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
 export default function init() {

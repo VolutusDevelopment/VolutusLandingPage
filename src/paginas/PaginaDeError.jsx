@@ -3,12 +3,13 @@ import { PAGINAS } from '../lib/meta.js'
 import { ARRIBA, COLORES } from '../lib/pato.js'
 
 /**
- * Las páginas de error: la 404 y la de los 5xx. Son la misma pantalla, la nube
- * de la portada con el aviso y una sola salida, y ninguna lleva pie: son un
- * alto, no una página que se recorre. Cada una ocupa la pantalla entera.
+ * Las páginas de error —la 404 y la de los 5xx— y /pato. Son la misma
+ * pantalla, la nube de la portada con un aviso y una sola salida, y ninguna
+ * lleva pie: son un alto, no una página que se recorre. Cada una ocupa la
+ * pantalla entera.
  *
- * Las dos pueden aparecer en cualquier dirección, así que todos sus enlaces
- * son absolutos. La 404 la sirve Cloudflare donde no hay archivo
+ * Las de error pueden aparecer en cualquier dirección, así que todos sus
+ * enlaces son absolutos. La 404 la sirve Cloudflare donde no hay archivo
  * (`not_found_handling` en wrangler.jsonc). La de los 5xx sale en /500 y solo
  * Cloudflare puede servirla en sus errores, con una Custom Error Rule, que pide
  * plan Pro (ver README).
@@ -19,6 +20,10 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * Su lienzo va antes que el de la nube para quedar detrás: dentro de la nube,
  * los puntos de ella tapan los del pato. El botón llega oculto, porque sin
  * JavaScript no sirve, y flota sobre el cielo para que aparecer no mueva nada.
+ *
+ * /pato es la misma escena dedicada al juego: llega ahí quien caza al pato que
+ * sale a nadar en el mar del pie, así que la partida empieza sola
+ * (`empiezaSolo`, ver src/client.js).
  */
 export function NoEncontrada() {
   return <PaginaDeError ruta="/404" antetitulo="Error 404" titulo="Esta página no existe." />
@@ -30,7 +35,11 @@ export function ErrorDelServidor() {
   return <PaginaDeError ruta="/500" antetitulo="Error del servidor" titulo="Algo falló de nuestro lado." />
 }
 
-function PaginaDeError({ ruta, antetitulo, titulo }) {
+export function CazaDePatos() {
+  return <PaginaDeError ruta="/pato" titulo="Dispara al pato" empiezaSolo />
+}
+
+function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false }) {
   const { descripcion } = PAGINAS[ruta]
 
   return (
@@ -39,14 +48,14 @@ function PaginaDeError({ ruta, antetitulo, titulo }) {
         <div className="pagina-error-cielo">
           <canvas className="patos" aria-hidden="true" />
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
-          <button className="boton boton-secundario jugar" type="button" hidden>
+          <button className="boton boton-secundario jugar" type="button" data-empieza={empiezaSolo || undefined} hidden>
             <Pato />
             <span>Jugar</span>
           </button>
         </div>
 
         <div className="contenedor pagina-error-texto">
-          <p className="antetitulo">{antetitulo}</p>
+          {antetitulo && <p className="antetitulo">{antetitulo}</p>}
           <h1>{titulo}</h1>
           <p className="entradilla">{descripcion}</p>
           <p className="pagina-error-salidas">

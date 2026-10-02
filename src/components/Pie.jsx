@@ -89,15 +89,15 @@ export default function Pie({ enHome = true, dia = false }) {
         </nav>
       </div>
 
-      {/* La página termina de noche, en el mar que hay bajo la nube de la
-          portada: la base de la nube. Nace en la línea de cierre y se va
-          haciendo agua hacia el borde de la página. */}
+      {/* La página termina en el mar que hay bajo la nube de la portada: la
+          base de la nube. Va bajo la línea de cierre, y lo que queda entre las
+          dos es aire para sus crestas (ver Pie.css). */}
       <div className="pie-mar">
         <canvas className="nubes" data-vista="mar" aria-hidden="true" />
         <div className="contenedor">
           <div className="pie-cierre">
             <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
-            <a href="/privacidad">Privacidad</a>
+            
           </div>
         </div>
       </div>
