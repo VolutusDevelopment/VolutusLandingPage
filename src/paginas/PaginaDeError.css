@@ -25,6 +25,37 @@
   --nubes-alfa: 1;
 }
 
+/* En S y M la trama va más fina: a 3 px la nube, los patos y el contador
+   llenan la pantalla del teléfono. Y mientras se juega, el aviso se va por la
+   izquierda y deja solo los botones: el cielo crece hasta ellos y todo es
+   campo de juego. Su fila de la rejilla se cierra de una vez, así que el cielo
+   cambia de tamaño una sola vez, junto con la nube; el aviso, que queda pegado
+   a los botones por encima, es lo que se desliza. Al terminar vuelve por el
+   mismo camino. */
+@media (max-width: 767px) {
+  .pagina-error-cielo {
+    --nubes-celda: 2;
+  }
+
+  .pagina-error-texto {
+    display: grid;
+  }
+
+  .pagina-error-aviso {
+    align-self: end;
+    transition: transform 500ms linear;
+  }
+
+  .cazando + .pagina-error-texto {
+    grid-template-rows: 0 auto;
+    padding-top: 0;
+  }
+
+  .cazando + .pagina-error-texto .pagina-error-aviso {
+    transform: translateX(-100vw);
+  }
+}
+
 /* El juego (src/patos.js). Los patos van detrás de la nube, para salir de
    dentro de ella y caer a través, en un lienzo que calza con el suyo: la misma
    rejilla de puntos. Un pato que huye se va por debajo de la barra en vez de
@@ -45,8 +76,10 @@
 }
 
 /* El pato que se burla se acerca —por eso crece— y pasa delante de la nube,
-   así se le ve entero aunque no encuentre un claro despejado. */
-.burlando .patos {
+   así se le ve entero aunque no encuentre un claro despejado. Igual el
+   letrero de cada nivel. */
+.burlando .patos,
+.anunciando .patos {
   z-index: 1;
 }
 

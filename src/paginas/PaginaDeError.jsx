@@ -53,9 +53,11 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
         </div>
 
         <div className="contenedor pagina-error-texto">
-          {antetitulo && <p className="antetitulo">{antetitulo}</p>}
-          <h1>{titulo}</h1>
-          {!sinEntradilla && <p className="entradilla">{descripcion}</p>}
+          <div className="pagina-error-aviso">
+            {antetitulo && <p className="antetitulo">{antetitulo}</p>}
+            <h1>{titulo}</h1>
+            {!sinEntradilla && <p className="entradilla">{descripcion}</p>}
+          </div>
           <p className="pagina-error-salidas">
             <a className="boton boton-primario" href="/">
               Inicio

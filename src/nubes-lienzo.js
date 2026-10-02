@@ -20,8 +20,9 @@
  *     llegan de frente con su física de verdad, rompen y dejan espuma, el sol
  *     brilla en ellas, y las crestas que pasan la altura de los ojos asoman
  *     sobre el horizonte. El cursor, o el dedo, toca el agua y deja anillos y
- *     estela, y al minuto sale a nadar un pato. La física y su shader viven en
- *     lib/mar.js.
+ *     estela, y al minuto sale a nadar un pato, que de rato en rato se
+ *     detiene a provocar a quien mira, en un globo: «¿A QUE NO ME CAZAS?». La
+ *     física y su shader viven en lib/mar.js.
  *
  * Los colores son tres, y cada vista los usa a su modo: `luz`, `sombra` y
  * `borde` (el filo dorado en el cielo, la espuma y los destellos en el mar).
@@ -32,7 +33,7 @@
  * tiene su primer fotograma y, en el mar, dónde va el pato.
  */
 
-import { FUENTES, MAR, OJOS, VIDA, alAgua, alLienzo, camara, casco, flotar } from './lib/mar.js'
+import { FUENTES, GLOBO, GLOBOS, MAR, OJOS, VAIVEN, VIDA, alAgua, alLienzo, camara, casco, flotar } from './lib/mar.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -65,10 +66,13 @@ const GOTA = 0.05
 const ESTELA = 0.005
 const ALCANCE = 30
 // El pato del mar nada a `NADO` m/s, con la línea de flotación al 45 % de la
-// franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s.
+// franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s. Habla
+// `HABLA` s seguidos, y antes de volver a hablar nada al menos `CALLA` s.
 const NADO = 0.3
 const HUNDIDO = 0.35
 const SALIDA = 0.9
+const HABLA = 8
+const CALLA = 10
 
 const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
@@ -162,9 +166,10 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
 //     área proporcional a la cobertura, como una trama de imprenta. En el mar
 //     (`relleno`) pinta además el agua entre los puntos, con `sombra`: el alfa
-//     del campo dice si la celda es agua (de 0.5 a 1) o no (de 0 a 0.498), y
-//     el borde del agua se suaviza entre las cuatro celdas vecinas, para que la
-//     silueta de una cresta contra el cielo no salga escalonada.
+//     del campo dice si la celda es agua (desde 0.5) o no (bajo 0.5), y encima
+//     el área a 0.249 por unidad (ver `MAR` en lib/mar.js). El borde del agua
+//     se suaviza entre las cuatro celdas vecinas, para que la silueta de una
+//     cresta contra el cielo no salga escalonada.
 const PUNTO = `
 float punto(vec2 px, vec2 c, float r) {
   return 1.0 - smoothstep(r - 0.75, r + 0.75, length(px - c));
@@ -315,7 +320,7 @@ void main() {
   vec4 m = celdaEn(celdaXY);
   float area = m.a, agua = 0.0;
   if (relleno > 0.0) {
-    area = 2.0 * m.a - step(0.5, m.a);
+    area = (m.a - 0.5 * step(0.5, m.a)) / 0.249;
     vec2 q = px / celda - 0.5, i = floor(q), f = fract(q);
     vec4 mojadas = step(0.5, vec4(celdaEn(i).a, celdaEn(i + vec2(1.0, 0.0)).a, celdaEn(i + vec2(0.0, 1.0)).a, celdaEn(i + 1.0).a));
     agua = smoothstep(0.3, 0.7, mix(mix(mojadas.x, mojadas.y, f.x), mix(mojadas.z, mojadas.w, f.x), f.y));
@@ -410,7 +415,7 @@ const inicio = performance.now()
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
-  'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'fuentes', 'pato',
+  'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'fuentes', 'pato', 'globo', 'dice',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
@@ -525,21 +530,21 @@ function laminasDelAire(aire) {
   return [...aire.velocidad, ...aire.presion, ...aire.estado, aire.rotor, aire.divergencia]
 }
 
-// El pato que nada en el mar (lib/pato.js), en la unidad 2: un texel por
-// punto, transparente donde no hay pato.
-function texturaDelPato(gl) {
-  const ancho = NADA[0].length
-  const datos = new Uint8Array(ancho * NADA.length * 4)
-  NADA.forEach((fila, y) =>
+// Un cuadro —el pato que nada en el mar (lib/pato.js) o sus globos
+// (lib/mar.js)— en la unidad activa: un texel por punto, transparente donde
+// no hay nada.
+function texturaDeCuadro(gl, filas) {
+  const ancho = filas[0].length
+  const datos = new Uint8Array(ancho * filas.length * 4)
+  filas.forEach((fila, y) =>
     [...fila].forEach((letra, x) => {
       if (!COLORES[letra]) return
       const n = parseInt(COLORES[letra].slice(1), 16)
       datos.set([n >> 16, (n >> 8) & 255, n & 255, 255], (y * ancho + x) * 4)
     }),
   )
-  gl.activeTexture(gl.TEXTURE2)
   gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, NADA.length, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, filas.length, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
   for (const [clave, valor] of [
     [gl.TEXTURE_MIN_FILTER, gl.NEAREST],
     [gl.TEXTURE_MAG_FILTER, gl.NEAREST],
@@ -577,8 +582,12 @@ function montar(id, lienzo, mar) {
   gl.uniform1f(trama.relleno, mar ? 1 : 0)
   gl.useProgram(campo.programa)
   if (mar) {
-    texturaDelPato(gl)
+    gl.activeTexture(gl.TEXTURE2)
+    texturaDeCuadro(gl, NADA)
+    gl.activeTexture(gl.TEXTURE3)
+    texturaDeCuadro(gl, GLOBOS)
     gl.uniform1i(campo.pato, 2)
+    gl.uniform1i(campo.globo, 3)
     escena.fuentes = new Float32Array(4 * FUENTES)
     escena.toques = { desde: 0, cuantos: TOQUES, siguiente: 0, ultimo: null }
     escena.estela = { desde: TOQUES, cuantos: FUENTES - TOQUES, siguiente: 0 }
@@ -646,20 +655,37 @@ function tocar(escena, { x, y, fuera, gota }) {
 // Un paso del pato del mar. Nada a lo ancho y da la vuelta antes de salir de
 // cuadro, o cuando se le antoja, cada 10 a 20 s. Flota donde lo lleva el agua
 // (`flotar`) y, la primera vez que se pinta, sale a flote desde abajo con una
-// gota. Le dice al shader dónde va su esquina, en celdas, hacia dónde mira y a
-// qué distancia está (ver `MAR`), y a la página dónde va, para que su enlace
-// lo siga.
+// gota. Ya fuera, cada vez que lleva `CALLA` s callado y su globo cabe a su
+// derecha, se detiene, mira hacia allá y dice el dicho que sigue. Quieto, su
+// lugar de reposo no cambia, y el globo cabe aunque el agua lo corra de lado
+// todo lo que puede (`VAIVEN`). Le dice al shader dónde va su esquina, en
+// celdas, hacia dónde mira, a qué distancia está y qué dice (ver `MAR`), y a
+// la página dónde va, para que su enlace lo siga.
 function nadar(escena, t) {
   const { gl, pato, camara: vista, celda, programas } = escena
   const profundidad = (vista.focal * OJOS) / (0.45 * (vista.alto - vista.horizonte))
   const orilla = ((vista.ancho / 2 - 12 * celda) * profundidad) / vista.focal
-  pato.lado += (pato.mira * NADO * DT) / orilla
-  if ((pato.vuelta -= DT) < 0 || pato.lado * pato.mira > 0.85) {
-    pato.mira = -pato.mira
-    pato.vuelta = 10 + 10 * Math.random()
-  }
   pato.nace ??= t
   const salida = Math.min((t - pato.nace) / SALIDA, 1)
+  if (pato.desde !== null && t - pato.desde >= HABLA) {
+    pato.desde = null
+    pato.callo = t
+    pato.dicho = (pato.dicho + 1) % GLOBO[2]
+  }
+  const reposo = vista.ancho / 2 + pato.lado * (vista.ancho / 2 - 12 * celda)
+  const globo = (NADA[0].length - FLOTACION[0] + 1 + GLOBO[0]) * celda + (VAIVEN * vista.focal) / profundidad
+  const cabe = reposo + globo <= vista.ancho
+  if (salida === 1 && pato.desde === null && t - pato.callo >= CALLA && cabe) {
+    pato.desde = t
+    pato.mira = 1
+  }
+  if (salida === 1 && pato.desde === null) {
+    pato.lado += (pato.mira * NADO * DT) / orilla
+    if ((pato.vuelta -= DT) < 0 || pato.lado * pato.mira > 0.85) {
+      pato.mira = -pato.mira
+      pato.vuelta = 10 + 10 * Math.random()
+    }
+  }
   const lugar = flotar(pato.lado * orilla, profundidad, t, escena.escala)
   lugar.y -= HUNDIDO * (1 - salida) ** 3
   if (t === pato.nace || t - pato.estela >= CADA_ESTELA) {
@@ -669,6 +695,7 @@ function nadar(escena, t) {
   const [x, y] = alLienzo(vista, lugar)
   const esquina = [Math.round(x / celda) - FLOTACION[0], Math.round(y / celda) - FLOTACION[1]]
   gl.uniform4f(programas[0].nado, ...esquina, pato.mira, Math.hypot(lugar.x, lugar.z))
+  gl.uniform1f(programas[0].dice, pato.desde === null ? 0 : pato.dicho + 1)
   postMessage({ tipo: 'pato', id: escena.id, x: esquina[0] * celda, y: esquina[1] * celda, visible: salida === 1 })
 }
 
@@ -823,8 +850,20 @@ onmessage = ({ data }) => {
     })
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
+  // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
+  // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
+  // si calla), `callo` cuándo terminó y `dicho`, el que sigue.
   if (escena?.mar && data.tipo === 'pato') {
-    escena.pato = { lado: Math.random() * 1.2 - 0.6, mira: Math.random() < 0.5 ? -1 : 1, vuelta: 15, nace: null, estela: 0 }
+    escena.pato = {
+      lado: -0.2 - 0.4 * Math.random(),
+      mira: 1,
+      vuelta: 15,
+      nace: null,
+      estela: 0,
+      desde: null,
+      callo: -Infinity,
+      dicho: 0,
+    }
   }
   // El cursor es viento en el cielo, y en el mar toca el agua.
   if (escena && data.tipo === 'cursor') {

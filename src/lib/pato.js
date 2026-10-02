@@ -1,9 +1,8 @@
 /**
- * El pato, cuadro por cuadro. Lo usan tres: el juego (src/patos.js), que lo
- * pinta en cuadrados sobre la rejilla de la nube; el botón que lo abre
- * (PaginaDeError.jsx), que lleva el mismo pato en cuadrados, y el mar del
- * pie (nubes-lienzo.js), donde sale a nadar. Un solo dibujo para todos, así
- * ninguno puede prometer otro pato.
+ * El pato, cuadro por cuadro. Lo usan tres, y los tres lo pintan en cuadrados:
+ * el juego (src/patos.js), sobre la rejilla de la nube; el botón que lo abre
+ * (PaginaDeError.jsx), y el mar del pie (nubes-lienzo.js), donde sale a nadar.
+ * Un solo dibujo para todos, así ninguno puede prometer otro pato.
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la

@@ -59,6 +59,14 @@
   --nubes-alfa: 1;
 }
 
+/* En S y M la trama va más fina: a 3 px los puntos se ven gruesos en el
+   teléfono. Como en el mar del pie y en la 404. */
+@media (max-width: 767px) {
+  .portada-cielo {
+    --nubes-celda: 2;
+  }
+}
+
 /* En L y XL la nube es el fondo de la portada: su lienzo cubre casi todo el
    alto y el rollo, en perspectiva, entra enorme por abajo a la izquierda y
    se aleja hacia arriba a la derecha, pasando detrás del titular. El titular

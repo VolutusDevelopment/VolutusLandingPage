@@ -67,6 +67,7 @@
  * el agua lleva el relleno de `sombra` (ver `TRAMA`).
  */
 
+import { filasDelGlobo } from './globo.js'
 import { NADA } from './pato.js'
 
 // Gravedad, en m/s².
@@ -148,6 +149,9 @@ const SILUETA = OLAS.slice(0, EN_LA_MARCHA)
 export const OJOS = 1.5
 const PROA = 0.5
 export const CRESTA = SILUETA.reduce((suma, ola) => suma + ola.alto, 0)
+// Lo más que el agua corre de lado a lo que flota, en m: el giro de todos los
+// trenes de la silueta a la vez, a lo ancho (ver `flotar`).
+export const VAIVEN = SILUETA.reduce((suma, ola) => suma + ola.alto * Math.abs(ola.dx), 0)
 const LEJOS = 3000
 
 // Lo que toca el agua: hasta `FUENTES` impulsos a la vez, cada uno con su
@@ -158,6 +162,28 @@ const RADIO = 0.15
 
 // El sol: adelante, 17° a la derecha y 18° sobre el horizonte.
 const SOL = [0.3, 0.34, 1].map((v, _, sol) => v / Math.hypot(...sol))
+
+// Lo que dice el pato, en su globo, al salir a flote y cada vez que se detiene:
+// invita al juego, al que lleva su enlace. Uno tras otro, en este orden. Cada
+// dicho va en dos líneas, para que quepa delante de él en un teléfono, y todos
+// van en un cuadro, uno bajo otro, con el tamaño del mayor: `GLOBO` es su
+// ancho, su alto y cuántos son.
+const DICHOS = [
+  ['¿A QUE NO', 'ME CAZAS?'],
+  ['DISPARA SI', 'TE ATREVES'],
+  ['APUESTO A', 'QUE FALLAS'],
+  ['NI CON', 'ESCOPETA'],
+  ['HAY PATO', 'PARA RATO'],
+  ['CUAC, CUAC,', '¿JUGAMOS?'],
+].map((lineas) => filasDelGlobo(lineas, 1))
+export const GLOBO = [
+  Math.max(...DICHOS.map((filas) => filas[0].length)),
+  Math.max(...DICHOS.map((filas) => filas.length)),
+  DICHOS.length,
+]
+export const GLOBOS = DICHOS.flatMap((filas) =>
+  Array.from({ length: GLOBO[1] }, (_, y) => (filas[y] ?? '').padEnd(GLOBO[0], '.')),
+)
 
 /**
  * La cámara de un lienzo de `ancho` × `alto` px. Estenopeica, con una focal de
@@ -434,7 +460,8 @@ float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out 
  * horizonte en px y la altura de los ojos en m; `escala`, la del detalle;
  * `nado`, la
  * celda de la esquina del pato, hacia dónde mira (0 si no hay pato) y su
- * distancia; `fuentes`, lo que tocó el agua.
+ * distancia; `dice`, qué dicho de `GLOBOS` dice, desde 1 (0 si calla);
+ * `fuentes`, lo que tocó el agua.
  *
  *   - La marcha: el rayo de la celda baja `baja` metros por metro de avance.
  *     Solo puede tocar agua entre la proa y donde pasa por debajo del valle
@@ -445,23 +472,27 @@ float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out 
  *     lejana, que ya es plana.
  *   - El pato tapa el agua que está detrás de él, y el agua que está más cerca
  *     lo tapa a él: así se dibuja sola su línea de flotación, y la ola que
- *     pasa delante lo esconde.
- *   - La salida, para `TRAMA`: el color del punto y, en el alfa, su área. Si
- *     la celda es agua, el alfa va de 0.5 a 1; si no —el pato contra el
- *     cielo—, de 0 a 0.498. El cielo vacío es 0.
+ *     pasa delante lo esconde. Su globo va delante del pico y de todo.
+ *   - La salida, para `TRAMA`: el color del punto y, en el alfa, su área a
+ *     0.249 por unidad, desde 0.5 si la celda es agua y desde 0 si no —el pato
+ *     contra el cielo—. El cielo vacío es 0. El agua tiene área de 0 a 1; el
+ *     pato y su globo, 2: su punto circunscribe la celda, que lo recorta en un
+ *     cuadrado lleno, el píxel del juego. Así el pato contra el cielo queda en
+ *     0.498, bajo el agua.
  */
 export const MAR = `precision highp float;
 uniform vec2 res;
 uniform vec3 camara, luz, sombra, borde;
-uniform float t, celda, escala;
+uniform float t, celda, escala, dice;
 uniform vec4 nado, fuentes[${FUENTES}];
-uniform sampler2D ruido, pato;
+uniform sampler2D ruido, pato, globo;
 const float PROA = ${num(PROA)};
 const float CRESTA = ${num(CRESTA)};
 const float LEJOS = ${num(LEJOS)};
 const float OJOS = ${num(OJOS)};
 const vec3 SOL = vec3(${SOL.map(num).join(', ')});
 const vec2 PATO = vec2(${num(NADA[0].length)}, ${num(NADA.length)});
+const vec3 GLOBO = vec3(${GLOBO.map(num).join(', ')});
 float detalle(float largo, float r) {
   return smoothstep(2.0, 4.0, largo * escala / (r * r));
 }
@@ -541,9 +572,17 @@ void main() {
       vec4 punto = texture2D(pato, (d + 0.5) / PATO);
       if (punto.a > 0.5 && !(toca && r < nado.w)) {
         color = punto.rgb;
-        area = 1.0;
+        area = 2.0;
+      }
+    }
+    vec2 g = celdaXY - nado.xy - vec2(PATO.x + 1.0, 0.0);
+    if (dice > 0.0 && g.x >= 0.0 && g.y >= 0.0 && g.x < GLOBO.x && g.y < GLOBO.y) {
+      vec4 punto = texture2D(globo, (g + vec2(0.0, (dice - 1.0) * GLOBO.y) + 0.5) / vec2(GLOBO.x, GLOBO.y * GLOBO.z));
+      if (punto.a > 0.5) {
+        color = punto.rgb;
+        area = 2.0;
       }
     }
   }
-  gl_FragColor = vec4(color, toca ? 0.5 + 0.5 * area : 0.498 * area);
+  gl_FragColor = vec4(color, (toca ? 0.5 : 0.0) + 0.249 * area);
 }`

@@ -22,6 +22,14 @@
   --nubes-alfa: 1;
 }
 
+/* En S y M la trama va más fina: a 3 px los puntos se ven gruesos en el
+   teléfono. Como en la portada y en la 404. */
+@media (max-width: 767px) {
+  .pie-mar {
+    --nubes-celda: 2;
+  }
+}
+
 .pie-mar .nubes {
   inset: auto 0 0;
   height: var(--alto-mar);
