@@ -55,7 +55,7 @@ export const PAGINAS = {
   '/pato': {
     archivo: 'pato.html',
     titulo: 'Caza de patos — Volutus',
-    descripcion: 'Un pato te trajo desde el mar. Los demás salen de la nube: dispárales hasta que pulses «Terminar».',
+    descripcion: '',
     indexar: false,
   },
 }

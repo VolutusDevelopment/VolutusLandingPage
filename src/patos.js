@@ -67,10 +67,14 @@ const LLEGADA = 0.5
 const RISA = 2
 const GRANDE = 3
 const LIBRE = 1.3
+// El margen del claro con los costados y con «Jugar», en puntos.
+const AIRE = 4
 // Al cazar estos, sale el que reclama por su familia. Una sola vez por
 // partida.
 const META = 15
-// Lo que dice el que reclama, en líneas para que el globo quepa en el cielo.
+// Lo que dicen el que se burla y el que reclama, en líneas para que el globo
+// quepa en el cielo.
+const BURLA = ['JA JA JA']
 const RECLAMO = ['FELICIDADES,','MATASTE A', 'TODA MI', 'FAMILIA']
 // Cuántas veces se agranda como mucho el que reclama: más que el que se
 // burla, para que se le vea llorar.
@@ -175,11 +179,17 @@ function medir() {
   const celda = Math.round(parseFloat(estilo.getPropertyValue('--nubes-celda')) * dpr)
   lienzo.width = Math.round(lienzo.clientWidth * dpr)
   lienzo.height = Math.round(lienzo.clientHeight * dpr)
+  // La letra de los globos va a 2 puntos por píxel si el reclamo cabe al lado
+  // del pato al doble; si no, como en un teléfono, a 1, y la burla con ella.
+  const ocupa = 2 * ARRIBA[0].length + 1 + filasDelGlobo(RECLAMO, 2)[0].length + 2 * AIRE
+  const punto = ocupa * celda <= lienzo.width ? 2 : 1
+  if (celda !== escena.celda || punto !== escena.punto) {
+    const [globo, globoFamilia] = [BURLA, RECLAMO].map((lineas) => pintarCuadro(filasDelGlobo(lineas, punto), celda))
+    Object.assign(escena, { punto, globo, globoFamilia })
+  }
   if (celda !== escena.celda) {
     const [arriba, abajo, herido, cae] = [ARRIBA, ABAJO, HERIDO, CAE].map((filas) => pintarCuadro(filas, celda))
-    const globo = pintarCuadro(filasDelGlobo(), celda)
-    const globoFamilia = pintarCuadro(filasDelGlobo(RECLAMO), celda)
-    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], globo, globoFamilia, contador: null })
+    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], contador: null })
   }
   escena.dpr = dpr
   escena.alto = lienzo.height
@@ -403,7 +413,7 @@ function claro(globo = escena.globo, grandeMaximo = GRANDE) {
   const { lienzo, celda, techo, boton, dpr, alto, cuadros } = escena
   const forma = valorForma(performance.now())
   const nubes = escena.cumulos.map((c) => cumulo(c, forma).map((medida) => medida * alto))
-  const aire = 4 * celda
+  const aire = AIRE * celda
   const jugar = [
     boton.offsetLeft * dpr - aire,
     boton.offsetTop * dpr - aire,
@@ -436,11 +446,11 @@ function claro(globo = escena.globo, grandeMaximo = GRANDE) {
 }
 
 // Dónde va el globo, a partir de la esquina del pato: a su derecha, con la
-// punta de la cola (la fila `PUNTA`) junto al pico, que está en la quinta fila
+// punta de la cola (la fila de `punta`) junto al pico, que está en la quinta fila
 // del cuadro.
 function globoJunto(x, y, escala) {
   const { celda } = escena
-  return [x + (ARRIBA[0].length * escala + 1) * celda, y + (5 * escala - PUNTA) * celda]
+  return [x + (ARRIBA[0].length * escala + 1) * celda, y + (5 * escala - punta(escena.punto)) * celda]
 }
 
 // El pato salió de la pantalla, por arriba o por abajo. Si se sigue jugando,
@@ -577,32 +587,33 @@ function pintarCuadro(filas, celda) {
 }
 
 // Un texto como cuadro, en la letra de `GLIFOS` y del color dado: cada píxel
-// de la letra son 2×2 puntos, con uno libre entre letras. El espacio es solo
-// ese hueco, doble.
-function filasDeTexto(texto, color) {
-  return Array.from({ length: 10 }, (_, y) =>
+// de la letra son `punto`×`punto` puntos, con uno libre entre letras. El
+// espacio es solo ese hueco, doble.
+function filasDeTexto(texto, color, punto = 2) {
+  return Array.from({ length: 5 * punto }, (_, y) =>
     [...texto]
       .map((letra) => {
         if (letra === ' ') return ''
         let fila = ''
-        for (let x = 0; x < 6; x++) fila += (GLIFOS[letra] >> (14 - 3 * (y >> 1) - (x >> 1))) & 1 ? color : '.'
+        for (let x = 0; x < 3 * punto; x++) {
+          fila += (GLIFOS[letra] >> (14 - 3 * Math.floor(y / punto) - Math.floor(x / punto))) & 1 ? color : '.'
+        }
         return fila
       })
-      .join('..'),
+      .join('.'.repeat(punto)),
   )
 }
 
 // El globo de la burla: una o varias líneas en negro sobre blanco, con borde
 // y una cola a la izquierda que apunta al pico. La punta de la cola es la
-// primera columna de la fila `PUNTA`, la del medio (ver `globoJunto`): cae en
-// la primera línea, así que el reclamo de tres líneas lo apunta igual.
-const PUNTA = 8
+// primera columna de la fila de `punta`, la del medio de la primera línea
+// (ver `globoJunto`), así que el reclamo de varias líneas lo apunta igual.
+const punta = (punto) => 3 + Math.floor((5 * punto) / 2)
 
-function filasDelGlobo(lineas = ['JA JA JA']) {
-  const lineasLista = Array.isArray(lineas) ? lineas : [lineas]
-  const ancha = Math.max(...lineasLista.map((linea) => filasDeTexto(linea, 'k')[0].length))
-  const textos = lineasLista.map((linea) =>
-    filasDeTexto(linea, 'k').map((fila) => `kbbb${fila.replaceAll('.', 'b')}${'b'.repeat(ancha - fila.length)}bbbk`),
+function filasDelGlobo(lineas, punto) {
+  const ancha = Math.max(...lineas.map((linea) => filasDeTexto(linea, 'k', punto)[0].length))
+  const textos = lineas.map((linea) =>
+    filasDeTexto(linea, 'k', punto).map((fila) => `kbbb${fila.replaceAll('.', 'b')}${'b'.repeat(ancha - fila.length)}bbbk`),
   )
   const ancho = textos[0][0].length
   const aire = `k${'b'.repeat(ancho - 2)}k`
@@ -612,6 +623,7 @@ function filasDelGlobo(lineas = ['JA JA JA']) {
     cuerpo.push(...texto)
   })
   cuerpo.push(aire, aire, 'k'.repeat(ancho))
-  const cola = { [PUNTA - 1]: '.kk', [PUNTA]: 'kbb', [PUNTA + 1]: '.kk' }
+  const centro = punta(punto)
+  const cola = { [centro - 1]: '.kk', [centro]: 'kbb', [centro + 1]: '.kk' }
   return cuerpo.map((fila, y) => (cola[y] ? `${cola[y]}b${fila.slice(1)}` : `...${fila}`))
 }
