@@ -28,7 +28,7 @@ export const PAGINAS = {
     archivo: 'index.html',
     titulo: 'Páginas web, apps y agentes de IA en Chile — Volutus',
     descripcion:
-      'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio Te responde una persona en menos de 48 horas hábiles.',
+      'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. Te responde una persona en menos de 48 horas hábiles.',
   },
   '/nosotros': {
     archivo: 'nosotros.html',
