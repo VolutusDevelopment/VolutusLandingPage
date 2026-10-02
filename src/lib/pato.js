@@ -7,7 +7,7 @@
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la
- * pupila. El punto es vacío. Los colores son los del NES, a propósito
+ * pupila y celeste la lágrima del que reclama. El punto es vacío. Los colores son los del NES, a propósito
  * (DESIGN-BRIEF, decisión 21).
  */
 
@@ -18,6 +18,7 @@ export const COLORES = {
   n: '#fca044',
   b: '#fcfcfc',
   k: '#000000',
+  a: '#3cbcfc',
 }
 
 export const ARRIBA = [

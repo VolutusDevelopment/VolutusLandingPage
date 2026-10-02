@@ -29,8 +29,8 @@
  * vuela al claro del cielo más lejos de las nubes, se agranda y se ríe en un
  * globo, «JA JA JA». Es lo que en el original hace el perro.
  *
- * Al cazar 30 patos sale uno más a reclamar: vuela al claro y dice, en tres
- * líneas, «MATASTE A / TODA MI / FAMILIA». Después la partida sigue.
+ * Al cazar 15 patos sale uno más a reclamar: vuela al claro y dice, llorando,
+ * «FELICIDADES, / MATASTE A / TODA MI / FAMILIA». Después la partida sigue.
  *
  * Las medidas van en altos del lienzo de la nube, como todo lo de la nube: así
  * el juego cuesta lo mismo en cualquier pantalla.
@@ -72,6 +72,11 @@ const LIBRE = 1.3
 const META = 15
 // Lo que dice el que reclama, en líneas para que el globo quepa en el cielo.
 const RECLAMO = ['FELICIDADES,','MATASTE A', 'TODA MI', 'FAMILIA']
+// Cuántas veces se agranda como mucho el que reclama: más que el que se
+// burla, para que se le vea llorar.
+const GRANDE_RECLAMO = 5
+// Lo que tarda cada lágrima del que reclama en caer del ojo hasta las patas.
+const LLANTO = 0.6
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
 // jirones. Cada uno va en su franja del ancho, de izquierda a derecha, corrido
@@ -289,7 +294,7 @@ function soltar() {
 // decirlo, como la burla. Si no hay un claro para su globo, sigue el juego.
 function soltarReclamo() {
   const { alto, cumulos, globoFamilia, cielo } = escena
-  const destino = claro(globoFamilia)
+  const destino = claro(globoFamilia, GRANDE_RECLAMO)
   if (!destino) {
     if (jugando) espera = setTimeout(soltar, 800)
     return
@@ -391,10 +396,10 @@ function mover(dt) {
 // lejos de toda nube. La distancia va en radios de cada nube, desde su centro
 // hasta el punto más cercano de la caja, y desde `LIBRE` es cielo despejado.
 // La caja va de la barra al borde de abajo del cielo, que suele ser lo más
-// despejado, sin tocar los costados ni «Jugar». Prueba al triple y después al
-// doble; si en ninguno hay cielo despejado, se queda con lo mejor que
-// encontró.
-function claro(globo = escena.globo) {
+// despejado, sin tocar los costados ni «Jugar». Prueba desde `grandeMaximo`
+// hasta el doble, achicando de a uno; si en ninguno hay cielo despejado, se
+// queda con lo mejor que encontró.
+function claro(globo = escena.globo, grandeMaximo = GRANDE) {
   const { lienzo, celda, techo, boton, dpr, alto, cuadros } = escena
   const forma = valorForma(performance.now())
   const nubes = escena.cumulos.map((c) => cumulo(c, forma).map((medida) => medida * alto))
@@ -408,7 +413,7 @@ function claro(globo = escena.globo) {
   const entre = (valor, desde, hasta) => Math.min(Math.max(valor, desde), hasta)
 
   let mejor = null
-  for (let grande = GRANDE; grande > 1 && !(mejor?.holgura >= LIBRE); grande--) {
+  for (let grande = grandeMaximo; grande > 1 && !(mejor?.holgura >= LIBRE); grande--) {
     const [gx, gy] = globoJunto(0, 0, grande)
     const ancho = gx + globo.width
     const altoCaja = Math.max(cuadros.arriba.height * grande, gy + globo.height)
@@ -514,15 +519,28 @@ function pintarPato() {
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.globalAlpha = 1
   if (p.estado === 'burla' && p.t > LLEGADA) ctx.drawImage(globo, ...globoJunto(x, y, p.escala))
+  if (p.mensaje === 'familia' && p.escala > 1 && (p.estado === 'huye' || p.t > LLEGADA)) pintarLagrimas(x, y, p)
+}
+
+// El que reclama llora desde que lo dice hasta que se va: dos lágrimas
+// alternadas caen del ojo, punto a punto, hasta las patas. Mira a la derecha.
+function pintarLagrimas(x, y, { t, escala }) {
+  const { ctx, celda } = escena
+  const { lagrima } = agrandados(escala)
+  for (const desfase of [0, 0.5]) {
+    const caida = Math.floor(((t / LLANTO + desfase) % 1) * 6 * escala)
+    ctx.drawImage(lagrima, x + 12 * escala * celda, y + (5 * escala + caida) * celda)
+  }
 }
 
 // El pato a `escala` puntos por punto, para la burla. Grande solo vuela, así
-// que bastan las alas arriba y abajo.
+// que bastan las alas arriba y abajo, y la lágrima del que reclama.
 function agrandados(escala) {
   const { grandes, celda } = escena
   grandes[escala] ??= {
     arriba: pintarCuadro(agrandar(ARRIBA, escala), celda),
     abajo: pintarCuadro(agrandar(ABAJO, escala), celda),
+    lagrima: pintarCuadro(agrandar(['a'], escala), celda),
   }
   return grandes[escala]
 }
