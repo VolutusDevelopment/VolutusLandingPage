@@ -72,7 +72,7 @@ const LIBRE = 1.3
 const AIRE = 4
 // Al cazar estos, sale el que reclama por su familia. Una sola vez por
 // partida.
-const META = 1
+const META = 15
 // Lo que dicen el que se burla y el que reclama, en líneas para que el globo
 // quepa en el cielo.
 const BURLA = ['JA JA JA']

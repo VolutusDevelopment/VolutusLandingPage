@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url'
 
 import { ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
+import { SERVICIOS } from '../src/lib/servicios.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
@@ -47,7 +48,9 @@ function datosEstructurados(ruta, canonical, titulo) {
     '/': [
       { '@type': 'WebSite', name: 'Volutus', url: `${ORIGEN}/`, inLanguage: 'es-CL' },
       {
-        '@type': 'Organization',
+        // ProfessionalService dice que esto se contrata; el catálogo nombra los
+        // mismos servicios que la sección de la página.
+        '@type': ['Organization', 'ProfessionalService'],
         '@id': ORGANIZACION,
         name: 'Volutus',
         url: `${ORIGEN}/`,
@@ -56,6 +59,14 @@ function datosEstructurados(ruta, canonical, titulo) {
         email: 'contacto@volutus.cl',
         areaServed: 'CL',
         sameAs: ['https://github.com/VolutusDevelopment'],
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Servicios',
+          itemListElement: SERVICIOS.map(({ nombre }) => ({
+            '@type': 'Offer',
+            itemOffered: { '@type': 'Service', name: nombre.replace(/­/g, '') },
+          })),
+        },
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }],
