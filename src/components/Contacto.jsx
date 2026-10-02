@@ -38,11 +38,11 @@ const PROBLEMAS = [
 
 export default function Contacto() {
   return (
-    <section id="contacto" className="seccion zona-plano hondura-3 contacto">
+    <section id="contacto" className="seccion zona-plano contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
         <div className="contacto-relato">
           <p className="antetitulo entra">Cuéntanos</p>
-          <h2 className="entra">¿Qué estás resolviendo a mano?</h2>
+          <h2 id="contacto-titulo" className="entra">¿Qué estás resolviendo a mano?</h2>
           {/* Una frase: quién te contesta y cuándo. El compromiso de las 48
               horas es el de §5, sin cambios. */}
           <p className="entradilla contacto-entradilla">

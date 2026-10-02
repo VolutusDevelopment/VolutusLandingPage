@@ -11,6 +11,9 @@
  * el día que un repositorio se haga público o se arregle un sitio, el cambio es
  * una línea de este archivo y no una sección nueva.
  *
+ * Los logros sin obra que abrir (un premio individual) entran con
+ * `publicacion`: el enlace al resultado publicado, que es su prueba.
+ *
  * Estado verificado el 2026-09-24, y no coincide con lo que el brief daba por
  * hecho:
  *
@@ -112,15 +115,31 @@ export const PROYECTOS = [
 
 
   {
+    id: 'cybergames',
+    nombre: 'Desafío de ciberseguridad',
+    // Un logro y no una obra: no hay código que abrir, así que la prueba es la
+    // publicación del resultado. Va antes que el hackathon porque es un primer
+    // lugar y la competencia es continental.
+    destacado: true,
+    credencial: { puesto: '1°', metal: 'oro', titulo: 'Primer lugar', evento: 'Cisco CyberGames Americas 2026' },
+    resumen:
+      'Rodrigo, socio de Volutus, resolvió las tres misiones de un desafío de ciberseguridad de tres horas, frente a más de 1.000 estudiantes de 21 países.',
+    publicacion:
+      'https://www.linkedin.com/feed/update/urn:li:activity:7479866884285460481/',
+  },
+
+  {
     id: 'hackathon',
     nombre: 'Hackathon Huawei Cloud',
-    // Es la única prueba validada por un tercero que existe hoy, así que va
-    // primero y destacada. Todo lo demás lo valoramos nosotros mismos.
+    // Validado por un jurado externo, como el de arriba: por eso también va
+    // destacado. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: { puesto: "2°", titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
+    credencial: { puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
     resumen:
       'Un agente de IA que atiende por su cuenta las alertas de infraestructura: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia, en tiempo real, usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
+    publicacion:
+      'https://www.linkedin.com/posts/rodrigo-mart%C3%ADnez-becker-74b6ab241_agenticai-huaweicloud-hackathon-activity-7504179855928913920-ztEm',
   },
 
 

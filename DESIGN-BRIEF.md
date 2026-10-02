@@ -721,6 +721,8 @@ tener dueño ni fecha.
 | 22 | 2026-10-01 | En la 404 la nube ocupa todo el cielo sobre el aviso. «Jugar» deshace la volutus en cúmulos de buen tiempo repartidos por el ancho (10 en XL, 8 en L, 6 en M, 4 en S) sin perder material: entre todos cubren la misma área que el rollo. «Terminar» los vuelve a juntar. La transición se ve, y los patos salen de los cúmulos sin esperar a que lleguen. Excepción declarada a «una volutus, no un cúmulo», solo mientras se juega. El aire y la luz de la nube no cambian | La volutus como único escenario del juego: gruesa a la izquierda y un hilo a la derecha, los patos quedaban todos de un lado. La trama a 2 px. Siete cúmulos de tamaño fijo, que se quedaban con un tercio de la nube | Diego |
 | 23 | 2026-10-01 | La partida de la 404 no termina sola: sigue hasta «Terminar». El pato al que le dispararon y no le dieron se burla antes de irse: vuela al claro del cielo más lejos de las nubes, se agranda al triple y se ríe en un globo «JA JA JA», en la trama de puntos, negro sobre blanco y en la letra del contador. Es lo que en el original hace el perro | Que la partida terminara sola si un pato se iba sin disparos | Diego |
 | 24 | 2026-10-01 | Una página para los errores 5xx, en `/500`, con la misma escena y el mismo juego que la 404. Las dos páginas de error van sin pie: son una sola pantalla. Una sola página para todos los 5xx, así que no dice el código («Error del servidor»). En plan Free no se sirve: reemplazar la página 5xx de Cloudflare pide una Custom Error Rule, que es de plan Pro (ver README) | Pasar todo el sitio por el Worker para atrapar los 5xx: gasta una invocación por visita y no atrapa los errores del propio Worker | Diego |
+| 25 | 2026-10-02 | El mar del pie es físico y sin borde, en todos los pies: once trenes de olas de Gerstner con la dispersión del agua honda (las largas corren más), espuma donde la superficie se pliega y que queda donde rompió, Fresnel del agua y el sol con la rugosidad de lo que no se ve. Se mira desde un bote que sube y baja con la marejada: el horizonte no se mueve y las crestas asoman sobre él; arriba queda aire para ellas, así que ningún borde las corta. El cursor toca el agua con la solución exacta para un impulso (Cauchy–Poisson), y su recorrido deja la estela de Kelvin. Trama de 3 px, la de la nube. De día, cobalto hondo, siempre más oscuro que el cielo | La marejada de senos y ruido, con la física al revés y cortada por el borde del lienzo; una simulación en malla para el cursor, que pedía texturas de medio float y no cubría a la vez lo cercano y lo lejano | Diego |
+| 26 | 2026-10-02 | Al minuto de pestaña a la vista sale a nadar en el mar un pato, en la trama y con los colores NES: flota con el agua, deja estela y la ola que pasa delante lo tapa. Es un enlace a `/pato`, la escena de la 404 dedicada al juego, que empieza sola y no se indexa. Con movimiento reducido no sale | Un pato que cruzara la pantalla volando | Diego |
 
 ---
 
@@ -1011,9 +1013,11 @@ ilustración.
   reducido queda quieta y no reacciona. En el tema oscuro forzado es una nube
   de noche, oscura y con filo plateado, para que el titular claro se lea
   encima.
-- *Pie:* el mar de noche. Olas que ruedan hacia el frente, espuma plateada en
-  las crestas, el reflejo de la luna al centro y las sombras de las nubes
-  pasando encima.
+- *Pie:* el mar bajo la nube, visto desde un bote (decisión 25). Olas con
+  física de verdad —dispersión del agua honda, trocoides, grupos y espuma
+  donde rompen—, el camino del sol (o de la luna) y las crestas que asoman
+  sobre el horizonte cuando el bote cae en un valle. El cursor toca el agua y
+  deja anillos y estela; al minuto sale a nadar un pato (decisión 26).
 
 Medido tras la portada y el pie (2026-09-30, Lighthouse móvil): 100 / 100 /
 100 / 100, TBT 90 ms, LCP 1.2 s, CLS 0.

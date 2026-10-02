@@ -29,7 +29,8 @@
   color: var(--texto-suave);
 }
 
-/* El segundo lugar va en plata, el metal de su puesto, igual en los dos temas.
+/* Los destacados van en el metal de su puesto, igual en los dos temas. Plata
+   por defecto (segundo lugar).
    Trae sus propios tokens: sobre el tono más oscuro del degradado (#bcc3cb)
    el texto suave pasa 5.7:1 y los enlaces 7.1:1. */
 .proyectos .proyecto-destacado {
@@ -45,6 +46,25 @@
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.8),
     0 12px 32px -16px rgb(21 25 30 / 0.35);
+}
+
+/* El primer lugar, en oro. Mismos tokens que la plata, en tinta tostada:
+   sobre el tono más oscuro (#d8b35e) el texto suave pasa 5.3:1 y los
+   enlaces 6.2:1. */
+.proyectos .proyecto-oro {
+  --texto: #1f1808;
+  --texto-suave: #4d3c12;
+  --accion: #4a3000;
+  --accion-hover: #352200;
+  --accion-activa: #241700;
+  --foco: #4a3000;
+  background: linear-gradient(135deg, #fbf3d6 0%, #ecd28c 40%, #f8ecc4 55%, #d8b35e 100%);
+}
+
+.proyecto-oro .proyecto-medalla {
+  background:
+    radial-gradient(circle, #f8ecc4 58%, transparent 60%),
+    conic-gradient(from 210deg, #fff6d8, #a8822c, #f8ecc4, #9a7426, #fff6d8);
 }
 
 /* La credencial es el único dato de la página validado por un tercero: va
@@ -117,7 +137,8 @@
   .proyectos-resto {
     display: grid;
     /* Tantas columnas como tarjetas: una sola ocupa la fila entera. */
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     gap: var(--e-6);
     /* Cada tarjeta mide lo que ocupa su contenido. Sin esto la rejilla iguala
        las alturas y la que no lleva captura se estira con un vacío debajo del
@@ -570,5 +591,24 @@
 @media (prefers-reduced-motion: reduce) {
   .vitrina.desplegando {
     transition: none;
+  }
+}
+
+/* Los logros, uno al lado del otro desde M: apilados ocupaban dos pantallas
+   para dos párrafos. */
+.proyectos-logros {
+  display: grid;
+  gap: var(--e-6);
+  margin-top: var(--e-8);
+}
+
+.proyectos-logros .proyecto {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .proyectos-logros {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
   }
 }

@@ -7,18 +7,34 @@
  * acordeón de ARIA: el botón dice si su panel está abierto y cuál es.
  *
  * El panel abierto no se puede cerrar: siempre hay uno a la vista, como en la
- * original. Su botón queda marcado como `aria-disabled` y no hace nada.
+ * original. Su botón queda marcado como `aria-disabled` y no hace nada. Uno
+ * cerrado se abre con un clic en cualquier parte, no solo en su botón: en
+ * escritorio se asoma al pasar el cursor (Servicios.css), y lo que deja ver
+ * también es la pieza.
  *
  * En escritorio, además, los paneles se arrastran: se mueve el que está bajo
  * el puntero y, al soltar pasado el umbral, se abre el que corresponde. Es un
- * atajo; el clic sigue haciendo lo mismo.
+ * atajo; el clic sigue haciendo lo mismo. Y la cartera que los guarda se
+ * inclina hacia el cursor.
  */
+import { quieto } from './lib/movimiento.js'
+
 const UMBRAL = 60
 const ARRANQUE = 6
+
+// Los grados de la inclinación y hasta dónde llega el gesto, en mitades de la
+// cartera medidas desde su centro: a 1.25 mitades ya está inclinada del todo.
+// La tarjeta de PonleNota llega a 12°, pero es chica; esto es un bloque de
+// casi 1200 px, y sobre las franjas de la derecha basta con unos 3°.
+const INCLINACION_MAX = 4
+const ALCANCE = 1.25
+
+const acotar = (valor) => Math.min(1, Math.max(-1, valor))
 
 export default function initServicios() {
   const servicios = [...document.querySelectorAll('.servicio')]
   if (!servicios.length) return
+  const escritorio = matchMedia('(min-width: 1024px)')
 
   function abrir(elegido) {
     for (const servicio of servicios) {
@@ -37,18 +53,20 @@ export default function initServicios() {
     boton.setAttribute('aria-controls', panel.id)
     panel.setAttribute('role', 'region')
     panel.setAttribute('aria-labelledby', boton.id)
-    boton.addEventListener('click', () => {
+    // En la pieza y no en el botón; con el teclado, el clic del botón sube
+    // hasta aquí.
+    servicio.addEventListener('click', () => {
       if (!servicio.classList.contains('activo')) abrir(servicio)
     })
   }
 
   abrir(servicios.find((s) => s.classList.contains('activo')) ?? servicios[0])
-  arrastrar(servicios, abrir)
+  arrastrar(servicios, abrir, escritorio)
+  inclinar(document.querySelector('.cartera'), escritorio)
 }
 
-function arrastrar(servicios, abrir) {
+function arrastrar(servicios, abrir, escritorio) {
   const lista = servicios[0].parentElement
-  const escritorio = matchMedia('(min-width: 1024px)')
   let inicio = null
   let dx = 0
   let arrastrando = false
@@ -90,15 +108,17 @@ function arrastrar(servicios, abrir) {
   function seguir() {
     // Hacia el lado contrario no se mueve: la pieza queda en su sitio.
     const d = dx * gesto.sentido > 0 ? dx : 0
-    for (const pieza of gesto.piezas) {
+    gesto.piezas.forEach((pieza, n) => {
       // Cada pieza que sigue va un poco a la zaga de la anterior, como una
-      // baraja que se arrastra; al soltar, la transición las junta.
+      // baraja que se arrastra; al soltar, la transición las junta. Parte de
+      // donde la dejó el asomo, y el tope vale para los dos juntos: si no, en
+      // el extremo se pasa y destapa el fondo bajo su canto.
       const lejania = Math.abs(servicios.indexOf(pieza) - gesto.ancla)
-      const paso = d * Math.max(0.6, 1 - 0.12 * lejania)
+      const paso = gesto.asomos[n] + d * Math.max(0.6, 1 - 0.12 * lejania)
       const r = recorrido(pieza)
       const x = gesto.sentido < 0 ? Math.max(paso, -r) : Math.min(paso, r) - r
       pieza.style.transform = `translateX(${x}px)`
-    }
+    })
   }
 
   lista.addEventListener('pointerdown', (e) => {
@@ -116,6 +136,12 @@ function arrastrar(servicios, abrir) {
     if (!arrastrando) {
       if (Math.abs(dx) < ARRANQUE) return
       arrastrando = true
+      // El asomo (Servicios.css) se queda donde está. Lo sostiene el :hover,
+      // que se va con la captura del puntero, y soltarlo haría recular la
+      // pieza contra el gesto: el asomo va hacia el mismo lado que el arrastre.
+      // Se lee antes de capturar, mientras aún vale, y pasa al `transform`
+      // del arrastre (seguir); `.arrastrando` apaga la regla y su transición.
+      gesto.asomos = gesto.piezas.map((pieza) => parseFloat(getComputedStyle(pieza).translate) || 0)
       lista.setPointerCapture(e.pointerId)
       lista.classList.add('arrastrando')
       // Si el gesto empezó como selección de texto, deja de serlo.
@@ -149,4 +175,62 @@ function arrastrar(servicios, abrir) {
     },
     true,
   )
+}
+
+/**
+ * La cartera se inclina hacia el cursor, con la lógica de la tarjeta NFC de
+ * ponlenota.cl: se hunde el punto al que apunta. La posición se mide contra
+ * el alcance y no contra el borde, así que el gesto empieza antes de llegar a
+ * ella y crece de forma continua: nada salta al cruzar el borde. Se recalcula
+ * también al desplazar la página, que cambia dónde queda el cursor respecto
+ * de ella.
+ *
+ * Solo se engancha con un cursor de verdad: en táctil no hay hacia dónde
+ * inclinarse, y el CSS tampoco le da capa.
+ */
+function inclinar(cartera, escritorio) {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return
+
+  let cuadro = 0
+  let cursor = null
+  let previoX = null
+  let previoY = null
+  // Lejos de la pantalla no hay nada que inclinar, y cada escritura obliga a
+  // recalcular estilos. El margen de media ventana deja que llegue ya
+  // inclinada.
+  let cerca = false
+  new IntersectionObserver(([entrada]) => (cerca = entrada.isIntersecting), {
+    rootMargin: '50% 0px',
+  }).observe(cartera)
+
+  function actualizar() {
+    cuadro = 0
+    if (!cursor || !escritorio.matches || quieto()) return
+    const { left, top, width, height } = cartera.getBoundingClientRect()
+    const x = acotar((cursor.x - left - width / 2) / ((width / 2) * ALCANCE))
+    const y = acotar((cursor.y - top - height / 2) / ((height / 2) * ALCANCE))
+    // Lejos, los valores se repiten acotados: no hay nada que escribir.
+    if (x === previoX && y === previoY) return
+    previoX = x
+    previoY = y
+    // Un `rotateX` positivo hunde el borde de arriba y uno de `rotateY`, el de
+    // la derecha: por eso el eje vertical va invertido y el horizontal no.
+    cartera.style.setProperty('--giro-x', `${-y * INCLINACION_MAX}deg`)
+    cartera.style.setProperty('--giro-y', `${x * INCLINACION_MAX}deg`)
+  }
+
+  function programar() {
+    if (cerca && !cuadro) cuadro = requestAnimationFrame(actualizar)
+  }
+
+  const pasivo = { passive: true }
+  addEventListener(
+    'pointermove',
+    ({ clientX, clientY }) => {
+      cursor = { x: clientX, y: clientY }
+      programar()
+    },
+    pasivo,
+  )
+  addEventListener('scroll', programar, pasivo)
 }

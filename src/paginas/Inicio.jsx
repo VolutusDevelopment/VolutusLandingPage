@@ -6,14 +6,14 @@ import Servicios from '../components/Servicios.jsx'
 import Contacto from '../components/Contacto.jsx'
 
 /**
- * La página, en el orden que fija DESIGN-BRIEF §4.
+ * La página, en el orden de un razonamiento: qué hacemos (Servicios), qué
+ * hemos hecho y cómo se mide (Proyectos y Métricas) y, al final, cuéntanos.
  *
  * El recorrido de color es una caída: la página empieza en la nube de la
  * portada y termina en el mar del pie, y nunca vuelve a subir. Sigue clara
- * mientras promete y muestra la obra; cuando empieza a demostrar —las métricas—
- * cruza un solo corte, que las tarjetas de cifras tapan a caballo, y desde ahí
- * cada sección es un poco más honda que la anterior (`hondura-*`) hasta llegar
- * al mar.
+ * mientras promete, muestra la obra y la mide; el paso a oscuro no es un corte
+ * sino un solo degradado que arranca en Contacto y llega hasta el final del pie
+ * (ver `cierre` en Pagina.jsx).
  *
  * El formulario queda abajo, en lo hondo, pero dentro de una tarjeta clara: es
  * lo que A.4 temía del «descenso sin retorno», un formulario sobre fondo oscuro,
@@ -25,12 +25,11 @@ import Contacto from '../components/Contacto.jsx'
  */
 export default function Inicio() {
   return (
-    <Pagina enHome>
+    <Pagina enHome cierre={<Contacto />}>
       <Portada />
+      <Servicios />
       <Proyectos />
       <Metricas />
-      <Servicios />
-      <Contacto />
     </Pagina>
   )
 }

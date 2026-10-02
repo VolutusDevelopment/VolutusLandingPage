@@ -271,20 +271,6 @@
   }
 }
 
-/* El contorno sale del color del texto y no de `--linea`, que sobre el vidrio
-   claro desaparece y dejaría el botón como un tercer enlace. */
-.barra-accion {
-  white-space: nowrap;
-  padding-inline: var(--e-4);
-  font-size: var(--texto-sm);
-  border-color: color-mix(in srgb, currentColor 24%, transparent);
-  transition:
-    color var(--t-tono) var(--ease-in-out),
-    text-shadow var(--t-tono) var(--ease-in-out),
-    border-color var(--t-tono) var(--ease-in-out),
-    transform var(--t-pulsar) var(--ease-out);
-}
-
 /* Solo se anima en la barra: en el pie el logotipo se queda quieto, porque
    repetir el gesto en la misma visita lo convertiría en un tic. */
 @media (prefers-reduced-motion: no-preference) {
@@ -338,7 +324,7 @@
    titular grande del mismo tono que las letras. Cada letra lleva un halo del
    fondo de su zona (lo que macOS llama vibrancy): separa la letra de lo que
    cruza por detrás sin teñir el vidrio. Cambia con la zona, como la letra. */
-.barra-capsula :is(.barra-enlaces a, .barra-accion) {
+.barra-capsula .barra-enlaces a {
   text-shadow:
     0 0 4px var(--fondo),
     0 0 12px var(--fondo);
@@ -429,10 +415,10 @@
   transition: opacity 200ms var(--ease-out);
 }
 
-/* Por debajo de 768 px el logotipo, los tres enlaces y el botón no caben en
-   una fila: se retira el botón, que sigue a mano en la portada. */
+/* Por debajo de 768 px el logotipo y los cuatro enlaces no caben en una fila:
+   se retira «Cuéntanos tu proyecto», que sigue a mano en la portada. */
 @media (max-width: 767px) {
-  .barra-accion {
+  .barra-contacto {
     display: none;
   }
 }
@@ -470,11 +456,4 @@
   .barra-capsula {
     display: none;
   }
-}
-
-/* En píldora, como en la rama de Diego. Allí todos los botones del sitio lo
-   son (`.boton` global); aquí solo se trajo la barra, así que la forma se
-   acota a su botón y los demás siguen con el radio del sitio. */
-.barra-accion {
-  border-radius: 999px;
 }

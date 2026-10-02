@@ -1,13 +1,13 @@
 /**
- * El pato de las páginas de error, cuadro por cuadro. Lo usan dos: el juego
- * (src/patos.js), que lo pinta con los puntos de la trama de la nube, y el
- * botón que lo abre (PaginaDeError.jsx), que lleva el mismo pato punto por
- * punto. Un solo dibujo para los dos, así el botón no puede prometer otro
- * pato.
+ * El pato, cuadro por cuadro. Lo usan tres: el juego (src/patos.js), que lo
+ * pinta en cuadrados sobre la rejilla de la nube; el botón que lo abre
+ * (PaginaDeError.jsx), que lleva el mismo pato en cuadrados, y el mar del
+ * pie (nubes-lienzo.js), donde sale a nadar. Un solo dibujo para todos, así
+ * ninguno puede prometer otro pato.
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la
- * pupila. El punto es vacío. Los colores son los del NES, a propósito
+ * pupila y celeste la lágrima del que reclama. El punto es vacío. Los colores son los del NES, a propósito
  * (DESIGN-BRIEF, decisión 21).
  */
 
@@ -18,6 +18,7 @@ export const COLORES = {
   n: '#fca044',
   b: '#fcfcfc',
   k: '#000000',
+  a: '#3cbcfc',
 }
 
 export const ARRIBA = [
@@ -70,6 +71,28 @@ export const HERIDO = [
 
 // Cayendo va de cabeza: el herido, girado un cuarto de vuelta.
 export const CAE = girar(HERIDO)
+
+// Nadando: el ala plegada sobre el cuerpo y las patas bajo el agua. La panza
+// es la fila 11, y `FLOTACION` es el punto de la línea de flotación: la
+// columna del medio de esa fila. Lo de abajo lo tapa el agua sola (ver `MAR`
+// en lib/mar.js).
+export const NADA = [
+  '................',
+  '................',
+  '................',
+  '............vv..',
+  '...........vvvv.',
+  '...........vbkvn',
+  '...........vvvvn',
+  '.c.........bbb..',
+  'cc...ooooocccc..',
+  'ccccooooooocccc.',
+  '.ccccooooocccc..',
+  '..cccccccccccc..',
+  '................',
+]
+
+export const FLOTACION = [8, 11]
 
 // Un cuarto de vuelta en el sentido del reloj: la columna de la izquierda pasa
 // a ser la fila de arriba.

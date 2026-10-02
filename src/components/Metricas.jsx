@@ -1,9 +1,11 @@
 import Medidor from './Medidor.jsx'
+import Icono from './Icono.jsx'
 import { ORIGEN } from '../lib/meta.js'
+import { SERVICIOS } from '../lib/servicios.js'
 
 /**
- * Métricas (DESIGN-BRIEF §4, bloque 3). Aquí la página cruza su único corte de
- * claro a oscuro y empieza a caer hacia el mar: es la primera hondura.
+ * Métricas (DESIGN-BRIEF §4, bloque 3). Sigue en el cielo: el paso a oscuro lo
+ * hace Contacto, en un solo degradado.
  *
  * **Por qué los números son los de esta misma página y no los de un cliente.**
  * §3 fija una regla de la que cuelga toda la credibilidad del sitio: cada
@@ -20,7 +22,7 @@ import { ORIGEN } from '../lib/meta.js'
  * Ahora las cuatro puntuaciones son cuatro medidores que se llenan al entrar, y
  * la explicación de cada prueba cabe en una línea bajo su anillo. Las tres
  * cifras duras que no van sobre cien —lo que tarda, lo que pesa, cuánto se
- * mueve— son las tarjetas que tapan el corte (ver `Corte`).
+ * mueve— van con la promesa que sostienen (ver `PROMESAS`).
  *
  * Medido con Lighthouse el 27-09-2026 sobre el build de producción, en móvil
  * con 4G simulado. Si el build engorda, estos números mienten: se vuelven a
@@ -46,55 +48,87 @@ import { ORIGEN } from '../lib/meta.js'
  * cuando te buscan» porque esa prueba mide si la página se deja entender, no si
  * sale primera: prometer lo segundo sería justo lo que §3 prohíbe.
  */
-const PRUEBAS = [
-  { nombre: 'Rendimiento', valor: 100, nota: 'Nadie se va porque tarda.' },
-  { nombre: 'Accesibilidad', valor: 100, nota: 'La puede usar quien no ve la pantalla.' },
-  { nombre: 'Buenas prácticas', valor: 100, nota: 'Nada inseguro ni roto por dentro.' },
-  { nombre: 'Posicionamiento', valor: 100, nota: 'Los buscadores saben de qué trata.' },
-]
+const PRUEBAS = {
+  rendimiento: { nombre: 'Rendimiento', valor: 100, nota: 'Nadie se va porque tarda.' },
+  accesibilidad: { nombre: 'Accesibilidad', valor: 100, nota: 'La puede usar quien no ve la pantalla.' },
+  practicas: { nombre: 'Buenas prácticas', valor: 100, nota: 'Nada inseguro ni roto por dentro.' },
+  posicionamiento: { nombre: 'Posicionamiento', valor: 100, nota: 'Los buscadores saben de qué trata.' },
+}
 
 // La prueba, sobre esta misma página. Es el enlace que el antetítulo promete:
 // sin él, «medido» es otra cosa que hay que creerse.
 const PRUEBA = `https://pagespeed.web.dev/analyze?url=${encodeURIComponent(`${ORIGEN}/`)}`
 
-// «78 kB» no le dice nada a nadie sin con qué compararlo, y la foto que ese
-// mismo teléfono acaba de sacar pesa cuarenta veces más.
-const CIFRAS = [
-  { dato: '1,2 s', texto: 'en abrir con datos móviles' },
-  { dato: '78 kB', texto: 'la página entera, menos que una foto' },
-  { dato: '0', texto: 'saltos mientras carga' },
+/**
+ * Las tres promesas, cada una con los servicios que la cumplen y las pruebas
+ * que la sostienen. Las frases salen de los `puntos` de `lib/servicios.js`, y
+ * los servicios se nombran por id: nombre e icono los pone esa misma lista.
+ *
+ * «78 kB» no le dice nada a nadie sin con qué compararlo, y la foto que ese
+ * mismo teléfono acaba de sacar pesa cuarenta veces más.
+ */
+const PROMESAS = [
+  {
+    titulo: 'Abre rápido en el celular',
+    servicios: ['web', 'tienda', 'app'],
+    pruebas: ['rendimiento'],
+    cifras: [
+      { dato: '1,2 s', texto: 'en abrir con datos móviles' },
+      { dato: '78 kB', texto: 'la página entera, menos que una foto' },
+    ],
+  },
+  {
+    titulo: 'Aparece en Google',
+    servicios: ['web', 'tienda'],
+    pruebas: ['posicionamiento'],
+    cifras: [],
+  },
+  {
+    titulo: 'Bien hecho por dentro',
+    servicios: SERVICIOS.map((s) => s.id),
+    pruebas: ['accesibilidad', 'practicas'],
+    cifras: [{ dato: '0', texto: 'saltos mientras carga' }],
+  },
 ]
 
-/**
- * El corte de claro a oscuro, tapado por las tres cifras (la referencia es
- * surgehq.ai/enterprise). La franja pinta su mitad de arriba del color de
- * Proyectos y deja ver abajo el de esta sección, así que las tarjetas quedan a
- * caballo del corte midan lo que midan: no hay alturas que calcular.
- *
- * Las tarjetas son de cielo: blancas, como un trozo de la página de arriba que
- * cae sobre la de abajo.
- */
-function Corte() {
+const NOMBRE_DE = Object.fromEntries(SERVICIOS.map((s) => [s.id, s.nombre]))
+
+function Promesa({ titulo, servicios, pruebas, cifras }) {
   return (
-    <div className="corte">
-      <div className="contenedor">
-        <ul className="cifras zona-cielo">
-          {CIFRAS.map(({ dato, texto }) => (
-            <li key={dato} className="cifra entra">
+    <li className="promesa entra">
+      <h3 className="promesa-titulo">{titulo}</h3>
+      {/* A qué servicios aplica: enlazan al acordeón, que ya se leyó arriba. */}
+      <ul className="promesa-servicios">
+        {servicios.map((id) => (
+          <li key={id}>
+            <a href="#servicios">
+              <Icono id={id} className="promesa-icono" />
+              {NOMBRE_DE[id]}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <ul className="medidores">
+        {pruebas.map((id) => (
+          <Medidor key={id} {...PRUEBAS[id]} />
+        ))}
+      </ul>
+      {cifras.length > 0 && (
+        <ul className="cifras">
+          {cifras.map(({ dato, texto }) => (
+            <li key={dato}>
               <b className="dato">{dato}</b> {texto}
             </li>
           ))}
         </ul>
-      </div>
-    </div>
+      )}
+    </li>
   )
 }
 
 export default function Metricas() {
   return (
-    <section id="metricas" className="seccion zona-plano hondura-1 metricas">
-      <Corte />
-
+    <section id="metricas" className="seccion zona-cielo metricas">
       <div className="contenedor">
         <p className="antetitulo entra">Medido, no prometido</p>
         {/* El titular lleva el número y dice de qué página habla. «Las cuatro
@@ -125,11 +159,11 @@ export default function Metricas() {
           hoy.
         </p>
 
-        <ul className="medidores">
-          {PRUEBAS.map((p) => (
-            <Medidor key={p.nombre} {...p} />
+        <ol className="promesas">
+          {PROMESAS.map((p) => (
+            <Promesa key={p.titulo} {...p} />
           ))}
-        </ul>
+        </ol>
 
         {/* Una línea y el enlace. «Compruébalo tú» sin decir cómo es una
             invitación que nadie recoge, así que dice lo que quita las dudas de

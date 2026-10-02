@@ -6,6 +6,41 @@
   display: grid;
 }
 
+/* El final de la página es la portada en espejo: UN degradado que pinta
+   `.caida`, que envuelve esta sección y el pie (ver Pagina.jsx); las dos dejan
+   ver su fondo. Arranca en el blanco de Métricas y vuelve al azul del cielo
+   de la mañana con las mismas paradas que la portada, al revés.
+
+   Solo en el tema por defecto: con un tema elegido, cada zona lleva el suyo. */
+:root:not([data-tema]) .caida {
+  background: linear-gradient(#f6f9fc 6%, #c2e1f8 24%, #7cbcf1 48%, #4d9fea 72%, #2b8de4);
+}
+
+:root:not([data-tema]) .caida > .contacto,
+:root:not([data-tema]) .caida > .pie {
+  --fondo-hora: transparent;
+}
+
+/* El pie de día. Sobre el azul medio, el texto suave y la acción de la
+   mañana no llegan a 4.5:1, así que todo va en la tinta de texto. El mar es
+   cobalto hondo, para que se lea como agua y no como más cielo: el relleno
+   da 3.8:1 contra el azul del final del cielo, y hasta el reflejo del cielo
+   en el agua (`--mar-cresta`) va más oscuro que él. La espuma, casi blanca. */
+:root:not([data-tema]) .caida > .pie {
+  --texto-suave: var(--texto);
+  --accion: var(--texto);
+  --linea: color-mix(in srgb, var(--texto) 30%, transparent);
+  --mar-hondo: #06305f;
+  --mar-cresta: #2f80d0;
+  --mar-espuma: #f1f7ff;
+}
+
+/* La firma grande, apagada contra el cielo: blanco translúcido, como una
+   nube más. Mezclada con el fondo claro de la zona salía gris. */
+:root:not([data-tema]) .caida .pie-logotipo {
+  color: rgb(255 255 255 / 0.4);
+}
+
 /* ---- el relato: la tarjeta oscura ---- */
 
 .contacto-relato {

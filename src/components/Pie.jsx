@@ -1,49 +1,30 @@
 import { Logotipo } from './Marca.jsx'
 import { CORREO_DE_CONTACTO } from './Contacto.jsx'
-import { PROYECTOS } from '../data/proyectos.js'
 
 /**
  * Pie.
  *
  * Cierra la página en plano, oscuro, con el nombre a todo lo ancho: es lo
- * último que se ve y se queda como una firma. Debajo, los enlaces agrupados por
- * para qué sirven y separados por líneas discontinuas, y la línea legal.
+ * último que se ve y se queda como una firma. Debajo, centrado y en tres
+ * niveles: el correo en grande, que es la única acción del pie; los enlaces
+ * secundarios en una sola línea, y la línea legal antes del mar. «Volver
+ * arriba» cierra el recorrido: la página cae de la nube al mar, y desde el mar
+ * se vuelve a la nube. Apunta a `#top`, que el estándar resuelve al principio
+ * del documento en cualquier página, sin un id ni JavaScript.
  *
  * El logotipo grande es decoración: la marca ya enlaza a la portada desde la
  * barra, así que aquí no es un enlace y se esconde del lector de pantalla. La
  * palabra va en `content` del CSS y no en el HTML, para que no compita con el
  * titular como texto de la página.
  *
- * **La columna de obra se genera desde `PROYECTOS`.** Es la misma lista que
- * pinta el índice, así que el día que un proyecto entre o salga, el pie se
- * entera solo.
- *
  * Sigue sin llevar perfiles personales de GitHub ni LinkedIn: §4 lo prohíbe.
- * Lo que se enlaza es el código, y eso es justamente la columna de obra.
  */
 
-const ANCLAS = [
-  ['proyectos', 'Proyectos'],
-  ['servicios', 'Servicios'],
-  ['contacto', 'Contacto'],
-]
-
-function Columna({ titulo, children }) {
+// `dia` lo pone la home: ahí el pie cierra el espejo de la portada y es de día
+// (ver `.caida` en Contacto.css). En las demás páginas sigue siendo la noche.
+export default function Pie({ dia = false }) {
   return (
-    <div className="pie-columna">
-      <h2 className="pie-titulo">{titulo}</h2>
-      <ul>{children}</ul>
-    </div>
-  )
-}
-
-export default function Pie({ enHome = true }) {
-  // El mismo cuidado que en la barra: un ancla suelta fuera de la portada
-  // apunta a una sección que esa página no tiene.
-  const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
-
-  return (
-    <footer className="pie zona-plano hora-noche">
+    <footer className={`pie ${dia ? 'zona-cielo hora-manana' : 'zona-plano hora-noche'}`}>
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
@@ -51,53 +32,36 @@ export default function Pie({ enHome = true }) {
           </span>
         </div>
 
-        <nav className="pie-columnas" aria-label="Pie de página">
-          <Columna titulo="Página">
-            {ANCLAS.map(([id, texto]) => (
-              <li key={id}>
-                <a href={ancla(id)}>{texto}</a>
-              </li>
-            ))}
-          </Columna>
+        <div className="pie-contacto">
+          <p className="antetitulo">Escríbenos</p>
+          <a className="pie-correo" href={`mailto:${CORREO_DE_CONTACTO}`}>
+            {CORREO_DE_CONTACTO} <span aria-hidden="true">→</span>
+          </a>
+        </div>
 
-          <Columna titulo="Volutus">
+        <nav className="pie-enlaces" aria-label="Pie de página">
+          <ul>
             <li>
               <a href="/nosotros">Quiénes somos</a>
             </li>
             <li>
               <a href="/privacidad">Privacidad</a>
             </li>
-          </Columna>
-
-          <Columna titulo="Obra">
-            {PROYECTOS.map((p) => (
-              <li key={p.id}>
-                <a href={p.sitio ?? p.repositorio} rel="noopener">
-                  {p.nombre}
-                </a>
-              </li>
-            ))}
-          </Columna>
-
-          <Columna titulo="Escríbenos">
             <li>
-              <a href={`mailto:${CORREO_DE_CONTACTO}`}>{CORREO_DE_CONTACTO}</a>
+              <a href="#top">
+                Volver arriba <span aria-hidden="true">↑</span>
+              </a>
             </li>
-          </Columna>
+          </ul>
         </nav>
+
+        <p className="pie-legal">© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
       </div>
 
-      {/* La página termina de noche, en el mar que hay bajo la nube de la
-          portada: la base de la nube. Nace en la línea de cierre y se va
-          haciendo agua hacia el borde de la página. */}
+      {/* La página termina en el mar que hay bajo la nube de la portada: la
+          base de la nube. */}
       <div className="pie-mar">
         <canvas className="nubes" data-vista="mar" aria-hidden="true" />
-        <div className="contenedor">
-          <div className="pie-cierre">
-            <p>© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
-            <a href="/privacidad">Privacidad</a>
-          </div>
-        </div>
       </div>
     </footer>
   )
