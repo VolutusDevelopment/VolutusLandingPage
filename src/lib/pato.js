@@ -1,7 +1,7 @@
 /**
  * El pato, cuadro por cuadro. Lo usan tres: el juego (src/patos.js), que lo
- * pinta con los puntos de la trama de la nube; el botón que lo abre
- * (PaginaDeError.jsx), que lleva el mismo pato punto por punto, y el mar del
+ * pinta en cuadrados sobre la rejilla de la nube; el botón que lo abre
+ * (PaginaDeError.jsx), que lleva el mismo pato en cuadrados, y el mar del
  * pie (nubes-lienzo.js), donde sale a nadar. Un solo dibujo para todos, así
  * ninguno puede prometer otro pato.
  *

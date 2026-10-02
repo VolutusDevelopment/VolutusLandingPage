@@ -108,15 +108,17 @@ function arrastrar(servicios, abrir, escritorio) {
   function seguir() {
     // Hacia el lado contrario no se mueve: la pieza queda en su sitio.
     const d = dx * gesto.sentido > 0 ? dx : 0
-    for (const pieza of gesto.piezas) {
+    gesto.piezas.forEach((pieza, n) => {
       // Cada pieza que sigue va un poco a la zaga de la anterior, como una
-      // baraja que se arrastra; al soltar, la transición las junta.
+      // baraja que se arrastra; al soltar, la transición las junta. Parte de
+      // donde la dejó el asomo, y el tope vale para los dos juntos: si no, en
+      // el extremo se pasa y destapa el fondo bajo su canto.
       const lejania = Math.abs(servicios.indexOf(pieza) - gesto.ancla)
-      const paso = d * Math.max(0.6, 1 - 0.12 * lejania)
+      const paso = gesto.asomos[n] + d * Math.max(0.6, 1 - 0.12 * lejania)
       const r = recorrido(pieza)
       const x = gesto.sentido < 0 ? Math.max(paso, -r) : Math.min(paso, r) - r
       pieza.style.transform = `translateX(${x}px)`
-    }
+    })
   }
 
   lista.addEventListener('pointerdown', (e) => {
@@ -137,8 +139,9 @@ function arrastrar(servicios, abrir, escritorio) {
       // El asomo (Servicios.css) se queda donde está. Lo sostiene el :hover,
       // que se va con la captura del puntero, y soltarlo haría recular la
       // pieza contra el gesto: el asomo va hacia el mismo lado que el arrastre.
-      // Se lee antes de capturar, mientras aún vale.
-      for (const pieza of gesto.piezas) pieza.style.translate = getComputedStyle(pieza).translate
+      // Se lee antes de capturar, mientras aún vale, y pasa al `transform`
+      // del arrastre (seguir); `.arrastrando` apaga la regla y su transición.
+      gesto.asomos = gesto.piezas.map((pieza) => parseFloat(getComputedStyle(pieza).translate) || 0)
       lista.setPointerCapture(e.pointerId)
       lista.classList.add('arrastrando')
       // Si el gesto empezó como selección de texto, deja de serlo.
@@ -154,10 +157,7 @@ function arrastrar(servicios, abrir, escritorio) {
     // Quitar la clase y los estilos en el mismo paso: la transición vuelve y
     // lleva el panel desde donde lo dejó el puntero hasta su sitio.
     lista.classList.remove('arrastrando')
-    for (const pieza of gesto.piezas) {
-      pieza.style.transform = ''
-      pieza.style.translate = ''
-    }
+    for (const pieza of gesto.piezas) pieza.style.transform = ''
     if (dx * gesto.sentido >= UMBRAL) abrir(gesto.destino)
   }
 

@@ -45,23 +45,14 @@
 }
 
 /* El pato que se burla se acerca —por eso crece— y pasa delante de la nube,
-   así se le ve entero aunque no encuentre un claro despejado. «Jugar» queda
-   siempre encima. */
+   así se le ve entero aunque no encuentre un claro despejado. */
 .burlando .patos {
   z-index: 1;
 }
 
-/* «Jugar» flota abajo a la derecha del cielo, alineado con el borde del
-   texto, así que aparecer no mueve nada. Lleva el vidrio de la barra para
-   leerse sobre la nube. */
+/* Con fondo propio, para que se reconozca sobre el cielo. */
 .jugar {
-  position: absolute;
-  z-index: 1;
-  right: max(var(--margen-lateral), (100% - var(--ancho-maximo)) / 2 + var(--margen-lateral));
-  bottom: var(--e-4);
-  background: var(--vidrio);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  background: var(--superficie);
 }
 
 /* El pato del juego a dos píxeles por punto: sus 16 × 13 celdas. */

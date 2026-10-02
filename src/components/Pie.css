@@ -6,14 +6,16 @@
 
 /* ---- el mar ----
    Volutus es la nube; esto es lo que tiene debajo (src/lib/mar.js). Va en la
-   franja de abajo, bajo la línea de cierre, con la trama fina de la nube. No
-   tiene borde: el agua termina en su horizonte, y lo que queda arriba es aire
-   para las crestas que pasan la altura de los ojos y asoman sobre él. Por eso
-   el copyright nunca queda sobre agua. */
+   franja de abajo, bajo las columnas, con la trama fina de la nube. No tiene
+   borde: el agua termina en su horizonte, y lo que queda arriba es aire para
+   las crestas que pasan la altura de los ojos y asoman sobre él. Ese aire es
+   el doble de lo que sube la cresta más alta, y el cielo del lienzo es
+   transparente y no recibe clics: su mitad de arriba se mete bajo la línea
+   legal y el agua queda cerca de ella. */
 .pie-mar {
   position: relative;
-  margin-top: var(--e-12);
   --alto-mar: clamp(200px, 26vw, 380px);
+  margin-top: calc(var(--alto-mar) * -0.1);
   padding-bottom: var(--alto-mar);
   --nubes-celda: 3;
   --nubes-luz: var(--mar-cresta);
@@ -124,13 +126,15 @@
 }
 
 /* ---- columnas de enlaces ----
-   Separadas por una línea discontinua, que marca el grupo sin pesar como un
-   borde: los enlaces siguen siendo lo que se ve. */
+   Centradas bajo el nombre y separadas por una línea discontinua, que marca el
+   grupo sin pesar como un borde: los enlaces siguen siendo lo que se ve. */
 .pie-columnas {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   row-gap: var(--e-8);
   margin-top: var(--e-12);
+  text-align: center;
 }
 
 .pie-columna {
@@ -140,7 +144,6 @@
 }
 
 .pie-columna:first-child {
-  padding-left: 0;
   border-left: 0;
 }
 
@@ -169,61 +172,43 @@
   text-decoration: none;
 }
 
-.pie-columna a:hover,
-.pie-cierre a:hover {
+/* El correo es el contacto directo: un punto más grande que el resto. */
+.pie-columna a[href^="mailto:"] {
+  font-size: var(--texto-lg);
+}
+
+.pie-columna a:hover {
   color: var(--accion);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* ---- línea de cierre ---- */
-.pie-cierre {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--e-2) var(--e-6);
-  padding-top: var(--e-4);
-  border-top: 1px dashed var(--linea);
+/* ---- línea legal ----
+   Bajo las columnas, al centro y cerca de ellas: es lo último que se lee
+   antes del mar. */
+.pie-legal {
+  margin: var(--e-4) auto 0;
+  text-align: center;
   font-size: var(--texto-xs);
   color: var(--texto-suave);
 }
 
-.pie-cierre p {
-  margin: 0;
-}
-
-.pie-cierre a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--texto-suave);
-  text-decoration: none;
-}
-
-/* En S las cuatro columnas no caben en fila, y apiladas de a una el pie se
-   vuelve una lista eterna: van de a dos, y el correo, que es largo, baja a
-   todo el ancho. */
+/* En S las dos columnas no caben en fila con el correo y la línea legal: van
+   una sobre otra, sin la línea que las separa. */
 @media (max-width: 559px) {
   .pie {
     padding-top: var(--e-8);
   }
 
   .pie-columnas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--e-6) var(--e-4);
+    row-gap: var(--e-6);
     margin-top: var(--e-8);
   }
 
   .pie-columna {
-    min-width: 0;
+    flex-basis: 100%;
     padding-inline: 0;
     border-left: 0;
-  }
-
-  .pie-columna:last-child {
-    grid-column: 1 / -1;
   }
 
   .pie-columna a {
@@ -231,11 +216,7 @@
     line-height: 1.3;
   }
 
-  .pie-mar {
-    margin-top: var(--e-8);
-  }
-
-  .pie-cierre {
-    gap: 0 var(--e-4);
+  .pie-columna a[href^="mailto:"] {
+    font-size: var(--texto-base);
   }
 }

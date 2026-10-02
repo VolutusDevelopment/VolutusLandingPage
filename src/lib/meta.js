@@ -13,9 +13,12 @@
  * canonical es la que el visitante ve en la barra del navegador.
  *
  * `indexar: false` es para las páginas de error, la 404 y la de los 5xx, que
- * se sirven en cualquier dirección y no tienen una URL propia que declarar, y
- * para /pato, el juego al que lleva el pato del mar: es un secreto, no algo
- * que buscar. Ninguna debe aparecer en un buscador.
+ * se sirven en cualquier dirección y no tienen una URL propia que declarar.
+ * Ninguna debe aparecer en un buscador.
+ *
+ * `tarjetaAlt` es para la página cuya tarjeta para compartir no es la de
+ * siempre, el logotipo con el título: la de /pato es el pato del juego (ver
+ * scripts/tarjetas-og.mjs).
  */
 
 export const ORIGEN = 'https://volutus.cl'
@@ -43,7 +46,7 @@ export const PAGINAS = {
     archivo: '404.html',
     titulo: 'Página no encontrada — Volutus',
     descripcion:
-      'Puede que el enlace esté mal escrito o que la página se haya movido. Desde aquí puedes volver al inicio.',
+      'Puede que el enlace esté mal escrito o que la página se haya movido. Desde aquí puedes volver al inicio o disparar un par de patos si quieres.',
     indexar: false,
   },
   '/500': {
@@ -55,8 +58,9 @@ export const PAGINAS = {
   '/pato': {
     archivo: 'pato.html',
     titulo: 'Caza de patos — Volutus',
-    descripcion: '',
-    indexar: false,
+    descripcion:
+      'Un Duck Hunt hecho con la nube de Volutus: los patos salen de los cúmulos y caen a través de ellos. Se juega en el navegador, sin instalar nada.',
+    tarjetaAlt: 'El pato del juego, en píxeles cuadrados, volando en un cielo azul.',
   },
 }
 

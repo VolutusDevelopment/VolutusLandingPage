@@ -6,7 +6,7 @@ import Pie from './Pie.jsx'
  * el pie. Cada página es una caída: empieza arriba, bajo la barra, y termina en
  * el mar del pie.
  *
- * `enHome` decide a dónde apuntan los anclas del menú y del pie. Fuera de la
+ * `enHome` decide a dónde apuntan los anclas del menú. Fuera de la
  * portada tienen que ser `/#proyectos`: un `#proyectos` pelado apunta a una
  * sección que la página no tiene, y el error no se ve hasta que alguien hace
  * clic.
@@ -36,10 +36,10 @@ export default function Pagina({ enHome = false, ruta, className, pie = true, ci
       {cierre ? (
         <div className="caida">
           {cierre}
-          {pie && <Pie enHome={enHome} dia />}
+          {pie && <Pie dia />}
         </div>
       ) : (
-        pie && <Pie enHome={enHome} />
+        pie && <Pie />
       )}
     </>
   )

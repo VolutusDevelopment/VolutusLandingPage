@@ -1,5 +1,7 @@
 // Genera la tarjeta para compartir (OpenGraph) de cada página indexable: el
-// logotipo sobre fondo blanco y, debajo, el título de la página.
+// logotipo sobre fondo blanco y, debajo, el título de la página. La de /pato
+// es el pato del juego en el cielo; su texto alternativo va en meta.js
+// (`tarjetaAlt`).
 //
 //   pnpm og
 //
@@ -13,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 
 import { PAGINAS, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 import { LETRAS, TRAMAS } from '../src/lib/logotipo.js'
+import { ARRIBA, COLORES } from '../src/lib/pato.js'
 import { chromium } from 'playwright'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
@@ -60,13 +63,36 @@ function html(titulo) {
 </body></html>`
 }
 
+// El pato de lib/pato.js con un cuadrado por celda, el píxel de las consolas
+// que lo inspiran, sobre el cielo de la mañana de la página (`--fondo-hora` de
+// `.hora-manana`). Sin suavizado, para que los cuadrados vecinos no dejen
+// costuras entre ellos.
+function htmlPato() {
+  const pixeles = ARRIBA.flatMap((fila, y) =>
+    [...fila].map((letra, x) =>
+      COLORES[letra] ? `<rect x="${x}" y="${y}" width="1" height="1" fill="${COLORES[letra]}" />` : '',
+    ),
+  )
+  return `<!doctype html>
+<html lang="es-CL"><head><meta charset="utf-8"><style>
+  html, body { margin: 0; width: ${ANCHO}px; height: ${ALTO}px; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(#2b8de4, #4d9fea 28%, #7cbcf1 52%, #c2e1f8 76%, #f6f9fc 94%);
+  }
+  svg { width: 560px; height: auto; display: block; }
+</style></head><body>
+  <svg viewBox="0 0 ${ARRIBA[0].length} ${ARRIBA.length}" shape-rendering="crispEdges" aria-hidden="true">${pixeles.join('')}</svg>
+</body></html>`
+}
+
 mkdirSync(`${root}public/image/og`, { recursive: true })
 const navegador = await chromium.launch()
 const pagina = await navegador.newPage({ viewport: { width: ANCHO, height: ALTO } })
 
-for (const { archivo, titulo, indexar = true } of Object.values(PAGINAS)) {
+for (const [ruta, { archivo, titulo, indexar = true }] of Object.entries(PAGINAS)) {
   if (!indexar) continue
-  await pagina.setContent(html(tituloCorto(titulo)))
+  await pagina.setContent(ruta === '/pato' ? htmlPato() : html(tituloCorto(titulo)))
   await pagina.evaluate(() => document.fonts.ready)
   const destino = `${root}public${tarjetaDe(archivo)}`
   await pagina.screenshot({ path: destino, type: 'jpeg', quality: 90 })

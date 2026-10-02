@@ -20,10 +20,11 @@
  * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /pato
  * empieza solo, en cuanto la nube pinta.
  *
- * Los patos (src/lib/pato.js) se dibujan con la trama de la nube: cada píxel
- * del sprite es un punto de su rejilla —la misma celda y el mismo origen—, así
- * que, dentro de ella, los puntos de la nube tapan justo los del pato y solo se
- * le ve donde se abre.
+ * Los patos (src/lib/pato.js) se dibujan en la rejilla de la nube: cada píxel
+ * del sprite es un cuadrado de una celda —la misma celda y el mismo origen—.
+ * Dentro de ella, los puntos de la nube tapan el centro de cada cuadrado, así
+ * que el pato apenas se adivina entre punto y punto, y se le ve entero donde
+ * se abre.
  *
  * El pato que se escapa después de que le dispararon se burla antes de irse:
  * vuela al claro del cielo más lejos de las nubes, se agranda y se ríe en un
@@ -55,7 +56,7 @@ const ALETEO = 8
 const VUELTA = 0.12
 // Lo que tarda la volutus en deshacerse en cúmulos, o en volver a juntarse.
 const TRANSICION = 1.6
-// Hasta dónde baja a volar: por encima de «Jugar», que va abajo.
+// Hasta dónde baja a volar: por encima del contador, que va abajo.
 const SUELO = 0.8
 // La tolerancia del disparo, en px. Con el dedo es el doble: tapa justo lo que
 // apunta.
@@ -67,11 +68,11 @@ const LLEGADA = 0.5
 const RISA = 2
 const GRANDE = 3
 const LIBRE = 1.3
-// El margen del claro con los costados y con «Jugar», en puntos.
+// El margen del claro con los costados y con el contador, en puntos.
 const AIRE = 4
 // Al cazar estos, sale el que reclama por su familia. Una sola vez por
 // partida.
-const META = 15
+const META = 1
 // Lo que dicen el que se burla y el que reclama, en líneas para que el globo
 // quepa en el cielo.
 const BURLA = ['JA JA JA']
@@ -153,11 +154,13 @@ export function alternar(boton) {
 }
 
 function preparar(boton) {
-  const cielo = boton.parentElement
+  const pagina = boton.closest('.pagina-error')
+  const cielo = pagina.querySelector('.pagina-error-cielo')
   const lienzo = cielo.querySelector('.patos')
   escena = {
     boton,
     cielo,
+    titulo: pagina.querySelector('h1'),
     lienzo,
     ctx: lienzo.getContext('2d'),
     nube: cielo.querySelector('.nubes'),
@@ -173,7 +176,7 @@ function preparar(boton) {
 // borde de abajo de la barra, en puntos enteros: los patos no vuelan detrás
 // de ella, donde el clic caería en el logo o en el menú.
 function medir() {
-  const { lienzo, cielo, boton } = escena
+  const { lienzo, cielo, titulo } = escena
   const estilo = getComputedStyle(cielo)
   const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
   const celda = Math.round(parseFloat(estilo.getPropertyValue('--nubes-celda')) * dpr)
@@ -194,7 +197,8 @@ function medir() {
   escena.dpr = dpr
   escena.alto = lienzo.height
   escena.techo = Math.ceil((parseFloat(estilo.getPropertyValue('--barra-alto')) * dpr) / celda) * celda
-  escena.derecha = (boton.offsetLeft + boton.offsetWidth) * dpr
+  const izquierda = (titulo.getBoundingClientRect().left - lienzo.getBoundingClientRect().left) * dpr
+  escena.izquierda = Math.round(izquierda / celda) * celda
   repartir()
   avisarForma(performance.now())
   if (!bucle) pintar()
@@ -406,35 +410,36 @@ function mover(dt) {
 // lejos de toda nube. La distancia va en radios de cada nube, desde su centro
 // hasta el punto más cercano de la caja, y desde `LIBRE` es cielo despejado.
 // La caja va de la barra al borde de abajo del cielo, que suele ser lo más
-// despejado, sin tocar los costados ni «Jugar». Prueba desde `grandeMaximo`
+// despejado, sin tocar los costados ni el contador. Prueba desde `grandeMaximo`
 // hasta el doble, achicando de a uno; si en ninguno hay cielo despejado, se
-// queda con lo mejor que encontró.
+// queda con lo mejor que encontró. En un cielo chico, como el de un teléfono,
+// puede que nada quepa sin tocar el contador: entonces prueba también a tamaño
+// normal y, si tampoco, lo tapa antes que no salir.
 function claro(globo = escena.globo, grandeMaximo = GRANDE) {
-  const { lienzo, celda, techo, boton, dpr, alto, cuadros } = escena
+  const { lienzo, celda, techo, alto, cuadros } = escena
   const forma = valorForma(performance.now())
   const nubes = escena.cumulos.map((c) => cumulo(c, forma).map((medida) => medida * alto))
   const aire = AIRE * celda
-  const jugar = [
-    boton.offsetLeft * dpr - aire,
-    boton.offsetTop * dpr - aire,
-    (boton.offsetLeft + boton.offsetWidth) * dpr + aire,
-    (boton.offsetTop + boton.offsetHeight) * dpr + aire,
-  ]
+  const [mx, my, contador] = dondeContador()
+  const marcador = [mx - aire, my - aire, mx + contador.width + aire, my + contador.height + aire]
   const entre = (valor, desde, hasta) => Math.min(Math.max(valor, desde), hasta)
 
   let mejor = null
-  for (let grande = grandeMaximo; grande > 1 && !(mejor?.holgura >= LIBRE); grande--) {
+  const libreDelContador = () => mejor?.holgura > -Infinity
+  for (let grande = grandeMaximo; grande > (libreDelContador() ? 1 : 0) && !(mejor?.holgura >= LIBRE); grande--) {
     const [gx, gy] = globoJunto(0, 0, grande)
     const ancho = gx + globo.width
     const altoCaja = Math.max(cuadros.arriba.height * grande, gy + globo.height)
     for (let y = techo; y + altoCaja <= lienzo.height; y += aire) {
       for (let x = aire; x + ancho <= lienzo.width - aire; x += aire) {
-        if (x < jugar[2] && x + ancho > jugar[0] && y < jugar[3] && y + altoCaja > jugar[1]) continue
-        const holgura = Math.min(
-          ...nubes.map(([cx, cy, r]) =>
-            Math.hypot((entre(cx, x, x + ancho) - cx) / (1.6 * r), (entre(cy, y, y + altoCaja) - cy) / r),
-          ),
-        )
+        const tapa = x < marcador[2] && x + ancho > marcador[0] && y < marcador[3] && y + altoCaja > marcador[1]
+        const holgura = tapa
+          ? -Infinity
+          : Math.min(
+              ...nubes.map(([cx, cy, r]) =>
+                Math.hypot((entre(cx, x, x + ancho) - cx) / (1.6 * r), (entre(cy, y, y + altoCaja) - cy) / r),
+              ),
+            )
         if (!mejor || holgura > mejor.holgura) mejor = { holgura, grande, x, y }
       }
     }
@@ -559,16 +564,34 @@ function agrandar(filas, escala) {
   return filas.flatMap((fila) => Array(escala).fill([...fila].map((letra) => letra.repeat(escala)).join('')))
 }
 
-// Arriba a la derecha, bajo la barra y alineado con el borde del botón.
-function pintarContador() {
-  const { ctx, celda, techo, derecha } = escena
-  escena.contador ??= pintarCuadro(filasDeTexto(String(cazados), 'b'), celda)
+// Abajo del cielo, justo encima del título y alineado con su borde.
+function dondeContador() {
+  const { celda, alto, izquierda } = escena
+  escena.contador ??= pintarCuadro(contornear(filasDeTexto(String(cazados), 'b')), celda)
   const { contador } = escena
-  ctx.drawImage(contador, Math.round((derecha - contador.width) / celda) * celda, techo + 4 * celda)
+  return [izquierda, (Math.floor(alto / celda) - 2) * celda - contador.height, contador]
 }
 
-// Un cuadro como puntos de la trama, en un lienzo chico. El radio es media
-// celda, como el de los puntos más densos de la nube.
+function pintarContador() {
+  const [x, y, contador] = dondeContador()
+  escena.ctx.drawImage(contador, x, y)
+}
+
+// El contador lleva un punto negro alrededor de cada letra: así se lee sobre
+// el cielo claro y sobre la nube.
+function contornear(filas) {
+  const lleno = (x, y) => filas[y]?.[x] !== undefined && filas[y][x] !== '.'
+  return Array.from({ length: filas.length + 2 }, (_, y) =>
+    Array.from({ length: filas[0].length + 2 }, (_, x) => {
+      if (lleno(x - 1, y - 1)) return filas[y - 1][x - 1]
+      for (let dy = -2; dy <= 0; dy++) for (let dx = -2; dx <= 0; dx++) if (lleno(x + dx, y + dy)) return 'k'
+      return '.'
+    }).join(''),
+  )
+}
+
+// Un cuadro en la rejilla de la nube, en un lienzo chico: un cuadrado lleno
+// por celda, el píxel de las consolas que inspiran el juego.
 function pintarCuadro(filas, celda) {
   const lienzo = document.createElement('canvas')
   lienzo.width = filas[0].length * celda
@@ -578,9 +601,7 @@ function pintarCuadro(filas, celda) {
     for (let x = 0; x < fila.length; x++) {
       if (!COLORES[fila[x]]) continue
       ctx.fillStyle = COLORES[fila[x]]
-      ctx.beginPath()
-      ctx.arc((x + 0.5) * celda, (y + 0.5) * celda, celda / 2, 0, 2 * Math.PI)
-      ctx.fill()
+      ctx.fillRect(x * celda, y * celda, celda, celda)
     }
   })
   return lienzo

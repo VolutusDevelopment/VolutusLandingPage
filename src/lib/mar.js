@@ -11,9 +11,12 @@
  * La física:
  *
  *   - Once trenes de olas de gravedad (`TRENES`): dos de marejada, seis de
- *     mar de viento y tres de rizos. Cada uno con su longitud de onda, su amplitud y su rumbo, todos
- *     hacia quien mira. La velocidad no se elige: la da la dispersión del agua
- *     honda, ω = √(g·k), así que las olas largas corren más que las cortas. La
+ *     mar de viento y tres de rizos. Cada uno con su longitud de onda, su
+ *     amplitud y su rumbo. Pasan de izquierda a derecha frente a quien mira:
+ *     de frente, las crestas eran franjas planas; de lado, se ve su perfil y
+ *     sus líneas se juntan hacia el horizonte. La velocidad no se elige: la
+ *     da la dispersión del agua honda, ω = √(g·k), así que las olas largas
+ *     corren más que las cortas. La
  *     velocidad de grupo es la mitad de la de fase, y las dos marejadas, de
  *     longitud vecina, forman grupos —las series— que las crestas
  *     atraviesan creciendo y apagándose. Nada de eso se programa: sale de
@@ -22,26 +25,40 @@
  *     círculos del alto de la ola, así que la cresta es aguda y el valle ancho.
  *     Para saber la altura en un punto del mundo hay que deshacer ese
  *     desplazamiento horizontal: por tren es la ecuación de Kepler,
- *     θ = θ' + e·sen θ, que dos vueltas resuelven. El empinamiento e = k·A ronda
- *     0.065: mar de brisa, lejos del de rotura.
+ *     θ = θ' + e·sen θ, que dos vueltas resuelven. El empinamiento e = k·A va
+ *     de 0.063 a 0.083: mar fresco, con cresta marcada y lejos del de rotura.
  *   - La espuma sale de la misma geometría. Donde el desplazamiento horizontal
- *     se pliega (su jacobiano baja de un umbral) la ola rompe, y la espuma se
- *     queda en el agua donde rompió: el pliegue se mira también 0.6, 1.2 y
- *     1.8 s atrás, cada vez más tenue, así que la ola sigue y la mancha queda
- *     detrás. Su textura se lee en el punto de reposo del agua (`origen`), así
- *     que gira con ella.
+ *     se pliega (su jacobiano baja de un umbral) la ola rompe, y la espuma
+ *     queda en las partículas de agua que rompieron (`ESPUMA`): gira y sube
+ *     con ellas y deriva con ellas, mientras la ola sigue de largo y deja la
+ *     estela atrás. Mientras rompe es blanca y sólida; al envejecer se abre en
+ *     encaje, una red de burbujas alrededor de agua limpia, hasta que solo
+ *     quedan las venas.
  *   - Lo que toca el agua —el cursor, el dedo, el pato— deja anillos con la
  *     solución exacta del agua honda para un impulso, la de Cauchy y Poisson:
  *     a una edad τ y a una distancia r llega la ola de número k = g·τ²/(4r²),
  *     con fase g·τ²/(4r). Las largas llegan primero. Sumados a lo largo de un
  *     recorrido, los anillos forman la estela de Kelvin, la V de 19,47° de
  *     todo lo que avanza por el agua. Solo mueven la luz, no la silueta.
- *   - Cada tren se apaga cuando su período, visto a esa distancia y escorzado,
- *     baja de unas 3 celdas (`detalle`): más fino, daría muaré. Lo que se
+ *   - Las cortas no son iguales en todas partes (`PICADO`): en la cresta de
+ *     la silueta el agua se comprime y ellas se empinan; en el valle se
+ *     estiran y se calman. Las crestas quedan ásperas y con espuma, y los
+ *     valles lisos. Como la rugosidad también se pica, la marejada se sigue
+ *     leyendo lejos, en bandas de brillo, aunque las cortas ya no se vean.
+ *   - Cada tren se apaga cuando su período en la pantalla, medido en su
+ *     rumbo, baja de unas 3 celdas (`detalle`): más fino, daría muaré. El
+ *     escorzo depende del rumbo: lo que viene de frente se aplasta contra el
+ *     horizonte, pero lo que cruza tiene las crestas apuntando hacia él y
+ *     sigue ancho mucho más lejos. Así la textura se va afinando con la
+ *     distancia, tren por tren, en vez de acabarse en una franja. Lo que se
  *     apaga no desaparece de la luz: su pendiente pasa a ser rugosidad, que
  *     ensancha el reflejo del sol. Cerca, el sol es un puñado de destellos;
- *     lejos, un camino de luz. Y el agua lejana queda pareja, que también es
- *     profundidad.
+ *     lejos, un camino de luz.
+ *   - Bajo los rizos más cortos queda la ondulación que ningún tren cubre: la
+ *     da el `ruido` de la espuma, leído como relieve en dos escalas (`RIZO`)
+ *     que el viento arrastra a velocidades distintas, así que no se desliza
+ *     de una pieza sino que cambia. Se apaga con la distancia como un tren
+ *     más, y también pasa a rugosidad.
  *
  * Quien mira flota: va en un bote, con los ojos a `OJOS` del agua, y el bote
  * sube y baja con la marejada (`casco`, el agua bajo él en promedio). El
@@ -64,20 +81,22 @@ import { NADA } from './pato.js'
 const G = 9.81
 
 // Los trenes, de mayor a menor: longitud de onda y amplitud en metros, rumbo
-// en grados (0 viene de frente; positivo, cruzando hacia la derecha) y fase.
+// en grados (0 viene de frente; 90 cruza de izquierda a derecha) y fase. La
+// marejada corre de lado, entre 72° y 84°; el viento se abre en abanico
+// alrededor, y los rizos más, para que la textura no quede peinada.
 // Los primeros `EN_LA_MARCHA` dan la silueta; el resto, la textura.
 const TRENES = [
-  [38, 0.42, -8, 0],
-  [31, 0.33, 7, 2.1],
-  [17, 0.17, -24, 4.2],
-  [10.5, 0.11, 28, 1.3],
-  [6.4, 0.065, -40, 5],
-  [4, 0.04, 16, 3.3],
-  [2.5, 0.024, -55, 0.7],
-  [1.6, 0.015, 42, 2.6],
-  [1, 0.0095, -18, 4.4],
-  [0.62, 0.006, 64, 1.9],
-  [0.4, 0.0038, -72, 3.7],
+  [38, 0.5, 72, 0],
+  [31, 0.4, 84, 2.1],
+  [17, 0.22, 58, 4.2],
+  [10.5, 0.13, 100, 1.3],
+  [6.4, 0.075, 46, 5],
+  [4, 0.045, 88, 3.3],
+  [2.5, 0.027, 30, 0.7],
+  [1.6, 0.017, 118, 2.6],
+  [1, 0.0105, 64, 4.4],
+  [0.62, 0.0065, 140, 1.9],
+  [0.4, 0.004, 20, 3.7],
 ]
 const EN_LA_MARCHA = 4
 
@@ -89,15 +108,16 @@ export const OLAS = TRENES.map(([largo, alto, rumbo, fase]) => {
 
 const SILUETA = OLAS.slice(0, EN_LA_MARCHA)
 
-// La cámara: los ojos a `OJOS` m del agua bajo el bote, y nada más cerca que
-// la proa, a `PROA` m. `CRESTA` es la ola más alta posible: todos los trenes
-// de la silueta a la vez. `ASOMA` es cuánto puede subir una cresta sobre el
-// horizonte, en tangente: en 20 minutos de este mar, la que más asomó llegó a
-// 0.045 —a media marejada del bote, con el bote en el valle—, y se le deja el
-// doble. Si cambian las olas o los ojos, hay que volver a medirla.
-export const OJOS = 1.2
+// La cámara: los ojos a `OJOS` m del agua bajo el bote —de pie en él—, y nada
+// más cerca que la proa, a `PROA` m. `CRESTA` es la ola más alta posible:
+// todos los trenes de la silueta a la vez. `ASOMA` es cuánto puede subir una
+// cresta sobre el horizonte, en tangente: en 20 minutos de este mar, la que
+// más asomó llegó a 0.048 —a media marejada del bote, con el bote en el
+// valle—, y se le deja el doble. Si cambian las olas o los ojos, hay que
+// volver a medirla.
+export const OJOS = 1.5
 const PROA = 0.5
-const ASOMA = 0.09
+const ASOMA = 0.1
 export const CRESTA = SILUETA.reduce((suma, ola) => suma + ola.alto, 0)
 const LEJOS = 3000
 
@@ -175,7 +195,7 @@ export function flotar(x0, z0, t, escala) {
 function relieve(x, z, t, escala) {
   let h = 0
   for (const ola of SILUETA) {
-    const d = detalle(ola.largo, x * x + z * z, escala)
+    const d = detalle(ola, x, z, escala)
     const fase = ola.k * (ola.dx * x + ola.dz * z) - ola.w * t + ola.fase
     let th = fase + ola.e * d * Math.sin(fase)
     th = fase + ola.e * d * Math.sin(th)
@@ -184,11 +204,12 @@ function relieve(x, z, t, escala) {
   return h
 }
 
-// Cuánto se ve un tren a la distancia √r2: su período en celdas, escorzado
-// por la perspectiva. `escala` es focal × OJOS / celda. Por debajo de 2
-// celdas no se ve, y desde 4 se ve entero. La de `detalle` en el shader.
-function detalle(largo, r2, escala) {
-  const s = Math.min(Math.max((largo * escala) / r2 / 2 - 1, 0), 1)
+// Cuánto se ve un tren en (x, z): su período en celdas de la pantalla, medido
+// en su rumbo. `escala` es focal × OJOS / celda. Por debajo de 2 celdas no se
+// ve, y desde 4 se ve entero. La de `detalle` en el shader.
+function detalle(ola, x, z, escala) {
+  const celdas = (ola.largo * escala) / Math.abs(z * Math.hypot(ola.dx * OJOS, ola.dx * x + ola.dz * z))
+  const s = Math.min(Math.max(celdas / 2 - 1, 0), 1)
   return s * s * (3 - 2 * s)
 }
 
@@ -198,57 +219,80 @@ function num(numero) {
   return /[.e]/.test(texto) ? texto : `${texto}.0`
 }
 
-// Un tren en el punto `p`, a la distancia `r` y en el instante `cuando`: deja
-// en `d` su detalle y en `th` su fase con el desplazamiento horizontal
-// deshecho. `cuenta` es lo que se hace con él.
+const rumbo = (ola) => `vec2(${num(ola.dx)}, ${num(ola.dz)})`
+
+// Un tren en el punto `p` y en el instante `cuando`: deja en `d` su detalle y
+// en `th` su fase con el desplazamiento horizontal deshecho. `cuenta` es lo
+// que se hace con él.
 const tren = (ola, cuenta) => `
-  d = detalle(${num(ola.largo)}, r);
-  fase = dot(p, vec2(${num(ola.dx)}, ${num(ola.dz)})) * ${num(ola.k)} - ${num(ola.w)} * cuando + ${num(ola.fase)};
+  d = detalle(${num(ola.largo)}, ${rumbo(ola)}, p);
+  fase = dot(p, ${rumbo(ola)}) * ${num(ola.k)} - ${num(ola.w)} * cuando + ${num(ola.fase)};
   th = fase + ${num(ola.e)} * d * sin(fase);
   th = fase + ${num(ola.e)} * d * sin(th);
   ${cuenta}`
 
 const sumar = (olas, cuenta) => olas.map((ola) => tren(ola, cuenta(ola))).join('')
 
-const rumbo = (ola) => `vec2(${num(ola.dx)}, ${num(ola.dz)})`
-
 // La altura de la silueta, para la marcha del rayo.
 const RELIEVE = `
-float relieve(vec2 p, float r, float cuando) {
+float relieve(vec2 p, float cuando) {
   float h = 0.0, d, fase, th;
   ${sumar(SILUETA, (ola) => `h += ${num(ola.alto)} * d * cos(th);`)}
   return h;
 }`
 
-// El jacobiano del desplazamiento horizontal: 1 en el agua en calma, menos
-// donde la superficie se comprime, y 0 donde se pliega.
+// El picado: en la cresta de la silueta el agua se comprime, y las olas
+// cortas se aprietan y se empinan; en el valle se estiran y se calman
+// (Longuet-Higgins y Stewart, 1960). La compresión es 1 − jacobiano de la
+// silueta, y cada décima de compresión suma `PICADO` décimas a la fuerza de
+// las cortas, entre 0.5 y 2.2: el valle se calma, pero no queda de vidrio.
+// Con 3, el 1 % de la superficie más apretada llega a 1.7 y un 8 % empieza a
+// hacer espuma (el umbral de 0.78 en `ESPUMA`).
+const PICADO = 3
+const PICAR = `float picado = clamp(1.0 + ${num(PICADO)} * (1.0 - jacobiano(m)), 0.5, 2.2);`
+const TEXTURA = OLAS.slice(EN_LA_MARCHA)
+
+// Lo que comprime un tren, con su fuerza: '' o 'picado * '.
+const comprimir = (fuerza) => (ola) =>
+  `m += ${fuerza}${num(ola.e)} * d * cos(th) * vec3(${num(ola.dx ** 2)}, ${num(ola.dz ** 2)}, ${num(ola.dx * ola.dz)});`
+
+// Un tren en la partícula que en reposo está en `o`: Gerstner ya está escrita
+// por partícula, así que su fase sale directa, sin deshacer nada. Su detalle
+// viene hecho en `detalles`: la partícula no se aleja de donde se ve.
+const enParticula = (olas, cuenta) =>
+  olas
+    .map(
+      (ola) => `
+  d = detalles[${OLAS.indexOf(ola)}];
+  th = dot(o, ${rumbo(ola)}) * ${num(ola.k)} - ${num(ola.w)} * cuando + ${num(ola.fase)};
+  ${cuenta(ola)}`,
+    )
+    .join('')
+
+// El jacobiano del desplazamiento horizontal de la partícula `o`: 1 en el agua
+// en calma, menos donde la superficie se comprime, y 0 donde se pliega. Las
+// cortas entran picadas, así que la espuma nace en las crestas.
 const PLIEGUE = `
-float pliegue(vec2 p, float r, float cuando) {
-  vec3 m = vec3(0.0);
-  float d, fase, th;
-  ${sumar(OLAS, (ola) => `m += ${num(ola.e)} * d * cos(th) * vec3(${num(ola.dx ** 2)}, ${num(ola.dz ** 2)}, ${num(ola.dx * ola.dz)});`)}
+float jacobiano(vec3 m) {
   return (1.0 - m.x) * (1.0 - m.y) - m.z * m.z;
+}
+float pliegue(vec2 o, float cuando, float detalles[${OLAS.length}]) {
+  vec3 m = vec3(0.0);
+  float d, th;
+  ${enParticula(SILUETA, comprimir(''))}
+  ${PICAR}
+  ${enParticula(TEXTURA, comprimir('picado * '))}
+  return jacobiano(m);
 }`
 
-// La superficie entera en `p`: su altura, su pendiente, el punto de reposo del
-// agua que está ahí y la rugosidad de lo que no alcanza a verse.
-const SUPERFICIE = `
-float superficie(vec2 p, float r, float cuando, out vec2 pendiente, out vec2 origen, out float rugosidad) {
-  float h = 0.0, d, fase, th, s, c;
-  pendiente = vec2(0.0);
-  origen = p;
-  rugosidad = 2e-4;
-  ${sumar(
-    OLAS,
-    (ola) => `s = sin(th);
+// Lo que suma un tren a la superficie, con su fuerza: '' o 'picado * '.
+const sumarA = (fuerza) => (ola) => `s = sin(th);
   c = cos(th);
+  e = ${fuerza}${num(ola.e)} * d;
   h += ${num(ola.alto)} * d * c;
-  pendiente -= ${num(ola.e)} * d * s / (1.0 - ${num(ola.e)} * d * c) * ${rumbo(ola)};
+  pendiente -= e * s / (1.0 - e * c) * ${rumbo(ola)};
   origen += ${num(ola.alto)} * d * s * ${rumbo(ola)};
-  rugosidad += (1.0 - d * d) * ${num(ola.e ** 2 / 2)};`,
-  )}
-  return h;
-}`
+  rugosidad += (1.0 - d * d) * ${fuerza}${fuerza}${num(ola.e ** 2 / 2)};`
 
 // La pendiente de los anillos de lo que tocó el agua.
 const ONDAS = `
@@ -266,6 +310,124 @@ vec2 ondas(vec2 p, float r) {
     pendiente -= alto * k * cos(k * lejos) * detalle(${num(2 * Math.PI)} / k, r) * d / lejos;
   }
   return pendiente;
+}`
+
+// La ondulación bajo los rizos: el `ruido` leído como relieve, con el lado de
+// su texel en metros. Cada escala corre con el viento —el rumbo de la
+// marejada— a la velocidad de una ola de dos texels, y su alto es un cuarto
+// del texel: su pendiente es la diferencia del ruido a un cuarto de texel, y
+// ronda la de los rizos. El texel se suaviza como en `ruido3` del cielo:
+// lineal, cerca se verían sus facetas.
+const RIZOS = [0.6, 0.22]
+const VIENTO = OLAS[0]
+
+const RIZO = `
+float rizoAlto(vec2 q) {
+  vec2 i = floor(q), f = fract(q);
+  return texture2D(ruido, (i + f * f * (3.0 - 2.0 * f) + 0.5) / 256.0).r;
+}
+vec2 rizo(vec2 origen, float r, float picado, inout float rugosidad) {
+  vec2 pendiente = vec2(0.0), q;
+  float h, d;
+  ${RIZOS.map(
+    (texel) => `
+  q = (origen - ${rumbo(VIENTO)} * ${num(Math.sqrt((G * texel) / Math.PI))} * t) / ${num(texel)};
+  h = rizoAlto(q);
+  d = detalle(${num(2 * texel)}, r);
+  pendiente += picado * d * vec2(rizoAlto(q + vec2(0.25, 0.0)) - h, rizoAlto(q + vec2(0.0, 0.25)) - h);
+  rugosidad += (1.0 - d * d) * picado * picado * 0.004;`,
+  ).join('')}
+  return pendiente;
+}`
+
+// La espuma flota: no es una mancha del mundo sino de la partícula de agua
+// que rompió, y viaja con ella. Gira con la ola (su reposo es `origen`) y
+// avanza con la deriva de Stokes, que en agua honda es a²·ω·k por tren, en su
+// rumbo: unos 0.2 m/s. La partícula que ahora reposa en `origen` reposaba en
+// `etiqueta + DERIVA·τ` en el instante τ, y es ahí donde se mira si rompió.
+//
+//   - Cuánta hay: crece mientras la partícula rompe —en `CRECE` s de rotura
+//     llega a blanco pleno— y se apaga con una vida media de `DURA` s. Es la
+//     suma de las roturas de los últimos `MEMORIA` × `PASO` segundos, cada una
+//     apagada por su edad. Esos instantes van fijos en el reloj y no corridos
+//     desde `t`: si se corrieran, cada fotograma atraparía roturas distintas y
+//     la estela parpadearía.
+//   - Cómo se ve: encaje, dos redes de Voronoi de 0.9 y 0.3 m pegadas a la
+//     partícula. `red` es la distancia al borde de la celda (F2 − F1), y la
+//     espuma cubre lo que está a menos de lo que queda de ella: donde rompe
+//     ahora (`nucleo`) casi todo, con ojos de agua y el borde deshilachado;
+//     fresca, venas gruesas; vieja, solo las venas finas. Cada vena se difumina en una celda de la pantalla
+//     y, si es más fina que eso, se aclara en vez de salir a saltos. Lejos,
+//     donde la red no cabe, queda su promedio: las aristas de un Voronoi suman
+//     unas 2 veces su ancho en área.
+//
+// El azar de cada celda sale del `ruido`, leído justo en sus texels.
+const PASO = 0.5
+const MEMORIA = 14
+const DURA = 3.5
+const CRECE = 0.5
+const DERIVA = OLAS.reduce(
+  ([x, z], ola) => [x + ola.alto ** 2 * ola.w * ola.k * ola.dx, z + ola.alto ** 2 * ola.w * ola.k * ola.dz],
+  [0, 0],
+)
+
+const ESPUMA = `
+const vec2 DERIVA = vec2(${DERIVA.map(num).join(', ')});
+float red(vec2 q) {
+  vec2 i = floor(q), f = fract(q), d;
+  float f1 = 9.0, f2 = 9.0, d2;
+  for (int y = -1; y <= 1; y++) {
+    for (int x = -1; x <= 1; x++) {
+      d = vec2(float(x), float(y));
+      d += texture2D(ruido, (i + d + 0.5) / 256.0).rg - f;
+      d2 = dot(d, d);
+      f2 = min(f2, max(f1, d2));
+      f1 = min(f1, d2);
+    }
+  }
+  return sqrt(f2) - sqrt(f1);
+}
+float encaje(vec2 q, float lado, float ancho, float r) {
+  float pantalla = r * r / (lado * escala);
+  float vena = (1.0 - smoothstep(ancho - pantalla, ancho + pantalla, red(q / lado))) * min(1.0, ancho / pantalla);
+  return mix(min(1.0, 2.0 * ancho), vena, detalle(lado, r));
+}
+float rompe(vec2 etiqueta, float cuando, float detalles[${OLAS.length}]) {
+  return 1.0 - smoothstep(0.55, 0.78, pliegue(etiqueta + DERIVA * cuando, cuando, detalles));
+}
+float espuma(vec2 p, vec2 origen, float r) {
+  vec2 etiqueta = origen - DERIVA * t;
+  float detalles[${OLAS.length}];
+  ${OLAS.map((ola, i) => `detalles[${i}] = detalle(${num(ola.largo)}, ${rumbo(ola)}, p);`).join('\n  ')}
+  float ultimo = floor(t / ${num(PASO)}) * ${num(PASO)}, cuando;
+  float nucleo = rompe(etiqueta, t, detalles);
+  float queda = nucleo * (t - ultimo) / ${num(CRECE)};
+  for (int i = 0; i < ${MEMORIA}; i++) {
+    cuando = ultimo - ${num(PASO)} * float(i);
+    queda += rompe(etiqueta, cuando, detalles) * exp((cuando - t) / ${num(DURA)}) * ${num(PASO / CRECE)};
+  }
+  queda = min(queda, 1.0);
+  if (queda + nucleo < 0.02) return 0.0;
+  float gruesa = encaje(etiqueta, 0.9, 0.35 * queda + 0.65 * nucleo, r);
+  float fina = encaje(etiqueta, 0.3, 0.15 * queda, r);
+  return max(gruesa, fina);
+}`
+
+// La superficie entera en `p`: su altura, su pendiente, el punto de reposo del
+// agua que está ahí y la rugosidad de lo que no alcanza a verse. Primero la
+// silueta, que da el picado; después las cortas y el rizo, picados.
+const SUPERFICIE = `
+float superficie(vec2 p, float r, float cuando, out vec2 pendiente, out vec2 origen, out float rugosidad) {
+  float h = 0.0, d, fase, th, s, c, e;
+  vec3 m = vec3(0.0);
+  pendiente = vec2(0.0);
+  origen = p;
+  rugosidad = 2e-4;
+  ${sumar(SILUETA, (ola) => `${sumarA('')(ola)}\n  ${comprimir('')(ola)}`)}
+  ${PICAR}
+  ${sumar(TEXTURA, sumarA('picado * '))}
+  pendiente += rizo(origen, r, picado, rugosidad);
+  return h;
 }`
 
 /**
@@ -298,15 +460,21 @@ uniform sampler2D ruido, pato;
 const float PROA = ${num(PROA)};
 const float CRESTA = ${num(CRESTA)};
 const float LEJOS = ${num(LEJOS)};
+const float OJOS = ${num(OJOS)};
 const vec3 SOL = vec3(${SOL.map(num).join(', ')});
 const vec2 PATO = vec2(${num(NADA[0].length)}, ${num(NADA.length)});
 float detalle(float largo, float r) {
   return smoothstep(2.0, 4.0, largo * escala / (r * r));
 }
+float detalle(float largo, vec2 rumbo, vec2 p) {
+  return smoothstep(2.0, 4.0, largo * escala / abs(p.y * length(vec2(rumbo.x * OJOS, dot(p, rumbo)))));
+}
 ${RELIEVE}
 ${PLIEGUE}
-${SUPERFICIE}
 ${ONDAS}
+${RIZO}
+${SUPERFICIE}
+${ESPUMA}
 void main() {
   vec2 celdaXY = floor(gl_FragCoord.xy);
   vec2 uv = (celdaXY + 0.5) * celda - vec2(0.5 * res.x, camara.y);
@@ -325,13 +493,13 @@ void main() {
   bool toca = false;
   float r = desde;
   if (desde < hasta) {
-    float antes = ojos - baja * r - relieve(rumbo * r, r, t);
+    float antes = ojos - baja * r - relieve(rumbo * r, t);
     toca = antes <= 0.0;
     float paso = pow(hasta / desde, 1.0 / 32.0);
     for (int i = 0; i < 32; i++) {
       if (toca) break;
       float sigue = r * paso;
-      float ahora = ojos - baja * sigue - relieve(rumbo * sigue, sigue, t);
+      float ahora = ojos - baja * sigue - relieve(rumbo * sigue, t);
       if (ahora <= 0.0) {
         r += (sigue - r) * antes / (antes - ahora);
         toca = true;
@@ -360,13 +528,7 @@ void main() {
       * exp((c2 - 1.0) / (c2 * 2.0 * rugosidad)) / (2.0 * rugosidad * c2 * c2);
     float transluz = smoothstep(0.1, 0.7, h) * max(dot(rayo, SOL), 0.0);
     float tono = mix(0.1 + 0.4 * transluz, cielo, fresnel);
-    float espuma = 0.0;
-    for (int i = 0; i < 4; i++) {
-      float atras = 0.6 * float(i);
-      espuma = max(espuma, smoothstep(0.62, 0.45, pliegue(p, r, t - atras)) * exp(-atras / 1.2));
-    }
-    espuma *= smoothstep(0.35, 0.6, 0.65 * texture2D(ruido, origen / 100.0).r + 0.35 * texture2D(ruido, origen / 33.0).r);
-    tono = mix(tono, 1.0, max(espuma, clamp(0.02 * sol, 0.0, 1.0)));
+    tono = mix(tono, 1.0, max(espuma(p, origen, r), clamp(0.02 * sol, 0.0, 1.0)));
     tono = mix(tono, 0.68, 1.0 - exp(-r / 900.0));
     area = smoothstep(0.07, 0.6, tono);
     color = tono < 0.6 ? mix(sombra, luz, tono / 0.6) : mix(luz, borde, (tono - 0.6) / 0.4);

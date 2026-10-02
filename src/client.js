@@ -153,7 +153,7 @@ function initPatos() {
  * WebGL la nube nunca pinta, y queda «Jugar».
  */
 function empezarSolo(boton, alternar) {
-  const nube = boton.parentElement.querySelector('.nubes')
+  const nube = boton.closest('.pagina-error').querySelector('.nubes')
   if (nube.classList.contains('vivo')) return alternar()
   nube.addEventListener('vivo', alternar, { once: true })
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })

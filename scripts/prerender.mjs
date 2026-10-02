@@ -67,7 +67,7 @@ function datosEstructurados(ruta, canonical, titulo) {
   })}</script>`
 }
 
-function cabecera(ruta, { archivo, titulo, descripcion, indexar = true }) {
+function cabecera(ruta, { archivo, titulo, descripcion, indexar = true, tarjetaAlt }) {
   const t = atributo(titulo)
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
@@ -79,7 +79,7 @@ function cabecera(ruta, { archivo, titulo, descripcion, indexar = true }) {
 
   const canonical = canonicalDe(ruta)
   const imagen = `${ORIGEN}${tarjetaDe(archivo)}`
-  const alt = atributo(`El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
+  const alt = atributo(tarjetaAlt ?? `El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
   return [
     ...basicas,
     `<link rel="canonical" href="${canonical}" />`,

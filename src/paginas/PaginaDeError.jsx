@@ -18,12 +18,14 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * suelta patos desde dentro de ellos, como los del Duck Hunt desde el pasto; el
  * que se caza cae a través de la nube (src/patos.js).
  * Su lienzo va antes que el de la nube para quedar detrás: dentro de la nube,
- * los puntos de ella tapan los del pato. El botón llega oculto, porque sin
- * JavaScript no sirve, y flota sobre el cielo para que aparecer no mueva nada.
+ * los puntos de ella tapan casi todo el pato. El botón llega oculto, porque sin
+ * JavaScript no sirve, y va junto a «Inicio», que es igual de alto, así que
+ * aparecer no mueve nada.
  *
  * /pato es la misma escena dedicada al juego: llega ahí quien caza al pato que
  * sale a nadar en el mar del pie, así que la partida empieza sola
- * (`empiezaSolo`, ver src/client.js).
+ * (`empiezaSolo`, ver src/client.js). Su descripción va solo en el `<head>`
+ * (`sinEntradilla`): la pantalla es el juego, y debajo del título no dice nada.
  */
 export function NoEncontrada() {
   return <PaginaDeError ruta="/404" antetitulo="Error 404" titulo="Esta página no existe." />
@@ -36,10 +38,10 @@ export function ErrorDelServidor() {
 }
 
 export function CazaDePatos() {
-  return <PaginaDeError ruta="/pato" titulo="Dispara al pato" empiezaSolo />
+  return <PaginaDeError ruta="/pato" titulo="Dispara al pato" empiezaSolo sinEntradilla />
 }
 
-function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false }) {
+function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntradilla = false }) {
   const { descripcion } = PAGINAS[ruta]
 
   return (
@@ -48,20 +50,20 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false }) {
         <div className="pagina-error-cielo">
           <canvas className="patos" aria-hidden="true" />
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
-          <button className="boton boton-secundario jugar" type="button" data-empieza={empiezaSolo || undefined} hidden>
-            <Pato />
-            <span>Jugar</span>
-          </button>
         </div>
 
         <div className="contenedor pagina-error-texto">
           {antetitulo && <p className="antetitulo">{antetitulo}</p>}
           <h1>{titulo}</h1>
-          <p className="entradilla">{descripcion}</p>
+          {!sinEntradilla && <p className="entradilla">{descripcion}</p>}
           <p className="pagina-error-salidas">
             <a className="boton boton-primario" href="/">
-              Volver al inicio
+              Inicio
             </a>
+            <button className="boton boton-secundario jugar" type="button" data-empieza={empiezaSolo || undefined} hidden>
+              <Pato />
+              <span>Jugar</span>
+            </button>
           </p>
         </div>
       </section>
@@ -70,30 +72,29 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false }) {
 }
 
 /**
- * El pato del botón: el mismo que vuela en el juego (lib/pato.js), punto por
- * punto y con sus colores. Va en el HTML y no en un lienzo porque el botón se
- * ve antes de que el juego se descargue. Un trazo por color, con un punto por
- * celda: un tramo casi nulo con punta redonda de una celda de ancho, que es el
- * mismo punto de media celda de radio que pinta el juego.
+ * El pato del botón: el mismo que vuela en el juego (lib/pato.js), celda por
+ * celda y con sus colores. Va en el HTML y no en un lienzo porque el botón se
+ * ve antes de que el juego se descargue. Una forma por color, con un cuadrado
+ * por celda, el píxel de las consolas que lo inspiran, como la tarjeta para
+ * compartir de /pato. Sin suavizado, para que los cuadrados vecinos no dejen
+ * costuras entre ellos.
  */
 function Pato() {
-  const trazos = {}
+  const formas = {}
   ARRIBA.forEach((fila, y) =>
     [...fila].forEach((letra, x) => {
-      if (COLORES[letra]) trazos[letra] = `${trazos[letra] ?? ''}M${x + 0.5} ${y + 0.5}h.01`
+      if (COLORES[letra]) formas[letra] = `${formas[letra] ?? ''}M${x} ${y}h1v1h-1z`
     }),
   )
   return (
     <svg
       viewBox={`0 0 ${ARRIBA[0].length} ${ARRIBA.length}`}
-      fill="none"
-      strokeWidth="1"
-      strokeLinecap="round"
+      shapeRendering="crispEdges"
       aria-hidden="true"
       focusable="false"
     >
-      {Object.entries(trazos).map(([letra, d]) => (
-        <path key={letra} stroke={COLORES[letra]} d={d} />
+      {Object.entries(formas).map(([letra, d]) => (
+        <path key={letra} fill={COLORES[letra]} d={d} />
       ))}
     </svg>
   )
