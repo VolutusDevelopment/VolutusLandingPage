@@ -69,7 +69,7 @@ const GRANDE = 3
 const LIBRE = 1.3
 // Al cazar estos, sale el que reclama por su familia. Una sola vez por
 // partida.
-const META = 2
+const META = 15
 // Lo que dice el que reclama, en líneas para que el globo quepa en el cielo.
 const RECLAMO = ['FELICIDADES,','MATASTE A', 'TODA MI', 'FAMILIA']
 
