@@ -55,8 +55,8 @@ export const PAGINAS = {
     descripcion: 'No fue nada que hicieras: el servidor tuvo un problema. Prueba de nuevo en un momento.',
     indexar: false,
   },
-  '/pato': {
-    archivo: 'pato.html',
+  '/patos': {
+    archivo: 'patos.html',
     titulo: 'Caza de patos — Volutus',
     descripcion:
       'Un Duck Hunt hecho con la nube de Volutus: los patos salen de los cúmulos y caen a través de ellos. Se juega en el navegador, sin instalar nada.',

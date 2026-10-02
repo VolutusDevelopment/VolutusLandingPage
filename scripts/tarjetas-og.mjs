@@ -92,7 +92,7 @@ const pagina = await navegador.newPage({ viewport: { width: ANCHO, height: ALTO 
 
 for (const [ruta, { archivo, titulo, indexar = true }] of Object.entries(PAGINAS)) {
   if (!indexar) continue
-  await pagina.setContent(ruta === '/pato' ? htmlPato() : html(tituloCorto(titulo)))
+  await pagina.setContent(ruta === '/patos' ? htmlPato() : html(tituloCorto(titulo)))
   await pagina.evaluate(() => document.fonts.ready)
   const destino = `${root}public${tarjetaDe(archivo)}`
   await pagina.screenshot({ path: destino, type: 'jpeg', quality: 90 })

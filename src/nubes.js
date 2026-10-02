@@ -197,7 +197,7 @@ function alMinuto(hacer) {
 function soltarPato(pintor, lienzo, id) {
   const enlace = document.createElement('a')
   enlace.className = 'pato-del-mar'
-  enlace.href = '/pato'
+  enlace.href = '/patos'
   enlace.setAttribute('aria-label', 'Seguir al pato')
   enlace.hidden = true
   lienzo.after(enlace)

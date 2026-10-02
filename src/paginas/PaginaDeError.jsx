@@ -38,7 +38,7 @@ export function ErrorDelServidor() {
 }
 
 export function CazaDePatos() {
-  return <PaginaDeError ruta="/pato" titulo="Dispara al pato" empiezaSolo sinEntradilla />
+  return <PaginaDeError ruta="/patos" titulo="Dispara al pato" empiezaSolo sinEntradilla />
 }
 
 function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntradilla = false }) {
