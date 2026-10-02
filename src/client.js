@@ -132,7 +132,7 @@ function initFormulario() {
 }
 
 /**
- * El juego de las páginas de error y de /pato (src/patos.js). Casi nadie lo
+ * El juego de las páginas de error y de /patos (src/patos.js). Casi nadie lo
  * abre, así que no pesa en la carga: se descarga al pulsar «Jugar», y cada
  * pulsación lo empieza o lo termina. Sin JavaScript el botón no sirve, por eso
  * llega oculto.
@@ -147,7 +147,7 @@ function initPatos() {
 }
 
 /**
- * En /pato la partida empieza sola: llegar desde el pato del mar ya es pedirla.
+ * En /patos la partida empieza sola: llegar desde el pato del mar ya es pedirla.
  * Espera a que la nube pinte (`vivo`, ver nubes.js), porque antes no escucha
  * los cambios de forma del juego. Si la persona pulsa antes, manda ella. Sin
  * WebGL la nube nunca pinta, y queda «Jugar».

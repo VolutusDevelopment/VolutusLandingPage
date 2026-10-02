@@ -17,7 +17,7 @@
  * está cada cúmulo. Así el juego sabe siempre dónde están y no espera a que
  * lleguen: un pato puede salir de una nube que todavía viaja.
  *
- * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /pato
+ * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /patos
  * empieza solo, en cuanto la nube pinta.
  *
  * Los patos (src/lib/pato.js) se dibujan en la rejilla de la nube: cada píxel

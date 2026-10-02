@@ -17,7 +17,7 @@
  * Ninguna debe aparecer en un buscador.
  *
  * `tarjetaAlt` es para la página cuya tarjeta para compartir no es la de
- * siempre, el logotipo con el título: la de /pato es el pato del juego (ver
+ * siempre, el logotipo con el título: la de /patos es el pato del juego (ver
  * scripts/tarjetas-og.mjs).
  */
 

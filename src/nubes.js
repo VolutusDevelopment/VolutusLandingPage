@@ -19,10 +19,10 @@
  * que lo avisa con un evento `soplo` en el lienzo. Y el juego de la 404 cambia
  * la forma de la nube con un evento `forma`, que aquí solo se reenvía al
  * pintor (ver patos.js). Cuando un lienzo ya pinta, recibe la clase y el evento
- * `vivo`: el juego de /pato lo espera para empezar.
+ * `vivo`: el juego de /patos lo espera para empezar.
  *
  * Y el mar tiene un pato. Al minuto de pestaña a la vista sale a nadar —lo
- * pinta y lo mueve el pintor, con la física del agua— y es un enlace a /pato,
+ * pinta y lo mueve el pintor, con la física del agua— y es un enlace a /patos,
  * que aquí sigue al pato que se ve.
  *
  * Qué NO hace, a propósito:
@@ -193,7 +193,7 @@ function alMinuto(hacer) {
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su
-// enlace a /pato, que llega oculto y lo sigue (`seguirPato`).
+// enlace a /patos, que llega oculto y lo sigue (`seguirPato`).
 function soltarPato(pintor, lienzo, id) {
   const enlace = document.createElement('a')
   enlace.className = 'pato-del-mar'

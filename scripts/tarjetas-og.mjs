@@ -1,5 +1,5 @@
 // Genera la tarjeta para compartir (OpenGraph) de cada página indexable: el
-// logotipo sobre fondo blanco y, debajo, el título de la página. La de /pato
+// logotipo sobre fondo blanco y, debajo, el título de la página. La de /patos
 // es el pato del juego en el cielo; su texto alternativo va en meta.js
 // (`tarjetaAlt`).
 //
