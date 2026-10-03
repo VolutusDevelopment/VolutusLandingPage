@@ -1,7 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import Portada from '../components/Portada.jsx'
 import Proyectos from '../components/Proyectos.jsx'
-import Metricas from '../components/Metricas.jsx'
 import Servicios from '../components/Servicios.jsx'
 import Contacto from '../components/Contacto.jsx'
 
@@ -29,7 +28,6 @@ export default function Inicio() {
       <Portada />
       <Servicios />
       <Proyectos />
-      <Metricas />
     </Pagina>
   )
 }

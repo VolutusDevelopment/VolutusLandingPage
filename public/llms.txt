@@ -15,7 +15,6 @@ hábiles.
 
 - [Portada](https://volutus.cl/): qué hacemos, la obra, las métricas y el formulario
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
-- [Métricas](https://volutus.cl/#metricas): lo que tarda y pesa la portada, medido
 - [Servicios](https://volutus.cl/#servicios): los seis servicios, cada uno con su prueba cuando la hay
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
