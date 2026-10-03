@@ -68,12 +68,54 @@
 }
 
 /* La credencial es el único dato de la página validado por un tercero: va
-   primero, con una medalla que dice el puesto antes de leer nada. */
-.proyecto-credencial {
-  display: flex;
-  align-items: center;
-  gap: var(--e-4);
-  margin: 0 0 var(--e-6);
+   primero, con una medalla que dice el puesto antes de leer nada. En S y M la
+   medalla comparte fila con la credencial; en L ocupa su propia columna y el
+   texto corre a su lado, así la tarjeta no gasta una fila solo en la medalla. */
+.proyectos .proyecto-destacado {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--e-4);
+  align-content: start;
+}
+
+.proyecto-destacado > * {
+  grid-column: 1 / -1;
+}
+
+.proyecto-destacado .proyecto-medalla {
+  grid-column: 1;
+  margin-bottom: var(--e-4);
+}
+
+.proyecto-destacado .proyecto-credencial {
+  grid-column: 2;
+  align-self: center;
+  margin: 0 0 var(--e-4);
+}
+
+.proyecto-destacado .proyecto-enlaces {
+  margin-top: var(--e-3);
+}
+
+@media (min-width: 1024px) {
+  .proyectos .proyecto-destacado {
+    column-gap: var(--e-6);
+    padding-block: var(--e-6);
+  }
+
+  .proyecto-destacado > * {
+    grid-column: 2;
+  }
+
+  .proyecto-destacado .proyecto-medalla {
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    margin: 0;
+  }
+
+  .proyecto-destacado .proyecto-credencial {
+    margin-bottom: var(--e-3);
+  }
 }
 
 .proyecto-credencial strong {
@@ -595,11 +637,14 @@
 }
 
 /* Los logros, uno al lado del otro desde M: apilados ocupaban dos pantallas
-   para dos párrafos. */
+   para dos párrafos. Se salen de la columna: ocupan el ancho de la ventana,
+   menos el margen lateral, hasta 1440 px. El margen negativo los centra
+   respecto del contenedor sin tocar el HTML. */
 .proyectos-logros {
   display: grid;
   gap: var(--e-6);
   margin-top: var(--e-8);
+  margin-inline: calc(50% - min(720px, 50vw - var(--margen-lateral)));
 }
 
 .proyectos-logros .proyecto {

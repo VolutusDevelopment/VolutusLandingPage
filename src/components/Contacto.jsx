@@ -41,26 +41,7 @@ export default function Contacto() {
     <section id="contacto" className="seccion zona-plano contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
         <div className="contacto-relato">
-          <p className="antetitulo entra">Cuéntanos</p>
-          <h2 id="contacto-titulo" className="entra">¿Qué estás resolviendo a mano?</h2>
-          {/* Una frase: quién te contesta y cuándo. El compromiso de las 48
-              horas es el de §5, sin cambios. */}
-          <p className="entradilla contacto-entradilla">
-            Te responde una persona en menos de 48 horas hábiles.
-          </p>
-
-          <ul className="contacto-problemas">
-            {PROBLEMAS.map(({ icono, texto }) => (
-              <li key={icono}>
-                <Icono id={icono} className="contacto-icono" />
-                {texto}
-              </li>
-            ))}
-          </ul>
-
-          <p className="contacto-nosotros">
-            <a href="/nosotros">Conoce quiénes somos</a>
-          </p>
+          <h1 id="contacto-titulo" className="entra">¿Qué estás resolviendo a mano?</h1>
         </div>
 
         <form className="formulario tarjeta zona-cielo" method="post" action="/api/contacto" noValidate>
@@ -120,14 +101,13 @@ export default function Contacto() {
           </fieldset>
 
           <div className="campo">
-            <label htmlFor="proyecto">El problema, en tus palabras</label>
             {/* El marcador de posición enseña QUÉ clase de respuesta sirve, que
                 es la duda real de quien se queda mirando un recuadro vacío. */}
             <textarea
               id="proyecto"
               name="proyecto"
               rows="3"
-              placeholder="Anotamos las reservas en un cuaderno y se nos pierden."
+              placeholder="El problema, en tus palabras."
               required
             />
             <p className="campo-error" id="error-proyecto" hidden>

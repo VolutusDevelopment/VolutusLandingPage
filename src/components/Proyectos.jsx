@@ -176,14 +176,12 @@ export default function Proyectos() {
               {/* La credencial va ANTES del nombre: es lo único de esta página que
                   validó un tercero, y es el motivo de que encabece. La medalla
                   repite el puesto en grande; el texto lo dice entero. */}
+              <span className="proyecto-medalla dato" aria-hidden="true">
+                {destacado.credencial.puesto}
+              </span>
               <p className="proyecto-credencial">
-                <span className="proyecto-medalla dato" aria-hidden="true">
-                  {destacado.credencial.puesto}
-                </span>
-                <span>
-                  <strong>{destacado.credencial.titulo}</strong>{' '}
-                  <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
-                </span>
+                <strong>{destacado.credencial.titulo}</strong>{' '}
+                <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
               </p>
               <h3>{destacado.nombre}</h3>
               <p className="proyecto-resumen">{destacado.resumen}</p>
