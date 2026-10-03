@@ -42,6 +42,12 @@ export const PAGINAS = {
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',
   },
+  '/ley21719': {
+    archivo: 'ley21719.html',
+    titulo: 'Ley 21.719 de protección de datos: qué cambia — Volutus',
+    descripcion:
+      'La nueva ley de datos personales rige desde el 1 de diciembre de 2026. Qué cambia, qué tiene que hacer tu negocio para cumplirla y cuánto arriesga si no.',
+  },
   '/404': {
     archivo: '404.html',
     titulo: 'Página no encontrada — Volutus',

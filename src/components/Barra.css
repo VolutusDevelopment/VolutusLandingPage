@@ -139,8 +139,8 @@
    y el botón de 44 px a 4 px del canto: las tres curvas son concéntricas. */
 /* El vidrio de la cápsula es uno solo: no tiene modo claro ni oscuro. Es un
    cristal casi incoloro que deja ver la zona que pasa por detrás, y lo único
-   que cambia al pasar de un fondo a otro es el color de las letras: la
-   cápsula toma la zona de lo que tiene justo detrás (barra.js), igual que el
+   que cambia al pasar de un fondo a otro es el color de las letras: cada
+   enlace toma la zona de lo que tiene justo detrás (barra.js), igual que el
    logo toma la del suyo. */
 .barra-capsula {
   --cristal: rgb(255 255 255 / 0.22);
@@ -310,8 +310,18 @@
 
 /* Sobre un fondo oscuro, el logo y las letras van en blanco puro y no en el
    claro de la zona: sobre el cristal, el claro se lee gris. */
-:root :is(.barra-marca, .barra-capsula).zona-plano {
+:root :is(.barra-marca, .barra-capsula, .barra-enlaces a).zona-plano {
   --texto: #fff;
+}
+
+/* Sin transparencia la cápsula es opaca y tapa lo que cada enlace tenía
+   detrás: las letras vuelven a la zona de la cápsula. */
+@media (prefers-reduced-transparency: reduce) {
+  :root .barra-enlaces a:is(.zona-cielo, .zona-plano) {
+    --texto: inherit;
+    --fondo: inherit;
+    --foco: inherit;
+  }
 }
 
 /* El cristal es incoloro, así que por detrás pasa de todo, también un

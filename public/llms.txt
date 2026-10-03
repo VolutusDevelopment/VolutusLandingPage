@@ -18,6 +18,7 @@ Contacto: contacto@volutus.cl
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
+- [Ley 21.719](https://volutus.cl/ley21719): qué cambia con la nueva ley de datos personales y qué tiene que hacer un negocio para cumplirla
 - [Caza de patos](https://volutus.cl/patos): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
 
 ## Proyectos

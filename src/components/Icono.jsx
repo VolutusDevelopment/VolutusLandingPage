@@ -1,7 +1,7 @@
 /**
- * Iconos de trazo, en la misma rejilla de 24 que el símbolo: uno por servicio.
- * Los usan los paneles de servicios y la lista de problemas del contacto, que
- * nombra los mismos servicios desde el lado de quien los necesita.
+ * Iconos de trazo, en la misma rejilla de 24 que el símbolo. Los paneles de
+ * servicios usan uno por servicio; la guía de la Ley 21.719 (/ley21719), el de
+ * la ley de datos y los cuatro del final.
  *
  * Son decorativos siempre: el texto que acompañan ya dice lo mismo.
  */
@@ -41,6 +41,32 @@ const ICONOS = {
     <>
       <path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5" />
       <path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.5M4 20v-4.5h4.5" />
+    </>
+  ),
+  documento: (
+    <>
+      <path d="M6 3h8l4 4v14H6z" />
+      <path d="M14 3v4h4M9 12h6M9 16h6" />
+    </>
+  ),
+  negocio: (
+    <>
+      <path d="M4 10v10h16V10" />
+      <path d="M3 10l2-6h14l2 6z" />
+      <path d="M10 20v-5h4v5" />
+    </>
+  ),
+  persona: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <circle cx="9" cy="11" r="2" />
+      <path d="M6 16c.6-1.3 1.7-2 3-2s2.4.7 3 2M15 10h3M15 13.5h3" />
+    </>
+  ),
+  alerta: (
+    <>
+      <path d="M12 4l9 16H3z" />
+      <path d="M12 10v4M12 17h.01" />
     </>
   ),
 }

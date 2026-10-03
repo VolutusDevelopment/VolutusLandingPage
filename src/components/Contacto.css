@@ -11,7 +11,7 @@
    ver su fondo. Arranca en el blanco de la sección anterior y vuelve al azul
    del cielo de la mañana con las mismas paradas que la portada, al revés. */
 :root .caida {
-  background: linear-gradient(#f6f9fc 6%, #c2e1f8 24%, #7cbcf1 48%, #4d9fea 72%, #2b8de4);
+  background: linear-gradient(#f6f9fc 0%, #c2e1f8 10%, #7cbcf1 30%, #4d9fea 58%, #2b8de4);
 }
 
 :root .caida > .contacto,
@@ -19,25 +19,16 @@
   --fondo-hora: transparent;
 }
 
-/* El pie de día. Sobre el azul medio, el texto suave y la acción de la
-   mañana no llegan a 4.5:1, así que todo va en la tinta de texto. El mar es
-   cobalto hondo, para que se lea como agua y no como más cielo: el relleno
-   da 3.8:1 contra el azul del final del cielo, y hasta el reflejo del cielo
-   en el agua (`--mar-cresta`) va más oscuro que él. La espuma, casi blanca. */
+/* El pie de día. El mar es cobalto hondo, para que se lea como agua y no
+   como más cielo: el relleno da 3.8:1 contra el azul del final del cielo, y
+   hasta el reflejo del cielo en el agua (`--mar-cresta`) va más oscuro que
+   él. La espuma, casi blanca. */
 :root .caida > .pie {
-  --texto-suave: var(--texto);
-  --accion: var(--texto);
-  --linea: color-mix(in srgb, var(--texto) 30%, transparent);
   --mar-hondo: #06305f;
   --mar-cresta: #2f80d0;
   --mar-espuma: #f1f7ff;
 }
 
-/* La firma grande, apagada contra el cielo: blanco translúcido, como una
-   nube más. Mezclada con el fondo claro de la zona salía gris. */
-:root .caida .pie-logotipo {
-  color: rgb(255 255 255 / 0.4);
-}
 
 /* ---- el relato: la tarjeta oscura ---- */
 
@@ -47,7 +38,11 @@
   font-size: clamp(26px, 8vw, 60px);
 }
 
+/* La sección es clara —lo que se ve en sus márgenes es el cielo de `.caida`—
+   y solo esta tarjeta es oscura, así que la barra lee cada una por separado.
+   El color se hereda de la sección: sin esto, el titular saldría en tinta. */
 .contacto-relato {
+  color: var(--texto);
   padding: var(--e-8) var(--e-6);
   /* Abajo deja sitio para el formulario, que se monta sobre su borde. */
   padding-bottom: calc(var(--e-16) + var(--e-6));
@@ -70,9 +65,6 @@
   margin: calc(-1 * var(--e-16)) var(--e-3) 0;
   padding: var(--e-4);
   border-radius: var(--radio-tarjeta);
-  /* La sección es oscura y el color se hereda: sin esto, el texto del
-     formulario saldría claro sobre la tarjeta blanca. */
-  color: var(--texto);
 }
 
 /* En S y M el titular va en el tamaño de los subtítulos: el formulario

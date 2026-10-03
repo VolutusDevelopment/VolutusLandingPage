@@ -5,7 +5,9 @@ import { PAGINAS } from '../lib/meta.js'
  * Marco de los documentos legales. Hoy lo usa solo /privacidad; existe como
  * marco y no como página suelta porque el día que haya un segundo documento
  * —términos de servicio, cuando Volutus venda algo por la web— será el mismo
- * objeto: un titular, una fecha de vigencia y una lista numerada de apartados.
+ * objeto: un titular, una versión con su fecha y una lista numerada de
+ * apartados. La versión y la fecha van juntas porque la ley de datos pide las
+ * dos para la política de privacidad (art. 14 ter, letra a).
  *
  * **La numeración la pone el índice del array, no el texto.** Insertar un
  * apartado en el medio no debe obligar a renumerar a mano los de abajo, que es
@@ -20,7 +22,7 @@ import { PAGINAS } from '../lib/meta.js'
  * cómoda está muy por debajo del contenedor de 1200 px de las secciones de
  * venta.
  */
-export default function DocumentoLegal({ ruta, actualizado, apartados }) {
+export default function DocumentoLegal({ ruta, version, actualizado, apartados }) {
   // La entradilla visible es la misma frase que la meta description. Resume el
   // documento y no hay motivo para escribirla dos veces con dos redacciones que
   // después divergen.
@@ -40,7 +42,9 @@ export default function DocumentoLegal({ ruta, actualizado, apartados }) {
           <p className="antetitulo">Legal</p>
           <h1>Privacidad y protección de datos</h1>
           <p className="entradilla legal-entradilla">{descripcion}</p>
-          <p className="legal-fecha dato">Última actualización: {actualizado}</p>
+          <p className="legal-fecha dato">
+            Versión {version} · Última actualización: {actualizado}
+          </p>
         </header>
 
         {apartados.map(({ titulo, contenido }, indice) => (

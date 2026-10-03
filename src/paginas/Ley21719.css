@@ -1,0 +1,490 @@
+/* La Ley 21.719 en simple. Ver Ley21719.jsx. */
+
+/* ---- la portada ----
+   El cielo de la mañana entero, el de la portada del inicio (`hora-manana`):
+   sube detrás de la barra y se difumina del azul hondo al blanco de la página.
+   Sobre su azul más hondo el texto suave da 2.7:1, así que aquí todo el texto
+   va en la tinta, como en el pie de día: da 5:1 en lo más azul. */
+:root .ley-portada {
+  --texto-suave: var(--texto);
+  --linea: color-mix(in srgb, var(--texto) 25%, transparent);
+}
+
+.ley-portada {
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-top: calc(var(--barra-alto) + var(--e-16));
+}
+
+@media (min-width: 1024px) {
+  .ley-portada {
+    padding-top: calc(var(--barra-alto) + var(--e-24));
+  }
+}
+
+/* Lo que va bajo la portada no se maqueta hasta acercarse a la pantalla. La
+   guía tiene casi el triple de nodos que /nosotros y, con la CPU a un cuarto,
+   maquetarla entera al cargar costaba unos 390 ms; así baja a unos 210. Mientras
+   tanto cada sección reserva un alto aproximado y, una vez pintada, guarda el
+   real (`auto`). El contenido sigue en el documento: se encuentra, se lee en
+   voz alta y se imprime igual. */
+.ley-portada ~ .seccion {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+.ley-entradilla {
+  margin-top: var(--e-4);
+}
+
+/* Las tres cifras que hay que llevarse, en la mono de los datos. */
+.ley-cifras {
+  list-style: none;
+  display: grid;
+  gap: var(--e-4);
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .ley-cifras {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--e-6);
+  }
+}
+
+.ley-cifras li {
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ley-cifra {
+  display: block;
+  margin-bottom: var(--e-1);
+  font-size: var(--texto-xl);
+  line-height: 1.2;
+  color: var(--texto);
+}
+
+/* ---- piezas comunes ---- */
+
+.ley-bajada {
+  margin-top: var(--e-3);
+  color: var(--texto-suave);
+}
+
+.ley-icono {
+  width: 32px;
+  height: 32px;
+  color: var(--accion);
+}
+
+/* El artículo que respalda cada punto: una referencia y no prosa, así que va
+   en la mono, y entero, para que «14 quinquies» no quede lejos de su «Art.». */
+.ley-articulo {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+/* ---- lo básico ---- */
+
+.ley-basico {
+  list-style: none;
+  display: grid;
+  gap: var(--e-8);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .ley-basico {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.ley-basico h3 {
+  margin: var(--e-3) 0 var(--e-2);
+}
+
+.ley-basico p {
+  color: var(--texto-suave);
+}
+
+/* ---- qué cambia ----
+   Cada tema en su fila: el antes apagado, en gris, más chico y solo con su
+   contorno; el ahora sobre un velo del celeste de la marca, que es donde mira
+   el ojo. En S van uno sobre otro; desde M, lado a lado, y desde L, con el
+   tema a la izquierda. */
+.ley-cambios {
+  list-style: none;
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+.ley-cambio {
+  display: grid;
+  gap: var(--e-2) var(--e-4);
+  padding-block: var(--e-4);
+  border-top: 1px solid var(--linea);
+}
+
+.ley-cambio h3 {
+  font-size: var(--texto-base);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) {
+  .ley-cambio {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ley-cambio h3 {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ley-cambio {
+    grid-template-columns: 12rem 1fr 1fr;
+    align-items: start;
+  }
+
+  .ley-cambio h3 {
+    grid-column: auto;
+    padding-top: var(--e-3);
+  }
+}
+
+.ley-antes,
+.ley-ahora {
+  max-width: none;
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+}
+
+.ley-antes {
+  border-color: var(--linea);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ley-ahora {
+  background: color-mix(in oklab, var(--marca) 14%, var(--superficie));
+}
+
+.ley-etiqueta {
+  display: block;
+  margin-bottom: var(--e-1);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ley-ahora .ley-etiqueta {
+  color: var(--accion);
+}
+
+/* ---- cuánto arriesgas ----
+   Las tres barras de la ley nueva van en una sola escala, la del rojo de
+   error, que sube con la gravedad: 55, 78 y 100 % sobre la superficie. Se
+   validó como escala ordinal y su paso más claro da 2.4:1 contra el fondo. La
+   de 1999 va en el gris del texto suave, porque es contexto. El valor va
+   escrito al final de cada barra: el color nunca es lo único que dice cuánto. */
+.ley-multas {
+  list-style: none;
+  display: grid;
+  gap: var(--e-6);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+.ley-multa {
+  display: grid;
+  gap: var(--e-1) var(--e-6);
+}
+
+@media (min-width: 640px) {
+  .ley-multa {
+    grid-template-columns: 8rem 1fr;
+    align-items: center;
+  }
+
+  .ley-multa-ejemplo {
+    grid-column: 2;
+  }
+}
+
+.ley-multa-nivel {
+  font-weight: 800;
+}
+
+.ley-multa-pista {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+/* La barra deja 7rem para su valor: así la mayor llega al borde con la cifra
+   todavía dentro. Arranca recta en la base y redondea el extremo del dato. */
+.ley-multa-barra {
+  flex: none;
+  width: calc(var(--valor) * (100% - 7rem));
+  min-width: 3px;
+  height: 20px;
+  border-radius: 0 var(--radio) var(--radio) 0;
+  background: var(--tono);
+}
+
+.ley-multa-valor {
+  font-size: var(--texto-sm);
+  white-space: nowrap;
+}
+
+.ley-multa-ejemplo {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ley-multa-antes {
+  --tono: var(--texto-suave);
+}
+
+.ley-multa-leve {
+  --tono: color-mix(in oklab, var(--error) 55%, var(--superficie));
+}
+
+.ley-multa-grave {
+  --tono: color-mix(in oklab, var(--error) 78%, var(--superficie));
+}
+
+.ley-multa-gravisima {
+  --tono: var(--error);
+}
+
+/* Las barras crecen desde la base al asomar, atadas al scroll: el salto de 50
+   a 20.000 se ve ocurrir. Sin soporte, al imprimir o con movimiento reducido
+   están enteras desde el principio. */
+@keyframes ley-crecer {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .ley-multa-barra {
+      transform-origin: left;
+      animation: ley-crecer var(--t-entrada) var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+  }
+}
+
+.ley-notas {
+  list-style: none;
+  display: grid;
+  gap: var(--e-2);
+  max-width: var(--medida-lectura);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+/* ---- qué tiene que hacer tu negocio ----
+   Tres frentes, cada uno con su color: la tinta para lo que se ordena, la
+   acción para lo que se construye y el aviso para lo que se previene. El del
+   medio va sobre el velo celeste porque es el nuestro. La numeración corre de
+   uno a otro, en la mono y en el color de su frente. */
+.ley-frentes {
+  display: grid;
+  gap: var(--e-6);
+  margin-top: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .ley-frentes {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+.ley-frente {
+  padding: var(--e-6);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+.ley-frente-ordena {
+  --frente: var(--texto);
+}
+
+.ley-frente-construye {
+  --frente: var(--accion);
+  background: color-mix(in oklab, var(--marca) 14%, var(--superficie));
+  border-color: transparent;
+}
+
+.ley-frente-preven {
+  --frente: var(--aviso);
+}
+
+.ley-frente h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  color: var(--frente);
+}
+
+.ley-frente .ley-icono {
+  color: var(--frente);
+}
+
+.ley-frente-bajada {
+  margin-top: var(--e-1);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ley-frente-nota {
+  width: fit-content;
+  margin-top: var(--e-3);
+  padding: var(--e-1) var(--e-2);
+  border-radius: var(--radio);
+  background: var(--accion);
+  color: var(--sobre-accion);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 32 px a la izquierda: es lo que ocupa «12.» en la mono. */
+.ley-tareas {
+  display: grid;
+  gap: var(--e-3);
+  margin: var(--e-6) 0 0;
+  padding-left: var(--e-8);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ley-tareas li::marker {
+  font-family: var(--fuente-datos);
+  color: var(--frente);
+}
+
+.ley-tareas strong {
+  font-weight: 800;
+  color: var(--texto);
+}
+
+/* ---- si tu empresa es pyme ----
+   En el verde de éxito: es la sección de las buenas noticias. Desde L, la
+   pregunta a la izquierda y las respuestas a la derecha. */
+.ley-pyme {
+  display: grid;
+  gap: var(--e-6);
+  padding: var(--e-8) var(--e-6);
+  background: color-mix(in oklab, var(--exito) 9%, var(--superficie));
+  border-radius: var(--radio-tarjeta);
+}
+
+@media (min-width: 640px) {
+  .ley-pyme {
+    padding: var(--e-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ley-pyme {
+    grid-template-columns: 2fr 3fr;
+    gap: var(--e-12);
+  }
+}
+
+.ley-pyme .ley-icono {
+  margin-bottom: var(--e-3);
+  color: var(--exito);
+}
+
+.ley-pyme-lista {
+  list-style: none;
+  display: grid;
+  gap: var(--e-3);
+  margin: 0;
+  padding: 0;
+}
+
+/* El visto, dibujado con dos bordes: no depende de que la fuente traiga «✓». */
+.ley-pyme-lista li {
+  position: relative;
+  padding-left: var(--e-8);
+}
+
+.ley-pyme-lista li::before {
+  content: '';
+  position: absolute;
+  top: 0.2em;
+  left: var(--e-2);
+  width: 6px;
+  height: 12px;
+  border: solid var(--exito);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.ley-pyme-cierre {
+  margin-top: var(--e-6);
+  font-weight: 800;
+}
+
+/* ---- el cierre ----
+   Va en la caída, como el contacto de la portada: deja ver su degradado, del
+   blanco al azul del cielo, y pone encima una tarjeta clara. */
+:root .caida > .ley-cierre {
+  --fondo-hora: transparent;
+}
+
+/* Sin aire arriba: la sección anterior ya deja el suyo, y sumados separaban la
+   tarjeta el doble que al resto de las secciones. */
+.ley-cierre {
+  padding-top: 0;
+}
+
+.ley-tarjeta {
+  max-width: 48rem;
+  padding: var(--e-8) var(--e-6);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+@media (min-width: 640px) {
+  .ley-tarjeta {
+    padding: var(--e-12);
+  }
+}
+
+.ley-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}
+
+.ley-nota {
+  margin-top: var(--e-8);
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}

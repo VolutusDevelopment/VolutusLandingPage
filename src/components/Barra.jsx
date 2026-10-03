@@ -79,7 +79,7 @@ function Lente() {
  * máscara, que funden lo que pasa por debajo sin un borde donde cortarse. Al
  * pasar sobre un fondo oscuro, `barra.js` cambia la zona de cada pieza según
  * lo que tiene justo detrás: el vidrio de la cápsula no cambia, solo el color
- * del logo y de sus letras.
+ * del logo y el de cada enlace, por separado.
  *
  * La cápsula se nota por cómo se comporta, no por su adorno: el vidrio se
  * condensa con el scroll, y una sola píldora viaja entre los enlaces y

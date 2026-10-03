@@ -1,4 +1,5 @@
 import Inicio from './Inicio.jsx'
+import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
 import Privacidad from './Privacidad.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
@@ -11,6 +12,7 @@ export const COMPONENTES = {
   '/': Inicio,
   '/nosotros': Nosotros,
   '/privacidad': Privacidad,
+  '/ley21719': Ley21719,
   '/404': NoEncontrada,
   '/500': ErrorDelServidor,
   '/patos': CazaDePatos,

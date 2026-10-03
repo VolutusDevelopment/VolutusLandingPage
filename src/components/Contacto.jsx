@@ -1,5 +1,4 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
-import Icono from './Icono.jsx'
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
@@ -30,21 +29,16 @@ export const CORREO_DE_CONTACTO = 'contacto@volutus.cl'
 
 // Lo que trae quien llega (§2), dicho como lo diría: cada problema es uno de
 // los servicios visto desde el otro lado del mostrador.
-const PROBLEMAS = [
-  { icono: 'automatizacion', texto: 'Copias datos de una planilla a otra, a mano.' },
-  { icono: 'web', texto: 'Te buscan en Google y no te encuentran.' },
-  { icono: 'agente', texto: 'Respondes lo mismo todo el día por WhatsApp.' },
-]
 
 export default function Contacto() {
   return (
-    <section id="contacto" className="seccion zona-plano contacto" aria-labelledby="contacto-titulo">
+    <section id="contacto" className="seccion zona-cielo contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
-        <div className="contacto-relato">
+        <div className="contacto-relato zona-plano">
           <h1 id="contacto-titulo" className="entra">¿Qué estás resolviendo a mano?</h1>
         </div>
 
-        <form className="formulario tarjeta zona-cielo" method="post" action="/api/contacto" noValidate>
+        <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>
           <h3 className="formulario-titulo">Escríbenos</h3>
 
           {/* Nombre y correo en dos columnas: son cortos y ponerlos uno debajo

@@ -70,34 +70,68 @@
     },
     "/privacidad": {
       "movil": {
-        "alto": 6191,
+        "alto": 4368,
+        "desborda": false,
+        "h1": 110.15625,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 3313,
         "desborda": false,
         "h1": 73.4375,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 4326,
-        "desborda": false,
-        "h1": 36.71875,
-        "bloquesQueEntran": 0,
-        "ocultosTrasRecorrer": 0,
-        "ocultosAlImprimir": 0
-      },
       "escritorio": {
-        "alto": 4542,
+        "alto": 3555,
         "desborda": false,
-        "h1": 36.71875,
+        "h1": 73.4375,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "oscuro": {
-        "alto": 4542,
+        "alto": 3555,
         "desborda": false,
-        "h1": 36.71875,
+        "h1": 73.4375,
         "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/ley21719": {
+      "movil": {
+        "alto": 7999,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 15,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "tablet": {
+        "alto": 6796,
+        "desborda": false,
+        "h1": 116.125,
+        "bloquesQueEntran": 15,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "escritorio": {
+        "alto": 6585,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 15,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "oscuro": {
+        "alto": 6585,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 15,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
@@ -147,7 +181,11 @@
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 16,
+      "paradas": 14,
+      "sinAnillo": 0
+    },
+    "/ley21719": {
+      "paradas": 13,
       "sinAnillo": 0
     },
     "/no-existe": {

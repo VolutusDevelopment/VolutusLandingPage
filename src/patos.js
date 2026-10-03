@@ -51,6 +51,7 @@
 import { DPR_MAXIMO } from './nubes.js'
 import { quieto } from './lib/movimiento.js'
 import { filasDelGlobo, filasDeTexto, punta } from './lib/globo.js'
+import { BURLAS, NIVELES, RECLAMOS } from './lib/chistes.js'
 import { ABAJO, ARRIBA, CAE, COLORES, HERIDO } from './lib/pato.js'
 
 // A ojo. Las velocidades van en altos por segundo y los tiempos en segundos.
@@ -85,7 +86,7 @@ const MARGEN = 10
 // mucho y desde qué holgura (ver `claro`) el cielo ya está despejado: el
 // relieve de la nube pasa un poco su elipse.
 const LLEGADA = 0.5
-const RISA = 1
+const RISA = 1.6
 const RECLAMO = 3
 const GRANDE = 3
 const LIBRE = 1.3
@@ -94,23 +95,12 @@ const AIRE = 4
 // Los patos de cada nivel, al cabo de los cuales sale el que reclama, y cómo
 // se llama cada nivel: desde el último de la lista, todos igual.
 const POR_NIVEL = 3
-const NIVELES = ['FACIL', 'MEDIO', 'DIFICIL', 'MUY DIFICIL', 'ODIO A LOS PATOS']
 // Cuántos se van en V a otro cielo al pasar de nivel: muchísimos la primera
 // vez y cada vez menos, hasta quedar los del último de la lista, que se van
 // todas las veces que siguen. Van lejos, así que se ven más chicos.
 const PARVADAS = [15, 12, 9, 6, 3]
 const LEJANA = 0.6
-// Lo que dicen el que se burla y los que reclaman, en orden y de nuevo desde
-// el primero, en líneas para que el globo quepa en el cielo. La letra no
-// lleva tildes ni eñes, como en el NES.
-const BURLA = ['JA JA JA']
-const RECLAMOS = [
-  ['LE VOY A', 'CONTAR A', 'TU MAMA'],
-  ['WOW, SI QUE', 'ERES DEDICADO'],
-  ['FELICIDADES,', 'MATASTE A', 'TODA MI', 'FAMILIA'],
-  ['ESPERO QUE', 'DUERMAS', 'TRANQUILO'],  
-  ['TODO ESTO', 'POR UNA', 'PAGINA'] 
-]
+// Los textos y su orden de rotación viven en `lib/chistes.js`.
 // Cuántas veces se agranda como mucho el que reclama: más que el que se
 // burla, para que se le vea llorar.
 const GRANDE_RECLAMO = 5
@@ -150,6 +140,7 @@ let escena = null
 let jugando = false
 let pato = null
 let cazados = 0
+let burlasMostradas = 0
 let espera = 0
 let bucle = 0
 let antes = 0
@@ -195,11 +186,11 @@ function medir() {
   // La letra de los globos va a 2 puntos por píxel si el reclamo más ancho
   // cabe al lado del pato al doble; si no, como en un teléfono, a 1, y la
   // burla con ella.
-  const reclamo = Math.max(...RECLAMOS.map((lineas) => filasDelGlobo(lineas, 2)[0].length))
-  const ocupa = 2 * ARRIBA[0].length + 1 + reclamo + 2 * AIRE
+  const anchoChiste = Math.max(...[...BURLAS, ...RECLAMOS].map((lineas) => filasDelGlobo(lineas, 2)[0].length))
+  const ocupa = 2 * ARRIBA[0].length + 1 + anchoChiste + 2 * AIRE
   const punto = ocupa * celda <= lienzo.width ? 2 : 1
   if (celda !== escena.celda || punto !== escena.punto) {
-    Object.assign(escena, { punto, globo: pintarCuadro(filasDelGlobo(BURLA, punto), celda) })
+    Object.assign(escena, { punto, globo: pintarCuadro(filasDelGlobo(BURLAS[0], punto), celda) })
   }
   if (celda !== escena.celda) {
     const [arriba, abajo, herido, cae] = [ARRIBA, ABAJO, HERIDO, CAE].map((filas) => pintarCuadro(filas, celda))
@@ -303,6 +294,7 @@ function viajar(ahora) {
 function empezar() {
   jugando = true
   cazados = 0
+  burlasMostradas = 0
   escena.nivel = 1
   escena.contador = null
   escena.reclamo = false
@@ -454,8 +446,10 @@ function mover(dt) {
   // irse: se acerca, por eso crece desde su tamaño de siempre, y pasa delante
   // de las nubes.
   if (p.t > VIDA) {
-    const destino = p.disparos && claro()
-    const burla = { estado: 'burla', t: 0, mira: 1, tamano: 1, desde: { x: p.x, y: p.y }, ...destino }
+    const chiste = p.disparos && BURLAS[burlasMostradas++ % BURLAS.length]
+    const globo = chiste && pintarCuadro(filasDelGlobo(chiste, escena.punto), escena.celda)
+    const destino = p.disparos && claro(globo)
+    const burla = { estado: 'burla', t: 0, mira: 1, tamano: 1, globo, desde: { x: p.x, y: p.y }, ...destino }
     Object.assign(p, destino ? burla : { estado: 'huye' })
     escena.cielo.classList.toggle('burlando', Boolean(destino))
     return

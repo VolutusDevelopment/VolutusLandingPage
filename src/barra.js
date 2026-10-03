@@ -11,13 +11,16 @@
  *
  * - **La barra**, una franja fina a la altura de la cápsula y a todo lo ancho:
  *   la sección que pasa por debajo da el tono al velo.
- * - **El logo y la cápsula**, cada uno lo que tiene detrás: una línea de 1 px
- *   en su canto de arriba y otra en el de abajo, solo a su ancho. Dentro de
+ * - **El logo, la cápsula y cada enlace**, cada uno lo que tiene detrás: un
+ *   punto en el medio de su canto de arriba y otro en el de abajo. Dentro de
  *   una sección clara pasan tarjetas oscuras, y cada pieza tiene que
- *   reaccionar a su propio fondo, no a la sección. Manda el canto por el que
- *   entra el fondo nuevo —el de abajo al bajar, el de arriba al subir—, así
- *   que el color empieza a cambiar en cuanto el fondo asoma, y a mitad de la
- *   transición (Barra.css) el fondo ya cubre media pieza.
+ *   reaccionar a su propio fondo, no a la sección: con el canto de una
+ *   tarjeta cruzando la cápsula, «Nosotros» puede ir en blanco y «Proyectos»
+ *   en tinta. La cápsula solo tiñe su indicador; las letras son de cada
+ *   enlace. Manda el canto por el que entra el fondo nuevo —el de abajo al
+ *   bajar, el de arriba al subir—, así que el color empieza a cambiar en
+ *   cuanto el fondo asoma, y a mitad de la transición (Barra.css) el fondo ya
+ *   cubre media pieza.
  * - **La sección actual**, a un tercio de la pantalla, para `aria-current`.
  *   Detrás del vidrio no sirve: al saltar a un ancla, `scroll-padding` deja
  *   el final de la sección anterior bajo la barra y se marcaría el enlace
@@ -71,10 +74,11 @@ addEventListener(
   { passive: true }
 )
 
-// El margen negativo recorta la pantalla hasta dejar una línea de 1 px a la
-// altura `y` y del ancho de la pieza. La barra es fija arriba, así que las
-// líneas solo se mueven al cambiar el tamaño de la ventana; una pieza oculta
-// (la cápsula en S) no mide nada y no se vigila.
+// El margen negativo recorta la pantalla hasta dejar un punto de 1 px a la
+// altura `y`, en el medio de la pieza: manda el fondo que ya cubre su mitad,
+// no el canto de una tarjeta que apenas roza un extremo. La barra es fija
+// arriba, así que los puntos solo se mueven al cambiar el tamaño de la
+// ventana; una pieza oculta (la cápsula en S) no mide nada y no se vigila.
 function vigilarDetras(pieza, fondos) {
   const detras = { arriba: undefined, abajo: undefined }
   const decidir = () => tomarZona(pieza, bajando ? detras.abajo : detras.arriba)
@@ -84,10 +88,11 @@ function vigilarDetras(pieza, fondos) {
     const caja = pieza.getBoundingClientRect()
     if (!caja.width) return
     const { clientWidth: ancho, clientHeight: alto } = document.documentElement
-    const linea = (y) =>
-      [y, ancho - caja.right, alto - y - 1, caja.left].map((px) => `${-Math.round(px)}px`).join(' ')
+    const medio = (caja.left + caja.right) / 2
+    const punto = (y) =>
+      [y, ancho - medio - 1, alto - y - 1, medio].map((px) => `${-Math.round(px)}px`).join(' ')
     observadores = ['arriba', 'abajo'].map((canto) =>
-      vigilarFranja(fondos, linea(canto === 'arriba' ? caja.top : caja.bottom - 1), (debajo) => {
+      vigilarFranja(fondos, punto(canto === 'arriba' ? caja.top : caja.bottom - 1), (debajo) => {
         detras[canto] = debajo
         decidir()
       })
@@ -109,8 +114,10 @@ export default function initBarra() {
 
   vigilarFranja(zonas, '-4% 0px -95% 0px', (debajo) => tomarZona(barra, debajo))
 
-  const fondos = document.querySelectorAll('.seccion, main .zona-plano, .pie')
-  barra.querySelectorAll('.barra-marca, .barra-capsula').forEach((pieza) => vigilarDetras(pieza, fondos))
+  const fondos = document.querySelectorAll('.seccion, .seccion .zona-plano, .pie')
+  barra
+    .querySelectorAll('.barra-marca, .barra-capsula, .barra-enlaces a')
+    .forEach((pieza) => vigilarDetras(pieza, fondos))
 
   // Solo las secciones que tienen enlace: fuera de ellas no se marca ninguno.
   // El enlace a otra página no es una sección: su `aria-current` viene del HTML.

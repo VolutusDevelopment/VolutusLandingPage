@@ -4,74 +4,170 @@
  * reclamo, y el pato del mar (lib/mar.js), en lo que dice al salir.
  */
 
-// Las letras, en 3×5 leídas por filas: el bit 14 es la esquina de arriba a la
-// izquierda. Mayúsculas, como en el NES.
+// Mayúsculas en 3×5. Los dibujos en filas hacen fácil revisar y ampliar la
+// letra cuando se agreguen textos nuevos. Un signo sin dibujo usa «?» para
+// que nunca desaparezca en silencio.
 const GLIFOS = {
-  0: 0x7b6f,
-  1: 0x2c97,
-  2: 0x73e7,
-  3: 0x73cf,
-  4: 0x5bc9,
-  5: 0x79cf,
-  6: 0x79ef,
-  7: 0x7249,
-  8: 0x7bef,
-  9: 0x7bcf,
-  A: 0x2bed,
-  B: 0x6bae,
-  C: 0x3923,
-  D: 0x6b6e,
-  E: 0x79a7,
-  F: 0x79a4,
-  G: 0x396b,
-  H: 0x5bed,
-  I: 0x7497,
-  J: 0x126a,
-  L: 0x4927,
-  M: 0x5fed,
-  N: 0x6b6d,
-  O: 0x2b6a,
-  P: 0x6ba4,
-  Q: 0x2b73,
-  R: 0x6bad,
-  S: 0x388e,
-  T: 0x7492,
-  U: 0x5b6f,
-  V: 0x5b6a,
-  W: 0x5bfd,
-  X: 0x5aad,
-  Y: 0x5a92,
-  Z: 0x72a7,
-  ',': 0x0014,
-  '?': 0x6282,
-  '¿': 0x20a3,
+  0: ['###', '#.#', '#.#', '#.#', '###'],
+  1: ['.#.', '##.', '.#.', '.#.', '###'],
+  2: ['###', '..#', '###', '#..', '###'],
+  3: ['###', '..#', '###', '..#', '###'],
+  4: ['#.#', '#.#', '###', '..#', '..#'],
+  5: ['###', '#..', '###', '..#', '###'],
+  6: ['###', '#..', '###', '#.#', '###'],
+  7: ['###', '..#', '..#', '..#', '..#'],
+  8: ['###', '#.#', '###', '#.#', '###'],
+  9: ['###', '#.#', '###', '..#', '###'],
+  A: ['.#.', '#.#', '###', '#.#', '#.#'],
+  B: ['##.', '#.#', '##.', '#.#', '##.'],
+  C: ['.##', '#..', '#..', '#..', '.##'],
+  D: ['##.', '#.#', '#.#', '#.#', '##.'],
+  E: ['###', '#..', '##.', '#..', '###'],
+  F: ['###', '#..', '##.', '#..', '#..'],
+  G: ['.##', '#..', '#.#', '#.#', '.##'],
+  H: ['#.#', '#.#', '###', '#.#', '#.#'],
+  I: ['###', '.#.', '.#.', '.#.', '###'],
+  J: ['..#', '..#', '..#', '#.#', '.#.'],
+  K: ['#.#', '#.#', '##.', '#.#', '#.#'],
+  L: ['#..', '#..', '#..', '#..', '###'],
+  M: ['#.#', '###', '###', '#.#', '#.#'],
+  N: ['##.', '#.#', '#.#', '#.#', '#.#'],
+  O: ['.#.', '#.#', '#.#', '#.#', '.#.'],
+  P: ['##.', '#.#', '##.', '#..', '#..'],
+  Q: ['.#.', '#.#', '#.#', '##.', '.##'],
+  R: ['##.', '#.#', '##.', '#.#', '#.#'],
+  S: ['.##', '#..', '.#.', '..#', '##.'],
+  T: ['###', '.#.', '.#.', '.#.', '.#.'],
+  U: ['#.#', '#.#', '#.#', '#.#', '###'],
+  V: ['#.#', '#.#', '#.#', '#.#', '.#.'],
+  W: ['#.#', '#.#', '###', '###', '#.#'],
+  X: ['#.#', '#.#', '.#.', '#.#', '#.#'],
+  Y: ['#.#', '#.#', '.#.', '.#.', '.#.'],
+  Z: ['###', '..#', '.#.', '#..', '###'],
+  ' ': ['', '', '', '', ''],
+  '!': ['.#.', '.#.', '.#.', '...', '.#.'],
+  '¡': ['.#.', '...', '.#.', '.#.', '.#.'],
+  '"': ['#.#', '#.#', '...', '...', '...'],
+  '#': ['#.#', '###', '#.#', '###', '#.#'],
+  $: ['.##', '#..', '.#.', '..#', '##.'],
+  '%': ['#.#', '..#', '.#.', '#..', '#.#'],
+  '&': ['.#.', '#..', '.#.', '#.#', '.##'],
+  "'": ['.#.', '.#.', '...', '...', '...'],
+  '(': ['..#', '.#.', '#..', '.#.', '..#'],
+  ')': ['#..', '.#.', '..#', '.#.', '#..'],
+  '*': ['...', '#.#', '.#.', '#.#', '...'],
+  '+': ['...', '.#.', '###', '.#.', '...'],
+  ',': ['...', '...', '...', '.#.', '#..'],
+  '-': ['...', '...', '###', '...', '...'],
+  '.': ['...', '...', '...', '...', '.#.'],
+  '/': ['..#', '..#', '.#.', '#..', '#..'],
+  ':': ['...', '.#.', '...', '.#.', '...'],
+  ';': ['...', '.#.', '...', '.#.', '#..'],
+  '<': ['..#', '.#.', '#..', '.#.', '..#'],
+  '=': ['...', '###', '...', '###', '...'],
+  '>': ['#..', '.#.', '..#', '.#.', '#..'],
+  '?': ['##.', '..#', '.#.', '...', '.#.'],
+  '@': ['###', '#.#', '###', '#..', '###'],
+  '[': ['.##', '.#.', '.#.', '.#.', '.##'],
+  '\\': ['#..', '#..', '.#.', '..#', '..#'],
+  ']': ['##.', '.#.', '.#.', '.#.', '##.'],
+  '^': ['.#.', '#.#', '...', '...', '...'],
+  _: ['...', '...', '...', '...', '###'],
+  '`': ['#..', '...', '...', '...', '...'],
+  '{': ['..#', '.#.', '##.', '.#.', '..#'],
+  '|': ['.#.', '.#.', '.#.', '.#.', '.#.'],
+  '}': ['##.', '.#.', '..#', '.#.', '##.'],
+  '~': ['...', '.#.', '#.#', '...', '...'],
+  '¿': ['.#.', '...', '.#.', '#..', '.##'],
 }
 
-// Un texto como cuadro, en la letra de `GLIFOS` y del color dado: cada píxel
-// de la letra son `punto`×`punto` puntos, con uno libre entre letras. El
-// espacio es solo ese hueco, doble.
-export function filasDeTexto(texto, color, punto = 2) {
-  return Array.from({ length: 5 * punto }, (_, y) =>
-    [...texto]
-      .map((letra) => {
-        if (letra === ' ') return ''
-        let fila = ''
-        for (let x = 0; x < 3 * punto; x++) {
-          fila += (GLIFOS[letra] >> (14 - 3 * Math.floor(y / punto) - Math.floor(x / punto))) & 1 ? color : '.'
+// Tilde, acento agudo/grave, diéresis y circunflejo. La fila superior se
+// reserva para la marca; el resto del dibujo conserva sus cinco filas.
+const MARCAS = {
+  '\u0300': '#..',
+  '\u0301': '..#',
+  '\u0302': '.#.',
+  '\u0303': '.#.',
+  '\u0308': '#.#',
+  '\u030a': '.#.',
+}
+
+// Ninguna línea se lleva el globo entero fuera de la pantalla. Las frases se
+// parten por palabras y, si alguien escribe una palabra larguísima, por letras.
+const MAX_CARACTERES_POR_LINEA = 16
+
+function ajustarLineas(lineas) {
+  const resultado = []
+  for (const original of lineas.map(normalizar)) {
+    let actual = ''
+    for (const palabra of original.trim().split(/\s+/u).filter(Boolean)) {
+      const letras = [...palabra]
+      if (letras.length > MAX_CARACTERES_POR_LINEA) {
+        if (actual) resultado.push(actual)
+        actual = ''
+        while (letras.length > MAX_CARACTERES_POR_LINEA) {
+          resultado.push(letras.splice(0, MAX_CARACTERES_POR_LINEA).join(''))
         }
-        return fila
+        if (letras.length) actual = letras.join('')
+        continue
+      }
+      if (actual && [...actual, ' ', ...letras].length > MAX_CARACTERES_POR_LINEA) {
+        resultado.push(actual)
+        actual = palabra
+      } else {
+        actual = actual ? `${actual} ${palabra}` : palabra
+      }
+    }
+    if (actual) resultado.push(actual)
+  }
+  return resultado
+}
+
+// Las comillas curvas, los guiones largos y los puntos suspensivos se usan a
+// menudo al escribir chistes. Se convierten a signos de la misma letra pixel.
+function normalizar(texto) {
+  return texto
+    .normalize('NFC')
+    .toLocaleUpperCase('es-CL')
+    .replace(/[“”«»]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[–—]/g, '-')
+    .replace(/…/g, '...')
+}
+
+// Un texto como cuadro. Cada píxel de letra son `punto`×`punto` puntos, con
+// uno libre entre letras. Los espacios quedan más anchos que ese hueco.
+export function filasDeTexto(texto, color, punto = 2) {
+  const letras = [...normalizar(texto)].map((letra) => {
+    if (/\s/u.test(letra)) return { filas: GLIFOS[' '], marca: null }
+
+    const descompuesta = [...letra.normalize('NFD')]
+    const base = descompuesta.shift()
+    return {
+      filas: GLIFOS[base] ?? GLIFOS['?'],
+      marca: descompuesta.map((marca) => MARCAS[marca]).filter(Boolean).join(''),
+    }
+  })
+
+  return Array.from({ length: 6 * punto }, (_, y) =>
+    letras
+      .map(({ filas, marca }) => {
+        if (!filas.some(Boolean)) return ''
+        const fila = Math.floor(y / punto)
+        const marcas = fila === 0 && marca ? [...marca].map((pixel) => pixel === '#' ? '#' : '.').join('') : ''
+        const dibujo = fila === 0 ? marcas.padEnd(3, '.') : filas[fila - 1]
+        return [...dibujo].map((pixel) => pixel === '#' ? color.repeat(punto) : '.'.repeat(punto)).join('')
       })
       .join('.'.repeat(punto)),
   )
 }
 
-// El globo: una o varias líneas en negro sobre blanco, con borde y una cola a
-// la izquierda que apunta al pico. La punta de la cola es la primera columna
-// de la fila de `punta`, la del medio de la primera línea (ver `globoJunto` en
-// patos.js), así que un globo de varias líneas lo apunta igual.
-export const punta = (punto) => 3 + Math.floor((5 * punto) / 2)
+// El globo: una o varias líneas en negro sobre blanco, con una cola a la
+// izquierda que apunta al pico. La punta cae a media altura del primer renglón.
+export const punta = (punto) => 3 + Math.floor((6 * punto) / 2)
 
 export function filasDelGlobo(lineas, punto) {
+  lineas = ajustarLineas(lineas)
   const ancha = Math.max(...lineas.map((linea) => filasDeTexto(linea, 'k', punto)[0].length))
   const textos = lineas.map((linea) =>
     filasDeTexto(linea, 'k', punto).map((fila) => `kbbb${fila.replaceAll('.', 'b')}${'b'.repeat(ancha - fila.length)}bbbk`),

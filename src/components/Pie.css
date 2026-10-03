@@ -4,6 +4,16 @@
   padding-top: var(--e-12);
 }
 
+/* Todo el texto del pie en blanco, de día y de noche: el hover lo marca el
+   subrayado que se enciende, no el color. `:root` para ganarle a la hora. */
+:root .pie {
+  --texto: #fff;
+  --texto-suave: #fff;
+  --accion: #fff;
+  --foco: #fff;
+  --linea: rgb(255 255 255 / 0.3);
+}
+
 /* ---- el mar ----
    Volutus es la nube; esto es lo que tiene debajo (src/lib/mar.js). Va en la
    franja de abajo, bajo la línea legal, con la trama fina de la nube. No tiene
@@ -52,11 +62,10 @@
 /* ---- el logotipo ----
    Mide lo que mide el contenedor: el tamaño de letra sale de su propio ancho
    (`cqi`), así que el nombre llena la fila en cualquier pantalla sin un solo
-   punto de corte. Va apagado, casi del color del fondo: es una firma, no un
-   titular. */
+   punto de corte. En blanco, como el resto del pie. */
 .pie-logotipo {
   container-type: inline-size;
-  color: color-mix(in srgb, var(--texto) 16%, var(--fondo));
+  color: var(--texto);
 }
 
 .pie-logotipo-cuerpo {
@@ -188,7 +197,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: var(--e-6) 0 0;
+  margin: var(--e-3) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -223,7 +232,7 @@
 /* ---- línea legal ----
    Al centro y cerca de los enlaces: es lo último que se lee antes del mar. */
 .pie-legal {
-  margin: var(--e-2) auto 0;
+  margin: 0 auto;
   text-align: center;
   font-size: var(--texto-xs);
   color: var(--texto-suave);
@@ -237,7 +246,7 @@
   }
 
   .pie-contacto {
-    margin-top: var(--e-8);
+    margin-top: var(--e-6);
   }
 
   .pie-enlaces ul {

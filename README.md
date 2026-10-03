@@ -25,9 +25,10 @@ En producción **React no se envía al navegador**. El script de build:
    `<head>`, el HTML de React y el CSS incrustado. Genera también `sitemap.xml`
    y `_headers`.
 
-Las páginas son `/`, `/nosotros`, `/privacidad`, las de error —la 404 y la de
-los 5xx, en `/500`— y `/patos`, el juego al que lleva el pato que sale a nadar en
-el mar del pie al minuto de visita (sin indexar). Agregar una es una entrada en
+Las páginas son `/`, `/nosotros`, `/privacidad`, `/ley21719` (la Ley 21.719
+explicada para un negocio), las de error —la 404 y la de los 5xx, en `/500`— y
+`/patos`, el juego al que lleva el pato que sale a nadar en el mar del pie al
+minuto de visita (sin indexar). Agregar una es una entrada en
 `PAGINAS` (meta.js) y otra en `COMPONENTES` (paginas/rutas.js).
 
 **La página de los 5xx no se sirve todavía.** Cloudflare sirve el sitio y el
@@ -74,7 +75,7 @@ scripts/
   prerender.mjs         # un HTML por página, sitemap.xml y _headers
   verificar.mjs         # verificación con Playwright
 src/
-  paginas/              # Inicio, Nosotros, Privacidad y las de error (404 y 5xx)
+  paginas/              # Inicio, Nosotros, Privacidad, Ley21719 y las de error (404 y 5xx)
   components/           # secciones con su CSS
   data/                 # proyectos
   lib/                  # metadatos, servicios, seguridad y geometría de la marca
