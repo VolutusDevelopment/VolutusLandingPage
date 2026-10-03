@@ -17,7 +17,7 @@
  * está cada cúmulo. Así el juego sabe siempre dónde están y no espera a que
  * lleguen: un pato puede salir de una nube que todavía viaja.
  *
- * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /pato
+ * Lo descarga «Jugar» (src/client.js), y el mismo botón lo termina. En /patos
  * empieza solo, en cuanto la nube pinta.
  *
  * Los patos (src/lib/pato.js) se dibujan en la rejilla de la nube: cada píxel
@@ -58,10 +58,13 @@ const VELOCIDAD = 0.7
 // La dificultad sube con cada pato cazado y no para: el pato tiende a volar
 // `RAPIDO` veces más rápido que el primero y a medir `CHICO` de él, blanco y
 // disparo a la vez, sin llegar nunca. Tras cada uno queda `SUBE` de lo que
-// faltaba: con 10 patos va en el 40 %, con 20 en el 64 %.
+// faltaba: con 10 patos va en el 40 %, con 20 en el 64 %. `CHICO` vale con la
+// celda de `CELDA_GRANDE` px: con una más fina, como en el teléfono, el pato
+// parte más chico y se achica menos, para no bajar nunca de ese tamaño.
 const SUBE = 0.95
 const RAPIDO = 2.5
 const CHICO = 0.4
+const CELDA_GRANDE = 3
 const VIDA = 6
 const PASMO = 0.35
 const GRAVEDAD = 3
@@ -360,7 +363,7 @@ function soltar() {
     giro: 1 + Math.random() * 0.6,
     disparos: 0,
     escala: 1,
-    tamano: 1 - (1 - CHICO) * dificultad(),
+    tamano: 1 - (1 - Math.min(1, (CHICO * CELDA_GRANDE * escena.dpr) / escena.celda)) * dificultad(),
   }
   animar()
 }

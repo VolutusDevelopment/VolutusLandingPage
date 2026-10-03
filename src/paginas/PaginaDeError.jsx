@@ -3,7 +3,7 @@ import { PAGINAS } from '../lib/meta.js'
 import { ARRIBA, COLORES } from '../lib/pato.js'
 
 /**
- * Las páginas de error —la 404 y la de los 5xx— y /pato. Son la misma
+ * Las páginas de error —la 404 y la de los 5xx— y /patos. Son la misma
  * pantalla, la nube de la portada con un aviso y una sola salida, y ninguna
  * lleva pie: son un alto, no una página que se recorre. Cada una ocupa la
  * pantalla entera.
@@ -22,7 +22,7 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * JavaScript no sirve, y va junto a «Inicio», que es igual de alto, así que
  * aparecer no mueve nada.
  *
- * /pato es la misma escena dedicada al juego: llega ahí quien caza al pato que
+ * /patos es la misma escena dedicada al juego: llega ahí quien caza al pato que
  * sale a nadar en el mar del pie, así que la partida empieza sola
  * (`empiezaSolo`, ver src/client.js). Su descripción va solo en el `<head>`
  * (`sinEntradilla`): la pantalla es el juego, y debajo del título no dice nada.
@@ -38,7 +38,7 @@ export function ErrorDelServidor() {
 }
 
 export function CazaDePatos() {
-  return <PaginaDeError ruta="/pato" titulo="Dispara al pato" empiezaSolo sinEntradilla />
+  return <PaginaDeError ruta="/patos" titulo="Dispara al pato" empiezaSolo sinEntradilla />
 }
 
 function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntradilla = false }) {
@@ -60,7 +60,7 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
           </div>
           <p className="pagina-error-salidas">
             <a className="boton boton-primario" href="/">
-              Inicio
+              Volver al inicio
             </a>
             <button className="boton boton-secundario jugar" type="button" data-empieza={empiezaSolo || undefined} hidden>
               <Pato />
@@ -78,7 +78,7 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
  * celda y con sus colores. Va en el HTML y no en un lienzo porque el botón se
  * ve antes de que el juego se descargue. Una forma por color, con un cuadrado
  * por celda, el píxel de las consolas que lo inspiran, como la tarjeta para
- * compartir de /pato. Sin suavizado, para que los cuadrados vecinos no dejen
+ * compartir de /patos. Sin suavizado, para que los cuadrados vecinos no dejen
  * costuras entre ellos.
  */
 function Pato() {

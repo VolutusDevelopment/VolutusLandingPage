@@ -13,5 +13,5 @@ export const COMPONENTES = {
   '/privacidad': Privacidad,
   '/404': NoEncontrada,
   '/500': ErrorDelServidor,
-  '/pato': CazaDePatos,
+  '/patos': CazaDePatos,
 }

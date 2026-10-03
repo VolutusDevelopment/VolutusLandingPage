@@ -26,7 +26,7 @@ En producción **React no se envía al navegador**. El script de build:
    y `_headers`.
 
 Las páginas son `/`, `/nosotros`, `/privacidad`, las de error —la 404 y la de
-los 5xx, en `/500`— y `/pato`, el juego al que lleva el pato que sale a nadar en
+los 5xx, en `/500`— y `/patos`, el juego al que lleva el pato que sale a nadar en
 el mar del pie al minuto de visita (sin indexar). Agregar una es una entrada en
 `PAGINAS` (meta.js) y otra en `COMPONENTES` (paginas/rutas.js).
 

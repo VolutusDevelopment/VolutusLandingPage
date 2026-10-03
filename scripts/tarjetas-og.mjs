@@ -1,5 +1,5 @@
 // Genera la tarjeta para compartir (OpenGraph) de cada página indexable: el
-// logotipo sobre fondo blanco y, debajo, el título de la página. La de /pato
+// logotipo sobre fondo blanco y, debajo, el título de la página. La de /patos
 // es el pato del juego en el cielo; su texto alternativo va en meta.js
 // (`tarjetaAlt`).
 //
@@ -92,7 +92,7 @@ const pagina = await navegador.newPage({ viewport: { width: ANCHO, height: ALTO 
 
 for (const [ruta, { archivo, titulo, indexar = true }] of Object.entries(PAGINAS)) {
   if (!indexar) continue
-  await pagina.setContent(ruta === '/pato' ? htmlPato() : html(tituloCorto(titulo)))
+  await pagina.setContent(ruta === '/patos' ? htmlPato() : html(tituloCorto(titulo)))
   await pagina.evaluate(() => document.fonts.ready)
   const destino = `${root}public${tarjetaDe(archivo)}`
   await pagina.screenshot({ path: destino, type: 'jpeg', quality: 90 })

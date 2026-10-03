@@ -20,7 +20,7 @@ hábiles.
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
-- [Caza de patos](https://volutus.cl/pato): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
+- [Caza de patos](https://volutus.cl/patos): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
 
 ## Proyectos
 
