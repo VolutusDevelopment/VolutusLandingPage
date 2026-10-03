@@ -37,6 +37,17 @@
   --accion-hover: #10243a;
   --accion-activa: #0a1828;
   --foco: #1d3550;
+  --sobre-accion: #ffffff;
+  /* El brillo de la plata: casi blanco, angosto e intenso, con bordes apenas
+     fríos. Es el metal que refleja la luz sin teñirla. */
+  --brillo: rgb(255 255 255 / 0.95);
+  --brillo-borde: rgb(235 242 255 / 0.4);
+  --brillo-ancho: 60px;
+  --anillo: conic-gradient(from 210deg, #f7f9fb, #8a939e, #eef1f4, #7d8692, #f7f9fb);
+  --disco: #eef1f4;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
   color: var(--texto);
   background: linear-gradient(135deg, #f4f6f8 0%, #d6dbe1 40%, #eef1f4 55%, #bcc3cb 100%);
   box-shadow:
@@ -54,39 +65,157 @@
   --accion-hover: #352200;
   --accion-activa: #241700;
   --foco: #4a3000;
+  /* El oro tiñe su propio reflejo: el brillo sale amarillo pálido, ancho y
+     suave, con menos contraste que el de la plata. */
+  --brillo: rgb(255 248 222 / 0.85);
+  --brillo-borde: rgb(255 226 150 / 0.4);
+  --brillo-ancho: 100px;
+  --anillo: conic-gradient(from 210deg, #fff6d8, #a8822c, #f8ecc4, #9a7426, #fff6d8);
+  --disco: #f8ecc4;
   background: linear-gradient(135deg, #fbf3d6 0%, #ecd28c 40%, #f8ecc4 55%, #d8b35e 100%);
 }
 
-.proyecto-oro .proyecto-medalla {
-  background:
-    radial-gradient(circle, #f8ecc4 58%, transparent 60%),
-    conic-gradient(from 210deg, #fff6d8, #a8822c, #f8ecc4, #9a7426, #fff6d8);
+/* El destello: una banda de luz en diagonal, el doble de ancha que la tarjeta
+   para que entre y salga por completo. Va bajo el texto gracias al
+   `isolation` de la tarjeta. Solo se mueve con `translate`, que no repinta. */
+.proyecto-destacado::before,
+.proyecto-destacado::after {
+  content: '';
+  position: absolute;
+  inset: 0 -50%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    transparent calc(50% - var(--brillo-ancho) * 2),
+    var(--brillo-borde) calc(50% - var(--brillo-ancho)),
+    var(--brillo) 50%,
+    var(--brillo-borde) calc(50% + var(--brillo-ancho)),
+    transparent calc(50% + var(--brillo-ancho) * 2)
+  );
+}
+
+/* Al bajar por la página, el reflejo cruza la tarjeta como cuando se inclina
+   una placa bajo la lámpara. Atado al scroll, igual que `.entra`: cero
+   JavaScript y va con el dedo. Sin soporte o con movimiento reducido, la
+   tarjeta se queda con su degradado, que ya es metálico. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .proyecto-destacado::before {
+      opacity: 1;
+      animation: destello linear both;
+      animation-timeline: view();
+      animation-range: cover 10% cover 90%;
+    }
+
+    .proyecto-medalla::before {
+      animation: girar-anillo linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+/* Con ratón, una pasada rápida al entrar. Es una animación y no una
+   transición: corre una vez por entrada y no se devuelve al salir. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .proyecto-destacado:hover::after {
+    animation: pasada 900ms var(--ease-out);
+  }
+}
+
+@keyframes destello {
+  from {
+    translate: -60% 0;
+  }
+  to {
+    translate: 60% 0;
+  }
+}
+
+@keyframes pasada {
+  from {
+    translate: -60% 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    translate: 60% 0;
+  }
+}
+
+/* Los reflejos de un anillo pulido giran con él, como en una moneda. */
+@keyframes girar-anillo {
+  from {
+    rotate: -30deg;
+  }
+  to {
+    rotate: 30deg;
+  }
 }
 
 /* La credencial es el único dato de la página validado por un tercero: va
    primero, con una medalla que dice el puesto antes de leer nada. En S y M la
    medalla comparte fila con la credencial; en L ocupa su propia columna y el
-   texto corre a su lado, así la tarjeta no gasta una fila solo en la medalla. */
-.proyectos .proyecto-destacado {
+   texto corre a su lado, así la tarjeta no gasta una fila solo en la medalla.
+   La flecha cierra la fila de la credencial, en la esquina de la tarjeta. */
+.proyecto-destacado summary {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   column-gap: var(--e-4);
-  align-content: start;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
 }
 
-.proyecto-destacado > * {
-  grid-column: 1 / -1;
+.proyecto-destacado summary::-webkit-details-marker {
+  display: none;
 }
 
 .proyecto-destacado .proyecto-medalla {
-  grid-column: 1;
   margin-bottom: var(--e-4);
 }
 
 .proyecto-destacado .proyecto-credencial {
-  grid-column: 2;
-  align-self: center;
-  margin: 0 0 var(--e-4);
+  margin-bottom: var(--e-4);
+}
+
+.proyecto-destacado summary h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.proyecto-destacado .flecha-desplegar {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.proyecto-cuerpo {
+  padding-top: var(--e-3);
+}
+
+/* En el teléfono la tarjeta baja un escalón de letra: a tamaño completo el
+   evento se partía en tres líneas y el nombre ocupaba media pantalla. */
+@media (max-width: 649px) {
+  .proyecto-destacado .proyecto-credencial strong,
+  .proyecto-destacado summary h3 {
+    font-size: var(--texto-base);
+  }
+
+  .proyecto-destacado .proyecto-evento {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .proyecto-destacado .proyecto-cuerpo {
+    font-size: var(--texto-sm);
+  }
+
+  .proyecto-destacado .proyecto-medalla {
+    width: 3.25rem;
+    font-size: var(--texto-lg);
+  }
 }
 
 .proyecto-destacado .proyecto-enlaces {
@@ -95,22 +224,66 @@
 
 @media (min-width: 1024px) {
   .proyectos .proyecto-destacado {
-    column-gap: var(--e-6);
     padding-block: var(--e-6);
   }
 
-  .proyecto-destacado > * {
-    grid-column: 2;
+  .proyecto-destacado summary {
+    column-gap: var(--e-6);
   }
 
   .proyecto-destacado .proyecto-medalla {
-    grid-column: 1;
-    grid-row: 1 / span 4;
+    grid-row: 1 / span 2;
     margin: 0;
   }
 
   .proyecto-destacado .proyecto-credencial {
     margin-bottom: var(--e-3);
+  }
+
+  .proyecto-destacado summary h3 {
+    grid-column: 2;
+  }
+
+  .proyecto-destacado .flecha-desplegar {
+    grid-row: 1 / span 2;
+  }
+
+  /* El relato corre bajo el nombre, no bajo la medalla. */
+  .proyecto-cuerpo {
+    padding-left: calc(5rem + var(--e-6));
+  }
+}
+
+/* La flecha mira hacia donde va a pasar algo y se enciende al pasar el ratón
+   por la tarjeta, igual que en la vitrina. */
+.proyecto-destacado details[open] .flecha-desplegar svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .proyecto-destacado summary:hover .flecha-desplegar {
+    background: var(--accion);
+    color: var(--sobre-accion);
+  }
+}
+
+/* Donde el navegador sabe animar hasta `auto`, el cuerpo crece en vez de
+   aparecer de golpe; en el resto se abre sin más. */
+@media (prefers-reduced-motion: no-preference) {
+  .proyecto-destacado details {
+    interpolate-size: allow-keywords;
+  }
+
+  .proyecto-destacado details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 300ms var(--ease-out),
+      content-visibility 300ms allow-discrete;
+  }
+
+  .proyecto-destacado details[open]::details-content {
+    block-size: auto;
   }
 }
 
@@ -129,8 +302,11 @@
   color: var(--texto-suave);
 }
 
-/* Anillo de metal pulido con el centro liso, donde va el número. */
+/* Anillo de metal pulido con el centro liso, donde va el número. El anillo y
+   el disco son capas aparte para que el anillo pueda girar bajo el disco. */
 .proyecto-medalla {
+  position: relative;
+  isolation: isolate;
   flex: none;
   display: grid;
   place-items: center;
@@ -141,10 +317,24 @@
   font-weight: 800;
   line-height: 1;
   color: var(--texto);
-  background:
-    radial-gradient(circle, #eef1f4 58%, transparent 60%),
-    conic-gradient(from 210deg, #f7f9fb, #8a939e, #eef1f4, #7d8692, #f7f9fb);
   box-shadow: 0 4px 12px -4px rgb(21 25 30 / 0.4);
+}
+
+.proyecto-medalla::before,
+.proyecto-medalla::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.proyecto-medalla::before {
+  background: var(--anillo);
+}
+
+.proyecto-medalla::after {
+  background: radial-gradient(circle, var(--disco) 58%, transparent 60%);
 }
 
 @media (min-width: 1024px) {
@@ -553,7 +743,7 @@
   border-radius: inherit;
 }
 
-.vitrina-abrir-flecha {
+.flecha-desplegar {
   display: grid;
   place-items: center;
   width: 36px;
@@ -567,7 +757,7 @@
     color 200ms var(--ease-out);
 }
 
-.vitrina-abrir-flecha svg {
+.flecha-desplegar svg {
   width: 18px;
   height: 18px;
   stroke: currentColor;
@@ -579,14 +769,14 @@
 
 /* La flecha mira hacia donde va a pasar algo: abajo para abrir, arriba para
    cerrar. */
-.vitrina-abrir[aria-expanded='true'] .vitrina-abrir-flecha svg {
+.vitrina-abrir[aria-expanded='true'] .flecha-desplegar svg {
   transform: rotate(180deg);
 }
 
 /* Al pasar por cualquier punto de la burbuja, la flecha se enciende. Solo con
    ratón: en táctil el hover se queda pegado después del toque. */
 @media (hover: hover) {
-  .vitrina-cabecera:has(.vitrina-abrir:hover) .vitrina-abrir-flecha {
+  .vitrina-cabecera:has(.vitrina-abrir:hover) .flecha-desplegar {
     background: var(--accion);
     color: var(--sobre-accion);
   }
@@ -598,8 +788,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .vitrina-cabecera,
-  .vitrina-abrir-flecha,
-  .vitrina-abrir-flecha svg {
+  .flecha-desplegar,
+  .flecha-desplegar svg {
     transition: none;
   }
 }
@@ -641,6 +831,13 @@
 
 .proyectos-logros .proyecto {
   margin-top: 0;
+}
+
+/* Abrir una no estira a su vecina. */
+@media (min-width: 768px) {
+  .proyectos-logros {
+    align-items: start;
+  }
 }
 
 @media (min-width: 768px) {

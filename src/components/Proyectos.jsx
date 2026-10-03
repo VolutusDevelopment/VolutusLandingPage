@@ -42,6 +42,17 @@ function Enlaces({ sitio, repositorio, publicacion, nombre }) {
   )
 }
 
+// Abajo para abrir; el CSS la gira cuando la pieza ya está abierta.
+function FlechaDesplegar() {
+  return (
+    <span className="flecha-desplegar" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </span>
+  )
+}
+
 // La forma de cada vista sale de su orden: la primera ancha, la segunda corrida
 // hacia dentro, la tercera alta y la cuarta cierra a todo el ancho. Juntas
 // arman la composición desordenada.
@@ -141,11 +152,7 @@ function Vitrina({ proyecto }) {
             aria-controls={proyecto.id}
           >
             <span className="vitrina-abrir-texto">Ver {proyecto.nombre} por dentro</span>
-            <span className="vitrina-abrir-flecha" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </span>
+            <FlechaDesplegar />
           </button>
         </div>
         {tarjetas.slice(0, cierre)}
@@ -173,19 +180,29 @@ export default function Proyectos() {
               key={destacado.id}
               className={`tarjeta proyecto proyecto-destacado proyecto-${destacado.credencial.metal} entra`}
             >
-              {/* La credencial va ANTES del nombre: es lo único de esta página que
-                  validó un tercero, y es el motivo de que encabece. La medalla
-                  repite el puesto en grande; el texto lo dice entero. */}
-              <span className="proyecto-medalla dato" aria-hidden="true">
-                {destacado.credencial.puesto}
-              </span>
-              <p className="proyecto-credencial">
-                <strong>{destacado.credencial.titulo}</strong>{' '}
-                <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
-              </p>
-              <h3>{destacado.nombre}</h3>
-              <p className="proyecto-resumen">{destacado.resumen}</p>
-              <Enlaces {...destacado} />
+              {/* Plegada, la tarjeta dice el puesto y la obra; el relato y su
+                  prueba se despliegan. `<details>` lo hace sin JavaScript y
+                  el texto plegado sigue en el HTML para los buscadores. */}
+              <details>
+                {/* La credencial va ANTES del nombre: es lo único de esta página
+                    que validó un tercero, y es el motivo de que encabece. La
+                    medalla repite el puesto en grande; el texto lo dice entero. */}
+                <summary>
+                  <span className="proyecto-medalla dato" aria-hidden="true">
+                    {destacado.credencial.puesto}
+                  </span>
+                  <span className="proyecto-credencial">
+                    <strong>{destacado.credencial.titulo}</strong>{' '}
+                    <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
+                  </span>
+                  <h3>{destacado.nombre}</h3>
+                  <FlechaDesplegar />
+                </summary>
+                <div className="proyecto-cuerpo">
+                  <p className="proyecto-resumen">{destacado.resumen}</p>
+                  <Enlaces {...destacado} />
+                </div>
+              </details>
             </article>
           ))}
         </div>

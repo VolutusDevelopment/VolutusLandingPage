@@ -18,7 +18,7 @@ import { CORREO_DE_CONTACTO } from '../components/Contacto.jsx'
  * la 21.719 reconoce, que son más amplios.
  */
 
-const ACTUALIZADO = '25 de septiembre de 2026'
+const ACTUALIZADO = '2 de octubre de 2026'
 
 const APARTADOS = [
   {
@@ -96,22 +96,12 @@ const APARTADOS = [
           No hay analítica, ni píxeles de seguimiento, ni cookies publicitarias, ni botones de
           redes sociales que informen de tu visita. No usamos <strong>ninguna cookie</strong>, y
           por eso tampoco verás un aviso pidiéndote que las aceptes: no habría nada que aceptar.
+          Y en el almacenamiento local de tu navegador no guardamos nada.
         </p>
         <p>
           Tampoco guardamos registros de navegación con fines de análisis. Nuestro proveedor de
           infraestructura conserva registros técnicos por seguridad y para que el sitio funcione,
           como hace cualquier servidor.
-        </p>
-      </>
-    ),
-  },
-  {
-    titulo: 'Lo único que tu navegador guarda',
-    contenido: (
-      <>
-        <p>
-          Este sitio no guarda preferencias de accesibilidad en el almacenamiento local de tu
-          navegador.
         </p>
       </>
     ),
