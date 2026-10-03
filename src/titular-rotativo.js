@@ -15,6 +15,8 @@
  * Solo se anima `transform`; el alto lo reserva el CSS.
  */
 
+import { quieto } from './lib/movimiento.js'
+
 const PAUSA = 2600
 // Deben coincidir con `.rotativo-letra` en Portada.css.
 const DURACION = 600
@@ -58,10 +60,6 @@ export default function initTitularRotativo() {
     reserva.textContent = texto
     rotativo.append(reserva)
   }
-
-  const quieto = () =>
-    document.documentElement.dataset.movimiento === 'reducido' ||
-    matchMedia('(prefers-reduced-motion: reduce)').matches
 
   let actual = 0
   const inicial = enLetras(palabra.textContent)

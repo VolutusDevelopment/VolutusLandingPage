@@ -9,7 +9,6 @@
 // funciona sin él: el <form> lleva method y action, así que sin JavaScript el
 // navegador envía y recarga. Esto solo valida antes y evita la recarga.
 
-import initMedidores from './medidores.js'
 import initTitularRotativo from './titular-rotativo.js'
 import initServicios from './servicios.js'
 import initVitrina from './vitrina.js'
@@ -162,7 +161,6 @@ function empezarSolo(boton, alternar) {
 export default function init() {
   initFormulario()
   initPatos()
-  initMedidores()
   initTitularRotativo()
   initServicios()
   initVitrina()

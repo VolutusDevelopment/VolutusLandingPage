@@ -96,8 +96,7 @@
 
 /* `.boton` fija `display` y le ganaría al atributo. Con movimiento reducido el
    juego no se ofrece: la nube tampoco se mueve. */
-.jugar[hidden],
-:root[data-movimiento='reducido'] .jugar {
+.jugar[hidden] {
   display: none;
 }
 

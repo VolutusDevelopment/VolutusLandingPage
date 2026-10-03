@@ -128,7 +128,7 @@ function desvio(q, s) {
 const AUREA = (Math.sqrt(5) - 1) / 2
 const R2 = 0.7548776662466927
 
-export const OLAS = Array.from({ length: CUANTAS }, (_, i) => {
+const OLAS = Array.from({ length: CUANTAS }, (_, i) => {
   const w = wDesde * Math.exp(franja * (i + 0.5))
   const k = (w * w) / G
   const alto = Math.sqrt(2 * jonswap(w) * w * franja)
@@ -148,7 +148,7 @@ const SILUETA = OLAS.slice(0, EN_LA_MARCHA)
 // cambian las olas o los ojos, hay que volver a medirlo.
 export const OJOS = 1.5
 const PROA = 0.5
-export const CRESTA = SILUETA.reduce((suma, ola) => suma + ola.alto, 0)
+const CRESTA = SILUETA.reduce((suma, ola) => suma + ola.alto, 0)
 // Lo más que el agua corre de lado a lo que flota, en m: el giro de todos los
 // trenes de la silueta a la vez, a lo ancho (ver `flotar`).
 export const VAIVEN = SILUETA.reduce((suma, ola) => suma + ola.alto * Math.abs(ola.dx), 0)

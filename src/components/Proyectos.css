@@ -13,10 +13,6 @@
   }
 }
 
-.proyectos-entradilla {
-  margin-top: var(--e-4);
-}
-
 .proyecto {
   margin-top: var(--e-8);
 }
@@ -358,10 +354,6 @@
       animation-range: contain 0% contain 100%;
     }
   }
-}
-
-:root[data-movimiento='reducido'] .vista-alta .vista-marco img {
-  animation: none;
 }
 
 @keyframes recorrer-app {

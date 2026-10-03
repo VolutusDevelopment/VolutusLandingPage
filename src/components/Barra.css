@@ -291,10 +291,6 @@
   }
 }
 
-:root[data-movimiento='reducido'] .barra-marca .logotipo-puntos {
-  animation: none;
-}
-
 /* El logotipo mide por su alto: las mayúsculas quedan cerca de los 19 px, el
    mismo peso visual que tenía la palabra suelta. */
 .marca-logotipo {
@@ -313,10 +309,8 @@
 }
 
 /* Sobre un fondo oscuro, el logo y las letras van en blanco puro y no en el
-   claro de la zona: sobre el cristal, el claro se lee gris. Con el tema
-   forzado a claro la zona de plano es clara, así que ahí no aplica. */
-:root:not([data-tema='claro']) :is(.barra-marca, .barra-capsula).zona-plano,
-:root[data-tema='oscuro'] :is(.barra-marca, .barra-capsula) {
+   claro de la zona: sobre el cristal, el claro se lee gris. */
+:root :is(.barra-marca, .barra-capsula).zona-plano {
   --texto: #fff;
 }
 
@@ -405,14 +399,6 @@
   .barra-capsula::after {
     transition: opacity 200ms var(--ease-out);
   }
-}
-
-:root[data-movimiento='reducido'] .barra-capsula::before {
-  animation: none;
-}
-
-:root[data-movimiento='reducido'] .barra-capsula::after {
-  transition: opacity 200ms var(--ease-out);
 }
 
 /* Por debajo de 768 px el logotipo y los cuatro enlaces no caben en una fila:

@@ -13,13 +13,11 @@
  * suelta la altura fija para que la vitrina vuelva a medir lo que ocupe.
  */
 
+import { quieto } from './lib/movimiento.js'
+
 const DURACION = 650
 
 export default function initVitrina() {
-  const quieto = () =>
-    document.documentElement.dataset.movimiento === 'reducido' ||
-    matchMedia('(prefers-reduced-motion: reduce)').matches
-
   for (const vitrina of document.querySelectorAll('.vitrina')) {
     const boton = vitrina.querySelector('.vitrina-abrir')
     if (!boton || !vitrina.id) continue

@@ -8,16 +8,14 @@
 
 /* El final de la página es la portada en espejo: UN degradado que pinta
    `.caida`, que envuelve esta sección y el pie (ver Pagina.jsx); las dos dejan
-   ver su fondo. Arranca en el blanco de Métricas y vuelve al azul del cielo
-   de la mañana con las mismas paradas que la portada, al revés.
-
-   Solo en el tema por defecto: con un tema elegido, cada zona lleva el suyo. */
-:root:not([data-tema]) .caida {
+   ver su fondo. Arranca en el blanco de la sección anterior y vuelve al azul
+   del cielo de la mañana con las mismas paradas que la portada, al revés. */
+:root .caida {
   background: linear-gradient(#f6f9fc 6%, #c2e1f8 24%, #7cbcf1 48%, #4d9fea 72%, #2b8de4);
 }
 
-:root:not([data-tema]) .caida > .contacto,
-:root:not([data-tema]) .caida > .pie {
+:root .caida > .contacto,
+:root .caida > .pie {
   --fondo-hora: transparent;
 }
 
@@ -26,7 +24,7 @@
    cobalto hondo, para que se lea como agua y no como más cielo: el relleno
    da 3.8:1 contra el azul del final del cielo, y hasta el reflejo del cielo
    en el agua (`--mar-cresta`) va más oscuro que él. La espuma, casi blanca. */
-:root:not([data-tema]) .caida > .pie {
+:root .caida > .pie {
   --texto-suave: var(--texto);
   --accion: var(--texto);
   --linea: color-mix(in srgb, var(--texto) 30%, transparent);
@@ -37,7 +35,7 @@
 
 /* La firma grande, apagada contra el cielo: blanco translúcido, como una
    nube más. Mezclada con el fondo claro de la zona salía gris. */
-:root:not([data-tema]) .caida .pie-logotipo {
+:root .caida .pie-logotipo {
   color: rgb(255 255 255 / 0.4);
 }
 
@@ -46,7 +44,7 @@
 /* Más chico que los otros h1: con su tamaño, «RESOLVIENDO» no cabía en la
    tarjeta y la ensanchaba más allá de la pantalla, en S y en L. */
 .contacto-relato h1 {
-  font-size: calc(clamp(26px, 8vw, 60px) * var(--escala, 1));
+  font-size: clamp(26px, 8vw, 60px);
 }
 
 .contacto-relato {
@@ -56,44 +54,6 @@
   background: var(--superficie);
   border: 1px solid var(--linea);
   border-radius: var(--radio-tarjeta);
-}
-
-.contacto-entradilla {
-  margin-top: var(--e-4);
-}
-
-/* Separados por una línea, como en la referencia: se leen de a uno. */
-.contacto-problemas {
-  list-style: none;
-  margin: var(--e-8) 0 0;
-  padding: 0;
-  border-top: 1px solid var(--linea);
-}
-
-.contacto-problemas li {
-  display: flex;
-  align-items: center;
-  gap: var(--e-4);
-  padding-block: var(--e-4);
-  border-bottom: 1px solid var(--linea);
-}
-
-.contacto-icono {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  color: var(--marca);
-}
-
-.contacto-nosotros {
-  margin-top: var(--e-6);
-  font-size: var(--texto-sm);
-}
-
-.contacto-nosotros a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
 }
 
 /* ---- el formulario: la tarjeta clara ---- */

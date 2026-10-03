@@ -11,10 +11,6 @@ import { CORREO_DE_CONTACTO } from '../components/Contacto.jsx'
  * declarar tratamientos que no existen, y eso es tan incorrecto como omitir los
  * que sí.
  *
- * Lo que sí hay y casi ninguna política declara es el almacenamiento del widget
- * de accesibilidad: no es una cookie, no sale del navegador y no identifica a
- * nadie, pero es almacenamiento en el equipo de la persona y se dice.
- *
  * Sobre la ley aplicable: se nombran las dos. La 19.628 es la que rige hoy; la
  * 21.719 la reemplaza y crea la Agencia de Protección de Datos Personales.
  * Nombrar solo una dejaría el documento desactualizado en cuanto cambie el

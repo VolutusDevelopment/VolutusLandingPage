@@ -98,24 +98,18 @@
   --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
-     esta tabla es un tamaño que nadie decidió.
-
-     Cada paso se multiplica por --escala, que el widget de accesibilidad mueve
-     entre 1 y 1.5. Va aquí y no en cada componente porque así agrandar el texto
-     es UNA variable: los seis pasos crecen juntos y la jerarquía se mantiene.
-     El valor por defecto lo declara el propio widget sobre <html>, y el
-     fallback de cada calc() cubre el caso de que el widget no esté montado. */
-  --texto-xs: calc(13px * var(--escala, 1));
-  --texto-sm: calc(15px * var(--escala, 1));
-  --texto-base: calc(17px * var(--escala, 1));
-  --texto-lg: calc(22px * var(--escala, 1));
-  --texto-xl: calc(34px * var(--escala, 1));
+     esta tabla es un tamaño que nadie decidió. */
+  --texto-xs: 13px;
+  --texto-sm: 15px;
+  --texto-base: 17px;
+  --texto-lg: 22px;
+  --texto-xl: 34px;
   /* El mínimo baja de 48 a 40 px. Medido contra diez landings de referencia en
      un móvil de 390: Linear usa 38, Raycast 36, Clerk 32, Cal 40 — éramos el
      más grande y el que más líneas gastaba, cuatro. A 40 px el titular entra
      en tres y devuelve una línea entera de pantalla. En escritorio no cambia
      nada: ahí manda el 7vw y el techo de 76. */
-  --texto-2xl: calc(clamp(40px, 7vw, 76px) * var(--escala, 1));
+  --texto-2xl: clamp(40px, 7vw, 76px);
 
   /* Escala de espaciado, múltiplos de 4 (§6). */
   --e-1: 4px;
@@ -134,13 +128,12 @@
 
   /* Valores de respaldo para lo que vive FUERA de toda zona.
    *
-   * Los colores los definen `.zona-cielo` y `.zona-plano`, pero hay dos cosas
-   * que no están dentro de ninguna sección: el enlace de salto —que es el
-   * primer elemento enfocable de la página— y el panel de accesibilidad, que
-   * el JavaScript cuelga del `<body>`.
+   * Los colores los definen `.zona-cielo` y `.zona-plano`, pero el enlace de
+   * salto —que es el primer elemento enfocable de la página— no está dentro de
+   * ninguna sección.
    *
    * Sin esto, `var(--foco)` no resuelve, la declaración entera se invalida y
-   * el contorno desaparece: los dos elementos perdían el anillo por completo.
+   * el contorno desaparece: el enlace perdía el anillo por completo.
    * Lo destapó recorrer la página con el tabulador midiendo el contraste en
    * cada parada, no la vista. */
   --foco: #116492;
@@ -160,7 +153,7 @@
      con Geist) y el radio de 10-12 px (aspecto de plantilla SaaS). */
   --radio: 4px;
 
-  /* Las tarjetas (proyectos, cifras, contacto, equipo) van a 12 px, y se acota
+  /* Las tarjetas (proyectos, contacto, equipo) van a 12 px, y se acota
      a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
 
@@ -199,18 +192,8 @@
 }
 
 /* ============ Tema cielo: la página promete ============
-   Portada, bloque de qué/cómo, formulario y pie.
-
-   El segundo selector es la puerta del widget de accesibilidad: con el tema
-   forzado a claro, las zonas de plano pasan a pintarse con estos mismos
-   valores. No se duplica ni un token — se amplía a quién aplican.
-
-   La especificidad hace el resto: `:root[data-tema] .zona-x` (0,2,1) gana a
-   `.zona-x` (0,1,0), así que la preferencia de la persona manda sobre lo que
-   la sección declara de sí misma. Sin el atributo, la página se ve exactamente
-   como la diseñó el brief. */
-.zona-cielo,
-:root[data-tema='claro'] .zona-plano {
+   Portada, bloque de qué/cómo, formulario y pie. */
+.zona-cielo {
   /* Le dice al navegador de qué color es esta zona, y con eso pinta acorde lo
      que nosotros no controlamos: el interior de los `select`, las barras de
      desplazamiento y el relleno automático del formulario. Sin esto, en la
@@ -247,10 +230,9 @@
   --tinte-a: #ffffff;
   --tinte-b: #eef4f9;
 
-  /* La nube y el mar (src/nubes.js) cuando la hora del día no aplica: con el
-     tema forzado desde el panel de accesibilidad. En hex: el lienzo los lee
-     tal cual. La nube: cara al sol celeste, vientre azul pizarra y filo
-     dorado. */
+  /* La nube y el mar (src/nubes.js) donde la hora del día no aplica. En hex:
+     el lienzo los lee tal cual. La nube: cara al sol celeste, vientre azul
+     pizarra y filo dorado. */
   --nube-luz: #b9dcf2;
   --nube-sombra: #56779b;
   --nube-borde: #e0b870;
@@ -260,13 +242,9 @@
 }
 
 /* ============ Tema plano: la página demuestra ============
-   Índice de proyectos y métricas. Sobre este fondo la marca sí llega a 6.71:1,
-   así que aquí es el color de acción y no hace falta el azul oscurecido.
-
-   Igual que arriba: con el tema forzado a oscuro, las zonas de cielo se pintan
-   con estos valores y la página entera queda en plano. */
-.zona-plano,
-:root[data-tema='oscuro'] .zona-cielo {
+   Índice de proyectos. Sobre este fondo la marca sí llega a 6.71:1, así que
+   aquí es el color de acción y no hace falta el azul oscurecido. */
+.zona-plano {
   color-scheme: dark;
 
   --fondo: #0a1a2a;
@@ -366,8 +344,6 @@
    hora trae su fondo (`--fondo-hora`, que pinta quien lo use) y lo que cambia
    de su zona; el resto lo hereda de ella. La barra lleva la mañana para que
    su botón sea el mismo que el de la portada.
-   Solo aplican sin tema forzado: quien elige claro u oscuro en el panel de
-   accesibilidad recibe las dos zonas de siempre.
 
    La mañana: un cielo azul que se sostiene hasta pasada la mitad y solo
    entonces se aclara hasta el blanco de la sección siguiente (`#f6f9fc`, sin
@@ -376,7 +352,7 @@
    texto y 6.7:1 el suave. Donde empieza el titular —nunca antes del 35 % del
    alto—, el texto da 6.8:1 y la acción, que colorea su primera línea, 4.4:1
    (es texto grande: pide 3:1). Blanco sobre la acción, 11.2:1. */
-:root:not([data-tema]) .hora-manana {
+:root .hora-manana {
   --texto-suave: #2f4a63;
   --accion: #093d66;
   --accion-hover: #073355;
@@ -391,7 +367,7 @@
 /* La noche: azul que se hunde hacia el borde de la página y un mar bajo la
    luna, crestas azules y espuma plateada. El texto suave sobre el fondo más
    hondo da 8.9:1. */
-:root:not([data-tema]) .hora-noche {
+:root .hora-noche {
   --mar-hondo: #0e2c47;
   --mar-cresta: #3b86bf;
   --mar-espuma: #eef3ff;
@@ -409,15 +385,15 @@
    arranque de la primera, es el que fija el límite: ahí el texto da 11:1, el
    secundario 5.9:1 y la acción 4.9:1. Un azul más claro bajaba la acción de
    4.5:1. */
-:root:not([data-tema]) .hondura-1 {
+:root .hondura-1 {
   --fondo-hora: linear-gradient(#173350, #132c45);
 }
 
-:root:not([data-tema]) .hondura-2 {
+:root .hondura-2 {
   --fondo-hora: linear-gradient(#132c45, #0f2338);
 }
 
-:root:not([data-tema]) .hondura-3 {
+:root .hondura-3 {
   --fondo-hora: linear-gradient(#0f2338, #0a1a2a);
 }
 
@@ -435,31 +411,8 @@ html {
   /* El fondo del documento es el de la portada: lo que se ve al rebotar el
      scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
      no en token porque <html> está por encima de cualquier zona y no hereda
-     ninguna; con el tema oscuro forzado se cambia abajo. */
+     ninguna. */
   background: #f6f9fc;
-}
-
-:root[data-tema='oscuro'] {
-  background: #0a1a2a;
-}
-
-/* La otra vía: quien lo pide en el panel de esta página. Hace exactamente lo
-   mismo que el bloque de `prefers-reduced-motion` de más abajo — quita el
-   desplazamiento y deja los cambios de color. */
-:root[data-movimiento='reducido'] {
-  scroll-behavior: auto;
-}
-
-:root[data-movimiento='reducido'] .entra {
-  animation: none;
-}
-
-:root[data-movimiento='reducido'] .boton:active {
-  transform: none;
-}
-
-:root[data-movimiento='reducido'] .salto {
-  transition: none;
 }
 
 body {
@@ -626,11 +579,7 @@ svg {
  *
  * Reducir no es apagar. Lo que se va es el DESPLAZAMIENTO —lo que produce
  * mareo— y lo que se queda son los cambios de color y opacidad, que ayudan a
- * entender qué está pasando y no mueven nada.
- *
- * Se atiende por dos vías porque son dos personas distintas: quien lo tiene
- * configurado en su sistema operativo, y quien lo pide en el panel de esta
- * página sin tenerlo configurado en ningún sitio. */
+ * entender qué está pasando y no mueven nada. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -673,8 +622,7 @@ svg {
 }
 
 /* Dos secciones seguidas del mismo tema suman sus dos rellenos: 192 px de aire
-   entre el último proyecto y el título de las métricas, sin corte de color que
-   lo justifique. El espacio grande se gana la separación cuando MARCA algo; si
+   entre una y otra, sin corte de color que lo justifique. El espacio grande se gana la separación cuando MARCA algo; si
    no marca nada, solo obliga a desplazar.
 
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
@@ -686,14 +634,8 @@ svg {
    regla a `.seccion` —como en la rama de Diego— devolvía el relleno al
    `main` y al pie de /privacidad, que no son secciones y crecían 112 px. */
 .zona-plano + .zona-plano:not(.vista, .servicio),
-.zona-cielo + .zona-cielo:not(.corte-de-zona) {
+.zona-cielo + .zona-cielo {
   padding-top: 0;
-}
-
-/* El corte entre temas es una LÍNEA, no un degradado (A.3, regla 1). Va en el
-   lado que entra, para que el borde pertenezca siempre a la zona nueva. */
-.corte-de-zona {
-  border-top: 1px solid var(--linea);
 }
 
 /* Antetítulo de sección. Es un <p>, no un encabezado: no entra en la jerarquía

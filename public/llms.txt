@@ -8,8 +8,7 @@
 El sitio está en español de Chile. Existe para que quien haya hablado con el
 equipo pueda comprobar la obra antes de seguir.
 
-Contacto: contacto@volutus.cl — respuesta de una persona en menos de 48 horas
-hábiles.
+Contacto: contacto@volutus.cl
 
 ## Páginas
 
@@ -48,7 +47,3 @@ en línea no aparece en el sitio.
 - Encargos urgentes para el día siguiente
 - Procesos de proveedor de empresa grande
 
-## Lo que este sitio no dice
-
-No hay clientes que hayan pagado todavía, así que no hay testimonios, logos ni
-casos de estudio, y no se insinúan.

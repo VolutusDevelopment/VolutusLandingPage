@@ -165,8 +165,6 @@ function montar(pintor, lienzo, id) {
     activar()
   }).observe(lienzo)
   document.addEventListener('visibilitychange', activar)
-
-  return colorear
 }
 
 // Llama a `hacer` al minuto de pestaña a la vista: con la pestaña oculta, el
@@ -227,14 +225,7 @@ export default function initNubes() {
 
     const avisarQuieto = () => pintor.postMessage({ tipo: 'quieto', valor: quieto() })
     avisarQuieto()
-    const recolorear = [...lienzos].map((lienzo, id) => montar(pintor, lienzo, id))
-
-    // El panel de accesibilidad puede cambiar el tema o el movimiento con la
-    // página abierta: los dos cambian lo que se pinta.
-    new MutationObserver(() => {
-      recolorear.forEach((colorear) => colorear())
-      avisarQuieto()
-    }).observe(document.documentElement, { attributeFilter: ['data-tema', 'data-movimiento'] })
+    lienzos.forEach((lienzo, id) => montar(pintor, lienzo, id))
     matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', avisarQuieto)
   }
 

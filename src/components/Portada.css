@@ -194,8 +194,8 @@
 }
 
 /* ---- la entrada ----
-   Una sola vez por carga y en orden de lectura: titular, entradilla, acciones y
-   credencial, 80 ms entre uno y otro.
+   Una sola vez por carga y en orden de lectura: primero el titular y después
+   las acciones.
 
    El titular es el LCP y por eso NO parte de opacidad 0: solo sube. Un
    elemento invisible no cuenta como pintado, y partir de 0 retrasaría la
@@ -211,33 +211,9 @@
     animation: portada-subir 700ms var(--ease-out) both;
   }
 
-  .portada-entradilla,
-  .portada-acciones,
-  .portada-credencial {
-    animation: entrar var(--t-entrada) var(--ease-out) both;
-  }
-
-  .portada-entradilla {
-    animation-delay: 80ms;
-  }
-
   .portada-acciones {
-    animation-delay: 160ms;
+    animation: entrar var(--t-entrada) var(--ease-out) 160ms both;
   }
-
-  .portada-credencial {
-    animation-delay: 240ms;
-  }
-}
-
-:root[data-movimiento='reducido'] :is(.portada h1, .portada-entradilla, .portada-acciones, .portada-credencial) {
-  animation: none;
-}
-
-.portada-entradilla {
-  margin: var(--e-6) auto 0;
-  max-width: 40rem;
-  text-wrap: balance;
 }
 
 .portada-acciones {
@@ -258,28 +234,6 @@
   .portada-acciones .boton {
     width: 100%;
   }
-}
-
-/* La credencial del jurado. Es texto, no una insignia: una medalla dibujada
-   sería exactamente el adorno que A.2 prohíbe, y además cualquiera puede
-   dibujarse una. Lo que la sostiene es el enlace al código. */
-.portada-credencial {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: var(--e-3);
-  margin: var(--e-6) auto 0;
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-  max-width: 34rem;
-}
-
-.portada-credencial-marca {
-  flex-shrink: 0;
-  font-size: var(--texto-lg);
-  font-weight: 800;
-  line-height: 1;
-  color: var(--ciruela);
 }
 
 @media (min-width: 1024px) {
