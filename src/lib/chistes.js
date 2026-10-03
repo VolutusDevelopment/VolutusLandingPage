@@ -63,7 +63,7 @@ export const DICHOS_FOOTER = [
 
   ['HAY PATO', 'PARA RATO…'],
 
-  ['CUAC, CUAC,', '¿JUGAMOS?'],
+  ['QUE ELEGANCIA', 'LA DE FRANCIA'],
 
   ['SOY MUY BELLO'],
 
