@@ -68,6 +68,7 @@
  */
 
 import { filasDelGlobo } from './globo.js'
+import { DICHOS_FOOTER } from './chistes.js'
 import { NADA } from './pato.js'
 
 // Gravedad, en m/s².
@@ -163,19 +164,9 @@ const RADIO = 0.15
 // El sol: adelante, 17° a la derecha y 18° sobre el horizonte.
 const SOL = [0.3, 0.34, 1].map((v, _, sol) => v / Math.hypot(...sol))
 
-// Lo que dice el pato, en su globo, al salir a flote y cada vez que se detiene:
-// invita al juego, al que lleva su enlace. Uno tras otro, en este orden. Cada
-// dicho va en dos líneas, para que quepa delante de él en un teléfono, y todos
-// van en un cuadro, uno bajo otro, con el tamaño del mayor: `GLOBO` es su
-// ancho, su alto y cuántos son.
-const DICHOS = [
-  ['¿A QUE NO', 'ME CAZAS?'],
-  ['DISPARA SI', 'TE ATREVES'],
-  ['APUESTO A', 'QUE FALLAS'],
-  ['NI CON', 'ESCOPETA'],
-  ['HAY PATO', 'PARA RATO'],
-  ['CUAC, CUAC,', '¿JUGAMOS?'],
-].map((lineas) => filasDelGlobo(lineas, 1))
+// Los textos editables están en `chistes.js`; aquí se convierten a
+// puntos y se guardan en un atlas del tamaño del dicho más ancho.
+const DICHOS = DICHOS_FOOTER.map((lineas) => filasDelGlobo(lineas, 1))
 export const GLOBO = [
   Math.max(...DICHOS.map((filas) => filas[0].length)),
   Math.max(...DICHOS.map((filas) => filas.length)),
