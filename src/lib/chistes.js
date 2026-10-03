@@ -68,7 +68,7 @@ export const DICHOS_FOOTER = [
   ['SOY MUY BELLO'],
 
   ['NO CONFÍES', 'EN UN PATO…'],
-  ['NO MIRES', 'ATRÁS.'],
+  ['…Y NO MIRES', 'ATRÁS…'],
 
   ['¿POR QUÉ', 'SIGUES AQUÍ?'],
 
