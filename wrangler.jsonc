@@ -21,6 +21,17 @@
     "run_worker_first": ["/api/*"]
   },
 
+  // Cinco envíos por minuto desde una misma IP. Nadie escribe más que eso a
+  // mano; un robot que encuentre el endpoint sí, y cada envío que pase gasta
+  // cuota de Resend y llena la bandeja.
+  "ratelimits": [
+    {
+      "name": "LIMITE_CONTACTO",
+      "namespace_id": "1001",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ],
+
   "observability": {
     // Los console.error del endpoint son el único aviso de que se están
     // perdiendo mensajes. Sin logs, un fallo de Resend es invisible.

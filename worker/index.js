@@ -85,6 +85,15 @@ async function manejarContacto(request, env) {
     return new Response('Método no permitido', { status: 405, headers: { ...CABECERAS, allow: 'POST' } })
   }
 
+  // Antes de leer nada: un envío que sobra no debe costar ni el parseo. Se
+  // responde con el mismo mensaje de fallo, que ya ofrece el correo directo:
+  // es también lo que muestra el cliente ante cualquier respuesta no 2xx.
+  const ip = request.headers.get('cf-connecting-ip') ?? 'sin-ip'
+  const { success } = await env.LIMITE_CONTACTO.limit({ key: ip })
+  if (!success) {
+    return responder(request, MENSAJES.fallo, 429)
+  }
+
   let datos
   try {
     datos = await request.formData()

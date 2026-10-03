@@ -12,7 +12,7 @@ Contacto: contacto@volutus.cl
 
 ## Páginas
 
-- [Portada](https://volutus.cl/): qué hacemos, la obra, las métricas y el formulario
+- [Portada](https://volutus.cl/): qué hacemos, los servicios, los proyectos y el formulario; no hay una sección de métricas
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
 - [Servicios](https://volutus.cl/#servicios): los seis servicios, cada uno con su prueba cuando la hay
 - [Contacto](https://volutus.cl/#contacto): el formulario
@@ -23,14 +23,16 @@ Contacto: contacto@volutus.cl
 
 ## Proyectos
 
-Solo entra lo que se puede abrir. Un proyecto sin repositorio público ni sitio
-en línea no aparece en el sitio.
+Los proyectos tienen un sitio o repositorio público. Los logros individuales se incluyen cuando hay una publicación que permite comprobarlos.
 
-- Agente de respuesta a incidentes: segundo lugar en el hackathon de Huawei
-  Cloud y Kostra AI, con jurado externo. Código en
-  https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS
 - PonleNota: reseñas en Google para negocios locales, con una tarjeta NFC o un
   QR, una app para el negocio y un panel web. En línea en https://ponlenota.cl
+- Desafío de ciberseguridad: primer lugar de Rodrigo en Cisco CyberGames
+  Americas 2026, frente a más de 1.000 estudiantes de 21 países. Publicación:
+  https://www.linkedin.com/feed/update/urn:li:activity:7479866884285460481/
+- Hackathon Huawei Cloud: segundo lugar en el hackathon de Huawei Cloud y
+  Kostra AI, con jurado externo. Código en
+  https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS
 - CarFlip: portal chileno de autos usados donde publican particulares y
   automotoras. Código en https://github.com/DiegoPyLL/CarFlip
 
