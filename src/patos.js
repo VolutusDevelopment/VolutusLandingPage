@@ -37,8 +37,8 @@
  * / TODA MI / FAMILIA». Después ya no quedan patos en ese cielo: los que
  * sobreviven se van en V a otro, muchísimos la primera vez y cada vez menos, y
  * la vista los sigue. Las nubes pasan, llegan otras y empieza el nivel
- * siguiente. Cuando ya no queda parvada, sale el último pato, solo, a
- * despedirse, y la partida termina con el letrero «FIN».
+ * siguiente. Cuando ya no queda parvada, los cazados suben al cielo con su
+ * aureola por un rayo de luz, y sale el último pato, solo, a despedirse, y la partida termina con el letrero «FIN».
  *
  * Las medidas van en altos del lienzo de la nube, como todo lo de la nube: así
  * el juego cuesta lo mismo en cualquier pantalla. El primero sale al doble y
@@ -68,7 +68,7 @@ import {
   RECLAMOS,
   RECLAMOS_ODIO,
 } from './lib/chistes.js'
-import { ABAJO, ARRIBA, CAE, CASCO, COLORES, HERIDO } from './lib/pato.js'
+import { ABAJO, ARRIBA, AUREOLA, CAE, CASCO, COLORES, HERIDO } from './lib/pato.js'
 
 // A ojo. Las velocidades van en altos por segundo y los tiempos en segundos.
 const VELOCIDAD = 0.45
@@ -125,6 +125,11 @@ const LEJANA = 0.6
 const GRANDE_RECLAMO = 5
 // Lo que tarda cada lágrima del que reclama en caer del ojo hasta las patas.
 const LLANTO = 0.6
+// La subida de los cazados al final: lo que dura entera, lo que tarda cada uno
+// en cruzar el cielo y el ancho del rayo, en altos.
+const ASCENSO = 6
+const SUBIDA = 3
+const RAYO = 0.5
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
 // jirones. Cada uno va en su franja del ancho, de izquierda a derecha, corrido
@@ -219,8 +224,8 @@ function medir() {
     Object.assign(escena, { punto, globo: pintarCuadro(filasDelGlobo(BURLAS[0], punto), celda) })
   }
   if (celda !== escena.celda) {
-    const [arriba, abajo, herido, cae, casco] = [ARRIBA, ABAJO, HERIDO, CAE, CASCO].map((filas) => pintarCuadro(filas, celda))
-    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae, casco }, grandes: [], contador: null })
+    const [arriba, abajo, herido, cae, casco, aureola] = [ARRIBA, ABAJO, HERIDO, CAE, CASCO, AUREOLA].map((filas) => pintarCuadro(filas, celda))
+    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae, casco, aureola }, grandes: [], contador: null })
   }
   escena.dpr = dpr
   escena.alto = lienzo.height
@@ -343,7 +348,7 @@ function empezar(modoOdio = false) {
 function terminar() {
   jugando = false
   clearTimeout(espera)
-  Object.assign(escena, { reclamo: false, viaje: null, letrero: null })
+  Object.assign(escena, { reclamo: false, viaje: null, letrero: null, ascenso: null })
   escena.boton.lastElementChild.textContent = 'Jugar'
   escena.botonOdio.hidden = !desbloqueado()
   escena.botonOdio.classList.remove('desarmado')
@@ -427,6 +432,12 @@ function soltar() {
 // De 0, con el primer pato, hacia 1, sin llegar nunca.
 const dificultad = () => 1 - SUBE ** cazados
 
+// Antes de la despedida, los cazados suben al cielo (ver `pintarAscenso`).
+function ascender() {
+  escena.ascenso = { t0: performance.now(), cuantos: cazados }
+  animar()
+}
+
 // El que reclama por su familia: sale de un cúmulo y va directo al claro a
 // decirlo, como la burla. Si no hay un claro para su globo, sigue el juego. En
 // el último nivel es el último pato que queda, y se despide.
@@ -473,8 +484,12 @@ function paso(ahora) {
   if (pato?.estado === 'cae') soplar()
   if (escena.forma.pendiente) avisarForma(ahora)
   if (escena.letrero && ahora - escena.letrero.t0 > escena.letrero.dura * 1000) escena.letrero = null
+  if (escena.ascenso && ahora - escena.ascenso.t0 > ASCENSO * 1000) {
+    escena.ascenso = null
+    soltarReclamo()
+  }
   pintar(ahora)
-  bucle = pato || escena.chatarra || escena.forma.pendiente || escena.letrero ? requestAnimationFrame(paso) : 0
+  bucle = pato || escena.chatarra || escena.forma.pendiente || escena.letrero || escena.ascenso ? requestAnimationFrame(paso) : 0
 }
 
 function mover(dt) {
@@ -608,7 +623,8 @@ function fin() {
   if (lloraba) return seguir()
   if (escena.reclamo && cayo) {
     escena.reclamo = false
-    soltarReclamo()
+    if (escena.nivel === PARVADAS.length && !escena.odio) ascender()
+    else soltarReclamo()
     return
   }
   espera = setTimeout(soltar, 800)
@@ -657,15 +673,16 @@ function soplar(fuera) {
   nube.dispatchEvent(new CustomEvent('soplo', { detail }))
 }
 
-// Mientras se ve el letrero, el lienzo pasa delante de la nube para que se
-// lea entero: todavía no hay patos que tengan que ir detrás.
+// Mientras se ve el letrero o suben los cazados, el lienzo pasa delante de la
+// nube para que se vea entero: no hay patos que tengan que ir detrás.
 function pintar(ahora = performance.now()) {
-  const { ctx, lienzo, viaje, letrero, cielo } = escena
-  cielo.classList.toggle('anunciando', Boolean(letrero))
+  const { ctx, lienzo, viaje, letrero, cielo, ascenso } = escena
+  cielo.classList.toggle('anunciando', Boolean(letrero || ascenso))
   ctx.clearRect(0, 0, lienzo.width, lienzo.height)
   if (jugando) pintarContador()
   if (viaje) pintarParvada(viaje, ahora)
   if (letrero) pintarLetrero(letrero.cuadro)
+  if (ascenso) pintarAscenso(ascenso, ahora)
   if (escena.chatarra) pintarChatarra()
   if (pato) pintarPato()
 }
@@ -704,6 +721,33 @@ function pintarParvada({ t0, parvada }, ahora) {
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.globalAlpha = 1
+}
+
+// Un rayo de luz baja del cielo y los cazados suben por él uno tras otro,
+// desde abajo, con su aureola y aleteando despacio, hasta perderse arriba. El
+// rayo se enciende al empezar y se apaga al final.
+function pintarAscenso({ t0, cuantos }, ahora) {
+  const { ctx, cuadros, lienzo, alto, celda } = escena
+  const t = (ahora - t0) / 1000
+  const ancho = RAYO * alto
+  const izquierda = (lienzo.width - ancho) / 2
+  const luz = ctx.createLinearGradient(izquierda, 0, izquierda + ancho, 0)
+  luz.addColorStop(0, 'rgba(248, 216, 120, 0)')
+  luz.addColorStop(0.5, 'rgba(252, 252, 252, 0.6)')
+  luz.addColorStop(1, 'rgba(248, 216, 120, 0)')
+  ctx.globalAlpha = Math.max(0, Math.min(1, t / 0.5, (ASCENSO - t) / 0.5))
+  ctx.fillStyle = luz
+  ctx.fillRect(izquierda, 0, ancho, lienzo.height)
+  ctx.globalAlpha = 1
+  const { width, height } = cuadros.arriba
+  for (let i = 0; i < cuantos; i++) {
+    const s = (t - (i / cuantos) * (ASCENSO - SUBIDA)) / SUBIDA
+    if (s < 0 || s > 1) continue
+    const x = Math.round((izquierda + ((i * 0.618) % 1) * (ancho - width)) / celda) * celda
+    const y = Math.round((lienzo.height - s * (lienzo.height + 2 * height)) / celda) * celda
+    ctx.drawImage(Math.floor(((t + i / 3) * ALETEO) / 2) % 2 ? cuadros.abajo : cuadros.arriba, x, y)
+    ctx.drawImage(cuadros.aureola, x, y - 2 * celda)
+  }
 }
 
 function pintarLetrero(cuadro) {

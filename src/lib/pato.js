@@ -6,9 +6,9 @@
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la
- * pupila, celeste la lágrima del que reclama y gris el casco del modo «Odio a
- * los patos». El punto es vacío. Los colores son los del NES, a propósito
- * (DESIGN-BRIEF, decisión 21).
+ * pupila, celeste la lágrima del que reclama, gris el casco del modo «Odio a
+ * los patos» y amarilla la aureola de los cazados. El punto es vacío. Los
+ * colores son los del NES, a propósito (DESIGN-BRIEF, decisión 21).
  */
 
 export const COLORES = {
@@ -20,6 +20,7 @@ export const COLORES = {
   k: '#000000',
   a: '#3cbcfc',
   g: '#bcbcbc',
+  y: '#f8d878',
 }
 
 export const ARRIBA = [
@@ -87,6 +88,14 @@ export const CASCO = [
   '................',
   '................',
   '................',
+]
+
+// La aureola de los cazados que suben al cielo al final de la partida, en una
+// capa aparte que va sobre la cabeza, como el casco.
+export const AUREOLA = [
+  '...........yyy..',
+  '..........y...y.',
+  '...........yyy..',
 ]
 
 // Cayendo va de cabeza: el herido, girado un cuarto de vuelta.
