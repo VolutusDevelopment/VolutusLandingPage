@@ -42,6 +42,9 @@
   // no queda marcado como de prueba. RESEND_API_KEY NO va aquí: es un secreto
   // y se carga con `wrangler secret put RESEND_API_KEY`.
   "vars": {
-    "REMITENTE": "Formulario Volutus <formulario@volutus.cl>"
+    "REMITENTE": "Formulario Volutus <formulario@volutus.cl>",
+    // Los dominios desde los que vale un token de Turnstile. Sin localhost: en
+    // local no hay TURNSTILE_SECRET y la verificación no corre.
+    "TURNSTILE_HOSTNAMES": "volutus.cl,www.volutus.cl"
   }
 }

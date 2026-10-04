@@ -1,5 +1,6 @@
 import { OPCIONES_DE_CONTACTO } from '../src/lib/servicios.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
+import { LIMITES, CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION } from '../src/lib/contacto.js'
 /**
  * El Worker que entrega el formulario de contacto.
  *
@@ -19,8 +20,10 @@ import { CABECERAS } from '../src/lib/seguridad.js'
  * **Responde de dos maneras, y las dos hacen falta.** Con JavaScript el
  * formulario manda `Accept: application/json` y recibe JSON, que es lo que le
  * permite confirmar sin recargar. Sin JavaScript el navegador envía el POST
- * nativo y recibe una página HTML de confirmación: §8 exige que el formulario
- * funcione sin JS, y una respuesta JSON en pantalla no es funcionar.
+ * nativo y recibe una página HTML. Ese envío llega sin token de Turnstile y
+ * se rechaza: la página que recibe ofrece el correo directo, que es la vía sin
+ * JavaScript. Aceptarlo dejaba a cualquier robot saltarse Turnstile con solo
+ * omitir el token.
  */
 
 const DESTINO = 'contacto@volutus.cl'
@@ -30,16 +33,23 @@ const DESTINO = 'contacto@volutus.cl'
 // al remitente de pruebas de Resend, que entrega pero marca el correo como tal.
 const REMITENTE_POR_DEFECTO = 'Volutus <onboarding@resend.dev>'
 
-// Topes de longitud. No son validación de formato —eso ya lo hace el navegador
-// y lo repite el cliente—, son un freno al abuso: este endpoint es público y
-// cualquiera puede llamarlo sin pasar por la página.
-const LIMITES = { nombre: 120, correo: 200, proyecto: 4000 }
+// Tope del cuerpo entero, antes de leerlo. Los tres campos a su máximo, con
+// las casillas y el token de Turnstile, no llegan a la mitad: lo que pase de
+// aquí no es una persona escribiendo.
+const TOPE_CUERPO = 16 * 1024
 
-const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const TIPOS_ACEPTADOS = ['application/x-www-form-urlencoded', 'multipart/form-data']
+
+// Caracteres de control. En el nombre se quitan todos —va en el asunto, y un
+// salto de línea ahí es la puerta a inyectar cabeceras—; en el mensaje se
+// conservan el salto y la tabulación, que son parte del texto.
+const CONTROL = /[\u0000-\u001f\u007f]/g
+const CONTROL_SALVO_SALTOS = /[\u0000-\u0008\u000b-\u001f\u007f]/g
 
 const MENSAJES = {
-  enviado: 'Mensaje enviado. Te respondemos en menos de 48 horas hábiles.',
+  enviado: 'Mensaje enviado, te responderemos pronto.',
   invalido: 'Faltan datos o el correo no es válido. Revísalo y vuelve a enviarlo.',
+  demasiados: 'Recibimos varios mensajes seguidos. Espera un minuto y vuelve a intentarlo.',
   fallo: `No pudimos enviar tu mensaje. Escríbenos directamente a ${DESTINO}.`,
 }
 
@@ -76,14 +86,69 @@ function responder(request, mensaje, estado) {
   })
 }
 
-function limpiar(valor, tope) {
-  return typeof valor === 'string' ? valor.trim().slice(0, tope) : ''
+function limpiar(valor, tope, control = CONTROL) {
+  return typeof valor === 'string' ? valor.replace(control, ' ').trim().slice(0, tope) : ''
+}
+
+/**
+ * ¿Viene el envío de esta misma página? Un `<form>` de cualquier otro sitio
+ * puede apuntar aquí y el navegador lo manda sin preguntar. Los navegadores
+ * actuales ponen `Origin` en todo POST, también en el nativo sin JavaScript;
+ * si falta, `Sec-Fetch-Site` dice lo mismo. Sin ninguna de las dos (curl, un
+ * script) se deja pasar: no es un navegador engañado, y para eso están el
+ * rate-limit y Turnstile.
+ */
+function esMismoOrigen(request) {
+  const origen = request.headers.get('origin')
+  if (origen) return origen === new URL(request.url).origin
+  return request.headers.get('sec-fetch-site') !== 'cross-site'
+}
+
+/**
+ * Verifica el token de Turnstile con siteverify. Además de `success`, exige la
+ * acción de este formulario y uno de los dominios de `TURNSTILE_HOSTNAMES`:
+ * un token válido sacado de otra página o de localhost no sirve aquí.
+ *
+ * Sin `TURNSTILE_SECRET` (wrangler dev) no hay contra qué comprobar y se deja
+ * pasar, registrándolo, igual que el rate-limit. En producción el secreto
+ * tiene que estar: se carga con `wrangler secret put TURNSTILE_SECRET`.
+ */
+async function pasaTurnstile(token, ip, env) {
+  if (!env.TURNSTILE_SECRET) {
+    console.error('contacto: falta TURNSTILE_SECRET, sigo sin verificar')
+    return true
+  }
+
+  const dominios = (env.TURNSTILE_HOSTNAMES ?? '').split(',').map((d) => d.trim()).filter(Boolean)
+  if (!token || token.length > 2048 || dominios.length === 0) return false
+
+  try {
+    const respuesta = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: new URLSearchParams({ secret: env.TURNSTILE_SECRET, response: token, remoteip: ip }),
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!respuesta.ok) throw new Error(`siteverify ${respuesta.status}`)
+    const { success, action, hostname } = await respuesta.json()
+    return success === true && action === TURNSTILE_ACCION && dominios.includes(hostname)
+  } catch (error) {
+    console.error('contacto: falló siteverify', error)
+    return false
+  }
 }
 
 async function manejarContacto(request, env) {
   if (request.method !== 'POST') {
     return new Response('Método no permitido', { status: 405, headers: { ...CABECERAS, allow: 'POST' } })
   }
+
+  if (!esMismoOrigen(request)) {
+    return responder(request, MENSAJES.fallo, 403)
+  }
+
+  // `ip` también la usa Turnstile. En producción Cloudflare siempre manda la
+  // cabecera; 'sin-ip' solo aparece en local.
+  const ip = request.headers.get('cf-connecting-ip') ?? 'sin-ip'
 
   // Antes de leer nada: un envío que sobra no debe costar ni el parseo. Se
   // responde con el mismo mensaje de fallo, que ya ofrece el correo directo:
@@ -94,14 +159,22 @@ async function manejarContacto(request, env) {
   // defensa auxiliar sería peor que recibir uno de más.
   if (env.LIMITE_CONTACTO) {
     try {
-      const ip = request.headers.get('cf-connecting-ip') ?? 'sin-ip'
       const { success } = await env.LIMITE_CONTACTO.limit({ key: ip })
       if (!success) {
-        return responder(request, MENSAJES.fallo, 429)
+        return responder(request, MENSAJES.demasiados, 429)
       }
     } catch (error) {
       console.error('contacto: rate-limit no disponible, sigo sin limitar', error)
     }
+  }
+
+  // El tamaño y el tipo se miran antes de leer: `formData()` carga el cuerpo
+  // entero en memoria, y un POST de varios megas no debe llegar a eso. Sin
+  // `content-length` (cuerpo por trozos) tampoco se sabe cuánto viene.
+  const largo = Number(request.headers.get('content-length'))
+  const tipo = (request.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (!largo || largo > TOPE_CUERPO || !TIPOS_ACEPTADOS.includes(tipo)) {
+    return responder(request, MENSAJES.invalido, 400)
   }
 
   let datos
@@ -114,13 +187,13 @@ async function manejarContacto(request, env) {
   // Trampa para robots: un campo que la hoja de estilos esconde y que una
   // persona nunca rellena. Si viene con algo, se acepta en silencio y no se
   // manda nada — decirle al robot que falló solo le enseña a reintentar.
-  if (limpiar(datos.get('empresa'), 200)) {
+  if (limpiar(datos.get('hp_campo'), 200)) {
     return responder(request, MENSAJES.enviado, 200)
   }
 
   const nombre = limpiar(datos.get('nombre'), LIMITES.nombre)
   const correo = limpiar(datos.get('correo'), LIMITES.correo)
-  const proyecto = limpiar(datos.get('proyecto'), LIMITES.proyecto)
+  const proyecto = limpiar(datos.get('proyecto'), LIMITES.proyecto, CONTROL_SALVO_SALTOS)
   // Opcional, y se puede marcar más de uno. Solo valen los de la lista: lo que
   // no coincida se descarta sin rechazar el envío, porque perder un mensaje por
   // una casilla manipulada no protege nada y deja a alguien sin respuesta.
@@ -130,8 +203,12 @@ async function manejarContacto(request, env) {
     .map((valor) => limpiar(valor, 40))
   const servicio = OPCIONES_DE_CONTACTO.filter((opcion) => marcados.includes(opcion)).join(' · ') || null
 
-  if (!nombre || !proyecto || !CORREO_VALIDO.test(correo)) {
+  if (!NOMBRE_VALIDO.test(nombre) || !proyecto || !CORREO_VALIDO.test(correo)) {
     return responder(request, MENSAJES.invalido, 400)
+  }
+
+  if (!(await pasaTurnstile(limpiar(datos.get('cf-turnstile-response'), 4096), ip, env))) {
+    return responder(request, MENSAJES.fallo, 403)
   }
 
   if (!env.RESEND_API_KEY) {
@@ -162,7 +239,9 @@ async function manejarContacto(request, env) {
     })
 
     if (!envio.ok) {
-      console.error('contacto: Resend respondió', envio.status, await envio.text())
+      // Solo el estado: el cuerpo de Resend puede repetir el correo y el
+      // mensaje de quien escribió, y eso no debe quedar en los logs.
+      console.error('contacto: Resend respondió', envio.status)
       return responder(request, MENSAJES.fallo, 502)
     }
   } catch (error) {

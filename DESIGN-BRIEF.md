@@ -375,7 +375,7 @@ mismos términos.
 | --- | --- |
 | Falta un campo | "Falta tu correo." (nunca "Campo requerido") |
 | Correo mal escrito | "Ese correo no parece válido, revísalo." |
-| Envío correcto | "Mensaje enviado. Te respondemos en menos de 48 horas hábiles." |
+| Envío correcto | "Mensaje enviado, te responderemos pronto." |
 | Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
 
 **Compromiso público:** respuesta en menos de **48 horas hábiles**. Si se

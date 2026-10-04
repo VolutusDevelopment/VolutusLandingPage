@@ -8,9 +8,11 @@
  * día no coincidan.
  *
  * La política de contenido es estricta porque puede serlo: la página no tiene un
- * solo script en línea ni carga nada de otro dominio.
+ * solo script en línea, y el único dominio ajeno es el de Turnstile.
  *
- * - `script-src 'self'`: el bundle y el Worker de las nubes, nada más. Los
+ * - `script-src 'self' challenges.cloudflare.com`: el bundle, el Worker de las
+ *   nubes y Turnstile, que se descarga al tocar el formulario y monta su
+ *   comprobación en un iframe (`frame-src`). Los
  *   datos estructurados van en `<script type="application/ld+json">`, que el
  *   navegador no ejecuta y por eso no necesita permiso.
  * - `style-src 'unsafe-inline'`: el CSS va incrustado en el HTML para no
@@ -20,7 +22,8 @@
  */
 const POLITICA = [
   "default-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",

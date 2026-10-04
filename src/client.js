@@ -5,9 +5,8 @@
 // se envía al cliente (ver src/main.js), y el presupuesto de DESIGN-BRIEF §8 es
 // de 15 KB de JavaScript para toda la página.
 //
-// Lo único que hay es el formulario, y lo que hace es MEJORAR algo que ya
-// funciona sin él: el <form> lleva method y action, así que sin JavaScript el
-// navegador envía y recarga. Esto solo valida antes y evita la recarga.
+// Lo principal es el formulario: valida mientras se escribe, monta Turnstile
+// (sin su token el Worker rechaza el envío) y evita la recarga.
 
 import initTitularRotativo from './titular-rotativo.js'
 import initServicios from './servicios.js'
@@ -15,19 +14,19 @@ import initVitrina from './vitrina.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import { quieto } from './lib/movimiento.js'
-
-const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
 
 // Los textos salen de §5 y dicen qué hacer, no qué falló.
 const MENSAJES = {
   nombre: 'Falta tu nombre.',
+  nombreInvalido: 'Usa solo letras en tu nombre.',
   correo: 'Falta tu correo.',
   correoInvalido: 'Ese correo no parece válido, revísalo.',
   // Corto como los otros dos: la reserva bajo el campo es de una línea, y un
   // aviso de dos (a 360 px ya lo era) empuja el botón justo cuando el dedo va
   // hacia él.
   proyecto: 'Falta el problema.',
-  enviado: 'Mensaje enviado. Te respondemos en menos de 48 horas hábiles.',
+  enviado: 'Mensaje enviado, te responderemos pronto.',
   fallo: 'No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl.',
 }
 
@@ -44,7 +43,8 @@ function marcarError(campo, mensaje) {
   if (!error) return
   if (mensaje) error.textContent = mensaje
   error.hidden = !mensaje
-  campo.setAttribute('aria-describedby', mensaje ? error.id : '')
+  if (mensaje) campo.setAttribute('aria-describedby', error.id)
+  else campo.removeAttribute('aria-describedby')
 }
 
 function validar(campo) {
@@ -52,6 +52,11 @@ function validar(campo) {
 
   if (!valor) {
     marcarError(campo, MENSAJES[campo.name])
+    return false
+  }
+
+  if (campo.name === 'nombre' && !NOMBRE_VALIDO.test(valor)) {
+    marcarError(campo, MENSAJES.nombreInvalido)
     return false
   }
 
@@ -72,14 +77,43 @@ function initFormulario() {
   const boton = form.querySelector('.formulario-enviar')
   const campos = [form.elements.nombre, form.elements.correo, form.elements.proyecto]
 
-  // Al salir de un campo se valida, pero solo para LIMPIAR un error que ya
-  // estaba: marcar en rojo un campo que la persona aún no terminó de rellenar
-  // es regañarla por ir en orden.
-  campos.forEach((campo) => {
-    campo.addEventListener('blur', () => {
-      if (campo.getAttribute('aria-invalid') === 'true') validar(campo)
+  // Nombre y correo avisan de un error de tipeo mientras se escribe. Vacío no
+  // se marca: eso es ir en orden, no equivocarse, y lo cubre el envío.
+  // La descripción, en cambio, solo se revisa al salir para LIMPIAR un error
+  // que ya estaba.
+  const { nombre, correo, proyecto } = form.elements
+  ;[nombre, correo].forEach((campo) => {
+    campo.addEventListener('input', () => {
+      if (campo.value.trim()) validar(campo)
+      else marcarError(campo, '')
     })
   })
+  proyecto.addEventListener('blur', () => {
+    if (proyecto.getAttribute('aria-invalid') === 'true') validar(proyecto)
+  })
+
+  // Turnstile se descarga al primer contacto con el formulario: así no pesa
+  // en la carga ni en Lighthouse. Se monta a mano (`render=explicit`) para
+  // guardar su id: el token vale un envío, y tras cada intento hay que pedir
+  // otro. Añade `cf-turnstile-response` al FormData.
+  let widget
+  form.addEventListener(
+    'focusin',
+    () => {
+      const script = document.createElement('script')
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      script.async = true
+      script.onload = () => {
+        widget = window.turnstile.render(form.querySelector('.turnstile'), {
+          sitekey: TURNSTILE_SITEKEY,
+          action: TURNSTILE_ACCION,
+          appearance: 'interaction-only',
+        })
+      }
+      document.head.append(script)
+    },
+    { once: true }
+  )
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault()
@@ -112,16 +146,23 @@ function initFormulario() {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body: new FormData(form),
+        // Sin tope, una red colgada dejaría el botón desactivado para siempre.
+        signal: AbortSignal.timeout(15000),
       })
-      if (!respuesta.ok) throw new Error(String(respuesta.status))
+      // El Worker dice qué pasó (datos inválidos, demasiados envíos...); si
+      // la respuesta no trae texto, vale el fallo genérico.
+      const { mensaje } = await respuesta.json().catch(() => ({}))
+      if (!respuesta.ok) throw new Error(mensaje)
 
       form.reset()
       aviso.textContent = MENSAJES.enviado
       aviso.dataset.estado = 'ok'
-    } catch {
-      aviso.textContent = MENSAJES.fallo
+    } catch (error) {
+      aviso.textContent = (error.name === 'Error' && error.message) || MENSAJES.fallo
       aviso.dataset.estado = 'error'
     } finally {
+      // Cada token de Turnstile vale un solo envío.
+      if (widget !== undefined) window.turnstile.reset(widget)
       clearTimeout(avisarQueEnvia)
       aviso.hidden = false
       boton.disabled = false

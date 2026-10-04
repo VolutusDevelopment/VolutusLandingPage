@@ -1,4 +1,5 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
+import { LIMITES } from '../lib/contacto.js'
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
@@ -12,9 +13,9 @@ import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
  * convertir y más frágil en accesibilidad. La tarjeta clara deja caer la
  * página hasta el mar sin pagar ese precio.
  *
- * **Funciona sin JavaScript**, que es requisito de §8: el `<form>` lleva
- * `method="post"` y `action`, así que sin JS el navegador envía y recarga. El
- * JavaScript de `client.js` solo mejora la validación y evita la recarga. Las
+ * El `<form>` lleva `method="post"` y `action`, pero el envío exige el token
+ * de Turnstile, que solo existe con JavaScript: sin él, el Worker responde con
+ * una página que ofrece el correo directo. Las
  * opciones de «Qué necesitas» son casillas nativas: se marcan y se envían sin
  * una línea de código.
  *
@@ -50,6 +51,7 @@ export default function Contacto() {
                 name="nombre"
                 type="text"
                 autoComplete="name"
+                maxLength={LIMITES.nombre}
                 placeholder="Tu Nombre"
                 required
               />
@@ -65,6 +67,7 @@ export default function Contacto() {
                 type="email"
                 inputMode="email"
                 autoComplete="email"
+                maxLength={LIMITES.correo}
                 spellCheck="false"
                 autoCapitalize="off"
                 placeholder="tu@correo.cl"
@@ -101,6 +104,7 @@ export default function Contacto() {
               id="proyecto"
               name="proyecto"
               rows="3"
+              maxLength={LIMITES.proyecto}
               placeholder="El problema, en tus palabras."
               required
             />
@@ -117,11 +121,19 @@ export default function Contacto() {
 
               `aria-hidden` y `tabIndex` lo sacan también del recorrido de
               teclado y del lector de pantalla: esconderlo solo con CSS lo
-              habría dejado en medio del formulario para quien navega a ciegas. */}
+              habría dejado en medio del formulario para quien navega a ciegas.
+
+              El nombre no significa nada a propósito: «empresa» lo reconocía el
+              autocompletado del navegador como organización y lo rellenaba,
+              y el Worker descartaba el mensaje de una persona real. */}
           <div className="trampa" aria-hidden="true">
-            <label htmlFor="empresa">No rellenes este campo</label>
-            <input id="empresa" name="empresa" type="text" tabIndex={-1} autoComplete="off" />
+            <label htmlFor="hp_campo">No rellenes este campo</label>
+            <input id="hp_campo" name="hp_campo" type="text" tabIndex={-1} autoComplete="new-password" />
           </div>
+
+          {/* Turnstile monta aquí su comprobación, invisible salvo que dude.
+              El script lo descarga client.js al primer foco en el formulario. */}
+          <div className="turnstile" />
 
           {/* Regla 4 de §7: al enviar no desaparece ni encoge. El correo va al
               lado, como segunda puerta para quien prefiere escribir desde el
