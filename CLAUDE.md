@@ -119,6 +119,19 @@ No deben existir problemas de:
 
 ---
 
+## 6. Safari e iOS
+
+El sitio debe funcionar bien en Safari de macOS, iOS y iPadOS, incluidas versiones anteriores a la actual (por ejemplo, Safari 18 en iPads que no pueden actualizar).
+
+- Revisar en caniuse.com o en las notas de WebKit que cada propiedad CSS o API de JavaScript nueva esté soportada en Safari antes de usarla.
+- Toda función que Safari no soporte debe ir detrás de `@supports` o de una detección en JavaScript, con un resultado aceptable sin ella: el contenido siempre visible y usable.
+- No depender de cómo corta el texto el navegador: Safari puede medir y partir líneas distinto que Chromium. El texto que cambia en vivo (rotativos, botones, mensajes de error) debe tener su espacio fijo, sin depender de dónde se parta.
+- Usar `svh`/`dvh` en vez de `vh` para altos de pantalla en móvil, y respetar las zonas seguras (`env(safe-area-inset-*)`) cuando corresponda.
+- Los campos de formulario usan al menos 16 px de letra, para que iOS no haga zoom al enfocarlos.
+- Probar con el WebKit de Playwright en los anchos de iPhone y iPad. Lo que no se pueda reproducir ahí se confirma en un dispositivo real.
+
+---
+
 # Optimización del Código
 
 Siempre:

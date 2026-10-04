@@ -12,7 +12,7 @@
  * Cada cambio es una cascada letra a letra: la frase que se va sube y la nueva
  * entra desde abajo al mismo tiempo, así que la línea nunca queda vacía. Las
  * dos cruzan el degradé con que el CSS funde los bordes de la línea.
- * Solo se anima `transform`; el alto lo reserva el CSS.
+ * Solo se anima `transform`; el alto es siempre una línea (ver el CSS).
  */
 
 import { quieto } from './lib/movimiento.js'
@@ -22,26 +22,23 @@ const PAUSA = 2600
 const DURACION = 600
 const ESCALON = 25
 
-// Las letras de cada palabra van juntas en un bloque que no se parte, así la
-// frase solo puede cortar línea entre palabras. El índice sigue corriendo de
-// una palabra a otra para que la cascada sea una sola ola.
+// Cada letra en su caja para que la cascada sea una sola ola. Los espacios
+// quedan como texto: una caja con solo un espacio no mide nada.
 function enLetras(texto) {
   const palabra = document.createElement('span')
   palabra.className = 'rotativo-palabra'
   let indice = 0
-  texto.split(' ').forEach((trozo, posicion) => {
-    if (posicion) palabra.append(' ')
-    const bloque = document.createElement('span')
-    bloque.className = 'rotativo-trozo'
-    for (const caracter of trozo) {
-      const letra = document.createElement('span')
-      letra.className = 'rotativo-letra'
-      letra.style.setProperty('--i', indice++)
-      letra.textContent = caracter
-      bloque.append(letra)
+  for (const caracter of texto) {
+    if (caracter === ' ') {
+      palabra.append(' ')
+      continue
     }
-    palabra.append(bloque)
-  })
+    const letra = document.createElement('span')
+    letra.className = 'rotativo-letra'
+    letra.style.setProperty('--i', indice++)
+    letra.textContent = caracter
+    palabra.append(letra)
+  }
   return palabra
 }
 
@@ -51,15 +48,6 @@ export default function initTitularRotativo() {
   if (!palabra) return
 
   const palabras = rotativo.dataset.palabras.split('|')
-  // El CSS reserva el alto con la frase más larga, pero en pantallas angostas
-  // la más alta puede ser otra, según dónde corte cada una. Se reservan todas,
-  // invisibles en la misma celda, y la celda mide lo que la más alta.
-  for (const texto of palabras) {
-    const reserva = document.createElement('span')
-    reserva.className = 'rotativo-reserva'
-    reserva.textContent = texto
-    rotativo.append(reserva)
-  }
 
   let actual = 0
   const inicial = enLetras(palabra.textContent)

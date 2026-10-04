@@ -40,8 +40,7 @@ export default function Portada() {
                 Buscadores y lectores de pantalla leen la lista entera y fija,
                 con los nombres que la gente busca («aplicaciones», «agentes de
                 inteligencia artificial»); el rotativo es solo para la vista.
-                `data-reserva` es la frase más larga y reserva su alto desde el
-                primer pintado, así que el titular no salta al cambiar. */}
+                Ocupa siempre una línea, así que el titular no salta al cambiar. */}
             <p className="antetitulo">
               El mundo avanza. <span>No te quedes atrás.</span>
             </p>
@@ -54,7 +53,6 @@ export default function Portada() {
               <span
                 className="rotativo"
                 aria-hidden="true"
-                data-reserva="automatización"
                 data-palabras="páginas web|tiendas online|apps|agentes de IA|automatización"
               >
                 <span className="rotativo-palabra">páginas web</span>

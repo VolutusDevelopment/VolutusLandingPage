@@ -59,7 +59,7 @@ const GLIFOS = {
   '+': ['...', '.#.', '###', '.#.', '...'],
   ',': ['...', '...', '...', '.#.', '#..'],
   '-': ['...', '...', '###', '...', '...'],
-  '.': ['...', '...', '...', '...', '.#.'],
+  '.': ['.', '.', '.', '.', '#'],
   '/': ['..#', '..#', '.#.', '#..', '#..'],
   ':': ['...', '.#.', '...', '.#.', '...'],
   ';': ['...', '.#.', '...', '.#.', '#..'],
@@ -155,7 +155,7 @@ export function filasDeTexto(texto, color, punto = 2) {
         if (!filas.some(Boolean)) return ''
         const fila = Math.floor(y / punto)
         const marcas = fila === 0 && marca ? [...marca].map((pixel) => pixel === '#' ? '#' : '.').join('') : ''
-        const dibujo = fila === 0 ? marcas.padEnd(3, '.') : filas[fila - 1]
+        const dibujo = fila === 0 ? marcas.padEnd(filas[0].length, '.') : filas[fila - 1]
         return [...dibujo].map((pixel) => pixel === '#' ? color.repeat(punto) : '.'.repeat(punto)).join('')
       })
       .join('.'.repeat(punto)),

@@ -374,7 +374,7 @@ mismos términos.
 | Situación | Texto |
 | --- | --- |
 | Falta un campo | "Falta tu correo." (nunca "Campo requerido") |
-| Correo mal escrito | "Ese correo no parece válido, revísalo." |
+| Correo mal escrito | "Revisa tu correo." |
 | Envío correcto | "Mensaje enviado, te responderemos pronto." |
 | Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
 

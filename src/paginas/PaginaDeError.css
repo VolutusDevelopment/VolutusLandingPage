@@ -84,24 +84,56 @@
 }
 
 /* Con fondo propio, para que se reconozca sobre el cielo. */
-.jugar {
+.jugar,
+.odio {
   background: var(--superficie);
 }
 
 /* El pato del juego a dos píxeles por punto: sus 16 × 13 celdas. */
-.jugar svg {
+/* El botón mide siempre lo que «Terminar»: al empezar la partida no crece ni,
+   en S, salta a otra línea. */
+.jugar span::after {
+  content: 'Terminar';
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.jugar svg,
+.odio svg {
   width: 32px;
   height: 26px;
 }
 
+/* Al pulsar «Odio a los patos», el yelmo del pato se cae dando vueltas, como el
+   de los patos del juego al primer acierto. Vuelve cuando reaparece el botón. */
+.odio .casco {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.odio.desarmado .casco {
+  animation: casco-cae 0.6s ease-in forwards;
+}
+
+@keyframes casco-cae {
+  to {
+    transform: translateY(14px) rotate(200deg);
+    opacity: 0;
+  }
+}
+
 /* `.boton` fija `display` y le ganaría al atributo. Con movimiento reducido el
    juego no se ofrece: la nube tampoco se mueve. */
-.jugar[hidden] {
+.jugar[hidden],
+.odio[hidden] {
   display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .jugar {
+  .jugar,
+  .odio {
     display: none;
   }
 }

@@ -1,6 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import { PAGINAS } from '../lib/meta.js'
-import { ARRIBA, COLORES } from '../lib/pato.js'
+import { ARRIBA, CASCO, COLORES } from '../lib/pato.js'
 
 /**
  * Las páginas de error —la 404 y la de los 5xx— y /patos. Son la misma
@@ -20,7 +20,8 @@ import { ARRIBA, COLORES } from '../lib/pato.js'
  * Su lienzo va antes que el de la nube para quedar detrás: dentro de la nube,
  * los puntos de ella tapan casi todo el pato. El botón llega oculto, porque sin
  * JavaScript no sirve, y va junto a «Inicio», que es igual de alto, así que
- * aparecer no mueve nada.
+ * aparecer no mueve nada. «Odio a los patos», el modo sin fin, aparece recién
+ * después de terminar una partida entera.
  *
  * /patos es la misma escena dedicada al juego: llega ahí quien caza al pato que
  * sale a nadar en el mar del pie, así que la partida empieza sola
@@ -66,6 +67,10 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
               <Pato />
               <span>Jugar</span>
             </button>
+            <button className="boton boton-secundario odio" type="button" hidden>
+              <Pato casco />
+              <span>Odio a los patos</span>
+            </button>
           </p>
         </div>
       </section>
@@ -79,15 +84,11 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
  * ve antes de que el juego se descargue. Una forma por color, con un cuadrado
  * por celda, el píxel de las consolas que lo inspiran, como la tarjeta para
  * compartir de /patos. Sin suavizado, para que los cuadrados vecinos no dejen
- * costuras entre ellos.
+ * costuras entre ellos. El de «Odio a los patos» lleva el yelmo de los patos de
+ * ese modo, en su propio grupo: al pulsar el botón se le cae (ver
+ * PaginaDeError.css), y así se entiende que hay que darles dos veces.
  */
-function Pato() {
-  const formas = {}
-  ARRIBA.forEach((fila, y) =>
-    [...fila].forEach((letra, x) => {
-      if (COLORES[letra]) formas[letra] = `${formas[letra] ?? ''}M${x} ${y}h1v1h-1z`
-    }),
-  )
+function Pato({ casco = false }) {
   return (
     <svg
       viewBox={`0 0 ${ARRIBA[0].length} ${ARRIBA.length}`}
@@ -95,9 +96,22 @@ function Pato() {
       aria-hidden="true"
       focusable="false"
     >
-      {Object.entries(formas).map(([letra, d]) => (
-        <path key={letra} fill={COLORES[letra]} d={d} />
-      ))}
+      <Celdas filas={ARRIBA} />
+      {casco && (
+        <g className="casco">
+          <Celdas filas={CASCO} />
+        </g>
+      )}
     </svg>
   )
+}
+
+function Celdas({ filas }) {
+  const formas = {}
+  filas.forEach((fila, y) =>
+    [...fila].forEach((letra, x) => {
+      if (COLORES[letra]) formas[letra] = `${formas[letra] ?? ''}M${x} ${y}h1v1h-1z`
+    }),
+  )
+  return Object.entries(formas).map(([letra, d]) => <path key={letra} fill={COLORES[letra]} d={d} />)
 }

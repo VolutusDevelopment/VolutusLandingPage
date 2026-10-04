@@ -14,17 +14,18 @@ import initVitrina from './vitrina.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import { quieto } from './lib/movimiento.js'
+import { desbloqueado } from './lib/odio.js'
 import { CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
 
 // Los textos salen de §5 y dicen qué hacer, no qué falló.
 const MENSAJES = {
   nombre: 'Falta tu nombre.',
-  nombreInvalido: 'Usa solo letras en tu nombre.',
+  // Todos cortos: la reserva bajo el campo es de una línea, y un aviso de dos
+  // empuja el botón justo cuando el dedo va hacia él. El más angosto es el
+  // nombre en L (158 px): ningún aviso pasa de unos 110 px.
+  nombreInvalido: 'Usa solo letras.',
   correo: 'Falta tu correo.',
-  correoInvalido: 'Ese correo no parece válido, revísalo.',
-  // Corto como los otros dos: la reserva bajo el campo es de una línea, y un
-  // aviso de dos (a 360 px ya lo era) empuja el botón justo cuando el dedo va
-  // hacia él.
+  correoInvalido: 'Revisa tu correo.',
   proyecto: 'Falta el problema.',
   enviado: 'Mensaje enviado, te responderemos pronto.',
   fallo: 'No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl.',
@@ -183,6 +184,12 @@ function initPatos() {
   boton.hidden = false
   const alternar = () => import('./patos.js').then((juego) => juego.alternar(boton))
   boton.addEventListener('click', alternar)
+  const odio = document.querySelector('.odio')
+  odio.hidden = !desbloqueado()
+  odio.addEventListener('click', () => {
+    odio.classList.add('desarmado')
+    import('./patos.js').then((juego) => setTimeout(() => juego.odio(boton), 600))
+  })
   if (boton.dataset.empieza && !quieto()) empezarSolo(boton, alternar)
 }
 

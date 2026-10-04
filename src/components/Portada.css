@@ -116,10 +116,10 @@
 }
 
 /* ---- la palabra que rota ----
-   Un bloque de rejilla con dos ocupantes en la misma celda: la palabra visible
-   y, invisible, la más larga de la lista. La celda mide siempre lo que la más
-   larga, así que el titular reserva su alto desde el primer pintado y no salta
-   cuando cambia la palabra — ni en móvil, donde puede ocupar dos líneas. */
+   Un bloque de rejilla de una sola línea: todas las frases caben (el tamaño del
+   titular se calcula para la más larga) y no se parten, así que el alto es
+   siempre el mismo y el titular no salta al cambiar. La saliente y la entrante
+   comparten la celda. */
 /* La línea se funde por arriba y por abajo: las letras aparecen y se van por
    un degradé, no por un corte. La franja cae fuera de la línea —el relleno la
    añade y el margen negativo la devuelve, así que no mueve nada— y en reposo
@@ -127,6 +127,7 @@
 .rotativo {
   --franja: 0.15em;
   display: grid;
+  white-space: nowrap;
   color: var(--accion);
   padding-block: var(--franja);
   margin-block: calc(var(--franja) * -1);
@@ -139,25 +140,8 @@
   );
 }
 
-.rotativo::before {
-  content: attr(data-reserva);
-}
-
-.rotativo::before,
-.rotativo-reserva {
-  visibility: hidden;
-}
-
-.rotativo::before,
-.rotativo-reserva,
 .rotativo-palabra {
   grid-area: 1 / 1;
-}
-
-/* Una palabra no se parte entre líneas: la frase solo corta entre palabras. */
-.rotativo-trozo {
-  display: inline-block;
-  white-space: nowrap;
 }
 
 .rotativo-letra {

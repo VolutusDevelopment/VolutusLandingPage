@@ -6,7 +6,8 @@
  *
  * Miran a la derecha. Una letra por punto: verde la cabeza, café el cuerpo,
  * ocre el ala, naranjo el pico y las patas, blanco el ojo y el collar, negra la
- * pupila y celeste la lágrima del que reclama. El punto es vacío. Los colores son los del NES, a propósito
+ * pupila, celeste la lágrima del que reclama y gris el casco del modo «Odio a
+ * los patos». El punto es vacío. Los colores son los del NES, a propósito
  * (DESIGN-BRIEF, decisión 21).
  */
 
@@ -18,6 +19,7 @@ export const COLORES = {
   b: '#fcfcfc',
   k: '#000000',
   a: '#3cbcfc',
+  g: '#bcbcbc',
 }
 
 export const ARRIBA = [
@@ -66,6 +68,25 @@ export const HERIDO = [
   '.cccccccccccc...',
   '...cccccccc.....',
   '....n...n.......',
+]
+
+// El yelmo de caballero de los patos del modo «Odio a los patos», con penacho
+// y visera, en una capa aparte que se pinta encima de cualquier cuadro de
+// vuelo: la cabeza es la misma en todos.
+export const CASCO = [
+  '.........cc.....',
+  '..........ccgg..',
+  '..........ggggg.',
+  '..........gggggg',
+  '..........gkkkgg',
+  '..........gggggg',
+  '..........gggg..',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
 ]
 
 // Cayendo va de cabeza: el herido, girado un cuarto de vuelta.

@@ -30,20 +30,25 @@
  * vuela al claro del cielo más lejos de las nubes, se agranda y se ríe en un
  * globo, «JA JA JA». Es lo que en el original hace el perro.
  *
- * La partida va por niveles de `POR_NIVEL` patos, sin fin: fácil, medio y, del
- * tercero en adelante, difícil. Cada uno empieza con su letrero, «NIVEL 1». Al
+ * La partida va por niveles de `POR_NIVEL` patos, de fácil a difícil. Cada uno
+ * empieza con su letrero, «NIVEL 1», y el primero dice además cómo se dispara. Al
  * final de cada uno sale uno más a reclamar: vuela al claro y dice, llorando,
  * algo que haga sentir culpable a quien juega, como «FELICIDADES, / MATASTE A
  * / TODA MI / FAMILIA». Después ya no quedan patos en ese cielo: los que
  * sobreviven se van en V a otro, muchísimos la primera vez y cada vez menos, y
  * la vista los sigue. Las nubes pasan, llegan otras y empieza el nivel
- * siguiente.
+ * siguiente. Cuando ya no queda parvada, sale el último pato, solo, a
+ * despedirse, y la partida termina con el letrero «FIN».
  *
  * Las medidas van en altos del lienzo de la nube, como todo lo de la nube: así
- * el juego cuesta lo mismo en cualquier pantalla. Cada pato cazado hace al
- * siguiente más rápido y más chico, y más difícil de acertar, sin parar nunca.
+ * el juego cuesta lo mismo en cualquier pantalla. El primero sale al doble y
+ * lento, y cada pato cazado hace al siguiente más rápido y más chico.
  *
- * La partida sigue hasta «Terminar». Con movimiento reducido no se ofrece, y si
+ * Terminar una partida desbloquea «Odio a los patos», el modo sin fin: sigue
+ * con la dificultad y las burlas donde quedaron, y cada pato trae casco, así
+ * que hay que darle dos veces: la primera se lo vuela.
+ *
+ * «Terminar» la corta antes. Con movimiento reducido no se ofrece, y si
  * se activa a mitad de partida, termina con el pato siguiente y la volutus
  * vuelve sin transición.
  */
@@ -51,18 +56,30 @@
 import { DPR_MAXIMO } from './nubes.js'
 import { quieto } from './lib/movimiento.js'
 import { filasDelGlobo, filasDeTexto, punta } from './lib/globo.js'
-import { BURLAS, NIVELES, RECLAMOS } from './lib/chistes.js'
-import { ABAJO, ARRIBA, CAE, COLORES, HERIDO } from './lib/pato.js'
+import { desbloquear, desbloqueado } from './lib/odio.js'
+import {
+  BURLAS,
+  BURLAS_ODIO,
+  DESPEDIDA,
+  FIN,
+  INSTRUCCION,
+  MODO_ODIO,
+  NIVELES,
+  RECLAMOS,
+  RECLAMOS_ODIO,
+} from './lib/chistes.js'
+import { ABAJO, ARRIBA, CAE, CASCO, COLORES, HERIDO } from './lib/pato.js'
 
 // A ojo. Las velocidades van en altos por segundo y los tiempos en segundos.
-const VELOCIDAD = 0.7
-// La dificultad sube con cada pato cazado y no para: el pato tiende a volar
-// `RAPIDO` veces más rápido que el primero y a medir `CHICO` de él, blanco y
-// disparo a la vez, sin llegar nunca. Tras cada uno queda `SUBE` de lo que
-// faltaba: con 10 patos va en el 40 %, con 20 en el 64 %. `CHICO` vale con la
-// celda de `CELDA_GRANDE` px: con una más fina, como en el teléfono, el pato
-// parte más chico y se achica menos, para no bajar nunca de ese tamaño.
-const SUBE = 0.95
+const VELOCIDAD = 0.45
+// La dificultad sube con cada pato cazado: el pato tiende a volar `RAPIDO`
+// veces más rápido que el primero y a medir `CHICO` del pato normal, blanco y
+// disparo a la vez. El primero sale a `INICIAL` veces su tamaño. Tras cada uno
+// queda `SUBE` de lo que faltaba: con 3 patos va en el 39 %, con 12 en el
+// 86 %. `CHICO` vale con la celda de `CELDA_GRANDE` px: con una más fina, como
+// en el teléfono, el pato se achica menos, para no bajar nunca de ese tamaño.
+const SUBE = 0.85
+const INICIAL = 2
 const RAPIDO = 2.5
 const CHICO = 0.4
 const CELDA_GRANDE = 3
@@ -72,10 +89,12 @@ const GRAVEDAD = 3
 const ALETEO = 8
 const VUELTA = 0.12
 // Lo que tarda la volutus en deshacerse en cúmulos, o en volver a juntarse, lo
-// que tarda el viaje a otro cielo y lo que dura el letrero de cada nivel.
+// que tarda el viaje a otro cielo y lo que dura el letrero de cada nivel. El
+// primero, que explica cómo se dispara, y el del final duran más.
 const TRANSICION = 1.6
 const VIAJE = 4
 const LETRERO = 2
+const LETRERO_LARGO = 3.5
 // Hasta dónde baja a volar: por encima del contador, que va abajo.
 const SUELO = 0.8
 // La tolerancia del disparo, en px. Con el dedo es el doble: tapa justo lo que
@@ -95,10 +114,10 @@ const AIRE = 4
 // Los patos de cada nivel, al cabo de los cuales sale el que reclama, y cómo
 // se llama cada nivel: desde el último de la lista, todos igual.
 const POR_NIVEL = 3
-// Cuántos se van en V a otro cielo al pasar de nivel: muchísimos la primera
-// vez y cada vez menos, hasta quedar los del último de la lista, que se van
-// todas las veces que siguen. Van lejos, así que se ven más chicos.
-const PARVADAS = [15, 12, 9, 6, 3]
+// Cuántos se van en V a otro cielo al pasar de nivel: muchos la primera vez y
+// cada vez menos, hasta que no queda ninguno y se acaba la partida. Van lejos,
+// así que se ven más chicos.
+const PARVADAS = [13, 10, 7, 4, 0]
 const LEJANA = 0.6
 // Los textos y su orden de rotación viven en `lib/chistes.js`.
 // Cuántas veces se agranda como mucho el que reclama: más que el que se
@@ -141,6 +160,7 @@ let jugando = false
 let pato = null
 let cazados = 0
 let burlasMostradas = 0
+let burlasOdio = 0
 let espera = 0
 let bucle = 0
 let antes = 0
@@ -151,12 +171,18 @@ export function alternar(boton) {
   else empezar()
 }
 
+export function odio(boton) {
+  if (!escena) preparar(boton)
+  if (!jugando) empezar(true)
+}
+
 function preparar(boton) {
   const pagina = boton.closest('.pagina-error')
   const cielo = pagina.querySelector('.pagina-error-cielo')
   const lienzo = cielo.querySelector('.patos')
   escena = {
     boton,
+    botonOdio: pagina.querySelector('.odio'),
     cielo,
     lienzo,
     ctx: lienzo.getContext('2d'),
@@ -186,15 +212,15 @@ function medir() {
   // La letra de los globos va a 2 puntos por píxel si el reclamo más ancho
   // cabe al lado del pato al doble; si no, como en un teléfono, a 1, y la
   // burla con ella.
-  const anchoChiste = Math.max(...[...BURLAS, ...RECLAMOS].map((lineas) => filasDelGlobo(lineas, 2)[0].length))
+  const anchoChiste = Math.max(...[...BURLAS, ...RECLAMOS, ...BURLAS_ODIO, ...RECLAMOS_ODIO, DESPEDIDA].map((lineas) => filasDelGlobo(lineas, 2)[0].length))
   const ocupa = 2 * ARRIBA[0].length + 1 + anchoChiste + 2 * AIRE
   const punto = ocupa * celda <= lienzo.width ? 2 : 1
   if (celda !== escena.celda || punto !== escena.punto) {
     Object.assign(escena, { punto, globo: pintarCuadro(filasDelGlobo(BURLAS[0], punto), celda) })
   }
   if (celda !== escena.celda) {
-    const [arriba, abajo, herido, cae] = [ARRIBA, ABAJO, HERIDO, CAE].map((filas) => pintarCuadro(filas, celda))
-    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae }, grandes: [], contador: null })
+    const [arriba, abajo, herido, cae, casco] = [ARRIBA, ABAJO, HERIDO, CAE, CASCO].map((filas) => pintarCuadro(filas, celda))
+    Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae, casco }, grandes: [], contador: null })
   }
   escena.dpr = dpr
   escena.alto = lienzo.height
@@ -291,11 +317,20 @@ function viajar(ahora) {
   return (avance < 0.5 ? -2 * avance : 2 - 2 * avance) * fuera
 }
 
-function empezar() {
+// El modo «Odio a los patos» sigue la dificultad de la partida anterior, al
+// menos desde la del último nivel, y numera sus niveles desde ahí.
+function empezar(modoOdio = false) {
   jugando = true
-  cazados = 0
-  burlasMostradas = 0
-  escena.nivel = 1
+  escena.odio = modoOdio
+  if (modoOdio) {
+    cazados = Math.max(cazados, POR_NIVEL * PARVADAS.length)
+    escena.nivel = PARVADAS.length + 1
+  } else {
+    cazados = 0
+    burlasMostradas = 0
+    escena.nivel = 1
+  }
+  escena.botonOdio.hidden = true
   escena.contador = null
   escena.reclamo = false
   escena.boton.lastElementChild.textContent = 'Terminar'
@@ -310,22 +345,49 @@ function terminar() {
   clearTimeout(espera)
   Object.assign(escena, { reclamo: false, viaje: null, letrero: null })
   escena.boton.lastElementChild.textContent = 'Jugar'
+  escena.botonOdio.hidden = !desbloqueado()
+  escena.botonOdio.classList.remove('desarmado')
   escena.cielo.classList.remove('cazando')
   if (pato?.estado === 'vuela') pato.estado = 'huye'
   cambiarForma(0)
 }
 
 // El letrero del nivel, en medio del cielo, y el primer pato cuando se apaga.
+// El del primero dice cómo se dispara, con el dedo o con el mouse.
 function anunciar() {
-  const { nivel, celda } = escena
+  const { nivel, punto, odio } = escena
+  if (odio) {
+    mostrarLetrero([filasDeTexto(MODO_ODIO, 'n', punto + 1), filasDeTexto(`NIVEL ${nivel - PARVADAS.length}`, 'b')], LETRERO)
+    if (!pato) espera = setTimeout(soltar, LETRERO * 1000)
+    return
+  }
   const nombre = NIVELES[Math.min(nivel, NIVELES.length) - 1]
   const lineas = [filasDeTexto(`NIVEL ${nivel}`, 'b', 3), filasDeTexto(nombre, 'b')]
+  if (nivel === 1) {
+    const forma = matchMedia('(pointer: coarse)').matches ? 'toque' : 'clic'
+    lineas.push(...INSTRUCCION[forma].map((linea) => filasDeTexto(linea, 'n', punto)))
+  }
+  const dura = nivel === 1 ? LETRERO_LARGO : LETRERO
+  mostrarLetrero(lineas, dura)
+  if (!pato) espera = setTimeout(soltar, dura * 1000)
+}
+
+// Los renglones centrados uno bajo otro, con aire entre ellos.
+function mostrarLetrero(lineas, dura) {
   const ancho = Math.max(...lineas.map((filas) => filas[0].length))
   const centrar = (fila) => fila.padStart((ancho + fila.length) >> 1, '.').padEnd(ancho, '.')
-  const filas = [...lineas[0], ...Array(4).fill(''), ...lineas[1]].map(centrar)
-  escena.letrero = { t0: performance.now(), cuadro: pintarCuadro(contornear(filas), celda) }
-  if (!pato) espera = setTimeout(soltar, LETRERO * 1000)
+  const filas = lineas.flatMap((linea, i) => [...(i ? Array(4).fill('') : []), ...linea]).map(centrar)
+  escena.letrero = { t0: performance.now(), dura, cuadro: pintarCuadro(contornear(filas), escena.celda) }
   animar()
+}
+
+// No quedan patos: el letrero del final con la cuenta, y la volutus vuelve.
+// Desbloquea el modo sin fin: su botón aparece cuando vuelve la volutus.
+function finalizar() {
+  desbloquear()
+  const [titulo, ...resto] = FIN(cazados)
+  mostrarLetrero([filasDeTexto(titulo, 'b', 3), ...resto.map((linea) => filasDeTexto(linea, 'b', escena.punto))], LETRERO_LARGO)
+  espera = setTimeout(terminar, LETRERO_LARGO * 1000)
 }
 
 // Después del que reclama, los que quedan se van en parvada a otro cielo (ver
@@ -333,6 +395,7 @@ function anunciar() {
 function seguir() {
   if (quieto()) return terminar()
   const parvada = PARVADAS[Math.min(escena.nivel, PARVADAS.length) - 1]
+  if (!parvada && !escena.odio) return finalizar()
   escena.viaje = { t0: performance.now(), parvada }
   escena.forma.pendiente = true
   animar()
@@ -355,7 +418,8 @@ function soltar() {
     giro: 1 + Math.random() * 0.6,
     disparos: 0,
     escala: 1,
-    tamano: 1 - (1 - Math.min(1, (CHICO * CELDA_GRANDE * escena.dpr) / escena.celda)) * dificultad(),
+    armadura: escena.odio,
+    tamano: INICIAL - (INICIAL - Math.min(1, (CHICO * CELDA_GRANDE * escena.dpr) / escena.celda)) * dificultad(),
   }
   animar()
 }
@@ -364,10 +428,12 @@ function soltar() {
 const dificultad = () => 1 - SUBE ** cazados
 
 // El que reclama por su familia: sale de un cúmulo y va directo al claro a
-// decirlo, como la burla. Si no hay un claro para su globo, sigue el juego.
+// decirlo, como la burla. Si no hay un claro para su globo, sigue el juego. En
+// el último nivel es el último pato que queda, y se despide.
 function soltarReclamo() {
-  const { alto, cumulos, cielo, punto, celda } = escena
-  const lineas = RECLAMOS[(cazados / POR_NIVEL - 1) % RECLAMOS.length]
+  const { alto, cumulos, cielo, punto, celda, nivel } = escena
+  const lista = escena.odio ? RECLAMOS_ODIO : RECLAMOS
+  const lineas = nivel === PARVADAS.length ? DESPEDIDA : lista[(cazados / POR_NIVEL - 1) % lista.length]
   const globo = pintarCuadro(filasDelGlobo(lineas, punto), celda)
   const destino = claro(globo, GRANDE_RECLAMO)
   if (!destino) return seguir()
@@ -403,11 +469,12 @@ function paso(ahora) {
   const dt = antes ? Math.min((ahora - antes) / 1000, 0.05) : 0
   antes = ahora
   if (pato) mover(dt)
+  if (escena.chatarra) caerChatarra(dt)
   if (pato?.estado === 'cae') soplar()
   if (escena.forma.pendiente) avisarForma(ahora)
-  if (escena.letrero && ahora - escena.letrero.t0 > LETRERO * 1000) escena.letrero = null
+  if (escena.letrero && ahora - escena.letrero.t0 > escena.letrero.dura * 1000) escena.letrero = null
   pintar(ahora)
-  bucle = pato || escena.forma.pendiente || escena.letrero ? requestAnimationFrame(paso) : 0
+  bucle = pato || escena.chatarra || escena.forma.pendiente || escena.letrero ? requestAnimationFrame(paso) : 0
 }
 
 function mover(dt) {
@@ -446,7 +513,7 @@ function mover(dt) {
   // irse: se acerca, por eso crece desde su tamaño de siempre, y pasa delante
   // de las nubes.
   if (p.t > VIDA) {
-    const chiste = p.disparos && BURLAS[burlasMostradas++ % BURLAS.length]
+    const chiste = p.disparos && (escena.odio ? BURLAS_ODIO[burlasOdio++ % BURLAS_ODIO.length] : BURLAS[burlasMostradas++ % BURLAS.length])
     const globo = chiste && pintarCuadro(filasDelGlobo(chiste, escena.punto), escena.celda)
     const destino = p.disparos && claro(globo)
     const burla = { estado: 'burla', t: 0, mira: 1, tamano: 1, globo, desde: { x: p.x, y: p.y }, ...destino }
@@ -559,10 +626,26 @@ function disparar(evento) {
   const dx = Math.abs((evento.clientX - caja.left) * dpr - pato.x)
   const dy = Math.abs((evento.clientY - caja.top) * dpr - pato.y)
   if (dx > (cuadros.arriba.width / 2) * tamano + margen || dy > (cuadros.arriba.height / 2) * tamano + margen) return
+  // Con casco, el primer acierto solo se lo vuela, y el pato da la vuelta.
+  if (pato.armadura) {
+    const { x, y, mira } = pato
+    escena.chatarra = { x, y, mira, tamano, t: 0, vy: -0.5 * escena.alto }
+    Object.assign(pato, { armadura: false, rumbo: pato.rumbo + Math.PI, giro: 0.6 })
+    return
+  }
   Object.assign(pato, { estado: 'herido', t: 0 })
   cazados++
   escena.contador = null
   if (cazados % POR_NIVEL === 0) escena.reclamo = true
+}
+
+// El casco volado cae como el pato cazado, dando vueltas, hasta salir del cielo.
+function caerChatarra(dt) {
+  const c = escena.chatarra
+  c.t += dt
+  c.vy += GRAVEDAD * escena.alto * dt
+  c.y += c.vy * dt
+  if (c.y > escena.lienzo.height) escena.chatarra = null
 }
 
 // El aire que mueve el pato al caer, para la nube, en coordenadas de la
@@ -583,7 +666,19 @@ function pintar(ahora = performance.now()) {
   if (jugando) pintarContador()
   if (viaje) pintarParvada(viaje, ahora)
   if (letrero) pintarLetrero(letrero.cuadro)
+  if (escena.chatarra) pintarChatarra()
   if (pato) pintarPato()
+}
+
+function pintarChatarra() {
+  const { ctx, cuadros, celda } = escena
+  const { x, y, t, tamano, mira } = escena.chatarra
+  const ancho = cuadros.casco.width * tamano
+  const lado = Math.floor(t / VUELTA) % 2 ? -mira : mira
+  const esquina = [Math.round((x - ancho / 2) / celda) * celda, Math.round((y - (cuadros.casco.height * tamano) / 2) / celda) * celda]
+  ctx.setTransform(lado * tamano, 0, 0, tamano, lado < 0 ? esquina[0] + ancho : esquina[0], esquina[1])
+  ctx.drawImage(cuadros.casco, 0, 0)
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
 }
 
 // La parvada que se va al cielo siguiente, en V como los patos de verdad: el
@@ -622,7 +717,7 @@ function pintarPato() {
   const { ctx, cuadros, celda, lienzo, alto } = escena
   const p = pato
   const globo = p.globo ?? escena.globo
-  const { arriba, abajo } = p.escala > 1 ? agrandados(p.escala) : cuadros
+  const { arriba, abajo, casco } = p.escala > 1 ? agrandados(p.escala) : cuadros
   let cuadro = cuadros.herido
   let mira = p.mira
   if (p.estado === 'cae') {
@@ -639,6 +734,7 @@ function pintarPato() {
   ctx.globalAlpha = p.estado === 'cae' ? Math.min(1, (lienzo.height - p.y) / (0.15 * alto)) : 1
   ctx.setTransform(mira * p.tamano, 0, 0, p.tamano, mira < 0 ? x + ancho : x, y)
   ctx.drawImage(cuadro, 0, 0)
+  if (p.armadura) ctx.drawImage(casco, 0, 0)
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.globalAlpha = 1
   if (p.estado === 'burla' && p.t > LLEGADA) ctx.drawImage(globo, ...globoJunto(x, y, p.escala))
@@ -657,12 +753,13 @@ function pintarLagrimas(x, y, { t, escala }) {
 }
 
 // El pato a `escala` puntos por punto, para la burla. Grande solo vuela, así
-// que bastan las alas arriba y abajo, y la lágrima del que reclama.
+// que bastan las alas arriba y abajo, el casco y la lágrima del que reclama.
 function agrandados(escala) {
   const { grandes, celda } = escena
   grandes[escala] ??= {
     arriba: pintarCuadro(agrandar(ARRIBA, escala), celda),
     abajo: pintarCuadro(agrandar(ABAJO, escala), celda),
+    casco: pintarCuadro(agrandar(CASCO, escala), celda),
     lagrima: pintarCuadro(agrandar(['a'], escala), celda),
   }
   return grandes[escala]
