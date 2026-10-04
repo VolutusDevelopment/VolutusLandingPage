@@ -88,10 +88,20 @@ async function manejarContacto(request, env) {
   // Antes de leer nada: un envío que sobra no debe costar ni el parseo. Se
   // responde con el mismo mensaje de fallo, que ya ofrece el correo directo:
   // es también lo que muestra el cliente ante cualquier respuesta no 2xx.
-  const ip = request.headers.get('cf-connecting-ip') ?? 'sin-ip'
-  const { success } = await env.LIMITE_CONTACTO.limit({ key: ip })
-  if (!success) {
-    return responder(request, MENSAJES.fallo, 429)
+  //
+  // Si el binding no existe (wrangler dev sin rate-limits, despliegue sin
+  // aplicarlos), se sigue sin limitar y se registra: perder mensajes por una
+  // defensa auxiliar sería peor que recibir uno de más.
+  if (env.LIMITE_CONTACTO) {
+    try {
+      const ip = request.headers.get('cf-connecting-ip') ?? 'sin-ip'
+      const { success } = await env.LIMITE_CONTACTO.limit({ key: ip })
+      if (!success) {
+        return responder(request, MENSAJES.fallo, 429)
+      }
+    } catch (error) {
+      console.error('contacto: rate-limit no disponible, sigo sin limitar', error)
+    }
   }
 
   let datos

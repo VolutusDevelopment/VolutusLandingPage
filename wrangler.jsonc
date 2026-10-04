@@ -36,10 +36,12 @@
     // Los console.error del endpoint son el único aviso de que se están
     // perdiendo mensajes. Sin logs, un fallo de Resend es invisible.
     "enabled": true
-  }
+  },
 
-  // RESEND_API_KEY NO va aquí: es un secreto y se carga con
-  //   wrangler secret put RESEND_API_KEY
-  // REMITENTE es opcional y se puede poner como variable normal cuando
-  // volutus.cl esté verificado en Resend.
+  // volutus.cl está verificado en Resend: el correo sale del dominio propio y
+  // no queda marcado como de prueba. RESEND_API_KEY NO va aquí: es un secreto
+  // y se carga con `wrangler secret put RESEND_API_KEY`.
+  "vars": {
+    "REMITENTE": "Formulario Volutus <formulario@volutus.cl>"
+  }
 }
