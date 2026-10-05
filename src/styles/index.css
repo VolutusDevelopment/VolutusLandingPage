@@ -598,6 +598,18 @@ svg {
   }
 }
 
+/* Donde el cielo de la mañana sube detrás de la barra (la portada, los
+   documentos legales), arriba del todo el azul es el más hondo y la barra va
+   en blanco, como en las páginas internas. Esta franja vacía lleva la hora del
+   día: barra.js la ve detrás de cada pieza y la copia. Mide lo que la barra,
+   así que en cuanto pasa por detrás el texto, la barra vuelve a la tinta. Su
+   sección la posiciona. */
+.alba {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--barra-alto);
+}
+
 /* El cierre va en la caída, como el contacto de la portada: deja ver su
    degradado, del blanco al azul del cielo, y pone encima una tarjeta clara.
    Sin aire arriba: la sección anterior ya deja el suyo, y sumados separaban la

@@ -51,7 +51,7 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
 
 // Copia la zona y la hora de lo que hay detrás. Una tarjeta no lleva hora
 // propia: la hereda de su sección. Una franja de día dentro de una sección
-// (`.portada-alba`) sí la lleva, y manda la suya.
+// (`.alba`) sí la lleva, y manda la suya.
 function tomarZona(destino, debajo) {
   if (!debajo) return
   const plano = debajo.classList.contains('zona-plano')

@@ -13,8 +13,9 @@ import { PAGINAS } from '../lib/meta.js'
  * apartado en el medio no debe obligar a renumerar a mano los de abajo, que es
  * como aparecen los documentos con dos cláusulas «7».
  *
- * Arriba lleva el cielo de la mañana, como las otras páginas, y debajo va
- * entero en tema cielo y sin un solo corte de zona. Los dos cortes que fija
+ * Arriba lleva el cielo de la portada, del azul hondo al blanco, y abajo el
+ * mismo cielo al revés; entre medio va entero en tema cielo y sin un solo
+ * corte de zona. Los dos cortes que fija
  * A.4 son del recorrido de la portada —prometer, demostrar, convertir— y aquí
  * no hay recorrido: hay un texto que se lee seguido. Alternar temas en mitad de
  * un documento legal sería decoración, que es justo lo que el brief prohíbe.
@@ -30,8 +31,9 @@ export default function DocumentoLegal({ ruta, version, actualizado, apartados }
   const { descripcion } = PAGINAS[ruta]
 
   return (
-    <Pagina hora="dia">
-      <header className="seccion zona-cielo hora-dia cabecera-cielo legal-cabecera">
+    <Pagina hora="dia" pieDeDia>
+      <header className="seccion zona-cielo hora-manana legal-cabecera">
+        <div className="alba hora-dia" aria-hidden="true" />
         <div className="contenedor legal-interior">
           {/* La marca de la barra ya vuelve a la portada, pero eso hay que
               adivinarlo. Un documento legal es donde más fácil se pierde

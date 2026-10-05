@@ -23,7 +23,7 @@
 export default function Portada() {
   return (
     <section id="portada" className="seccion zona-cielo hora-manana portada">
-      <div className="portada-alba hora-dia" aria-hidden="true" />
+      <div className="alba hora-dia" aria-hidden="true" />
       <div className="portada-escena">
         <div className="portada-cielo">
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
@@ -34,9 +34,10 @@ export default function Portada() {
             {/* El gancho va de antetítulo y el titular dice lo que hacemos,
                 sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
                 de `lib/servicios.js` (menos la prospección y la ley de datos,
-                que no son algo que se cree). Cada uno cabe en una línea a 360 px: por eso
-                «automatización» y no «automatizaciones», que no cabe y, como
-                una palabra no se parte, desbordaría.
+                que no son algo que se cree). Cada uno cabe en una línea a
+                360 px: por eso «sistemas» y no «sistemas de gestión», y
+                «automatización» y no «automatizaciones», que no caben y
+                desbordarían.
 
                 Buscadores y lectores de pantalla leen la lista entera y fija,
                 con los nombres que la gente busca («aplicaciones», «agentes de
@@ -48,13 +49,13 @@ export default function Portada() {
             <h1>
               Creamos{' '}
               <span className="solo-lectores">
-                páginas web, tiendas online, aplicaciones, agentes de inteligencia artificial y
+                páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
                 automatizaciones
               </span>
               <span
                 className="rotativo"
                 aria-hidden="true"
-                data-palabras="páginas web|tiendas online|apps|agentes de IA|automatización"
+                data-palabras="páginas web|tiendas online|apps|sistemas|agentes de IA|automatización"
               >
                 <span className="rotativo-palabra">páginas web</span>
               </span>{' '}

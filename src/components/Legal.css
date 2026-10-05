@@ -68,3 +68,46 @@
 .legal-apartado .lista {
   margin-bottom: var(--e-4);
 }
+
+/* La cabecera es la portada en chico: el mismo cielo, del azul hondo detrás
+   de la barra al blanco de la página, y el texto en tinta, como allá. El azul
+   se aclara en el aire de arriba (`--cielo`) y el texto empieza donde ya es
+   celeste: sobre `#7cbcf1` el texto suave da 4.5:1, y más abajo, más. */
+:root .legal-cabecera {
+  --cielo: calc(var(--barra-alto) + var(--e-16));
+  --fondo-hora: linear-gradient(
+    #1976cc,
+    #4d9fea calc(var(--cielo) * 0.6),
+    #7cbcf1 var(--cielo),
+    #c2e1f8 70%,
+    #f6f9fc
+  );
+}
+
+.legal-cabecera {
+  position: relative;
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-top: var(--cielo);
+}
+
+@media (min-width: 1024px) {
+  :root .legal-cabecera {
+    --cielo: calc(var(--barra-alto) + var(--e-24));
+  }
+}
+
+/* El pie es el de la portada. Allá el cierre se lleva el tramo del blanco al
+   celeste y el pie empieza ya en azul; aquí no hay cierre, así que ese tramo
+   es aire propio (`--tramo`) y el pie arranca en el mismo azul, donde su texto
+   blanco se lee igual que allá. */
+:root main:has(.legal-cabecera) + .caida {
+  --tramo: calc(var(--e-24) * 3);
+  padding-top: var(--tramo);
+  background: linear-gradient(
+    #f6f9fc,
+    #c2e1f8 calc(var(--tramo) * 0.3),
+    #7cbcf1 calc(var(--tramo) * 0.65),
+    #4d9fea var(--tramo),
+    #2b8de4
+  );
+}

@@ -19,11 +19,13 @@ import Pie from './Pie.jsx'
  * `pie` en falso lo quita: las páginas de error son una sola pantalla, sin
  * caída que recorrer.
  *
+ * `pieDeDia` pone el pie de la home, con su degradado, aunque no haya cierre.
+ *
  * `cierre` va entre el `main` y el pie, y comparte con el pie un solo fondo
  * (`.caida`): así el degradado es uno, de arriba de la última sección al
  * final de la página, y no dos que hay que empalmar.
  */
-export default function Pagina({ enHome = false, ruta, hora, className, pie = true, cierre, children }) {
+export default function Pagina({ enHome = false, ruta, hora, className, pie = true, pieDeDia = false, cierre, children }) {
   return (
     <>
       <a className="salto" href="#contenido">
@@ -36,7 +38,7 @@ export default function Pagina({ enHome = false, ruta, hora, className, pie = tr
         {children}
       </main>
 
-      {cierre ? (
+      {cierre || pieDeDia ? (
         <div className="caida">
           {cierre}
           {pie && <Pie dia />}
