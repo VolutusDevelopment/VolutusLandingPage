@@ -23,6 +23,7 @@
 export default function Portada() {
   return (
     <section id="portada" className="seccion zona-cielo hora-manana portada">
+      <div className="portada-alba hora-dia" aria-hidden="true" />
       <div className="portada-escena">
         <div className="portada-cielo">
           <canvas className="nubes" data-vista="cielo" aria-hidden="true" />

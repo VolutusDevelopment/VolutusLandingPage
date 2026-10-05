@@ -13,7 +13,8 @@ import { PAGINAS } from '../lib/meta.js'
  * apartado en el medio no debe obligar a renumerar a mano los de abajo, que es
  * como aparecen los documentos con dos cláusulas «7».
  *
- * Va entero en tema cielo y sin un solo corte de zona. Los dos cortes que fija
+ * Arriba lleva el cielo de la mañana, como las otras páginas, y debajo va
+ * entero en tema cielo y sin un solo corte de zona. Los dos cortes que fija
  * A.4 son del recorrido de la portada —prometer, demostrar, convertir— y aquí
  * no hay recorrido: hay un texto que se lee seguido. Alternar temas en mitad de
  * un documento legal sería decoración, que es justo lo que el brief prohíbe.
@@ -29,9 +30,9 @@ export default function DocumentoLegal({ ruta, version, actualizado, apartados }
   const { descripcion } = PAGINAS[ruta]
 
   return (
-    <Pagina className="zona-cielo legal">
-      <div className="contenedor legal-interior">
-        <header className="legal-cabecera">
+    <Pagina hora="dia">
+      <header className="seccion zona-cielo hora-dia cabecera-cielo legal-cabecera">
+        <div className="contenedor legal-interior">
           {/* La marca de la barra ya vuelve a la portada, pero eso hay que
               adivinarlo. Un documento legal es donde más fácil se pierde
               alguien, así que la salida se dice con todas sus letras. */}
@@ -45,16 +46,20 @@ export default function DocumentoLegal({ ruta, version, actualizado, apartados }
           <p className="legal-fecha dato">
             Versión {version} · Última actualización: {actualizado}
           </p>
-        </header>
+        </div>
+      </header>
 
-        {apartados.map(({ titulo, contenido }, indice) => (
-          <section key={titulo} className="legal-apartado">
-            <h2>
-              {indice + 1}. {titulo}
-            </h2>
-            {contenido}
-          </section>
-        ))}
+      <div className="seccion zona-cielo">
+        <div className="contenedor legal-interior">
+          {apartados.map(({ titulo, contenido }, indice) => (
+            <section key={titulo} className="legal-apartado">
+              <h2>
+                {indice + 1}. {titulo}
+              </h2>
+              {contenido}
+            </section>
+          ))}
+        </div>
       </div>
     </Pagina>
   )

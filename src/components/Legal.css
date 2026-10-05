@@ -1,9 +1,3 @@
-.legal {
-  background: var(--fondo);
-  color: var(--texto);
-  padding-block: var(--e-12) var(--e-24);
-}
-
 /* Ancho de lectura, no el del sitio. Son párrafos largos que se leen seguidos y
    la medida cómoda está muy por debajo del contenedor de 1200 px. */
 .legal-interior {
@@ -27,11 +21,6 @@
   color: var(--accion);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.legal-cabecera {
-  padding-bottom: var(--e-8);
-  border-bottom: 1px solid var(--linea);
 }
 
 /* El h1 de un documento legal no es el titular de una portada: aquí manda la

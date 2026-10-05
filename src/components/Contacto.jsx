@@ -36,7 +36,7 @@ export default function Contacto() {
     <section id="contacto" className="seccion zona-cielo contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
         <div className="contacto-relato zona-plano">
-          <h1 id="contacto-titulo" className="entra">¿Qué estás resolviendo a mano?</h1>
+          <h2 id="contacto-titulo" className="titular entra">¿Qué estás resolviendo a mano?</h2>
         </div>
 
         <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>
@@ -97,22 +97,6 @@ export default function Contacto() {
             </div>
           </fieldset>
 
-          <div className="campo">
-            {/* El marcador de posición enseña QUÉ clase de respuesta sirve, que
-                es la duda real de quien se queda mirando un recuadro vacío. */}
-            <textarea
-              id="proyecto"
-              name="proyecto"
-              rows="3"
-              maxLength={LIMITES.proyecto}
-              placeholder="El problema, en tus palabras."
-              required
-            />
-            <p className="campo-error" id="error-proyecto" hidden>
-              Falta el problema.
-            </p>
-          </div>
-
           {/* Trampa para robots. No es un campo del diseño —§7 lista los que
               hay y este no está— sino una defensa del endpoint, que es público
               y cualquiera puede llamar. Una persona nunca lo ve ni lo rellena;
@@ -135,19 +119,61 @@ export default function Contacto() {
               El script lo descarga client.js al primer foco en el formulario. */}
           <div className="turnstile" />
 
-          {/* Regla 4 de §7: al enviar no desaparece ni encoge. El correo va al
-              lado, como segunda puerta para quien prefiere escribir desde el
-              suyo: es la acción secundaria aceptable de §1. */}
-          <div className="formulario-acciones">
-            <button className="boton boton-primario formulario-enviar" type="submit">
-              Enviar mensaje
-            </button>
+          {/* El mensaje es un «composer»: un solo cuadro con el texto arriba y,
+              en su base, el contador y el botón de enviar. Un `<textarea>` no
+              puede contener otros elementos, así que el cuadro lo dibuja el
+              envoltorio y la barra va DEBAJO del texto, no encima: ninguna
+              palabra puede quedar tapada por el botón, mida lo que mida la
+              pantalla. El tope lo impone `maxLength`; el contador solo lo
+              muestra. Regla 4 de §7: al enviar, el botón no desaparece ni
+              encoge (ver Contacto.css). */}
+          <div className="campo">
+            <div className="composer">
+              {/* El marcador de posición enseña QUÉ clase de respuesta sirve,
+                  que es la duda real de quien se queda mirando un recuadro
+                  vacío. */}
+              <textarea
+                id="proyecto"
+                name="proyecto"
+                rows="3"
+                maxLength={LIMITES.proyecto}
+                placeholder="El problema, en tus palabras."
+                aria-describedby="cuenta-proyecto"
+                required
+              />
+              <div className="composer-barra">
+                <p className="campo-cuenta" id="cuenta-proyecto">
+                  <span className="campo-cuenta-n">0</span> / {LIMITES.proyecto}
+                </p>
+                <button className="boton boton-primario formulario-enviar" type="submit">
+                  Enviar mensaje
+                </button>
+              </div>
+            </div>
+            <p className="campo-error" id="error-proyecto" hidden>
+              Falta el problema.
+            </p>
           </div>
-
-          {/* `role="status"` para que un lector de pantalla anuncie el
-              resultado sin que el foco salte. Vive en el HTML servido, vacío. */}
-          <p className="formulario-aviso" role="status" hidden />
         </form>
+
+        {/* El resultado del envío —el agradecimiento o el fallo— aparece como
+            un toast que sube desde abajo, dejando el formulario a la vista.
+            Vive en el HTML servido, vacío y oculto; client.js lo rellena. Es
+            `position: fixed`, así que su sitio en el DOM no condiciona dónde se
+            ve. El correo solo se muestra en el fallo, como salida directa. */}
+        <div className="contacto-toast" role="status" hidden>
+          <span className="contacto-toast-marca" aria-hidden="true" />
+          <div className="contacto-toast-cuerpo">
+            <p className="contacto-toast-titulo" />
+            <p className="contacto-toast-texto" />
+            <a className="contacto-toast-correo" href={`mailto:${CORREO_DE_CONTACTO}`}>
+              {CORREO_DE_CONTACTO}
+            </a>
+          </div>
+          <button className="contacto-toast-cerrar" type="button" aria-label="Cerrar aviso">
+            <span aria-hidden="true">✕</span>
+          </button>
+        </div>
       </div>
     </section>
   )

@@ -19,21 +19,23 @@
  *   - `mar`: el agua bajo la nube, mirada desde muy cerca de ella. Las olas
  *     llegan de frente con su física de verdad, rompen y dejan espuma, el sol
  *     brilla en ellas, y las crestas que pasan la altura de los ojos asoman
- *     sobre el horizonte. El cursor, o el dedo, toca el agua y deja anillos y
- *     estela, y al minuto sale a nadar un pato, que de rato en rato se
- *     detiene a provocar a quien mira, en un globo: «¿A QUE NO ME CAZAS?». La
- *     física y su shader viven en lib/mar.js.
+ *     sobre el horizonte. Apenas el mar entra en pantalla sale a nadar un
+ *     pato, que deja estela y de rato en rato se detiene a provocar a quien
+ *     mira, en un globo: «¿A QUE NO ME CAZAS?». La física y su shader viven
+ *     en lib/mar.js.
  *
  * Los colores son tres, y cada vista los usa a su modo: `luz`, `sombra` y
  * `borde` (el filo dorado en el cielo, la espuma y los destellos en el mar).
  *
  * Recibe de la página (nubes.js) los lienzos, sus medidas, sus colores, si
- * están a la vista, por dónde pasa el cursor, cuándo sale el pato y, en el
- * juego de la 404, la forma del cielo; le devuelve `vivo` cuando un lienzo ya
- * tiene su primer fotograma y, en el mar, dónde va el pato.
+ * están a la vista, por dónde pasa el cursor en el cielo, cuándo sale el pato
+ * y, en el juego de la 404, la forma del cielo; le devuelve `vivo` cuando un
+ * lienzo ya tiene su primer fotograma y, en el mar, dónde va el pato.
  */
 
-import { FUENTES, GLOBO, GLOBOS, MAR, OJOS, VAIVEN, VIDA, alAgua, alLienzo, camara, casco, flotar } from './lib/mar.js'
+import {
+  GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
+} from './lib/mar.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -50,26 +52,16 @@ const DT = INTERVALO / 1000
 const CELDAS_POR_AIRE = 3
 const VUELTAS_DE_PRESION = 20
 const RAPIDEZ_MAXIMA = 2
-// Lo que toca el mar (ver lib/mar.js). El cursor deja un impulso cada
-// `CADA_TOQUE` s mientras se mueve, y el pato uno cada `CADA_ESTELA` s, cada
-// uno en su tramo de `fuentes`. Cada tramo dura lo que vive un anillo, así que
-// un impulso nuevo solo pisa a uno que ya se apagó. La fuerza del cursor crece
-// con su rapidez sobre el agua, hasta `RAPIDEZ_DEL_TOQUE` m/s; tocar sin
-// arrastrar es una `GOTA`, y el pato al salir a flote, también. Más allá de
-// `ALCANCE` m, los anillos no se verían.
-const TOQUES = 18
-const CADA_TOQUE = VIDA / TOQUES
-const CADA_ESTELA = VIDA / (FUENTES - TOQUES)
-const FUERZA_POR_RAPIDEZ = 0.01
-const RAPIDEZ_DEL_TOQUE = 3
-const GOTA = 0.05
-const ESTELA = 0.005
-const ALCANCE = 30
-// El pato del mar nada a `NADO` m/s, con la línea de flotación al 45 % de la
-// franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s. Habla
-// `HABLA` s seguidos, y antes de volver a hablar nada al menos `CALLA` s.
-const NADO = 0.3
+// El pato del mar nada a `NADO` m/s (lib/mar.js), con la línea de flotación al
+// 45 % de la franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s,
+// con una `GOTA` en el agua.
+// Habla `HABLA` s seguidos, y antes de volver a hablar nada al menos `CALLA` s.
+// Su cuerpo, en la línea de flotación, mide `LARGO` celdas, y de ancho, `ANCHO`
+// de su largo.
+const LARGO = 12
+const ANCHO = 0.4
 const HUNDIDO = 0.35
+const GOTA = 0.05
 const SALIDA = 0.9
 const HABLA = 8
 const CALLA = 10
@@ -415,7 +407,7 @@ const inicio = performance.now()
 // así cada mensaje se aplica igual a todos los programas de un lienzo.
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
-  'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'fuentes', 'pato', 'globo', 'dice',
+  'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
@@ -588,9 +580,7 @@ function montar(id, lienzo, mar) {
     texturaDeCuadro(gl, GLOBOS)
     gl.uniform1i(campo.pato, 2)
     gl.uniform1i(campo.globo, 3)
-    escena.fuentes = new Float32Array(4 * FUENTES)
-    escena.toques = { desde: 0, cuantos: TOQUES, siguiente: 0, ultimo: null }
-    escena.estela = { desde: TOQUES, cuantos: FUENTES - TOQUES, siguiente: 0 }
+    escena.rastro = new Float32Array(4 * RASTRO)
     escena.pato = null
   } else {
     gl.uniform1i(campo.estado, 2)
@@ -621,46 +611,18 @@ function soplar(escena, { x, y, fuera }) {
   escena.previo = punto
 }
 
-// Los segundos del reloj de los shaders, el `t` de cada fotograma.
-const reloj = () => (performance.now() - inicio) / 1000
-
-// Un impulso en el agua, en el lugar que le toca dentro de su tramo de
-// `fuentes`.
-function impulso(escena, tramo, { x, z }, fuerza, t) {
-  escena.fuentes.set([x, z, t, fuerza], 4 * (tramo.desde + tramo.siguiente))
-  tramo.siguiente = (tramo.siguiente + 1) % tramo.cuantos
-}
-
-// El cursor sobre el mar: donde su rayo toca el agua deja un impulso cada
-// `CADA_TOQUE` s mientras se mueve, con la fuerza de su rapidez, y una gota al
-// tocar. Quieto, no mueve nada.
-function tocar(escena, { x, y, fuera, gota }) {
-  const { toques } = escena
-  const punto = !fuera && !quieto && escena.camara && alAgua(escena.camara, x, y)
-  if (!punto || Math.hypot(punto.x, punto.z) > ALCANCE) {
-    toques.ultimo = null
-    return
-  }
-  const t = reloj()
-  if (gota) impulso(escena, toques, punto, GOTA, t)
-  const { ultimo } = toques
-  if (ultimo && t - ultimo.t < CADA_TOQUE) return
-  if (ultimo) {
-    const rapidez = Math.hypot(punto.x - ultimo.x, punto.z - ultimo.z) / (t - ultimo.t)
-    impulso(escena, toques, punto, FUERZA_POR_RAPIDEZ * Math.min(rapidez, RAPIDEZ_DEL_TOQUE), t)
-  }
-  toques.ultimo = { ...punto, t }
-}
-
 // Un paso del pato del mar. Nada a lo ancho y da la vuelta antes de salir de
 // cuadro, o cuando se le antoja, cada 10 a 20 s. Flota donde lo lleva el agua
 // (`flotar`) y, la primera vez que se pinta, sale a flote desde abajo con una
-// gota. Ya fuera, cada vez que lleva `CALLA` s callado y su globo cabe a su
-// derecha, se detiene, mira hacia allá y dice el dicho que sigue. Quieto, su
-// lugar de reposo no cambia, y el globo cabe aunque el agua lo corra de lado
-// todo lo que puede (`VAIVEN`). Le dice al shader dónde va su esquina, en
-// celdas, hacia dónde mira, a qué distancia está y qué dice (ver `MAR`), y a
-// la página dónde va, para que su enlace lo siga.
+// gota. Su `rastro` es su lugar de reposo, el de ahora y uno cada
+// `TRAMO_RASTRO` m de camino, y su `cuerpo`, el largo de `LARGO` celdas a su
+// distancia: así deja estela (ver `ESTELA` en lib/mar.js). Ya fuera, cada vez
+// que lleva `CALLA` s callado y su globo cabe a su derecha, se detiene, mira
+// hacia allá y dice el dicho que sigue. Quieto, su lugar de reposo no cambia,
+// y el globo cabe aunque el agua lo corra de lado todo lo que puede
+// (`VAIVEN`). Le dice al shader dónde va su esquina, en celdas, hacia dónde
+// mira, a qué distancia está y qué dice (ver `MAR`), y a la página dónde va,
+// para que su enlace lo siga.
 function nadar(escena, t) {
   const { gl, pato, camara: vista, celda, programas } = escena
   const profundidad = (vista.focal * OJOS) / (0.45 * (vista.alto - vista.horizonte))
@@ -688,10 +650,13 @@ function nadar(escena, t) {
   }
   const lugar = flotar(pato.lado * orilla, profundidad, t, escena.escala)
   lugar.y -= HUNDIDO * (1 - salida) ** 3
-  if (t === pato.nace || t - pato.estela >= CADA_ESTELA) {
-    impulso(escena, escena.estela, lugar, t === pato.nace ? GOTA : ESTELA, t)
-    pato.estela = t
-  }
+  if (t === pato.nace) gl.uniform4f(programas[0].gota, lugar.x, lugar.z, t, GOTA)
+  const { rastro } = escena
+  const aqui = [pato.lado * orilla, profundidad]
+  if (Math.hypot(aqui[0] - rastro[4], aqui[1] - rastro[5]) >= TRAMO_RASTRO) rastro.copyWithin(4, 0, rastro.length - 4)
+  rastro.set([...aqui, t, 1])
+  const semieje = (LARGO / 2) * celda * (profundidad / vista.focal)
+  gl.uniform2f(programas[0].cuerpo, semieje, ANCHO * semieje)
   const [x, y] = alLienzo(vista, lugar)
   const esquina = [Math.round(x / celda) - FLOTACION[0], Math.round(y / celda) - FLOTACION[1]]
   gl.uniform4f(programas[0].nado, ...esquina, pato.mira, Math.hypot(lugar.x, lugar.z))
@@ -769,7 +734,7 @@ function pintar(escena, ahora) {
     vista.ojos = OJOS + casco(t)
     gl.uniform3f(campo.camara, vista.focal, vista.horizonte, vista.ojos)
     if (escena.pato) nadar(escena, t)
-    gl.uniform4fv(campo.fuentes, escena.fuentes)
+    gl.uniform4fv(campo.rastro, escena.rastro)
   }
   gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
   gl.viewport(0, 0, ...escena.rejilla)
@@ -859,16 +824,14 @@ onmessage = ({ data }) => {
       mira: 1,
       vuelta: 15,
       nace: null,
-      estela: 0,
       desde: null,
       callo: -Infinity,
       dicho: 0,
     }
   }
-  // El cursor es viento en el cielo, y en el mar toca el agua.
+  // El cursor es viento en el cielo.
   if (escena && data.tipo === 'cursor') {
-    if (escena.mar) tocar(escena, data)
-    else soplar(escena, data)
+    soplar(escena, data)
     return
   }
 

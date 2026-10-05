@@ -15,7 +15,7 @@ import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
-import { CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
+import { CORREO_VALIDO, LIMITES, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
 
 // Los textos salen de §5 y dicen qué hacer, no qué falló.
 const MENSAJES = {
@@ -27,8 +27,14 @@ const MENSAJES = {
   correo: 'Falta tu correo.',
   correoInvalido: 'Revisa tu correo.',
   proyecto: 'Falta el problema.',
-  enviado: 'Mensaje enviado, te responderemos pronto.',
-  fallo: 'No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl.',
+}
+
+// Título y texto del toast con el resultado del envío. El del fallo no lleva
+// el correo en el texto: va debajo, como enlace (ver Contacto.jsx). La marca
+// (✓ o !) la pone el CSS según el estado.
+const TOAST = {
+  ok: ['¡Gracias por escribirnos!', 'Te responderemos pronto.'],
+  error: ['No pudimos enviar tu mensaje', 'Escríbenos directamente a:'],
 }
 
 /**
@@ -74,9 +80,54 @@ function initFormulario() {
   const form = document.querySelector('.formulario')
   if (!form) return
 
-  const aviso = form.querySelector('.formulario-aviso')
+  const toast = form.parentElement.querySelector('.contacto-toast')
   const boton = form.querySelector('.formulario-enviar')
   const campos = [form.elements.nombre, form.elements.correo, form.elements.proyecto]
+
+  // El contador de caracteres del mensaje. El tope lo impone `maxLength`; aquí
+  // solo se dibuja cuántos van, y se tiñe al acercarse al límite.
+  const cuenta = form.querySelector('.campo-cuenta-n')
+  const actualizarCuenta = () => {
+    const usados = form.elements.proyecto.value.length
+    cuenta.textContent = usados
+    cuenta.parentElement.classList.toggle('campo-cuenta--cerca', usados >= LIMITES.proyecto * 0.9)
+  }
+  form.elements.proyecto.addEventListener('input', actualizarCuenta)
+  actualizarCuenta()
+
+  // El toast del resultado: sube desde abajo y baja al cerrarlo. El éxito se
+  // retira solo a los 5 s; el fallo se queda, porque trae el correo para
+  // escribir directo y hay que darle tiempo a usarlo. Tras bajar se vuelve a
+  // ocultar con `hidden` —a los 300 ms, haya o no transición— para que no
+  // quede en el árbol de accesibilidad.
+  let retirar
+  const cerrarToast = () => {
+    clearTimeout(retirar)
+    toast.classList.remove('visible')
+    retirar = setTimeout(() => (toast.hidden = true), 300)
+  }
+  toast.querySelector('.contacto-toast-cerrar').addEventListener('click', cerrarToast)
+
+  // `detalle` reemplaza el texto cuando el Worker explica qué corregir. Siempre
+  // como `textContent`: lo que llega de la red nunca se lee como HTML. El
+  // texto se escribe con el toast ya visible: escrito estando oculto, el
+  // lector de pantalla no siempre lo anuncia.
+  const [titulo, texto] = toast.querySelectorAll('p')
+  const mostrarToast = (estado, detalle) => {
+    clearTimeout(retirar)
+    toast.dataset.estado = estado
+    toast.hidden = false
+    requestAnimationFrame(() => {
+      titulo.textContent = TOAST[estado][0]
+      texto.textContent = detalle || TOAST[estado][1]
+      // Medirlo fija el punto de partida (abajo y transparente). Sin esto,
+      // salir de `hidden` y ganar `visible` caen en el mismo cálculo de estilo
+      // y el toast aparece sin subir.
+      toast.getBoundingClientRect()
+      toast.classList.add('visible')
+    })
+    if (estado === 'ok') retirar = setTimeout(cerrarToast, 5000)
+  }
 
   // Nombre y correo avisan de un error de tipeo mientras se escribe. Vacío no
   // se marca: eso es ir en orden, no equivocarse, y lo cubre el envío.
@@ -137,7 +188,6 @@ function initFormulario() {
     // respuesta llega antes, la persona no ve ningún estado intermedio, que es
     // exactamente lo correcto cuando algo fue instantáneo.
     boton.disabled = true
-    aviso.hidden = true
     const avisarQueEnvia = setTimeout(() => {
       boton.textContent = 'Enviando…'
     }, 150)
@@ -150,22 +200,26 @@ function initFormulario() {
         // Sin tope, una red colgada dejaría el botón desactivado para siempre.
         signal: AbortSignal.timeout(15000),
       })
-      // El Worker dice qué pasó (datos inválidos, demasiados envíos...); si
-      // la respuesta no trae texto, vale el fallo genérico.
+      // El Worker dice qué pasó. Con un 4xx (datos inválidos, demasiados
+      // envíos) su frase dice qué corregir y va en el toast; con un 5xx o sin
+      // respuesta vale el texto genérico, que lleva al correo.
       const { mensaje } = await respuesta.json().catch(() => ({}))
-      if (!respuesta.ok) throw new Error(mensaje)
+      if (!respuesta.ok) {
+        mostrarToast('error', respuesta.status < 500 && mensaje)
+        return
+      }
 
+      // El formulario se vacía y queda a la vista; el agradecimiento sube
+      // desde abajo y se retira solo.
       form.reset()
-      aviso.textContent = MENSAJES.enviado
-      aviso.dataset.estado = 'ok'
-    } catch (error) {
-      aviso.textContent = (error.name === 'Error' && error.message) || MENSAJES.fallo
-      aviso.dataset.estado = 'error'
+      actualizarCuenta()
+      mostrarToast('ok')
+    } catch {
+      mostrarToast('error')
     } finally {
       // Cada token de Turnstile vale un solo envío.
       if (widget !== undefined) window.turnstile.reset(widget)
       clearTimeout(avisarQueEnvia)
-      aviso.hidden = false
       boton.disabled = false
       boton.textContent = 'Enviar mensaje'
     }

@@ -1,26 +1,5 @@
 /* La Ley 21.719 en simple. Ver Ley21719.jsx. */
 
-/* ---- la portada ----
-   El cielo de la mañana entero, el de la portada del inicio (`hora-manana`):
-   sube detrás de la barra y se difumina del azul hondo al blanco de la página.
-   Sobre su azul más hondo el texto suave da 2.7:1, así que aquí todo el texto
-   va en la tinta, como en el pie de día: da 5:1 en lo más azul. */
-:root .ley-portada {
-  --texto-suave: var(--texto);
-  --linea: color-mix(in srgb, var(--texto) 25%, transparent);
-}
-
-.ley-portada {
-  margin-top: calc(-1 * var(--barra-alto));
-  padding-top: calc(var(--barra-alto) + var(--e-16));
-}
-
-@media (min-width: 1024px) {
-  .ley-portada {
-    padding-top: calc(var(--barra-alto) + var(--e-24));
-  }
-}
-
 /* Lo que va bajo la portada no se maqueta hasta acercarse a la pantalla. La
    guía tiene casi el triple de nodos que /nosotros y, con la CPU a un cuarto,
    maquetarla entera al cargar costaba unos 390 ms; así baja a unos 210. Mientras
@@ -447,32 +426,7 @@
   font-weight: 800;
 }
 
-/* ---- el cierre ----
-   Va en la caída, como el contacto de la portada: deja ver su degradado, del
-   blanco al azul del cielo, y pone encima una tarjeta clara. */
-:root .caida > .ley-cierre {
-  --fondo-hora: transparent;
-}
-
-/* Sin aire arriba: la sección anterior ya deja el suyo, y sumados separaban la
-   tarjeta el doble que al resto de las secciones. */
-.ley-cierre {
-  padding-top: 0;
-}
-
-.ley-tarjeta {
-  max-width: 48rem;
-  padding: var(--e-8) var(--e-6);
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-tarjeta);
-}
-
-@media (min-width: 640px) {
-  .ley-tarjeta {
-    padding: var(--e-12);
-  }
-}
+/* ---- el cierre ---- */
 
 .ley-acciones {
   display: flex;

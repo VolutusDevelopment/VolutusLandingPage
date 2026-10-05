@@ -13,6 +13,9 @@ import Pie from './Pie.jsx'
  *
  * `ruta` marca en la barra el enlace de la página en la que se está.
  *
+ * `hora` es la de la cabecera de la página, para que la barra ya salga del
+ * servidor con sus colores y no cambie al cargar (barra.js la sigue después).
+ *
  * `pie` en falso lo quita: las páginas de error son una sola pantalla, sin
  * caída que recorrer.
  *
@@ -20,14 +23,14 @@ import Pie from './Pie.jsx'
  * (`.caida`): así el degradado es uno, de arriba de la última sección al
  * final de la página, y no dos que hay que empalmar.
  */
-export default function Pagina({ enHome = false, ruta, className, pie = true, cierre, children }) {
+export default function Pagina({ enHome = false, ruta, hora, className, pie = true, cierre, children }) {
   return (
     <>
       <a className="salto" href="#contenido">
         Saltar al contenido
       </a>
 
-      <Barra enHome={enHome} ruta={ruta} />
+      <Barra enHome={enHome} ruta={ruta} hora={hora} />
 
       <main id="contenido" className={className}>
         {children}

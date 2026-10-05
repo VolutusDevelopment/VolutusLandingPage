@@ -3,8 +3,9 @@ import { VOLUTA } from '../components/Marca.jsx'
 import { PAGINAS } from '../lib/meta.js'
 
 /**
- * Quiénes somos. Cae como la portada: arriba claro, y desde el nombre hacia
- * abajo cada sección un poco más honda, hasta el mar del pie.
+ * Quiénes somos. Va de cielo a cielo, como la guía de la ley: arriba, el
+ * cielo de la mañana; en medio, secciones claras, y abajo la caída con el
+ * cierre y el pie de día (ver `cierre` en Pagina.jsx).
  *
  * Todo lo que dice se puede comprobar: el origen del nombre está en el Atlas
  * Internacional de Nubes, la construcción del símbolo está en el código de la
@@ -65,14 +66,39 @@ function Construccion() {
   )
 }
 
+/** La invitación final, en la caída: sobre su degradado, en una tarjeta clara. */
+function Cierre() {
+  return (
+    <section className="seccion zona-cielo cierre" aria-labelledby="cierre-titulo">
+      <div className="contenedor">
+        <div className="cierre-tarjeta entra">
+          <h2 id="cierre-titulo">Lo que hacemos se puede abrir y revisar.</h2>
+          <p className="entradilla nosotros-parrafo">
+            PonleNota está en línea, y el agente de IA que salió segundo en el hackathon de Huawei Cloud
+            y Kostra AI tiene su código abierto.
+          </p>
+          <p className="nosotros-acciones">
+            <a className="boton boton-primario" href="/#contacto">
+              Cuéntanos tu proyecto
+            </a>
+            <a className="boton boton-secundario" href="/#proyectos">
+              Ver proyectos
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function Nosotros() {
   // La entradilla visible es la misma frase que la meta description, como en
   // el documento legal: un resumen, escrito una vez.
   const { descripcion } = PAGINAS['/nosotros']
 
   return (
-    <Pagina ruta="/nosotros" className="nosotros">
-      <section className="seccion zona-cielo nosotros-cabecera">
+    <Pagina ruta="/nosotros" className="nosotros" hora="dia" cierre={<Cierre />}>
+      <section className="seccion zona-cielo hora-dia cabecera-cielo">
         <div className="contenedor">
           <p className="antetitulo">Nosotros</p>
           <h1>Quiénes somos</h1>
@@ -80,7 +106,7 @@ export default function Nosotros() {
         </div>
       </section>
 
-      <section id="origen" className="seccion zona-plano hondura-1" aria-labelledby="origen-titulo">
+      <section id="origen" className="seccion zona-cielo" aria-labelledby="origen-titulo">
         <div className="contenedor nosotros-origen">
           <div>
             <p className="antetitulo entra">De dónde viene el nombre</p>
@@ -112,7 +138,7 @@ export default function Nosotros() {
         </div>
       </section>
 
-      <section className="seccion zona-plano hondura-2" aria-labelledby="como-titulo">
+      <section className="seccion zona-cielo" aria-labelledby="como-titulo">
         <div className="contenedor">
           <p className="antetitulo entra">Cómo somos</p>
           <h2 id="como-titulo" className="entra">
@@ -125,26 +151,6 @@ export default function Nosotros() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="seccion zona-plano hondura-3" aria-labelledby="cierre-titulo">
-        <div className="contenedor">
-          <h2 id="cierre-titulo" className="entra">
-            Lo que hacemos se puede abrir y revisar.
-          </h2>
-          <p className="entradilla nosotros-parrafo entra">
-            PonleNota está en línea, y el agente de IA que salió segundo en el hackathon de Huawei Cloud
-            y Kostra AI tiene su código abierto.
-          </p>
-          <p className="nosotros-acciones entra">
-            <a className="boton boton-primario" href="/#contacto">
-              Cuéntanos tu proyecto
-            </a>
-            <a className="boton boton-secundario" href="/#proyectos">
-              Ver proyectos
-            </a>
-          </p>
         </div>
       </section>
     </Pagina>

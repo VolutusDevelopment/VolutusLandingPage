@@ -32,9 +32,9 @@
 
 /* ---- el relato: la tarjeta oscura ---- */
 
-/* Más chico que los otros h1: con su tamaño, «RESOLVIENDO» no cabía en la
+/* Más chico que los otros titulares: con su tamaño, «RESOLVIENDO» no cabía en la
    tarjeta y la ensanchaba más allá de la pantalla, en S y en L. */
-.contacto-relato h1 {
+.contacto-relato h2 {
   font-size: clamp(26px, 8vw, 60px);
 }
 
@@ -118,15 +118,21 @@
   font-family: inherit;
   font-size: var(--texto-base);
   color: var(--texto);
-  /* El campo es un hueco en la tarjeta, no otra tarjeta encima. Blanco sobre
-     blanco no se ve: se tiñe levemente con el color de texto. */
-  background: color-mix(in srgb, var(--texto) 4%, transparent);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
   padding: var(--e-3) var(--e-4);
   /* 44 px de área táctil incluso en el input de una línea. */
   min-height: 44px;
   width: 100%;
+}
+
+/* El cuadro visible. En el mensaje no lo dibuja el textarea sino el composer
+   que lo envuelve junto con su barra (ver más abajo). El campo es un hueco en
+   la tarjeta, no otra tarjeta encima. Blanco sobre blanco no se ve: se tiñe
+   levemente con el color de texto. */
+.campo input,
+.composer {
+  background: color-mix(in srgb, var(--texto) 4%, transparent);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
   transition:
     border-color 140ms var(--ease-out),
     background-color 140ms var(--ease-out);
@@ -141,25 +147,20 @@
 /* Al escribir, el campo se aclara y el borde se tiñe: dice cuál está activo
    sin recurrir a una sombra. */
 .campo input:focus,
-.campo textarea:focus {
+.composer:has(textarea:focus) {
   background: var(--superficie);
   border-color: var(--accion);
 }
 
-.campo textarea {
-  resize: vertical;
-  line-height: 1.6;
-}
-
 .campo input:hover,
-.campo textarea:hover {
+.composer:hover {
   border-color: color-mix(in srgb, var(--accion) 40%, var(--linea));
 }
 
 /* Regla 3 de §7: el error nunca se comunica solo con color. El borde cambia,
    pero lo que informa es el texto de abajo y el aria-invalid que pone el JS. */
 .campo input[aria-invalid='true'],
-.campo textarea[aria-invalid='true'] {
+.composer:has(textarea[aria-invalid='true']) {
   border-color: var(--error);
 }
 
@@ -272,39 +273,218 @@
   overflow: hidden;
 }
 
-/* En S, los dos botones a todo el ancho, uno sobre otro: el blanco grande
-   para el pulgar. Al llenar el ancho no hace falta reservar el del texto más
-   largo — «Enviando…» y «Enviar mensaje» ocupan lo mismo. */
-.formulario-acciones {
-  display: grid;
-  gap: var(--e-3);
-  margin-top: var(--e-2);
+/* ---- el mensaje: el composer ----
+ *
+ * Un solo cuadro con el texto arriba y, en su base, el contador y el botón de
+ * enviar, separados por una línea. La barra es una fila propia DEBAJO del
+ * textarea, no superpuesta: el texto nunca pasa por detrás del botón, y al
+ * agrandar el cuadro desde la esquina la barra baja con él. */
+.composer {
+  display: flex;
+  flex-direction: column;
+  /* El contador y el botón se apilan cuando el cuadro es angosto (abajo). */
+  container-type: inline-size;
 }
 
-@media (min-width: 560px) {
-  .formulario-acciones {
-    display: flex;
-    flex-wrap: wrap;
+.composer textarea {
+  display: block;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radio) var(--radio) 0 0;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* El anillo de foco lo lleva el cuadro entero, no solo el texto: dentro del
+   composer se vería cortado por la barra. Sin `:has` el textarea conserva el
+   suyo (regla 1 de §7: el foco no se quita sin poner otro). */
+@supports selector(:has(*)) {
+  .composer textarea:focus-visible {
+    outline: none;
   }
 
-  /* El ancho de «Enviar mensaje», reservado: al pasar a «Enviando…» el botón
-     no encoge y el del correo no se mueve (regla 4 de §7). */
+  .composer:has(textarea:focus-visible) {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+}
+
+.composer-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  padding: var(--e-2);
+  border-top: 1px solid var(--linea);
+}
+
+/* El ancho de «Enviar mensaje», reservado: al pasar a «Enviando…» el botón no
+   encoge (regla 4 de §7). */
+.formulario-enviar {
+  margin-left: auto;
+  min-width: 11rem;
+}
+
+/* En un cuadro angosto (S), el botón baja a su propia fila y llena el ancho:
+   el blanco grande para el pulgar, y al llenar el ancho tampoco encoge. El
+   umbral es el ancho que piden juntos el contador y el botón. Sin soporte de
+   consultas de contenedor, el botón igual baja de fila, a la derecha. */
+@container (max-width: 300px) {
   .formulario-enviar {
-    min-width: 11rem;
+    flex-basis: 100%;
   }
 }
 
-.formulario-aviso {
+/* La cuenta habla como las etiquetas: mono, chica, en tono suave. Alineada con
+   el texto de arriba, y sin partirse («123 / 500» nunca ocupa dos líneas). */
+.campo-cuenta {
+  margin: 0;
+  padding-left: var(--e-2);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cerca del tope, el número avisa con el color de error (y el peso, por si no
+   se distingue el color): regla 3 de §7. */
+.campo-cuenta--cerca .campo-cuenta-n {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* ---- el toast del resultado ----
+ *
+ * Sube desde abajo al enviarse (ver client.js): el éxito se retira solo y el
+ * fallo espera a que lo cierren, porque trae el correo para escribir directo.
+ * Es `position: fixed`, centrado abajo y por encima de todo. Su ancho es el
+ * del texto, con tope en la pantalla menos los márgenes: centrarlo con
+ * `left: 50%` lo habría limitado a media pantalla en el celular. No se dice
+ * solo con color —lleva marca y texto— ni se crea al vuelo. */
+.contacto-toast {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(var(--e-6) + env(safe-area-inset-bottom));
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  width: max-content;
+  max-width: min(calc(100% - 2 * var(--e-4)), 440px);
+  margin-inline: auto;
+  padding: var(--e-3) var(--e-4);
+  line-height: 1.4;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+  /* Punto de partida y de reposo: abajo y transparente. `.visible` lo sube. */
+  transform: translateY(calc(100% + var(--e-6)));
+  opacity: 0;
+  transition:
+    transform 320ms var(--ease-out),
+    opacity 320ms var(--ease-out);
+}
+
+/* Su `display: flex` le ganaría al `hidden` del navegador: oculto, el toast
+   seguiría en la página, transparente, alcanzable con el tabulador y por el
+   lector de pantalla. */
+.contacto-toast[hidden] {
+  display: none;
+}
+
+.contacto-toast.visible {
+  transform: none;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-toast {
+    transition-duration: 1ms;
+    transform: none;
+  }
+}
+
+/* La marca, en el color del estado, dentro de un disco tenue. */
+.contacto-toast-marca {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  font-weight: 700;
+  color: var(--exito);
+  background: color-mix(in srgb, var(--exito) 14%, transparent);
+  border-radius: 999px;
+}
+
+.contacto-toast-marca::before {
+  content: '✓';
+}
+
+.contacto-toast[data-estado='error'] .contacto-toast-marca {
+  color: var(--error);
+  background: color-mix(in srgb, var(--error) 14%, transparent);
+}
+
+.contacto-toast[data-estado='error'] .contacto-toast-marca::before {
+  content: '!';
+}
+
+.contacto-toast-cuerpo {
+  align-self: center;
+  min-width: 0;
+}
+
+/* El resultado habla con la fuente de texto de Volutus, no con la del estado
+   de un campo. */
+.contacto-toast-titulo {
+  margin: 0;
+  font-weight: 600;
+}
+
+.contacto-toast-texto {
+  margin: 0;
   font-size: var(--texto-sm);
   color: var(--texto-suave);
 }
 
-.formulario-aviso[data-estado='error'] {
-  color: var(--error);
+/* El correo, solo en el fallo: la salida directa cuando el formulario no
+   pudo. */
+.contacto-toast-correo {
+  display: none;
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--accion);
+  overflow-wrap: anywhere;
 }
 
-.formulario-aviso[data-estado='ok'] {
-  color: var(--exito);
+.contacto-toast[data-estado='error'] .contacto-toast-correo {
+  display: inline-block;
+}
+
+/* 44 px de área táctil (regla 2 de §7) sin agrandar el toast: el margen
+   negativo se come el relleno. */
+.contacto-toast-cerrar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: calc(-1 * var(--e-2)) calc(-1 * var(--e-2)) calc(-1 * var(--e-2)) 0;
+  font: inherit;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  background: none;
+  border: 0;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.contacto-toast-cerrar:hover {
+  color: var(--texto);
 }
 
 /* ---- escritorio: lado a lado ----

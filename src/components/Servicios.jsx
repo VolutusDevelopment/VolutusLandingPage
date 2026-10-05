@@ -43,7 +43,7 @@ export default function Servicios() {
   return (
     <section id="servicios" className="seccion zona-cielo servicios">
       <div className="contenedor">
-        <h1 className="entra">Nuestros Servicios</h1>
+        <h2 className="titular entra">Nuestros Servicios</h2>
 
         {/* La cartera es solo para inclinar el mazo: la lista ya usa su
             `transform` para entrar, y dos gestos no comparten propiedad. */}

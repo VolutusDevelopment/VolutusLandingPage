@@ -6,7 +6,7 @@
  * aviso.
  */
 
-export const LIMITES = { nombre: 60, correo: 100, proyecto: 4000 }
+export const LIMITES = { nombre: 60, correo: 100, proyecto: 500 }
 
 // Sin espacios ni separadores de direcciones (`,` `;` `<>` `"`...): el correo
 // termina en `reply_to`, y una coma ahí lo convertiría en varios destinatarios.

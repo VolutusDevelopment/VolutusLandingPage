@@ -4,9 +4,9 @@
  * Lo pinta el worker de las nubes (nubes-lienzo.js) con la trama de la nube y
  * en dos pasadas: `MAR` calcula una celda por texel y `TRAMA` dibuja los
  * puntos. Aquí no hay WebGL: está la física, en metros y segundos de verdad, y
- * el shader que sale de ella. Lo que el worker necesita para el cursor y el
- * pato —dónde cae un píxel en el agua, dónde está algo que flota— sale de las
- * mismas cuentas, así que el pato flota en el agua que se dibuja.
+ * el shader que sale de ella. Lo que el worker necesita para el pato —dónde
+ * está algo que flota— sale de las mismas cuentas, así que el pato flota en el
+ * agua que se dibuja.
  *
  * La física:
  *
@@ -32,12 +32,15 @@
  *     estela atrás. Mientras rompe es blanca y sólida; al envejecer se abre en
  *     encaje, una red de burbujas alrededor de agua limpia, hasta que solo
  *     quedan las venas.
- *   - Lo que toca el agua —el cursor, el dedo, el pato— deja anillos con la
- *     solución exacta del agua honda para un impulso, la de Cauchy y Poisson:
- *     a una edad τ y a una distancia r llega la ola de número k = g·τ²/(4r²),
- *     con fase g·τ²/(4r). Las largas llegan primero. Sumados a lo largo de un
- *     recorrido, los anillos forman la estela de Kelvin, la V de 19,47° de
- *     todo lo que avanza por el agua. Solo mueven la luz, no la silueta.
+ *   - El pato, al salir a flote, deja anillos con la solución exacta del agua
+ *     honda para un impulso, la de Cauchy y Poisson: a una edad τ y a una
+ *     distancia r llega la ola de número k = g·τ²/(4r²), con fase g·τ²/(4r).
+ *     Las largas llegan primero. Solo mueven la luz, no la silueta.
+ *   - Al nadar deja la estela de Kelvin, la V de 19,47° de todo lo que avanza
+ *     por el agua. La suya, a su escala, cabría en una celda, así que se arma
+ *     (`ESTELA`) con la construcción de Kelvin a la escala de su cuerpo:
+ *     anillos que nacen en su borde, lo rodean y detrás de él se abren en la
+ *     V, con crestas claras y valles hondos.
  *   - Las cortas no son iguales en todas partes (`PICADO`): en la cresta de
  *     la silueta el agua se comprime y ellas se empinan; en el valle se
  *     estiran y se calman. Las crestas quedan ásperas y con espuma, y los
@@ -155,11 +158,16 @@ const CRESTA = SILUETA.reduce((suma, ola) => suma + ola.alto, 0)
 export const VAIVEN = SILUETA.reduce((suma, ola) => suma + ola.alto * Math.abs(ola.dx), 0)
 const LEJOS = 3000
 
-// Lo que toca el agua: hasta `FUENTES` impulsos a la vez, cada uno con su
-// lugar, su instante y su fuerza. Viven `VIDA` segundos y miden `RADIO` m.
-export const FUENTES = 24
-export const VIDA = 2.25
+// La gota del pato al salir a flote: un impulso que vive `VIDA` segundos y
+// mide `RADIO` m.
+const VIDA = 2.25
 const RADIO = 0.15
+
+// El pato nada a `NADO` m/s. Su `rastro` son `RASTRO` puntos: dónde está y
+// dónde estuvo cada `TRAMO_RASTRO` m de camino (ver `ESTELA`).
+export const NADO = 0.3
+export const RASTRO = 16
+export const TRAMO_RASTRO = 0.11
 
 // El sol: adelante, 17° a la derecha y 18° sobre el horizonte.
 const SOL = [0.3, 0.34, 1].map((v, _, sol) => v / Math.hypot(...sol))
@@ -203,14 +211,6 @@ const CASCO = [
 
 export function casco(t) {
   return CASCO.reduce((suma, [x, z]) => suma + relieve(x, z, t, Infinity), 0) / CASCO.length
-}
-
-// Del lienzo al agua en calma: dónde toca el mar el rayo del píxel (x, y), en
-// metros. `null` sobre el horizonte.
-export function alAgua({ ancho, focal, horizonte, ojos }, x, y) {
-  if (y <= horizonte) return null
-  const z = (focal * ojos) / (y - horizonte)
-  return { x: ((x - ancho / 2) * z) / focal, z }
 }
 
 // Del agua al lienzo: dónde se ve el punto (x, y, z), en px.
@@ -339,22 +339,70 @@ const sumarA = (fuerza) => (ola) => `s = sin(th);
   origen += ${num(ola.alto)} * d * s * ${rumbo(ola)};
   rugosidad += (1.0 - d * d) * ${fuerza}${fuerza}${num(ola.e ** 2 / 2)};`
 
-// La pendiente de los anillos de lo que tocó el agua.
+// La pendiente de los anillos de la gota.
 const ONDAS = `
 vec2 ondas(vec2 p, float r) {
-  vec2 pendiente = vec2(0.0);
-  for (int i = 0; i < ${FUENTES}; i++) {
-    vec4 fuente = fuentes[i];
-    float edad = t - fuente.z;
-    if (fuente.w <= 0.0 || edad <= 0.0 || edad >= ${num(VIDA)}) continue;
-    vec2 d = p - fuente.xy;
-    float r2 = dot(d, d) + ${num(RADIO ** 2)};
-    float lejos = sqrt(r2);
-    float k = ${num(G / 4)} * edad * edad / r2;
-    float alto = fuente.w * edad * edad / (r2 * lejos) * exp(${num(-(RADIO ** 2) / 4)} * k * k) * (1.0 - edad / ${num(VIDA)});
-    pendiente -= alto * k * cos(k * lejos) * detalle(${num(2 * Math.PI)} / k, r) * d / lejos;
+  float edad = t - gota.z;
+  if (gota.w <= 0.0 || edad <= 0.0 || edad >= ${num(VIDA)}) return vec2(0.0);
+  vec2 d = p - gota.xy;
+  float r2 = dot(d, d) + ${num(RADIO ** 2)};
+  float lejos = sqrt(r2);
+  float k = ${num(G / 4)} * edad * edad / r2;
+  float alto = gota.w * edad * edad / (r2 * lejos) * exp(${num(-(RADIO ** 2) / 4)} * k * k) * (1.0 - edad / ${num(VIDA)});
+  return -alto * k * cos(k * lejos) * detalle(${num(2 * Math.PI)} / k, r) * d / lejos;
+}`
+
+// La estela del pato. Cada punto de `rastro` es un anillo que nace en el borde
+// de su cuerpo —una elipse de semiejes `cuerpo` a la altura del agua— y se
+// abre a un tercio de lo que nada el pato. Es la construcción de Kelvin: los
+// anillos que deja algo que avanza a U y se abren a U/3 tienen por envolvente
+// una V de arcsen(1/3) = 19.47°, la de todo lo que nada en agua honda. La V no
+// se programa: sale de sumar los anillos, que se refuerzan donde se tocan.
+// Si el pato se detiene, no deja puntos nuevos, y los anillos que ya dejó se
+// alejan solos y se apagan.
+//
+//   - Cada anillo es una onda, una cresta entre dos valles, que se apaga con
+//     la edad: en `DURA_ESTELA` s baja a un 37 %. Dentro de la V, las de
+//     anillos vecinos llegan desfasadas y se cancelan; en la envolvente
+//     llegan en fase y se suman. Su ancho no baja de `ANCHO_ESTELA` celda de
+//     la pantalla, para que no titile, y su pendiente es la de una onda corta
+//     de verdad, `PENDIENTE_ESTELA`, aunque la cresta quede más ancha: la luz
+//     depende de la pendiente y no del alto. Como los de `ONDAS`, mueve la luz
+//     y no la silueta.
+//   - Son ondas más cortas y empinadas que una celda: en su cresta el agua
+//     brilla y en su valle se ve honda. A esta distancia, una línea clara y
+//     una oscura. `estela` devuelve cuánto, de −1 a 1, y se pinta con el
+//     blanco de la espuma o hacia el fondo.
+//   - El primer punto es el pato mismo, y su anillo es su línea de flotación:
+//     una cresta sola, el menisco y la ola de proa, sin valles que la
+//     cancelen. Es lo que lo rodea, nade o no.
+//   - Los puntos son de la partícula de agua —su reposo en la silueta, como en
+//     `flotar`—, así que la estela sube, baja y se mece con el pato. No deriva:
+//     el pato tampoco.
+const PENDIENTE_ESTELA = 0.6
+const ANCHO_ESTELA = 0.7
+const DURA_ESTELA = 3
+const VIDA_ESTELA = 3 * DURA_ESTELA
+const BLANCO_ESTELA = 0.9
+
+const ESTELA = `
+float estela(vec2 o, float r, inout vec2 pendiente) {
+  if (rastro[0].w == 0.0 || distance(o, rastro[0].xy) > ${num(RASTRO * TRAMO_RASTRO + (NADO / 3) * VIDA_ESTELA)} + cuerpo.x) return 0.0;
+  float ancho = max(0.03, ${num(ANCHO_ESTELA)} * r * r / escala), alto = 0.0;
+  for (int i = 0; i < ${RASTRO}; i++) {
+    vec4 punto = rastro[i];
+    float edad = t - punto.z;
+    if (punto.w == 0.0 || edad > ${num(VIDA_ESTELA)}) continue;
+    vec2 eje = cuerpo + ${num(NADO / 3)} * edad;
+    vec2 u = (o - punto.xy) / eje;
+    float lejos = max(length(u), 1e-3);
+    float borde = (lejos - 1.0) * length(eje * u) / lejos;
+    float fuerza = exp(-edad / ${num(DURA_ESTELA)});
+    float x = borde / ancho, campana = fuerza * exp(-x * x);
+    alto += (i == 0 ? 1.0 : 1.0 - 2.0 * x * x) * campana;
+    pendiente -= ${num(PENDIENTE_ESTELA / 0.976)} * x * (3.0 - 2.0 * x * x) * campana * normalize(u / eje);
   }
-  return pendiente;
+  return clamp(${num(BLANCO_ESTELA)} * alto, -1.0, 1.0);
 }`
 
 // La espuma flota: no es una mancha del mundo sino de la partícula de agua
@@ -431,10 +479,12 @@ float espuma(vec2 p, vec2 origen, float r) {
 }`
 
 // La superficie entera en `p`: su altura, su pendiente, el punto de reposo del
-// agua que está ahí y la rugosidad de lo que no alcanza a verse. Primero la
-// silueta, que da el picado; después las cortas, picadas.
+// agua que está ahí, la rugosidad de lo que no alcanza a verse y cuánto la
+// aclara o la oscurece la estela del pato, a `r` m de los ojos. Primero la
+// silueta, que da el picado y el reposo donde se mide la estela; después las
+// cortas, picadas.
 const SUPERFICIE = `
-float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out float rugosidad) {
+float superficie(vec2 p, float r, float cuando, out vec2 pendiente, out vec2 origen, out float rugosidad, out float revuelta) {
   float h = 0.0, d, fase, th, s, c, e;
   vec3 m = vec3(0.0);
   pendiente = vec2(0.0);
@@ -442,6 +492,7 @@ float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out 
   rugosidad = 2e-4;
   ${sumar(SILUETA, (ola) => `${sumarA('')(ola)}\n  ${comprimir('')(ola)}`)}
   ${PICAR}
+  revuelta = estela(origen, r, pendiente);
   ${sumar(TEXTURA, sumarA('picado * '))}
   return h;
 }`
@@ -452,7 +503,8 @@ float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out 
  * `nado`, la
  * celda de la esquina del pato, hacia dónde mira (0 si no hay pato) y su
  * distancia; `dice`, qué dicho de `GLOBOS` dice, desde 1 (0 si calla);
- * `fuentes`, lo que tocó el agua.
+ * `gota`, la del pato al salir a flote; `rastro` y `cuerpo`, el camino del
+ * pato y los semiejes de su cuerpo, en m (ver `ESTELA`).
  *
  *   - La marcha: el rayo de la celda baja `baja` metros por metro de avance.
  *     Solo puede tocar agua entre la proa y donde pasa por debajo del valle
@@ -472,10 +524,10 @@ float superficie(vec2 p, float cuando, out vec2 pendiente, out vec2 origen, out 
  *     0.498, bajo el agua.
  */
 export const MAR = `precision highp float;
-uniform vec2 res;
+uniform vec2 res, cuerpo;
 uniform vec3 camara, luz, sombra, borde;
 uniform float t, celda, escala, dice;
-uniform vec4 nado, fuentes[${FUENTES}];
+uniform vec4 nado, gota, rastro[${RASTRO}];
 uniform sampler2D ruido, pato, globo;
 const float PROA = ${num(PROA)};
 const float CRESTA = ${num(CRESTA)};
@@ -493,6 +545,7 @@ float detalle(float largo, vec2 rumbo, vec2 p) {
 ${RELIEVE}
 ${PLIEGUE}
 ${ONDAS}
+${ESTELA}
 ${SUPERFICIE}
 ${ESPUMA}
 void main() {
@@ -535,8 +588,8 @@ void main() {
   float area = 0.0;
   if (toca) {
     vec2 p = rumbo * r, pendiente, origen;
-    float rugosidad;
-    float h = superficie(p, t, pendiente, origen, rugosidad);
+    float rugosidad, revuelta;
+    float h = superficie(p, r, t, pendiente, origen, rugosidad, revuelta);
     pendiente += ondas(p, r);
     vec3 normal = normalize(vec3(-pendiente.x, 1.0, -pendiente.y));
     float fresnel = 0.02 + 0.98 * pow(1.0 - max(dot(normal, -rayo), 0.0), 5.0);
@@ -549,7 +602,8 @@ void main() {
     float transluz = smoothstep(0.1, 0.7, h) * max(dot(rayo, SOL), 0.0);
     float tono = mix(0.1 + 0.4 * transluz, cielo, fresnel);
     float blanco = 0.72 + 0.28 * smoothstep(0.0, 0.45, dot(normal, SOL));
-    tono = mix(tono, blanco, espuma(p, origen, r));
+    tono = mix(tono, blanco, max(espuma(p, origen, r), revuelta));
+    tono *= 1.0 + min(revuelta, 0.0);
     tono = mix(tono, 1.0, clamp(0.02 * sol, 0.0, 1.0));
     tono = mix(tono, 0.68, 1.0 - exp(-r / 900.0));
     area = smoothstep(0.07, 0.6, tono);

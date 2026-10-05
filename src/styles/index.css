@@ -34,7 +34,7 @@
   src: url('/fonts/geist-mono-latin.woff2') format('woff2');
 }
 
-/* La fuente del logotipo, solo para los h1: así el titular se ladea lo mismo
+/* La fuente del logotipo, solo para los titulares: así el titular se ladea lo mismo
    que la marca (10°). Una sola cara, la que se usa. */
 @font-face {
   font-family: 'Archivo';
@@ -364,6 +364,21 @@
   --fondo-hora: linear-gradient(#2b8de4, #4d9fea 28%, #7cbcf1 52%, #c2e1f8 76%, #f6f9fc 94%);
 }
 
+/* El día: el cielo alto de las cabeceras de las páginas internas
+   (`.cabecera-cielo`), un azul parejo con todo el texto en blanco, que sobre
+   él da 4.7:1 y alcanza también para la letra chica. La barra lo copia al
+   pasar por encima, así que su logo y sus letras también van en blanco. El
+   halo de las letras de la cápsula (`--fondo`) es el mismo azul. */
+:root .hora-dia {
+  --fondo: #1976cc;
+  --texto: #ffffff;
+  --texto-suave: #ffffff;
+  --linea: rgb(255 255 255 / 0.4);
+  --accion: #ffffff;
+  --foco: #ffffff;
+  --vidrio-halo: rgb(25 118 204 / 0.3);
+}
+
 /* La noche: azul que se hunde hacia el borde de la página y un mar bajo la
    luna, crestas azules y espuma plateada. El texto suave sobre el fondo más
    hondo da 8.9:1. */
@@ -372,29 +387,6 @@
   --mar-cresta: #3b86bf;
   --mar-espuma: #eef3ff;
   --fondo-hora: linear-gradient(#0a1a2a, #050d18);
-}
-
-/* ============ La caída ============
-   La página cae de la nube al mar y nunca vuelve a subir. Pasado el único
-   corte de claro a oscuro, cada sección es un poco más honda que la anterior:
-   empieza en el color donde terminó la de arriba y acaba en el que abre la de
-   abajo, así que no hay costura entre ellas. La última llega al #0a1a2a donde
-   empieza el mar del pie.
-
-   Solo cambian el fondo; el resto es el tema plano. El punto más claro, el
-   arranque de la primera, es el que fija el límite: ahí el texto da 11:1, el
-   secundario 5.9:1 y la acción 4.9:1. Un azul más claro bajaba la acción de
-   4.5:1. */
-:root .hondura-1 {
-  --fondo-hora: linear-gradient(#173350, #132c45);
-}
-
-:root .hondura-2 {
-  --fondo-hora: linear-gradient(#132c45, #0f2338);
-}
-
-:root .hondura-3 {
-  --fondo-hora: linear-gradient(#0f2338, #0a1a2a);
 }
 
 /* ============ Base ============ */
@@ -441,8 +433,10 @@ h3 {
 /* Los h1 hablan como el logotipo: Archivo negra itálica, en mayúscula y con
    su mismo aire entre letras. En el logotipo «VOLUTUS» mide 534.9 de tinta
    con un em de 100; la fuente sola, 495.9: 6.5 por cada uno de los seis
-   espacios. */
-h1 {
+   espacios. `.titular` es la misma voz para un h2 que abre una sección
+   grande: se ve como titular, pero la página tiene un solo h1. */
+h1,
+.titular {
   font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-2xl);
   font-style: italic;
@@ -636,6 +630,62 @@ svg {
 .zona-plano + .zona-plano:not(.vista, .servicio),
 .zona-cielo + .zona-cielo {
   padding-top: 0;
+}
+
+/* ============ La caída ============
+   Las páginas internas van del cielo de la mañana al cielo de la mañana:
+   arriba, la cabecera con el cielo entero; en medio, el blanco de la zona
+   cielo, y abajo `.caida` (Contacto.css), que pinta el cierre y el pie de día
+   con un solo degradado. Va después de `.seccion` para ganarle el relleno.
+
+   La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), que
+   se sostiene bajo todo su texto, y solo en el relleno de abajo (`--fundido`)
+   se difumina al blanco de la página. */
+:root .cabecera-cielo {
+  --fundido: calc(var(--e-24) + var(--e-16));
+  --fondo-hora: linear-gradient(
+    var(--fondo) calc(100% - var(--fundido)),
+    #7cbcf1 calc(100% - var(--fundido) / 2),
+    #f6f9fc
+  );
+}
+
+.cabecera-cielo {
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-top: calc(var(--barra-alto) + var(--e-16));
+  padding-bottom: calc(var(--e-8) + var(--fundido));
+}
+
+@media (min-width: 1024px) {
+  .cabecera-cielo {
+    padding-top: calc(var(--barra-alto) + var(--e-24));
+  }
+}
+
+/* El cierre va en la caída, como el contacto de la portada: deja ver su
+   degradado, del blanco al azul del cielo, y pone encima una tarjeta clara.
+   Sin aire arriba: la sección anterior ya deja el suyo, y sumados separaban la
+   tarjeta el doble que al resto de las secciones. */
+:root .caida > .cierre {
+  --fondo-hora: transparent;
+}
+
+.cierre {
+  padding-top: 0;
+}
+
+.cierre-tarjeta {
+  max-width: 48rem;
+  padding: var(--e-8) var(--e-6);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+@media (min-width: 640px) {
+  .cierre-tarjeta {
+    padding: var(--e-12);
+  }
 }
 
 /* Antetítulo de sección. Es un <p>, no un encabezado: no entra en la jerarquía

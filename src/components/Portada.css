@@ -1,3 +1,20 @@
+/* La portada es el cielo del pie (`.caida`, Contacto.css) al revés, con el
+   mismo fundido, pero parte de un azul un poco más hondo. */
+:root .portada {
+  --fondo-hora: linear-gradient(#1c83df, #4d9fea 42%, #7cbcf1 70%, #c2e1f8 90%, #f6f9fc);
+}
+
+/* Arriba del todo, detrás de la barra, el azul es el más hondo y la barra va
+   en blanco, como en las páginas internas. Esta franja vacía lleva la hora
+   del día: barra.js la ve detrás de cada pieza y la copia. Mide lo que la
+   barra, así que en cuanto pasan por detrás la nube o el texto, la barra
+   vuelve a la tinta. */
+.portada-alba {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--barra-alto);
+}
+
 .portada {
   /* La escena pasa por debajo de la barra: el cielo llega hasta el borde de
      arriba de la pantalla y la barra flota encima con su vidrio. */

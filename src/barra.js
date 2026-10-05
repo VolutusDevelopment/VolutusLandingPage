@@ -50,7 +50,8 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
 }
 
 // Copia la zona y la hora de lo que hay detrás. Una tarjeta no lleva hora
-// propia: la hereda de su sección.
+// propia: la hereda de su sección. Una franja de día dentro de una sección
+// (`.portada-alba`) sí la lleva, y manda la suya.
 function tomarZona(destino, debajo) {
   if (!debajo) return
   const plano = debajo.classList.contains('zona-plano')
@@ -58,7 +59,7 @@ function tomarZona(destino, debajo) {
   destino.classList.toggle('zona-cielo', !plano)
   const esHora = (clase) => clase.startsWith('hora-')
   destino.classList.remove(...[...destino.classList].filter(esHora))
-  const hora = [...(debajo.closest('.seccion, .pie')?.classList ?? [])].find(esHora)
+  const hora = [...(debajo.closest('.hora-dia, .seccion, .pie')?.classList ?? [])].find(esHora)
   if (hora) destino.classList.add(hora)
 }
 
@@ -114,7 +115,7 @@ export default function initBarra() {
 
   vigilarFranja(zonas, '-4% 0px -95% 0px', (debajo) => tomarZona(barra, debajo))
 
-  const fondos = document.querySelectorAll('.seccion, .seccion .zona-plano, .pie')
+  const fondos = document.querySelectorAll('.seccion, .seccion :is(.zona-plano, .hora-dia), .pie')
   barra
     .querySelectorAll('.barra-marca, .barra-capsula, .barra-enlaces a')
     .forEach((pieza) => vigilarDetras(pieza, fondos))

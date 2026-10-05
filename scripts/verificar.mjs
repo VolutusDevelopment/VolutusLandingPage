@@ -128,12 +128,17 @@ async function medirFoco(ruta) {
     const estado = await pagina.evaluate(() => {
       const e = document.activeElement
       if (!e || e === document.body) return null
-      const s = getComputedStyle(e)
-      return { estilo: s.outlineStyle, ancho: parseFloat(s.outlineWidth) }
+      // El anillo puede ir en el envoltorio inmediato: el composer del
+      // formulario lo lleva por su textarea, para que no lo corte la barra.
+      const conAnillo = (el) => {
+        const s = getComputedStyle(el)
+        return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2
+      }
+      return { conAnillo: conAnillo(e) || conAnillo(e.parentElement) }
     })
     if (!estado) break
     paradas++
-    if (estado.estilo === 'none' || estado.ancho < 2) sinAnillo++
+    if (!estado.conAnillo) sinAnillo++
   }
   await ctx.close()
   return { paradas, sinAnillo }

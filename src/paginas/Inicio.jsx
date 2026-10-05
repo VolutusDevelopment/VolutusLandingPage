@@ -24,7 +24,7 @@ import Contacto from '../components/Contacto.jsx'
  */
 export default function Inicio() {
   return (
-    <Pagina enHome cierre={<Contacto />}>
+    <Pagina enHome hora="dia" cierre={<Contacto />}>
       <Portada />
       <Servicios />
       <Proyectos />

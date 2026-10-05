@@ -101,12 +101,13 @@ export const BURLAS_ODIO = [
 
 
 export const RECLAMOS_ODIO = [
+  
   ['¿TODAVÍA', 'AQUÍ?'],
   ['¡ERES MI', 'VILLANO, Y  NO', 'MI FAVORITO!'],  
   ['¡MI ARMADURA', 'ERA ARRENDADA!'],
   ['NO SEGUIRÉ', 'LA LEY 21.719', 'PARA ENCONTRARTE'],
-  ['YA SÉ DONDE', 'VIVES…'],
   ['AVADA KEDAVRA'],
+  ['YA SÉ DONDE', 'VIVES…'],  
 ]
 
 // Mensajes del pato que aparece en el footer. Se alternan en este orden y

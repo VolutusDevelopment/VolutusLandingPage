@@ -723,6 +723,9 @@ tener dueño ni fecha.
 | 24 | 2026-10-01 | Una página para los errores 5xx, en `/500`, con la misma escena y el mismo juego que la 404. Las dos páginas de error van sin pie: son una sola pantalla. Una sola página para todos los 5xx, así que no dice el código («Error del servidor»). En plan Free no se sirve: reemplazar la página 5xx de Cloudflare pide una Custom Error Rule, que es de plan Pro (ver README) | Pasar todo el sitio por el Worker para atrapar los 5xx: gasta una invocación por visita y no atrapa los errores del propio Worker | Diego |
 | 25 | 2026-10-02 | El mar del pie es físico y sin borde, en todos los pies: once trenes de olas de Gerstner con la dispersión del agua honda (las largas corren más), espuma donde la superficie se pliega y que queda donde rompió, Fresnel del agua y el sol con la rugosidad de lo que no se ve. Se mira desde un bote que sube y baja con la marejada: el horizonte no se mueve y las crestas asoman sobre él; arriba queda aire para ellas, así que ningún borde las corta. El cursor toca el agua con la solución exacta para un impulso (Cauchy–Poisson), y su recorrido deja la estela de Kelvin. Trama de 3 px, la de la nube. De día, cobalto hondo, siempre más oscuro que el cielo | La marejada de senos y ruido, con la física al revés y cortada por el borde del lienzo; una simulación en malla para el cursor, que pedía texturas de medio float y no cubría a la vez lo cercano y lo lejano | Diego |
 | 26 | 2026-10-02 | Al minuto de pestaña a la vista sale a nadar en el mar un pato, en la trama y con los colores NES: flota con el agua, deja estela y la ola que pasa delante lo tapa. Es un enlace a `/patos`, la escena de la 404 dedicada al juego, que empieza sola y no se indexa. Con movimiento reducido no sale | Un pato que cruzara la pantalla volando | Diego |
+| 27 | 2026-10-04 | El pato del mar deja su propia estela (issue #31): anillos que nacen en el borde de su cuerpo y se abren a un tercio de lo que nada, así que su envolvente es la V de Kelvin de 19,47°. Cada anillo es cresta entre dos valles: dentro de la V se cancelan y en los brazos se suman, en líneas claras y oscuras. Su línea de flotación es una cresta sola que lo rodea, nade o no. La estela es de la partícula de agua: sube, baja y se mece con el pato. Quieto, no deja anillos nuevos | Los anillos de Cauchy–Poisson del cursor, que a la escala del pato caben en una celda y no se veían; una franja lisa dentro de la estela, que no se notaba | Diego |
+| 28 | 2026-10-04 | El cursor y el dedo ya no tocan el mar: el agua solo la mueven las olas y el pato. El cielo sigue siendo viento para el cursor | Los anillos de Cauchy–Poisson y la estela de Kelvin del cursor (decisión 25) | Diego |
+| 29 | 2026-10-05 | El pato del mar sale a flote apenas el mar asoma a medias en pantalla, y no al minuto: quien llega al pie lo ve salir. Con movimiento reducido sigue sin salir | Esperar un minuto de pestaña a la vista (decisión 26), que casi nadie alcanzaba a ver | Diego |
 
 ---
 
@@ -1016,8 +1019,9 @@ ilustración.
 - *Pie:* el mar bajo la nube, visto desde un bote (decisión 25). Olas con
   física de verdad —dispersión del agua honda, trocoides, grupos y espuma
   donde rompen—, el camino del sol (o de la luna) y las crestas que asoman
-  sobre el horizonte cuando el bote cae en un valle. El cursor toca el agua y
-  deja anillos y estela; al minuto sale a nadar un pato (decisión 26).
+  sobre el horizonte cuando el bote cae en un valle. Apenas el mar asoma
+  sale a nadar un pato (decisiones 26 y 29), que deja su propia estela de Kelvin (decisión 27).
+  El cursor no toca el agua (decisión 28).
 
 Medido tras la portada y el pie (2026-09-30, Lighthouse móvil): 100 / 100 /
 100 / 100, TBT 90 ms, LCP 1.2 s, CLS 0.

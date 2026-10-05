@@ -12,18 +12,17 @@
  * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
  * de la trama, en px CSS, lo da `--nubes-celda`.
  *
- * Los dos escuchan al cursor, o al dedo: le cuentan al pintor por dónde pasa
- * sobre su zona —la sección del cielo, la franja del mar—, y el pintor lo
- * vuelve viento en el cielo y, en el mar, un toque en el agua. En el cielo,
- * lo mismo con lo que la página haga pasar por la nube —los patos de la 404—,
- * que lo avisa con un evento `soplo` en el lienzo. Y el juego de la 404 cambia
- * la forma de la nube con un evento `forma`, que aquí solo se reenvía al
- * pintor (ver patos.js). Cuando un lienzo ya pinta, recibe la clase y el evento
- * `vivo`: el juego de /patos lo espera para empezar.
+ * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
+ * sobre su sección, y el pintor lo vuelve viento. Lo mismo con lo que la
+ * página haga pasar por la nube —los patos de la 404—, que lo avisa con un
+ * evento `soplo` en el lienzo. Y el juego de la 404 cambia la forma de la nube
+ * con un evento `forma`, que aquí solo se reenvía al pintor (ver patos.js).
+ * Cuando un lienzo ya pinta, recibe la clase y el evento `vivo`: el juego de
+ * /patos lo espera para empezar.
  *
- * Y el mar tiene un pato. Al minuto de pestaña a la vista sale a nadar —lo
- * pinta y lo mueve el pintor, con la física del agua— y es un enlace a /patos,
- * que aquí sigue al pato que se ve.
+ * Y el mar tiene un pato. Sale a nadar en cuanto el mar asoma —lo pinta y lo
+ * mueve el pintor, con la física del agua— y es un enlace a /patos, que aquí
+ * sigue al pato que se ve.
  *
  * Qué NO hace, a propósito:
  *
@@ -101,23 +100,21 @@ function montar(pintor, lienzo, id) {
   }
 
   // Un punto del cursor, en coordenadas de la ventana: el pintor lo quiere en
-  // píxeles de su lienzo. `gota` es tocar sin arrastrar, que en el mar deja
-  // anillos.
-  function apuntar(x, y, gota) {
+  // píxeles de su lienzo.
+  function apuntar(x, y) {
     if (!visible || quieto() || performance.now() < callado) return
     const caja = lienzo.getBoundingClientRect()
     const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
-    pintor.postMessage({ tipo: 'cursor', id, x: (x - caja.left) * dpr, y: (y - caja.top) * dpr, gota })
+    pintor.postMessage({ tipo: 'cursor', id, x: (x - caja.left) * dpr, y: (y - caja.top) * dpr })
   }
 
   // Ratón y lápiz por `pointermove`; el dedo por `touchmove`, que sigue
   // llegando mientras la página se desplaza (`pointermove` se cancela en
   // cuanto empieza el scroll). Nada impide desplazar. Como mucho un aviso por
   // fotograma, y la caja del lienzo se lee en ese fotograma, no en cada evento.
-  // La zona es la sección del cielo o, en el mar, la franja del pie que lo
-  // lleva: el lienzo no recibe el puntero.
+  // La zona es la sección del cielo: el lienzo no recibe el puntero.
   function seguirCursor() {
-    const zona = mar ? lienzo.parentElement : lienzo.closest('section')
+    const zona = lienzo.closest('section')
     let cursor = null
     const apuntarCursor = () => {
       if (!ajeno) apuntar(cursor.x, cursor.y)
@@ -135,19 +132,25 @@ function montar(pintor, lienzo, id) {
     zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
     zona.addEventListener('pointerleave', soltar)
     zona.addEventListener('touchend', soltar, pasivo)
-    if (mar) zona.addEventListener('pointerdown', ({ clientX, clientY }) => apuntar(clientX, clientY, true), pasivo)
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
   pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar }, [offscreen])
   colorear()
   medir()
-  seguirCursor()
   if (mar) {
-    alMinuto(() => {
-      if (!quieto()) soltarPato(pintor, lienzo, id)
-    })
+    // El pato sale a flote cuando el mar asoma a medias: así se le ve salir.
+    const asomo = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return
+        asomo.disconnect()
+        if (!quieto()) soltarPato(pintor, lienzo, id)
+      },
+      { threshold: 0.5 },
+    )
+    asomo.observe(lienzo)
   } else {
+    seguirCursor()
     lienzo.addEventListener('soplo', ({ detail: { x, y, fuera } }) => {
       if (fuera) {
         if (ajeno) ceder(false)
@@ -165,29 +168,6 @@ function montar(pintor, lienzo, id) {
     activar()
   }).observe(lienzo)
   document.addEventListener('visibilitychange', activar)
-}
-
-// Llama a `hacer` al minuto de pestaña a la vista: con la pestaña oculta, el
-// reloj se para.
-function alMinuto(hacer) {
-  let falta = 60_000
-  let desde = 0
-  let reloj = 0
-  const contar = () => {
-    if (document.hidden) {
-      clearTimeout(reloj)
-      if (desde) falta -= performance.now() - desde
-      desde = 0
-      return
-    }
-    desde = performance.now()
-    reloj = setTimeout(() => {
-      document.removeEventListener('visibilitychange', contar)
-      hacer()
-    }, falta)
-  }
-  document.addEventListener('visibilitychange', contar)
-  contar()
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su

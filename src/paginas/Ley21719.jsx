@@ -250,9 +250,9 @@ function Articulo({ children }) {
  */
 function Cierre() {
   return (
-    <section className="seccion zona-cielo ley-cierre" aria-labelledby="cierre-titulo">
+    <section className="seccion zona-cielo cierre" aria-labelledby="cierre-titulo">
       <div className="contenedor">
-        <div className="ley-tarjeta">
+        <div className="cierre-tarjeta">
           <p className="antetitulo">Cómo te ayudamos</p>
           <h2 id="cierre-titulo">¿Tu web o tu app tratan datos personales?</h2>
           <p className="ley-bajada">
@@ -287,8 +287,8 @@ export default function Ley21719() {
   const { descripcion } = PAGINAS['/ley21719']
 
   return (
-    <Pagina cierre={<Cierre />}>
-      <section className="seccion zona-cielo hora-manana ley-portada">
+    <Pagina hora="dia" cierre={<Cierre />}>
+      <section className="seccion zona-cielo hora-dia cabecera-cielo ley-portada">
         <div className="contenedor">
           <p className="antetitulo">Protección de datos</p>
           <h1>La Ley 21.719, en simple</h1>
