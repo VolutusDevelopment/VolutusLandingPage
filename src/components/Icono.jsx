@@ -1,7 +1,8 @@
 /**
- * Iconos de trazo, en la misma rejilla de 24 que el símbolo. Los paneles de
- * servicios usan uno por servicio; la guía de la Ley 21.719 (/ley21719), el de
- * la ley de datos y los cuatro del final.
+ * Iconos de trazo, en la misma rejilla de 24 que el símbolo. Las cards de
+ * servicios usan uno por servicio, y las flechas de su rueda, `anterior` y
+ * `siguiente`; la guía de la Ley 21.719 (/ley21719), el de la ley de datos y
+ * los cuatro del final.
  *
  * Son decorativos siempre: el texto que acompañan ya dice lo mismo.
  */
@@ -69,6 +70,8 @@ const ICONOS = {
       <path d="M12 10v4M12 17h.01" />
     </>
   ),
+  anterior: <path d="M15 6l-6 6 6 6" />,
+  siguiente: <path d="M9 6l6 6-6 6" />,
 }
 
 export default function Icono({ id, className }) {

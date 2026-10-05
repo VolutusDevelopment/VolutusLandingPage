@@ -1,39 +1,43 @@
 import { PROYECTOS } from '../data/proyectos.js'
+import LogoProyecto from './LogoProyecto.jsx'
 
 /**
  * Índice de obra (DESIGN-BRIEF §4, bloque 2). La página sigue en blanco y el
  * color vive en las tarjetas: los logros con jurado externo van en el metal
- * de su puesto —oro o plata, porque es lo único validado por un tercero— y los
- * otros dos en tintes fríos y cálidos, así cada uno se lee como un objeto
- * aparte y no como filas de una tabla.
+ * de su puesto —oro o plata, porque es lo único validado por un tercero—.
  *
  * Cada proyecto pinta solo los enlaces que tiene. Un proyecto sin ninguno no
  * llega hasta aquí: lo filtra el propio archivo de datos, donde está explicada
  * la regla y el estado verificado de cada uno.
  *
- * Un proyecto con capturas se enseña como vitrina: una tarjeta por cada cara
- * del producto. Sin capturas se sostiene con su texto y su enlace, que es
- * lo que exige §4; nunca con un marcador vacío en lugar de la imagen.
+ * Los proyectos van en un mosaico (issue #33): una tesela por proyecto, con su
+ * ícono, su nombre y una línea. Lo demás —el resumen, las capturas, cómo
+ * funciona y los enlaces— está en su ficha, un `<dialog>` que se abre al tocar
+ * la tesela (src/fichas.js). Así la sección mide lo mismo con dos proyectos
+ * que con ocho, y las capturas no se descargan hasta que alguien abre la ficha.
  */
 
-function Enlaces({ sitio, repositorio, publicacion, nombre }) {
+function Enlaces({ sitio, repositorio, publicacion, nombre, botones }) {
   if (!sitio && !repositorio && !publicacion) return null
+  // En la ficha son botones: el producto en línea manda y va en primario; sin
+  // sitio, el primario es el código.
+  const clase = (principal) => (botones ? `boton ${principal ? 'boton-primario' : 'boton-secundario'}` : undefined)
   return (
-    <p className="proyecto-enlaces">
+    <p className={botones ? 'ficha-enlaces' : 'proyecto-enlaces'}>
       {sitio && (
-        <a href={sitio} rel="noopener">
+        <a href={sitio} rel="noopener" className={clase(true)}>
           Abrir el sitio
           <span className="solo-lectores"> de {nombre}</span>
         </a>
       )}
       {repositorio && (
-        <a href={repositorio} rel="noopener">
+        <a href={repositorio} rel="noopener" className={clase(!sitio)}>
           Ver el código fuente
           <span className="solo-lectores"> de {nombre}</span>
         </a>
       )}
       {publicacion && (
-        <a href={publicacion} rel="noopener">
+        <a href={publicacion} rel="noopener" className={clase(false)}>
           Ver la publicación del resultado
           <span className="solo-lectores"> de {nombre}</span>
         </a>
@@ -42,132 +46,126 @@ function Enlaces({ sitio, repositorio, publicacion, nombre }) {
   )
 }
 
-// Abajo para abrir; el CSS la gira cuando la pieza ya está abierta.
-function FlechaDesplegar() {
+// El círculo con flecha de las piezas que se abren: abajo para desplegar (el
+// CSS la gira cuando ya está abierta) y a la derecha para abrir una ficha.
+const TRAZOS = { desplegar: 'M6 9l6 6 6-6', abrir: 'M5 12h14M13 6l6 6-6 6' }
+
+function Flecha({ hacia = 'desplegar' }) {
   return (
     <span className="flecha-desplegar" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none">
-        <path d="M6 9l6 6 6-6" />
+        <path d={TRAZOS[hacia]} />
       </svg>
     </span>
   )
 }
 
-// La forma de cada vista sale de su orden: la primera ancha, la segunda corrida
-// hacia dentro, la tercera alta y la cuarta cierra a todo el ancho. Juntas
-// arman la composición desordenada.
-const FORMAS = ['ancha', 'desplazada', 'alta', 'cierre']
-
 /**
- * Un proyecto que se enseña por dentro: su cabecera y una tarjeta por cada
- * cara del producto, con su captura real, que sale por el borde de abajo
- * como si la tarjeta fuera una ventana sobre él. Cada tarjeta es una zona de
- * plano con su tono, así que el texto hereda colores que ya pasan contraste.
+ * La tesela de un proyecto. El botón es una línea de texto, pero su `::after`
+ * se estira sobre la tesela entera: se abre tocando en cualquier punto.
  */
-const SIN_SCRIPT = `
-.vitrina.plegada .vista { display: flex !important; }
-.vitrina.plegada .vitrina-rejilla::before { display: block !important; }
-.vitrina-abrir { display: none !important; }
-`
-
-function Vitrina({ proyecto }) {
-  // Si el resumen nombra el dominio del sitio, el enlace va en esas mismas
-  // palabras y sobra el «Abrir el sitio» aparte. Si no lo nombra, el enlace
-  // aparte se queda: el sitio nunca se pierde.
-  const dominio = proyecto.sitio && new URL(proyecto.sitio).hostname
-  const [antes, ...despues] = proyecto.resumen.split(dominio)
-  const enLinea = dominio && despues.length > 0
-
-  const tarjetas = proyecto.vistas.map(({ titulo, texto, tono, imagen }, i) => (
-    <section
-      key={titulo}
-      className={`vista vista-${FORMAS[i]} zona-plano ${tono ? `tono-${tono}` : ''} entra`}
-    >
-      <div className="vista-texto">
-        <h4>{titulo}</h4>
-        <p>{texto}</p>
-      </div>
-      <div className="vista-marco">
-        <img
-          src={imagen.src}
-          srcSet={imagen.srcSet}
-          sizes={imagen.sizes}
-          width={imagen.ancho}
-          height={imagen.alto}
-          alt={imagen.alt}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </section>
-  ))
-  // El cierre va fuera de la rejilla: la tarjeta fija de la app se suelta al
-  // final de su contenedor, y así lo hace antes de llegar a él.
-  const cierre = FORMAS.indexOf('cierre')
-
+function Obra({ proyecto }) {
   return (
-    // Plegada por defecto: abierta ocupa varias pantallas y tapaba el resto de
-    // la obra. La cabecera se queda a la vista con un botón que la despliega;
-    // lo mueve `vitrina.js`. Sin JavaScript, la hoja de `<noscript>` la deja
-    // abierta y esconde el botón, que ahí no haría nada.
-    <article className="vitrina plegada" id={proyecto.id}>
-      <div className="vitrina-rejilla">
-        {/* La cabecera es una tarjeta del mismo estilo que las que despliega
-            —plano oscuro, esquinas de 28 px y los dos degradados—, así se lee
-            como la tapa de lo que hay dentro. Se pulsa entera: el botón se
-            estira sobre toda la tarjeta (ver `.vitrina-abrir::after`). El
-            enlace a ponlenota.cl queda por encima y se abre aparte. */}
-        <div className="vitrina-cabecera zona-plano entra">
-          <h3>{proyecto.nombre}</h3>
-          <p className="proyecto-resumen">
-            {enLinea ? (
-              <>
-                {antes}
-                <a href={proyecto.sitio} rel="noopener">
-                  {dominio}
-                </a>
-                {despues.join(dominio)}
-              </>
-            ) : (
-              proyecto.resumen
-            )}
-          </p>
-          {/* Cómo funciona va en la tapa y no dentro: quien no la abre se
-              lleva igual lo que el producto hace, en tres pasos. */}
-          {proyecto.pasos && (
-            <>
-              <p className="antetitulo vitrina-pasos-titulo">Cómo funciona</p>
-              <ol className="vitrina-pasos">
-                {proyecto.pasos.map((paso) => (
-                  <li key={paso}>{paso}</li>
-                ))}
-              </ol>
-            </>
-          )}
-          <Enlaces {...proyecto} sitio={enLinea ? null : proyecto.sitio} />
-          <button
-            type="button"
-            className="vitrina-abrir"
-            aria-expanded="false"
-            aria-controls={proyecto.id}
-          >
-            <span className="vitrina-abrir-texto">Ver {proyecto.nombre} por dentro</span>
-            <FlechaDesplegar />
-          </button>
-        </div>
-        {tarjetas.slice(0, cierre)}
+    <li className="obra zona-plano entra" id={proyecto.id}>
+      <div className="obra-icono">
+        <LogoProyecto proyecto={proyecto} />
       </div>
-      {tarjetas.slice(cierre)}
-      <noscript>
-        <style dangerouslySetInnerHTML={{ __html: SIN_SCRIPT }} />
-      </noscript>
-    </article>
+      <div className="obra-texto">
+        <h3>{proyecto.nombre}</h3>
+        <p className="obra-lema">{proyecto.lema}</p>
+        <button type="button" className="obra-abrir" data-ficha={`ficha-${proyecto.id}`} aria-haspopup="dialog">
+          <span>
+            Ver ficha<span className="solo-lectores"> de {proyecto.nombre}</span>
+          </span>
+          <Flecha hacia="abrir" />
+        </button>
+      </div>
+    </li>
   )
 }
 
+/**
+ * La ficha de un proyecto: todo lo que la tesela no dice. Va en el HTML desde
+ * el servidor, así que los buscadores la leen aunque nadie la abra.
+ */
+function Ficha({ proyecto }) {
+  const titulo = `ficha-${proyecto.id}-titulo`
+  return (
+    <dialog className="ficha zona-plano" id={`ficha-${proyecto.id}`} aria-labelledby={titulo}>
+      <div className="ficha-cabecera">
+        <LogoProyecto proyecto={proyecto} />
+        <div className="ficha-titulos">
+          <h3 id={titulo}>{proyecto.nombre}</h3>
+          <p>{proyecto.lema}</p>
+        </div>
+        {/* Cerrar no necesita script: un formulario `dialog` cierra el suyo. */}
+        <form method="dialog">
+          <button className="ficha-cerrar" aria-label={`Cerrar la ficha de ${proyecto.nombre}`}>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div className="ficha-cuerpo">
+        <p className="ficha-resumen">{proyecto.resumen}</p>
+
+        {/* Una tira que se desliza de lado: cada captura con su pie. Se puede
+            enfocar para recorrerla con el teclado. */}
+        {proyecto.vistas && (
+          <ul className="ficha-capturas" tabIndex={0} aria-label={`Capturas de ${proyecto.nombre}`}>
+            {proyecto.vistas.map(({ titulo, texto, forma, imagen }) => (
+              <li key={titulo} className={`captura captura-${forma}`}>
+                <figure>
+                  <div className="captura-marco">
+                    <img
+                      src={imagen.src}
+                      srcSet={imagen.srcSet}
+                      sizes={imagen.sizes}
+                      width={imagen.ancho}
+                      height={imagen.alto}
+                      alt={imagen.alt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <figcaption>
+                    <strong>{titulo}</strong> {texto}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {proyecto.pasos && (
+          <div>
+            <p className="antetitulo">Cómo funciona</p>
+            <ol className="ficha-pasos">
+              {proyecto.pasos.map((paso) => (
+                <li key={paso}>{paso}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        <Enlaces {...proyecto} botones />
+      </div>
+    </dialog>
+  )
+}
+
+// Sin JavaScript nadie abre un `<dialog>`: las fichas se ven en línea, debajo
+// del mosaico, y se esconden los botones que no harían nada.
+const SIN_SCRIPT = `
+.ficha { display: block !important; position: static !important; width: auto !important; max-height: none !important; margin: var(--e-6) 0 0 !important; }
+.obra-abrir, .ficha-cerrar { display: none !important; }
+`
+
 export default function Proyectos() {
   const destacados = PROYECTOS.filter((p) => p.destacado)
-  const resto = PROYECTOS.filter((p) => !p.destacado)
+  const obras = PROYECTOS.filter((p) => !p.destacado)
 
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
@@ -196,7 +194,7 @@ export default function Proyectos() {
                     <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
                   </span>
                   <h3>{destacado.nombre}</h3>
-                  <FlechaDesplegar />
+                  <Flecha />
                 </summary>
                 <div className="proyecto-cuerpo">
                   <p className="proyecto-resumen">{destacado.resumen}</p>
@@ -207,20 +205,24 @@ export default function Proyectos() {
           ))}
         </div>
 
-        {resto.filter((p) => p.vistas).map((proyecto) => (
-          <Vitrina key={proyecto.id} proyecto={proyecto} />
-        ))}
-
-        <div className="proyectos-resto">
-          {resto.filter((p) => !p.vistas).map((proyecto) => (
-            <article key={proyecto.id} className="tarjeta proyecto entra">
-              <h3>{proyecto.nombre}</h3>
-              <p className="proyecto-resumen">{proyecto.resumen}</p>
-
-              <Enlaces {...proyecto} />
-            </article>
-          ))}
+        <div className="obras-bloque">
+          <div className="obras-intro entra">
+            <p className="antetitulo">Proyectos</p>
+            <p className="obras-bajada">Toca un proyecto para ver cómo funciona por dentro y abrirlo.</p>
+          </div>
+          <ul className="obras">
+            {obras.map((proyecto) => (
+              <Obra key={proyecto.id} proyecto={proyecto} />
+            ))}
+          </ul>
         </div>
+
+        {obras.map((proyecto) => (
+          <Ficha key={proyecto.id} proyecto={proyecto} />
+        ))}
+        <noscript>
+          <style dangerouslySetInnerHTML={{ __html: SIN_SCRIPT }} />
+        </noscript>
       </div>
     </section>
   )

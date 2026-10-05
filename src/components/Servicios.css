@@ -1,21 +1,31 @@
-/* Servicios: paneles numerados con la mecánica del acordeón de vwlab
-   (anima-vw.netlify.app, `.accd`); ver Servicios.jsx para el porqué.
+/* Servicios: la rueda desde M y el mazo que se apila en S; el porqué, en
+   Servicios.jsx. El metal, los colores y el anillo blanco de la elegida vienen
+   de los paneles anteriores: cambió cómo se despliegan las cards, no cómo se
+   ven. */
 
-   De la original se copia el gesto, no las medidas: paneles superpuestos con
-   el canto redondeado, el elegido entero y los demás asomando en una franja,
-   800 ms de transición en la curva lenta de los dos extremos. El contenido no
-   espera a nadie: ya está en el panel y viaja con él. */
+/* La rueda se sale por los costados al girar, y en 3D asoma algún píxel de
+   más: se recorta aquí. `clip` y no `hidden`, que volvería la sección un
+   contenedor con scroll y el mazo de S dejaría de pegarse bajo la barra. */
+.servicios {
+  overflow-x: clip;
+}
 
-.paneles {
+.rueda {
+  margin-top: var(--e-8);
+  padding-inline: var(--margen-lateral);
+}
+
+.servicios-lista {
   list-style: none;
-  margin: var(--e-12) 0 0;
+  margin: 0;
   padding: 0;
 }
 
-/* Metal cepillado, solo con degradados: un reflejo en diagonal que se apaga
+/* ---- la card ----
+   Metal cepillado, solo con degradados: un reflejo en diagonal que se apaga
    hacia una sombra, sobre líneas verticales finísimas. No pesa nada ni se
-   anima, así que el deslizamiento sigue siendo solo `transform`. */
-.servicio {
+   anima. */
+.servicio-cara {
   --metal:
     linear-gradient(
       115deg,
@@ -27,38 +37,41 @@
     repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
   --anillo: rgb(255 255 255 / 0.8);
   --filo: inset 0 -1px 0 rgb(255 255 255 / 0.08);
+  /* La card es un objeto apoyado en la página, y lo dice su sombra: la
+     excepción a la regla de cero sombras (DESIGN-BRIEF, decisión 31). */
+  --sombra: 0 14px 30px -16px rgb(10 26 42 / 0.4);
   position: relative;
+  /* Su propio apilamiento: lo que la oscurece (::before) queda sobre el fondo
+     y bajo el texto. */
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--e-6);
+  border-radius: var(--radio-panel);
   background: var(--metal), var(--panel);
   color: var(--texto);
-  /* El filo de luz del canto y, debajo, el anillo de selección, apagado. */
-  box-shadow: var(--filo), inset 0 0 0 2px transparent;
-  transition: box-shadow 300ms var(--ease-out);
+  box-shadow: var(--filo), inset 0 0 0 2px var(--anillo), var(--sombra);
 }
 
-/* El elegido se enmarca con un anillo claro que sigue su canto redondeado: se
-   ve de un vistazo cuál está abierto sin tapar nada. */
-.servicio.activo {
-  box-shadow: var(--filo), inset 0 0 0 2px var(--anillo);
+/* Lo que la oscurece cuando queda atrás: en la rueda, según lo lejos que esté
+   del frente; en el mazo, cuando la tapa la siguiente. El texto sigue blanco
+   sobre un fondo más hondo, así que el contraste solo sube. */
+.servicio-cara::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: #0a1a2a;
+  opacity: 0;
 }
 
-/* Una pieza cerrada se abre con un clic en cualquier parte (servicios.js), y
-   al pasar por ella asoma el mismo anillo, tenue: dice que esa pieza también
-   se puede elegir. Va en la pieza y no en el botón porque en escritorio la
-   pieza se asoma bajo el cursor y lo deja fuera de la franja. */
-.servicio:not(.activo) {
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  .servicio:not(.activo):hover {
-    box-shadow: var(--filo), inset 0 0 0 2px color-mix(in srgb, var(--anillo) 40%, transparent);
-  }
-}
-
-/* Del petróleo al morado: un barrido de un panel a otro, como el de un metal
-   anodizado. Todos llevan texto blanco, que da 4.7:1 o más en el punto más
+/* Del petróleo al morado: un barrido de una card a otra, como el de un metal
+   anodizado. Todas llevan texto blanco, que da 4.7:1 o más en el punto más
    claro del reflejo; un blanco translúcido ya no llega, así que el texto
-   suave es blanco y se distingue por su tamaño. */
+   suave es blanco y se distingue por su tamaño. El botón de cada servicio,
+   abajo, lleva el mismo tono. */
 .servicio.zona-plano {
   --texto: #ffffff;
   --texto-suave: #ffffff;
@@ -67,66 +80,35 @@
   --linea: rgb(255 255 255 / 0.3);
 }
 
-.servicio:nth-child(1) {
+:is(.servicio, .servicios-chips > li):nth-child(1) {
   --panel: #1b6a96;
 }
 
-.servicio:nth-child(2) {
+:is(.servicio, .servicios-chips > li):nth-child(2) {
   --panel: #2d64a8;
 }
 
-.servicio:nth-child(3) {
+:is(.servicio, .servicios-chips > li):nth-child(3) {
   --panel: #3d59ad;
 }
 
-.servicio:nth-child(4) {
+:is(.servicio, .servicios-chips > li):nth-child(4) {
   --panel: #4c4aa8;
 }
 
-.servicio:nth-child(5) {
+:is(.servicio, .servicios-chips > li):nth-child(5) {
   --panel: #583b9e;
 }
 
-.servicio:nth-child(6) {
+:is(.servicio, .servicios-chips > li):nth-child(6) {
   --panel: #5a2d8c;
 }
 
-/* La cabecera del panel abierto solo existe en escritorio: en el apilado la
-   hace el propio botón. */
 .servicio-cabecera {
-  display: none;
-}
-
-.servicio-titulo {
-  margin: 0;
-  font-size: inherit;
-  font-weight: 400;
-  letter-spacing: normal;
-}
-
-.servicio-boton {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--e-3);
-  width: 100%;
-  min-height: 44px;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  /* El toque no espera a ver si es un doble toque, y Android no pinta su
-     recuadro encima: la respuesta ya la da el panel al abrirse. */
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Hacia dentro: la lista recorta lo que se sale, y un anillo hacia fuera se
-   perdía contra el canto del panel. */
-.servicio-boton:focus-visible {
-  outline-offset: -4px;
 }
 
 .servicio-icono {
@@ -135,39 +117,35 @@
   flex-shrink: 0;
 }
 
-.servicio-nombre {
-  font-size: var(--texto-lg);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-/* El número gigante es la firma de la referencia. Va en Geist y no en la mono:
-   no es un dato, es la marca del panel. */
+/* El número es la firma de la card y habla como el logotipo: Archivo negra
+   itálica, la voz de los titulares. */
 .servicio-numero {
-  margin-left: auto;
-  font-size: var(--texto-2xl);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: 3.5rem;
+  font-style: italic;
   font-weight: 800;
   line-height: 0.8;
-  letter-spacing: -0.06em;
-  transition: color 300ms var(--ease-out);
+}
+
+.servicio-nombre {
+  margin-top: var(--e-4);
 }
 
 .servicio-texto {
-  font-size: var(--texto-lg);
-  line-height: 1.4;
+  margin-top: var(--e-3);
+  line-height: 1.5;
 }
 
-/* Los puntos, numerados en círculo como en la original. */
+/* Los puntos, numerados en círculo. Van al pie de la card. */
 .servicio-puntos {
   counter-reset: punto;
   list-style: none;
-  margin: var(--e-6) 0 0;
-  padding: 0;
   display: grid;
-  gap: var(--e-3);
+  gap: var(--e-2);
+  margin: auto 0 0;
+  padding: var(--e-6) 0 0;
   font-size: var(--texto-sm);
-  color: var(--texto-suave);
+  line-height: 1.4;
 }
 
 .servicio-puntos li {
@@ -182,247 +160,379 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border: 1px solid var(--linea);
   border-radius: 50%;
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
-  color: var(--texto);
 }
 
 .servicio-enlace {
-  margin-top: var(--e-6);
+  margin-top: var(--e-4);
 }
 
-/* ---- el celular y la tableta: el apilado en vertical ---- */
+/* ---- S: el mazo que se apila ---- */
 
-@media (max-width: 1023px) {
+.servicio + .servicio {
+  margin-top: var(--e-4);
+}
+
+/* Cada card se pega bajo la barra, un escalón más abajo que la anterior, y la
+   siguiente sube y la tapa: al bajar, el mazo se arma solo. Solo cuando la
+   card entera cabe pegada en la pantalla; en una más baja, su final quedaría
+   bajo la siguiente sin forma de leerlo, y las cards van una tras otra. */
+@media (max-width: 767px) and (min-height: 700px) {
   .servicio {
-    z-index: calc(var(--n) - var(--i));
-    padding: var(--e-4) var(--e-6);
-    border-radius: 0 0 var(--radio-panel) var(--radio-panel);
+    position: sticky;
+    top: calc(var(--barra-alto) + var(--e-3) + var(--i) * var(--e-2));
   }
 
-  .servicio:first-child {
-    border-radius: var(--radio-panel);
-  }
-
-  /* Cada panel nace bajo el canto redondeado del de arriba, que lo tapa. */
   .servicio + .servicio {
-    margin-top: calc(-1 * var(--radio-panel));
-    padding-top: calc(var(--radio-panel) + var(--e-4));
+    margin-top: var(--e-8);
   }
 
-  /* El panel se despliega con la fila de la rejilla, de 0fr a 1fr: anima un
-     alto que no se conoce de antemano sin medir nada con JavaScript. */
-  .servicio-panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    visibility: hidden;
-    transition:
-      grid-template-rows 400ms var(--ease-in-out),
-      visibility 0s linear 400ms;
+  /* Del mismo alto todas: el mazo queda parejo y cada una tapa entera a la
+     anterior. */
+  .servicio-cara {
+    min-height: 29rem;
   }
 
-  .servicio.activo .servicio-panel {
-    grid-template-rows: 1fr;
-    visibility: visible;
-    transition: grid-template-rows 400ms var(--ease-in-out);
-  }
+  /* La tapada se encoge un poco y se oscurece, como el fondo de un mazo. Va
+     atado al scroll y sin JavaScript: la lista pasa por el borde de arriba
+     (bajo la barra) y cada card toma su tramo de ese paso, la i-ésima del i/n
+     al (i+1)/n, que es justo lo que tarda la siguiente en taparla. Sin
+     soporte (Safari 18) el mazo se arma igual, sin hundirse. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .servicios-lista {
+        view-timeline: --mazo block;
+        view-timeline-inset: calc(var(--barra-alto) + var(--e-3)) 0;
+      }
 
-  .servicio-contenido {
-    min-height: 0;
-    overflow: hidden;
-  }
+      .servicio:not(:last-child) .servicio-cara {
+        --tramo: exit-crossing calc(var(--i) / var(--n) * 100%) exit-crossing
+          calc((var(--i) + 1) / var(--n) * 100%);
+        transform-origin: 50% 0;
+        animation: servicio-tapada linear both;
+        animation-timeline: --mazo;
+        animation-range: var(--tramo);
+      }
 
-  .servicio-texto {
-    padding-top: var(--e-4);
-  }
-
-  .servicio-enlace {
-    padding-bottom: var(--e-2);
+      .servicio:not(:last-child) .servicio-cara::before {
+        animation: servicio-en-sombra linear both;
+        animation-timeline: --mazo;
+        animation-range: var(--tramo);
+      }
+    }
   }
 }
 
-/* ---- escritorio: los paneles superpuestos ---- */
+@keyframes servicio-tapada {
+  to {
+    transform: scale(0.94);
+  }
+}
+
+@keyframes servicio-en-sombra {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* ---- desde M: la rueda ---- */
+
+/* Sin rueda (sin JavaScript o sin funciones trigonométricas en el CSS), las
+   seis en una rejilla, enteras. */
+@media (min-width: 768px) {
+  .rueda {
+    margin-top: var(--e-12);
+  }
+
+  .servicios-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--e-4);
+    max-width: calc(var(--ancho-maximo) - 2 * var(--margen-lateral));
+    margin-inline: auto;
+  }
+
+  .servicio + .servicio {
+    margin-top: 0;
+  }
+
+  .servicio-cara {
+    padding: var(--e-8);
+  }
+}
 
 @media (min-width: 1024px) {
-  /* La cartera se inclina hacia el cursor, como la tarjeta NFC de
-     ponlenota.cl: se hunde el punto al que apunta. servicios.js solo escribe
-     los dos ángulos; la perspectiva y la suavidad son de aquí. La perspectiva
-     va dentro del `transform` para que el punto de fuga sea el centro de la
-     cartera, y como solo cambia `transform`, el compositor la recoloca sin
-     layout ni repintado. Sin cursor no hay capa: en táctil no se inclina. */
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .cartera {
-      transform: perspective(1800px) rotateX(var(--giro-x, 0deg)) rotateY(var(--giro-y, 0deg));
-      transition: transform var(--t-panel) var(--ease-out);
+  .servicios-lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Los controles solo sirven con la rueda. */
+.servicios-controles {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-4);
+  margin-top: var(--e-8);
+}
+
+.servicios-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--e-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.servicios-chip,
+.servicios-flecha {
+  min-height: 44px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+  font-size: var(--texto-sm);
+  cursor: pointer;
+  transition:
+    background-color 140ms var(--ease-out),
+    border-color 140ms var(--ease-out),
+    color 140ms var(--ease-out);
+}
+
+.servicios-chip {
+  padding: 0 var(--e-4);
+}
+
+.servicios-flecha {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  padding: 0;
+}
+
+.servicios-flecha-icono {
+  width: 20px;
+  height: 20px;
+}
+
+@media (hover: hover) {
+  .servicios-chip:not([aria-current='true']):hover,
+  .servicios-flecha:hover {
+    border-color: var(--accion);
+  }
+}
+
+/* La del frente se rellena con el color de su card, que la rueda muestra al
+   frente; al lector de pantalla se lo dice `aria-current`. */
+.servicios-chip[aria-current='true'] {
+  background: var(--panel);
+  border-color: var(--panel);
+  color: #ffffff;
+}
+
+@supports (rotate: calc(1deg * sin(1deg))) {
+  @media (min-width: 768px) and (scripting: enabled) {
+    .servicios .titular {
+      text-align: center;
     }
-  }
 
-  /* `overflow: clip` y no `hidden`: recorta lo que se corre a la izquierda sin
-     volver la lista un contenedor con scroll propio. */
-  .paneles {
-    --franja: 6.5rem;
-    /* Menos que el aire antes del texto del abierto (--e-12): la franja que
-       se asoma sobre él no lo tapa. */
-    --asomo: 1.5rem;
-    position: relative;
-    height: 34rem;
-    overflow: clip;
-    border-radius: var(--radio-panel);
-    /* Los paneles se arrastran en horizontal (servicios.js): el desplazamiento
-       vertical sigue siendo del navegador, el horizontal es nuestro. */
-    cursor: grab;
-    touch-action: pan-y;
-  }
+    /* El escenario. Cada tamaño de pantalla cambia solo estas medidas: la
+       card, el radio del anillo, cuánto sube hacia el fondo y a qué altura
+       queda la del frente. */
+    .rueda {
+      --ancho: 300px;
+      --alto: 450px;
+      --radio: 170px;
+      --alzado: 300px;
+      --frente: 207px;
+      position: relative;
+      height: calc(var(--frente) + var(--alto) + var(--e-6));
+      /* El gesto de lado es de la rueda (servicios.js); el vertical sigue
+         bajando por la página. */
+      touch-action: pan-y;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: grab;
+    }
 
-  /* Mientras se arrastra, el panel va pegado al puntero: sin transición que lo
-     haga ir a la zaga, y sin seleccionar texto por el camino. */
-  .paneles.arrastrando {
-    cursor: grabbing;
-    user-select: none;
-  }
+    .rueda.arrastrando,
+    .rueda.arrastrando .servicio {
+      cursor: grabbing;
+    }
 
-  .paneles.arrastrando .servicio,
-  .paneles.arrastrando .servicio-boton {
-    cursor: inherit;
-    transition: none;
-  }
+    /* El piso: una sombra suave bajo el anillo. Va antes que la lista para
+       quedar debajo de las cards. */
+    .rueda::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: calc(var(--radio) * 4);
+      height: var(--e-16);
+      translate: -50% 0;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgb(10 26 42 / 0.12), transparent);
+      pointer-events: none;
+    }
 
-  /* El panel que se va descubriendo ya enseña su contenido. */
-  .paneles.arrastrando .servicio-panel {
-    visibility: visible;
-    transition: none;
-  }
+    /* La perspectiva va en la madre directa de las cards, que es a quien
+       alcanza, y del tamaño del escenario, para que el punto de fuga quede en
+       su centro. */
+    .servicios-lista {
+      position: absolute;
+      inset: 0;
+      max-width: none;
+      perspective: 1600px;
+    }
 
-  /* Cada panel nace un canto antes, bajo el redondeo del anterior: así lo que
-     asoma por las esquinas es el panel de abajo y no el fondo de la sección.
-     El primero sobresale por la izquierda y la lista lo recorta. */
-  .servicio {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(var(--i) * var(--franja) - var(--radio-panel));
-    width: calc(100% - (var(--n) - 1) * var(--franja) + var(--radio-panel));
-    z-index: calc(var(--n) - var(--i));
-    display: flex;
-    flex-direction: column;
-    --filo: inset -1px 0 0 rgb(255 255 255 / 0.08);
-    border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
-    transition:
-      transform 800ms var(--ease-in-out),
-      translate 800ms var(--ease-in-out),
-      box-shadow 300ms var(--ease-out);
-  }
+    /* Cada card en su lugar del anillo, calculado de su ángulo: el suyo fijo
+       (i de n vueltas) menos el giro de la rueda. Hacia el fondo sube, se
+       achica, se oscurece y queda detrás; los costados de atrás se abren más
+       que los de adelante para que asomen todas. */
+    .servicio {
+      --angulo: calc((var(--i) * 360 / var(--n) - var(--giro, 0)) * 1deg);
+      /* 0 al frente, 1 al fondo. */
+      --fondo: calc((1 - cos(var(--angulo))) / 2);
+      /* -1 a la izquierda, 1 a la derecha. */
+      --lado: sin(var(--angulo));
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: calc(100 - 100 * var(--fondo));
+      width: var(--ancho);
+      height: var(--alto);
+      margin-left: calc(var(--ancho) / -2);
+      transform:
+        translate(
+          calc(var(--radio) * var(--lado) * (1 + var(--fondo))),
+          calc(var(--frente) - var(--alzado) * var(--fondo))
+        )
+        rotateY(calc(var(--lado) * -24deg))
+        scale(calc(1 - var(--fondo) / 2));
+      cursor: pointer;
+    }
 
-  /* Los que van antes del elegido se corren hasta dejar asomar solo su franja.
-     Su asomo (el de abajo) es hacia la derecha, por donde vuelven al abrirse. */
-  .servicio:has(~ .activo) {
-    --sentido: 1;
-    transform: translateX(calc(-100% + var(--franja) + var(--radio-panel)));
-  }
+    .servicio.activo {
+      cursor: inherit;
+    }
 
-  /* El asomo. Al pasar por una franja cerrada, lo que movería el clic se
-     asoma un poco hacia donde iría, como una tarjeta que sale de la cartera.
-     Son las mismas piezas que arrastra servicios.js: a la izquierda del
-     abierto, la franja y las que la siguen hasta él; a la derecha, el abierto
-     y las que tapan la franja. Va en `translate`, que se suma al `transform`
-     del corrimiento y del arrastre sin pisarlo.
-
-     Entra en 300 ms, como toda respuesta al cursor, pero se recoge con la
-     curva del corrimiento (la de la base): al abrir, asomo y corrimiento
-     terminan juntos y la pieza no recula antes de salir. Al arrastrar,
-     servicios.js lo deja fijo donde estaba y esta regla se aparta: su
-     transición no puede alcanzar al panel que va pegado al puntero. */
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .paneles:not(.arrastrando) > .servicio:is(:hover, :hover ~ *):has(~ .activo),
-    .paneles:not(.arrastrando) > .servicio:is(.activo, .activo ~ *):has(~ :hover) {
-      translate: calc(var(--sentido, -1) * var(--asomo)) 0;
+    .servicio-cara {
+      padding: var(--e-6);
+      box-shadow: var(--filo), inset 0 0 0 2px transparent, var(--sombra);
       transition:
-        transform 800ms var(--ease-in-out),
-        translate 300ms var(--ease-out),
-        box-shadow 300ms var(--ease-out);
+        box-shadow 300ms var(--ease-out),
+        translate var(--t-pulsar) var(--ease-out),
+        transform 250ms var(--ease-out);
+    }
+
+    .servicio-cara::before {
+      opacity: calc(var(--fondo) / 2);
+    }
+
+    /* La del frente: el anillo blanco y una sombra de su propio color, como un
+       objeto con luz. Se inclina hacia el cursor (servicios.js). */
+    .servicio.activo .servicio-cara {
+      box-shadow:
+        var(--filo),
+        inset 0 0 0 2px var(--anillo),
+        0 40px 80px -32px color-mix(in srgb, var(--panel) 75%, #0a1a2a);
+      transform: perspective(900px) rotateX(var(--inclina-x, 0deg)) rotateY(var(--inclina-y, 0deg));
+    }
+
+    .servicio-numero {
+      font-size: 3.25rem;
+    }
+
+    .servicio-texto {
+      font-size: var(--texto-sm);
+    }
+
+    .servicio-puntos {
+      padding-top: var(--e-4);
+    }
+
+    /* Al pasar por una que asoma, se levanta un poco: dice que se puede traer.
+       Sobre la del frente, un brillo sigue al cursor (servicios.js). */
+    @media (hover: hover) {
+      .rueda:not(.arrastrando) .servicio:not(.activo):hover .servicio-cara {
+        translate: 0 calc(-1 * var(--e-2));
+        box-shadow: var(--filo), inset 0 0 0 2px rgb(255 255 255 / 0.32), var(--sombra);
+      }
+
+      .servicio.activo .servicio-cara::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          28rem circle at var(--brillo-x, 50%) var(--brillo-y, 0%),
+          rgb(255 255 255 / 0.16),
+          transparent 60%
+        );
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 300ms var(--ease-out);
+      }
+
+      .rueda:not(.arrastrando) .servicio.activo .servicio-cara:hover::after {
+        opacity: 1;
+      }
+    }
+
+    .servicios-controles {
+      display: flex;
     }
   }
 
-  /* El botón es siempre la franja del borde derecho, abierto o cerrado: de
-     arriba abajo, el icono, el nombre de pie y el número al fondo. Como no
-     cambia de sitio, abrir no reacomoda nada. */
-  .servicio-boton {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: var(--franja);
-    flex-direction: column;
-    gap: var(--e-4);
-    padding: var(--e-8) 0 var(--e-6);
-  }
+  @media (min-width: 1024px) and (scripting: enabled) {
+    .rueda {
+      --ancho: 360px;
+      --alto: 480px;
+      --radio: 243px;
+      --alzado: 320px;
+      --frente: 220px;
+    }
 
-  .servicio-nombre {
-    writing-mode: vertical-rl;
-  }
+    .servicio-numero {
+      font-size: 3.75rem;
+    }
 
-  /* Abierto, el botón no hace nada: muestra la mano de arrastrar de la lista. */
-  .servicio.activo .servicio-boton {
-    cursor: inherit;
-  }
-
-  .servicio-numero {
-    margin: auto 0 0;
-    font-size: clamp(5rem, 7vw, 6.5rem);
-  }
-
-  @media (hover: hover) {
-    .servicio:not(.activo):hover .servicio-numero {
-      color: var(--accion);
+    .servicio-texto {
+      font-size: var(--texto-base);
     }
   }
 
-  .servicio-cabecera {
-    display: flex;
-    align-items: center;
-    gap: var(--e-3);
-    margin-bottom: var(--e-6);
-    font-size: var(--texto-xl);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
+  @media (min-width: 1400px) and (scripting: enabled) {
+    .rueda {
+      --ancho: 400px;
+      --alto: 520px;
+      --radio: 360px;
+      --alzado: 330px;
+      --frente: 230px;
+    }
 
-  /* El contenido está siempre y viaja con su panel. Los cerrados solo se
-     esconden del foco cuando ya terminaron de taparse. */
-  .servicio-panel {
-    flex: 1;
-    padding: var(--e-8) calc(var(--franja) + var(--e-6)) var(--e-8)
-      calc(var(--e-12) + var(--radio-panel));
-    visibility: hidden;
-    transition: visibility 0s linear 800ms;
-  }
+    .servicio-cara {
+      padding: var(--e-8);
+    }
 
-  .servicio.activo .servicio-panel {
-    visibility: visible;
-    transition: none;
-  }
-
-  .servicio-contenido {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    max-width: 36rem;
-  }
-
-  .servicio-puntos {
-    margin-top: auto;
+    .servicio-numero {
+      font-size: 4rem;
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .servicio,
-  .servicio-panel,
-  .servicio.activo .servicio-panel {
+  .servicio-cara,
+  .servicio-cara::after {
     transition: none;
   }
 }

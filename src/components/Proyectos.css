@@ -1,8 +1,7 @@
-/* La tarjeta tal como la dibuja la rama de Diego: sin borde, sobre su tinte
-   y con el radio grande. Acotada a esta sección porque `.tarjeta` es global
-   y también la lleva el formulario de contacto, que se queda como está. */
+/* La tarjeta tal como la dibuja la rama de Diego: sin borde y con el radio
+   grande. Acotada a esta sección porque `.tarjeta` es global y también la
+   lleva el formulario de contacto, que se queda como está. */
 .proyectos .tarjeta {
-  background: var(--tinte-a);
   border: 0;
   border-radius: var(--radio-tarjeta);
 }
@@ -255,7 +254,7 @@
 }
 
 /* La flecha mira hacia donde va a pasar algo y se enciende al pasar el ratón
-   por la tarjeta, igual que en la vitrina. */
+   por la tarjeta, igual que en las teselas de proyectos. */
 .proyecto-destacado details[open] .flecha-desplegar svg {
   transform: rotate(180deg);
 }
@@ -343,10 +342,6 @@
   }
 }
 
-.proyectos-resto .proyecto:nth-child(2) {
-  background: var(--tinte-b);
-}
-
 .proyecto-enlaces {
   display: flex;
   flex-wrap: wrap;
@@ -359,388 +354,6 @@
   align-items: center;
   min-height: 44px;
   font-size: var(--texto-sm);
-}
-
-@media (min-width: 1024px) {
-  .proyectos-resto {
-    display: grid;
-    /* Tantas columnas como tarjetas: una sola ocupa la fila entera. */
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    gap: var(--e-6);
-    /* Cada tarjeta mide lo que ocupa su contenido. Sin esto la rejilla iguala
-       las alturas y la que no lleva captura se estira con un vacío debajo del
-       enlace — justo el hueco vacío que acabamos de quitar, reaparecido por
-       otra vía. */
-    align-items: start;
-  }
-
-  .proyectos-resto .proyecto {
-    margin-top: var(--e-6);
-  }
-}
-
-/* ============================================================================
- * La vitrina.
- *
- * En L, la cabecera arriba a la izquierda con dos tarjetas anchas debajo, y a
- * la derecha la app, que sube hasta la cabecera y queda fija mientras pasan
- * las otras dos. Una cuarta, fuera de esa rejilla, cierra a todo el ancho.
- *
- * Cada tarjeta es una ventana sobre el producto: el texto arriba y la captura
- * abajo, cortada por el borde inferior. El fondo mezcla el tono de la tarjeta
- * con su color de marca en dos luces difusas, sin imagen.
- * ========================================================================= */
-
-.vitrina {
-  display: grid;
-  gap: var(--e-4);
-  /* La misma separación que las otras tarjetas de obra (`.proyecto`): la
-     cabecera es una burbuja más y no debe despegarse de sus vecinas. */
-  margin-top: var(--e-8);
-}
-
-.vitrina-rejilla {
-  display: grid;
-  gap: var(--e-4);
-}
-
-.vitrina-cabecera h3 {
-  margin-bottom: var(--e-3);
-}
-
-.vitrina-cabecera .proyecto-enlaces {
-  margin-top: var(--e-3);
-}
-
-/* Cómo funciona: tres pasos con su número en la mono y en el color de acción,
-   que es lo primero que encuentra la vista al bajar por la tapa. */
-.vitrina-pasos-titulo {
-  margin: var(--e-6) 0 var(--e-3);
-}
-
-.vitrina-pasos {
-  counter-reset: paso;
-  list-style: none;
-  display: grid;
-  gap: var(--e-3);
-  max-width: 40rem;
-  margin: 0;
-  padding: 0;
-  font-size: var(--texto-sm);
-  line-height: 1.5;
-}
-
-.vitrina-pasos li {
-  counter-increment: paso;
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: var(--e-2);
-}
-
-.vitrina-pasos li::before {
-  content: counter(paso, decimal-leading-zero);
-  font-family: var(--fuente-datos);
-  color: var(--accion);
-}
-
-.vista {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--radio-panel);
-  padding: var(--e-8) var(--e-6) 0;
-  color: var(--texto);
-  background:
-    radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--marca) 35%, transparent), transparent 70%),
-    radial-gradient(80% 90% at 0% 100%, var(--lamina), transparent 70%),
-    var(--fondo);
-}
-
-.vista-texto {
-  max-width: 26rem;
-}
-
-.vista h4 {
-  margin: 0 0 var(--e-2);
-  font-size: var(--texto-lg);
-  font-weight: 800;
-  letter-spacing: -0.015em;
-}
-
-.vista p {
-  color: var(--texto-suave);
-}
-
-/* La captura asoma desde abajo: el marco la corta en recto contra el borde
-   inferior de la tarjeta, así que se lee como algo que sigue más allá. */
-.vista-marco {
-  flex: 1;
-  margin-top: var(--e-6);
-  overflow: clip;
-  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
-}
-
-.vista-marco img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Los teléfonos no se estiran: van centrados y a su tamaño. */
-.vista-desplazada .vista-marco {
-  border-radius: 0;
-  max-height: 24rem;
-}
-
-/* La captura del cliente trae su teléfono, pero con las esquinas del fondo
-   blanco donde se tomó: el radio las recorta a la curva del propio marco. */
-.vista-desplazada .vista-marco img {
-  width: min(100%, 18rem);
-  margin-inline: auto;
-  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
-}
-
-/* La app no trae el marco del teléfono en la captura: el borde lo dibuja el
-   propio marco, que queda quieto, y el inicio completo corre por dentro. Es
-   contenedor para que el recorrido se mida contra su alto, sea cual sea. */
-.vista-alta .vista-marco {
-  container-type: size;
-  flex: none;
-  width: min(100%, 18rem);
-  height: 24rem;
-  margin-inline: auto;
-  border: 8px solid #151515;
-  border-bottom: 0;
-  border-radius: 36px 36px 0 0;
-  view-timeline: --app block;
-}
-
-.vista-ancha .vista-marco {
-  max-height: 22rem;
-}
-
-.vista-cierre .vista-marco {
-  max-height: 16rem;
-}
-
-/* Al bajar por la página, el inicio corre dentro del teléfono de arriba abajo.
-   Sin soporte o con movimiento reducido se queda quieto en su parte de arriba,
-   que ya se entiende sola. */
-@supports (animation-timeline: view()) {
-  @media screen and (prefers-reduced-motion: no-preference) {
-    .vista-alta .vista-marco img {
-      animation: recorrer-app linear both;
-      animation-timeline: --app;
-      animation-range: cover 45% cover 85%;
-    }
-  }
-
-  /* En L la tarjeta queda fija mientras pasan el sitio y el cliente, y el
-     recorrido dura exactamente eso: termina antes de que asome el panel. */
-  @media screen and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-    .vista-alta .vista-marco img {
-      animation-timeline: --columna-app;
-      animation-range: contain 0% contain 100%;
-    }
-  }
-}
-
-@keyframes recorrer-app {
-  to {
-    translate: 0 calc(-100% + 100cqh);
-  }
-}
-
-/* En M los dos teléfonos van lado a lado: apilados dejan media tarjeta vacía
-   a cada costado. El resto ocupa el ancho completo. */
-@media (min-width: 650px) {
-  .vitrina-rejilla {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .vitrina-cabecera,
-  .vista-ancha {
-    grid-column: 1 / -1;
-  }
-
-  /* Las dos tarjetas miden lo que la más alta: el teléfono más corto se apoya
-     en el borde de abajo y el hueco queda entre el texto y la captura. */
-  .vista-alta,
-  .vista-desplazada {
-    justify-content: space-between;
-  }
-
-  .vista-desplazada .vista-marco {
-    flex: none;
-  }
-}
-
-@media (min-width: 1024px) {
-  .vitrina-rejilla {
-    timeline-scope: --columna-app;
-    grid-template-columns: 1fr 1fr minmax(0, 0.95fr);
-    grid-template-areas:
-      'cabecera cabecera alta'
-      'ancha ancha alta'
-      'desplazada desplazada alta';
-  }
-
-  /* La columna de la app, vacía: la tarjeta se queda fija arriba y esto es lo
-     que marca cuánto scroll dura su recorrido. */
-  .vitrina-rejilla::before {
-    content: '';
-    grid-area: alta;
-    view-timeline: --columna-app block;
-  }
-
-  /* Es una tarjeta: sin el relleno recortado que tenía cuando era texto
-     suelto sobre la página, y arriba de su celda, junto a la tarjeta alta. */
-  .vitrina-cabecera {
-    grid-area: cabecera;
-    align-self: start;
-  }
-
-  .vista {
-    padding: var(--e-12) var(--e-12) 0;
-  }
-
-  .vista-ancha {
-    grid-area: ancha;
-    min-height: 30rem;
-  }
-
-  /* Queda fija bajo la barra mientras dura la rejilla, y se va con el cliente
-     justo antes de que llegue el cierre. */
-  .vista-alta {
-    grid-area: alta;
-    align-self: start;
-    position: sticky;
-    top: calc(var(--barra-alto) + var(--e-4));
-    padding-inline: var(--e-8);
-  }
-
-  /* Un teléfono de verdad: entero, con sus proporciones, y del alto que deje
-     la ventana para que la tarjeta quepa completa mientras está fija. */
-  .vista-alta .vista-marco {
-    width: auto;
-    height: clamp(20rem, 100dvh - 24rem, 36rem);
-    aspect-ratio: 9 / 19.5;
-    margin-bottom: var(--e-8);
-    border-bottom: 8px solid #151515;
-    border-radius: 36px;
-    view-timeline: none;
-  }
-
-  /* Cierra la vitrina a todo el ancho: el texto a un lado y el panel, que es
-     ancho, al otro, apoyado en el borde de abajo como las demás capturas. */
-  .vista-cierre {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: var(--e-8);
-  }
-
-  .vista-cierre .vista-texto {
-    padding-bottom: var(--e-12);
-  }
-
-  .vista-cierre .vista-marco {
-    margin-top: 0;
-    align-self: end;
-    max-height: none;
-  }
-
-  .vista-desplazada {
-    grid-area: desplazada;
-    min-height: 24rem;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--e-8);
-    padding-right: var(--e-8);
-  }
-
-  .vista-desplazada .vista-texto {
-    padding-bottom: var(--e-12);
-  }
-
-  .vista-desplazada .vista-marco {
-    margin-top: 0;
-    align-self: end;
-  }
-
-  .vista-desplazada .vista-marco img {
-    width: 17rem;
-  }
-
-}
-
-/* ---- la vitrina plegada ----
- *
- * Abierta ocupa varias pantallas y empujaba el resto de la obra muy abajo.
- * Plegada queda la cabecera —nombre, resumen y enlace al sitio— con un botón
- * que la despliega. Las tarjetas salen de la maqueta, y en escritorio la
- * rejilla vuelve a una columna: sin la tarjeta alta a la derecha, la cabecera
- * se quedaría en dos tercios con un hueco al lado. */
-
-.vitrina.plegada .vista,
-.vitrina.plegada .vitrina-rejilla::before {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .vitrina.plegada .vitrina-rejilla {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'cabecera';
-  }
-}
-
-/* La cabecera plegable es una burbuja como las del resto de la obra. Todo
-   su contorno responde: el botón es una línea de texto, pero su `::after` se
-   estira sobre la tarjeta entera. */
-.vitrina-cabecera {
-  position: relative;
-  border-radius: var(--radio-panel);
-  padding: var(--e-8) var(--e-6);
-  color: var(--texto);
-  background:
-    radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--marca) 35%, transparent), transparent 70%),
-    radial-gradient(80% 90% at 0% 100%, var(--lamina), transparent 70%),
-    var(--fondo);
-  transition: filter 200ms var(--ease-out);
-}
-
-@media (min-width: 1024px) {
-  .vitrina-cabecera {
-    padding: var(--e-12);
-  }
-}
-
-/* Los enlaces de dentro —el de ponlenota.cl— quedan por encima de esa capa y
-   se pueden abrir sin desplegar nada. */
-.vitrina-cabecera a {
-  position: relative;
-  z-index: 1;
-}
-
-.vitrina-abrir {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e-3);
-  margin-top: var(--e-6);
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  color: var(--accion);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.vitrina-abrir::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
 }
 
 .flecha-desplegar {
@@ -767,53 +380,9 @@
   transition: transform 300ms var(--ease-out);
 }
 
-/* La flecha mira hacia donde va a pasar algo: abajo para abrir, arriba para
-   cerrar. */
-.vitrina-abrir[aria-expanded='true'] .flecha-desplegar svg {
-  transform: rotate(180deg);
-}
-
-/* Al pasar por cualquier punto de la burbuja, la flecha se enciende. Solo con
-   ratón: en táctil el hover se queda pegado después del toque. */
-@media (hover: hover) {
-  .vitrina-cabecera:has(.vitrina-abrir:hover) .flecha-desplegar {
-    background: var(--accion);
-    color: var(--sobre-accion);
-  }
-
-  .vitrina-cabecera:has(.vitrina-abrir:hover) {
-    filter: brightness(1.12);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .vitrina-cabecera,
   .flecha-desplegar,
   .flecha-desplegar svg {
-    transition: none;
-  }
-}
-
-
-/* ---- el despliegue ----
- *
- * La vitrina crece y se encoge en altura en vez de aparecer de golpe. La altura
- * de llegada no se conoce en CSS —depende del ancho y de las capturas—, así
- * que `vitrina.js` la mide, la fija en píxeles durante el viaje y la suelta al
- * llegar. Mientras dura, lo que sobresale se recorta: se ve como una tapa que
- * se abre sobre el contenido. */
-/* `clip` y no `hidden`: `hidden` vuelve la vitrina un contenedor con scroll
-   propio mientras dura el viaje. La tarjeta fija de la app se pegaba entonces
-   a la vitrina y no a la pantalla —nacía 100 px más abajo y saltaba a su sitio
-   al llegar— y las entradas de las demás tarjetas, atadas al scroll, medían
-   contra la vitrina: se veían durante el viaje y se apagaban al final. */
-.vitrina.desplegando {
-  overflow: clip;
-  transition: height 650ms var(--ease-in-out);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .vitrina.desplegando {
     transition: none;
   }
 }
@@ -844,5 +413,536 @@
   .proyectos-logros {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
+  }
+}
+
+/* ============================================================================
+ * El mosaico de proyectos (issue #33).
+ *
+ * Una tesela por proyecto: su ícono sobre la mancha, el nombre y una línea.
+ * Todo lo demás vive en la ficha, así que sumar obra no alarga la sección:
+ * suma una tesela. En S van dos por fila; desde M, tantas como quepan de al
+ * menos 9.5rem, y si son pocas se estiran hasta llenar la fila.
+ * ========================================================================= */
+
+.obras-bloque {
+  display: grid;
+  gap: var(--e-6);
+  margin-top: var(--e-16);
+}
+
+.obras-bajada {
+  color: var(--texto-suave);
+}
+
+/* En L el texto va a un lado y las teselas al otro: con dos proyectos, una
+   rejilla a todo el ancho dejaba dos teselas enormes o media fila vacía. */
+@media (min-width: 1024px) {
+  .obras-bloque {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+    gap: var(--e-12);
+    align-items: start;
+  }
+
+  .obras-bajada {
+    max-width: 28ch;
+  }
+}
+
+.obras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: var(--e-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 650px) {
+  .obras {
+    gap: var(--e-6);
+  }
+}
+
+/* La tesela es una zona de plano: lleva los colores oscuros de la obra sin
+   repetirlos aquí. */
+.obra {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+/* El escenario del ícono: una luz suave detrás de la mancha. */
+.obra-icono {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  background: radial-gradient(70% 80% at 50% 45%, rgb(255 255 255 / 0.05), transparent 70%);
+}
+
+.obra .mancha {
+  width: 40%;
+}
+
+.obra-texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  padding: var(--e-1) var(--e-6) var(--e-6);
+}
+
+.obra h3 {
+  font-size: var(--texto-lg);
+}
+
+.obra-lema {
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+  color: var(--texto-suave);
+}
+
+.obra-abrir {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  min-height: 44px;
+  margin-top: auto;
+  padding: var(--e-3) 0 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--texto-sm);
+  color: var(--accion);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Toda la tesela responde al toque, no solo la línea del botón. */
+.obra-abrir::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Con el teclado, además del anillo del botón, se marca la tesela entera. */
+.obra:has(.obra-abrir:focus-visible) {
+  outline: 3px solid var(--foco);
+  outline-offset: 3px;
+}
+
+/* En el teléfono la tesela mide la mitad del ancho: el ícono va en un cuadrado
+   y el texto baja un escalón para que el nombre quepa en una línea. */
+@media (max-width: 649px) {
+  .obra-icono {
+    aspect-ratio: 1;
+  }
+
+  .obra .mancha {
+    width: 60%;
+  }
+
+  .obra-texto {
+    padding: 0 var(--e-4) var(--e-4);
+  }
+
+  .obra h3 {
+    font-size: var(--texto-base);
+  }
+
+  .obra-lema {
+    font-size: var(--texto-xs);
+  }
+}
+
+@media (hover: hover) {
+  .obra:hover .flecha-desplegar {
+    background: var(--accion);
+    color: var(--sobre-accion);
+  }
+}
+
+/* Con ratón, la tesela se levanta y la mancha cambia de forma, como algo
+   blando al tocarlo. Van `translate`, `rotate` y `scale` sueltos: así no pisan
+   el `transform` de la entrada al scroll (`.entra`). */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .obra {
+    transition:
+      translate 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out);
+  }
+
+  .obra:hover {
+    translate: 0 -4px;
+    box-shadow: 0 28px 48px -24px rgb(10 26 42 / 0.55);
+  }
+
+  .obra .mancha {
+    transition:
+      border-radius 700ms var(--ease-out),
+      rotate 700ms var(--ease-out),
+      scale 700ms var(--ease-out);
+  }
+
+  .obra:hover .mancha {
+    border-radius: 44% 56% 62% 38% / 41% 46% 54% 59%;
+    rotate: -4deg;
+    scale: 1.04;
+  }
+}
+
+/* ---- la mancha ----
+ *
+ * La forma orgánica bajo el ícono de cada proyecto, en el color de fondo de su
+ * ícono (`--fondo-icono`, que pone LogoProyecto.jsx). Mide su propio ancho para
+ * que la inicial de un proyecto sin símbolo crezca con ella. */
+.mancha {
+  container-type: inline-size;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 58% 42% 47% 53% / 52% 61% 39% 48%;
+  background: var(--fondo-icono);
+  box-shadow: 0 18px 32px -16px rgb(0 0 0 / 0.6);
+}
+
+.mancha svg {
+  width: 62%;
+}
+
+.mancha-inicial {
+  font-size: 60cqi;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+/* ============================================================================
+ * La ficha.
+ *
+ * Un `<dialog>` modal por proyecto. Desde M es un panel centrado sobre el
+ * velo; en S ocupa la pantalla entera, que en un teléfono es lo único que se
+ * lee bien. Se desplaza por dentro, y mientras está abierta la página de atrás
+ * no se mueve.
+ * ========================================================================= */
+
+.ficha {
+  width: min(100% - 2 * var(--margen-lateral), 60rem);
+  max-width: none;
+  max-height: calc(100vh - 2 * var(--e-12));
+  max-height: calc(100dvh - 2 * var(--e-12));
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+  box-shadow: 0 48px 96px -32px rgb(0 0 0 / 0.7);
+}
+
+.ficha::backdrop {
+  background: rgb(6 16 26 / 0.66);
+}
+
+html:has(.ficha[open]) {
+  overflow: hidden;
+}
+
+/* La cabecera se queda arriba mientras se baja por la ficha: cerrar está
+   siempre a mano. */
+.ficha-cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  padding: var(--e-6) var(--e-6) var(--e-4) var(--e-8);
+  background: var(--fondo);
+}
+
+.ficha-cabecera .mancha {
+  flex: none;
+  width: 4.5rem;
+}
+
+.ficha-titulos {
+  flex: 1;
+  min-width: 0;
+}
+
+.ficha-titulos h3 {
+  font-size: var(--texto-xl);
+}
+
+.ficha-titulos p {
+  margin-top: var(--e-1);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.ficha-cerrar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accion) 16%, transparent);
+  color: var(--texto);
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.ficha-cerrar svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+@media (hover: hover) {
+  .ficha-cerrar:hover {
+    background: var(--accion);
+    color: var(--sobre-accion);
+  }
+}
+
+/* El margen va en una variable porque la tira de capturas lo usa dos veces:
+   para salirse hasta el borde de la ficha y para alinear la primera captura
+   con el texto. */
+.ficha-cuerpo {
+  --ficha-margen: var(--e-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+  padding: var(--e-4) var(--ficha-margen) var(--e-8);
+}
+
+.ficha-resumen {
+  color: var(--texto-suave);
+}
+
+/* ---- las capturas ----
+ *
+ * Una tira que se desliza de lado y se detiene en cada captura. Llega hasta el
+ * borde de la ficha, así la siguiente asoma y se entiende que hay más. Cada
+ * marco tiene alto fijo: nada se mueve cuando llegan las imágenes, que se
+ * piden al abrir la ficha y no antes (un `<dialog>` cerrado no se pinta). */
+.ficha-capturas {
+  display: flex;
+  gap: var(--e-4);
+  margin: 0 calc(var(--ficha-margen) * -1);
+  padding: 0 var(--ficha-margen) var(--e-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--ficha-margen);
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--linea) transparent;
+}
+
+.captura {
+  flex: none;
+  width: 15rem;
+  scroll-snap-align: start;
+}
+
+.captura-pantalla {
+  width: min(28rem, 80vw);
+}
+
+.captura figure {
+  margin: 0;
+}
+
+.captura-marco {
+  display: grid;
+  place-items: end center;
+  height: 17.5rem;
+  overflow: hidden;
+  border-radius: var(--radio-tarjeta);
+  background:
+    radial-gradient(80% 90% at 0% 100%, color-mix(in srgb, var(--marca) 30%, transparent), transparent 70%),
+    var(--superficie);
+}
+
+.captura-pantalla img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+
+/* La captura del cliente trae su teléfono, pero con las esquinas del fondo
+   blanco donde se tomó: el radio las recorta a la curva del propio marco. */
+.captura-telefono img {
+  width: auto;
+  height: 92%;
+  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
+}
+
+/* La app no trae el teléfono en la captura: el borde lo dibuja la propia
+   imagen, que enseña el comienzo de la pantalla de inicio. */
+.captura-app img {
+  width: 7.75rem;
+  height: 92%;
+  object-fit: cover;
+  object-position: top;
+  border: 6px solid #151515;
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  background: #151515;
+}
+
+.captura figcaption {
+  margin-top: var(--e-3);
+  font-size: var(--texto-xs);
+  line-height: 1.5;
+  color: var(--texto-suave);
+}
+
+.captura figcaption strong {
+  display: block;
+  margin-bottom: var(--e-1);
+  font-size: var(--texto-sm);
+  font-weight: 800;
+  color: var(--texto);
+}
+
+/* Cómo funciona: tres pasos con su número en la mono y en el color de acción. */
+.ficha-pasos {
+  counter-reset: paso;
+  display: grid;
+  gap: var(--e-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+}
+
+.ficha-pasos li {
+  counter-increment: paso;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--e-2);
+}
+
+.ficha-pasos li::before {
+  content: counter(paso, decimal-leading-zero);
+  font-family: var(--fuente-datos);
+  color: var(--accion);
+}
+
+@media (min-width: 650px) {
+  .ficha-pasos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--e-6);
+  }
+
+  .ficha-pasos li {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ficha-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+}
+
+/* En el teléfono la ficha es la pantalla entera, sin esquinas, con la
+   cabecera fija arriba y respetando las zonas seguras. */
+@media (max-width: 649px) {
+  .ficha {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .ficha-cabecera {
+    padding: max(var(--e-4), env(safe-area-inset-top)) var(--e-4) var(--e-3) var(--margen-lateral);
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .ficha-cabecera .mancha {
+    width: 2.75rem;
+  }
+
+  .ficha-titulos h3 {
+    font-size: var(--texto-lg);
+  }
+
+  /* La línea del proyecto ya la dice el resumen, justo debajo. */
+  .ficha-titulos p {
+    display: none;
+  }
+
+  .ficha-cuerpo {
+    --ficha-margen: var(--margen-lateral);
+    gap: var(--e-6);
+    padding-top: var(--e-6);
+    padding-bottom: max(var(--e-8), env(safe-area-inset-bottom));
+  }
+
+  .captura {
+    width: 13.75rem;
+  }
+
+  .captura-marco {
+    height: 12.5rem;
+  }
+
+  .captura-app img {
+    width: 5.5rem;
+    border-width: 5px;
+  }
+
+  .ficha-enlaces .boton {
+    flex: 1 1 auto;
+  }
+}
+
+/* Al abrir, la ficha sube un poco y el velo aparece: entra algo nuevo, así
+   que va en ease-out. Al cerrar se va sin más. El velo lleva la curva escrita
+   entera porque `::backdrop` no hereda las variables en Safari antiguo. */
+@media (prefers-reduced-motion: no-preference) {
+  .ficha[open] {
+    animation: ficha-entra 320ms var(--ease-out);
+  }
+
+  .ficha[open]::backdrop {
+    animation: velo-entra 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+@keyframes ficha-entra {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@keyframes velo-entra {
+  from {
+    opacity: 0;
   }
 }

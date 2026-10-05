@@ -157,13 +157,13 @@
      a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
 
-  /* Los paneles de servicios y la vitrina de proyectos son objetos grandes, y
-     a su escala 12 px se lee como esquina recta. */
+  /* Las cards de servicios y las teselas y fichas de proyectos son objetos
+     grandes, y a su escala 12 px se lee como esquina recta. */
   --radio-panel: 28px;
 
   /* Lo que ocupa la barra fija (la de la rama de Diego). Lo leen el scroll a
-     anclas y lo que se pega arriba al desplazar —la tarjeta de la app en la
-     vitrina—, para quedar siempre por debajo de ella. */
+     anclas y lo que se pega arriba al desplazar —las cards de servicios—,
+     para quedar siempre por debajo de ella. */
   --barra-alto: 64px;
 
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
@@ -181,7 +181,6 @@
      desplegable de 180 ms se siente más rápido que uno de 400. Lo que puede
      durar más es lo narrativo, que se ve una vez. */
   --t-pulsar: 160ms;
-  --t-panel: 180ms;
   --t-entrada: 500ms;
 }
 
@@ -225,10 +224,6 @@
      en Barra.css: no cambia con el tema. */
   --vidrio: rgb(255 255 255 / 0.72);
   --vidrio-halo: rgb(255 255 255 / 0.22);
-
-  /* Superficies tintadas de las tarjetas de proyectos. */
-  --tinte-a: #ffffff;
-  --tinte-b: #eef4f9;
 
   /* La nube y el mar (src/nubes.js) donde la hora del día no aplica. En hex:
      el lienzo los lee tal cual. La nube: cara al sol celeste, vientre azul
@@ -278,65 +273,6 @@
   --mar-hondo: #155a86;
   --mar-cresta: #38a9e8;
   --mar-espuma: #d9f0fc;
-
-  /* Superficies tintadas y lámina de las tarjetas sin tono propio (el paso 03
-     y «La app del negocio»). En la rama de Diego el plano es verde bosque;
-     aquí sigue siendo el azul del brief, así que salen en azul. */
-  --tinte-a: #122638;
-  --tinte-b: #16304a;
-  --lamina: #1d4a6e;
-}
-
-/* ============ Tonos del plano ============
-   Traídos tal cual de la rama de Diego con la vitrina de PonleNota. Solo
-   cambian superficies, texto suave y acción; el resto lo hereda de
-   `.zona-plano`. Todos pasan 6.6:1. */
-.zona-plano.tono-ciruela {
-  --fondo: #1f141c;
-  --superficie: #2c1d28;
-  --tinte-a: #2c1d28;
-  --tinte-b: #352431;
-  --linea: #3d2a38;
-  --texto-suave: #c7b0bf;
-  --marca: #e2b6cf;
-  --accion: #e2b6cf;
-  --accion-hover: #eed3e2;
-  --accion-activa: #f7e9f1;
-  --sobre-accion: #1f141c;
-  --foco: #e2b6cf;
-  --lamina: #543b4e;
-}
-
-.zona-plano.tono-petroleo {
-  --fondo: #0a1e27;
-  --superficie: #112b36;
-  --tinte-a: #112b36;
-  --tinte-b: #163441;
-  --linea: #1d3c4a;
-  --texto-suave: #a2bfcb;
-  --marca: #8fc6d9;
-  --accion: #8fc6d9;
-  --accion-hover: #bcdde8;
-  --accion-activa: #ddeef4;
-  --sobre-accion: #0a1e27;
-  --foco: #8fc6d9;
-  --lamina: #2b5f73;
-}
-
-.zona-plano.tono-pizarra {
-  --fondo: #13171e;
-  --superficie: #1c222b;
-  --tinte-a: #1c222b;
-  --tinte-b: #242b36;
-  --linea: #2c3441;
-  --texto-suave: #b0b9c6;
-  --marca: #b4c6e0;
-  --accion: #b4c6e0;
-  --accion-hover: #d2ddec;
-  --accion-activa: #e9eef6;
-  --sobre-accion: #13171e;
-  --foco: #b4c6e0;
-  --lamina: #3d4a5c;
 }
 
 /* ============ Las horas del día (DESIGN-BRIEF A.8) ============
@@ -622,12 +558,12 @@ svg {
    Se colapsa el de arriba y se conserva el de abajo, así que la distancia
    entre bloques del mismo tema queda en la mitad y los cortes de zona siguen
    siendo los momentos que más respiran de la página. */
-/* Las tarjetas de la vitrina de proyectos y los paneles de servicios también
-   son zonas de plano, y dos seguidas perdían su relleno de arriba. Se excluyen
-   solo ellas: acotar la
-   regla a `.seccion` —como en la rama de Diego— devolvía el relleno al
-   `main` y al pie de /privacidad, que no son secciones y crecían 112 px. */
-.zona-plano + .zona-plano:not(.vista, .servicio),
+/* Las cards de servicios también son zonas de plano, y dos seguidas perdían
+   su relleno de arriba. Se excluyen solo ellas: acotar la regla a `.seccion`
+   —como en la rama de Diego— devolvía el relleno al `main` y al pie de
+   /privacidad, que no son secciones y crecían 112 px. Las teselas y las fichas
+   de proyectos no llevan relleno propio, así que la regla no las toca. */
+.zona-plano + .zona-plano:not(.servicio),
 .zona-cielo + .zona-cielo {
   padding-top: 0;
 }

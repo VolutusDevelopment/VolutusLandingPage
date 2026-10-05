@@ -1,236 +1,261 @@
 /**
- * Los servicios: cambiar de un panel a otro.
+ * Los servicios: girar la rueda.
  *
- * Toda la maqueta —paneles superpuestos en escritorio, apilados en el
- * celular— es CSS y funciona igual en las dos. Esto solo mueve la clase
- * `activo` y dice lo que pasa a quien no ve la pantalla, con el patrón de
- * acordeón de ARIA: el botón dice si su panel está abierto y cuál es.
+ * La rueda entera es CSS (Servicios.css): cada card calcula su lugar en el
+ * anillo a partir de un solo número, `--giro`, y el HTML ya llega con la
+ * primera al frente. Esto anima ese número y marca cuál quedó delante.
  *
- * El panel abierto no se puede cerrar: siempre hay uno a la vista, como en la
- * original. Su botón queda marcado como `aria-disabled` y no hace nada. Uno
- * cerrado se abre con un clic en cualquier parte, no solo en su botón: en
- * escritorio se asoma al pasar el cursor (Servicios.css), y lo que deja ver
- * también es la pieza.
+ * Se gira de cuatro formas, y todas terminan con una card al frente:
+ * eligiéndola abajo o con las flechas, pulsando una que asoma, arrastrando
+ * (al soltar sigue con su impulso) y con el trackpad de lado. Siempre por el
+ * camino corto, y con un resorte: arranca sin demora y se asienta sin golpe.
  *
- * En escritorio, además, los paneles se arrastran: se mueve el que está bajo
- * el puntero y, al soltar pasado el umbral, se abre el que corresponde. Es un
- * atajo; el clic sigue haciendo lo mismo. Y la cartera que los guarda se
- * inclina hacia el cursor.
+ * En S no hay rueda: el mazo que se apila es solo CSS.
  */
 import { quieto } from './lib/movimiento.js'
 
-const UMBRAL = 60
+// Un resorte apenas subamortiguado: el rebote al llegar es casi imperceptible,
+// el de una rueda con algo de peso.
+const RIGIDEZ = 90
+const AMORTIGUACION = 15.4
+// Lo que se mueve el puntero antes de que un clic pase a ser arrastre.
 const ARRANQUE = 6
+// Cuánto gira un píxel de arrastre o de trackpad, medido contra el radio del
+// anillo: una card cuesta el mismo recorrido de dedo en cualquier pantalla.
+const ARRASTRE = 83
+const TRACKPAD = 65
+// Cuánto sigue la rueda al soltarla, en segundos de la velocidad que llevaba.
+const INERCIA = 0.22
 
-// Los grados de la inclinación y hasta dónde llega el gesto, en mitades de la
-// cartera medidas desde su centro: a 1.25 mitades ya está inclinada del todo.
-// La tarjeta de PonleNota llega a 12°, pero es chica; esto es un bloque de
-// casi 1200 px, y sobre las franjas de la derecha basta con unos 3°.
-const INCLINACION_MAX = 4
-const ALCANCE = 1.25
-
-const acotar = (valor) => Math.min(1, Math.max(-1, valor))
+/** Lleva un ángulo a (-180, 180]: la diferencia que da el camino corto. */
+const corto = (grados) => (((grados % 360) + 540) % 360) - 180
 
 export default function initServicios() {
-  const servicios = [...document.querySelectorAll('.servicio')]
-  if (!servicios.length) return
-  const escritorio = matchMedia('(min-width: 1024px)')
+  const rueda = document.querySelector('.rueda')
+  // La misma condición que arma la rueda en el CSS. Sin ella queda el mazo de
+  // S o la rejilla de respaldo, y no hay nada que girar.
+  const anillo = matchMedia('(min-width: 768px) and (scripting: enabled)')
+  if (!rueda || !CSS.supports('rotate', 'calc(1deg * sin(1deg))')) return
 
-  function abrir(elegido) {
-    for (const servicio of servicios) {
-      const abierto = servicio === elegido
-      const boton = servicio.querySelector('.servicio-boton')
-      servicio.classList.toggle('activo', abierto)
-      boton.setAttribute('aria-expanded', String(abierto))
-      if (abierto) boton.setAttribute('aria-disabled', 'true')
-      else boton.removeAttribute('aria-disabled')
-    }
+  const servicios = [...rueda.querySelectorAll('.servicio')]
+  const chips = [...document.querySelectorAll('.servicios-chip')]
+  const aviso = document.querySelector('.servicios-aviso')
+  const paso = 360 / servicios.length
+
+  let giro = 0
+  let objetivo = 0
+  let velocidad = 0
+  let cuadro = 0
+  let activo = 0
+  let anunciado = 0
+  let arrastre = null
+  let ignorarClicHasta = 0
+  let porPxTrackpad = 0
+  let reposo = 0
+  let inclinada = null
+
+  const porPx = (constante) => constante / parseFloat(getComputedStyle(rueda).getPropertyValue('--radio'))
+
+  function dibujar() {
+    rueda.style.setProperty('--giro', giro.toFixed(2))
+    const n = servicios.length
+    const frente = (((Math.round(giro / paso) % n) + n) % n)
+    if (frente === activo) return
+    servicios[activo].classList.remove('activo')
+    chips[activo].removeAttribute('aria-current')
+    activo = frente
+    servicios[activo].classList.add('activo')
+    chips[activo].setAttribute('aria-current', 'true')
+    enderezar()
   }
 
-  for (const servicio of servicios) {
-    const boton = servicio.querySelector('.servicio-boton')
-    const panel = servicio.querySelector('.servicio-panel')
-    boton.setAttribute('aria-controls', panel.id)
-    panel.setAttribute('role', 'region')
-    panel.setAttribute('aria-labelledby', boton.id)
-    // En la pieza y no en el botón; con el teclado, el clic del botón sube
-    // hasta aquí.
-    servicio.addEventListener('click', () => {
-      if (!servicio.classList.contains('activo')) abrir(servicio)
+  // Se avisa cuando la rueda se detiene, no a cada card que pasa por delante.
+  function anunciar() {
+    if (activo === anunciado) return
+    anunciado = activo
+    aviso.textContent = `Al frente: ${servicios[activo].querySelector('.servicio-nombre').textContent}`
+  }
+
+  function animar() {
+    cancelAnimationFrame(cuadro)
+    if (quieto()) {
+      giro = objetivo
+      velocidad = 0
+      dibujar()
+      anunciar()
+      return
+    }
+    let previo = performance.now()
+    const avanzar = (ahora) => {
+      // Un cuadro largo (la pestaña en segundo plano) no puede disparar el resorte.
+      const dt = Math.min((ahora - previo) / 1000, 1 / 30)
+      previo = ahora
+      velocidad += (RIGIDEZ * (objetivo - giro) - AMORTIGUACION * velocidad) * dt
+      giro += velocidad * dt
+      // A una décima de grado ya no se ve moverse: ahí se da por llegada.
+      const quieta = Math.abs(objetivo - giro) < 0.1 && Math.abs(velocidad) < 1
+      if (quieta) {
+        giro = objetivo
+        velocidad = 0
+      }
+      dibujar()
+      if (quieta) {
+        cuadro = 0
+        anunciar()
+      } else {
+        cuadro = requestAnimationFrame(avanzar)
+      }
+    }
+    cuadro = requestAnimationFrame(avanzar)
+  }
+
+  function detener() {
+    cancelAnimationFrame(cuadro)
+    cuadro = 0
+    velocidad = 0
+  }
+
+  function irA(i) {
+    objetivo += corto(i * paso - objetivo)
+    animar()
+  }
+
+  chips.forEach((chip, i) => chip.addEventListener('click', () => irA(i)))
+  for (const flecha of document.querySelectorAll('.servicios-flecha')) {
+    flecha.addEventListener('click', () => {
+      objetivo = Math.round(objetivo / paso) * paso + Number(flecha.dataset.sentido) * paso
+      animar()
     })
   }
 
-  abrir(servicios.find((s) => s.classList.contains('activo')) ?? servicios[0])
-  arrastrar(servicios, abrir, escritorio)
-  inclinar(document.querySelector('.cartera'), escritorio)
-}
-
-function arrastrar(servicios, abrir, escritorio) {
-  const lista = servicios[0].parentElement
-  let inicio = null
-  let dx = 0
-  let arrastrando = false
-  let gesto = null
-
-  // Lo que recorre un panel entre abierto y corrido: su ancho menos la franja
-  // que asoma y el canto que se mete bajo el anterior.
-  function recorrido(panel) {
-    const franja = panel.querySelector('.servicio-boton').offsetWidth
-    const canto = parseFloat(getComputedStyle(panel).borderTopRightRadius)
-    return panel.offsetWidth - franja - canto
+  // Una card que asoma se trae al frente con un clic, o cuando le llega el
+  // foco del teclado (su enlace), para que nunca se enfoque algo tapado.
+  function traer(e) {
+    const i = servicios.indexOf(e.target.closest('.servicio'))
+    if (anillo.matches && i >= 0 && i !== activo) irA(i)
   }
+  rueda.addEventListener('click', traer)
+  rueda.addEventListener('focusin', traer)
 
-  // Se mueve la pieza que se agarró, solo en el sentido en que puede ir, y la
-  // siguen las que cambian de sitio al abrir el destino:
-  // - una franja de la izquierda (corrida) vuelve a la derecha y se abre; las
-  //   franjas entre ella y el abierto vuelven con ella;
-  // - el panel abierto se corre a la izquierda y deja ver el siguiente;
-  // - una franja de la derecha está debajo del abierto: al tirar de ella a la
-  //   izquierda se llevan las piezas que la tapan, y se abre ella.
-  function gestoPara(agarrado) {
-    if (!agarrado) return null
-    const g = servicios.indexOf(agarrado)
-    const a = servicios.findIndex((s) => s.classList.contains('activo'))
-    const destino = g === a ? a + 1 : g
-    if (destino >= servicios.length) return null
-    // Las que se corren son las que quedan entre el abierto y el destino; la
-    // más cercana al puntero es la que se agarró o, si esa no se mueve, la
-    // que la tapa.
-    const piezas = servicios.slice(Math.min(a, destino), Math.max(a, destino))
-    return {
-      piezas,
-      sentido: destino < a ? 1 : -1,
-      destino: servicios[destino],
-      ancla: Math.min(g, destino - (destino > a ? 1 : 0)),
-    }
-  }
-
-  function seguir() {
-    // Hacia el lado contrario no se mueve: la pieza queda en su sitio.
-    const d = dx * gesto.sentido > 0 ? dx : 0
-    gesto.piezas.forEach((pieza, n) => {
-      // Cada pieza que sigue va un poco a la zaga de la anterior, como una
-      // baraja que se arrastra; al soltar, la transición las junta. Parte de
-      // donde la dejó el asomo, y el tope vale para los dos juntos: si no, en
-      // el extremo se pasa y destapa el fondo bajo su canto.
-      const lejania = Math.abs(servicios.indexOf(pieza) - gesto.ancla)
-      const paso = gesto.asomos[n] + d * Math.max(0.6, 1 - 0.12 * lejania)
-      const r = recorrido(pieza)
-      const x = gesto.sentido < 0 ? Math.max(paso, -r) : Math.min(paso, r) - r
-      pieza.style.transform = `translateX(${x}px)`
-    })
-  }
-
-  lista.addEventListener('pointerdown', (e) => {
-    arrastrando = false
-    if (!escritorio.matches || e.button !== 0) return
-    gesto = gestoPara(e.target.closest('.servicio'))
-    if (!gesto) return
-    inicio = e.clientX
-    dx = 0
-  })
-
-  lista.addEventListener('pointermove', (e) => {
-    if (inicio === null) return
-    dx = e.clientX - inicio
-    if (!arrastrando) {
-      if (Math.abs(dx) < ARRANQUE) return
-      arrastrando = true
-      // El asomo (Servicios.css) se queda donde está. Lo sostiene el :hover,
-      // que se va con la captura del puntero, y soltarlo haría recular la
-      // pieza contra el gesto: el asomo va hacia el mismo lado que el arrastre.
-      // Se lee antes de capturar, mientras aún vale, y pasa al `transform`
-      // del arrastre (seguir); `.arrastrando` apaga la regla y su transición.
-      gesto.asomos = gesto.piezas.map((pieza) => parseFloat(getComputedStyle(pieza).translate) || 0)
-      lista.setPointerCapture(e.pointerId)
-      lista.classList.add('arrastrando')
-      // Si el gesto empezó como selección de texto, deja de serlo.
-      getSelection()?.removeAllRanges()
-    }
-    seguir()
-  })
-
-  function soltar() {
-    if (inicio === null) return
-    inicio = null
-    if (!arrastrando) return
-    // Quitar la clase y los estilos en el mismo paso: la transición vuelve y
-    // lleva el panel desde donde lo dejó el puntero hasta su sitio.
-    lista.classList.remove('arrastrando')
-    for (const pieza of gesto.piezas) pieza.style.transform = ''
-    if (dx * gesto.sentido >= UMBRAL) abrir(gesto.destino)
-  }
-
-  lista.addEventListener('pointerup', soltar)
-  lista.addEventListener('pointercancel', soltar)
-
-  // El clic que cierra un arrastre no es un clic: no abre la franja soltada.
-  lista.addEventListener(
+  // El clic que cierra un arrastre no es un clic: no trae la card soltada.
+  rueda.addEventListener(
     'click',
     (e) => {
-      if (!arrastrando) return
-      arrastrando = false
-      e.stopPropagation()
+      if (e.timeStamp > ignorarClicHasta) return
       e.preventDefault()
+      e.stopPropagation()
     },
     true,
   )
-}
 
-/**
- * La cartera se inclina hacia el cursor, con la lógica de la tarjeta NFC de
- * ponlenota.cl: se hunde el punto al que apunta. La posición se mide contra
- * el alcance y no contra el borde, así que el gesto empieza antes de llegar a
- * ella y crece de forma continua: nada salta al cruzar el borde. Se recalcula
- * también al desplazar la página, que cambia dónde queda el cursor respecto
- * de ella.
- *
- * Solo se engancha con un cursor de verdad: en táctil no hay hacia dónde
- * inclinarse, y el CSS tampoco le da capa.
- */
-function inclinar(cartera, escritorio) {
-  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  rueda.addEventListener('pointerdown', (e) => {
+    if (!anillo.matches || e.button !== 0) return
+    // Agarrarla la frena, como a una rueda de verdad.
+    detener()
+    arrastre = { x: e.clientX, giro, t: e.timeStamp, movido: false, porPx: porPx(ARRASTRE) }
+  })
 
-  let cuadro = 0
-  let cursor = null
-  let previoX = null
-  let previoY = null
-  // Lejos de la pantalla no hay nada que inclinar, y cada escritura obliga a
-  // recalcular estilos. El margen de media ventana deja que llegue ya
-  // inclinada.
-  let cerca = false
-  new IntersectionObserver(([entrada]) => (cerca = entrada.isIntersecting), {
-    rootMargin: '50% 0px',
-  }).observe(cartera)
+  rueda.addEventListener('pointermove', (e) => {
+    if (!arrastre) {
+      inclinar(e)
+      return
+    }
+    const dx = e.clientX - arrastre.x
+    if (!arrastre.movido) {
+      if (Math.abs(dx) < ARRANQUE) return
+      arrastre.movido = true
+      rueda.setPointerCapture(e.pointerId)
+      rueda.classList.add('arrastrando')
+      enderezar()
+      // Si el gesto empezó como selección de texto, deja de serlo.
+      getSelection()?.removeAllRanges()
+    }
+    const nuevo = arrastre.giro - dx * arrastre.porPx
+    const dt = Math.max((e.timeStamp - arrastre.t) / 1000, 0.001)
+    velocidad = 0.8 * ((nuevo - giro) / dt) + 0.2 * velocidad
+    arrastre.t = e.timeStamp
+    giro = objetivo = nuevo
+    dibujar()
+  })
 
-  function actualizar() {
-    cuadro = 0
-    if (!cursor || !escritorio.matches || quieto()) return
-    const { left, top, width, height } = cartera.getBoundingClientRect()
-    const x = acotar((cursor.x - left - width / 2) / ((width / 2) * ALCANCE))
-    const y = acotar((cursor.y - top - height / 2) / ((height / 2) * ALCANCE))
-    // Lejos, los valores se repiten acotados: no hay nada que escribir.
-    if (x === previoX && y === previoY) return
-    previoX = x
-    previoY = y
-    // Un `rotateX` positivo hunde el borde de arriba y uno de `rotateY`, el de
-    // la derecha: por eso el eje vertical va invertido y el horizontal no.
-    cartera.style.setProperty('--giro-x', `${-y * INCLINACION_MAX}deg`)
-    cartera.style.setProperty('--giro-y', `${x * INCLINACION_MAX}deg`)
+  function soltar(e) {
+    if (!arrastre) return
+    const { movido, t } = arrastre
+    arrastre = null
+    // Sin arrastre, la rueda sigue hacia donde iba.
+    if (!movido) {
+      animar()
+      return
+    }
+    rueda.classList.remove('arrastrando')
+    ignorarClicHasta = e.timeStamp + 100
+    // Si se detuvo antes de soltar, no hay impulso que seguir.
+    if (e.timeStamp - t > 120) velocidad = 0
+    objetivo = Math.round((giro + velocidad * INERCIA) / paso) * paso
+    animar()
   }
+  rueda.addEventListener('pointerup', soltar)
+  rueda.addEventListener('pointercancel', soltar)
 
-  function programar() {
-    if (cerca && !cuadro) cuadro = requestAnimationFrame(actualizar)
-  }
-
-  const pasivo = { passive: true }
-  addEventListener(
-    'pointermove',
-    ({ clientX, clientY }) => {
-      cursor = { x: clientX, y: clientY }
-      programar()
+  // El trackpad de lado la gira en vivo y, cuando se suelta, se asienta en la
+  // card más cercana. No es pasivo porque tiene que quedarse con el gesto: si
+  // no, además desplazaría la página o volvería atrás en el historial (macOS).
+  rueda.addEventListener(
+    'wheel',
+    (e) => {
+      if (!anillo.matches || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+      if (!reposo) porPxTrackpad = porPx(TRACKPAD)
+      detener()
+      giro += e.deltaX * porPxTrackpad
+      objetivo = giro
+      dibujar()
+      clearTimeout(reposo)
+      reposo = setTimeout(() => {
+        reposo = 0
+        objetivo = Math.round(giro / paso) * paso
+        animar()
+      }, 140)
     },
-    pasivo,
+    { passive: false },
   )
-  addEventListener('scroll', programar, pasivo)
+
+  // La del frente se inclina hacia el cursor y un brillo lo sigue: solo con un
+  // ratón de verdad, y nunca con el movimiento reducido.
+  function inclinar(e) {
+    if (e.pointerType !== 'mouse' || quieto()) return
+    const cara = e.target.closest('.servicio.activo .servicio-cara')
+    if (cara !== inclinada) enderezar()
+    if (!cara) return
+    inclinada = cara
+    const { left, top, width, height } = cara.getBoundingClientRect()
+    const x = (e.clientX - left) / width
+    const y = (e.clientY - top) / height
+    cara.style.setProperty('--brillo-x', `${(x * 100).toFixed(1)}%`)
+    cara.style.setProperty('--brillo-y', `${(y * 100).toFixed(1)}%`)
+    cara.style.setProperty('--inclina-x', `${((0.5 - y) * 8).toFixed(2)}deg`)
+    cara.style.setProperty('--inclina-y', `${((x - 0.5) * 8).toFixed(2)}deg`)
+  }
+
+  function enderezar() {
+    if (!inclinada) return
+    inclinada.style.removeProperty('--inclina-x')
+    inclinada.style.removeProperty('--inclina-y')
+    inclinada = null
+  }
+  rueda.addEventListener('pointerleave', enderezar)
+
+  // La primera vez que se ve entera, la rueda se mece un poco y vuelve: dice
+  // que gira sin que haya que adivinarlo.
+  const vigia = new IntersectionObserver(
+    ([entrada]) => {
+      if (!entrada.isIntersecting) return
+      vigia.disconnect()
+      if (!anillo.matches || quieto() || arrastre || cuadro) return
+      velocidad = -240
+      animar()
+    },
+    { threshold: 0.6 },
+  )
+  vigia.observe(rueda)
 }

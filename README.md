@@ -46,7 +46,7 @@ asset; el texto y el cielo se ven igual, pero hay que comprobar que la nube y
 el juego arranquen, porque el juego se descarga con una ruta relativa.
 
 El JS del cliente engancha sobre el HTML prerenderizado: valida y envía el
-formulario, rota el titular, activa los paneles de servicios y la vitrina de
+formulario, rota el titular, gira la rueda de servicios, abre las fichas de
 proyectos, actualiza la barra al desplazarse y mueve los lienzos de nube y mar.
 En las páginas de error, «Jugar» descarga el juego de los patos
 ([src/patos.js](src/patos.js)) al pulsarlo y deshace la volutus en cúmulos

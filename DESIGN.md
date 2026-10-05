@@ -47,14 +47,14 @@ La escala de espacios usa múltiplos de 4 px: 4, 8, 12, 16, 24, 32, 48, 64 y 96 
 
 La altura de la barra es 64 px y pasa a 84 px desde 768 px de ancho. Las secciones usan 64 px de espacio vertical en móvil primero y 96 px desde 1024 px.
 
-Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes de servicios y vitrina.
+Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes: servicios, y teselas y fichas de proyectos.
 
 ## Componentes y escenas
 
 - Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella.
 - Botones, etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
-- Paneles de servicios con interacción desplegable; se presentan apilados en móvil y como paneles en escritorio.
-- Proyectos en tarjetas y vitrina interactiva para PonleNota.
+- Servicios en seis cards: desde 768 px, una rueda que muestra todas y gira (arrastre, trackpad, flechas o el botón de cada servicio); en móvil, un mazo que se apila al bajar.
+- Logros en tarjetas con medalla. Proyectos en un mosaico de teselas, cada una con su ficha en un `<dialog>`.
 - Tarjeta clara de contacto sobre el cierre oscuro de la portada.
 - Canvas de nube en la portada y canvas de mar en el pie. La nube usa un worker de módulo.
 - Escena de error reutilizada en /404, /500 y /patos; esta última inicia el juego automáticamente.
@@ -63,7 +63,7 @@ Los estilos base están en src/styles/index.css; los de cada pieza están junto 
 
 ## Movimiento y adaptación
 
-Las curvas compartidas son cubic-bezier(0.23, 1, 0.32, 1) para entrada/salida y cubic-bezier(0.77, 0, 0.175, 1) para movimiento entre posiciones. Los tiempos base son 160 ms para respuesta, 180 ms para paneles y 500 ms para entradas narrativas.
+Las curvas compartidas son cubic-bezier(0.23, 1, 0.32, 1) para entrada/salida y cubic-bezier(0.77, 0, 0.175, 1) para movimiento entre posiciones. Los tiempos base son 160 ms para respuesta y 500 ms para entradas narrativas. La rueda de servicios no usa una duración fija: gira con un resorte.
 
 La entrada de bloques usa animación ligada al scroll cuando el navegador admite animation-timeline: view(); si no, el contenido permanece visible. La hoja base desactiva el desplazamiento de scroll y algunas transformaciones con prefers-reduced-motion; componentes y lienzos ajustan su movimiento según esa preferencia. El cambio de tema no depende de un widget del usuario.
 

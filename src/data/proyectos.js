@@ -33,23 +33,26 @@ export const PROYECTOS = [
   {
     id: 'ponlenota',
     nombre: 'PonleNota',
+    // La línea de la tesela del mosaico. El resumen entero va en la ficha.
+    lema: 'Valoraciones privadas y reseñas en Google para negocios locales.',
+    // El fondo de su ícono, que pinta la mancha de la tesela: blanco, con el
+    // símbolo en sus colores (ver LogoProyecto.jsx).
+    fondoIcono: '#ffffff',
     resumen:
       'ponlenota.cl convierte cada visita a un negocio local en una valoración privada y, si el cliente quiere, en una reseña en Google.',
     sitio: 'https://ponlenota.cl',
-    // Cómo funciona, a la vista aunque la vitrina esté plegada: es lo que
-    // necesita entender quien no la abre. El cupón va en su propia frase y con
-    // su propio «si»: no depende de la reseña, porque Google prohíbe premiar
+    // Cómo funciona, en la ficha. El cupón va en su propia frase y con su
+    // propio «si»: no depende de la reseña, porque Google prohíbe premiar
     // reseñas y PonleNota está hecho así a propósito.
     pasos: [
       'El cliente acerca el teléfono a una tarjeta NFC o escanea un QR. No descarga nada ni crea una cuenta.',
       'Pone su nota, de 1 a 5. Esa nota la ve solo el negocio.',
       'Si quiere, publica su opinión en Google. Si el negocio ofrece un beneficio, se lleva un cupón para volver.',
     ],
-    // Las tres caras del producto, cada una con su captura real. Sin `vistas`
-    // un proyecto se pinta como tarjeta simple; con ellas, como vitrina (ver
-    // `Vitrina` en Proyectos.jsx). El orden fija la forma: ancha, alta,
-    // desplazada y a la derecha. Sin `tono` la tarjeta queda en el bosque de
-    // la zona de plano.
+    // Las cuatro caras del producto, cada una con su captura real, en la tira
+    // de la ficha. `forma` dice cómo se enmarca: `pantalla` llena el marco y
+    // se recorta, `telefono` ya trae su teléfono dibujado y `app` es la
+    // pantalla sola, así que el marco le pone el borde del teléfono.
     //
     // La web es de ponlenota.cl (25-09-2026). El cliente es la demo de la
     // propia web, sin guardar nada. La app y el panel son las pantallas reales
@@ -59,11 +62,11 @@ export const PROYECTOS = [
       {
         titulo: 'El sitio',
         texto: 'Explica el producto y vende los planes. Pensado para aparecer en Google.',
-        tono: 'petroleo',
+        forma: 'pantalla',
         imagen: {
           src: '/image/ponlenota-1280.webp',
           srcSet: '/image/ponlenota-760.webp 760w, /image/ponlenota-1280.webp 1280w',
-          sizes: '(min-width: 1024px) 50vw, 100vw',
+          sizes: '(min-width: 650px) 28rem, 80vw',
           ancho: 1280,
           alto: 800,
           alt: 'La portada de ponlenota.cl: el titular «Opiniones privadas. Reseñas en Google» junto a una tarjeta con la valoración media de un café de ejemplo.',
@@ -72,11 +75,11 @@ export const PROYECTOS = [
       {
         titulo: 'Lo que ve el cliente',
         texto: 'Se abre en el navegador: primero las estrellas, sin pedirle nada. Al final elige si deja su opinión en Google o pide su beneficio.',
-        tono: 'ciruela',
+        forma: 'telefono',
         imagen: {
           src: '/image/ponlenota-cliente-320.webp',
           srcSet: '/image/ponlenota-cliente-320.webp 320w, /image/ponlenota-cliente-628.webp 628w',
-          sizes: '(min-width: 650px) 18rem, 70vw',
+          sizes: '8rem',
           ancho: 320,
           alto: 700,
           alt: 'Un teléfono con la valoración de Café Luna: cinco estrellas, el agradecimiento y los botones para dejar la opinión en Google o pedir el beneficio.',
@@ -87,10 +90,11 @@ export const PROYECTOS = [
         // Solo Android: la de iPhone existe, pero sin TestFlight ni prueba con
         // NFC real todavía, así que no se anuncia.
         texto: 'El negocio, el equipo, las tarjetas NFC y los cupones, desde un teléfono o una tablet Android. Es la que graba las tarjetas.',
+        forma: 'app',
         imagen: {
           src: '/image/ponlenota-app-640.webp',
           srcSet: '/image/ponlenota-app-640.webp 640w, /image/ponlenota-app-960.webp 960w',
-          sizes: '(min-width: 650px) 18rem, 70vw',
+          sizes: '7rem',
           ancho: 640,
           alto: 1536,
           alt: 'El inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, los accesos rápidos y la campaña activa de un café americano gratis.',
@@ -99,11 +103,11 @@ export const PROYECTOS = [
       {
         titulo: 'El panel web',
         texto: 'Casi todo lo de la app, en el computador de la caja: valoraciones, cupones, campañas y cómo va el mes.',
-        tono: 'pizarra',
+        forma: 'pantalla',
         imagen: {
           src: '/image/ponlenota-panel-1280.webp',
           srcSet: '/image/ponlenota-panel-760.webp 760w, /image/ponlenota-panel-1280.webp 1280w',
-          sizes: '(min-width: 1024px) 50vw, 100vw',
+          sizes: '(min-width: 650px) 28rem, 80vw',
           ancho: 1280,
           alto: 524,
           alt: 'El resumen del panel web de PonleNota para Café Luna: 1240 taps, 486 valoraciones, 212 cupones emitidos y 97 canjeados, con el gráfico de taps por día de los últimos 30 días.',
@@ -148,6 +152,10 @@ export const PROYECTOS = [
   {
     id: 'carflip',
     nombre: 'CarFlip',
+    lema: 'Portal de autos usados con estadísticas de mercado.',
+    // El azul de su marca (`--c-accent` de su sistema de diseño). No tiene
+    // símbolo propio, así que la mancha lleva su inicial.
+    fondoIcono: '#1873b3',
     resumen:
       'Un portal chileno de autos usados donde publican particulares y automotoras. Sobre su propio catálogo calcula estadísticas de mercado y detecta oportunidades.',
     repositorio: 'https://github.com/DiegoPyLL/CarFlip',
