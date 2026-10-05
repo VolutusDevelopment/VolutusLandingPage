@@ -33,8 +33,8 @@ export default function Portada() {
           <div className="portada-texto">
             {/* El gancho va de antetítulo y el titular dice lo que hacemos,
                 sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
-                de `lib/servicios.js` (menos la ley de datos, que no es algo que
-                se cree). Cada uno cabe en una línea a 360 px: por eso
+                de `lib/servicios.js` (menos la prospección y la ley de datos,
+                que no son algo que se cree). Cada uno cabe en una línea a 360 px: por eso
                 «automatización» y no «automatizaciones», que no cabe y, como
                 una palabra no se parte, desbordaría.
 

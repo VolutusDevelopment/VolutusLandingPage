@@ -22,18 +22,20 @@
 }
 
 /* ---- la card ----
-   Metal cepillado, solo con degradados: un reflejo en diagonal que se apaga
-   hacia una sombra, sobre líneas verticales finísimas. No pesa nada ni se
-   anima. */
+   Metal cepillado, solo con degradados: una franja de luz que se abre en oro
+   y cobre, como el sol del atardecer pasando por un prisma, con otro ángulo
+   en cada card; una sombra en diagonal y líneas verticales finísimas. No pesa
+   nada ni se anima. */
 .servicio-cara {
   --metal:
     linear-gradient(
-      115deg,
-      rgb(255 255 255 / 0) 10%,
-      rgb(255 255 255 / 0.08) 35%,
-      rgb(255 255 255 / 0) 55%,
-      rgb(0 0 0 / 0.22)
+      calc(100deg + var(--i, 0) * 20deg),
+      transparent 34%,
+      rgb(255 210 122 / 0.14) 44%,
+      rgb(255 154 92 / 0.22) 52%,
+      transparent 62%
     ),
+    linear-gradient(115deg, transparent 55%, rgb(0 0 0 / 0.22)),
     repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
   --anillo: rgb(255 255 255 / 0.8);
   --filo: inset 0 -1px 0 rgb(255 255 255 / 0.08);
@@ -67,11 +69,12 @@
   opacity: 0;
 }
 
-/* Del petróleo al morado: un barrido de una card a otra, como el de un metal
-   anodizado. Todas llevan texto blanco, que da 4.7:1 o más en el punto más
-   claro del reflejo; un blanco translúcido ya no llega, así que el texto
-   suave es blanco y se distingue por su tamaño. El botón de cada servicio,
-   abajo, lleva el mismo tono. */
+/* La costa: alga, mar hondo, ola, roca, coral, atardecer, arena quemada y
+   huiro. Colores de la naturaleza, hondos para contrastar con el cielo y sin
+   morado (DESIGN-BRIEF, A.2). Todas llevan texto blanco, que da 4.6:1 o más
+   en el punto más claro del prisma; un blanco translúcido ya no llega, así
+   que el texto suave es blanco y se distingue por su tamaño. El botón de cada
+   servicio, abajo, lleva el mismo tono. */
 .servicio.zona-plano {
   --texto: #ffffff;
   --texto-suave: #ffffff;
@@ -80,29 +83,14 @@
   --linea: rgb(255 255 255 / 0.3);
 }
 
-:is(.servicio, .servicios-chips > li):nth-child(1) {
-  --panel: #1b6a96;
-}
-
-:is(.servicio, .servicios-chips > li):nth-child(2) {
-  --panel: #2d64a8;
-}
-
-:is(.servicio, .servicios-chips > li):nth-child(3) {
-  --panel: #3d59ad;
-}
-
-:is(.servicio, .servicios-chips > li):nth-child(4) {
-  --panel: #4c4aa8;
-}
-
-:is(.servicio, .servicios-chips > li):nth-child(5) {
-  --panel: #583b9e;
-}
-
-:is(.servicio, .servicios-chips > li):nth-child(6) {
-  --panel: #5a2d8c;
-}
+.servicio:nth-child(1) {  --panel: #007192;}
+.servicio:nth-child(2) {  --panel: #405f74;}
+.servicio:nth-child(3) {  --panel: #b8342c;}
+.servicio:nth-child(4) {  --panel: #af4000;}
+.servicio:nth-child(5) {  --panel: #905500;}
+.servicio:nth-child(6) {  --panel: #005d37;}
+.servicio:nth-child(7) {  --panel: #007156;}
+.servicio:nth-child(8) {  --panel: #00588d;}
 
 .servicio-cabecera {
   display: flex;
@@ -243,7 +231,7 @@
 /* ---- desde M: la rueda ---- */
 
 /* Sin rueda (sin JavaScript o sin funciones trigonométricas en el CSS), las
-   seis en una rejilla, enteras. */
+   ocho en una rejilla, enteras. */
 @media (min-width: 768px) {
   .rueda {
     margin-top: var(--e-12);
@@ -272,73 +260,6 @@
   }
 }
 
-/* Los controles solo sirven con la rueda. */
-.servicios-controles {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: var(--e-4);
-  margin-top: var(--e-8);
-}
-
-.servicios-chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--e-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.servicios-chip,
-.servicios-flecha {
-  min-height: 44px;
-  border: 1px solid var(--linea);
-  border-radius: 999px;
-  background: var(--superficie);
-  color: var(--texto);
-  font: inherit;
-  font-size: var(--texto-sm);
-  cursor: pointer;
-  transition:
-    background-color 140ms var(--ease-out),
-    border-color 140ms var(--ease-out),
-    color 140ms var(--ease-out);
-}
-
-.servicios-chip {
-  padding: 0 var(--e-4);
-}
-
-.servicios-flecha {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 44px;
-  padding: 0;
-}
-
-.servicios-flecha-icono {
-  width: 20px;
-  height: 20px;
-}
-
-@media (hover: hover) {
-  .servicios-chip:not([aria-current='true']):hover,
-  .servicios-flecha:hover {
-    border-color: var(--accion);
-  }
-}
-
-/* La del frente se rellena con el color de su card, que la rueda muestra al
-   frente; al lector de pantalla se lo dice `aria-current`. */
-.servicios-chip[aria-current='true'] {
-  background: var(--panel);
-  border-color: var(--panel);
-  color: #ffffff;
-}
-
 @supports (rotate: calc(1deg * sin(1deg))) {
   @media (min-width: 768px) and (scripting: enabled) {
     .servicios .titular {
@@ -347,14 +268,17 @@
 
     /* El escenario. Cada tamaño de pantalla cambia solo estas medidas: la
        card, el radio del anillo, cuánto sube hacia el fondo y a qué altura
-       queda la del frente. */
+       queda la del frente. Las alturas se achican con la pantalla para que la
+       rueda quepa entera bajo la barra; la card no baja de
+       400px, lo que necesita su texto. */
     .rueda {
       --ancho: 300px;
-      --alto: 450px;
+      --alto: clamp(400px, 100svh - 140px - var(--frente), 450px);
       --radio: 170px;
-      --alzado: 300px;
-      --frente: 207px;
+      --alzado: min(300px, 36svh);
+      --frente: min(151px, 18svh);
       position: relative;
+      margin-top: var(--e-6);
       height: calc(var(--frente) + var(--alto) + var(--e-6));
       /* El gesto de lado es de la rueda (servicios.js); el vertical sigue
          bajando por la página. */
@@ -418,6 +342,11 @@
         )
         rotateY(calc(var(--lado) * -24deg))
         scale(calc(1 - var(--fondo) / 2));
+      /* Las del fondo asomarían nítidas por encima de la del frente: desde
+         0.75 se desenfocan y se desvanecen, y la del fondo desaparece. Las de
+         los costados quedan intactas. */
+      opacity: clamp(0, (0.92 - var(--fondo)) * 6, 1);
+      filter: blur(calc(max(0, var(--fondo) - 0.75) * 15px));
       cursor: pointer;
     }
 
@@ -487,19 +416,15 @@
         opacity: 1;
       }
     }
-
-    .servicios-controles {
-      display: flex;
-    }
   }
 
   @media (min-width: 1024px) and (scripting: enabled) {
     .rueda {
       --ancho: 360px;
-      --alto: 480px;
+      --alto: clamp(400px, 100svh - 140px - var(--frente), 480px);
       --radio: 243px;
-      --alzado: 320px;
-      --frente: 220px;
+      --alzado: min(320px, 38svh);
+      --frente: min(164px, 20svh);
     }
 
     .servicio-numero {
@@ -514,10 +439,10 @@
   @media (min-width: 1400px) and (scripting: enabled) {
     .rueda {
       --ancho: 400px;
-      --alto: 520px;
+      --alto: clamp(400px, 100svh - 140px - var(--frente), 520px);
       --radio: 360px;
-      --alzado: 330px;
-      --frente: 230px;
+      --alzado: min(330px, 38svh);
+      --frente: min(174px, 20svh);
     }
 
     .servicio-cara {

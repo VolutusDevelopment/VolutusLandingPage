@@ -2,22 +2,21 @@ import { SERVICIOS } from '../lib/servicios.js'
 import Icono from './Icono.jsx'
 
 /**
- * Servicios: seis cards, una por servicio, que se ven todas a la vez y piden
+ * Servicios: ocho cards, una por servicio, que se ven todas a la vez y piden
  * que las toquen. Va justo después de la portada, todavía en el cielo.
  *
  * - **Desde M (768 px), la rueda.** Las cards van montadas en un anillo: la del
  *   frente se ve entera; las de los costados y la del fondo, más chicas y en
- *   sombra, pero con el número, el icono y el nombre a la vista. Se gira
- *   arrastrando, con el trackpad de lado, con las flechas o eligiendo un
- *   servicio abajo, y siempre por el camino corto. La geometría entera está en
- *   el CSS en función de un solo número, `--giro`: el HTML ya llega con la
- *   rueda en su lugar y servicios.js solo lo anima.
+ *   sombra, pero con el número, el icono y el nombre a la vista; la del fondo
+ *   se desvanece. Se gira arrastrando, con el trackpad de lado o pulsando
+ *   una que asoma; el scroll vertical no la mueve. La geometría entera está
+ *   en el CSS en función de un solo número, `--giro`: el HTML ya llega con
+ *   la rueda en su lugar y servicios.js solo lo anima.
  * - **En S, el mazo que se apila.** Las mismas cards, una debajo de otra; al
  *   bajar, cada una se pega bajo la barra y la siguiente la tapa. Es solo CSS.
  *
- * Sin JavaScript la rueda no puede girar, así que no se arma: las seis quedan
- * en una rejilla, con todo a la vista (Servicios.css). Por lo mismo, los
- * controles solo aparecen con la rueda.
+ * Sin JavaScript la rueda no puede girar, así que no se arma: las ocho quedan
+ * en una rejilla, con todo a la vista (Servicios.css).
  */
 export default function Servicios() {
   return (
@@ -70,25 +69,7 @@ export default function Servicios() {
         </ol>
       </div>
 
-      <div className="contenedor servicios-controles">
-        <button type="button" className="servicios-flecha" data-sentido="-1" aria-label="Servicio anterior">
-          <Icono id="anterior" className="servicios-flecha-icono" />
-        </button>
-        <ul className="servicios-chips">
-          {SERVICIOS.map((servicio, i) => (
-            <li key={servicio.id}>
-              <button type="button" className="servicios-chip" aria-current={i === 0 ? 'true' : undefined}>
-                {servicio.nombre}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button type="button" className="servicios-flecha" data-sentido="1" aria-label="Servicio siguiente">
-          <Icono id="siguiente" className="servicios-flecha-icono" />
-        </button>
-      </div>
-
-      {/* Quien no ve la rueda oye cuál quedó al frente al usar los controles. */}
+      {/* Quien no ve la rueda oye cuál quedó al frente al girar la rueda. */}
       <p className="solo-lectores servicios-aviso" aria-live="polite" />
     </section>
   )

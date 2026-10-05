@@ -1,8 +1,7 @@
 /**
  * Iconos de trazo, en la misma rejilla de 24 que el símbolo. Las cards de
- * servicios usan uno por servicio, y las flechas de su rueda, `anterior` y
- * `siguiente`; la guía de la Ley 21.719 (/ley21719), el de la ley de datos y
- * los cuatro del final.
+ * servicios usan uno por servicio; la guía de la Ley 21.719 (/ley21719), el
+ * de la ley de datos y los cuatro del final.
  *
  * Son decorativos siempre: el texto que acompañan ya dice lo mismo.
  */
@@ -26,10 +25,24 @@ const ICONOS = {
       <path d="M11 18.5h2" />
     </>
   ),
+  gestion: (
+    <>
+      <rect x="3" y="3" width="7" height="9" rx="1.5" />
+      <rect x="14" y="3" width="7" height="5" rx="1.5" />
+      <rect x="14" y="12" width="7" height="9" rx="1.5" />
+      <rect x="3" y="16" width="7" height="5" rx="1.5" />
+    </>
+  ),
   agente: (
     <>
       <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4H6.5A2.5 2.5 0 0 1 4 13.5z" />
       <path d="M12 6.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" />
+    </>
+  ),
+  prospeccion: (
+    <>
+      <path d="M12 21s-6.5-5.8-6.5-11a6.5 6.5 0 0 1 13 0c0 5.2-6.5 11-6.5 11z" />
+      <circle cx="12" cy="10" r="2.5" />
     </>
   ),
   datos: (
@@ -70,8 +83,6 @@ const ICONOS = {
       <path d="M12 10v4M12 17h.01" />
     </>
   ),
-  anterior: <path d="M15 6l-6 6 6 6" />,
-  siguiente: <path d="M9 6l6 6-6 6" />,
 }
 
 export default function Icono({ id, className }) {

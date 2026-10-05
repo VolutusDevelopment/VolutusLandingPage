@@ -14,7 +14,7 @@ Contacto: contacto@volutus.cl
 
 - [Portada](https://volutus.cl/): qué hacemos, los servicios, los proyectos y el formulario; no hay una sección de métricas
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
-- [Servicios](https://volutus.cl/#servicios): los seis servicios, cada uno con su prueba cuando la hay
+- [Servicios](https://volutus.cl/#servicios): los ocho servicios, cada uno con su prueba cuando la hay
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
@@ -41,8 +41,10 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 - Páginas web
 - Tiendas online
 - Aplicaciones
+- Sistemas de gestión: inventario, clientes, agenda o cotizaciones en un solo lugar
 - Agentes de IA
 - Automatizaciones
+- Prospección de clientes: negocios de un rubro y zona, con sus datos de contacto, desde Google Maps
 - Adaptación técnica a la Ley 21.719 de protección de datos
 
 ## Qué no tomamos

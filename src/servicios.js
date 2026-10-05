@@ -5,10 +5,10 @@
  * anillo a partir de un solo número, `--giro`, y el HTML ya llega con la
  * primera al frente. Esto anima ese número y marca cuál quedó delante.
  *
- * Se gira de cuatro formas, y todas terminan con una card al frente:
- * eligiéndola abajo o con las flechas, pulsando una que asoma, arrastrando
- * (al soltar sigue con su impulso) y con el trackpad de lado. Siempre por el
- * camino corto, y con un resorte: arranca sin demora y se asienta sin golpe.
+ * Se gira de tres formas, y todas terminan con una card al frente: pulsando
+ * una que asoma, arrastrando (al soltar sigue con su impulso) y con el
+ * trackpad de lado. Siempre por el camino corto, y con un resorte: arranca
+ * sin demora y se asienta sin golpe. El scroll vertical es solo de la página.
  *
  * En S no hay rueda: el mazo que se apila es solo CSS.
  */
@@ -38,7 +38,6 @@ export default function initServicios() {
   if (!rueda || !CSS.supports('rotate', 'calc(1deg * sin(1deg))')) return
 
   const servicios = [...rueda.querySelectorAll('.servicio')]
-  const chips = [...document.querySelectorAll('.servicios-chip')]
   const aviso = document.querySelector('.servicios-aviso')
   const paso = 360 / servicios.length
 
@@ -62,10 +61,8 @@ export default function initServicios() {
     const frente = (((Math.round(giro / paso) % n) + n) % n)
     if (frente === activo) return
     servicios[activo].classList.remove('activo')
-    chips[activo].removeAttribute('aria-current')
     activo = frente
     servicios[activo].classList.add('activo')
-    chips[activo].setAttribute('aria-current', 'true')
     enderezar()
   }
 
@@ -118,14 +115,6 @@ export default function initServicios() {
   function irA(i) {
     objetivo += corto(i * paso - objetivo)
     animar()
-  }
-
-  chips.forEach((chip, i) => chip.addEventListener('click', () => irA(i)))
-  for (const flecha of document.querySelectorAll('.servicios-flecha')) {
-    flecha.addEventListener('click', () => {
-      objetivo = Math.round(objetivo / paso) * paso + Number(flecha.dataset.sentido) * paso
-      animar()
-    })
   }
 
   // Una card que asoma se trae al frente con un clic, o cuando le llega el

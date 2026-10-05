@@ -47,6 +47,20 @@ export const SERVICIOS = [
   },
 
   {
+    id: 'gestion',
+    nombre: 'Sistemas de gestión',
+    opcion: 'Un sistema de gestión',
+    texto: 'Un sistema a la medida para ordenar la operación de tu negocio en un solo lugar.',
+    puntos: [
+      'Inventario, clientes, agenda o cotizaciones',
+      'Paneles con los números de tu negocio',
+      'Usuarios y permisos según su rol',
+      'Acceso desde cualquier dispositivo',
+    ],
+    enlace: null,
+  },
+
+  {
     id: 'agente',
     nombre: 'Agentes de IA',
     opcion: 'Un agente de IA',
@@ -69,6 +83,20 @@ export const SERVICIOS = [
       'Traspaso automático de información',
       'Procesamiento de formularios y documentos',
       'Avisos, registros y tareas programadas',
+    ],
+    enlace: null,
+  },
+
+  {
+    id: 'prospeccion',
+    nombre: 'Prospección de clientes',
+    opcion: 'Encontrar clientes potenciales',
+    texto: 'Encontramos los negocios de tu rubro y zona con sus datos de contacto, listos para ofrecerles lo tuyo.',
+    puntos: [
+      'Búsqueda por rubro y zona en Google Maps',
+      'Correos y teléfonos desde sus sitios web',
+      'Lista ordenada en Google Sheets o Excel',
+      'Detección de negocios sin sitio web',
     ],
     enlace: null,
   },

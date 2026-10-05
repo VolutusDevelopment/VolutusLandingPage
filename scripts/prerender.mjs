@@ -62,9 +62,9 @@ function datosEstructurados(ruta, canonical, titulo) {
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: 'Servicios',
-          itemListElement: SERVICIOS.map(({ nombre }) => ({
+          itemListElement: SERVICIOS.map(({ nombre, texto }) => ({
             '@type': 'Offer',
-            itemOffered: { '@type': 'Service', name: nombre.replace(/­/g, '') },
+            itemOffered: { '@type': 'Service', name: nombre.replace(/­/g, ''), description: texto },
           })),
         },
       },
