@@ -116,14 +116,21 @@ export const PROYECTOS = [
     ],
   },
 
-
+  {
+    id: 'carflip',
+    nombre: 'CarFlip',
+    lema: 'Portal de autos usados con estadísticas de mercado.',
+    // El azul de su marca (`--c-accent` de su sistema de diseño). No tiene
+    // símbolo propio, así que la mancha lleva su inicial.
+    fondoIcono: '#1873b3',
+    resumen:
+      'Un portal chileno de autos usados donde publican particulares y automotoras. Sobre su propio catálogo calcula estadísticas de mercado y detecta oportunidades.',
+    repositorio: 'https://github.com/DiegoPyLL/CarFlip',
+  },
 
   {
     id: 'cybergames',
-    nombre: 'Desafío de ciberseguridad',
-    // Un logro y no una obra: no hay código que abrir, así que la prueba es la
-    // publicación del resultado. Va antes que el hackathon porque es un primer
-    // lugar y la competencia es continental.
+    nombre: 'Cisco Cybergames 2026',
     destacado: true,
     credencial: { puesto: '1°', metal: 'oro', titulo: 'Primer lugar', evento: 'Cisco CyberGames Americas 2026' },
     resumen:
@@ -146,18 +153,16 @@ export const PROYECTOS = [
       'https://www.linkedin.com/posts/rodrigo-mart%C3%ADnez-becker-74b6ab241_agenticai-huaweicloud-hackathon-activity-7504179855928913920-ztEm',
   },
 
-
-
-  
   {
-    id: 'carflip',
-    nombre: 'CarFlip',
-    lema: 'Portal de autos usados con estadísticas de mercado.',
-    // El azul de su marca (`--c-accent` de su sistema de diseño). No tiene
-    // símbolo propio, así que la mancha lleva su inicial.
-    fondoIcono: '#1873b3',
+    id: 'ctf-pdi',
+    nombre: 'Capture the Flag PDI',
+    // Validado por un jurado externo, como el de arriba: por eso también va
+    // destacado. Todo lo demás lo valoramos nosotros mismos.
+    destacado: true,
+    credencial: { puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: '9° Seminario Internacional de Ciberseguridad PDI' },
     resumen:
-      'Un portal chileno de autos usados donde publican particulares y automotoras. Sobre su propio catálogo calcula estadísticas de mercado y detecta oportunidades.',
-    repositorio: 'https://github.com/DiegoPyLL/CarFlip',
+      'El Capture the Flag (CTF) de ciberseguridad de la PDI de Chile permite poner a prueba habilidades técnicas mediante desafíos de identificación de vulnerabilidades, análisis digital y resolución de problemas. Code Cadaver, una experiencia inmersiva de Biohacking Village, propone investigar la desaparición de un amigo resolviendo retos relacionados con sistemas informáticos hospitalarios, redes y dispositivos médicos.',
+    repositorio: '',
+    publicacion: '',
   },
 ]

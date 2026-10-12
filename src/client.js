@@ -11,6 +11,7 @@
 import initTitularRotativo from './titular-rotativo.js'
 import initServicios from './servicios.js'
 import initFichas from './fichas.js'
+import initLogros from './logros.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import { quieto } from './lib/movimiento.js'
@@ -266,6 +267,7 @@ export default function init() {
   initTitularRotativo()
   initServicios()
   initFichas()
+  initLogros()
   initBarra()
   initNubes()
 }

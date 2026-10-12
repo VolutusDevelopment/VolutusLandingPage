@@ -9,10 +9,9 @@
  * una que asoma, arrastrando (al soltar sigue con su impulso) y con el
  * trackpad de lado. Siempre por el camino corto, y con un resorte: arranca
  * sin demora y se asienta sin golpe. El scroll vertical es solo de la página.
- *
- * En S no hay rueda: el mazo que se apila es solo CSS.
  */
 import { quieto } from './lib/movimiento.js'
+import { enderezar as enderezarCara, inclinar as inclinarCara } from './lib/inclinacion.js'
 
 // Un resorte apenas subamortiguado: el rebote al llegar es casi imperceptible,
 // el de una rueda con algo de peso.
@@ -32,9 +31,8 @@ const corto = (grados) => (((grados % 360) + 540) % 360) - 180
 
 export default function initServicios() {
   const rueda = document.querySelector('.rueda')
-  // La misma condición que arma la rueda en el CSS. Sin ella queda el mazo de
-  // S o la rejilla de respaldo, y no hay nada que girar.
-  const anillo = matchMedia('(min-width: 768px) and (scripting: enabled)')
+  // La misma condición que arma la rueda en el CSS. Sin ella queda la lista
+  // de respaldo, y no hay nada que girar.
   if (!rueda || !CSS.supports('rotate', 'calc(1deg * sin(1deg))')) return
 
   const servicios = [...rueda.querySelectorAll('.servicio')]
@@ -121,7 +119,7 @@ export default function initServicios() {
   // foco del teclado (su enlace), para que nunca se enfoque algo tapado.
   function traer(e) {
     const i = servicios.indexOf(e.target.closest('.servicio'))
-    if (anillo.matches && i >= 0 && i !== activo) irA(i)
+    if (i >= 0 && i !== activo) irA(i)
   }
   rueda.addEventListener('click', traer)
   rueda.addEventListener('focusin', traer)
@@ -138,7 +136,7 @@ export default function initServicios() {
   )
 
   rueda.addEventListener('pointerdown', (e) => {
-    if (!anillo.matches || e.button !== 0) return
+    if (e.button !== 0) return
     // Agarrarla la frena, como a una rueda de verdad.
     detener()
     arrastre = { x: e.clientX, giro, t: e.timeStamp, movido: false, porPx: porPx(ARRASTRE) }
@@ -192,7 +190,7 @@ export default function initServicios() {
   rueda.addEventListener(
     'wheel',
     (e) => {
-      if (!anillo.matches || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
       e.preventDefault()
       if (!reposo) porPxTrackpad = porPx(TRACKPAD)
       detener()
@@ -217,19 +215,12 @@ export default function initServicios() {
     if (cara !== inclinada) enderezar()
     if (!cara) return
     inclinada = cara
-    const { left, top, width, height } = cara.getBoundingClientRect()
-    const x = (e.clientX - left) / width
-    const y = (e.clientY - top) / height
-    cara.style.setProperty('--brillo-x', `${(x * 100).toFixed(1)}%`)
-    cara.style.setProperty('--brillo-y', `${(y * 100).toFixed(1)}%`)
-    cara.style.setProperty('--inclina-x', `${((0.5 - y) * 8).toFixed(2)}deg`)
-    cara.style.setProperty('--inclina-y', `${((x - 0.5) * 8).toFixed(2)}deg`)
+    inclinarCara(cara, e, 8)
   }
 
   function enderezar() {
     if (!inclinada) return
-    inclinada.style.removeProperty('--inclina-x')
-    inclinada.style.removeProperty('--inclina-y')
+    enderezarCara(inclinada)
     inclinada = null
   }
   rueda.addEventListener('pointerleave', enderezar)
@@ -240,7 +231,7 @@ export default function initServicios() {
     ([entrada]) => {
       if (!entrada.isIntersecting) return
       vigia.disconnect()
-      if (!anillo.matches || quieto() || arrastre || cuadro) return
+      if (quieto() || arrastre || cuadro) return
       velocidad = -240
       animar()
     },

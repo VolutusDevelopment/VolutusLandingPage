@@ -12,14 +12,6 @@
   }
 }
 
-.proyecto {
-  margin-top: var(--e-8);
-}
-
-.proyecto h3 {
-  margin-bottom: var(--e-3);
-}
-
 .proyecto-resumen {
   color: var(--texto-suave);
 }
@@ -77,8 +69,7 @@
 /* El destello: una banda de luz en diagonal, el doble de ancha que la tarjeta
    para que entre y salga por completo. Va bajo el texto gracias al
    `isolation` de la tarjeta. Solo se mueve con `translate`, que no repinta. */
-.proyecto-destacado::before,
-.proyecto-destacado::after {
+.proyecto-destacado::before {
   content: '';
   position: absolute;
   inset: 0 -50%;
@@ -95,12 +86,44 @@
   );
 }
 
-/* Al bajar por la página, el reflejo cruza la tarjeta como cuando se inclina
-   una placa bajo la lámpara. Atado al scroll, igual que `.entra`: cero
-   JavaScript y va con el dedo. Sin soporte o con movimiento reducido, la
-   tarjeta se queda con su degradado, que ya es metálico. */
+/* Con ratón, la tarjeta es una placa en la mano: se inclina hacia el cursor
+   (logros.js), la banda de luz corre bajo él y el anillo de la medalla gira
+   con la inclinación. Al salir, todo vuelve a su lugar. La inclinación va
+   solo en `:hover`: en reposo la tarjeta no lleva transformación y su texto
+   se pinta nítido. Con movimiento reducido no se mueve nada y queda el
+   degradado, que ya es metálico. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .proyectos .proyecto-destacado {
+    transition: transform 250ms var(--ease-out);
+  }
+
+  .proyectos .proyecto-destacado:hover {
+    transform: perspective(1000px) rotateX(var(--inclina-x, 0deg)) rotateY(var(--inclina-y, 0deg));
+  }
+
+  /* El centro de la banda queda bajo el cursor: la banda mide el doble que
+     la tarjeta, así que se corre la mitad de lo que el cursor se aleja del
+     medio. */
+  .proyecto-destacado::before {
+    translate: calc((var(--brillo-x, 50%) - 50%) / 2) 0;
+    transition: opacity 300ms var(--ease-out);
+  }
+
+  .proyecto-destacado:hover::before {
+    opacity: 1;
+  }
+
+  .proyecto-medalla::before {
+    rotate: calc(var(--inclina-y, 0deg) * -5);
+    transition: rotate 250ms var(--ease-out);
+  }
+}
+
+/* Sin cursor (en el teléfono y la tablet), el reflejo cruza la tarjeta al
+   bajar por la página, como cuando se inclina una placa bajo la lámpara.
+   Atado al scroll: cero JavaScript y va con el dedo. */
 @supports (animation-timeline: view()) {
-  @media screen and (prefers-reduced-motion: no-preference) {
+  @media screen and (hover: none) and (prefers-reduced-motion: no-preference) {
     .proyecto-destacado::before {
       opacity: 1;
       animation: destello linear both;
@@ -115,29 +138,9 @@
   }
 }
 
-/* Con ratón, una pasada rápida al entrar. Es una animación y no una
-   transición: corre una vez por entrada y no se devuelve al salir. */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .proyecto-destacado:hover::after {
-    animation: pasada 900ms var(--ease-out);
-  }
-}
-
 @keyframes destello {
   from {
     translate: -60% 0;
-  }
-  to {
-    translate: 60% 0;
-  }
-}
-
-@keyframes pasada {
-  from {
-    translate: -60% 0;
-  }
-  50% {
-    opacity: 1;
   }
   to {
     translate: 60% 0;
@@ -156,9 +159,9 @@
 
 /* La credencial es el único dato de la página validado por un tercero: va
    primero, con una medalla que dice el puesto antes de leer nada. En S y M la
-   medalla comparte fila con la credencial; en L ocupa su propia columna y el
-   texto corre a su lado, así la tarjeta no gasta una fila solo en la medalla.
-   La flecha cierra la fila de la credencial, en la esquina de la tarjeta. */
+   medalla comparte fila con la credencial; en L, donde van lado a lado, la
+   credencial baja a su propia fila. La flecha va en la esquina de la
+   tarjeta. */
 .proyecto-destacado summary {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -221,35 +224,17 @@
   margin-top: var(--e-3);
 }
 
+/* En L la tarjeta comparte la fila con las otras: la credencial a todo el
+   ancho, bajo la medalla, así no necesita más espacio que su palabra más
+   larga. */
 @media (min-width: 1024px) {
   .proyectos .proyecto-destacado {
     padding-block: var(--e-6);
   }
 
-  .proyecto-destacado summary {
-    column-gap: var(--e-6);
-  }
-
-  .proyecto-destacado .proyecto-medalla {
-    grid-row: 1 / span 2;
-    margin: 0;
-  }
-
   .proyecto-destacado .proyecto-credencial {
+    grid-column: 1 / -1;
     margin-bottom: var(--e-3);
-  }
-
-  .proyecto-destacado summary h3 {
-    grid-column: 2;
-  }
-
-  .proyecto-destacado .flecha-desplegar {
-    grid-row: 1 / span 2;
-  }
-
-  /* El relato corre bajo el nombre, no bajo la medalla. */
-  .proyecto-cuerpo {
-    padding-left: calc(5rem + var(--e-6));
   }
 }
 
@@ -387,32 +372,26 @@
   }
 }
 
-/* Los logros, uno al lado del otro desde M: apilados ocupaban dos pantallas
-   para dos párrafos. Se salen de la columna: ocupan el ancho de la ventana,
-   menos el margen lateral, hasta 1440 px. El margen negativo los centra
-   respecto del contenedor sin tocar el HTML. */
+/* Los logros: uno bajo otro en S y M, y uno al lado del otro desde L, en el
+   ancho del contenedor como el resto de la página. Las columnas son
+   `minmax(0, 1fr)` y no `1fr`, que no baja de la palabra más larga: con tres
+   logros, la fila desbordaba la pantalla entre 770 y 1130 px, el tercero
+   quedaba fuera y la página se corría de lado. Cerradas miden lo mismo, como
+   un juego de tarjetas; abrir una no estira a sus vecinas. */
 .proyectos-logros {
   display: grid;
   gap: var(--e-6);
   margin-top: var(--e-8);
-  margin-inline: calc(50% - min(720px, 50vw - var(--margen-lateral)));
 }
 
-.proyectos-logros .proyecto {
-  margin-top: 0;
-}
-
-/* Abrir una no estira a su vecina. */
-@media (min-width: 768px) {
-  .proyectos-logros {
-    align-items: start;
-  }
-}
-
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .proyectos-logros {
     grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  .proyectos-logros:has(details[open]) {
+    align-items: start;
   }
 }
 

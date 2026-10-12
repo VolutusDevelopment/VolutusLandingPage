@@ -53,8 +53,8 @@ Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas
 
 - Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella.
 - Botones, etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
-- Servicios en seis cards: desde 768 px, una rueda que muestra todas y gira (arrastre, trackpad, flechas o el botón de cada servicio); en móvil, un mazo que se apila al bajar.
-- Logros en tarjetas con medalla. Proyectos en un mosaico de teselas, cada una con su ficha en un `<dialog>`.
+- Servicios en ocho cards, en una rueda en todos los tamaños: muestra todas y gira (arrastre con el ratón o el dedo, trackpad o pulsando una que asoma). Sin JavaScript, una lista con todas a la vista.
+- Logros en tarjetas con medalla, siempre a la vista: uno bajo otro hasta M y lado a lado desde L. Con ratón se inclinan hacia el cursor. Proyectos en un mosaico de teselas, cada una con su ficha en un `<dialog>`.
 - Tarjeta clara de contacto sobre el cierre oscuro de la portada.
 - Canvas de nube en la portada y canvas de mar en el pie. La nube usa un worker de módulo.
 - Escena de error reutilizada en /404, /500 y /patos; esta última inicia el juego automáticamente.

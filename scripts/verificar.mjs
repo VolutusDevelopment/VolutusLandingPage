@@ -39,6 +39,8 @@ const MARGEN = 24
 const ANCHOS = [
   ['movil', 390, 844],
   ['tablet', 768, 1024],
+  // El iPad apaisado: aquí la fila de logros desbordaba y nadie lo medía.
+  ['tablet-apaisada', 1180, 820],
   ['escritorio', 1440, 900],
 ]
 

@@ -170,13 +170,15 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <h2 className="entra">Echa un vistazo a nuestros proyectos y logros</h2>
+        <h2 className="titular entra">proyectos y Logros</h2>
 
+        {/* Los logros no llevan `.entra`: están siempre a la vista. Con ratón
+            se inclinan hacia el cursor como una placa en la mano (logros.js). */}
         <div className="proyectos-logros">
           {destacados.map((destacado) => (
             <article
               key={destacado.id}
-              className={`tarjeta proyecto proyecto-destacado proyecto-${destacado.credencial.metal} entra`}
+              className={`tarjeta proyecto proyecto-destacado proyecto-${destacado.credencial.metal}`}
             >
               {/* Plegada, la tarjeta dice el puesto y la obra; el relato y su
                   prueba se despliegan. `<details>` lo hace sin JavaScript y

@@ -5,18 +5,16 @@ import Icono from './Icono.jsx'
  * Servicios: ocho cards, una por servicio, que se ven todas a la vez y piden
  * que las toquen. Va justo después de la portada, todavía en el cielo.
  *
- * - **Desde M (768 px), la rueda.** Las cards van montadas en un anillo: la del
- *   frente se ve entera; las de los costados y la del fondo, más chicas y en
- *   sombra, pero con el número, el icono y el nombre a la vista; la del fondo
- *   se desvanece. Se gira arrastrando, con el trackpad de lado o pulsando
- *   una que asoma; el scroll vertical no la mueve. La geometría entera está
- *   en el CSS en función de un solo número, `--giro`: el HTML ya llega con
- *   la rueda en su lugar y servicios.js solo lo anima.
- * - **En S, el mazo que se apila.** Las mismas cards, una debajo de otra; al
- *   bajar, cada una se pega bajo la barra y la siguiente la tapa. Es solo CSS.
+ * Van en una rueda, en todos los tamaños: las cards montadas en un anillo, la
+ * del frente entera; las de los costados y la del fondo, más chicas y en
+ * sombra, pero con el número, el icono y el nombre a la vista; la del fondo se
+ * desvanece. Se gira arrastrando (con el dedo en el teléfono), con el trackpad
+ * de lado o pulsando una que asoma; el scroll vertical no la mueve. La
+ * geometría entera está en el CSS en función de un solo número, `--giro`: el
+ * HTML ya llega con la rueda en su lugar y servicios.js solo lo anima.
  *
  * Sin JavaScript la rueda no puede girar, así que no se arma: las ocho quedan
- * en una rejilla, con todo a la vista (Servicios.css).
+ * enteras, una bajo otra en S y en rejilla desde M (Servicios.css).
  */
 export default function Servicios() {
   return (
