@@ -547,17 +547,14 @@ function texturaDeCuadro(gl, filas) {
   }
 }
 
-function montar(id, lienzo, mar) {
-  // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
-  // WebGL por software y cada fotograma cuesta CPU que la persona necesita
-  // para otra cosa. En ese caso no hay nubes: son decoración.
-  const gl = lienzo.getContext('webgl', {
-    antialias: false,
-    powerPreference: 'low-power',
-    failIfMajorPerformanceCaveat: true,
-  })
-  const programas = gl && [compilar(gl, mar ? MAR : CAMPO), compilar(gl, TRAMA)]
-  if (!programas || programas.includes(null)) return
+// Todo lo que la escena guarda en la GPU: sus programas, el triángulo, las
+// texturas y las láminas. Se arma al montar, y otra vez cuando el navegador
+// devuelve un contexto perdido, que vuelve vacío. Si un programa no compila,
+// no hay escena.
+function preparar(escena) {
+  const { gl, mar } = escena
+  const programas = [compilar(gl, mar ? MAR : CAMPO), compilar(gl, TRAMA)]
+  if (programas.includes(null)) return false
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
   // Un triángulo que cubre todo el lienzo: sin costura en la diagonal.
@@ -566,9 +563,10 @@ function montar(id, lienzo, mar) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
   const [campo, trama] = programas
+  escena.programas = programas
   texturaDeRuido(gl)
   gl.activeTexture(gl.TEXTURE1)
-  const escena = { id, gl, programas, mar, activa: false, vivo: false, campo: lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST) }
+  escena.campo = lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST)
   gl.useProgram(trama.programa)
   gl.uniform1i(trama.campo, 1)
   gl.uniform1f(trama.relleno, mar ? 1 : 0)
@@ -580,14 +578,49 @@ function montar(id, lienzo, mar) {
     texturaDeCuadro(gl, GLOBOS)
     gl.uniform1i(campo.pato, 2)
     gl.uniform1i(campo.globo, 3)
-    escena.rastro = new Float32Array(4 * RASTRO)
-    escena.pato = null
   } else {
     gl.uniform1i(campo.estado, 2)
     escena.aire = montarAire(gl)
+  }
+  return true
+}
+
+function montar(id, lienzo, mar) {
+  // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
+  // WebGL por software y cada fotograma cuesta CPU que la persona necesita
+  // para otra cosa. En ese caso no hay nubes: son decoración.
+  const gl = lienzo.getContext('webgl', {
+    antialias: false,
+    powerPreference: 'low-power',
+    failIfMajorPerformanceCaveat: true,
+  })
+  const escena = { id, gl, mar, activa: false, vivo: false, perdida: false, ultimos: {} }
+  if (!gl || !preparar(escena)) return
+  if (mar) {
+    escena.rastro = new Float32Array(4 * RASTRO)
+    escena.pato = null
+  } else {
     escena.previo = null
     escena.tramo = null
   }
+
+  // El navegador pierde los contextos de la página cuando reinicia su GPU: el
+  // equipo duerme, la pestaña pasa un rato en segundo plano, se resetea el
+  // driver. Solo los devuelve si se le pide (`preventDefault`), y vacíos: se
+  // arma la escena de nuevo y se le repite lo último que dijo la página. Sin
+  // esto, la nube y el mar quedaban en blanco hasta recargar. Mientras no
+  // vuelve no se pinta, y el enlace del pato se oculta.
+  lienzo.addEventListener('webglcontextlost', (evento) => {
+    evento.preventDefault()
+    escena.perdida = true
+    if (escena.pato) postMessage({ tipo: 'pato', id, x: 0, y: 0, visible: false })
+  })
+  lienzo.addEventListener('webglcontextrestored', () => {
+    if (!preparar(escena)) return
+    escena.perdida = false
+    Object.values(escena.ultimos).forEach((data) => aplicar(escena, data))
+    if (!marco) marco = cuadro(paso)
+  })
   escenas.set(id, escena)
 }
 
@@ -751,7 +784,7 @@ function pintar(escena, ahora) {
 
 function paso(ahora) {
   marco = 0
-  const activas = [...escenas.values()].filter((e) => e.activa)
+  const activas = [...escenas.values()].filter((e) => e.activa && !e.perdida)
   if (!activas.length) return
   if (quieto) {
     activas.forEach((e) => pintar(e, inicio + QUIETO_EN))
@@ -763,13 +796,13 @@ function paso(ahora) {
   activas.forEach((e) => pintar(e, ahora))
 }
 
-onmessage = ({ data }) => {
-  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar)
-  if (data.tipo === 'quieto') quieto = data.valor
-
-  const escena = escenas.get(data.id)
-  if (escena && data.tipo === 'medir') {
-    const { gl } = escena
+// Lo que la página fija en la GPU de cada escena: su medida, sus colores y, en
+// el juego de la 404, la forma del cielo. Se guarda el último de cada uno para
+// repetirlo cuando vuelve un contexto perdido.
+function aplicar(escena, data) {
+  escena.ultimos[data.tipo] = data
+  const { gl } = escena
+  if (data.tipo === 'medir') {
     gl.canvas.width = data.ancho
     gl.canvas.height = data.alto
     escena.rejilla = [Math.ceil(data.ancho / data.celda), Math.ceil(data.alto / data.celda)]
@@ -800,7 +833,7 @@ onmessage = ({ data }) => {
       if (vista) gl.uniform1f(u.escala, escena.escala)
     })
   }
-  if (escena && data.tipo === 'colores') {
+  if (data.tipo === 'colores') {
     fijar(escena, (gl, u) => {
       gl.uniform3fv(u.luz, data.luz)
       gl.uniform3fv(u.sombra, data.sombra)
@@ -808,12 +841,20 @@ onmessage = ({ data }) => {
       gl.uniform1f(u.alfa, data.alfa)
     })
   }
-  if (escena && data.tipo === 'forma') {
+  if (data.tipo === 'forma') {
     fijar(escena, (gl, u) => {
       gl.uniform1f(u.forma, data.valor)
       gl.uniform3fv(u.cumulos, data.cumulos)
     })
   }
+}
+
+onmessage = ({ data }) => {
+  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar)
+  if (data.tipo === 'quieto') quieto = data.valor
+
+  const escena = escenas.get(data.id)
+  if (escena && ['medir', 'colores', 'forma'].includes(data.tipo)) aplicar(escena, data)
   if (escena && data.tipo === 'activa') escena.activa = data.valor
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
