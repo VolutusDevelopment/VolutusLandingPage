@@ -24,6 +24,31 @@ const ATLAS = {
   url: 'https://cloudatlas.wmo.int/es/clouds-species-volutus.html',
 }
 
+// La raíz del nombre: el verbo latino y el rollo que salió de él.
+const VOLVO = {
+  id: 'volvo',
+  autor: 'Charlton T. Lewis y Charles Short',
+  titulo: 'volvo',
+  medio: 'A Latin Dictionary, 1879. En línea en Perseus Digital Library, Universidad de Tufts',
+  url: 'https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0059:entry=volvo',
+}
+
+const VOLUMEN = {
+  id: 'volumen',
+  autor: 'Charlton T. Lewis y Charles Short',
+  titulo: 'volumen',
+  medio: 'A Latin Dictionary, 1879. En línea en Perseus Digital Library, Universidad de Tufts',
+  url: 'https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0059:entry=volumen',
+}
+
+const ALEJANDRIA = {
+  id: 'alejandria',
+  autor: 'Wikipedia',
+  titulo: 'Biblioteca de Alejandría',
+  medio: 'Wikipedia en español',
+  url: 'https://es.wikipedia.org/wiki/Biblioteca_de_Alejandr%C3%ADa',
+}
+
 // La foto de la sección es de este artículo, y su crédito también.
 const XCMAG = {
   id: 'xcmag',
@@ -35,7 +60,7 @@ const XCMAG = {
 }
 
 // En el orden en que se citan: el número de cada una sale de aquí.
-const FUENTES = [ATLAS, XCMAG]
+const FUENTES = [VOLVO, VOLUMEN, ALEJANDRIA, ATLAS, XCMAG]
 
 // Las redes que enlaza cada socio, con su logo: la marca de cada una, en un
 // solo color, y no un ícono de trazo de Icono.jsx. Al pasar el cursor, el logo
@@ -78,7 +103,7 @@ const SOCIOS = [
       linkedin: 'https://www.linkedin.com/in/rodrigo-mart%C3%ADnez-becker-74b6ab241/',
     },
     descripcion:
-      'Por Escribir',
+      'Hoy el conocimiento llega al instante y casi cualquier solución está a un par de prompts. Yo prefiero no apurarme y disfrutar lo que nos hace humanos: el proceso. Si tenemos a mano toda la inteligencia reunida, lo mínimo es sacar de ella buenas ideas. Por eso quiero que cada producto que hago se note hecho a mano y no en serie. Si el camino A es el más rápido y rentable, y el B el que nos deja más lejos, tomo el B. Con esa paciencia gané el primer lugar en Cisco CyberGames Americas 2026, y hoy construyo Volutus junto a mi socio Diego.',
   },
 ]
 
@@ -242,8 +267,25 @@ export default function Nosotros() {
             ¿De dónde viene <dfn>Volutus</dfn>?
           </h2>
           <p className="nosotros-etimologia entra">
-            <span className="dato">vo·lu·tus</span> Del latín, «enrollado».
+            <span className="dato">vo·lu·tus</span> Del latín, «enrollado»: de <i lang="la">volvere</i>, «dar
+            vuelta».
+            <Cita fuente={VOLVO} />
           </p>
+
+          {/* Por qué el nombre: lo que hace el verbo y lo que salió de él. */}
+          <div className="nosotros-porque entra">
+            <p>Eso queremos hacer con la forma en que hoy se hace software: darla vuelta.</p>
+            <p>
+              Del mismo verbo viene <i lang="la">volumen</i>, el rollo de papiro
+              <Cita fuente={VOLUMEN} /> en que la Biblioteca de Alejandría guardaba el saber de su época.
+              <Cita fuente={ALEJANDRIA} /> Ese conocimiento lleva siglos reunido, y hoy está a un prompt de
+              distancia. Lo que falta no es información: es saber usarla.
+            </p>
+            <p>
+              Mientras otros se apuran por llegar, nosotros cuidamos el camino. No para entregar más tarde, sino
+              para no saltarnos los pasos que hacen que algo funcione.
+            </p>
+          </div>
 
           <figure className="nosotros-definicion entra">
             <blockquote cite={ATLAS.url}>

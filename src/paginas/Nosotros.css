@@ -421,3 +421,27 @@
     visibility: hidden;
   }
 }
+
+/* ---- por qué el nombre ---- */
+
+/* Bajo la entrada del diccionario, el porqué: en el tamaño de la entradilla y
+   a lo ancho de una columna de lectura. */
+.nosotros-porque {
+  max-width: 38em;
+  margin-top: var(--e-8);
+  font-size: var(--texto-lg);
+  line-height: 1.5;
+}
+
+.nosotros-porque p {
+  margin: 0;
+}
+
+.nosotros-porque p + p {
+  margin-top: var(--e-4);
+}
+
+.nosotros-porque p:last-child {
+  color: var(--texto);
+  font-weight: 600;
+}
