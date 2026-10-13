@@ -97,6 +97,9 @@ const LETRERO = 2
 const LETRERO_LARGO = 3.5
 // Hasta dónde baja a volar: por encima del contador, que va abajo.
 const SUELO = 0.8
+// El último tramo del cielo, donde se acaba sobre el aviso: lo que baja hasta
+// ahí se desvanece en vez de cortarse en seco.
+const ORILLA = 0.15
 // La tolerancia del disparo, en px. Con el dedo es el doble: tapa justo lo que
 // apunta.
 const MARGEN = 10
@@ -725,7 +728,9 @@ function pintarParvada({ t0, parvada }, ahora) {
 
 // Un rayo de luz baja del cielo y los cazados suben por él uno tras otro,
 // desde abajo, con su aureola y aleteando despacio, hasta perderse arriba. El
-// rayo se enciende al empezar y se apaga al final.
+// rayo se enciende al empezar y se apaga al final. Abajo, en la orilla del
+// cielo, se desvanece fila por fila de la rejilla, y de ahí aparecen los
+// cazados.
 function pintarAscenso({ t0, cuantos }, ahora) {
   const { ctx, cuadros, lienzo, alto, celda } = escena
   const t = (ahora - t0) / 1000
@@ -735,19 +740,24 @@ function pintarAscenso({ t0, cuantos }, ahora) {
   luz.addColorStop(0, 'rgba(248, 216, 120, 0)')
   luz.addColorStop(0.5, 'rgba(252, 252, 252, 0.6)')
   luz.addColorStop(1, 'rgba(248, 216, 120, 0)')
-  ctx.globalAlpha = Math.max(0, Math.min(1, t / 0.5, (ASCENSO - t) / 0.5))
+  const encendido = Math.max(0, Math.min(1, t / 0.5, (ASCENSO - t) / 0.5))
+  const orilla = (y) => Math.max(0, Math.min(1, (lienzo.height - y) / (ORILLA * alto)))
   ctx.fillStyle = luz
-  ctx.fillRect(izquierda, 0, ancho, lienzo.height)
-  ctx.globalAlpha = 1
+  for (let y = 0; y < lienzo.height; y += celda) {
+    ctx.globalAlpha = encendido * orilla(y)
+    ctx.fillRect(izquierda, y, ancho, celda)
+  }
   const { width, height } = cuadros.arriba
   for (let i = 0; i < cuantos; i++) {
     const s = (t - (i / cuantos) * (ASCENSO - SUBIDA)) / SUBIDA
     if (s < 0 || s > 1) continue
     const x = Math.round((izquierda + ((i * 0.618) % 1) * (ancho - width)) / celda) * celda
     const y = Math.round((lienzo.height - s * (lienzo.height + 2 * height)) / celda) * celda
+    ctx.globalAlpha = orilla(y)
     ctx.drawImage(Math.floor(((t + i / 3) * ALETEO) / 2) % 2 ? cuadros.abajo : cuadros.arriba, x, y)
     ctx.drawImage(cuadros.aureola, x, y - 2 * celda)
   }
+  ctx.globalAlpha = 1
 }
 
 function pintarLetrero(cuadro) {
@@ -775,7 +785,7 @@ function pintarPato() {
   const ancho = cuadro.width * p.tamano
   const x = Math.round((p.x - ancho / 2) / celda) * celda
   const y = Math.round((p.y - (cuadro.height * p.tamano) / 2) / celda) * celda
-  ctx.globalAlpha = p.estado === 'cae' ? Math.min(1, (lienzo.height - p.y) / (0.15 * alto)) : 1
+  ctx.globalAlpha = p.estado === 'cae' ? Math.min(1, (lienzo.height - p.y) / (ORILLA * alto)) : 1
   ctx.setTransform(mira * p.tamano, 0, 0, p.tamano, mira < 0 ? x + ancho : x, y)
   ctx.drawImage(cuadro, 0, 0)
   if (p.armadura) ctx.drawImage(casco, 0, 0)

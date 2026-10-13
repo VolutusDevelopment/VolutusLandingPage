@@ -4,7 +4,7 @@
 
 ## Modelo visual
 
-La interfaz organiza el color por zonas de contenido, no mediante un selector de tema. zona-cielo define las superficies claras de la portada y otras secciones; zona-plano define las secciones oscuras donde se muestra la obra. El recorrido de la portada llega gradualmente al mar del pie. /nosotros usa tres fondos hondos graduados. La barra fija adapta su lectura al fondo que tiene debajo.
+La interfaz organiza el color por zonas de contenido, no mediante un selector de tema. zona-cielo define las superficies claras de la portada y otras secciones; zona-plano define las secciones oscuras donde se muestra la obra. El recorrido de la portada llega gradualmente al mar del pie. /nosotros hace el mismo recorrido: abre bajo la misma nube, vista de costado, sigue en blanco con un plano oscuro para la marca y baja por la caída hasta el mar de día. La barra fija adapta su lectura al fondo que tiene debajo.
 
 La propuesta «Recorrido del día» conserva valor como exploración histórica, pero sus tonos cálidos no forman parte de la página actual. Ver DESIGN-BRIEF.md y la nota correspondiente del vault antes de reutilizarla.
 
@@ -17,7 +17,7 @@ Las fuentes se alojan en public/fonts/ y usan font-display: swap:
 - Archivo en cursiva 800, para los titulares h1 que comparten inclinación con la marca.
 - Geist respaldo y Archivo respaldo son caras locales ajustadas a las métricas de las fuentes para reducir el cambio de líneas mientras cargan.
 
-El texto base usa 17 px y line-height 1.6. Los encabezados h1–h3 usan peso 800; h1 usa Archivo cursiva, mayúsculas y tamaño fluido. La escala CSS es: 13, 15, 17, 22 y 34 px, más clamp(40px, 7vw, 76px) para el título principal.
+El texto base usa 17 px y line-height 1.6. Los encabezados h1–h3 usan peso 800; h1 usa Archivo cursiva, mayúsculas y tamaño fluido. La escala CSS es: 13, 15, 17, 22 y 34 px, más clamp(40px, 7vw, 76px) para el título principal y para `.titular`, y clamp(26px, 8vw, 60px) para `.titular-menor`, el de las tarjetas y los bloques dentro de una sección.
 
 ## Color implementado
 
@@ -37,7 +37,6 @@ Los valores se resuelven por zona y por estado. Las tarjetas y los componentes p
 | Vitrina de proyectos | Ciruela: fondo #1f141c, acción #e2b6cf; petróleo: #0a1e27, acción #8fc6d9; pizarra: #13171e, acción #b4c6e0 |
 | Mañana | Degradado #2b8de4 → #4d9fea → #7cbcf1 → #c2e1f8 → #f6f9fc |
 | Noche | Degradado #0a1a2a → #050d18; mar #0e2c47 / #3b86bf / #eef3ff |
-| Profundidad de /nosotros | Tres degradados entre #173350 y #0a1a2a |
 
 El cielo base define nube #b9dcf2 / #56779b / #e0b870 y mar #116492 / #38a9e8 / #9fd3f2. La mañana ajusta la nube a #ffffff / #6a8cb2 / #ffd48a. El plano nocturno define nube #34506e / #16293d / #7f9bb8 y mar #155a86 / #38a9e8 / #d9f0fc. Los tonos de marca y acción tienen usos distintos para mantener contraste.
 
@@ -56,7 +55,9 @@ Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas
 - Servicios en ocho cards, en una rueda en todos los tamaños: muestra todas y gira (arrastre con el ratón o el dedo, trackpad o pulsando una que asoma). Sin JavaScript, una lista con todas a la vista.
 - Logros en tarjetas con medalla, siempre a la vista: uno bajo otro hasta M y lado a lado desde L. Con ratón se inclinan hacia el cursor. Proyectos en un mosaico de teselas, cada una con su ficha en un `<dialog>`.
 - Tarjeta clara de contacto sobre el cierre oscuro de la portada.
-- Canvas de nube en la portada y canvas de mar en el pie. La nube usa un worker de módulo.
+- /nosotros: la escena de la portada (`Escena`) con la nube de costado (`perspectiva="costado"`): el rollo cruza la cabecera casi paralelo a la pantalla y gira con el frente hacia arriba; en todos los tamaños va arriba y el texto debajo. Su lienzo no baja de 45svh, la trama va a 2 px en todos los tamaños y la textura sigue la foto de la Morning Glory: coliflor en la cresta y vetas en la cara. Después, el nombre como entrada de diccionario, la Morning Glory en foto con cifras y fuentes citadas, el plano de la marca (zona-plano con cuadrícula y la construcción del símbolo), la forma de trabajar en lista numerada y un cierre en tarjeta oscura sobre la caída.
+- Cifras (`.cifras`): número en Geist Mono sobre una línea; las comparten /ley21719 y /nosotros.
+- Canvas de nube en la portada y canvas de mar en el pie. La nube usa un worker de módulo; la cámara de costado se elige al compilar el shader (`#define COSTADO`).
 - Escena de error reutilizada en /404, /500 y /patos; esta última inicia el juego automáticamente.
 
 Los estilos base están en src/styles/index.css; los de cada pieza están junto a su componente. src/styles/main.css organiza las importaciones.

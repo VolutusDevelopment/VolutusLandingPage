@@ -1,30 +1,283 @@
-/* Quiénes somos. Ver Nosotros.jsx. */
+/* Quiénes somos. Ver Nosotros.jsx. La cabecera es la escena de la portada
+   (Portada.css) y las listas numeradas y el cierre son los de index.css; aquí
+   va solo lo que esta página agrega. */
 
-.nosotros-entradilla {
-  margin-top: var(--e-4);
+/* ---- quiénes somos ---- */
+
+/* Una tarjeta horizontal por socio: la foto dentro, a un lado, y el texto al
+   otro, con el radio de las teselas de proyectos. En S la descripción baja a
+   todo el ancho; desde M va junto a la foto, que cambia de lado de una
+   tarjeta a la otra. Van en la escena, bajo el titular (Nosotros.jsx), que
+   desde L va centrado: las tarjetas no. */
+.socios {
+  list-style: none;
+  display: grid;
+  gap: var(--e-6);
+  margin: var(--e-16) 0 0;
+  padding: 0;
+  text-align: start;
 }
 
-.nosotros-parrafo {
-  margin-top: var(--e-4);
+.socio {
+  display: grid;
+  grid-template-columns: clamp(5.5rem, 34%, 9rem) minmax(0, 1fr);
+  grid-template-areas:
+    'foto nombre'
+    'texto texto';
+  gap: var(--e-4) var(--e-6);
+  align-items: center;
+  padding: var(--e-6);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--superficie);
+}
+
+/* La proporción va escrita, para que el hueco exista antes que la foto, y
+   con fondo, para que se vea mientras llega. */
+.socio img {
+  grid-area: foto;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radio-tarjeta);
+  background: var(--linea);
+}
+
+.socio-nombre {
+  grid-area: nombre;
+}
+
+/* Es un h2, porque cuelga del titular de la página, con el tamaño de un h3:
+   es el nombre de una tarjeta, no el de una sección. */
+.socio-nombre h2 {
+  font-size: var(--texto-lg);
+  letter-spacing: -0.015em;
+}
+
+.socio-nombre p {
+  margin-top: var(--e-1);
   color: var(--texto-suave);
 }
 
-/* ---- el nombre y la construcción del símbolo ---- */
-
-.nosotros-origen {
-  display: grid;
-  gap: var(--e-12);
-  align-items: center;
+.socio-descripcion {
+  grid-area: texto;
+  max-width: 40rem;
+  color: var(--texto-suave);
 }
 
-@media (min-width: 1024px) {
-  .nosotros-origen {
-    grid-template-columns: 3fr 2fr;
+@media (min-width: 640px) {
+  .socio {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'foto nombre'
+      'foto texto';
+    align-items: start;
+    padding: var(--e-8);
+  }
+
+  .socio:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    grid-template-areas:
+      'nombre foto'
+      'texto foto';
   }
 }
 
+@media (min-width: 1024px) {
+  .socio {
+    grid-template-columns: 20rem minmax(0, 1fr);
+    column-gap: var(--e-12);
+  }
+
+  .socio:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+/* ---- el nombre ---- */
+
+.nosotros-etimologia {
+  margin-top: var(--e-4);
+  font-size: var(--texto-lg);
+  color: var(--texto-suave);
+}
+
+.nosotros-etimologia .dato {
+  margin-right: var(--e-2);
+  color: var(--texto);
+}
+
+/* La acepción en sí, en grande y en tinta; lo que la acompaña, en el suave. */
+.numerada .nosotros-definicion {
+  margin: 0;
+  font-size: var(--texto-lg);
+  line-height: 1.45;
+}
+
+.numerada .nosotros-definicion,
+.numerada .nosotros-definicion p {
+  color: var(--texto);
+}
+
+/* ---- la Morning Glory ---- */
+
+.nosotros-morning {
+  margin-top: var(--e-24);
+}
+
+.nosotros-foto {
+  margin: var(--e-8) 0 0;
+}
+
+/* En S la foto se recorta a 4:3, hacia el ala delta y el frente de la nube: a
+   todo lo ancho, el ala delta era un punto. Desde M va entera. La proporción
+   va siempre escrita, para que el hueco exista antes de que la foto llegue. */
+.nosotros-foto img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 25% 50%;
+  border-radius: var(--radio-panel);
+  background: #c2e1f8;
+}
+
+@media (min-width: 640px) {
+  .nosotros-foto img {
+    aspect-ratio: 1920 / 968;
+  }
+}
+
+.nosotros-foto figcaption {
+  margin-top: var(--e-3);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.nosotros-relato {
+  display: grid;
+  gap: var(--e-4) var(--e-12);
+  margin-top: var(--e-8);
+  color: var(--texto-suave);
+}
+
+@media (min-width: 1024px) {
+  .nosotros-relato {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- cómo trabajamos ---- */
+
+/* «TRABAJAMOS» mide 8.1 em en la letra de los titulares y no se parte: a
+   40 px no cabe en el ancho del texto por debajo de unos 400 px, y en 320
+   corría la página de lado. El titular se achica lo justo, como el de la
+   portada con «AUTOMATIZACIÓN»; desde 400 px no cambia. */
+.nosotros-como-titulo {
+  font-size: min(var(--texto-2xl), (100vw - 2 * var(--margen-lateral)) / 8.2);
+}
+
+/* ---- las citas y sus fuentes ---- */
+
+/* Sin alto de línea, para que el número no separe su línea de las otras. */
+.cita {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  line-height: 0;
+}
+
+.cita a {
+  margin-left: 2px;
+  text-decoration: none;
+}
+
+.cita a:hover {
+  text-decoration: underline;
+}
+
+.fuentes {
+  margin-top: var(--e-16);
+  padding-top: var(--e-6);
+  border-top: 1px solid var(--linea);
+}
+
+.fuentes ol {
+  margin: 0;
+  padding-left: var(--e-6);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.fuentes li + li {
+  margin-top: var(--e-2);
+}
+
+/* ---- la marca: el plano ----
+   Un plano en el sentido literal: la zona oscura del sitio se llama así, y
+   aquí lleva su cuadrícula porque muestra cómo se construye el símbolo. Es una
+   tesela de proyectos en grande: el mismo fondo y el mismo radio. */
+
+.plano {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  display: grid;
+  gap: var(--e-8);
+  align-items: center;
+  padding: var(--e-8) var(--e-6);
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+/* La cuadrícula se apaga hacia el texto, para no pasar por debajo de él. */
+.plano::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(var(--linea) 1px, transparent 1px) 0 0 / var(--e-6) var(--e-6),
+    linear-gradient(90deg, var(--linea) 1px, transparent 1px) 0 0 / var(--e-6) var(--e-6);
+  mask-image: radial-gradient(ellipse at 50% 85%, #000 15%, transparent 70%);
+}
+
+@media (min-width: 1024px) {
+  .plano {
+    grid-template-columns: 3fr 2fr;
+    gap: var(--e-12);
+    padding: var(--e-16);
+  }
+
+  .plano::before {
+    mask-image: radial-gradient(ellipse at 80% 50%, #000 15%, transparent 70%);
+  }
+}
+
+.plano-piezas {
+  list-style: none;
+  display: grid;
+  gap: var(--e-4);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+.plano-piezas li {
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea);
+}
+
+.plano-piezas p {
+  margin-top: var(--e-1);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
 .construccion {
-  width: min(100%, 22rem);
+  width: min(100%, 24rem);
   justify-self: center;
   view-timeline: --construccion block;
 }
@@ -45,7 +298,7 @@
 }
 
 /* El grosor va en unidades del dibujo (24 de lado): a su tamaño máximo son
-   unos 3 px, como el trazo de la marca. */
+   unos 3.5 px, como el trazo de la marca. */
 .construccion-voluta {
   stroke: var(--marca);
   stroke-width: 0.22;
@@ -70,51 +323,4 @@
       animation-range: entry 20% cover 50%;
     }
   }
-}
-
-/* ---- las tres piezas de la marca ---- */
-
-.nosotros-marca {
-  list-style: none;
-  display: grid;
-  gap: var(--e-8);
-  margin: var(--e-16) 0 0;
-  padding: var(--e-8) 0 0;
-  border-top: 1px solid var(--linea);
-}
-
-@media (min-width: 640px) {
-  .nosotros-marca {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.nosotros-marca p {
-  margin-top: var(--e-2);
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-}
-
-/* ---- cómo somos ---- */
-
-.nosotros-rasgos {
-  list-style: none;
-  max-width: var(--medida-lectura);
-  margin: var(--e-8) 0 0;
-  padding: 0;
-  border-top: 1px solid var(--linea);
-}
-
-.nosotros-rasgos li {
-  padding-block: var(--e-4);
-  border-bottom: 1px solid var(--linea);
-  font-size: var(--texto-lg);
-  line-height: 1.4;
-}
-
-.nosotros-acciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-3);
-  margin-top: var(--e-8);
 }

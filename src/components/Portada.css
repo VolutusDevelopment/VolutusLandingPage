@@ -74,20 +74,36 @@
   }
 }
 
+/* De costado (/nosotros, ver `Escena`) la nube tiene que imponerse, como la
+   Morning Glory de la foto de esa página: el lienzo no baja de 45svh, aunque
+   en una pantalla baja empuje la entradilla bajo el borde, y la trama va fina
+   en todos los tamaños: a 3 px, con un rollo más chico que el de la portada,
+   los puntos se veían gruesos. */
+.portada-costado .portada-cielo {
+  min-height: 45svh;
+  max-height: 60svh;
+  --nubes-celda: 2;
+}
+
 /* En L y XL la nube es el fondo de la portada: su lienzo cubre casi todo el
    alto y el rollo, en perspectiva, entra enorme por abajo a la izquierda y
    se aleja hacia arriba a la derecha, pasando detrás del titular. El titular
-   va centrado, más ancho para que quepa en tres líneas. */
+   va centrado, más ancho para que quepa en tres líneas.
+
+   De costado (/nosotros, ver `Escena`) no: el rollo cruza a lo ancho, y
+   detrás del titular lo taparía entero. Se queda como en S y M, arriba y con
+   el texto debajo, que así nunca se tocan, tenga la pantalla el alto que
+   tenga; solo el texto se centra. */
 @media (min-width: 1024px) {
-  .portada-escena {
+  .portada:not(.portada-costado) .portada-escena {
     justify-content: center;
   }
 
-  .portada-escena::after {
+  .portada:not(.portada-costado) .portada-escena::after {
     content: none;
   }
 
-  .portada-cielo {
+  .portada:not(.portada-costado) .portada-cielo {
     position: absolute;
     inset: 0 0 auto;
     height: 88%;
@@ -111,6 +127,46 @@
 
   .portada-acciones {
     justify-content: center;
+  }
+}
+
+/* ---- la escena de costado ----
+   La de /nosotros (ver `Escena`): bajo el titular van la entradilla y los
+   socios, así que el texto usa el ancho entero del contenedor, como las
+   secciones que siguen. */
+.portada-costado .portada-texto {
+  max-width: none;
+}
+
+/* El titular y la entradilla van en blanco, como en las cabeceras internas
+   (`.cabecera-cielo`), y con su mismo cielo: el azul hondo se sostiene bajo
+   todo el texto y las tarjetas, donde el blanco da 4.7:1, y solo en el
+   relleno de abajo (`--fundido`) se difumina al blanco de la página. */
+:root .portada-costado {
+  --fundido: calc(var(--e-24) + var(--e-16));
+  --fondo-hora: linear-gradient(
+    #1976cc calc(100% - var(--fundido)),
+    #7cbcf1 calc(100% - var(--fundido) / 2),
+    #f6f9fc
+  );
+}
+
+.portada-costado {
+  padding-bottom: var(--fundido);
+}
+
+.portada-costado h1,
+.portada-entradilla {
+  color: #ffffff;
+}
+
+.portada-entradilla {
+  margin-top: var(--e-6);
+}
+
+@media (min-width: 1024px) {
+  .portada-entradilla {
+    margin-inline: auto;
   }
 }
 
@@ -200,6 +256,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .portada h1 {
     animation: portada-subir 700ms var(--ease-out) both;
+  }
+
+  /* Sube con el titular, sin pasar por transparente: en el teléfono es el
+     bloque más grande de la primera pantalla, y lo invisible no cuenta como
+     pintado. */
+  .portada-entradilla {
+    animation: portada-subir 700ms var(--ease-out) 80ms both;
   }
 
   .portada-acciones {

@@ -34,7 +34,7 @@ export const PAGINAS = {
     archivo: 'nosotros.html',
     titulo: 'Quiénes somos — Volutus',
     descripcion:
-      'Volutus es una empresa de desarrollo de software en Chile. Quiénes somos, cómo trabajamos y por qué nos llamamos como una nube.',
+      'Volutus es una empresa de desarrollo de software en Chile. De dónde viene su nombre, cómo trabajamos y dónde revisar lo que hemos hecho.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',

@@ -304,13 +304,18 @@
    (`.cabecera-cielo`), un azul parejo con todo el texto en blanco, que sobre
    él da 4.7:1 y alcanza también para la letra chica. La barra lo copia al
    pasar por encima, así que su logo y sus letras también van en blanco. El
-   halo de las letras de la cápsula (`--fondo`) es el mismo azul. */
+   halo de las letras de la cápsula (`--fondo`) es el mismo azul. El botón
+   primario se invierte: blanco, con el texto en el azul de la acción, que da
+   6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo. */
 :root .hora-dia {
   --fondo: #1976cc;
   --texto: #ffffff;
   --texto-suave: #ffffff;
   --linea: rgb(255 255 255 / 0.4);
   --accion: #ffffff;
+  --accion-hover: #e3f0fb;
+  --accion-activa: #c2e1f8;
+  --sobre-accion: #116492;
   --foco: #ffffff;
   --vidrio-halo: rgb(25 118 204 / 0.3);
 }
@@ -378,6 +383,13 @@ h1,
   font-style: italic;
   letter-spacing: 0.065em;
   text-transform: uppercase;
+}
+
+/* El titular más chico, para el que va dentro de una tarjeta o abre un bloque
+   dentro de una sección: con el tamaño de sección, «RESOLVIENDO» no cabía en
+   la tarjeta del contacto y la ensanchaba más allá de la pantalla, en S y en L. */
+.titular-menor {
+  font-size: clamp(26px, 8vw, 60px);
 }
 
 h2 {
@@ -598,8 +610,8 @@ svg {
   }
 }
 
-/* Donde el cielo de la mañana sube detrás de la barra (la portada, los
-   documentos legales), arriba del todo el azul es el más hondo y la barra va
+/* Donde el cielo de la mañana sube detrás de la barra (la portada y
+   /nosotros), arriba del todo el azul es el más hondo y la barra va
    en blanco, como en las páginas internas. Esta franja vacía lleva la hora del
    día: barra.js la ve detrás de cada pieza y la copia. Mide lo que la barra,
    así que en cuanto pasa por detrás el texto, la barra vuelve a la tinta. Su
@@ -633,6 +645,53 @@ svg {
 @media (min-width: 640px) {
   .cierre-tarjeta {
     padding: var(--e-12);
+  }
+}
+
+/* La invitación con que cierra /privacidad: la tarjeta oscura del
+   contacto de la portada, sola, a todo el ancho y con sus dos salidas. */
+.cierre-invitacion {
+  max-width: none;
+  color: var(--texto);
+}
+
+.cierre-invitacion .entradilla {
+  margin-top: var(--e-6);
+}
+
+/* La línea de la zona apenas se distingue de la tarjeta: el contorno del
+   secundario va más claro, para que se lea como botón. */
+.cierre-invitacion .boton-secundario {
+  border-color: color-mix(in srgb, var(--texto) 35%, transparent);
+}
+
+.cierre-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}
+
+/* Desde L, centrada, como la tarjeta del contacto de la portada. */
+@media (min-width: 1024px) {
+  .cierre-invitacion {
+    padding: var(--e-16) var(--e-12);
+    text-align: center;
+  }
+
+  .cierre-invitacion .entradilla {
+    margin-inline: auto;
+  }
+
+  .cierre-acciones {
+    justify-content: center;
+  }
+}
+
+/* En S los botones van a ancho completo, como en la portada. */
+@media (max-width: 479px) {
+  .cierre-acciones .boton {
+    width: 100%;
   }
 }
 
@@ -789,6 +848,84 @@ svg {
 
 .nubes.vivo {
   opacity: 1;
+}
+
+/* Cifras en fila: el número en la mono y grande, y debajo lo que mide. */
+.cifras {
+  list-style: none;
+  display: grid;
+  gap: var(--e-4);
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .cifras {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--e-6);
+  }
+}
+
+.cifras li {
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.cifra {
+  display: block;
+  margin-bottom: var(--e-1);
+  font-size: var(--texto-xl);
+  line-height: 1.2;
+  color: var(--texto);
+}
+
+/* Lista numerada: las acepciones del nombre y la forma de trabajar en
+   /nosotros, los apartados de /privacidad. El número habla como el de las
+   cards de servicios: Archivo negra itálica. */
+.numerada {
+  counter-reset: numero;
+  list-style: none;
+  display: grid;
+  gap: var(--e-8) var(--e-12);
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .numerada {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.numerada > li {
+  counter-increment: numero;
+  display: flex;
+  gap: var(--e-4);
+  padding-top: var(--e-6);
+  border-top: 1px solid var(--linea);
+}
+
+.numerada > li::before {
+  content: counter(numero);
+  flex: none;
+  width: 2.5rem;
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-xl);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accion);
+}
+
+.numerada p {
+  color: var(--texto-suave);
+}
+
+.numerada h3 + p,
+.numerada blockquote + p {
+  margin-top: var(--e-3);
 }
 
 .tarjeta {

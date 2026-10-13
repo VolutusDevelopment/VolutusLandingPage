@@ -15,7 +15,8 @@
  *     eje. El lomo da al sol, levanta bultos y torres y se dora en el filo;
  *     el vientre queda en sombra. El cursor, o el dedo, es una flecha en el
  *     aire: la corta a su paso, deja una estela revuelta y la nube se vuelve a
- *     cerrar sola.
+ *     cerrar sola. De costado (/nosotros), el mismo rollo corre casi
+ *     paralelo a la pantalla, cruzando el lienzo de lado a lado.
  *   - `mar`: el agua bajo la nube, mirada desde muy cerca de ella. Las olas
  *     llegan de frente con su física de verdad, rompen y dejan espuma, el sol
  *     brilla en ellas, y las crestas que pasan la altura de los ojos asoman
@@ -94,6 +95,18 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     3D con valor absoluto en cada octava —bultos redondos con pliegues
 //     finos, la coliflor de un cúmulo—, que pesa en el lomo y más donde se
 //     levantan `torres`.
+//   - De costado (`COSTADO`, que se define al compilar): el mismo rollo, con
+//     otra cámara. Converge apenas —el radio va de 0.4 altos a la izquierda
+//     a tres cuartos de eso al otro lado de una pantalla ancha—, así que
+//     cruza el lienzo casi paralelo a ella, con el eje a media altura. Gira
+//     al revés que en la portada: el frente, que da a quien mira, sube, como
+//     el de una Morning Glory que se acerca. La textura sigue la foto de
+//     /nosotros: en la cresta, coliflor, con bultos más chicos y de más
+//     relieve; en la cara y el vientre, vetas finas alrededor del rollo y
+//     largas a lo largo. Para que se dibujen lleva una octava más, el sol más
+//     alto, sombras propias más finas y hondas, y más luz ambiente en la
+//     sombra, que oscurece lo denso y aclara lo fino: así también el vientre
+//     tiene textura. Cuesta un cuarto más que la nube de la portada.
 //   - `ruido3` lee una textura de ruido 2D que genera este worker: su canal G
 //     es el R desplazado (37, 17) por cada capa en z, así que una sola lectura
 //     trae dos capas y basta mezclarlas. Es varias veces más barato que
@@ -168,11 +181,16 @@ float punto(vec2 px, vec2 c, float r) {
 }`
 
 // `cercania`: la escala de profundidad del rollo en cada x, en altos. 1 en el
-// borde izquierdo, y a partir de `FONDO` se queda en un 15 %.
+// borde izquierdo, y a partir de `FONDO` se queda en un 15 %. `FUGA` es cuánto
+// converge y `VUELTA`, cuánto gira por segundo y hacia dónde.
 const PERSPECTIVA = `
-const float FONDO = 2.1;
+#ifdef COSTADO
+const float FUGA = 0.1, FONDO = 1e3, VUELTA = -0.09;
+#else
+const float FUGA = 0.9, FONDO = 2.1, VUELTA = 0.09;
+#endif
 float cercania(float x) {
-  return exp(-0.9 * min(x, FONDO));
+  return exp(-FUGA * min(x, FONDO));
 }`
 
 const CAMPO = `precision highp float;
@@ -181,6 +199,17 @@ uniform float t, celda, forma;
 uniform vec3 luz, sombra, borde, cumulos[10];
 uniform sampler2D ruido, estado;
 ${PERSPECTIVA}
+#ifdef COSTADO
+const float RADIO = 0.4, EJE = 0.5, LISO = 0.6, CRESTA = 1.5, FIRME = 2.0, SOLAR = 1.35, SOMBRA = 30.0, PASO = 0.025, PISO = 0.0, TOPE = 1.6;
+const int DETALLE = 5;
+const vec3 SOL = vec3(0.45, -0.85, 0.35);
+const vec2 CIELO = vec2(0.3, 0.5);
+#else
+const float LISO = 0.55, CRESTA = 1.1, FIRME = 2.0, SOLAR = 1.3, SOMBRA = 18.0, PASO = 0.04, PISO = 0.15, TOPE = 1.3;
+const int DETALLE = 4;
+const vec3 SOL = vec3(0.55, -0.75, 0.25);
+const vec2 CIELO = vec2(0.12, 0.45);
+#endif
 float torres;
 mat2 giro;
 float ruido3(vec3 x) {
@@ -191,7 +220,7 @@ float ruido3(vec3 x) {
 }
 float borla(vec3 p, int octavas) {
   float v = 0.0, w = 0.5;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     if (i == octavas) break;
     v += w * abs(ruido3(p + vec3(0.0, 0.0, t * 0.04 * float(i))) * 2.0 - 1.0);
     p = p * 2.03 + vec3(1.7, 9.2, 3.1);
@@ -201,16 +230,25 @@ float borla(vec3 p, int octavas) {
 }
 vec3 tubo(float x) {
   float f = cercania(x);
+#ifdef COSTADO
+  return vec3((1.0 / f - 1.0) / (RADIO * FUGA), EJE, RADIO * f);
+#else
   return vec3((1.0 / f - 1.0) / 0.36 + max(x - FONDO, 0.0) / (0.4 * f), 0.3 + 0.28 * f, 0.4 * f);
+#endif
 }
 float rollo(vec3 p, int octavas) {
   vec3 e = tubo(p.x);
   vec2 d = vec2(p.y - e.y, p.z) / e.z;
   float base = 1.0 - length(d);
   if (base < -0.9) return 0.0;
+  float arriba = smoothstep(0.2, -0.8, d.x);
+#ifdef COSTADO
+  vec3 q = vec3((e.x + t * 0.04) * mix(1.6, 2.0, arriba), giro * d * mix(7.0, 2.0, arriba));
+#else
   vec3 q = vec3(e.x + t * 0.04, giro * d) * 1.7;
-  float relieve = mix(0.55, 1.1 * torres, smoothstep(0.2, -0.8, d.x));
-  return clamp(2.0 * (base + (borla(q, octavas) - 0.35) * relieve), 0.0, 1.0);
+#endif
+  float relieve = mix(LISO, CRESTA * torres, arriba);
+  return clamp(FIRME * (base + (borla(q, octavas) - 0.35) * relieve), 0.0, 1.0);
 }
 float cumulo(vec3 p, int octavas) {
   float base = -1.0, semilla = 0.0;
@@ -239,7 +277,7 @@ float densidad(vec3 p, int octavas) {
 }
 void main() {
   vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
-  giro = mat2(cos(t * 0.09), sin(t * 0.09), -sin(t * 0.09), cos(t * 0.09));
+  giro = mat2(cos(t * VUELTA), sin(t * VUELTA), -sin(t * VUELTA), cos(t * VUELTA));
   vec3 aire = texture2D(estado, p * vec2(res.y / res.x, 1.0)).xyz;
   p -= aire.xy;
   float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
@@ -268,30 +306,33 @@ void main() {
   }
   torres = 0.6 + 0.8 * ruido3(vec3(e.x * 0.6 + t * 0.02, 4.0, 7.0));
   float escala = marco.y / 0.3;
-  vec3 sol = normalize(vec3(0.55, -0.75, 0.25)) * escala;
+  vec3 sol = normalize(SOL) * escala;
   float z = sqrt(cuerda), dz = 2.0 * z / 28.0;
   float transmite = 1.0, brillo = 0.0, oro = 0.0;
   for (int i = 0; i < 28; i++) {
     vec3 muestra = vec3(p, z - (float(i) + 0.5) * dz);
-    float rho = densidad(muestra, 4) * abre;
+    float rho = densidad(muestra, DETALLE) * abre;
     if (rho > 0.01) {
-      float hondo = 0.0, lejos = 0.04, tramo = 0.04;
+      float hondo = 0.0, lejos = PASO, tramo = PASO;
       for (int j = 0; j < 3; j++) {
         hondo += tramo * densidad(muestra + sol * lejos, 2) * abre;
         tramo = 2.0 * lejos;
         lejos *= 3.0;
       }
-      float directa = exp(-18.0 * hondo);
-      float ambiente = mix(0.12, 0.45, smoothstep(0.4, -0.8, marco.x / marco.y));
+      float directa = exp(-SOMBRA * hondo);
+      float ambiente = mix(CIELO.x, CIELO.y, smoothstep(0.4, -0.8, marco.x / marco.y));
+#ifdef COSTADO
+      ambiente *= mix(1.7, 0.55, rho);
+#endif
       float opacidad = 1.0 - exp(-60.0 * rho * dz / escala);
-      brillo += transmite * opacidad * (ambiente + 1.3 * directa * (1.0 - exp(-6.0 * rho)));
+      brillo += transmite * opacidad * (ambiente + SOLAR * directa * (1.0 - exp(-6.0 * rho)));
       oro += transmite * opacidad * directa * (1.0 - smoothstep(0.0, 0.4, rho));
       transmite *= 1.0 - opacidad;
       if (transmite < 0.02) break;
     }
   }
   float cubre = max(1.0 - transmite, 1e-3);
-  vec3 color = mix(sombra, luz, smoothstep(0.15, 1.3, brillo / cubre));
+  vec3 color = mix(sombra, luz, smoothstep(PISO, TOPE, brillo / cubre));
   color = mix(color, borde, 0.8 * clamp(oro / cubre, 0.0, 1.0) * (1.0 - smoothstep(0.2, 0.8, cubre)));
   color = mix(color, luz, 0.35 * (1.0 - marco.y / 0.4));
   gl_FragColor = vec4(color, (1.0 - transmite) * smoothstep(0.0, 0.1, p.y) * (1.0 - smoothstep(0.93, 1.0, p.y)));
@@ -484,7 +525,7 @@ function dimensionar(gl, hoja, ancho, alto) {
 // la que escribe: se lee `[0]`, se escribe `[1]` y se dan vuelta. Sin texturas
 // de medio float que se puedan filtrar y pintar, no hay viento: `CAMPO` lee
 // entonces una unidad vacía, que da cero, y la nube se pinta igual.
-function montarAire(gl) {
+function montarAire(gl, definiciones) {
   const medio = gl.getExtension('OES_texture_half_float')
   if (!medio || !gl.getExtension('OES_texture_half_float_linear')) return null
   gl.getExtension('EXT_color_buffer_half_float')
@@ -499,7 +540,7 @@ function montarAire(gl) {
   const fuentes = { FUERZA, ROTOR, CONFINA, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
   const programas = {}
   for (const [nombre, fuente] of Object.entries(fuentes)) {
-    const u = compilar(gl, fuente, UNIFORMS_DEL_AIRE)
+    const u = compilar(gl, definiciones + fuente, UNIFORMS_DEL_AIRE)
     if (!u) return null
     gl.useProgram(u.programa)
     gl.uniform1i(u.uno, 2)
@@ -552,8 +593,9 @@ function texturaDeCuadro(gl, filas) {
 // devuelve un contexto perdido, que vuelve vacío. Si un programa no compila,
 // no hay escena.
 function preparar(escena) {
-  const { gl, mar } = escena
-  const programas = [compilar(gl, mar ? MAR : CAMPO), compilar(gl, TRAMA)]
+  const { gl, mar, costado } = escena
+  const definiciones = costado ? '#define COSTADO\n' : ''
+  const programas = [compilar(gl, mar ? MAR : definiciones + CAMPO), compilar(gl, TRAMA)]
   if (programas.includes(null)) return false
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
@@ -580,12 +622,12 @@ function preparar(escena) {
     gl.uniform1i(campo.globo, 3)
   } else {
     gl.uniform1i(campo.estado, 2)
-    escena.aire = montarAire(gl)
+    escena.aire = montarAire(gl, definiciones)
   }
   return true
 }
 
-function montar(id, lienzo, mar) {
+function montar(id, lienzo, mar, costado) {
   // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
   // WebGL por software y cada fotograma cuesta CPU que la persona necesita
   // para otra cosa. En ese caso no hay nubes: son decoración.
@@ -594,7 +636,7 @@ function montar(id, lienzo, mar) {
     powerPreference: 'low-power',
     failIfMajorPerformanceCaveat: true,
   })
-  const escena = { id, gl, mar, activa: false, vivo: false, perdida: false, ultimos: {} }
+  const escena = { id, gl, mar, costado, activa: false, vivo: false, perdida: false, ultimos: {} }
   if (!gl || !preparar(escena)) return
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
@@ -850,7 +892,7 @@ function aplicar(escena, data) {
 }
 
 onmessage = ({ data }) => {
-  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar)
+  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar, data.costado)
   if (data.tipo === 'quieto') quieto = data.valor
 
   const escena = escenas.get(data.id)

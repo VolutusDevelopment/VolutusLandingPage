@@ -14,6 +14,8 @@ import initFichas from './fichas.js'
 import initLogros from './logros.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
+import initCopiar from './copiar.js'
+import initSocios from './socios.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
 import { CORREO_VALIDO, LIMITES, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
@@ -270,4 +272,6 @@ export default function init() {
   initLogros()
   initBarra()
   initNubes()
+  initCopiar()
+  initSocios()
 }

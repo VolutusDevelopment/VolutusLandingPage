@@ -32,12 +32,6 @@
 
 /* ---- el relato: la tarjeta oscura ---- */
 
-/* Más chico que los otros titulares: con su tamaño, «RESOLVIENDO» no cabía en la
-   tarjeta y la ensanchaba más allá de la pantalla, en S y en L. */
-.contacto-relato h2 {
-  font-size: clamp(26px, 8vw, 60px);
-}
-
 /* La sección es clara —lo que se ve en sus márgenes es el cielo de `.caida`—
    y solo esta tarjeta es oscura, así que la barra lee cada una por separado.
    El color se hereda de la sección: sin esto, el titular saldría en tinta. */

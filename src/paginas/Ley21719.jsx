@@ -293,10 +293,10 @@ export default function Ley21719() {
           <p className="antetitulo">Protección de datos</p>
           <h1>La Ley 21.719, en simple</h1>
           <p className="entradilla ley-entradilla">{descripcion}</p>
-          <ul className="ley-cifras">
+          <ul className="cifras">
             {CIFRAS.map(({ valor, texto }) => (
               <li key={valor}>
-                <span className="ley-cifra dato">{valor}</span>
+                <span className="cifra dato">{valor}</span>
                 {texto}
               </li>
             ))}

@@ -7,7 +7,8 @@
  * se mide, se leen los colores y se avisa de lo que cambia.
  *
  * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes) o
- * `mar` (el agua bajo ellas). El color lo toma de `--nubes-luz`,
+ * `mar` (el agua bajo ellas). El cielo puede decir además desde dónde, con
+ * `data-perspectiva="costado"` (ver `Escena` en Portada.jsx). El color lo toma de `--nubes-luz`,
  * `--nubes-sombra`, `--nubes-borde` y `--nubes-alfa`, que el CSS resuelve
  * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
  * de la trama, en px CSS, lo da `--nubes-celda`.
@@ -135,7 +136,8 @@ function montar(pintor, lienzo, id) {
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar }, [offscreen])
+  const costado = lienzo.dataset.perspectiva === 'costado'
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, costado }, [offscreen])
   colorear()
   medir()
   if (mar) {

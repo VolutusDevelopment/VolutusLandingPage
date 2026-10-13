@@ -20,57 +20,73 @@
  * La obra la enseña el índice que viene debajo, con sus enlaces, que es donde
  * §3 quiere que esté — cada afirmación con lo que la sostiene al lado.
  */
-export default function Portada() {
+
+/**
+ * El cielo de la mañana con la volutus y el texto encima. Lo comparten la
+ * portada y /nosotros, que abre bajo la misma nube.
+ *
+ * `perspectiva` cambia desde dónde se mira la nube. Sin ella, la de la
+ * portada: el rollo entra enorme por la izquierda y se aleja en diagonal.
+ * `costado` lo pone casi paralelo a la pantalla, cruzando la cabecera, donde
+ * se le ve girar sobre su eje (nubes-lienzo.js), y le da a la escena su
+ * variante de layout (Portada.css).
+ */
+export function Escena({ id, perspectiva, children }) {
   return (
-    <section id="portada" className="seccion zona-cielo hora-manana portada">
+    <section id={id} className={`seccion zona-cielo hora-manana portada${perspectiva ? ` portada-${perspectiva}` : ''}`}>
       <div className="alba hora-dia" aria-hidden="true" />
       <div className="portada-escena">
         <div className="portada-cielo">
-          <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
+          <canvas className="nubes" data-vista="cielo" data-perspectiva={perspectiva} aria-hidden="true" />
         </div>
 
         <div className="contenedor portada-interior">
-          <div className="portada-texto">
-            {/* El gancho va de antetítulo y el titular dice lo que hacemos,
-                sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
-                de `lib/servicios.js` (menos la prospección y la ley de datos,
-                que no son algo que se cree). Cada uno cabe en una línea a
-                360 px: por eso «sistemas» y no «sistemas de gestión», y
-                «automatización» y no «automatizaciones», que no caben y
-                desbordarían.
-
-                Buscadores y lectores de pantalla leen la lista entera y fija,
-                con los nombres que la gente busca («aplicaciones», «agentes de
-                inteligencia artificial»); el rotativo es solo para la vista.
-                Ocupa siempre una línea, así que el titular no salta al cambiar. */}
-            <p className="antetitulo">
-              El mundo avanza. <span>No te quedes atrás.</span>
-            </p>
-            <h1>
-              Creamos{' '}
-              <span className="solo-lectores">
-                páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
-                automatizaciones
-              </span>
-              <span
-                className="rotativo"
-                aria-hidden="true"
-                data-palabras="páginas web|tiendas online|apps|sistemas|agentes de IA|automatización"
-              >
-                <span className="rotativo-palabra">páginas web</span>
-              </span>{' '}
-              para tu negocio
-            </h1>
-
-            <div className="portada-acciones">
-              <a className="boton boton-primario" href="#contacto">
-                Cuéntanos tu proyecto
-              </a>
-            </div>
-
-          </div>
+          <div className="portada-texto">{children}</div>
         </div>
       </div>
     </section>
+  )
+}
+
+export default function Portada() {
+  return (
+    <Escena id="portada">
+      {/* El gancho va de antetítulo y el titular dice lo que hacemos,
+          sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
+          de `lib/servicios.js` (menos la prospección y la ley de datos,
+          que no son algo que se cree). Cada uno cabe en una línea a
+          360 px: por eso «sistemas» y no «sistemas de gestión», y
+          «automatización» y no «automatizaciones», que no caben y
+          desbordarían.
+
+          Buscadores y lectores de pantalla leen la lista entera y fija,
+          con los nombres que la gente busca («aplicaciones», «agentes de
+          inteligencia artificial»); el rotativo es solo para la vista.
+          Ocupa siempre una línea, así que el titular no salta al cambiar. */}
+      <p className="antetitulo">
+        El mundo avanza. <span>No te quedes atrás.</span>
+      </p>
+      <h1>
+        Creamos{' '}
+        <span className="solo-lectores">
+          páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
+          automatizaciones
+        </span>
+        <span
+          className="rotativo"
+          aria-hidden="true"
+          data-palabras="páginas web|tiendas online|apps|sistemas|agentes de IA|automatización"
+        >
+          <span className="rotativo-palabra">páginas web</span>
+        </span>{' '}
+        para tu negocio
+      </h1>
+
+      <div className="portada-acciones">
+        <a className="boton boton-primario" href="#contacto">
+          Cuéntanos tu proyecto
+        </a>
+      </div>
+    </Escena>
   )
 }
