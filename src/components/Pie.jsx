@@ -17,7 +17,8 @@ import { CORREO_DE_CONTACTO } from './Contacto.jsx'
  * palabra va en `content` del CSS y no en el HTML, para que no compita con el
  * titular como texto de la página.
  *
- * Sigue sin llevar perfiles personales de GitHub ni LinkedIn: §4 lo prohíbe.
+ * No lleva perfiles personales de GitHub ni LinkedIn: esos van en la tarjeta
+ * de cada socio, en /nosotros (decisión 34 del brief).
  */
 
 // `dia` lo pone la home: ahí el pie cierra el espejo de la portada y es de día

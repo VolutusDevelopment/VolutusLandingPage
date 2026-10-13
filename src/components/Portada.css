@@ -139,20 +139,11 @@
 }
 
 /* El titular y la entradilla van en blanco, como en las cabeceras internas
-   (`.cabecera-cielo`), y con su mismo cielo: el azul hondo se sostiene bajo
-   todo el texto y las tarjetas, donde el blanco da 4.7:1, y solo en el
-   relleno de abajo (`--fundido`) se difumina al blanco de la página. */
+   (`.cabecera-cielo`), y sobre su mismo azul hondo, donde el blanco da 4.7:1.
+   El azul se difumina al blanco de la página detrás de las tarjetas de los
+   socios, que lo pintan (Nosotros.css). */
 :root .portada-costado {
-  --fundido: calc(var(--e-24) + var(--e-16));
-  --fondo-hora: linear-gradient(
-    #1976cc calc(100% - var(--fundido)),
-    #7cbcf1 calc(100% - var(--fundido) / 2),
-    #f6f9fc
-  );
-}
-
-.portada-costado {
-  padding-bottom: var(--fundido);
+  --fondo-hora: #1976cc;
 }
 
 .portada-costado h1,

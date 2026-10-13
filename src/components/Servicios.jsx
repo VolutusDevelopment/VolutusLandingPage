@@ -6,9 +6,8 @@ import Icono from './Icono.jsx'
  * que las toquen. Va justo después de la portada, todavía en el cielo.
  *
  * Van en una rueda, en todos los tamaños: las cards montadas en un anillo, la
- * del frente entera; las de los costados y la del fondo, más chicas y en
- * sombra, pero con el número, el icono y el nombre a la vista; la del fondo se
- * desvanece. Se gira arrastrando (con el dedo en el teléfono), con el trackpad
+ * del frente entera; las demás, más chicas y en sombra, asoman detrás de
+ * ella; la del fondo se desvanece. Se gira arrastrando (con el dedo en el teléfono), con el trackpad
  * de lado o pulsando una que asoma; el scroll vertical no la mueve. La
  * geometría entera está en el CSS en función de un solo número, `--giro`: el
  * HTML ya llega con la rueda en su lugar y servicios.js solo lo anima.

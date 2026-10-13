@@ -1,6 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import { Escena } from '../components/Portada.jsx'
-import { VOLUTA } from '../components/Marca.jsx'
+import { TRAMAS } from '../lib/logotipo.js'
 
 /**
  * Quiénes somos. Hace el recorrido de la portada: abre bajo la misma nube, en
@@ -10,8 +10,8 @@ import { VOLUTA } from '../components/Marca.jsx'
  *
  * Todo lo que dice se puede comprobar (DESIGN-BRIEF §3). Lo que viene de
  * afuera —la definición de la nube y los datos de la Morning Glory— lleva su
- * cita, que apunta a la lista de fuentes; la construcción del símbolo está en
- * el código de la marca (`lib/espiral.js`), y la obra, en la portada con sus
+ * cita, que apunta a la lista de fuentes; la ola y su trama están en el
+ * código de la marca (`lib/logotipo.js`), y la obra, en la portada con sus
  * enlaces. No hay fecha de fundación ni anécdota, porque no hay de dónde
  * sacarlas.
  */
@@ -37,22 +37,48 @@ const XCMAG = {
 // En el orden en que se citan: el número de cada una sale de aquí.
 const FUENTES = [ATLAS, XCMAG]
 
-// Los socios (decisión 16 del brief). Las fotos son provisorias, y cada
-// descripción dice solo lo que se puede comprobar en la portada.
+// Las redes que enlaza cada socio, con su logo: la marca de cada una, en un
+// solo color, y no un ícono de trazo de Icono.jsx. Al pasar el cursor, el logo
+// toma el color de su marca.
+const REDES = [
+  {
+    id: 'github',
+    nombre: 'GitHub',
+    color: '#8250df',
+    logo: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+  },
+  {
+    id: 'linkedin',
+    nombre: 'LinkedIn',
+    color: '#0a66c2',
+    logo: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 4.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+  },
+]
+
+// Los socios (decisiones 16 y 34 del brief). Las fotos son provisorias, y
+// cada descripción dice solo lo que se puede comprobar en la portada.
 const SOCIOS = [
   {
     nombre: 'Diego Peña y Lillo Luhrs',
-    rol: 'Socio',
+    rol: 'Socio co-fundador',
     foto: '/image/Diego.jpeg',
+    perfiles: {
+      github: 'https://github.com/DiegoPyLL',
+      linkedin: 'https://www.linkedin.com/in/diegopyll/',
+    },
     descripcion:
-      'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y en las plantas. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus SpA junto a mi socio Rodrigo, con la idea de hacer tecnología que resuelva problemas de fondo.',
+      'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y otros retos personales. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus junto a mi socio Rodrigo, con la idea de hacer soluciones que resuelvan problemas de fondo.',
   },
   {
     nombre: 'Rodrigo Martínez Becker',
-    rol: 'Socio',
+    rol: 'Socio co-fundador',
     foto: '/image/Rodrigo.jpeg',
+    perfiles: {
+      github: 'https://github.com/Marbeck-one',
+      linkedin: 'https://www.linkedin.com/in/rodrigo-mart%C3%ADnez-becker-74b6ab241/',
+    },
     descripcion:
-      'Ganó el primer lugar en el Cisco CyberGames Americas 2026, un desafío de ciberseguridad de tres horas, frente a más de 1.000 estudiantes de 21 países.',
+      'Por Escribir',
   },
 ]
 
@@ -63,28 +89,39 @@ const CIFRAS = [
   { valor: '68 km', texto: 'Voló Jonny Durand junto a ella en ala delta, en 1\u00a0h\u00a045\u00a0min, en 2009.' },
 ]
 
-// Las tres piezas de la marca que salen de la nube.
+// Las tres piezas de la marca que salen de la nube. La última se comprueba en
+// la misma página: la nube, el mar y la ola los pinta la misma trama (nubes.js).
 const MARCA = [
-  {
-    titulo: 'El símbolo',
-    texto: 'Una sola línea que entra recta y se enrolla en cuatro cuartos de circunferencia, con radios 8, 5, 3 y 2: la serie de Fibonacci.',
-  },
-  { titulo: 'La palabra', texto: 'La ola nace en la S de VOLUTUS y rompe en voluta.' },
-  { titulo: 'Esta página', texto: 'Empieza en la nube y termina en el mar.' },
+  { titulo: 'El símbolo', texto: '¿Qué más sencillo que el punto?' },
+  { titulo: 'La palabra', texto: 'En latín, volutus es «enrollado»: la ola nace en la S y se enrolla en voluta.' },
+  { titulo: 'Esta página', texto: 'La nube, el mar y la ola están hechos de los mismos puntos.' },
 ]
 
-// Las respuestas del equipo en «Volutus entra a una sala» (DESIGN-BRIEF A.1),
-// dichas en plural. La última es la regla de §3, que rige toda la página.
+// Lo que la nube es para nosotros. Cada rasgo sale de una palabra de su
+// definición, tal como la escribe el Atlas: primero lo que dice de la nube y
+// después lo que dice de nosotros, con la marca del brief (A.1, A.3 y A.6).
 const RASGOS = [
   {
-    titulo: 'Al mismo nivel',
-    texto: 'Conversamos de cerca y sin jerga. Aterrizamos las ideas hasta que entiendas lo mismo que nosotros.',
+    titulo: 'Única',
+    nube: 'Va sola, separada de las demás nubes.',
+    nosotros: 'Queremos lo mismo para lo que hacemos: identidad propia, que se reconozca sin ver la firma.',
   },
-  { titulo: 'Opinamos, pero escuchamos', texto: 'Damos nuestra opinión cuando nos la piden, sin cerrarnos a la tuya.' },
-  { titulo: 'Sin ruido', texto: 'No buscamos llamar la atención, pero tampoco pasar desapercibidos.' },
   {
-    titulo: 'Todo se puede comprobar',
-    texto: 'Lo que decimos va con su enlace, su número o su código, como las fuentes de esta página. Lo que no se puede comprobar, no lo decimos.',
+    titulo: 'Simple',
+    nube: 'Es una sola forma, de punta a punta.',
+    nosotros:
+      'Como nuestra marca, que es una sola ola. Antes de agregar algo, buscamos la forma más simple de resolver el problema.',
+  },
+  {
+    titulo: 'Imponente',
+    nube: 'La Morning Glory llega a medir 1.000 km y cruza el cielo sin hacer ruido.',
+    fuente: XCMAG,
+    nosotros: 'No buscamos llamar la atención, pero tampoco pasar desapercibidos.',
+  },
+  {
+    titulo: 'Al mismo nivel',
+    nube: 'Es una nube baja, que se extiende a lo ancho y no hacia arriba.',
+    nosotros: 'Así conversamos: de cerca y sin jerga, hasta que entiendas lo mismo que nosotros.',
   },
 ]
 
@@ -100,43 +137,31 @@ function Cita({ fuente }) {
   )
 }
 
-/**
- * El símbolo con su construcción a la vista: cada cuarto de vuelta en su
- * cuadrado, con el radio que le toca. Son los números que `espiralFibonacci`
- * calcula para la marca, no un dibujo aparte: si la marca cambia, cambia esto.
- *
- * El cuadrado de cada arco tiene una esquina en el centro y dos en los extremos
- * del arco; la cuarta es la suma de los extremos menos el centro.
- */
-function Construccion() {
-  const tramos = VOLUTA.arcos.map(({ centro, serie }, k) => {
-    const [inicio, fin] = VOLUTA.puntos.slice(k + 1, k + 3)
-    const opuesta = [inicio[0] + fin[0] - centro[0], inicio[1] + fin[1] - centro[1]]
-    const esquinas = [centro, inicio, opuesta, fin]
-    const medio = [(centro[0] + opuesta[0]) / 2, (centro[1] + opuesta[1]) / 2]
-    return { serie, puntos: esquinas.map((p) => p.join(',')).join(' '), medio }
-  })
+// La ola de la trama fina: 22 × 22 puntos de 6 unidades, de (558, 42) a
+// (690, 174), con dos puntos de aire por lado para que el viento la pueda
+// correr sin cortarla en el borde.
+const OLA = { viewBox: '546 30 156 156', celdas: 26 }
 
+/**
+ * La ola del logotipo, punto por punto. El SVG es la ola quieta: lo que se ve
+ * sin JavaScript o sin WebGL, y hasta que el lienzo pinta. Entonces el lienzo
+ * toma su trama y la dibuja desde la S, y el cursor la mueve como a la nube
+ * (nubes.js).
+ */
+function Ola() {
   return (
-    <svg className="construccion" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-      {tramos.map(({ serie, puntos, medio }) => (
-        <g key={serie}>
-          <polygon className="construccion-cuadrado" points={puntos} vectorEffect="non-scaling-stroke" />
-          <text className="construccion-radio" x={medio[0]} y={medio[1]}>
-            {serie}
-          </text>
-        </g>
-      ))}
-      {/* Sin `non-scaling-stroke`: con él, el navegador mide el guion en
-          píxeles de pantalla, ignora `pathLength` y el trazo sale a tramos. */}
-      <path className="construccion-voluta" d={VOLUTA.d} pathLength="1" />
-    </svg>
+    <div className="ola">
+      <canvas className="nubes" data-vista="ola" data-celdas={OLA.celdas} aria-hidden="true" />
+      <svg viewBox={OLA.viewBox} aria-hidden="true" focusable="false">
+        <path d={TRAMAS.fina.puntos} />
+      </svg>
+    </div>
   )
 }
 
 /**
- * El cierre, en la caída: el plano de la marca, con la construcción del
- * símbolo sobre su cuadrícula.
+ * El cierre, en la caída: el plano de la marca, con la ola sobre su
+ * cuadrícula.
  */
 function Cierre() {
   return (
@@ -146,7 +171,7 @@ function Cierre() {
           <div>
             <p className="antetitulo">La marca</p>
             <h2 id="marca-titulo" className="titular titular-menor">
-              Una sola línea
+              Tres líneas de puntos
             </h2>
             <ul className="plano-piezas">
               {MARCA.map(({ titulo, texto }) => (
@@ -157,7 +182,7 @@ function Cierre() {
               ))}
             </ul>
           </div>
-          <Construccion />
+          <Ola />
         </div>
       </div>
     </section>
@@ -177,80 +202,64 @@ export default function Nosotros() {
           de hacerlo para otros, lo hicimos para nosotros.
         </p>
 
-        {/* Una tarjeta horizontal por socio, con la foto en lados alternos. */}
+        {/* Una tarjeta por socio, con la foto encima y en lados alternos,
+            como el formulario de contacto sobre su tarjeta. */}
         <ul className="socios">
-          {SOCIOS.map(({ nombre, rol, foto, descripcion }) => (
+          {SOCIOS.map(({ nombre, rol, foto, perfiles, descripcion }) => (
             <li key={nombre} className="socio entra">
               <img src={foto} alt="" width={800} height={1000} loading="lazy" decoding="async" />
-              <div className="socio-nombre">
-                <h2>{nombre}</h2>
-                <p>{rol}</p>
+              <div className="socio-cuerpo">
+                <div className="socio-nombre">
+                  <h2>{nombre}</h2>
+                  <ul className="socio-perfiles">
+                    {REDES.map((red) => (
+                      <li key={red.id}>
+                        <a href={perfiles[red.id]} rel="noopener" style={{ '--color-red': red.color }}>
+                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d={red.logo} />
+                          </svg>
+                          <span className="solo-lectores">
+                            {red.nombre} de {nombre}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="socio-rol">{rol}</p>
+                <p className="socio-descripcion">{descripcion}</p>
               </div>
-              <p className="socio-descripcion">{descripcion}</p>
             </li>
           ))}
         </ul>
       </Escena>
 
-      <section id="como-trabajamos" className="seccion zona-cielo" aria-labelledby="como-titulo">
-        <div className="contenedor">
-          <h2 id="como-titulo" className="titular nosotros-como-titulo entra">
-            Cómo trabajamos
-          </h2>
-          <ol className="numerada">
-            {RASGOS.map(({ titulo, texto }) => (
-              <li key={titulo} className="entra">
-                <div>
-                  <h3>{titulo}</h3>
-                  <p>{texto}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* La palabra, como en un diccionario: la nube y la empresa son sus dos
-          acepciones. La nube más conocida viene después, con su foto. */}
+      {/* Primero lo que es la nube: su definición, como en un diccionario, y
+          la más conocida, con su foto. Después, lo que es para nosotros. */}
       <section id="nombre" className="seccion zona-cielo" aria-labelledby="nombre-titulo">
         <div className="contenedor">
-          <p className="antetitulo entra">De dónde viene el nombre</p>
           <h2 id="nombre-titulo" className="titular entra">
-            <dfn>Volutus</dfn>
+            ¿De dónde viene <dfn>Volutus</dfn>?
           </h2>
           <p className="nosotros-etimologia entra">
             <span className="dato">vo·lu·tus</span> Del latín, «enrollado».
           </p>
 
-          <ol className="numerada">
-            <li className="entra">
-              <div>
-                <p className="antetitulo">Meteorología</p>
-                <blockquote className="nosotros-definicion" cite={ATLAS.url}>
-                  <p>
-                    «Masa de nubes larga, habitualmente baja, horizontal, aislada y con forma de tubo que con
-                    frecuencia parece girar lentamente sobre un eje horizontal.»
-                    <Cita fuente={ATLAS} />
-                  </p>
-                </blockquote>
-                <p>
-                  Así la define el Atlas Internacional de Nubes de la Organización Meteorológica Mundial, en su
-                  edición de 2017.
-                </p>
-              </div>
-            </li>
-            <li className="entra">
-              <div>
-                <p className="antetitulo">Empresa</p>
-                <p className="nosotros-definicion">
-                  Desarrollo de software en Chile. Su marca es esa nube, dibujada con una sola línea que se
-                  enrolla sobre sí misma.
-                </p>
-              </div>
-            </li>
-          </ol>
+          <figure className="nosotros-definicion entra">
+            <blockquote cite={ATLAS.url}>
+              <p>
+                «Masa de nubes larga, habitualmente baja, horizontal, aislada y con forma de tubo que con frecuencia
+                parece girar lentamente sobre un eje horizontal.»
+                <Cita fuente={ATLAS} />
+              </p>
+            </blockquote>
+            <figcaption>
+              Así la define el Atlas Internacional de Nubes de la Organización Meteorológica Mundial, en su edición
+              de 2017.
+            </figcaption>
+          </figure>
 
-          <div className="nosotros-morning">
+          <div className="nosotros-bloque">
             <h3 className="titular titular-menor entra" lang="en">
              The Morning Glory
             </h3>
@@ -285,36 +294,47 @@ export default function Nosotros() {
               ))}
             </ul>
 
-            <div className="nosotros-relato">
-              <p className="entra">
-                En ciertas condiciones, de julio a noviembre, se forma sobre el golfo de Carpentaria y rueda por
-                el cielo del norte de Queensland. De noche, el aire que baja de la península del Cabo York pasa
-                bajo una capa de aire más tibio y levanta una onda que cruza el golfo: en su frente el aire sube
-                y forma la nube, que por detrás se evapora. Dura hasta que el calor del día deshace esa capa.
-                <Cita fuente={XCMAG} />
-              </p>
-              <p className="entra">
-                Los pilotos de ala delta y de planeador la vuelan como a una ola, y hay quienes la esperan
-                semanas sin llegar a volarla. En parapente no se puede: no es lo bastante rápido y caería en el
-                remolino que la nube deja detrás.
-                <Cita fuente={XCMAG} />
-              </p>
-            </div>
+            <p className="nosotros-relato entra">
+              En ciertas condiciones, de julio a noviembre, se forma sobre el golfo de Carpentaria y rueda por el
+              cielo del norte de Queensland. De noche, el aire que baja de la península del Cabo York pasa bajo
+              una capa de aire más tibio y levanta una onda que cruza el golfo: en su frente el aire sube y forma
+              la nube, que por detrás se evapora. Dura hasta que el calor del día deshace esa capa.
+              <Cita fuente={XCMAG} />
+            </p>
+          </div>
 
-            <div className="fuentes entra">
-              <h3 className="antetitulo">Fuentes</h3>
-              <ol>
-                {FUENTES.map(({ id, autor, titulo, idioma, medio, url }) => (
-                  <li key={id} id={`fuente-${id}`}>
-                    {autor}.{' '}
-                    <a href={url} rel="noopener">
-                      <cite lang={idioma}>{titulo}</cite>
-                    </a>
-                    . {medio}.
-                  </li>
-                ))}
-              </ol>
-            </div>
+          <div className="nosotros-bloque">
+            <h3 className="titular titular-menor entra">Para nosotros</h3>
+            <p className="entradilla entra">Cuatro palabras de su definición dicen lo que queremos ser.</p>
+
+            <ol className="numerada">
+              {RASGOS.map(({ titulo, nube, fuente, nosotros }) => (
+                <li key={titulo} className="entra">
+                  <div>
+                    <h4>{titulo}</h4>
+                    <p>
+                      {nube}
+                      {fuente && <Cita fuente={fuente} />} {nosotros}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="fuentes entra">
+            <h3 className="antetitulo">Fuentes</h3>
+            <ol>
+              {FUENTES.map(({ id, autor, titulo, idioma, medio, url }) => (
+                <li key={id} id={`fuente-${id}`}>
+                  {autor}.{' '}
+                  <a href={url} rel="noopener">
+                    <cite lang={idioma}>{titulo}</cite>
+                  </a>
+                  . {medio}.
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>

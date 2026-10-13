@@ -363,7 +363,8 @@ body {
 /* Solo 400 y 800 (A.7). Los títulos van en 800 y nada más usa peso. */
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.08;
@@ -396,7 +397,8 @@ h2 {
   font-size: var(--texto-xl);
 }
 
-h3 {
+h3,
+h4 {
   font-size: var(--texto-lg);
   letter-spacing: -0.015em;
 }
@@ -881,9 +883,9 @@ svg {
   color: var(--texto);
 }
 
-/* Lista numerada: las acepciones del nombre y la forma de trabajar en
-   /nosotros, los apartados de /privacidad. El número habla como el de las
-   cards de servicios: Archivo negra itálica. */
+/* Lista numerada: lo que el nombre es para nosotros en /nosotros, los
+   apartados de /privacidad. El número habla como el de las cards de
+   servicios: Archivo negra itálica. */
 .numerada {
   counter-reset: numero;
   list-style: none;
@@ -924,7 +926,7 @@ svg {
 }
 
 .numerada h3 + p,
-.numerada blockquote + p {
+.numerada h4 + p {
   margin-top: var(--e-3);
 }
 

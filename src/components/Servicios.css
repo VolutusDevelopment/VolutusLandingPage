@@ -162,10 +162,12 @@
 /* ---- sin rueda: la lista ----
    Sin JavaScript (o sin funciones trigonométricas en el CSS) la rueda no
    puede girar, así que no se arma: las ocho quedan enteras, una bajo otra en
-   S y en rejilla desde M. */
+   S y en rejilla desde M. Se separan con `gap`, que en la rueda no actúa: un
+   margen correría las cards de su lugar en el anillo. */
 
-.servicio + .servicio {
-  margin-top: var(--e-4);
+.servicios-lista {
+  display: grid;
+  gap: var(--e-4);
 }
 
 @media (min-width: 768px) {
@@ -174,15 +176,9 @@
   }
 
   .servicios-lista {
-    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--e-4);
     max-width: calc(var(--ancho-maximo) - 2 * var(--margen-lateral));
     margin-inline: auto;
-  }
-
-  .servicio + .servicio {
-    margin-top: 0;
   }
 
   .servicio-cara {
@@ -211,13 +207,14 @@
        su texto. En S la card deja ver a sus vecinas a los lados, y su alto
        es fijo: es el que pide su texto, con la letra de S (abajo). Las del
        fondo suben lo justo para asomar sobre la del frente, así el titular
-       queda cerca de la rueda. */
+       queda cerca de la rueda, y no más: si suben mucho, cada mitad del
+       anillo se curva en una C. */
     .rueda {
       --ancho: min(300px, 100vw - 64px);
       --alto: 420px;
       --radio: 100px;
-      --alzado: 160px;
-      --frente: 56px;
+      --alzado: 132px;
+      --frente: 32px;
       position: relative;
       margin-top: var(--e-6);
       height: calc(var(--frente) + var(--alto) + var(--e-6));
@@ -427,8 +424,8 @@
       --ancho: 300px;
       --alto: clamp(400px, 100svh - 140px - var(--frente), 450px);
       --radio: 170px;
-      --alzado: min(300px, 36svh);
-      --frente: min(151px, 18svh);
+      --alzado: min(206px, 25svh);
+      --frente: min(71px, 9svh);
     }
   }
 
@@ -437,8 +434,8 @@
       --ancho: 360px;
       --alto: clamp(400px, 100svh - 140px - var(--frente), 480px);
       --radio: 243px;
-      --alzado: min(320px, 38svh);
-      --frente: min(164px, 20svh);
+      --alzado: min(220px, 27svh);
+      --frente: min(79px, 10svh);
     }
 
     .servicio-numero {
@@ -455,8 +452,8 @@
       --ancho: 400px;
       --alto: clamp(400px, 100svh - 140px - var(--frente), 520px);
       --radio: 360px;
-      --alzado: min(330px, 38svh);
-      --frente: min(174px, 20svh);
+      --alzado: min(230px, 26svh);
+      --frente: min(89px, 10svh);
     }
 
     .servicio-cara {

@@ -24,19 +24,26 @@
  *     pato, que deja estela y de rato en rato se detiene a provocar a quien
  *     mira, en un globo: «¿A QUE NO ME CAZAS?». La física y su shader viven
  *     en lib/mar.js.
+ *   - `ola`: la ola del logotipo, punto por punto (lib/ola.js), en el plano de
+ *     la marca de /nosotros. Al asomar se dibuja: las tres líneas nacen en la
+ *     S y se enrollan en voluta. Después el cursor es viento, como en el
+ *     cielo, pero el aire es viscoso: la ola se estira en una curva ancha, sin
+ *     abrirse, y vuelve a su forma en menos de un segundo.
  *
  * Los colores son tres, y cada vista los usa a su modo: `luz`, `sombra` y
  * `borde` (el filo dorado en el cielo, la espuma y los destellos en el mar).
  *
  * Recibe de la página (nubes.js) los lienzos, sus medidas, sus colores, si
- * están a la vista, por dónde pasa el cursor en el cielo, cuándo sale el pato
- * y, en el juego de la 404, la forma del cielo; le devuelve `vivo` cuando un
+ * están a la vista, por dónde pasa el cursor en el cielo y en la ola, cuándo
+ * sale el pato, la trama de la ola y cuándo asoma (`nace`) y, en el juego de
+ * la 404, la forma del cielo; le devuelve `vivo` cuando un
  * lienzo ya tiene su primer fotograma y, en el mar, dónde va el pato.
  */
 
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
+import { texturaDeLaOla } from './lib/ola.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -53,6 +60,12 @@ const DT = INTERVALO / 1000
 const CELDAS_POR_AIRE = 3
 const VUELTAS_DE_PRESION = 20
 const RAPIDEZ_MAXIMA = 2
+// En la ola cada punto lleva su celda de aire: con 3 por celda, como en el
+// cielo, un remolino taparía tres puntos. Su viscosidad son dos pasos de
+// `DIFUSION` por ley, y las tres líneas se dibujan en `DIBUJO` ms.
+const CELDAS_POR_AIRE_EN_LA_OLA = 1
+const VUELTAS_DE_VISCOSIDAD = 2
+const DIBUJO = 2500
 // El pato del mar nada a `NADO` m/s (lib/mar.js), con la línea de flotación al
 // 45 % de la franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s,
 // con una `GOTA` en el agua.
@@ -168,6 +181,17 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //         que forma la volutus la vuelve a armar, y topa en 0.06 altos. En `b`
 //         va el aire seco que la turbulencia mezcla dentro (*entrainment*):
 //         nace donde el rotor es fuerte y se evapora en un segundo.
+//       · `DIFUSION`, solo en la ola: la viscosidad. Reparte entre vecinas la
+//         velocidad, después de `CONFINA`, y lo que el aire corrió a la ola,
+//         después de `ESTADO`: así la ola se estira en una curva ancha y lisa.
+//   - La ola (`OLA`, que se define al compilar, como `COSTADO`): el campo no
+//     es una nube sino la textura de lib/ola.js, corrida por el aire y abierta
+//     por el aire seco igual que el rollo. Mientras se dibuja, cada punto crece
+//     cuando `crece` (de 0 a 1 en `DIBUJO` ms) pasa su orden, con un frente de
+//     una décima de la ola. Su aire es más espeso que el del cielo (ver `AIRE`):
+//     casi sin remolinos ni aire seco, se frena al soltar y la ola vuelve en
+//     medio segundo. Los números salieron de un prototipo en el que se
+//     ajustaron a la vista: vuelve entera en menos de 0.9 s.
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
 //     área proporcional a la cobertura, como una trama de imprenta. En el mar
 //     (`relleno`) pinta además el agua entre los puntos, con `sombra`: el alfa
@@ -182,10 +206,13 @@ float punto(vec2 px, vec2 c, float r) {
 
 // `cercania`: la escala de profundidad del rollo en cada x, en altos. 1 en el
 // borde izquierdo, y a partir de `FONDO` se queda en un 15 %. `FUGA` es cuánto
-// converge y `VUELTA`, cuánto gira por segundo y hacia dónde.
+// converge y `VUELTA`, cuánto gira por segundo y hacia dónde. La ola es plana:
+// 1 en todas partes.
 const PERSPECTIVA = `
-#ifdef COSTADO
+#if defined(COSTADO)
 const float FUGA = 0.1, FONDO = 1e3, VUELTA = -0.09;
+#elif defined(OLA)
+const float FUGA = 0.0, FONDO = 1e3, VUELTA = 0.0;
 #else
 const float FUGA = 0.9, FONDO = 2.1, VUELTA = 0.09;
 #endif
@@ -193,12 +220,22 @@ float cercania(float x) {
   return exp(-FUGA * min(x, FONDO));
 }`
 
+const RUIDO = `
+uniform sampler2D ruido;
+float ruido3(vec3 x) {
+  vec3 i = floor(x), f = fract(x);
+  f = f * f * (3.0 - 2.0 * f);
+  vec2 rg = texture2D(ruido, (i.xy + vec2(37.0, 17.0) * i.z + f.xy + 0.5) / 256.0).yx;
+  return mix(rg.x, rg.y, f.z);
+}`
+
 const CAMPO = `precision highp float;
 uniform vec2 res;
 uniform float t, celda, forma;
 uniform vec3 luz, sombra, borde, cumulos[10];
-uniform sampler2D ruido, estado;
+uniform sampler2D estado;
 ${PERSPECTIVA}
+${RUIDO}
 #ifdef COSTADO
 const float RADIO = 0.4, EJE = 0.5, LISO = 0.6, CRESTA = 1.5, FIRME = 2.0, SOLAR = 1.35, SOMBRA = 30.0, PASO = 0.025, PISO = 0.0, TOPE = 1.6;
 const int DETALLE = 5;
@@ -212,12 +249,6 @@ const vec2 CIELO = vec2(0.12, 0.45);
 #endif
 float torres;
 mat2 giro;
-float ruido3(vec3 x) {
-  vec3 i = floor(x), f = fract(x);
-  f = f * f * (3.0 - 2.0 * f);
-  vec2 rg = texture2D(ruido, (i.xy + vec2(37.0, 17.0) * i.z + f.xy + 0.5) / 256.0).yx;
-  return mix(rg.x, rg.y, f.z);
-}
 float borla(vec3 p, int octavas) {
   float v = 0.0, w = 0.5;
   for (int i = 0; i < 5; i++) {
@@ -338,6 +369,24 @@ void main() {
   gl_FragColor = vec4(color, (1.0 - transmite) * smoothstep(0.0, 0.1, p.y) * (1.0 - smoothstep(0.93, 1.0, p.y)));
 }`
 
+// La ola (ver arriba): `p` y `abre` como en `CAMPO`; la textura se lee en
+// celdas, así que en reposo cada punto cae en el centro de su texel.
+const OLA = `precision highp float;
+uniform vec2 res, rejilla;
+uniform float t, celda, crece;
+uniform vec3 luz;
+uniform sampler2D estado, ola;
+${RUIDO}
+void main() {
+  vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
+  vec3 aire = texture2D(estado, p * vec2(res.y / res.x, 1.0)).xyz;
+  p -= aire.xy;
+  float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
+  vec4 punto = texture2D(ola, p * res.y / (celda * rejilla));
+  float aparece = smoothstep(punto.r, punto.r + 0.1, crece * 1.1);
+  gl_FragColor = vec4(luz, punto.a * aparece * abre);
+}`
+
 const TRAMA = `precision highp float;
 uniform vec2 res, rejilla;
 uniform float celda, alfa, relleno;
@@ -362,11 +411,24 @@ void main() {
   gl_FragColor = vec4(m.rgb * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
 }`
 
+// El aire del cielo y el de la ola, que es viscoso (ver arriba). `SOPLO` es el
+// radio mínimo de la ráfaga, en celdas del aire; `REMOLINO`, la fuerza de
+// `CONFINA`; `FRENO`, en cuántos segundos se calma; `SECADO`, cuánto aire seco
+// mete el rotor, y `EVAPORA`, en cuántos segundos se va; `VUELVE`, en cuántos
+// segundos se deshace lo que el aire corrió, y `CORRE`, hasta cuántos altos.
+const AIRE = `
+#ifdef OLA
+const float SOPLO = 2.0, REMOLINO = 1.2, FRENO = 0.26, SECADO = 0.8, EVAPORA = 0.2, VUELVE = 0.5, CORRE = 0.08;
+#else
+const float SOPLO = 1.5, REMOLINO = 6.0, FRENO = 0.8, SECADO = 4.0, EVAPORA = 1.0, VUELVE = 2.5, CORRE = 0.06;
+#endif`
+
 // El fluido, una pasada por ley (ver arriba). `en` lee la celda vecina.
 const MALLA = `precision highp float;
 uniform vec2 malla;
 uniform float dt;
 uniform sampler2D uno, dos, tres;
+${AIRE}
 vec4 en(sampler2D s, float x, float y) {
   return texture2D(s, (gl_FragCoord.xy + vec2(x, y)) / malla);
 }`
@@ -378,7 +440,7 @@ uniform vec2 empuje;
 void main() {
   vec2 p = gl_FragCoord.xy / malla.y, a = tramo.xy, ab = tramo.zw - a;
   vec2 d = p - a - ab * clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
-  float f = cercania(tramo.z), r = max(0.03 * f, 1.5 / malla.y);
+  float f = cercania(tramo.z), r = max(0.03 * f, SOPLO / malla.y);
   gl_FragColor = vec4(en(uno, 0.0, 0.0).xy + 0.4 * f * empuje * exp(-dot(d, d) / (r * r)), 0.0, 1.0);
 }`
 
@@ -392,7 +454,16 @@ const CONFINA = `${MALLA}
 void main() {
   vec2 n = 0.5 * vec2(abs(en(dos, 0.0, 1.0).x) - abs(en(dos, 0.0, -1.0).x), abs(en(dos, 1.0, 0.0).x) - abs(en(dos, -1.0, 0.0).x));
   n /= length(n) + 1e-4;
-  gl_FragColor = vec4(en(uno, 0.0, 0.0).xy + dt * 6.0 * en(dos, 0.0, 0.0).x * vec2(n.x, -n.y), 0.0, 1.0);
+  gl_FragColor = vec4(en(uno, 0.0, 0.0).xy + dt * REMOLINO * en(dos, 0.0, 0.0).x * vec2(n.x, -n.y), 0.0, 1.0);
+}`
+
+// Un paso de la viscosidad: `xy` se reparte con las cuatro vecinas, y `z`, el
+// aire seco del estado, queda como estaba.
+const DIFUSION = `${MALLA}
+void main() {
+  vec4 c = en(uno, 0.0, 0.0);
+  vec2 vecinas = en(uno, 1.0, 0.0).xy + en(uno, -1.0, 0.0).xy + en(uno, 0.0, 1.0).xy + en(uno, 0.0, -1.0).xy;
+  gl_FragColor = vec4(c.xy + 0.2 * (vecinas - 4.0 * c.xy), c.z, 1.0);
 }`
 
 const DIVERGENCIA = `${MALLA}
@@ -422,15 +493,15 @@ vec2 atras() {
 
 const ADVECCION = `${ATRAS}
 void main() {
-  gl_FragColor = vec4(texture2D(uno, atras()).xy * exp(-dt / 0.8), 0.0, 1.0);
+  gl_FragColor = vec4(texture2D(uno, atras()).xy * exp(-dt / FRENO), 0.0, 1.0);
 }`
 
 const ESTADO = `${ATRAS}
 void main() {
   vec3 antes = texture2D(dos, atras()).xyz;
-  vec2 movio = (antes.xy + dt * en(uno, 0.0, 0.0).xy) * exp(-dt / 2.5);
-  movio *= min(1.0, 0.06 / (length(movio) + 1e-6));
-  float seco = antes.z * exp(-dt) + dt * 4.0 * abs(en(tres, 0.0, 0.0).x);
+  vec2 movio = (antes.xy + dt * en(uno, 0.0, 0.0).xy) * exp(-dt / VUELVE);
+  movio *= min(1.0, CORRE / (length(movio) + 1e-6));
+  float seco = antes.z * exp(-dt / EVAPORA) + dt * SECADO * abs(en(tres, 0.0, 0.0).x);
   gl_FragColor = vec4(movio, min(seco, 1.0), 1.0);
 }`
 
@@ -449,6 +520,7 @@ const inicio = performance.now()
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
+  'ola', 'crece',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje']
 
@@ -537,7 +609,7 @@ function montarAire(gl, definiciones) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   if (!pinta) return null
 
-  const fuentes = { FUERZA, ROTOR, CONFINA, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
+  const fuentes = { FUERZA, ROTOR, CONFINA, DIFUSION, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
   const programas = {}
   for (const [nombre, fuente] of Object.entries(fuentes)) {
     const u = compilar(gl, definiciones + fuente, UNIFORMS_DEL_AIRE)
@@ -563,6 +635,20 @@ function laminasDelAire(aire) {
   return [...aire.velocidad, ...aire.presion, ...aire.estado, aire.rotor, aire.divergencia]
 }
 
+// Una textura de bytes que no cambia, en la unidad activa.
+function subirTextura(gl, ancho, alto, datos, filtro) {
+  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, alto, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
+  for (const [clave, valor] of [
+    [gl.TEXTURE_MIN_FILTER, filtro],
+    [gl.TEXTURE_MAG_FILTER, filtro],
+    [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
+    [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE],
+  ]) {
+    gl.texParameteri(gl.TEXTURE_2D, clave, valor)
+  }
+}
+
 // Un cuadro —el pato que nada en el mar (lib/pato.js) o sus globos
 // (lib/mar.js)— en la unidad activa: un texel por punto, transparente donde
 // no hay nada.
@@ -576,16 +662,7 @@ function texturaDeCuadro(gl, filas) {
       datos.set([n >> 16, (n >> 8) & 255, n & 255, 255], (y * ancho + x) * 4)
     }),
   )
-  gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, filas.length, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
-  for (const [clave, valor] of [
-    [gl.TEXTURE_MIN_FILTER, gl.NEAREST],
-    [gl.TEXTURE_MAG_FILTER, gl.NEAREST],
-    [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE],
-    [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE],
-  ]) {
-    gl.texParameteri(gl.TEXTURE_2D, clave, valor)
-  }
+  subirTextura(gl, ancho, filas.length, datos, gl.NEAREST)
 }
 
 // Todo lo que la escena guarda en la GPU: sus programas, el triángulo, las
@@ -593,9 +670,9 @@ function texturaDeCuadro(gl, filas) {
 // devuelve un contexto perdido, que vuelve vacío. Si un programa no compila,
 // no hay escena.
 function preparar(escena) {
-  const { gl, mar, costado } = escena
-  const definiciones = costado ? '#define COSTADO\n' : ''
-  const programas = [compilar(gl, mar ? MAR : definiciones + CAMPO), compilar(gl, TRAMA)]
+  const { gl, mar, costado, ola } = escena
+  const definiciones = costado ? '#define COSTADO\n' : ola ? '#define OLA\n' : ''
+  const programas = [compilar(gl, mar ? MAR : definiciones + (ola ? OLA : CAMPO)), compilar(gl, TRAMA)]
   if (programas.includes(null)) return false
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
@@ -622,12 +699,20 @@ function preparar(escena) {
     gl.uniform1i(campo.globo, 3)
   } else {
     gl.uniform1i(campo.estado, 2)
+    // La ola, en la unidad 5, que el aire no toca. Se lee interpolada: cuando
+    // el aire la corre, cada punto crece o se achica de a poco. Va antes del
+    // aire, que deja en uso sus propios programas.
+    if (ola) {
+      gl.activeTexture(gl.TEXTURE5)
+      subirTextura(gl, ola.celdas, ola.celdas, ola.datos, gl.LINEAR)
+      gl.uniform1i(campo.ola, 5)
+    }
     escena.aire = montarAire(gl, definiciones)
   }
   return true
 }
 
-function montar(id, lienzo, mar, costado) {
+function montar(id, lienzo, mar, costado, ola) {
   // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
   // WebGL por software y cada fotograma cuesta CPU que la persona necesita
   // para otra cosa. En ese caso no hay nubes: son decoración.
@@ -637,6 +722,7 @@ function montar(id, lienzo, mar, costado) {
     failIfMajorPerformanceCaveat: true,
   })
   const escena = { id, gl, mar, costado, activa: false, vivo: false, perdida: false, ultimos: {} }
+  if (ola) escena.ola = { celdas: ola.celdas, datos: texturaDeLaOla(ola), nace: null }
   if (!gl || !preparar(escena)) return
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
@@ -756,6 +842,14 @@ function simular(escena) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, destino.fbo)
     gl.drawArrays(gl.TRIANGLES, 0, 3)
   }
+  // La viscosidad, solo en la ola: reparte un par de láminas entre vecinas.
+  const espesar = (par) => {
+    if (!escena.ola) return
+    for (let i = 0; i < VUELTAS_DE_VISCOSIDAD; i++) {
+      pasada(p.DIFUSION, par[1], par[0])
+      par.reverse()
+    }
+  }
   gl.viewport(0, 0, ...aire.malla)
 
   if (tramo?.hasta) {
@@ -781,6 +875,7 @@ function simular(escena) {
   pasada(p.ROTOR, aire.rotor, velocidad[0])
   pasada(p.CONFINA, velocidad[1], velocidad[0], aire.rotor)
   velocidad.reverse()
+  espesar(velocidad)
   pasada(p.DIVERGENCIA, aire.divergencia, velocidad[0])
   for (let i = 0; i < VUELTAS_DE_PRESION; i++) {
     pasada(p.PRESION, presion[1], presion[0], aire.divergencia)
@@ -792,6 +887,7 @@ function simular(escena) {
   velocidad.reverse()
   pasada(p.ESTADO, estado[1], velocidad[0], estado[0], aire.rotor)
   estado.reverse()
+  espesar(estado)
 
   gl.activeTexture(gl.TEXTURE2)
   gl.bindTexture(gl.TEXTURE_2D, estado[0].textura)
@@ -803,6 +899,9 @@ function pintar(escena, ahora) {
   if (escena.aire && !quieto) simular(escena)
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
+  // La ola se dibuja desde que asoma (`nace`); quieta, va entera.
+  const { ola } = escena
+  if (ola) gl.uniform1f(campo.crece, quieto ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
   if (escena.mar) {
     // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
     const vista = escena.camara
@@ -857,7 +956,8 @@ function aplicar(escena, data) {
     const { aire } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
-      const alto = Math.max(8, Math.round(escena.rejilla[1] / CELDAS_POR_AIRE))
+      const porAire = escena.ola ? CELDAS_POR_AIRE_EN_LA_OLA : CELDAS_POR_AIRE
+      const alto = Math.max(8, Math.round(escena.rejilla[1] / porAire))
       aire.malla = [Math.max(8, Math.round((alto * data.ancho) / data.alto)), alto]
       gl.activeTexture(gl.TEXTURE2)
       for (const hoja of laminasDelAire(aire)) dimensionar(gl, hoja, ...aire.malla)
@@ -892,12 +992,13 @@ function aplicar(escena, data) {
 }
 
 onmessage = ({ data }) => {
-  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar, data.costado)
+  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar, data.costado, data.ola)
   if (data.tipo === 'quieto') quieto = data.valor
 
   const escena = escenas.get(data.id)
   if (escena && ['medir', 'colores', 'forma'].includes(data.tipo)) aplicar(escena, data)
   if (escena && data.tipo === 'activa') escena.activa = data.valor
+  if (escena?.ola && data.tipo === 'nace') escena.ola.nace ??= performance.now()
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
   // si calla), `callo` cuándo terminó y `dicho`, el que sigue.

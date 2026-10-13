@@ -4,12 +4,16 @@
 
 /* ---- quiénes somos ---- */
 
-/* Una tarjeta horizontal por socio: la foto dentro, a un lado, y el texto al
-   otro, con el radio de las teselas de proyectos. En S la descripción baja a
-   todo el ancho; desde M va junto a la foto, que cambia de lado de una
-   tarjeta a la otra. Van en la escena, bajo el titular (Nosotros.jsx), que
-   desde L va centrado: las tarjetas no. */
+/* Una tarjeta por socio con la forma del formulario de contacto
+   (Contacto.css): el texto va en la tarjeta, con el radio de las teselas de
+   proyectos, y la foto se monta encima y sobresale. En S la foto va arriba,
+   algo más angosta, y pisa el borde superior de la tarjeta; desde M va al
+   lado, al ras del borde exterior, sobresale por arriba y por abajo y cambia
+   de lado de una tarjeta a la otra. Van en la escena, bajo el titular
+   (Nosotros.jsx), que desde L va centrado: las tarjetas no. */
 .socios {
+  position: relative;
+  isolation: isolate;
   list-style: none;
   display: grid;
   gap: var(--e-6);
@@ -18,82 +22,174 @@
   text-align: start;
 }
 
+/* El azul de la escena se difumina detrás de las tarjetas, de borde a borde
+   de la pantalla: empieza en la primera y llega al blanco de la página un poco
+   bajo la segunda (`--fundido-fin`), dentro de los 96 px que quedan hasta el
+   final de la escena. El blanco sigue hasta ese final, que recorta lo que
+   sobra (`overflow: clip`, Portada.css). */
+.socios::before,
+.socios::after {
+  --fundido-fin: calc(100% + var(--e-16));
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-inline: -100vw;
+}
+
+.socios::before {
+  inset-block: 0 calc(100% - var(--fundido-fin));
+  background: linear-gradient(#1976cc, #7cbcf1, #f6f9fc);
+}
+
+.socios::after {
+  inset-block: var(--fundido-fin) -100svh;
+  background: #f6f9fc;
+}
+
 .socio {
   display: grid;
-  grid-template-columns: clamp(5.5rem, 34%, 9rem) minmax(0, 1fr);
   grid-template-areas:
-    'foto nombre'
-    'texto texto';
-  gap: var(--e-4) var(--e-6);
-  align-items: center;
-  padding: var(--e-6);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-panel);
-  background: var(--superficie);
+    'foto'
+    'cuerpo';
 }
 
 /* La proporción va escrita, para que el hueco exista antes que la foto, y
-   con fondo, para que se vea mientras llega. */
+   con fondo, para que se vea mientras llega. Va por encima de la tarjeta,
+   que la sigue en el HTML. */
 .socio img {
   grid-area: foto;
+  z-index: 1;
   display: block;
-  width: 100%;
+  width: calc(100% - 2 * var(--e-3));
   height: auto;
   aspect-ratio: 4 / 5;
+  margin: 0 auto calc(-1 * var(--e-16));
   object-fit: cover;
   border-radius: var(--radio-tarjeta);
   background: var(--linea);
 }
 
-.socio-nombre {
-  grid-area: nombre;
+/* Arriba deja sitio para la foto, que se monta sobre su borde. */
+.socio-cuerpo {
+  grid-area: cuerpo;
+  padding: calc(var(--e-16) + var(--e-6)) var(--e-6) var(--e-6);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--superficie);
 }
 
 /* Es un h2, porque cuelga del titular de la página, con el tamaño de un h3:
    es el nombre de una tarjeta, no el de una sección. */
-.socio-nombre h2 {
+.socio-cuerpo h2 {
   font-size: var(--texto-lg);
   letter-spacing: -0.015em;
 }
 
-.socio-nombre p {
+.socio-rol {
   margin-top: var(--e-1);
   color: var(--texto-suave);
 }
 
+/* Los perfiles, al lado del nombre, en el gris del texto y en el color de su
+   marca al pasar (`--color-red`, Nosotros.jsx). Si el nombre no cabe en una línea, se parte y los logos
+   siguen a su lado. Cada enlace mide 44 px, lo cómodo para el dedo, y el
+   margen negativo de arriba y abajo evita que alarguen la línea del nombre. */
+.socio-nombre {
+  display: flex;
+  align-items: center;
+}
+
+.socio-perfiles {
+  list-style: none;
+  display: flex;
+  margin: -10px 0 -10px var(--e-2);
+  padding: 0;
+}
+
+.socio-perfiles a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--texto-suave);
+  transition: color 200ms var(--ease-out);
+}
+
+.socio-perfiles a:hover {
+  color: var(--color-red);
+}
+
+.socio-perfiles svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
 .socio-descripcion {
-  grid-area: texto;
   max-width: 40rem;
+  margin-top: var(--e-4);
   color: var(--texto-suave);
 }
 
+/* Justificado con sangría, como un párrafo de libro. Sin guiones, la
+   justificación abre huecos entre palabras en S; `hyphens` corta según el
+   `lang` de la página. */
+.socio-descripcion,
+.nosotros-relato {
+  text-align: justify;
+  text-indent: 2em;
+  hyphens: auto;
+}
+
+/* La foto mide lo que la tarjeta más los 64 px que sobresale; con un texto
+   largo se estira y se recorta, nunca baja de 4:5. El alto va en porcentaje
+   de la fila y no con `align-self: stretch`, que Safari no aplica a una
+   imagen. La tarjeta pierde el borde y las esquinas del lado de la foto, y
+   entre una tarjeta y otra queda sitio para lo que sobresalen las dos fotos. */
 @media (min-width: 640px) {
+  .socios {
+    gap: var(--e-24);
+  }
+
   .socio {
     grid-template-columns: 15rem minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'foto nombre'
-      'foto texto';
-    align-items: start;
+    grid-template-areas: 'foto cuerpo';
+  }
+
+  .socio img {
+    width: 100%;
+    height: calc(100% + 2 * var(--e-8));
+    margin: calc(-1 * var(--e-8)) 0;
+  }
+
+  .socio-cuerpo {
     padding: var(--e-8);
+    border-left-width: 0;
+    border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
   }
 
   .socio:nth-child(even) {
     grid-template-columns: minmax(0, 1fr) 15rem;
-    grid-template-areas:
-      'nombre foto'
-      'texto foto';
+    grid-template-areas: 'cuerpo foto';
+  }
+
+  .socio:nth-child(even) .socio-cuerpo {
+    border-width: 1px 0 1px 1px;
+    border-radius: var(--radio-panel) 0 0 var(--radio-panel);
   }
 }
 
 @media (min-width: 1024px) {
   .socio {
     grid-template-columns: 20rem minmax(0, 1fr);
-    column-gap: var(--e-12);
   }
 
   .socio:nth-child(even) {
     grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+
+  .socio-cuerpo {
+    padding: var(--e-12);
   }
 }
 
@@ -110,22 +206,41 @@
   color: var(--texto);
 }
 
-/* La acepción en sí, en grande y en tinta; lo que la acompaña, en el suave. */
-.numerada .nosotros-definicion {
+/* La definición, en grande y en tinta, bajo la línea de la entrada; quién la
+   da, en el suave. Desde L sube un paso: es lo primero que se lee del nombre. */
+.nosotros-definicion {
+  margin: var(--e-12) 0 0;
+  padding-top: var(--e-6);
+  border-top: 1px solid var(--linea);
+}
+
+.nosotros-definicion blockquote {
   margin: 0;
+  max-width: 30em;
   font-size: var(--texto-lg);
   line-height: 1.45;
 }
 
-.numerada .nosotros-definicion,
-.numerada .nosotros-definicion p {
-  color: var(--texto);
+@media (min-width: 1024px) {
+  .nosotros-definicion blockquote {
+    font-size: var(--texto-xl);
+    line-height: 1.3;
+  }
 }
 
-/* ---- la Morning Glory ---- */
+.nosotros-definicion figcaption {
+  margin-top: var(--e-4);
+  color: var(--texto-suave);
+}
 
-.nosotros-morning {
+/* ---- la Morning Glory y lo que es para nosotros ---- */
+
+.nosotros-bloque {
   margin-top: var(--e-24);
+}
+
+.nosotros-bloque .entradilla {
+  margin-top: var(--e-6);
 }
 
 .nosotros-foto {
@@ -158,26 +273,9 @@
 }
 
 .nosotros-relato {
-  display: grid;
-  gap: var(--e-4) var(--e-12);
+  max-width: none;
   margin-top: var(--e-8);
   color: var(--texto-suave);
-}
-
-@media (min-width: 1024px) {
-  .nosotros-relato {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* ---- cómo trabajamos ---- */
-
-/* «TRABAJAMOS» mide 8.1 em en la letra de los titulares y no se parte: a
-   40 px no cabe en el ancho del texto por debajo de unos 400 px, y en 320
-   corría la página de lado. El titular se achica lo justo, como el de la
-   portada con «AUTOMATIZACIÓN»; desde 400 px no cambia. */
-.nosotros-como-titulo {
-  font-size: min(var(--texto-2xl), (100vw - 2 * var(--margen-lateral)) / 8.2);
 }
 
 /* ---- las citas y sus fuentes ---- */
@@ -215,10 +313,23 @@
   margin-top: var(--e-2);
 }
 
+/* Al saltar desde una cita, la fuente cae a un tercio de la pantalla, con su
+   título y lo que la cita encima. Pegada a la barra, lo que se veía era el
+   plano de la marca, que viene después, y parecía otra sección. La citada
+   pasa a la tinta del texto, para saber cuál es. */
+.fuentes li {
+  scroll-margin-top: 30svh;
+}
+
+.fuentes li:target {
+  color: var(--texto);
+}
+
 /* ---- la marca: el plano ----
    Un plano en el sentido literal: la zona oscura del sitio se llama así, y
-   aquí lleva su cuadrícula porque muestra cómo se construye el símbolo. Es una
-   tesela de proyectos en grande: el mismo fondo y el mismo radio. */
+   aquí lleva su cuadrícula porque muestra de qué está hecha la marca: una
+   trama de puntos. Es una tesela de proyectos en grande: el mismo fondo y el
+   mismo radio. */
 
 .plano {
   position: relative;
@@ -276,51 +387,37 @@
   color: var(--texto-suave);
 }
 
-.construccion {
+/* La ola, en el color de la marca (Nosotros.jsx). El hueco es cuadrado y
+   tiene su medida antes de que nada pinte. Los colores van en hex porque el
+   lienzo los lee tal cual (nubes.js); la trama lee también la sombra, aunque
+   la ola no la use. */
+.ola {
+  --nubes-luz: var(--marca);
+  --nubes-sombra: var(--fondo);
+  --nubes-borde: var(--marca);
+  --nubes-alfa: 1;
+  position: relative;
   width: min(100%, 24rem);
+  aspect-ratio: 1;
   justify-self: center;
-  view-timeline: --construccion block;
 }
 
-/* Las guías, a media tinta: se tienen que ver, pero por detrás de la voluta. */
-.construccion-cuadrado {
-  stroke: color-mix(in srgb, var(--texto-suave) 45%, transparent);
-  stroke-width: 1px;
+.ola svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: var(--marca);
 }
 
-/* El radio en la mono: aquí sí es un dato. */
-.construccion-radio {
-  font-family: var(--fuente-datos);
-  font-size: 1.1px;
-  fill: var(--texto-suave);
-  text-anchor: middle;
-  dominant-baseline: central;
+/* El lienzo entra sin fundido, porque su entrada es el dibujo. Desde que pinta,
+   la ola es suya y la quieta se esconde: con movimiento reducido, las dos son
+   la misma y el cambio no se nota. Al imprimir queda la quieta. */
+.ola .nubes {
+  transition: none;
 }
 
-/* El grosor va en unidades del dibujo (24 de lado): a su tamaño máximo son
-   unos 3.5 px, como el trazo de la marca. */
-.construccion-voluta {
-  stroke: var(--marca);
-  stroke-width: 0.22;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-}
-
-/* La voluta se traza al asomar, del borde hacia el ojo, atada al scroll: es
-   la construcción que el dibujo explica. Sin soporte, al imprimir o con
-   movimiento reducido se ve entera. */
-@keyframes voluta-trazar {
-  from {
-    stroke-dashoffset: 1;
-  }
-}
-
-@supports (animation-timeline: view()) {
-  @media screen and (prefers-reduced-motion: no-preference) {
-    .construccion-voluta {
-      animation: voluta-trazar linear both;
-      animation-timeline: --construccion;
-      animation-range: entry 20% cover 50%;
-    }
+@media screen {
+  .ola .nubes.vivo + svg {
+    visibility: hidden;
   }
 }
