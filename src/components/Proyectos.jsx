@@ -1,10 +1,11 @@
 import { PROYECTOS } from '../data/proyectos.js'
 import LogoProyecto from './LogoProyecto.jsx'
+import Podio from './Podio.jsx'
 
 /**
  * Índice de obra (DESIGN-BRIEF §4, bloque 2). La página sigue en blanco y el
- * color vive en las tarjetas: los logros con jurado externo van en el metal
- * de su puesto —oro o plata, porque es lo único validado por un tercero—.
+ * color vive en las tarjetas: los logros con jurado externo suben a un podio
+ * en pixel art (Podio.jsx): es lo único validado por un tercero.
  *
  * Cada proyecto pinta solo los enlaces que tiene. Un proyecto sin ninguno no
  * llega hasta aquí: lo filtra el propio archivo de datos, donde está explicada
@@ -172,40 +173,8 @@ export default function Proyectos() {
       <div className="contenedor">
         <h2 className="titular entra">proyectos y Logros</h2>
 
-        {/* Los logros no llevan `.entra`: están siempre a la vista. Con ratón
-            se inclinan hacia el cursor como una placa en la mano (logros.js). */}
-        <div className="proyectos-logros">
-          {destacados.map((destacado) => (
-            <article
-              key={destacado.id}
-              className={`tarjeta proyecto proyecto-destacado proyecto-${destacado.credencial.metal}`}
-            >
-              {/* Plegada, la tarjeta dice el puesto y la obra; el relato y su
-                  prueba se despliegan. `<details>` lo hace sin JavaScript y
-                  el texto plegado sigue en el HTML para los buscadores. */}
-              <details>
-                {/* La credencial va ANTES del nombre: es lo único de esta página
-                    que validó un tercero, y es el motivo de que encabece. La
-                    medalla repite el puesto en grande; el texto lo dice entero. */}
-                <summary>
-                  <span className="proyecto-medalla dato" aria-hidden="true">
-                    {destacado.credencial.puesto}
-                  </span>
-                  <span className="proyecto-credencial">
-                    <strong>{destacado.credencial.titulo}</strong>{' '}
-                    <span className="proyecto-evento dato">{destacado.credencial.evento}</span>
-                  </span>
-                  <h3>{destacado.nombre}</h3>
-                  <Flecha />
-                </summary>
-                <div className="proyecto-cuerpo">
-                  <p className="proyecto-resumen">{destacado.resumen}</p>
-                  <Enlaces {...destacado} />
-                </div>
-              </details>
-            </article>
-          ))}
-        </div>
+        {/* Los logros con jurado externo suben al podio (Podio.jsx). */}
+        <Podio logros={destacados} />
 
         <div className="obras-bloque">
           <div className="obras-intro entra">

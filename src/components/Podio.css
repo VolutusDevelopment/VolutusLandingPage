@@ -1,0 +1,350 @@
+/* ============================================================================
+ * El podio de los logros (Podio.jsx), en pixel art al estilo Nitrome.
+ *
+ * Todo se mide en «píxeles de juego» (--p): el podio entero mide 96 de ancho
+ * (tres bloques de 32), así que un píxel es 1/96 del contenedor y la flecha,
+ * los destellos y el suelo crecen al mismo paso que los sprites. Los colores
+ * del juego son los mismos en los dos temas: es un objeto, no una superficie.
+ * ========================================================================= */
+
+.podio {
+  --contorno: #2a1d3d;
+  --oro: #ffe066;
+  --oro-medio: #f7b928;
+  container-type: inline-size;
+  max-width: 36rem;
+  margin: var(--e-12) auto 0;
+}
+
+.podio-escena,
+.podio-suelo,
+.podio-cartel {
+  --p: calc(100cqi / 96);
+}
+
+.podio-escena {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  padding-top: calc(var(--p) * 2);
+}
+
+.podio-columna {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.podio-columna:focus-visible {
+  outline: 3px dashed var(--foco);
+  outline-offset: calc(var(--p) * 2);
+}
+
+/* El bloque del oro pisa un píxel de cada vecino: dos contornos juntos se
+   leían como una raya el doble de gruesa. */
+.podio-bloque {
+  display: block;
+  width: 100%;
+}
+
+.podio-oro {
+  z-index: 1;
+}
+
+.podio-oro .podio-bloque {
+  width: calc(100% * 34 / 32);
+}
+
+/* Los sprites usan la misma escala que el bloque: un píxel del trofeo mide lo
+   mismo que uno del podio. */
+.podio-premio {
+  position: relative;
+  display: block;
+  width: calc(var(--p) * 16);
+  margin-bottom: calc(var(--p) * 2);
+}
+
+.podio-sprite {
+  display: block;
+  width: calc(var(--ancho) * var(--p));
+  margin-inline: auto;
+}
+
+/* La flecha de «elegido», un triángulo escalonado de 7×4 píxeles con
+   contorno. El contorno es un `drop-shadow` del padre porque el `clip-path`
+   recortaría el del propio triángulo. */
+.podio-flecha {
+  width: calc(var(--p) * 7);
+  height: calc(var(--p) * 4);
+  margin-bottom: calc(var(--p) * 3);
+  opacity: 0;
+  filter: drop-shadow(0 var(--p) 0 var(--contorno));
+}
+
+.podio-flecha::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--oro);
+  clip-path: polygon(
+    0 0, 100% 0, 100% 25%, 85.7% 25%, 85.7% 50%, 71.4% 50%, 71.4% 75%, 57.1% 75%,
+    57.1% 100%, 42.9% 100%, 42.9% 75%, 28.6% 75%, 28.6% 50%, 14.3% 50%, 14.3% 25%, 0 25%
+  );
+}
+
+.podio-columna[aria-selected='true'] .podio-flecha {
+  opacity: 1;
+}
+
+/* Tres destellos en cruz alrededor del trofeo, que se encienden por turnos. */
+.podio-destellos i {
+  position: absolute;
+  width: calc(var(--p) * 3);
+  aspect-ratio: 1;
+  background: #ffffff;
+  clip-path: polygon(33.3% 0, 66.6% 0, 66.6% 33.3%, 100% 33.3%, 100% 66.6%, 66.6% 66.6%, 66.6% 100%, 33.3% 100%, 33.3% 66.6%, 0 66.6%, 0 33.3%, 33.3% 33.3%);
+}
+
+.podio-destellos i:nth-child(1) {
+  top: 0;
+  left: calc(var(--p) * -2);
+}
+
+.podio-destellos i:nth-child(2) {
+  top: calc(var(--p) * 6);
+  right: calc(var(--p) * -3);
+}
+
+.podio-destellos i:nth-child(3) {
+  top: calc(var(--p) * -4);
+  right: calc(var(--p) * 2);
+}
+
+/* El suelo: pasto con contorno, una franja más oscura y tierra. */
+.podio-suelo {
+  height: calc(var(--p) * 6);
+  margin-top: calc(var(--p) * -1);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(var(--p) * 5), #3f9a33 calc(var(--p) * 5) calc(var(--p) * 6)) 0 calc(var(--p) * 3) / 100% var(--p) no-repeat,
+    linear-gradient(
+      var(--contorno) 0 var(--p),
+      #7ee05a var(--p) calc(var(--p) * 3),
+      #4caf3c calc(var(--p) * 3) calc(var(--p) * 4),
+      #9a6534 calc(var(--p) * 4) calc(var(--p) * 5),
+      var(--contorno) calc(var(--p) * 5)
+    );
+}
+
+/* ---------------------------------------------------------------------------
+ * El cartel: un cuadro de diálogo de juego, oscuro, con borde escalonado.
+ * ------------------------------------------------------------------------ */
+
+.podio-cartel {
+  --b: 4px;
+  --texto: #ffffff;
+  --texto-suave: #d9d0f0;
+  --acento: var(--oro);
+  position: relative;
+  margin: calc(var(--e-6) + var(--b)) var(--b) var(--b);
+  padding: var(--e-6);
+  color: var(--texto);
+  background: #1e1638;
+  /* Cuatro sombras sin difuminar, una por lado: dejan las esquinas mordidas,
+     como un recuadro dibujado a mano píxel a píxel. */
+  box-shadow:
+    0 calc(var(--b) * -1) 0 0 var(--contorno),
+    0 var(--b) 0 0 var(--contorno),
+    calc(var(--b) * -1) 0 0 0 var(--contorno),
+    var(--b) 0 0 0 var(--contorno),
+    inset 0 var(--b) 0 0 var(--acento),
+    inset 0 calc(var(--b) * -1) 0 0 #140e28;
+}
+
+.podio-cartel-plata {
+  --acento: #a9c4ff;
+}
+
+.podio-cartel h3 {
+  margin: var(--e-2) 0 0;
+  color: var(--texto);
+}
+
+.podio-puesto {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  margin: 0;
+  font-weight: 700;
+  font-size: var(--texto-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.podio-insignia {
+  display: grid;
+  place-items: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  font-size: var(--texto-base);
+  letter-spacing: 0;
+  color: var(--contorno);
+  background: var(--acento);
+  box-shadow:
+    0 -3px 0 0 var(--contorno),
+    0 3px 0 0 var(--contorno),
+    -3px 0 0 0 var(--contorno),
+    3px 0 0 0 var(--contorno),
+    inset -3px -3px 0 0 rgb(0 0 0 / 0.2);
+}
+
+.podio-evento {
+  margin: var(--e-1) 0 0;
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.podio-resumen {
+  margin: var(--e-4) 0 0;
+  color: var(--texto-suave);
+}
+
+.podio-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-4);
+  margin: var(--e-6) 0 0;
+}
+
+/* Botones de menú de juego: amarillos, con contorno y una sombra de tres
+   píxeles que desaparece al pulsarlos, como si se hundieran. */
+.podio-boton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 3px;
+  padding: 0 var(--e-4);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--contorno);
+  background: var(--acento);
+  box-shadow:
+    0 -3px 0 0 var(--contorno),
+    0 3px 0 0 var(--contorno),
+    -3px 0 0 0 var(--contorno),
+    3px 0 0 0 var(--contorno),
+    inset 0 -4px 0 0 rgb(0 0 0 / 0.22);
+}
+
+.podio-boton:hover {
+  color: var(--contorno);
+  filter: brightness(1.08);
+}
+
+.podio-boton:active {
+  translate: 0 2px;
+  box-shadow:
+    0 -3px 0 0 var(--contorno),
+    0 3px 0 0 var(--contorno),
+    -3px 0 0 0 var(--contorno),
+    3px 0 0 0 var(--contorno);
+}
+
+.podio-boton:focus-visible {
+  outline: 3px dashed #ffffff;
+  outline-offset: 5px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Movimiento: todo en `steps()`, para que se mueva a saltos de píxel como en
+ * un juego y no se deslice como en una interfaz.
+ * ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .podio-columna[aria-selected='true'] .podio-flecha {
+    animation: podio-flotar 800ms steps(1, end) infinite;
+  }
+
+  .podio-columna[aria-selected='true'] .podio-premio {
+    animation: podio-flotar 1200ms steps(1, end) infinite;
+  }
+
+  @media (hover: hover) {
+    .podio-columna:hover .podio-premio {
+      animation: podio-saltar 400ms steps(1, end) infinite;
+    }
+  }
+
+  .podio-destellos i {
+    animation: podio-destello 1500ms steps(1, end) infinite;
+  }
+
+  .podio-destellos i:nth-child(2) {
+    animation-delay: 500ms;
+  }
+
+  .podio-destellos i:nth-child(3) {
+    animation-delay: 1000ms;
+  }
+
+  .podio-cartel:not([hidden]) {
+    animation: podio-aparecer 240ms steps(3, end);
+  }
+}
+
+@keyframes podio-flotar {
+  50% {
+    translate: 0 calc(var(--p) * -1);
+  }
+}
+
+@keyframes podio-saltar {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25%,
+  75% {
+    translate: 0 calc(var(--p) * -2);
+  }
+  50% {
+    translate: 0 calc(var(--p) * -3);
+  }
+}
+
+@keyframes podio-destello {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  33% {
+    scale: 0.34;
+    opacity: 1;
+  }
+  66% {
+    opacity: 0;
+  }
+}
+
+@keyframes podio-aparecer {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 -10% 0);
+  }
+}
