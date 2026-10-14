@@ -59,30 +59,17 @@
   min-height: 6rem;
   max-height: 50svh;
   margin-top: var(--barra-alto);
-  --nubes-celda: 3;
   --nubes-luz: var(--nube-luz);
   --nubes-sombra: var(--nube-sombra);
-  --nubes-borde: var(--nube-borde);
   --nubes-alfa: 1;
-}
-
-/* En S y M la trama va más fina: a 3 px los puntos se ven gruesos en el
-   teléfono. Como en el mar del pie y en la 404. */
-@media (max-width: 767px) {
-  .portada-cielo {
-    --nubes-celda: 2;
-  }
 }
 
 /* De costado (/nosotros, ver `Escena`) la nube tiene que imponerse, como la
    Morning Glory de la foto de esa página: el lienzo no baja de 45svh, aunque
-   en una pantalla baja empuje la entradilla bajo el borde, y la trama va fina
-   en todos los tamaños: a 3 px, con un rollo más chico que el de la portada,
-   los puntos se veían gruesos. */
+   en una pantalla baja empuje la entradilla bajo el borde. */
 .portada-costado .portada-cielo {
   min-height: 45svh;
   max-height: 60svh;
-  --nubes-celda: 2;
 }
 
 /* En L y XL la nube es el fondo de la portada: su lienzo cubre casi todo el

@@ -736,6 +736,7 @@ tener dueño ni fecha.
 | 35 | 2026-10-13 | La rueda de servicios, más baja: las cards de atrás suben la mitad que antes, así cada mitad del anillo es un arco suave y no una C, y la rueda queda más cerca del titular. Las de atrás asoman apenas por su borde de arriba | Las de atrás alzadas hasta mostrar también su nombre, que curvaban el anillo en una C | Diego |
 | 36 | 2026-10-13 | En `/nosotros`, «¿De dónde viene Volutus?» dice primero lo que es la nube —la definición del Atlas y la Morning Glory— y después lo que es para nosotros: cuatro rasgos en lista numerada, cada uno nacido de una palabra de la definición (aislada: única; con forma de tubo: simple; larga: imponente; baja, horizontal: al mismo nivel), con la marca de A.1, A.3 y A.6. Reemplaza la segunda acepción («Empresa») y la sección «Cómo trabajamos» | La entrada de diccionario con dos acepciones, que no decía por qué la nube | Diego |
 | 37 | 2026-10-13 | El plano de la marca en `/nosotros` muestra la ola del logotipo, punto por punto, con la trama de la nube: al asomar se dibuja desde la S hasta la voluta, y el cursor o el dedo la mueven como viento, en un aire viscoso: se estira sin abrirse y vuelve a su forma en menos de un segundo. Título «Tres líneas de puntos». Sin JavaScript o sin WebGL queda la ola quieta | La construcción de la voluta de Fibonacci de una sola línea, que ya no era la marca | Diego |
+| 38 | 2026-10-13 | Las nubes son una sola volutus física (`src/lib/volutus.js`), vista con una cámara de verdad por página: la portada desde el aire, a lo largo del rollo y con su base entera en el lienzo; /nosotros de costado; la 404 desde el suelo, viéndola llegar; la 500 pasando por encima, y /patos lejos, sobre el horizonte. El rollo mide 1,7 × 1,2 km, se forma en su frente, donde el aire sube, con la base plana en el nivel de condensación, y se evapora detrás en jirones: eso es lo que se ve rodar. Es un estratocúmulo: bultos bajos, sin torres, vetas en el frente laminar. La luz es la misma en todas las páginas: un sol alto detrás de quien mira, sin dorado, con una sola extinción, dispersión múltiple y la fase de las gotas; la bruma depende de la distancia (80 km de visibilidad) y aclara lo lejano hacia la luz de la nube, sin achicar sus puntos. El detalle llega hasta ~2,5 puntos según la distancia. El punto mide 2 px y nunca menos de 3 px del aparato, el lienzo se pinta a la densidad real de la pantalla (hasta 3×) y es un cuadrado redondeado, entre el círculo y el cuadrado. El cursor sopla en px de pantalla, suave y local, y la estela se cierra en ~1 s. Jugando, los cúmulos se reparten por el cielo, alto y bajo, a la distancia del rollo y hasta 3 km, se dan sombra y tapan al pato que pasa detrás. El mar no cambia | La perspectiva inventada (un rollo que se achicaba exponencialmente), el sol de media mañana con filo dorado, el sol rasante del alba (demasiado contraste), las torres de cúmulo, el giro rígido, el punto de 3 px en escritorio y 2 px en el teléfono pintado a 1,5×, el viento medido en altos del lienzo, que crecía con la nube y la deformaba entera, la cámara de la portada pegada al rollo, que lo cortaba abajo, la bruma que achicaba los puntos y deshacía la volutus hacia la derecha, y los cúmulos con una misma base, que quedaban en fila sobre el horizonte | Diego |
 
 ---
 
@@ -1016,17 +1017,16 @@ ilustración.
 
 - *Portada:* **una volutus, no un cúmulo.** La nube en rollo que da nombre a
   la marca (como el Morning Glory), en volumen de verdad sobre una trama de
-  puntos finos: la cabeza, enorme y redonda, a la izquierda del centro, y el
-  cuerpo que cruza la pantalla y sale por la derecha, rodando despacio sobre
-  su eje mientras sus bultos hierven. Lomo al sol blanco con filo dorado y
-  una base que se vuelve bruma y se funde con el blanco de la página (la
-  referencia es deta.surf). En L y XL es la base de la portada, a todo el
-  ancho, y el titular va centrado sobre el cielo; en M y S va arriba y el
-  texto debajo. El cursor es viento, y es un roce: la empuja apenas, deja
-  remolinos chicos y se aquieta en menos de un segundo. Con movimiento
-  reducido queda quieta y no reacciona. En el tema oscuro forzado es una nube
-  de noche, oscura y con filo plateado, para que el titular claro se lea
-  encima.
+  puntos finos, vista desde el aire: la cabeza, enorme, a la izquierda, y el
+  cuerpo que se aleja hacia el horizonte de la derecha. Se forma en su frente
+  y se evapora detrás, así que se ve rodar mientras sus bultos hierven. Cima
+  blanca al sol alto y vientre azul pizarra (decisión 38). En L y XL es la
+  base de la portada, a todo el ancho, y el titular va centrado sobre el
+  cielo; en M y S va arriba y el texto debajo. El cursor es viento, y es un
+  roce: la empuja apenas donde pasa y se aquieta en un segundo. Con
+  movimiento reducido queda quieta y no reacciona. En el tema oscuro forzado
+  es una nube de noche, oscura, para que el titular claro se lea encima. La
+  misma nube, con otras cámaras, abre /nosotros y las páginas de error.
 - *Pie:* el mar bajo la nube, visto desde un bote (decisión 25). Olas con
   física de verdad —dispersión del agua honda, trocoides, grupos y espuma
   donde rompen—, el camino del sol (o de la luna) y las crestas que asoman

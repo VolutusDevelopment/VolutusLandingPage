@@ -18,25 +18,17 @@
   position: relative;
   flex: 1 1 0;
   min-height: calc(var(--barra-alto) + 8rem);
-  --nubes-celda: 3;
   --nubes-luz: var(--nube-luz);
   --nubes-sombra: var(--nube-sombra);
-  --nubes-borde: var(--nube-borde);
   --nubes-alfa: 1;
 }
 
-/* En S y M la trama va más fina: a 3 px la nube, los patos y el contador
-   llenan la pantalla del teléfono. Y mientras se juega, el aviso se va por la
-   izquierda y deja solo los botones: el cielo crece hasta ellos y todo es
-   campo de juego. Su fila de la rejilla se cierra de una vez, así que el cielo
-   cambia de tamaño una sola vez, junto con la nube; el aviso, que queda pegado
-   a los botones por encima, es lo que se desliza. Al terminar vuelve por el
-   mismo camino. */
+/* En S y M, mientras se juega, el aviso se va por la izquierda y deja solo
+   los botones: el cielo crece hasta ellos y todo es campo de juego. Su fila
+   de la rejilla se cierra de una vez, así que el cielo cambia de tamaño una
+   sola vez, junto con la nube; el aviso, que queda pegado a los botones por
+   encima, es lo que se desliza. Al terminar vuelve por el mismo camino. */
 @media (max-width: 767px) {
-  .pagina-error-cielo {
-    --nubes-celda: 2;
-  }
-
   .pagina-error-texto {
     display: grid;
   }

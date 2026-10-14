@@ -10,11 +10,12 @@
  * `mar` (el agua bajo ellas) u `ola` (la ola del logotipo, en el plano de la
  * marca de /nosotros). La ola trae su trama en el SVG que la sigue, que es lo
  * que se ve hasta que el lienzo pinta, y dice en `data-celdas` cuántos puntos
- * mide de lado. El cielo puede decir además desde dónde, con
- * `data-perspectiva="costado"` (ver `Escena` en Portada.jsx). El color lo toma de `--nubes-luz`,
- * `--nubes-sombra`, `--nubes-borde` y `--nubes-alfa`, que el CSS resuelve
- * según la zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda
- * de la trama, en px CSS, lo da `--nubes-celda`.
+ * mide de lado. El cielo dice además desde dónde se mira la nube, con
+ * `data-perspectiva`: la cámara de su página en lib/volutus.js (`aire` si no
+ * lo dice). El color lo toma de `--nubes-luz`, `--nubes-sombra`, `--nubes-alfa`
+ * y, en el mar y la ola, `--nubes-borde`, que el CSS resuelve según la zona.
+ * Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la trama,
+ * en px CSS, lo da `--nubes-celda` (ver `rejilla`).
  *
  * El cielo y la ola escuchan al cursor, o al dedo: le cuentan al pintor por
  * dónde pasa sobre su sección, y el pintor lo vuelve viento. La ola, además,
@@ -43,10 +44,24 @@
 
 import { quieto } from './lib/movimiento.js'
 
-// Tope de densidad de píxeles: por encima de 1.5 los puntos no se ven mejor y
-// el costo sigue creciendo. Los patos (patos.js) lo usan para caer en la misma
-// rejilla de puntos.
-export const DPR_MAXIMO = 1.5
+// Tope de densidad de píxeles del mar: por encima de 1.5 sus puntos no se ven
+// mejor y el costo sigue creciendo.
+const DPR_MAXIMO = 1.5
+
+// La rejilla del cielo: el lado del punto en px CSS (`lado`, de
+// `--nubes-celda`), cuántos px del lienzo mide (`celda`) y cuántos px del
+// lienzo hay por px CSS (`densidad`). El lienzo se pinta a la densidad real de
+// la pantalla, hasta 3, un píxel del lienzo por píxel del aparato: a 1.5, el
+// teléfono lo estiraba y la trama se veía borrosa. La celda es un número
+// entero de esos píxeles, así que el punto mide `lado` px CSS, redondeado al
+// píxel del aparato, y nunca menos de 3: con 2, en una pantalla común, cada
+// punto llenaba su celda sin hueco y la trama desaparecía. Los patos de la
+// 404 (patos.js) caen en la misma rejilla.
+export function rejilla(lienzo) {
+  const lado = parseFloat(getComputedStyle(lienzo).getPropertyValue('--nubes-celda'))
+  const densidad = Math.min(devicePixelRatio, 3)
+  return { lado, celda: Math.max(3, Math.round(lado * densidad)), densidad }
+}
 
 // El enlace de cada pato del mar, por lienzo.
 const patos = new Map()
@@ -85,12 +100,13 @@ function montar(pintor, lienzo, id) {
   const mar = vista === 'mar'
   const ola = vista === 'ola'
   let visible = false
-  // Píxeles del pintor por píxel CSS: el dpr, salvo en la ola (ver `medir`).
+  // Píxeles del pintor por píxel CSS (ver `medir`).
   let escala = 1
 
   // La ola mide `data-celdas` de lado, una celda por punto del logotipo: la
   // celda sale del ancho y el lienzo mide justo esas celdas, así la rejilla
-  // del pintor calza con la trama.
+  // del pintor calza con la trama. El cielo va con su `rejilla`, y el mar, a
+  // la densidad de siempre.
   function medir() {
     const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
     if (ola) {
@@ -100,17 +116,24 @@ function montar(pintor, lienzo, id) {
       pintor.postMessage({ tipo: 'medir', id, ancho: celda * celdas, alto: celda * celdas, celda })
       return
     }
-    escala = dpr
-    const celda = parseFloat(getComputedStyle(lienzo).getPropertyValue('--nubes-celda'))
+    let { lado, celda, densidad } = rejilla(lienzo)
+    if (mar) {
+      celda = Math.round(lado * dpr)
+      densidad = dpr
+    }
+    escala = densidad
     pintor.postMessage({
       tipo: 'medir',
       id,
-      ancho: Math.round(lienzo.clientWidth * dpr),
-      alto: Math.round(lienzo.clientHeight * dpr),
-      celda: Math.round(celda * dpr),
+      ancho: Math.round(lienzo.clientWidth * densidad),
+      alto: Math.round(lienzo.clientHeight * densidad),
+      celda,
+      lado,
+      densidad,
     })
   }
 
+  // `--nubes-borde` es del mar y de la ola: la nube no tiene borde.
   function colorear() {
     const estilo = getComputedStyle(lienzo)
     const valor = (nombre) => estilo.getPropertyValue(nombre)
@@ -119,7 +142,7 @@ function montar(pintor, lienzo, id) {
       id,
       luz: rgb(valor('--nubes-luz')),
       sombra: rgb(valor('--nubes-sombra')),
-      borde: rgb(valor('--nubes-borde')),
+      borde: valor('--nubes-borde') && rgb(valor('--nubes-borde')),
       alfa: parseFloat(valor('--nubes-alfa')),
     })
   }
@@ -178,9 +201,9 @@ function montar(pintor, lienzo, id) {
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
-  const costado = lienzo.dataset.perspectiva === 'costado'
+  const { perspectiva } = lienzo.dataset
   const trama = ola ? tramaDeLaOla(lienzo) : null
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, costado, ola: trama }, [offscreen])
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva, ola: trama }, [offscreen])
   colorear()
   medir()
   if (ola) alAsomar(lienzo, () => pintor.postMessage({ tipo: 'nace', id }))

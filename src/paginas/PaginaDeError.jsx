@@ -6,7 +6,9 @@ import { ARRIBA, CASCO, COLORES } from '../lib/pato.js'
  * Las páginas de error —la 404 y la de los 5xx— y /patos. Son la misma
  * pantalla, la nube de la portada con un aviso y una sola salida, y ninguna
  * lleva pie: son un alto, no una página que se recorre. Cada una ocupa la
- * pantalla entera.
+ * pantalla entera y mira la nube desde otro lugar (`perspectiva`, ver
+ * lib/volutus.js): la 404, desde el suelo, viéndola llegar; la 500, pasando
+ * por encima, y /patos, lejos sobre el horizonte.
  *
  * Las de error pueden aparecer en cualquier dirección, así que todos sus
  * enlaces son absolutos. La 404 la sirve Cloudflare donde no hay archivo
@@ -29,20 +31,22 @@ import { ARRIBA, CASCO, COLORES } from '../lib/pato.js'
  * (`sinEntradilla`): la pantalla es el juego, y debajo del título no dice nada.
  */
 export function NoEncontrada() {
-  return <PaginaDeError ruta="/404" antetitulo="Error 404" titulo="Esta página no existe." />
+  return <PaginaDeError ruta="/404" antetitulo="Error 404" titulo="Esta página no existe." perspectiva="suelo" />
 }
 
 // Una sola para todos los 5xx, así que no dice el código: dice de quién es la
 // falla.
 export function ErrorDelServidor() {
-  return <PaginaDeError ruta="/500" antetitulo="Error del servidor" titulo="Algo falló de nuestro lado." />
+  return (
+    <PaginaDeError ruta="/500" antetitulo="Error del servidor" titulo="Algo falló de nuestro lado." perspectiva="encima" />
+  )
 }
 
 export function CazaDePatos() {
-  return <PaginaDeError ruta="/patos" titulo="Dispara al pato" empiezaSolo sinEntradilla />
+  return <PaginaDeError ruta="/patos" titulo="Dispara al pato" perspectiva="horizonte" empiezaSolo sinEntradilla />
 }
 
-function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntradilla = false }) {
+function PaginaDeError({ ruta, antetitulo, titulo, perspectiva, empiezaSolo = false, sinEntradilla = false }) {
   const { descripcion } = PAGINAS[ruta]
 
   return (
@@ -50,7 +54,7 @@ function PaginaDeError({ ruta, antetitulo, titulo, empiezaSolo = false, sinEntra
       <section className="seccion zona-cielo hora-manana pagina-error">
         <div className="pagina-error-cielo">
           <canvas className="patos" aria-hidden="true" />
-          <canvas className="nubes" data-vista="cielo" aria-hidden="true" />
+          <canvas className="nubes" data-vista="cielo" data-perspectiva={perspectiva} aria-hidden="true" />
         </div>
 
         <div className="contenedor pagina-error-texto">

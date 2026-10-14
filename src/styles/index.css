@@ -226,11 +226,10 @@
   --vidrio-halo: rgb(255 255 255 / 0.22);
 
   /* La nube y el mar (src/nubes.js) donde la hora del día no aplica. En hex:
-     el lienzo los lee tal cual. La nube: cara al sol celeste, vientre azul
-     pizarra y filo dorado. */
+     el lienzo los lee tal cual. La nube: cara al sol celeste y vientre azul
+     pizarra. */
   --nube-luz: #b9dcf2;
   --nube-sombra: #56779b;
-  --nube-borde: #e0b870;
   --mar-hondo: #116492;
   --mar-cresta: #38a9e8;
   --mar-espuma: #9fd3f2;
@@ -265,11 +264,10 @@
   --vidrio-halo: rgb(10 12 18 / 0.3);
 
   /* La nube de noche. El titular claro va encima de ella, así que la nube es
-     oscura, con luz de luna y filo plateado: sobre su cara más clara el texto
-     da 7.2:1 y la acción 3.2:1, que basta para un titular. */
+     oscura, con luz de luna: sobre su cara más clara el texto da 7.2:1 y la
+     acción 3.2:1, que basta para un titular. */
   --nube-luz: #34506e;
   --nube-sombra: #16293d;
-  --nube-borde: #7f9bb8;
   --mar-hondo: #155a86;
   --mar-cresta: #38a9e8;
   --mar-espuma: #d9f0fc;
@@ -296,7 +294,6 @@
   --foco: #093d66;
   --nube-luz: #ffffff;
   --nube-sombra: #6a8cb2;
-  --nube-borde: #ffd48a;
   --fondo-hora: linear-gradient(#2b8de4, #4d9fea 28%, #7cbcf1 52%, #c2e1f8 76%, #f6f9fc 94%);
 }
 
@@ -837,7 +834,8 @@ svg {
 /* El lienzo de las nubes (src/nubes.js). Ocupa su contenedor sin mover el
    layout y aparece con un fundido cuando pinta su primer fotograma; hasta
    entonces, o sin WebGL, es transparente. El color lo decide quien lo
-   contiene, con `--nubes-cerca`, `--nubes-lejos` y `--nubes-alfa`. */
+   contiene, con `--nubes-luz`, `--nubes-sombra` y `--nubes-alfa`; el mar y
+   la ola suman `--nubes-borde`. */
 .nubes {
   position: absolute;
   inset: 0;
@@ -850,6 +848,13 @@ svg {
 
 .nubes.vivo {
   opacity: 1;
+}
+
+/* El punto de la nube, en px CSS: el mismo en todas las páginas, y el lienzo
+   lo pinta a la densidad real de la pantalla (`rejilla` en src/nubes.js). El
+   mar del pie lleva el suyo (Pie.css). */
+.nubes[data-vista='cielo'] {
+  --nubes-celda: 2;
 }
 
 /* Cifras en fila: el número en la mono y grande, y debajo lo que mide. */

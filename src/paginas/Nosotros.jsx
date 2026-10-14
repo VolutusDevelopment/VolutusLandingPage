@@ -92,7 +92,7 @@ const SOCIOS = [
       linkedin: 'https://www.linkedin.com/in/diegopyll/',
     },
     descripcion:
-      'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y otros retos personales. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus junto a mi socio Rodrigo, con la idea de hacer soluciones que resuelvan problemas de fondo.',
+      'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y otros retos personales. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus junto a Rodrigo, con la idea de hacer soluciones que resuelvan problemas de fondo.',
   },
   {
     nombre: 'Rodrigo Martínez Becker',

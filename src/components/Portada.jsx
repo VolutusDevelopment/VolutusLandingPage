@@ -8,9 +8,9 @@
  * porque es lo único que casi todos van a leer.
  *
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
- * rollo que da nombre a la marca, en volumen y de puntos finos, con luz,
- * sombra y un filo dorado, rodando despacio sobre su eje; el cursor la mueve
- * como viento (ver nubes-lienzo.js). En L y XL cruza la portada en
+ * rollo que da nombre a la marca, en volumen y de puntos finos, con su luz y
+ * su sombra, formándose en su frente y deshaciéndose detrás; el cursor la
+ * mueve como viento (ver nubes-lienzo.js). En L y XL cruza la portada en
  * perspectiva, detrás del titular centrado; en M y S va arriba y el texto
  * debajo, sin empujarlo nunca. La página baja por las horas del día hasta la
  * noche del pie (DESIGN-BRIEF A.8).
@@ -25,11 +25,11 @@
  * El cielo de la mañana con la volutus y el texto encima. Lo comparten la
  * portada y /nosotros, que abre bajo la misma nube.
  *
- * `perspectiva` cambia desde dónde se mira la nube. Sin ella, la de la
- * portada: el rollo entra enorme por la izquierda y se aleja en diagonal.
- * `costado` lo pone casi paralelo a la pantalla, cruzando la cabecera, donde
- * se le ve girar sobre su eje (nubes-lienzo.js), y le da a la escena su
- * variante de layout (Portada.css).
+ * `perspectiva` cambia desde dónde se mira la nube: es una de las cámaras de
+ * lib/volutus.js. Sin ella, la de la portada, desde el aire: el rollo entra
+ * enorme por la izquierda y se aleja en diagonal. `costado` lo pone casi
+ * paralelo a la pantalla, cruzando la cabecera, donde se ve subir su frente,
+ * y le da a la escena su variante de layout (Portada.css).
  */
 export function Escena({ id, perspectiva, children }) {
   return (

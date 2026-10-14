@@ -53,7 +53,8 @@
  * vuelve sin transición.
  */
 
-import { DPR_MAXIMO } from './nubes.js'
+import { rejilla } from './nubes.js'
+import { encuadrar, rollo } from './lib/volutus.js'
 import { quieto } from './lib/movimiento.js'
 import { filasDelGlobo, filasDeTexto, punta } from './lib/globo.js'
 import { desbloquear, desbloqueado } from './lib/odio.js'
@@ -135,9 +136,12 @@ const SUBIDA = 3
 const RAYO = 0.5
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
-// jirones. Cada uno va en su franja del ancho, de izquierda a derecha, corrido
-// un poco de su centro (`corre`, en franjas) y alternando alto y bajo (`v`, la
-// fracción del alto). `peso` es su tamaño relativo: el de verdad sale de
+// jirones, repartidos por todo el cielo. Cada uno va en su franja del ancho, de
+// izquierda a derecha, corrido un poco de su centro (`corre`, en franjas) y
+// alternando alto y bajo (`v`, la fracción del alto). Juegan a la distancia
+// del rollo en su columna, hasta `JUEGO` (ver `cumulosEnElMundo` en
+// nubes-lienzo.js), así que no comparten la base: compartiéndola, quedaban en
+// fila sobre el horizonte. `peso` es su tamaño relativo: el de verdad sale de
 // `repartir`. Tantos como `cumulos` en nubes-lienzo.js.
 const CUMULOS = [
   { peso: 0.8, v: 0.55, corre: 0.1 },
@@ -161,6 +165,10 @@ const POR_ANCHO = [
 // El área de un cúmulo de radio 1: media elipse de 1.6 × 1 arriba y otra de
 // 1.6 × 1/1.8 abajo, la base aplanada (ver `cumulo` en nubes-lienzo.js).
 const AREA = (Math.PI * 1.6 * (1 + 1 / 1.8)) / 2
+// Lo más que tapan los cúmulos, en fracción del cielo: el resto es para los
+// patos. En /patos el rollo cubre un 18 % y no llega; en la 404 y la 500 pasa
+// cerca, cubre la mitad, y los cúmulos tapaban casi todo el campo de juego.
+const CUBRE = 0.2
 
 // Lo que se mide y se pinta. Se arma con el primer «Jugar».
 let escena = null
@@ -203,17 +211,18 @@ function preparar(boton) {
   lienzo.addEventListener('pointerdown', disparar)
 }
 
-// La rejilla de la nube (nubes.js): la misma densidad de píxeles y la misma
-// celda. Los dos lienzos calzan, así que también el origen. El `techo` es el
+// La rejilla de la nube (`rejilla` en nubes.js): la misma densidad de
+// píxeles y la misma celda. Los dos lienzos calzan, así que también el origen
+// y la cámara con que la página mira la nube (lib/volutus.js). El `techo` es el
 // borde de abajo de la barra, en puntos enteros: los patos no vuelan detrás
 // de ella, donde el clic caería en el logo o en el menú.
 function medir() {
   const { lienzo, cielo, boton } = escena
   const estilo = getComputedStyle(cielo)
-  const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
-  const celda = Math.round(parseFloat(estilo.getPropertyValue('--nubes-celda')) * dpr)
-  lienzo.width = Math.round(lienzo.clientWidth * dpr)
-  lienzo.height = Math.round(lienzo.clientHeight * dpr)
+  const { celda, densidad } = rejilla(escena.nube)
+  lienzo.width = Math.round(lienzo.clientWidth * densidad)
+  lienzo.height = Math.round(lienzo.clientHeight * densidad)
+  escena.encuadre = encuadrar(escena.nube.dataset.perspectiva, lienzo.width, lienzo.height)
   // El pato que se achica no pasa a la rejilla: sin suavizado, sigue en
   // píxeles. Cambiar el tamaño del lienzo lo reinicia.
   escena.ctx.imageSmoothingEnabled = false
@@ -230,43 +239,47 @@ function medir() {
     const [arriba, abajo, herido, cae, casco, aureola] = [ARRIBA, ABAJO, HERIDO, CAE, CASCO, AUREOLA].map((filas) => pintarCuadro(filas, celda))
     Object.assign(escena, { celda, cuadros: { arriba, abajo, herido, cae, casco, aureola }, grandes: [], contador: null })
   }
-  escena.dpr = dpr
+  escena.densidad = densidad
   escena.alto = lienzo.height
-  escena.techo = Math.ceil((parseFloat(estilo.getPropertyValue('--barra-alto')) * dpr) / celda) * celda
-  const izquierda = (boton.parentElement.getBoundingClientRect().left - lienzo.getBoundingClientRect().left) * dpr
+  escena.techo = Math.ceil((parseFloat(estilo.getPropertyValue('--barra-alto')) * densidad) / celda) * celda
+  const izquierda = (boton.parentElement.getBoundingClientRect().left - lienzo.getBoundingClientRect().left) * densidad
   escena.izquierda = Math.round(izquierda / celda) * celda
   repartir()
   avisarForma(performance.now())
   if (!bucle) pintar()
 }
 
-// La volutus en la columna x, en altos: la altura de su eje, su radio y el
-// área que cubre de 0 a x, que es la integral de su grosor. Es `tubo` en
-// nubes-lienzo.js; si cambia allá, cambia aquí.
-function rollo(x) {
-  const f = Math.exp(-0.9 * Math.min(x, 2.1))
-  const area = (0.8 / 0.9) * (1 - f) + 0.8 * f * Math.max(x - 2.1, 0)
-  return { y: 0.3 + 0.28 * f, r: 0.4 * f, area }
+// El área de la volutus a la vista, en altos²: su grosor, columna a columna,
+// visto con la cámara de la página.
+function areaDelRollo() {
+  const { encuadre, lienzo, alto } = escena
+  let area = 0
+  for (let i = 0; i < 64; i++) {
+    const visto = rollo(encuadre, ((i + 0.5) / 64) * lienzo.width)
+    if (visto) area += (2 * visto.r * lienzo.width) / (64 * alto * alto)
+  }
+  return area
 }
 
 // Dónde va cada cúmulo y de dónde sale. La volutus no pierde material: entre
-// todos los cúmulos cubren la misma área que ella a la vista, así que el
-// tamaño de cada uno depende de cuántos son. Cada uno nace del tramo de rollo
+// todos los cúmulos cubren la misma área que ella a la vista, hasta `CUBRE`,
+// así que el tamaño de cada uno depende de cuántos son. Cada uno nace del tramo de rollo
 // de su franja, a la altura del eje y con su grosor, y al menos tan ancho como
 // el tramo: los trozos lo cubren entero y no queda nada que se evapore. Cada
 // nivel es otro cielo: toma los cúmulos desde otro punto de la lista.
 function repartir() {
-  const { lienzo, alto, nivel } = escena
+  const { encuadre, lienzo, alto, nivel } = escena
   const aspecto = lienzo.width / alto
   const [, cuantos] = POR_ANCHO.find(([desde]) => lienzo.clientWidth >= desde)
   const elegidos = Array.from({ length: cuantos }, (_, i) => CUMULOS[(i + 3 * (nivel - 1)) % CUMULOS.length])
   const pesos = elegidos.reduce((suma, { peso }) => suma + peso ** 2, 0)
-  const escala = Math.sqrt(rollo(aspecto).area / (AREA * pesos))
+  const escala = Math.sqrt(Math.min(areaDelRollo(), CUBRE * aspecto) / (AREA * pesos))
   const franja = aspecto / cuantos
   escena.cumulos = elegidos.map(({ peso, v, corre }, i) => {
     const x = (i + 0.5 + corre) * franja
-    const { y, r } = rollo(x)
-    return { x, desde: { y, r: Math.max(r, franja / 3.2) }, hasta: { y: v, r: peso * escala } }
+    const visto = rollo(encuadre, x * alto)
+    const desde = visto ? { y: visto.y / alto, r: Math.max(visto.r / alto, franja / 3.2) } : { y: v, r: 0 }
+    return { x, desde, hasta: { y: v, r: peso * escala } }
   })
 }
 
@@ -427,7 +440,7 @@ function soltar() {
     disparos: 0,
     escala: 1,
     armadura: escena.odio,
-    tamano: INICIAL - (INICIAL - Math.min(1, (CHICO * CELDA_GRANDE * escena.dpr) / escena.celda)) * dificultad(),
+    tamano: INICIAL - (INICIAL - Math.min(1, (CHICO * CELDA_GRANDE * escena.densidad) / escena.celda)) * dificultad(),
   }
   animar()
 }
@@ -638,12 +651,12 @@ function disparar(evento) {
   if (!pato || evento.button) return
   pato.disparos++
   if ((pato.estado !== 'vuela' && pato.estado !== 'huye') || pato.escala > 1) return
-  const { lienzo, dpr, cuadros } = escena
+  const { lienzo, densidad, cuadros } = escena
   const { tamano } = pato
   const caja = lienzo.getBoundingClientRect()
-  const margen = MARGEN * dpr * (evento.pointerType === 'touch' ? 2 : 1) * tamano
-  const dx = Math.abs((evento.clientX - caja.left) * dpr - pato.x)
-  const dy = Math.abs((evento.clientY - caja.top) * dpr - pato.y)
+  const margen = MARGEN * densidad * (evento.pointerType === 'touch' ? 2 : 1) * tamano
+  const dx = Math.abs((evento.clientX - caja.left) * densidad - pato.x)
+  const dy = Math.abs((evento.clientY - caja.top) * densidad - pato.y)
   if (dx > (cuadros.arriba.width / 2) * tamano + margen || dy > (cuadros.arriba.height / 2) * tamano + margen) return
   // Con casco, el primer acierto solo se lo vuela, y el pato da la vuelta.
   if (pato.armadura) {
@@ -670,9 +683,9 @@ function caerChatarra(dt) {
 // El aire que mueve el pato al caer, para la nube, en coordenadas de la
 // ventana. `fuera` avisa que ya salió.
 function soplar(fuera) {
-  const { lienzo, dpr, nube } = escena
+  const { lienzo, densidad, nube } = escena
   const caja = lienzo.getBoundingClientRect()
-  const detail = fuera ? { fuera } : { x: caja.left + pato.x / dpr, y: caja.top + pato.y / dpr }
+  const detail = fuera ? { fuera } : { x: caja.left + pato.x / densidad, y: caja.top + pato.y / densidad }
   nube.dispatchEvent(new CustomEvent('soplo', { detail }))
 }
 
