@@ -46,14 +46,14 @@ La escala de espacios usa múltiplos de 4 px: 4, 8, 12, 16, 24, 32, 48, 64 y 96 
 
 La altura de la barra es 64 px y pasa a 84 px desde 768 px de ancho. Las secciones usan 64 px de espacio vertical en móvil primero y 96 px desde 1024 px.
 
-Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes: servicios, y teselas y fichas de proyectos.
+Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes: servicios, y láminas y fichas de proyectos.
 
 ## Componentes y escenas
 
 - Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella.
 - Botones, etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
 - Servicios en ocho cards, en una rueda en todos los tamaños: muestra todas y gira (arrastre con el ratón o el dedo, trackpad o pulsando una que asoma). Sin JavaScript, una lista con todas a la vista.
-- Logros en tarjetas con medalla, siempre a la vista: uno bajo otro hasta M y lado a lado desde L. Con ratón se inclinan hacia el cursor. Proyectos en un mosaico de teselas, cada una con su ficha en un `<dialog>`.
+- Logros en tarjetas con medalla, siempre a la vista: uno bajo otro hasta M y lado a lado desde L. Con ratón se inclinan hacia el cursor. Proyectos en láminas oscuras: resumen, la dirección donde se abre cada uno («En línea» o «Código público») y, si hay capturas, el producto en sus pantallas reales saliendo del borde de la lámina; tocarla abre su ficha en un `<dialog>`, que sale de la lámina (arranca encima, con su ancho, y crece hasta su sitio) y al cerrar vuelve a ella; es Web Animations y no View Transitions, que en Safari no captura bien un `<dialog>` modal. Un proyecto sin capturas ni pasos no tiene ficha y su lámina es una fila. Cada lámina toma su forma por su propio ancho (container query).
 - Tarjeta clara de contacto sobre el cierre oscuro de la portada.
 - /nosotros: la escena de la portada (`Escena`) con la nube de costado (`perspectiva="costado"`): el rollo cruza la cabecera casi paralelo a la pantalla y su frente sube; en todos los tamaños va arriba y el texto debajo. Su lienzo no baja de 45svh y la textura sigue la foto de la Morning Glory: vetas en el frente y bultos bajos en la cresta. Después, el nombre: primero lo que es la nube, con la definición del Atlas como entrada de diccionario y la Morning Glory en foto con cifras; luego lo que es para nosotros, en lista numerada, un rasgo por cada palabra de la definición (única, simple, imponente, al mismo nivel), y las fuentes citadas. Cierra el plano de la marca (zona-plano con cuadrícula) en tarjeta oscura sobre la caída: la ola del logotipo, punto por punto, en un lienzo del pintor de nubes (`data-vista="ola"`, lib/ola.js) que la dibuja desde la S al asomar y deja que el cursor la mueva en un aire viscoso; sin WebGL queda el SVG quieto.
 - Cifras (`.cifras`): número en Geist Mono sobre una línea; las comparten /ley21719 y /nosotros.

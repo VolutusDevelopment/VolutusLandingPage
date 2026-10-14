@@ -1,69 +1,11 @@
-/* La tarjeta tal como la dibuja la rama de Diego: sin borde y con el radio
-   grande. Acotada a esta sección porque `.tarjeta` es global y también la
-   lleva el formulario de contacto, que se queda como está. */
-.proyectos .tarjeta {
-  border: 0;
-  border-radius: var(--radio-tarjeta);
-}
-
-@media (min-width: 1024px) {
-  .proyectos .tarjeta {
-    padding: var(--e-8);
-  }
-}
-
-.proyecto-enlaces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-6);
-  margin-top: var(--e-6);
-}
-
-.proyecto-enlaces a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: var(--texto-sm);
-}
-
-.flecha-desplegar {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  /* Tinte de acción y no de superficie: sobre la tarjeta oscura un círculo
-     del color del fondo desaparecía, y es justo la pieza que invita. */
-  background: color-mix(in srgb, var(--accion) 20%, transparent);
-  transition:
-    background-color 200ms var(--ease-out),
-    color 200ms var(--ease-out);
-}
-
-.flecha-desplegar svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 300ms var(--ease-out);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .flecha-desplegar,
-  .flecha-desplegar svg {
-    transition: none;
-  }
-}
-
 /* ============================================================================
- * El mosaico de proyectos (issue #33).
+ * Las láminas de proyectos.
  *
- * Una tesela por proyecto: su ícono sobre la mancha, el nombre y una línea.
- * Todo lo demás vive en la ficha, así que sumar obra no alarga la sección:
- * suma una tesela. En S van dos por fila; desde M, tantas como quepan de al
- * menos 9.5rem, y si son pocas se estiran hasta llenar la fila.
+ * Una por proyecto. La que trae capturas va a todo el ancho, con el texto a
+ * un lado y el producto al otro; las que no, son filas y se reparten de a dos
+ * o tres. Cada lámina toma su forma según su propio ancho (container query) y
+ * no el de la pantalla: una fila sola ocupa el ancho entero y se pone en
+ * horizontal; tres juntas se quedan en columna.
  * ========================================================================= */
 
 .obras-bloque {
@@ -76,165 +18,293 @@
   color: var(--texto-suave);
 }
 
-/* En L el texto va a un lado y las teselas al otro: con dos proyectos, una
-   rejilla a todo el ancho dejaba dos teselas enormes o media fila vacía. */
-@media (min-width: 1024px) {
-  .obras-bloque {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
-    gap: var(--e-12);
-    align-items: start;
-  }
-
-  .obras-bajada {
-    max-width: 28ch;
-  }
-}
-
 .obras {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
-  gap: var(--e-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-6);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 650px) {
-  .obras {
-    gap: var(--e-6);
-  }
-}
-
-/* La tesela es una zona de plano: lleva los colores oscuros de la obra sin
+/* La lámina es una zona de plano: lleva los colores oscuros de la obra sin
    repetirlos aquí. */
 .obra {
+  flex: 1 1 22rem;
   position: relative;
-  display: flex;
-  flex-direction: column;
+  container-type: inline-size;
   overflow: hidden;
   border-radius: var(--radio-panel);
   background: var(--fondo);
   color: var(--texto);
 }
 
-/* El escenario del ícono: una luz suave detrás de la mancha. */
-.obra-icono {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 10;
-  background: radial-gradient(70% 80% at 50% 45%, rgb(255 255 255 / 0.05), transparent 70%);
+.obra-con-vitrina {
+  flex-basis: 100%;
 }
 
-.obra .mancha {
-  width: 40%;
+.obra-lamina {
+  --obra-margen: var(--e-6);
+  display: grid;
 }
 
 .obra-texto {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--e-2);
-  padding: var(--e-1) var(--e-6) var(--e-6);
+  align-items: flex-start;
+  gap: var(--e-4);
+  padding: var(--obra-margen);
+}
+
+.obra-nombre {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.obra-nombre .mancha {
+  flex: none;
+  width: 2.75rem;
 }
 
 .obra h3 {
   font-size: var(--texto-lg);
 }
 
-.obra-lema {
-  font-size: var(--texto-sm);
-  line-height: 1.5;
+.obra-resumen {
   color: var(--texto-suave);
 }
 
+/* Dónde se abre la obra, con lo que es: el producto en línea o su código. Es
+   la regla para estar en esta lista, así que se dice en cada lámina. Baja al
+   pie del texto cuando la lámina es más alta que él. */
+.obra-pruebas {
+  display: grid;
+  gap: var(--e-2);
+  margin: auto 0 0;
+  padding-top: var(--e-2);
+}
+
+.obra-pruebas dt {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.obra-pruebas dd {
+  margin: 0;
+}
+
+/* Por encima del `::after` del botón de la ficha, que cubre la lámina. En
+   línea y no en flex: si la dirección se parte, la flecha sigue a la última
+   palabra. El relleno lleva el área de toque a 44 px. */
+.obra-direccion {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  max-width: 100%;
+  padding-block: 10px;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-base);
+  overflow-wrap: anywhere;
+  text-underline-offset: 0.3em;
+}
+
+.obra-direccion-fin {
+  white-space: nowrap;
+}
+
+.obra-direccion svg {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-left: 0.3em;
+  vertical-align: -0.05em;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .obra-abrir {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--e-3);
   min-height: 44px;
-  margin-top: auto;
-  padding: var(--e-3) 0 0;
+  padding: 0;
   border: 0;
   background: none;
   font: inherit;
   font-size: var(--texto-sm);
-  color: var(--accion);
-  text-align: left;
+  color: var(--texto);
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
 
-/* Toda la tesela responde al toque, no solo la línea del botón. */
+/* Toda la lámina responde al toque, no solo la línea del botón. La capa la
+   pone encima de las capturas, que también van posicionadas. */
 .obra-abrir::after {
   content: '';
   position: absolute;
+  z-index: 1;
   inset: 0;
 }
 
-/* Con el teclado, además del anillo del botón, se marca la tesela entera. */
+/* Con el teclado, además del anillo del botón, se marca la lámina entera. */
 .obra:has(.obra-abrir:focus-visible) {
   outline: 3px solid var(--foco);
   outline-offset: 3px;
 }
 
-/* En el teléfono la tesela mide la mitad del ancho: el ícono va en un cuadrado
-   y el texto baja un escalón para que el nombre quepa en una línea. */
-@media (max-width: 649px) {
-  .obra-icono {
-    aspect-ratio: 1;
-  }
+.obra-flecha {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  /* Tinte de acción y no de superficie: sobre la lámina oscura un círculo del
+     color del fondo desaparecía, y es justo la pieza que invita. */
+  background: color-mix(in srgb, var(--accion) 20%, transparent);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
 
-  .obra .mancha {
-    width: 60%;
-  }
-
-  .obra-texto {
-    padding: 0 var(--e-4) var(--e-4);
-  }
-
-  .obra h3 {
-    font-size: var(--texto-base);
-  }
-
-  .obra-lema {
-    font-size: var(--texto-xs);
-  }
+.obra-flecha svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 @media (hover: hover) {
-  .obra:hover .flecha-desplegar {
+  .obra:hover .obra-flecha {
     background: var(--accion);
     color: var(--sobre-accion);
   }
 }
 
-/* Con ratón, la tesela se levanta y la mancha cambia de forma, como algo
-   blando al tocarlo. Van `translate`, `rotate` y `scale` sueltos: así no pisan
-   el `transform` de la entrada al scroll (`.entra`). */
+/* ---- la vitrina ----
+ *
+ * El sitio detrás y el teléfono delante, los dos más grandes que su hueco: se
+ * salen por abajo y el sitio también por la derecha, y la lámina los recorta.
+ * Las medidas van en porcentajes del hueco, que tiene proporción fija: la
+ * composición es la misma a cualquier ancho y nada se mueve al llegar las
+ * imágenes. Dos límites mandan sobre los números: el recorte de la derecha no
+ * pasa del 8 % del sitio, que más allá se come su tarjeta de valoraciones, y
+ * el teléfono no tapa más del primer 10 %, donde empieza su titular. */
+.vitrina {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  background: radial-gradient(90% 80% at 70% 100%, color-mix(in srgb, var(--marca) 30%, transparent), transparent 70%);
+}
+
+/* `height: auto` porque el atributo `height` del HTML, que reserva el hueco
+   antes de que llegue la imagen, también fija su alto. */
+.vitrina img {
+  position: absolute;
+  height: auto;
+}
+
+.vitrina-pantalla {
+  left: 30%;
+  top: 8%;
+  width: 78%;
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+}
+
+/* La captura trae su teléfono, pero con las esquinas del fondo blanco donde
+   se tomó: el radio las recorta a la curva del propio marco. */
+.vitrina-telefono {
+  left: var(--obra-margen);
+  top: 16%;
+  width: 30%;
+  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
+  box-shadow: 0 24px 40px -12px rgb(0 0 0 / 0.6);
+}
+
+/* Con ratón, el producto se asoma un poco más: el teléfono, que está delante,
+   sube más que el sitio. Va `translate` suelto para no pisar el `transform`
+   de la entrada al scroll (`.entra`). */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .obra {
-    transition:
-      translate 300ms var(--ease-out),
-      box-shadow 300ms var(--ease-out);
+  .vitrina img {
+    transition: translate 500ms var(--ease-out);
   }
 
-  .obra:hover {
-    translate: 0 -4px;
-    box-shadow: 0 28px 48px -24px rgb(10 26 42 / 0.55);
+  .obra:hover .vitrina-pantalla {
+    translate: 0 -6px;
   }
 
-  .obra .mancha {
-    transition:
-      border-radius 700ms var(--ease-out),
-      rotate 700ms var(--ease-out),
-      scale 700ms var(--ease-out);
+  .obra:hover .vitrina-telefono {
+    translate: 0 -14px;
+  }
+}
+
+@container (min-width: 36rem) {
+  .obra-lamina {
+    --obra-margen: var(--e-8);
   }
 
-  .obra:hover .mancha {
-    border-radius: 44% 56% 62% 38% / 41% 46% 54% 59%;
-    rotate: -4deg;
-    scale: 1.04;
+  .obra h3 {
+    font-size: var(--texto-xl);
+  }
+
+  .obra-nombre .mancha {
+    width: 3.5rem;
+  }
+
+  .obra-direccion {
+    font-size: var(--texto-lg);
+  }
+}
+
+@container (min-width: 52rem) {
+  .obra-lamina {
+    --obra-margen: var(--e-12);
+  }
+
+  .obra-resumen {
+    max-width: 44ch;
+  }
+
+  /* El texto a la izquierda y el producto a la derecha, pegado al borde de
+     abajo aunque el texto sea más alto. */
+  .obra-con-vitrina .obra-lamina {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .obra-con-vitrina .vitrina {
+    align-self: end;
+    aspect-ratio: 4 / 3;
+  }
+
+  .obra-con-vitrina .vitrina-pantalla {
+    left: 16%;
+    top: 25%;
+    width: 92%;
+  }
+
+  .obra-con-vitrina .vitrina-telefono {
+    left: 0;
+    top: 40%;
+    width: 22%;
+  }
+
+  /* La fila: el nombre y el resumen a la izquierda, dónde abrirlo a la
+     derecha. */
+  .obra:not(.obra-con-vitrina) .obra-texto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: var(--e-12);
+  }
+
+  .obra:not(.obra-con-vitrina) .obra-pruebas {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 
@@ -496,8 +566,11 @@ html:has(.ficha[open]) {
     gap: var(--e-6);
   }
 
+  /* Sin `start`, el paso más corto reparte el alto sobrante de la fila entre
+     el número y el texto, y queda más abajo que sus vecinos. */
   .ficha-pasos li {
     grid-template-columns: 1fr;
+    align-content: start;
   }
 }
 
@@ -562,23 +635,20 @@ html:has(.ficha[open]) {
   }
 }
 
-/* Al abrir, la ficha sube un poco y el velo aparece: entra algo nuevo, así
-   que va en ease-out. Al cerrar se va sin más. El velo lleva la curva escrita
-   entera porque `::backdrop` no hereda las variables en Safari antiguo. */
-@media (prefers-reduced-motion: no-preference) {
-  .ficha[open] {
-    animation: ficha-entra 320ms var(--ease-out);
-  }
-
-  .ficha[open]::backdrop {
-    animation: velo-entra 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
+/* ---- de la lámina a la ficha ----
+ *
+ * La ficha sale de su lámina y vuelve a ella (src/fichas.js): arranca encima,
+ * con su ancho y recortada a su alto, y crece hasta su sitio. Escala desde la
+ * esquina de arriba a la izquierda, que es la que se hace coincidir. El velo
+ * aparece a la vez. Lleva la curva escrita entera porque `::backdrop` no
+ * hereda las variables en Safari antiguo. */
+.ficha {
+  transform-origin: 0 0;
 }
 
-@keyframes ficha-entra {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
+@media (prefers-reduced-motion: no-preference) {
+  .ficha[open]::backdrop {
+    animation: velo-entra 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 }
 

@@ -36,9 +36,10 @@ export const PROYECTOS = [
   {
     id: 'ponlenota',
     nombre: 'PonleNota',
-    // La línea de la tesela del mosaico. El resumen entero va en la ficha.
+    // La línea bajo el nombre en la ficha; la lámina lleva el resumen. Solo
+    // la necesita un proyecto con ficha (con `vistas` o `pasos`).
     lema: 'Valoraciones privadas y reseñas en Google para negocios locales.',
-    // El fondo de su ícono, que pinta la mancha de la tesela: blanco, con el
+    // El fondo de su ícono, que pinta la mancha de la lámina: blanco, con el
     // símbolo en sus colores (ver LogoProyecto.jsx).
     fondoIcono: '#ffffff',
     resumen:
@@ -122,7 +123,6 @@ export const PROYECTOS = [
   {
     id: 'carflip',
     nombre: 'CarFlip',
-    lema: 'Portal de autos usados con estadísticas de mercado.',
     // El azul de su marca (`--c-accent` de su sistema de diseño). No tiene
     // símbolo propio, así que la mancha lleva su inicial.
     fondoIcono: '#1873b3',

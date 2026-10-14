@@ -10,10 +10,10 @@
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
  * rollo que da nombre a la marca, en volumen y de puntos finos, con su luz y
  * su sombra, formándose en su frente y deshaciéndose detrás; el cursor la
- * mueve como viento (ver nubes-lienzo.js). En L y XL cruza la portada en
- * perspectiva, detrás del titular centrado; en M y S va arriba y el texto
- * debajo, sin empujarlo nunca. La página baja por las horas del día hasta la
- * noche del pie (DESIGN-BRIEF A.8).
+ * mueve como viento (ver nubes-lienzo.js). Desde M, o en una pantalla
+ * apaisada, cruza la portada en perspectiva, detrás del titular centrado; en
+ * un teléfono vertical va arriba y el texto debajo, sin empujarlo nunca. La página baja por las horas del día
+ * hasta la noche del pie (DESIGN-BRIEF A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.

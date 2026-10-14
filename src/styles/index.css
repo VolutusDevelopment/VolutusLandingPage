@@ -157,7 +157,7 @@
      a ellas: el resto del sitio sigue en el radio de arriba. */
   --radio-tarjeta: 12px;
 
-  /* Las cards de servicios y las teselas y fichas de proyectos son objetos
+  /* Las cards de servicios y las láminas y fichas de proyectos son objetos
      grandes, y a su escala 12 px se lee como esquina recta. */
   --radio-panel: 28px;
 
@@ -572,7 +572,7 @@ svg {
 /* Las cards de servicios también son zonas de plano, y dos seguidas perdían
    su relleno de arriba. Se excluyen solo ellas: acotar la regla a `.seccion`
    —como en la rama de Diego— devolvía el relleno al `main` y al pie de
-   /privacidad, que no son secciones y crecían 112 px. Las teselas y las fichas
+   /privacidad, que no son secciones y crecían 112 px. Las láminas y las fichas
    de proyectos no llevan relleno propio, así que la regla no las toca. */
 .zona-plano + .zona-plano:not(.servicio),
 .zona-cielo + .zona-cielo {

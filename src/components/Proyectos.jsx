@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { PROYECTOS } from '../data/proyectos.js'
 import LogoProyecto from './LogoProyecto.jsx'
 import Podio from './Podio.jsx'
@@ -11,20 +12,21 @@ import Podio from './Podio.jsx'
  * llega hasta aquí: lo filtra el propio archivo de datos, donde está explicada
  * la regla y el estado verificado de cada uno.
  *
- * Los proyectos van en un mosaico (issue #33): una tesela por proyecto, con su
- * ícono, su nombre y una línea. Lo demás —el resumen, las capturas, cómo
- * funciona y los enlaces— está en su ficha, un `<dialog>` que se abre al tocar
- * la tesela (src/fichas.js). Así la sección mide lo mismo con dos proyectos
- * que con ocho, y las capturas no se descargan hasta que alguien abre la ficha.
+ * Cada proyecto es una lámina que enseña la obra sin pedir nada: su resumen,
+ * el producto en sus pantallas reales y la dirección donde abrirlo, etiquetada
+ * por lo que es («En línea» o «Código público»), que es la regla para estar
+ * aquí. Lo que no cabe —todas las pantallas y cómo funciona— va en su ficha,
+ * un `<dialog>` que se abre al tocar la lámina (src/fichas.js). Un proyecto
+ * sin capturas ni pasos no tiene más que enseñar: no lleva ficha y su lámina
+ * es una fila.
  */
 
-function Enlaces({ sitio, repositorio, publicacion, nombre, botones }) {
-  if (!sitio && !repositorio && !publicacion) return null
-  // En la ficha son botones: el producto en línea manda y va en primario; sin
-  // sitio, el primario es el código.
-  const clase = (principal) => (botones ? `boton ${principal ? 'boton-primario' : 'boton-secundario'}` : undefined)
+function Enlaces({ sitio, repositorio, publicacion, nombre }) {
+  // El producto en línea manda y va en primario; sin sitio, el primario es el
+  // código.
+  const clase = (principal) => `boton ${principal ? 'boton-primario' : 'boton-secundario'}`
   return (
-    <p className={botones ? 'ficha-enlaces' : 'proyecto-enlaces'}>
+    <p className="ficha-enlaces">
       {sitio && (
         <a href={sitio} rel="noopener" className={clase(true)}>
           Abrir el sitio
@@ -47,39 +49,116 @@ function Enlaces({ sitio, repositorio, publicacion, nombre, botones }) {
   )
 }
 
-// El círculo con flecha de las piezas que se abren: abajo para desplegar (el
-// CSS la gira cuando ya está abierta) y a la derecha para abrir una ficha.
-const TRAZOS = { desplegar: 'M6 9l6 6 6-6', abrir: 'M5 12h14M13 6l6 6-6 6' }
+const tieneFicha = (proyecto) => Boolean(proyecto.vistas || proyecto.pasos)
 
-function Flecha({ hacia = 'desplegar' }) {
+function Captura({ imagen, sizes = imagen.sizes, className }) {
   return (
-    <span className="flecha-desplegar" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d={TRAZOS[hacia]} />
-      </svg>
-    </span>
+    <img
+      className={className}
+      src={imagen.src}
+      srcSet={imagen.srcSet}
+      sizes={sizes}
+      width={imagen.ancho}
+      height={imagen.alto}
+      alt={imagen.alt}
+      loading="lazy"
+      decoding="async"
+    />
   )
 }
 
 /**
- * La tesela de un proyecto. El botón es una línea de texto, pero su `::after`
- * se estira sobre la tesela entera: se abre tocando en cualquier punto.
+ * El producto en la lámina: el sitio detrás y, delante, el teléfono con lo que
+ * ve el cliente. Los dos suben desde el borde de abajo y se salen de él, así
+ * que la lámina los recorta. Son las mismas imágenes de la ficha: abrirla
+ * después no descarga nada nuevo.
+ */
+function Vitrina({ vistas }) {
+  const pantalla = vistas.find((vista) => vista.forma === 'pantalla')
+  const telefono = vistas.find((vista) => vista.forma === 'telefono')
+  return (
+    <div className="vitrina">
+      {pantalla && <Captura imagen={pantalla.imagen} sizes="(min-width: 1024px) 40rem, 75vw" className="vitrina-pantalla" />}
+      {telefono && <Captura imagen={telefono.imagen} sizes="(min-width: 1024px) 10rem, 30vw" className="vitrina-telefono" />}
+    </div>
+  )
+}
+
+// La dirección se lee sin el protocolo: `github.com/DiegoPyLL/CarFlip`. Si no
+// cabe en la línea, se corta después de una barra y no a mitad de un nombre, y
+// la flecha va pegada al último: nunca baja sola.
+function Direccion({ url }) {
+  const { host, pathname } = new URL(url)
+  const partes = (host + pathname).replace(/\/$/, '').split('/')
+  const ultima = partes.pop()
+  return (
+    <>
+      {partes.map((parte, i) => (
+        <Fragment key={i}>
+          {parte}/<wbr />
+        </Fragment>
+      ))}
+      <span className="obra-direccion-fin">
+        {ultima}
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 17 17 7M9 7h8v8" />
+        </svg>
+      </span>
+    </>
+  )
+}
+
+const PRUEBAS = [
+  ['sitio', 'En línea'],
+  ['repositorio', 'Código público'],
+]
+
+function Pruebas({ proyecto }) {
+  return (
+    <dl className="obra-pruebas">
+      {PRUEBAS.filter(([clave]) => proyecto[clave]).map(([clave, etiqueta]) => (
+        <div key={clave}>
+          <dt>{etiqueta}</dt>
+          <dd>
+            <a href={proyecto[clave]} rel="noopener" className="obra-direccion">
+              <Direccion url={proyecto[clave]} />
+            </a>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+/**
+ * La lámina de un proyecto. El botón de la ficha es una línea de texto, pero
+ * su `::after` se estira sobre la lámina entera: se abre tocando en cualquier
+ * punto que no sea un enlace.
  */
 function Obra({ proyecto }) {
+  const conFicha = tieneFicha(proyecto)
   return (
-    <li className="obra zona-plano entra" id={proyecto.id}>
-      <div className="obra-icono">
-        <LogoProyecto proyecto={proyecto} />
-      </div>
-      <div className="obra-texto">
-        <h3>{proyecto.nombre}</h3>
-        <p className="obra-lema">{proyecto.lema}</p>
-        <button type="button" className="obra-abrir" data-ficha={`ficha-${proyecto.id}`} aria-haspopup="dialog">
-          <span>
-            Ver ficha<span className="solo-lectores"> de {proyecto.nombre}</span>
-          </span>
-          <Flecha hacia="abrir" />
-        </button>
+    <li className={`obra zona-plano entra${proyecto.vistas ? ' obra-con-vitrina' : ''}`} id={proyecto.id}>
+      <div className="obra-lamina">
+        <div className="obra-texto">
+          <div className="obra-nombre">
+            <LogoProyecto proyecto={proyecto} />
+            <h3>{proyecto.nombre}</h3>
+          </div>
+          <p className="obra-resumen">{proyecto.resumen}</p>
+          <Pruebas proyecto={proyecto} />
+          {conFicha && (
+            <button type="button" className="obra-abrir" data-ficha={`ficha-${proyecto.id}`} aria-haspopup="dialog">
+              Ver cómo funciona<span className="solo-lectores"> {proyecto.nombre}</span>
+              <span className="obra-flecha" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </button>
+          )}
+        </div>
+        {proyecto.vistas && <Vitrina vistas={proyecto.vistas} />}
       </div>
     </li>
   )
@@ -120,16 +199,7 @@ function Ficha({ proyecto }) {
               <li key={titulo} className={`captura captura-${forma}`}>
                 <figure>
                   <div className="captura-marco">
-                    <img
-                      src={imagen.src}
-                      srcSet={imagen.srcSet}
-                      sizes={imagen.sizes}
-                      width={imagen.ancho}
-                      height={imagen.alto}
-                      alt={imagen.alt}
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <Captura imagen={imagen} />
                   </div>
                   <figcaption>
                     <strong>{titulo}</strong> {texto}
@@ -151,14 +221,14 @@ function Ficha({ proyecto }) {
           </div>
         )}
 
-        <Enlaces {...proyecto} botones />
+        <Enlaces {...proyecto} />
       </div>
     </dialog>
   )
 }
 
 // Sin JavaScript nadie abre un `<dialog>`: las fichas se ven en línea, debajo
-// del mosaico, y se esconden los botones que no harían nada.
+// de las láminas, y se esconden los botones que no harían nada.
 const SIN_SCRIPT = `
 .ficha { display: block !important; position: static !important; width: auto !important; max-height: none !important; margin: var(--e-6) 0 0 !important; }
 .obra-abrir, .ficha-cerrar { display: none !important; }
@@ -179,7 +249,7 @@ export default function Proyectos() {
         <div className="obras-bloque">
           <div className="obras-intro entra">
             <p className="antetitulo">Proyectos</p>
-            <p className="obras-bajada">Toca un proyecto para ver cómo funciona por dentro y abrirlo.</p>
+            <p className="obras-bajada">Todo lo que mostramos se puede abrir: el producto en línea o su código.</p>
           </div>
           <ul className="obras">
             {obras.map((proyecto) => (
@@ -188,7 +258,7 @@ export default function Proyectos() {
           </ul>
         </div>
 
-        {obras.map((proyecto) => (
+        {obras.filter(tieneFicha).map((proyecto) => (
           <Ficha key={proyecto.id} proyecto={proyecto} />
         ))}
         <noscript>

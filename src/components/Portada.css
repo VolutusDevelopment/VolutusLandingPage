@@ -72,18 +72,24 @@
   max-height: 60svh;
 }
 
-/* En L y XL la nube es el fondo de la portada: su lienzo cubre casi todo el
-   alto y el rollo, en perspectiva, entra enorme por abajo a la izquierda y
-   se aleja hacia arriba a la derecha, pasando detrás del titular. El titular
-   va centrado, más ancho para que quepa en tres líneas.
+/* Desde M, y en S si la pantalla es apaisada o casi cuadrada, la nube es el
+   fondo de la portada: su lienzo cubre casi todo el alto y el rollo, en
+   perspectiva, entra enorme por abajo a la izquierda y se aleja hacia arriba
+   a la derecha, pasando detrás del titular. Arriba del titular, en una
+   pantalla baja, no le quedaba más que una franja.
 
    De costado (/nosotros, ver `Escena`) no: el rollo cruza a lo ancho, y
-   detrás del titular lo taparía entero. Se queda como en S y M, arriba y con
-   el texto debajo, que así nunca se tocan, tenga la pantalla el alto que
-   tenga; solo el texto se centra. */
-@media (min-width: 1024px) {
+   detrás del titular lo taparía entero. Se queda como en S vertical, arriba
+   y con el texto debajo, que así nunca se tocan, tenga la pantalla el alto
+   que tenga.
+
+   El texto va al centro de la nube, un poco más arriba que el de la
+   pantalla, más ancho para que el titular quepa en tres líneas, y en una
+   pantalla baja, como un teléfono apaisado, nunca sube detrás de la barra. */
+@media (min-width: 768px), (min-aspect-ratio: 4/5) {
   .portada:not(.portada-costado) .portada-escena {
     justify-content: center;
+    padding-block: var(--barra-alto) calc(var(--barra-alto) + var(--e-16));
   }
 
   .portada:not(.portada-costado) .portada-escena::after {
@@ -102,7 +108,7 @@
     position: relative;
   }
 
-  .portada-texto {
+  .portada:not(.portada-costado) .portada-texto {
     max-width: 66rem;
     margin-inline: auto;
     text-align: center;
@@ -142,7 +148,12 @@
   margin-top: var(--e-6);
 }
 
+/* En L y XL el texto se centra. */
 @media (min-width: 1024px) {
+  .portada-costado .portada-texto {
+    text-align: center;
+  }
+
   .portada-entradilla {
     margin-inline: auto;
   }
@@ -150,8 +161,9 @@
 
 /* La palabra que rota no se parte, y la más larga («AUTOMATIZACIÓN») mide
    10.6 em en Archivo mayúscula con su espaciado: el titular se achica lo justo
-   para que quepa en el ancho del texto (`cqi`), que en S son los márgenes y en
-   M el tope de 36rem. Si sobra, manda el paso de siempre. */
+   para que quepa en el ancho del texto (`cqi`): el del contenedor, hasta su
+   tope (36rem, o 66rem con la nube de fondo). Si sobra, manda el paso de
+   siempre. */
 .portada h1 {
   font-size: min(var(--texto-2xl), 100cqi / 10.6);
 }

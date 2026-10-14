@@ -5,7 +5,7 @@
 /* ---- quiénes somos ---- */
 
 /* Una tarjeta por socio con la forma del formulario de contacto
-   (Contacto.css): el texto va en la tarjeta, con el radio de las teselas de
+   (Contacto.css): el texto va en la tarjeta, con el radio de las láminas de
    proyectos, y la foto se monta encima y sobresale. En S la foto va arriba,
    algo más angosta, y pisa el borde superior de la tarjeta; desde M va al
    lado, al ras del borde exterior, sobresale por arriba y por abajo y cambia
@@ -328,7 +328,7 @@
 /* ---- la marca: el plano ----
    Un plano en el sentido literal: la zona oscura del sitio se llama así, y
    aquí lleva su cuadrícula porque muestra de qué está hecha la marca: una
-   trama de puntos. Es una tesela de proyectos en grande: el mismo fondo y el
+   trama de puntos. Es una lámina de proyectos en grande: el mismo fondo y el
    mismo radio. */
 
 .plano {

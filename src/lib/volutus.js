@@ -55,20 +55,24 @@ const REFERENCIA = 1500
  * `campo` el ángulo vertical que cabe en el lienzo. `centro` pone el punto al
  * que mira en el lienzo, en altos desde la izquierda y desde arriba (sin `x`,
  * va al medio del ancho): así el rollo se mide por el alto, como la portada
- * pide.
+ * pide. `cubre`, en las que lo miran en diagonal, es cuántos altos de ancho
+ * cruza el rollo antes de perderse en su punto de fuga: en un lienzo más
+ * ancho que eso, la cámara lo mide por el ancho, como si el lienzo fuera más
+ * alto. Sin eso, en una ventana baja el rollo se acababa a media pantalla y
+ * dejaba el resto vacío.
  */
 export const VISTAS = {
   // La portada: desde el aire, detrás del rollo y a la altura de su cima,
   // mirándolo a lo largo. Entra enorme por la izquierda y se aleja hacia el
   // horizonte de la derecha. A 1,4 km de su espalda, para que su base entre
   // entera en el lienzo: más cerca, el lienzo la cortaba.
-  aire: { ojo: [0, 1170, -2300], rumbo: 63, cabeceo: 0, campo: 52, centro: [0.9, 0.28] },
+  aire: { ojo: [0, 1170, -2300], rumbo: 63, cabeceo: 0, campo: 52, centro: [0.9, 0.28], cubre: 2.8 },
   // /nosotros: de costado y a la altura del eje, frente a su frente, que
   // sube. Cruza el lienzo casi paralelo a él.
   costado: { ojo: [0, 700, 2500], rumbo: -96, cabeceo: 0, campo: 33, centro: [null, 0.5] },
   // La 404: desde el suelo, viéndola llegar. Pasa alta por la izquierda y se
   // pierde en el horizonte de la derecha, abajo, donde el cielo es blanco.
-  suelo: { ojo: [0, 2, 2000], rumbo: -120, cabeceo: 20, campo: 60, centro: [null, 0.5] },
+  suelo: { ojo: [0, 2, 2000], rumbo: -120, cabeceo: 20, campo: 60, centro: [null, 0.5], cubre: 2.5 },
   // La 500: pasando por encima. A 650 m de su frente, mirando hacia arriba:
   // cruza de lado a lado como una ola que se viene encima, con su base plana
   // abajo y cielo arriba y abajo.
@@ -98,9 +102,12 @@ export function encuadrar(perspectiva, ancho, alto) {
   const frente = [Math.cos(cabeceo) * Math.cos(rumbo), Math.sin(cabeceo), Math.cos(cabeceo) * Math.sin(rumbo)]
   const derecha = normal(cruz([0, 1, 0], frente))
   const arriba = cruz(frente, derecha)
-  const focal = alto / 2 / Math.tan(grados(vista.campo) / 2)
+  // El alto con que se mide el rollo: el del lienzo, o más si no cubre el
+  // ancho. Entonces crece alrededor del horizonte, que no se mueve.
+  const medida = Math.max(alto, ancho / (vista.cubre ?? Infinity))
+  const focal = medida / 2 / Math.tan(grados(vista.campo) / 2)
   const [x, y] = vista.centro
-  const centro = [x === null ? ancho / 2 : x * alto, y * alto]
+  const centro = [x === null ? ancho / 2 : x * medida, y * alto - focal * (1 - alto / medida) * Math.tan(cabeceo)]
   // El sol: su rumbo desde el frente de la cámara, en el plano.
   const [altura, giro] = SOL.map(grados)
   const plano = normal([frente[0], 0, frente[2]])

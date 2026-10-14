@@ -1020,11 +1020,11 @@ ilustración.
   puntos finos, vista desde el aire: la cabeza, enorme, a la izquierda, y el
   cuerpo que se aleja hacia el horizonte de la derecha. Se forma en su frente
   y se evapora detrás, así que se ve rodar mientras sus bultos hierven. Cima
-  blanca al sol alto y vientre azul pizarra (decisión 38). En L y XL es la
-  base de la portada, a todo el ancho, y el titular va centrado sobre el
-  cielo; en M y S va arriba y el texto debajo. El cursor es viento, y es un
-  roce: la empuja apenas donde pasa y se aquieta en un segundo. Con
-  movimiento reducido queda quieta y no reacciona. En el tema oscuro forzado
+  blanca al sol alto y vientre azul pizarra (decisión 38). Desde M, o en una
+  pantalla apaisada, es la base de la portada, a todo el ancho, y el titular va centrado sobre el
+  cielo; en un teléfono vertical va arriba y el texto debajo. El cursor es
+  viento, y es un roce: la empuja apenas donde pasa y se aquieta en un
+  segundo. Con movimiento reducido queda quieta y no reacciona. En el tema oscuro forzado
   es una nube de noche, oscura, para que el titular claro se lea encima. La
   misma nube, con otras cámaras, abre /nosotros y las páginas de error.
 - *Pie:* el mar bajo la nube, visto desde un bote (decisión 25). Olas con
