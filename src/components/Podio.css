@@ -1,10 +1,11 @@
 /* ============================================================================
- * El podio de los logros (Podio.jsx): un castillo de noche en pixel art, al
- * estilo Nitrome, con la tabla de honor debajo.
+ * El podio de los logros (Podio.jsx): un castillo de día en pixel art, al
+ * estilo Nitrome, sobre una isla que flota entre las nubes, con la tabla de
+ * honor debajo.
  *
  * Todo se mide en «píxeles de juego» (--p): la escena mide 120 de ancho (tres
- * torres de 32 y 12 de margen a cada lado para las antorchas), así que un
- * píxel es 1/120 del contenedor, y la flecha, las llamas y el suelo crecen al
+ * torres de 32 y 12 de margen a cada lado para las torrecillas), así que un
+ * píxel es 1/120 del contenedor, y la flecha y los destellos crecen al
  * mismo paso que los sprites. Los colores del juego son los mismos en los dos
  * temas: es un objeto, no una superficie.
  * ========================================================================= */
@@ -24,9 +25,14 @@
   --contorno: #2a1d3d;
   --oro: #ffcc33;
   --plata: #c9d3e6;
-  --noche: #120b26;
-  --muralla: #1f1840;
-  --piedra: #4b4f6b;
+  --cielo: #7cc4f5;
+  --papel: #fff3d6;
+  --papel-sombra: #f0dcae;
+  --madera: #6b3d1c;
+  --tinta: #3b2412;
+  --tinta-suave: #5a3a20;
+  /* Los textos naranjas sobre el papel: este tono pasa 5.6:1. */
+  --naranja: #9a4f0f;
   container-type: inline-size;
   max-width: 36rem;
   margin: var(--e-12) auto 0;
@@ -37,44 +43,31 @@
   --p: calc(100cqi / 120);
 }
 
-/* El marco recorta la escena: el fondo se apoya en el suelo y, si la escena
-   queda más alta que él, arriba sigue el color del cielo. */
+/* El marco recorta la escena: el fondo se apoya abajo, con la isla, y si la
+   escena queda más alta que él, arriba sigue el color del cielo. */
 .podio-marco {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: var(--noche);
+  background: var(--cielo);
 }
 
 .podio-fondo {
   position: absolute;
   z-index: -1;
   left: 0;
-  bottom: calc(var(--p) * 10);
+  bottom: 0;
   display: block;
   width: 100%;
   height: auto;
-}
-
-.podio-llama {
-  position: absolute;
-  bottom: calc(var(--p) * 26);
-  width: calc(var(--p) * 3);
-}
-
-.podio-llama-izquierda {
-  left: calc(var(--p) * 4);
-}
-
-.podio-llama-derecha {
-  left: calc(var(--p) * 113);
 }
 
 .podio-escena {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
-  padding: calc(var(--p) * 30) calc(var(--p) * 12) 0;
+  /* Abajo, lo que cuelga la isla bajo el pasto. */
+  padding: calc(var(--p) * 30) calc(var(--p) * 12) calc(var(--p) * 38);
 }
 
 .podio-columna {
@@ -92,7 +85,7 @@
 }
 
 .podio-columna:focus-visible {
-  outline: 3px dashed var(--oro);
+  outline: 3px dashed var(--contorno);
   outline-offset: calc(var(--p) * 2);
 }
 
@@ -108,13 +101,14 @@
   width: calc(var(--ancho) * var(--p));
 }
 
-/* El premio se mete dos píxeles entre las almenas. */
+/* El premio flota tres píxeles sobre las almenas, como un objeto de juego
+   listo para recoger. */
 .podio-premio {
   position: relative;
   z-index: 1;
   display: block;
   width: calc(var(--p) * 16);
-  margin-bottom: calc(var(--p) * -2);
+  margin-bottom: calc(var(--p) * 3);
 }
 
 .podio-sprite {
@@ -173,30 +167,21 @@
   right: calc(var(--p) * 2);
 }
 
-/* El suelo: pasto oscuro con contorno, una franja más honda y tierra con
-   piedras sueltas. */
-.podio-suelo {
-  height: calc(var(--p) * 10);
-  background:
-    repeating-linear-gradient(90deg, transparent 0 calc(var(--p) * 5), #2a1d15 calc(var(--p) * 5) calc(var(--p) * 7))
-      0 calc(var(--p) * 7) / 100% var(--p) no-repeat,
-    linear-gradient(
-      var(--contorno) 0 var(--p),
-      #3f7a3a var(--p) calc(var(--p) * 4),
-      #2c5a2a calc(var(--p) * 4) calc(var(--p) * 5),
-      #3b2a20 calc(var(--p) * 5)
-    );
-}
-
 /* ---------------------------------------------------------------------------
- * La tabla de honor: la pantalla de puntajes, pegada bajo el suelo.
+ * La tabla de honor: la pantalla de puntajes, en papel de día con marco de
+ * madera.
  * ------------------------------------------------------------------------ */
 
 .podio-honor {
+  margin: calc(var(--e-4) + 4px) 4px 0;
   padding: var(--e-4) var(--e-3) var(--e-3);
-  background: var(--muralla);
-  border: 4px solid var(--piedra);
-  border-top: 0;
+  background: var(--papel);
+  box-shadow:
+    0 -4px 0 0 var(--madera),
+    0 4px 0 0 var(--madera),
+    -4px 0 0 0 var(--madera),
+    4px 0 0 0 var(--madera),
+    inset 0 -4px 0 0 var(--papel-sombra);
   font-family: 'Press Start 2P', var(--fuente-datos);
 }
 
@@ -205,8 +190,8 @@
   text-align: center;
   font-size: 11px;
   line-height: 1.4;
-  color: var(--oro);
-  text-shadow: 2px 2px 0 var(--contorno);
+  color: var(--naranja);
+  text-shadow: 2px 2px 0 #ffd98a;
 }
 
 .podio-tabla {
@@ -215,7 +200,7 @@
   list-style: none;
   font-size: 9px;
   line-height: 1.6;
-  color: #e6e0ff;
+  color: var(--tinta);
 }
 
 .podio-tabla li {
@@ -227,13 +212,13 @@
 }
 
 .podio-tabla li.es-elegido {
-  background: #352964;
-  box-shadow: inset 3px 0 0 var(--oro);
+  background: #ffe39a;
+  box-shadow: inset 3px 0 0 var(--naranja);
 }
 
 .podio-tabla-cursor {
   width: 1.2em;
-  color: var(--oro);
+  color: var(--naranja);
   visibility: hidden;
 }
 
@@ -242,11 +227,11 @@
 }
 
 .podio-tabla-oro {
-  color: var(--oro);
+  color: #8a5a00;
 }
 
 .podio-tabla-plata {
-  color: var(--plata);
+  color: #4f5a73;
 }
 
 /* La letra pixel no trae el «°»: sale de la letra de datos, a su tamaño. */
@@ -265,12 +250,12 @@
 }
 
 .podio-tabla-anio {
-  color: #9a8fcf;
+  color: #7a5a3a;
 }
 
 @media (hover: hover) {
   .podio-tabla li:not(.es-elegido):hover {
-    background: #2a2052;
+    background: #fbe6b8;
   }
 }
 
@@ -285,26 +270,26 @@
 }
 
 /* ---------------------------------------------------------------------------
- * El cartel: un cuadro de diálogo de juego, con borde escalonado del metal.
+ * El cartel: un cuadro de diálogo de juego, en el mismo papel que la tabla.
  * ------------------------------------------------------------------------ */
 
 .podio-cartel {
   --b: 4px;
-  --texto: #ffffff;
-  --texto-suave: #d9d0f0;
+  --texto: var(--tinta);
+  --texto-suave: var(--tinta-suave);
   --acento: var(--oro);
   position: relative;
   margin: calc(var(--e-6) + var(--b)) var(--b) var(--b);
   padding: var(--e-6);
   color: var(--texto);
-  background: #241a45;
+  background: var(--papel);
   /* Cuatro sombras sin difuminar, una por lado: dejan las esquinas mordidas,
      como un recuadro dibujado píxel a píxel. */
   box-shadow:
-    0 calc(var(--b) * -1) 0 0 var(--acento),
-    0 var(--b) 0 0 var(--acento),
-    calc(var(--b) * -1) 0 0 0 var(--acento),
-    var(--b) 0 0 0 var(--acento);
+    0 calc(var(--b) * -1) 0 0 var(--madera),
+    0 var(--b) 0 0 var(--madera),
+    calc(var(--b) * -1) 0 0 0 var(--madera),
+    var(--b) 0 0 0 var(--madera);
 }
 
 .podio-cartel-plata {
@@ -325,7 +310,7 @@
   font-size: var(--texto-sm);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--acento);
+  color: var(--naranja);
 }
 
 .podio-insignia {
@@ -360,8 +345,8 @@
   margin: var(--e-6) 0 0;
 }
 
-/* Botones de menú de juego, del metal del cartel, con una sombra de cuatro
-   píxeles que desaparece al pulsarlos, como si se hundieran. */
+/* Botones de menú de juego, dorados con marco de madera y una sombra de
+   cuatro píxeles que desaparece al pulsarlos, como si se hundieran. */
 .podio-boton {
   display: inline-flex;
   align-items: center;
@@ -373,23 +358,33 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--contorno);
-  background: var(--acento);
-  box-shadow: inset 0 -4px 0 0 rgb(0 0 0 / 0.22);
+  margin: 3px;
+  color: var(--tinta);
+  background: var(--oro);
+  box-shadow:
+    0 -3px 0 0 var(--madera),
+    0 3px 0 0 var(--madera),
+    -3px 0 0 0 var(--madera),
+    3px 0 0 0 var(--madera),
+    inset 0 -4px 0 0 rgb(0 0 0 / 0.18);
 }
 
 .podio-boton:hover {
-  color: var(--contorno);
+  color: var(--tinta);
   filter: brightness(1.08);
 }
 
 .podio-boton:active {
   translate: 0 2px;
-  box-shadow: none;
+  box-shadow:
+    0 -3px 0 0 var(--madera),
+    0 3px 0 0 var(--madera),
+    -3px 0 0 0 var(--madera),
+    3px 0 0 0 var(--madera);
 }
 
 .podio-boton:focus-visible {
-  outline: 3px dashed #ffffff;
+  outline: 3px dashed var(--madera);
   outline-offset: 4px;
 }
 
@@ -423,14 +418,6 @@
 
   .podio-destellos i:nth-child(3) {
     animation-delay: 1000ms;
-  }
-
-  .podio-llama {
-    animation: podio-arder 600ms steps(1, end) infinite;
-  }
-
-  .podio-llama-derecha {
-    animation-delay: 300ms;
   }
 
   .podio-cartel:not([hidden]) {
@@ -470,17 +457,6 @@
   66% {
     opacity: 0;
   }
-}
-
-/* La llama crece un píxel y se vuelve a encoger, desde la base. */
-@keyframes podio-arder {
-  50% {
-    scale: 1 1.25;
-  }
-}
-
-.podio-llama {
-  transform-origin: 50% 100%;
 }
 
 @keyframes podio-aparecer {
