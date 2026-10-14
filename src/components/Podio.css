@@ -1,32 +1,80 @@
 /* ============================================================================
- * El podio de los logros (Podio.jsx), en pixel art al estilo Nitrome.
+ * El podio de los logros (Podio.jsx): un castillo de noche en pixel art, al
+ * estilo Nitrome, con la tabla de honor debajo.
  *
- * Todo se mide en «píxeles de juego» (--p): el podio entero mide 96 de ancho
- * (tres bloques de 32), así que un píxel es 1/96 del contenedor y la flecha,
- * los destellos y el suelo crecen al mismo paso que los sprites. Los colores
- * del juego son los mismos en los dos temas: es un objeto, no una superficie.
+ * Todo se mide en «píxeles de juego» (--p): la escena mide 120 de ancho (tres
+ * torres de 32 y 12 de margen a cada lado para las antorchas), así que un
+ * píxel es 1/120 del contenedor, y la flecha, las llamas y el suelo crecen al
+ * mismo paso que los sprites. Los colores del juego son los mismos en los dos
+ * temas: es un objeto, no una superficie.
  * ========================================================================= */
+
+/* La letra de la tabla de honor. Solo la usa la tabla, así que el navegador
+   no la descarga hasta que la tabla se pinta. No trae «Ó» ni «°»: los textos
+   de la tabla van sin tilde, y el grado sale de la letra de datos. */
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/press-start-2p-latin.woff2') format('woff2');
+}
 
 .podio {
   --contorno: #2a1d3d;
-  --oro: #ffe066;
-  --oro-medio: #f7b928;
+  --oro: #ffcc33;
+  --plata: #c9d3e6;
+  --noche: #120b26;
+  --muralla: #1f1840;
+  --piedra: #4b4f6b;
   container-type: inline-size;
   max-width: 36rem;
   margin: var(--e-12) auto 0;
 }
 
-.podio-escena,
-.podio-suelo,
-.podio-cartel {
-  --p: calc(100cqi / 96);
+.podio-marco,
+.podio-honor {
+  --p: calc(100cqi / 120);
+}
+
+/* El marco recorta la escena: el fondo se apoya en el suelo y, si la escena
+   queda más alta que él, arriba sigue el color del cielo. */
+.podio-marco {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--noche);
+}
+
+.podio-fondo {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  bottom: calc(var(--p) * 10);
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.podio-llama {
+  position: absolute;
+  bottom: calc(var(--p) * 26);
+  width: calc(var(--p) * 3);
+}
+
+.podio-llama-izquierda {
+  left: calc(var(--p) * 4);
+}
+
+.podio-llama-derecha {
+  left: calc(var(--p) * 113);
 }
 
 .podio-escena {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
-  padding-top: calc(var(--p) * 2);
+  padding: calc(var(--p) * 30) calc(var(--p) * 12) 0;
 }
 
 .podio-columna {
@@ -44,32 +92,29 @@
 }
 
 .podio-columna:focus-visible {
-  outline: 3px dashed var(--foco);
+  outline: 3px dashed var(--oro);
   outline-offset: calc(var(--p) * 2);
-}
-
-/* El bloque del oro pisa un píxel de cada vecino: dos contornos juntos se
-   leían como una raya el doble de gruesa. */
-.podio-bloque {
-  display: block;
-  width: 100%;
 }
 
 .podio-oro {
   z-index: 1;
 }
 
-.podio-oro .podio-bloque {
-  width: calc(100% * 34 / 32);
+/* La torre mide en píxeles de juego y no en porcentaje: la del oro mide 34 y
+   sobra un píxel por lado, centrado sobre sus vecinas. */
+.podio-bloque {
+  display: block;
+  flex: none;
+  width: calc(var(--ancho) * var(--p));
 }
 
-/* Los sprites usan la misma escala que el bloque: un píxel del trofeo mide lo
-   mismo que uno del podio. */
+/* El premio se mete dos píxeles entre las almenas. */
 .podio-premio {
   position: relative;
+  z-index: 1;
   display: block;
   width: calc(var(--p) * 16);
-  margin-bottom: calc(var(--p) * 2);
+  margin-bottom: calc(var(--p) * -2);
 }
 
 .podio-sprite {
@@ -128,23 +173,119 @@
   right: calc(var(--p) * 2);
 }
 
-/* El suelo: pasto con contorno, una franja más oscura y tierra. */
+/* El suelo: pasto oscuro con contorno, una franja más honda y tierra con
+   piedras sueltas. */
 .podio-suelo {
-  height: calc(var(--p) * 6);
-  margin-top: calc(var(--p) * -1);
+  height: calc(var(--p) * 10);
   background:
-    repeating-linear-gradient(90deg, transparent 0 calc(var(--p) * 5), #3f9a33 calc(var(--p) * 5) calc(var(--p) * 6)) 0 calc(var(--p) * 3) / 100% var(--p) no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 calc(var(--p) * 5), #2a1d15 calc(var(--p) * 5) calc(var(--p) * 7))
+      0 calc(var(--p) * 7) / 100% var(--p) no-repeat,
     linear-gradient(
       var(--contorno) 0 var(--p),
-      #7ee05a var(--p) calc(var(--p) * 3),
-      #4caf3c calc(var(--p) * 3) calc(var(--p) * 4),
-      #9a6534 calc(var(--p) * 4) calc(var(--p) * 5),
-      var(--contorno) calc(var(--p) * 5)
+      #3f7a3a var(--p) calc(var(--p) * 4),
+      #2c5a2a calc(var(--p) * 4) calc(var(--p) * 5),
+      #3b2a20 calc(var(--p) * 5)
     );
 }
 
 /* ---------------------------------------------------------------------------
- * El cartel: un cuadro de diálogo de juego, oscuro, con borde escalonado.
+ * La tabla de honor: la pantalla de puntajes, pegada bajo el suelo.
+ * ------------------------------------------------------------------------ */
+
+.podio-honor {
+  padding: var(--e-4) var(--e-3) var(--e-3);
+  background: var(--muralla);
+  border: 4px solid var(--piedra);
+  border-top: 0;
+  font-family: 'Press Start 2P', var(--fuente-datos);
+}
+
+.podio-honor-titulo {
+  margin: 0 0 var(--e-3);
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--oro);
+  text-shadow: 2px 2px 0 var(--contorno);
+}
+
+.podio-tabla {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #e6e0ff;
+}
+
+.podio-tabla li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-2);
+  padding: var(--e-1) var(--e-2);
+  cursor: pointer;
+}
+
+.podio-tabla li.es-elegido {
+  background: #352964;
+  box-shadow: inset 3px 0 0 var(--oro);
+}
+
+.podio-tabla-cursor {
+  width: 1.2em;
+  color: var(--oro);
+  visibility: hidden;
+}
+
+.es-elegido .podio-tabla-cursor {
+  visibility: visible;
+}
+
+.podio-tabla-oro {
+  color: var(--oro);
+}
+
+.podio-tabla-plata {
+  color: var(--plata);
+}
+
+/* La letra pixel no trae el «°»: sale de la letra de datos, a su tamaño. */
+.podio-grado {
+  font-family: var(--fuente-datos);
+  font-size: 1.3em;
+}
+
+.podio-tabla-nombre {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.podio-tabla-anio {
+  color: #9a8fcf;
+}
+
+@media (hover: hover) {
+  .podio-tabla li:not(.es-elegido):hover {
+    background: #2a2052;
+  }
+}
+
+@media (min-width: 650px) {
+  .podio-honor-titulo {
+    font-size: 13px;
+  }
+
+  .podio-tabla {
+    font-size: 11px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * El cartel: un cuadro de diálogo de juego, con borde escalonado del metal.
  * ------------------------------------------------------------------------ */
 
 .podio-cartel {
@@ -156,20 +297,18 @@
   margin: calc(var(--e-6) + var(--b)) var(--b) var(--b);
   padding: var(--e-6);
   color: var(--texto);
-  background: #1e1638;
+  background: #241a45;
   /* Cuatro sombras sin difuminar, una por lado: dejan las esquinas mordidas,
-     como un recuadro dibujado a mano píxel a píxel. */
+     como un recuadro dibujado píxel a píxel. */
   box-shadow:
-    0 calc(var(--b) * -1) 0 0 var(--contorno),
-    0 var(--b) 0 0 var(--contorno),
-    calc(var(--b) * -1) 0 0 0 var(--contorno),
-    var(--b) 0 0 0 var(--contorno),
-    inset 0 var(--b) 0 0 var(--acento),
-    inset 0 calc(var(--b) * -1) 0 0 #140e28;
+    0 calc(var(--b) * -1) 0 0 var(--acento),
+    0 var(--b) 0 0 var(--acento),
+    calc(var(--b) * -1) 0 0 0 var(--acento),
+    var(--b) 0 0 0 var(--acento);
 }
 
 .podio-cartel-plata {
-  --acento: #a9c4ff;
+  --acento: var(--plata);
 }
 
 .podio-cartel h3 {
@@ -198,12 +337,7 @@
   letter-spacing: 0;
   color: var(--contorno);
   background: var(--acento);
-  box-shadow:
-    0 -3px 0 0 var(--contorno),
-    0 3px 0 0 var(--contorno),
-    -3px 0 0 0 var(--contorno),
-    3px 0 0 0 var(--contorno),
-    inset -3px -3px 0 0 rgb(0 0 0 / 0.2);
+  box-shadow: inset -3px -3px 0 0 rgb(0 0 0 / 0.2);
 }
 
 .podio-evento {
@@ -226,13 +360,12 @@
   margin: var(--e-6) 0 0;
 }
 
-/* Botones de menú de juego: amarillos, con contorno y una sombra de tres
+/* Botones de menú de juego, del metal del cartel, con una sombra de cuatro
    píxeles que desaparece al pulsarlos, como si se hundieran. */
 .podio-boton {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  margin: 3px;
   padding: 0 var(--e-4);
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
@@ -242,12 +375,7 @@
   text-decoration: none;
   color: var(--contorno);
   background: var(--acento);
-  box-shadow:
-    0 -3px 0 0 var(--contorno),
-    0 3px 0 0 var(--contorno),
-    -3px 0 0 0 var(--contorno),
-    3px 0 0 0 var(--contorno),
-    inset 0 -4px 0 0 rgb(0 0 0 / 0.22);
+  box-shadow: inset 0 -4px 0 0 rgb(0 0 0 / 0.22);
 }
 
 .podio-boton:hover {
@@ -257,16 +385,12 @@
 
 .podio-boton:active {
   translate: 0 2px;
-  box-shadow:
-    0 -3px 0 0 var(--contorno),
-    0 3px 0 0 var(--contorno),
-    -3px 0 0 0 var(--contorno),
-    3px 0 0 0 var(--contorno);
+  box-shadow: none;
 }
 
 .podio-boton:focus-visible {
   outline: 3px dashed #ffffff;
-  outline-offset: 5px;
+  outline-offset: 4px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -299,6 +423,14 @@
 
   .podio-destellos i:nth-child(3) {
     animation-delay: 1000ms;
+  }
+
+  .podio-llama {
+    animation: podio-arder 600ms steps(1, end) infinite;
+  }
+
+  .podio-llama-derecha {
+    animation-delay: 300ms;
   }
 
   .podio-cartel:not([hidden]) {
@@ -338,6 +470,17 @@
   66% {
     opacity: 0;
   }
+}
+
+/* La llama crece un píxel y se vuelve a encoger, desde la base. */
+@keyframes podio-arder {
+  50% {
+    scale: 1 1.25;
+  }
+}
+
+.podio-llama {
+  transform-origin: 50% 100%;
 }
 
 @keyframes podio-aparecer {

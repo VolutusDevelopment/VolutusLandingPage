@@ -14,6 +14,9 @@
  * Los logros sin obra que abrir (un premio individual) entran con
  * `publicacion`: el enlace al resultado publicado, que es su prueba.
  *
+ * `credencial.corto` es el nombre en la tabla de honor del podio, en letra
+ * pixel: cabe en una línea del teléfono con unos 18 caracteres.
+ *
  * Estado verificado el 2026-09-24, y no coincide con lo que el brief daba por
  * hecho:
  *
@@ -132,7 +135,7 @@ export const PROYECTOS = [
     id: 'cybergames',
     nombre: 'Cisco Cybergames 2026',
     destacado: true,
-    credencial: { puesto: '1°', metal: 'oro', titulo: 'Primer lugar', evento: 'Cisco CyberGames Americas 2026' },
+    credencial: { corto: 'Cisco CyberGames', puesto: '1°', metal: 'oro', titulo: 'Primer lugar', evento: 'Cisco CyberGames Americas 2026' },
     resumen:
       'Rodrigo, socio de Volutus, resolvió las tres misiones de un desafío de ciberseguridad de tres horas, frente a más de 1.000 estudiantes de 21 países.',
     publicacion:
@@ -145,7 +148,7 @@ export const PROYECTOS = [
     // Validado por un jurado externo, como el de arriba: por eso también va
     // destacado. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: { puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
+    credencial: { corto: 'Hackathon Huawei', puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: 'Hackathon de Huawei Cloud y Kostra AI' },
     resumen:
       'Un agente de IA que atiende por su cuenta las alertas de infraestructura: reúne el contexto de varios sistemas y propone un diagnóstico con su evidencia, en tiempo real, usando servicios MaaS.',
     repositorio: 'https://github.com/DiegoPyLL/Hackathon-Huawei-Cloud-MaaS',
@@ -159,7 +162,7 @@ export const PROYECTOS = [
     // Validado por un jurado externo, como el de arriba: por eso también va
     // destacado. Todo lo demás lo valoramos nosotros mismos.
     destacado: true,
-    credencial: { puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: '9° Seminario Internacional de Ciberseguridad PDI' },
+    credencial: { corto: 'CTF PDI', puesto: '2°', metal: 'plata', titulo: 'Segundo lugar', evento: '9° Seminario Internacional de Ciberseguridad PDI' },
     resumen:
       'El Capture the Flag (CTF) de ciberseguridad de la PDI de Chile permite poner a prueba habilidades técnicas mediante desafíos de identificación de vulnerabilidades, análisis digital y resolución de problemas. Code Cadaver, una experiencia inmersiva de Biohacking Village, propone investigar la desaparición de un amigo resolviendo retos relacionados con sistemas informáticos hospitalarios, redes y dispositivos médicos.',
     repositorio: '',

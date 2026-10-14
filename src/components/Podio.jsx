@@ -1,12 +1,15 @@
 /**
- * El podio de los logros, en pixel art al estilo de los juegos de Nitrome:
- * contorno morado oscuro, colores saturados y cada píxel a la vista.
+ * El podio de los logros, en pixel art al estilo de los juegos de Nitrome: un
+ * castillo de noche, con almenas, estandartes con el puesto y antorchas, y
+ * debajo la tabla de honor, como la pantalla de puntajes de un juego.
  *
- * Los sprites son mapas de texto (un carácter por píxel) que se convierten en
- * `<rect>` al prerenderizar: no hay imágenes que descargar y escalan nítidos a
- * cualquier tamaño. Cada columna del podio es una pestaña; el cartel de abajo
- * cuenta el logro elegido. Sin JavaScript se ven todos los carteles (ver
- * SIN_SCRIPT) y el contenido sigue en el HTML para los buscadores.
+ * Los sprites son mapas de texto (un carácter por píxel) o rectángulos
+ * calculados, que se convierten en `<rect>` al prerenderizar: no hay imágenes
+ * que descargar y escalan nítidos a cualquier tamaño. Cada columna del podio
+ * es una pestaña; el cartel de abajo cuenta el logro elegido, y la tabla elige
+ * lo mismo al tocar una fila (src/podio.js). Sin JavaScript se ven todos los
+ * carteles (ver SIN_SCRIPT) y el contenido sigue en el HTML para los
+ * buscadores.
  */
 
 const CONTORNO = '#2a1d3d'
@@ -37,6 +40,13 @@ function Sprite({ mapa, paleta, className }) {
       {rects}
     </svg>
   )
+}
+
+// Un lienzo de rectángulos: `r(x, y, ancho, alto, color)` agrega uno.
+function lienzo() {
+  const rects = []
+  const r = (x, y, w, h, fill) => rects.push(<rect key={rects.length} x={x} y={y} width={w} height={h} fill={fill} />)
+  return { rects, r }
 }
 
 const TROFEO = [
@@ -75,6 +85,19 @@ const MEDALLA = [
   '...oooooo...',
 ]
 
+const LUNA = [
+  '...oooo...',
+  '..owwwwo..',
+  '.owwwwsso.',
+  'owwwwwssso',
+  'owwwwwwsso',
+  'owwswwwwso',
+  'owwwwwwwso',
+  '.owwwwwso.',
+  '..oossoo..',
+  '...oooo...',
+]
+
 const SPRITES = {
   oro: {
     mapa: TROFEO,
@@ -86,60 +109,127 @@ const SPRITES = {
   },
 }
 
-// Dígitos de 5×7: el puesto se pinta en la cara del bloque.
+// Dígitos de 5×7: el puesto se pinta en el estandarte.
 const DIGITOS = {
   1: ['..x..', '.xx..', '..x..', '..x..', '..x..', '..x..', '.xxx.'],
   2: ['.xxx.', 'x...x', '....x', '...x.', '..x..', '.x...', 'xxxxx'],
   3: ['xxxx.', '....x', '....x', '.xxx.', '....x', '....x', 'xxxx.'],
 }
 
-const BLOQUES = {
-  oro: { alto: 32, tapa: '#ffe066', tapaSombra: '#f7b928', cara: '#ff9f1c', luz: '#ffc15e', sombra: '#d9720b', junta: '#c4650a' },
-  plata: { alto: 24, tapa: '#e6ecf5', tapaSombra: '#a9b6c9', cara: '#5b8def', luz: '#86adf6', sombra: '#3f6bc7', junta: '#365db0' },
+// El oro mide 34 de ancho y no 32: pisa un píxel de cada vecino, porque dos
+// contornos juntos se leían como una raya el doble de gruesa.
+const TORRES = {
+  oro: { ancho: 34, alto: 33, tela: ['#ffcc33', '#e09a12', '#fff0a8'], largo: 20 },
+  plata: { ancho: 32, alto: 24, tela: ['#c9d3e6', '#8a97b3', '#ffffff'], largo: 15 },
 }
 
-/**
- * El bloque del podio, de 32 píxeles de ancho: tapa clara, cara de ladrillos
- * con luz a la izquierda y sombra a la derecha, y el número al centro.
- */
-function Bloque({ metal, puesto }) {
-  const b = BLOQUES[metal]
-  const ancho = 32
-  const rects = []
-  const r = (x, y, w, h, fill) => rects.push(<rect key={rects.length} x={x} y={y} width={w} height={h} fill={fill} />)
+const PIEDRA = { luz: '#a3a9c2', cara: '#7a809b', sombra: '#555a75', junta: '#4b4f6b' }
 
-  r(0, 0, ancho, b.alto, CONTORNO)
-  // Tapa
-  r(1, 1, ancho - 2, 3, b.tapa)
-  r(1, 4, ancho - 2, 1, b.tapaSombra)
-  r(1, 5, ancho - 2, 1, CONTORNO)
-  // Cara
-  r(1, 6, ancho - 2, b.alto - 7, b.cara)
-  r(1, 6, 2, b.alto - 7, b.luz)
-  r(ancho - 3, 6, 2, b.alto - 7, b.sombra)
-  // Juntas de ladrillo cada 6 filas, con las verticales alternadas
-  for (let y = 11, fila = 0; y < b.alto - 1; y += 6, fila++) {
-    r(3, y, ancho - 6, 1, b.junta)
-    for (let x = fila % 2 ? 8 : 15; x < ancho - 3; x += 14) r(x, y - 5, 1, 5, b.junta)
+/**
+ * La torre de cada puesto: almenas arriba, piedra con juntas alternadas y un
+ * estandarte del metal del puesto, con su número.
+ */
+function Torre({ metal, puesto }) {
+  const t = TORRES[metal]
+  const { rects, r } = lienzo()
+  const w = t.ancho
+  const top = 4
+
+  for (let x = 0; x < w - 1; x += 8) {
+    r(x, 0, 6, 5, CONTORNO)
+    r(x + 1, 1, 4, 4, PIEDRA.luz)
+  }
+  r(0, top, w, t.alto, CONTORNO)
+  r(1, top + 1, w - 2, t.alto - 1, PIEDRA.cara)
+  r(1, top + 1, w - 2, 2, PIEDRA.luz)
+  r(w - 3, top + 3, 2, t.alto - 3, PIEDRA.sombra)
+  for (let y = top + 7, fila = 0; y < top + t.alto; y += 5, fila++) {
+    r(1, y, w - 2, 1, PIEDRA.junta)
+    for (let x = fila % 2 ? 5 : 10; x < w - 2; x += 10) r(x, y - 4, 1, 4, PIEDRA.junta)
   }
 
-  // El número, a 2× y con sombra de un píxel
+  // El estandarte, colgado de su vara, con la punta en V.
+  const [tela, sombra, luz] = t.tela
+  const bw = 11
+  const bx = Math.floor((w - bw) / 2)
+  const by = top + 3
+  r(bx - 2, by - 2, bw + 4, 1, '#6b3d1c')
+  r(bx - 1, by - 1, bw + 2, t.largo + 1, CONTORNO)
+  r(bx, by, bw, t.largo, tela)
+  r(bx, by, 1, t.largo, luz)
+  r(bx + bw - 1, by, 1, t.largo, sombra)
+  for (let i = 0; i < 4; i++) {
+    r(bx + 1 + i, by + t.largo + i, bw - 2 - i * 2, 1, tela)
+    r(bx + i, by + t.largo + i, 1, 1, CONTORNO)
+    r(bx + bw - 1 - i, by + t.largo + i, 1, 1, CONTORNO)
+  }
+  r(bx + 4, by + t.largo + 3, 3, 1, CONTORNO)
   const glifo = DIGITOS[puesto] ?? DIGITOS[2]
-  const gx = (ancho - 10) / 2
-  const gy = 6 + Math.round((b.alto - 7 - 14) / 2)
-  glifo.forEach((fila, y) =>
-    [...fila].forEach((c, x) => {
-      if (c !== 'x') return
-      r(gx + x * 2 + 1, gy + y * 2 + 1, 2, 2, CONTORNO)
-      r(gx + x * 2, gy + y * 2, 2, 2, '#ffffff')
-    }),
-  )
+  const gy = by + (metal === 'oro' ? 6 : 4)
+  glifo.forEach((fila, y) => [...fila].forEach((c, x) => c === 'x' && r(bx + 3 + x, gy + y, 1, 1, CONTORNO)))
 
   return (
-    <svg className="podio-bloque" viewBox={`0 0 ${ancho} ${b.alto}`} shapeRendering="crispEdges" aria-hidden="true">
+    <svg
+      className="podio-bloque"
+      viewBox={`0 0 ${w} ${top + t.alto}`}
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+      style={{ '--ancho': w }}
+    >
       {rects}
     </svg>
   )
+}
+
+const ESTRELLAS = [
+  [6, 6], [18, 20], [30, 8], [44, 26], [58, 4], [70, 18], [84, 30], [100, 24],
+  [112, 10], [8, 40], [26, 34], [110, 44], [64, 36], [38, 48], [92, 52],
+]
+
+/**
+ * El fondo: el cielo de noche con la luna, la muralla con sus ventanas
+ * encendidas y dos antorchas. Mide 120 × 90 píxeles y se apoya en el suelo:
+ * si la escena es más alta, arriba sigue el color del cielo.
+ */
+function Fondo() {
+  const { rects, r } = lienzo()
+  const base = 90
+  ;['#120b26', '#170f31', '#1d143d', '#241a49', '#2c2156', '#352964'].forEach((c, i) => r(0, i * 15, 120, 16, c))
+  ESTRELLAS.forEach(([x, y], i) => {
+    r(x, y, 1, 1, i % 3 ? '#bfb3ff' : '#ffffff')
+    if (i % 4 === 0) {
+      r(x - 1, y, 1, 1, '#6c5fb0')
+      r(x + 1, y, 1, 1, '#6c5fb0')
+      r(x, y - 1, 1, 1, '#6c5fb0')
+      r(x, y + 1, 1, 1, '#6c5fb0')
+    }
+  })
+  const paletaLuna = { o: '#2c2156', w: '#fff6c9', s: '#e8d98a' }
+  LUNA.forEach((fila, y) => [...fila].forEach((c, x) => paletaLuna[c] && r(98 + x, 6 + y, 1, 1, paletaLuna[c])))
+
+  r(0, base - 18, 120, 18, '#1f1840')
+  for (let x = 0; x < 120; x += 8) r(x, base - 22, 4, 4, '#1f1840')
+  for (let x = 4; x < 120; x += 16) r(x, base - 12, 2, 3, '#ffcc33')
+
+  for (const x of [4, 113]) {
+    r(x, base - 14, 3, 14, CONTORNO)
+    r(x + 1, base - 13, 1, 13, '#8a5a2b')
+    r(x - 1, base - 16, 5, 3, CONTORNO)
+    r(x, base - 16, 3, 2, '#5a3a20')
+  }
+
+  return (
+    <svg className="podio-fondo" viewBox="0 0 120 90" shapeRendering="crispEdges" aria-hidden="true">
+      {rects}
+    </svg>
+  )
+}
+
+const LLAMA = { mapa: ['.o.', 'oyo', 'ywy', 'oyo'], paleta: { o: '#ff6a1c', y: '#ffcc33', w: '#fff6c9' } }
+
+// Las llamas van aparte del fondo para poder parpadear.
+function Antorcha({ lado }) {
+  return <Sprite className={`podio-llama podio-llama-${lado}`} {...LLAMA} />
 }
 
 function Destellos() {
@@ -162,55 +252,86 @@ function Enlace({ href, children, nombre }) {
   )
 }
 
+const lugar = (logro) => parseInt(logro.credencial.puesto)
+
 // El primero al centro y los demás a los lados, como en un podio de verdad.
-function ordenar(logros) {
-  const porPuesto = [...logros].sort((a, b) => parseInt(a.credencial.puesto) - parseInt(b.credencial.puesto))
+function ordenar(porPuesto) {
   const orden = []
   porPuesto.forEach((logro, i) => (i % 2 ? orden.unshift(logro) : orden.push(logro)))
   return orden
 }
 
+// El año, si el evento o el nombre lo dicen. No se inventa: sin año, la
+// columna queda vacía.
+const anio = (logro) => (`${logro.credencial.evento} ${logro.nombre}`.match(/\b(19|20)\d{2}\b/) ?? [''])[0]
+
 // Sin JavaScript no hay pestañas que cambiar: se ven todos los carteles.
 const SIN_SCRIPT = `
 .podio-cartel[hidden] { display: block !important; }
-.podio-cartel + .podio-cartel { margin-top: var(--e-6); }
+.podio-cartel + .podio-cartel { margin-top: var(--e-8); }
+.podio-tabla li { cursor: default !important; }
 `
 
 export default function Podio({ logros }) {
-  const columnas = ordenar(logros)
-  const elegido = columnas.find((l) => l.credencial.metal === 'oro') ?? columnas[0]
+  const porPuesto = [...logros].sort((a, b) => lugar(a) - lugar(b))
+  const columnas = ordenar(porPuesto)
+  const elegido = porPuesto[0]
 
   return (
     <div className="podio" data-podio>
-      <div className="podio-escena" role="tablist" aria-label="Logros con jurado externo">
-        {columnas.map((logro) => {
-          const { metal, puesto, titulo, evento } = logro.credencial
-          const activo = logro === elegido
-          return (
-            <button
-              key={logro.id}
-              type="button"
-              role="tab"
-              id={`podio-${logro.id}`}
-              className={`podio-columna podio-${metal}`}
-              aria-selected={activo}
-              aria-controls={`cartel-${logro.id}`}
-              tabIndex={activo ? 0 : -1}
-            >
-              <span className="podio-flecha" aria-hidden="true" />
-              <span className="podio-premio">
-                {metal === 'oro' && <Destellos />}
-                <Sprite className="podio-sprite" {...SPRITES[metal]} />
-              </span>
-              <Bloque metal={metal} puesto={parseInt(puesto)} />
-              <span className="solo-lectores">
-                {titulo}: {logro.nombre}, {evento}
-              </span>
-            </button>
-          )
-        })}
+      <div className="podio-marco">
+        <Fondo />
+        <Antorcha lado="izquierda" />
+        <Antorcha lado="derecha" />
+        <div className="podio-escena" role="tablist" aria-label="Logros con jurado externo">
+          {columnas.map((logro) => {
+            const { metal, titulo, evento } = logro.credencial
+            const activo = logro === elegido
+            return (
+              <button
+                key={logro.id}
+                type="button"
+                role="tab"
+                id={`podio-${logro.id}`}
+                className={`podio-columna podio-${metal}`}
+                aria-selected={activo}
+                aria-controls={`cartel-${logro.id}`}
+                tabIndex={activo ? 0 : -1}
+              >
+                <span className="podio-flecha" aria-hidden="true" />
+                <span className="podio-premio">
+                  {metal === 'oro' && <Destellos />}
+                  <Sprite className="podio-sprite" {...SPRITES[metal]} />
+                </span>
+                <Torre metal={metal} puesto={lugar(logro)} />
+                <span className="solo-lectores">
+                  {titulo}: {logro.nombre}, {evento}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        <div className="podio-suelo" aria-hidden="true" />
       </div>
-      <div className="podio-suelo" aria-hidden="true" />
+
+      {/* La tabla repite lo que ya dicen las pestañas, así que se esconde a
+          los lectores de pantalla: es un atajo para el dedo y el ratón. */}
+      <div className="podio-honor" aria-hidden="true">
+        <p className="podio-honor-titulo">TABLA DE HONOR</p>
+        <ol className="podio-tabla">
+          {porPuesto.map((logro) => (
+            <li key={logro.id} data-elegir={logro.id} className={logro === elegido ? 'es-elegido' : undefined}>
+              <span className="podio-tabla-cursor">▶</span>
+              <span className={`podio-tabla-puesto podio-tabla-${logro.credencial.metal}`}>
+                {lugar(logro)}
+                <span className="podio-grado">°</span>
+              </span>
+              <span className="podio-tabla-nombre">{logro.credencial.corto ?? logro.nombre}</span>
+              <span className="podio-tabla-anio">{anio(logro)}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       {columnas.map((logro) => (
         <article
