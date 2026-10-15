@@ -1,0 +1,147 @@
+/* Los artículos y su índice. Ver Articulos.jsx y components/Articulo.jsx. */
+
+.articulo-entradilla {
+  margin-top: var(--e-6);
+}
+
+/* «Artículos», sobre el título: la vuelta al índice, con la voz del
+   antetítulo. */
+.articulo-volver {
+  color: inherit;
+}
+
+.articulo-fecha {
+  margin-top: var(--e-6);
+  font-size: var(--texto-sm);
+}
+
+/* ---- el índice ----
+   Uno bajo otro, como un sumario: la fecha, el título y su resumen, con una
+   línea del color del servicio del que habla. */
+.articulos {
+  list-style: none;
+  display: grid;
+  gap: var(--e-12);
+  max-width: 52rem;
+  margin: 0;
+  padding: 0;
+}
+
+.articulos li {
+  padding-left: var(--e-6);
+  border-left: 3px solid var(--tinte, var(--linea));
+}
+
+.articulos-fecha {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.articulos h2 {
+  margin-top: var(--e-2);
+  font-size: var(--texto-xl);
+}
+
+.articulos h2 a {
+  color: var(--texto);
+  text-decoration: none;
+}
+
+.articulos h2 a:hover {
+  color: var(--accion);
+  text-decoration: underline;
+}
+
+.articulos-resumen {
+  margin-top: var(--e-3);
+  color: var(--texto-suave);
+}
+
+/* ---- el cuerpo ----
+   Texto corrido a la medida de lectura, con el ritmo de los demás bloques:
+   aire grande antes de cada subtítulo y chico entre párrafos. */
+.prosa {
+  max-width: var(--medida-lectura);
+}
+
+.prosa > * + * {
+  margin-top: var(--e-4);
+}
+
+.prosa h2 {
+  margin-top: var(--e-12);
+  font-size: var(--texto-xl);
+}
+
+.prosa h3 {
+  margin-top: var(--e-8);
+}
+
+.prosa h2 + *,
+.prosa h3 + * {
+  margin-top: var(--e-3);
+}
+
+.prosa ul,
+.prosa ol {
+  display: grid;
+  gap: var(--e-2);
+  padding-left: var(--e-6);
+}
+
+.prosa li::marker {
+  color: var(--accion);
+}
+
+.prosa ol li::marker {
+  font-family: var(--fuente-datos);
+}
+
+.prosa strong {
+  font-weight: 800;
+}
+
+/* La idea que hay que llevarse, destacada sobre un velo de la marca. */
+.prosa .destacado {
+  padding: var(--e-4) var(--e-6);
+  border-left: 3px solid var(--marca);
+  border-radius: 0 var(--radio) var(--radio) 0;
+  background: color-mix(in oklab, var(--marca) 10%, var(--superficie));
+}
+
+.articulo-servicios-titulo {
+  margin-top: var(--e-16);
+}
+
+/* Una comparación de lado a lado. Las celdas son cortas y caben en S; si un
+   día una no cabe, se desliza dentro de su caja y la página no se corre. */
+.tabla {
+  overflow-x: auto;
+}
+
+.prosa table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--texto-sm);
+}
+
+.prosa th,
+.prosa td {
+  padding: var(--e-3) var(--e-4) var(--e-3) 0;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prosa thead th {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.prosa tbody th {
+  font-weight: 800;
+}

@@ -1,6 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import Icono from '../components/Icono.jsx'
-import { PAGINAS } from '../lib/meta.js'
+import { PAGINAS, fechaDe } from '../lib/meta.js'
 
 /**
  * La Ley 21.719 en simple, para quien tiene un negocio: qué cambia, cuánto
@@ -24,7 +24,7 @@ import { PAGINAS } from '../lib/meta.js'
  * mañana; abajo, la caída con el pie de día (ver `cierre` en Pagina.jsx).
  */
 
-const ACTUALIZADO = '3 de octubre de 2026'
+const ACTUALIZADO = fechaDe('/ley21719')
 
 const FUENTE = 'https://www.bcn.cl/leychile/navegar?idNorma=1209272'
 
@@ -409,7 +409,7 @@ export default function Ley21719() {
               <p className="ley-bajada">Micro, pequeña o mediana: hasta 100.000 UF de ventas al año.</p>
             </div>
             <div>
-              <ul className="ley-pyme-lista">
+              <ul className="vistos">
                 {PYME.map(({ texto, articulos }) => (
                   <li key={texto}>
                     {texto} <Articulo>{articulos}</Articulo>

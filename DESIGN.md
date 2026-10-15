@@ -59,6 +59,8 @@ Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas
 - Cifras (`.cifras`): número en Geist Mono sobre una línea; las comparten /ley21719 y /nosotros.
 - Canvas de nube en la portada, /nosotros y las páginas de error, y canvas de mar en el pie. Las pinta un worker de módulo. La nube es una sola volutus física (`src/lib/volutus.js`) y cada página la mira con su cámara (`data-perspectiva`): `aire`, `costado`, `suelo` (404), `encima` (500) y `horizonte` (/patos). Su punto mide 2 px, nunca menos de 3 px del aparato, y es un cuadrado redondeado (decisión 38).
 - Escena de error reutilizada en /404, /500 y /patos; esta última inicia el juego automáticamente.
+- Páginas de servicio: la card de la rueda abierta. Su color (`--tinte`, el de la card) tiñe el cielo de la cabecera y la barra, y marca lo propio del servicio —líneas, vistos y números—; enlaces y botones siguen en la acción de siempre. La cabecera lleva una pieza (`Pieza.jsx`): la card en grande, con la trama de puntos, su anillo blanco, su sombra y una escena en SVG de lo que hace el servicio (blanco sobre el color y, en las piezas de interfaz, tinta y el color). Las partes entran en orden al cargar; con movimiento reducido está entera. Terminan en el formulario del contacto, con el servicio marcado.
+- Artículos: cabecera del cielo del día, cuerpo a la medida de lectura (`.prosa`) e invitación oscura en la caída. El índice marca cada artículo con el color del servicio del que habla.
 
 Los estilos base están en src/styles/index.css; los de cada pieza están junto a su componente. src/styles/main.css organiza las importaciones.
 

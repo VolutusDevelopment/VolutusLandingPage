@@ -17,6 +17,7 @@ Contacto: contacto@volutus.cl
 - [Servicios](https://volutus.cl/#servicios): los ocho servicios, cada uno con su prueba cuando la hay
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
+- [Artículos](https://volutus.cl/articulos): guías cortas para decidir qué software necesita un negocio
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 - [Ley 21.719](https://volutus.cl/ley21719): qué cambia con la nueva ley de datos personales y qué tiene que hacer un negocio para cumplirla
 - [Caza de patos](https://volutus.cl/patos): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
@@ -38,14 +39,29 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 
 ## Servicios
 
-- Páginas web
-- Tiendas online
-- Aplicaciones
-- Sistemas de gestión: inventario, clientes, agenda o cotizaciones en un solo lugar
-- Agentes de IA
-- Automatizaciones
-- Prospección de clientes: negocios de un rubro y zona, con sus datos de contacto, desde Google Maps
+Cada página dice qué incluye el servicio, cuándo sirve, qué le pedimos al
+cliente, dónde comprobar obra parecida y las preguntas frecuentes. No
+publicamos precios: se cotizan en la primera respuesta, en menos de 48 horas
+hábiles.
+
+- [Desarrollo web](https://volutus.cl/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA
+- [Tiendas online](https://volutus.cl/tiendas-online): catálogo, carrito, pagos en línea y pedidos, administrados por el propio negocio
+- [Desarrollo de software a medida](https://volutus.cl/desarrollo-software-a-medida): apps para iOS y Android, aplicaciones web y paneles conectados a los datos del negocio
+- [Agentes de IA](https://volutus.cl/agentes-ia): agentes que responden con la información del negocio, atienden solicitudes y hacen tareas, con una persona de respaldo
+- [Automatización de procesos](https://volutus.cl/automatizacion-procesos): traspaso de datos, formularios y documentos, avisos y tareas programadas
+- [Sistemas de gestión](https://volutus.cl/sistemas-de-gestion): inventario, clientes, agenda o cotizaciones en un solo lugar
+- [Prospección de clientes](https://volutus.cl/prospeccion-de-clientes): los negocios de un rubro y una zona marcada en el mapa, con su correo, su valoración en Google y su sitio web, en Google Sheets y Excel. Solo datos públicos: lo que cada negocio publica en Google Maps y en su propio sitio
 - Adaptación técnica a la Ley 21.719 de protección de datos
+
+## Artículos
+
+- [Qué es un agente de IA y cuándo le sirve a tu negocio](https://volutus.cl/articulos/que-es-un-agente-de-ia)
+- [Página web o tienda online: cuál necesita tu negocio](https://volutus.cl/articulos/pagina-web-o-tienda-online)
+- [Software a medida o uno ya hecho: cómo decidir](https://volutus.cl/articulos/software-a-medida-o-ya-hecho)
+- [Planilla o sistema de gestión: cuándo dar el paso](https://volutus.cl/articulos/planilla-o-sistema-de-gestion)
+- [Qué tareas automatizar primero en tu negocio](https://volutus.cl/articulos/que-automatizar-primero)
+- [Qué preparar antes de pedir una cotización de software](https://volutus.cl/articulos/que-preparar-antes-de-cotizar)
+- [La Ley 21.719, en simple](https://volutus.cl/ley21719)
 
 ## Qué no tomamos
 

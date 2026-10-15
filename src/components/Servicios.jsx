@@ -3,7 +3,9 @@ import Icono from './Icono.jsx'
 
 /**
  * Servicios: ocho cards, una por servicio, que se ven todas a la vez y piden
- * que las toquen. Va justo después de la portada, todavía en el cielo.
+ * que las toquen. Va justo después de la portada, todavía en el cielo. Cada
+ * card lleva el color de su servicio (lib/servicios.js), el mismo de su
+ * página.
  *
  * Van en una rueda, en todos los tamaños: las cards montadas en un anillo, la
  * del frente entera; las demás, más chicas y en sombra, asoman detrás de
@@ -28,7 +30,7 @@ export default function Servicios() {
             <li
               key={servicio.id}
               className={`servicio zona-plano${i === 0 ? ' activo' : ''}`}
-              style={{ '--i': i }}
+              style={{ '--i': i, '--panel': servicio.color }}
             >
               <div className="servicio-cara">
                 <div className="servicio-cabecera">
@@ -39,7 +41,18 @@ export default function Servicios() {
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="servicio-nombre">{servicio.nombre}</h3>
+                {/* El nombre lleva a la página del servicio, si tiene. La
+                    flecha la pone el CSS, para que no entre en el aviso de
+                    la card que queda al frente (servicios.js). */}
+                <h3 className="servicio-nombre">
+                  {servicio.ruta ? (
+                    <a href={servicio.ruta} draggable="false">
+                      {servicio.nombre}
+                    </a>
+                  ) : (
+                    servicio.nombre
+                  )}
+                </h3>
                 <p className="servicio-texto">{servicio.texto}</p>
                 <ol className="servicio-puntos">
                   {servicio.puntos.map((punto) => (

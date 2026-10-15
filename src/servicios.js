@@ -116,10 +116,13 @@ export default function initServicios() {
   }
 
   // Una card que asoma se trae al frente con un clic, o cuando le llega el
-  // foco del teclado (su enlace), para que nunca se enfoque algo tapado.
+  // foco del teclado (su enlace), para que nunca se enfoque algo tapado. El
+  // clic que la trae no abre su enlace: primero se ve entera.
   function traer(e) {
     const i = servicios.indexOf(e.target.closest('.servicio'))
-    if (i >= 0 && i !== activo) irA(i)
+    if (i < 0 || i === activo) return
+    if (e.type === 'click') e.preventDefault()
+    irA(i)
   }
   rueda.addEventListener('click', traer)
   rueda.addEventListener('focusin', traer)

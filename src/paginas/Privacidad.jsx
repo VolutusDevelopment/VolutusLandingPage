@@ -1,6 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import { CORREO_DE_CONTACTO } from '../components/Contacto.jsx'
-import { ORIGEN, PAGINAS, canonicalDe, tituloCorto } from '../lib/meta.js'
+import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.js'
 
 /**
  * Política de privacidad y protección de datos. Abre en el cielo azul de las
@@ -30,7 +30,7 @@ import { ORIGEN, PAGINAS, canonicalDe, tituloCorto } from '../lib/meta.js'
  */
 
 const VERSION = 3
-const ACTUALIZADO = '13 de octubre de 2026'
+const ACTUALIZADO = fechaDe('/privacidad')
 
 const CORREO = `[${CORREO_DE_CONTACTO}](mailto:${CORREO_DE_CONTACTO})`
 

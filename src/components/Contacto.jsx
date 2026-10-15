@@ -31,7 +31,9 @@ export const CORREO_DE_CONTACTO = 'contacto@volutus.cl'
 // Lo que trae quien llega (§2), dicho como lo diría: cada problema es uno de
 // los servicios visto desde el otro lado del mostrador.
 
-export default function Contacto() {
+// `marcado` es la opción de «Qué necesitas» que llega marcada: en la página de
+// un servicio, ese servicio. Se puede desmarcar como cualquier otra.
+export default function Contacto({ marcado }) {
   return (
     <section id="contacto" className="seccion zona-cielo contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
@@ -90,7 +92,7 @@ export default function Contacto() {
             <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
                 <label key={opcion} className="chip">
-                  <input type="checkbox" name="servicio" value={opcion} />
+                  <input type="checkbox" name="servicio" value={opcion} defaultChecked={opcion === marcado} />
                   {opcion}
                 </label>
               ))}

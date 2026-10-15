@@ -1,13 +1,24 @@
 /**
- * Lo que ofrecemos. Una sola lista para toda la página.
+ * Lo que ofrecemos. Una sola lista para todo el sitio.
  *
  * Cada servicio es independiente: el cliente puede contratar una prestación
  * sin necesitar contratar otra previamente. Los puntos describen capacidades
  * concretas de la solución, no dependencias entre servicios.
+ *
+ * `color` es el de su card en la rueda y el de su página: la costa —mar hondo,
+ * roca, coral, atardecer, arena quemada, alga, huiro y ola—, colores hondos
+ * para contrastar con el cielo y sin morado (DESIGN-BRIEF, A.2). El blanco
+ * encima da 5.5:1 o más.
+ *
+ * `ruta` es la de su página propia (paginas/Servicio.jsx), que tiene que
+ * estar declarada en PAGINAS (lib/meta.js). El que no la tiene se queda en la
+ * rueda.
  */
 export const SERVICIOS = [
   {
     id: 'web',
+    color: '#007192',
+    ruta: '/desarrollo-web',
     nombre: 'Páginas web',
     opcion: 'Una página web',
     texto: 'Una web rápida, clara y pensada para convertir visitas en clientes.',
@@ -21,6 +32,8 @@ export const SERVICIOS = [
 
   {
     id: 'tienda',
+    color: '#405f74',
+    ruta: '/tiendas-online',
     nombre: 'Tiendas online',
     opcion: 'Una tienda online',
     texto: 'Vende tus productos por internet con una tienda que puedas administrar.',
@@ -35,19 +48,23 @@ export const SERVICIOS = [
 
   {
     id: 'app',
+    color: '#b8342c',
+    ruta: '/desarrollo-software-a-medida',
     nombre: 'Aplicaciones',
     opcion: 'Una app',
     texto: 'Una aplicación hecha para resolver una necesidad concreta de tu negocio.',
     puntos: [
       'Para clientes, trabajadores o uso interno',
       'Conectada a tus datos y sistemas',
-      'Desarrollo en iOS y Android'    
+      'Desarrollo en iOS y Android',
     ],
     enlace: null,
   },
 
   {
     id: 'gestion',
+    color: '#af4000',
+    ruta: '/sistemas-de-gestion',
     nombre: 'Sistemas de gestión',
     opcion: 'Un sistema de gestión',
     texto: 'Un sistema a la medida para ordenar la operación de tu negocio en un solo lugar.',
@@ -62,6 +79,8 @@ export const SERVICIOS = [
 
   {
     id: 'agente',
+    color: '#905500',
+    ruta: '/agentes-ia',
     nombre: 'Agentes de IA',
     opcion: 'Un agente de IA',
     texto: 'Un agente de IA que entiende tu información y se encarga de tareas por ti.',
@@ -76,6 +95,8 @@ export const SERVICIOS = [
 
   {
     id: 'automatizacion',
+    color: '#005d37',
+    ruta: '/automatizacion-procesos',
     nombre: 'Automatizaciones',
     opcion: 'Una automatización',
     texto: 'Conectamos tus herramientas para que las tareas repetitivas ocurran automáticamente.',
@@ -89,6 +110,8 @@ export const SERVICIOS = [
 
   {
     id: 'prospeccion',
+    color: '#007156',
+    ruta: '/prospeccion-de-clientes',
     nombre: 'Prospección de clientes',
     opcion: 'Encontrar clientes potenciales',
     texto: 'Encontramos los negocios de tu rubro y zona con sus datos de contacto, listos para ofrecerles lo tuyo.',
@@ -103,6 +126,7 @@ export const SERVICIOS = [
 
   {
     id: 'datos',
+    color: '#00588d',
     nombre: 'Ley de datos',
     opcion: 'Adaptarme a la ley de datos',
     texto: 'Adaptamos técnicamente tus sistemas para gestionar los datos personales de acuerdo con la Ley 21.719.',

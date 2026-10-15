@@ -303,18 +303,22 @@
    pasar por encima, así que su logo y sus letras también van en blanco. El
    halo de las letras de la cápsula (`--fondo`) es el mismo azul. El botón
    primario se invierte: blanco, con el texto en el azul de la acción, que da
-   6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo. */
+   6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo.
+
+   Una página de servicio tiñe este cielo con el color de su servicio
+   (`--tinte`, ver Pagina.jsx): todos dan 5.5:1 o más con el blanco, y el
+   botón lleva las letras en ese mismo color. */
 :root .hora-dia {
-  --fondo: #1976cc;
+  --fondo: var(--tinte, #1976cc);
   --texto: #ffffff;
   --texto-suave: #ffffff;
   --linea: rgb(255 255 255 / 0.4);
   --accion: #ffffff;
   --accion-hover: #e3f0fb;
   --accion-activa: #c2e1f8;
-  --sobre-accion: #116492;
+  --sobre-accion: var(--tinte, #116492);
   --foco: #ffffff;
-  --vidrio-halo: rgb(25 118 204 / 0.3);
+  --vidrio-halo: color-mix(in srgb, var(--fondo) 30%, transparent);
 }
 
 /* La noche: azul que se hunde hacia el borde de la página y un mar bajo la
@@ -587,17 +591,19 @@ svg {
 
    La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), que
    se sostiene bajo todo su texto, y solo en el relleno de abajo (`--fundido`)
-   se difumina al blanco de la página. */
+   se difumina al blanco de la página. Teñida, pasa por un claro de su
+   propio color. */
 :root .cabecera-cielo {
   --fundido: calc(var(--e-24) + var(--e-16));
   --fondo-hora: linear-gradient(
     var(--fondo) calc(100% - var(--fundido)),
-    #7cbcf1 calc(100% - var(--fundido) / 2),
+    var(--tinte-claro, #7cbcf1) calc(100% - var(--fundido) / 2),
     #f6f9fc
   );
 }
 
 .cabecera-cielo {
+  position: relative;
   margin-top: calc(-1 * var(--barra-alto));
   padding-top: calc(var(--barra-alto) + var(--e-16));
   padding-bottom: calc(var(--e-8) + var(--fundido));
@@ -607,6 +613,18 @@ svg {
   .cabecera-cielo {
     padding-top: calc(var(--barra-alto) + var(--e-24));
   }
+}
+
+/* Lo contrario de `.alba`: el tramo del fundido que ya es claro. Desde ahí la
+   tinta contrasta más que el blanco: medido sobre los ocho tintes, el cruce
+   cae entre 9 y 41 px del comienzo del fundido, casi siempre cerca de 24.
+   Es una franja vacía que pone barra.js; la barra la ve detrás de cada pieza
+   y vuelve a la tinta, en vez de seguir en blanco sobre un fondo casi blanco. */
+.cabecera-fundido {
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(var(--fundido) - var(--e-6));
+  pointer-events: none;
 }
 
 /* Donde el cielo de la mañana sube detrás de la barra (la portada y
@@ -886,6 +904,35 @@ svg {
   font-size: var(--texto-xl);
   line-height: 1.2;
   color: var(--texto);
+}
+
+/* Lista con visto: lo que trae de bueno la ley para la pyme en /ley21719, y
+   cuándo sirve un servicio y qué pide, en su página. El visto va dibujado con
+   dos bordes, que no depende de que la fuente traiga «✓», y en el color que
+   diga `--visto`. */
+.vistos {
+  list-style: none;
+  display: grid;
+  gap: var(--e-3);
+  margin: 0;
+  padding: 0;
+}
+
+.vistos li {
+  position: relative;
+  padding-left: var(--e-8);
+}
+
+.vistos li::before {
+  content: '';
+  position: absolute;
+  top: 0.2em;
+  left: var(--e-2);
+  width: 6px;
+  height: 12px;
+  border: solid var(--visto, var(--exito));
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 /* Lista numerada: lo que el nombre es para nosotros en /nosotros, los

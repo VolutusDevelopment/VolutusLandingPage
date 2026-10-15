@@ -1,0 +1,321 @@
+/* Las páginas de servicio. Ver paginas/Servicio.jsx y components/Pieza.jsx.
+   El color de cada una es `--tinte` (Pagina.jsx), el de su card en la rueda:
+   tiñe la cabecera y marca lo que es propio del servicio —las líneas, los
+   vistos, los números—, mientras los enlaces y botones siguen en la acción
+   de siempre (decisión 7). */
+
+/* ---- la cabecera ----
+   El cielo del día en el color del servicio (index.css). Al bajar se aclara
+   por un claro de su mismo color, no por el celeste. Desde L, el texto a la
+   izquierda y la pieza a la derecha. */
+.servicio-cabecera {
+  --tinte-claro: color-mix(in oklab, var(--tinte) 45%, #f6f9fc);
+}
+
+/* `minmax(0, …)` y no `auto`: en WebKit el SVG de la pieza aporta un ancho
+   mínimo propio, y con una columna `auto` la cabecera se salía de la
+   pantalla en un teléfono. */
+.servicio-portada {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--e-12);
+}
+
+@media (min-width: 1024px) {
+  .servicio-portada {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--e-16);
+  }
+}
+
+.servicio-entradilla {
+  margin-top: var(--e-6);
+}
+
+.servicio-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+}
+
+@media (max-width: 479px) {
+  .servicio-acciones .boton {
+    width: 100%;
+  }
+}
+
+/* ---- la pieza ----
+   La card de la rueda en grande: su color, un poco más hondo, la trama de
+   puntos de la marca, su anillo blanco y su sombra de objeto (la excepción de
+   la decisión 31). La proporción es fija, así que no mueve nada al cargar. */
+.pieza {
+  aspect-ratio: 4 / 3;
+  padding: 3%;
+  border-radius: var(--radio-panel);
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 0.14) 1px, transparent 1.6px) 0 0 / 12px 12px,
+    color-mix(in oklab, var(--tinte) 78%, #000);
+  box-shadow:
+    inset 0 0 0 2px rgb(255 255 255 / 0.8),
+    0 14px 30px -16px rgb(10 26 42 / 0.4);
+}
+
+.pieza svg {
+  width: 100%;
+  height: 100%;
+  color: var(--tinte);
+}
+
+.pz-mono {
+  font-family: var(--fuente-datos);
+}
+
+/* Al cargar, las partes entran en su orden (`--n`); las líneas por donde
+   viajan los datos corren unas vueltas y se quedan quietas, y las barras del
+   panel crecen desde su base. Con movimiento reducido o al imprimir, la
+   escena está entera desde el principio. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .pz-entra {
+    animation: entrar var(--t-entrada) var(--ease-out) both;
+    animation-delay: calc(150ms + var(--n) * 110ms);
+  }
+
+  .pz-flujo {
+    animation: pz-fluir 1.4s 700ms linear 4;
+  }
+
+  .pz-barra {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: pz-crecer 600ms var(--ease-out) both;
+    animation-delay: calc(450ms + var(--n) * 50ms);
+  }
+}
+
+@keyframes pz-fluir {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes pz-crecer {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* ---- lo propio del servicio, en su color ---- */
+
+.servicio-pagina {
+  --visto: var(--tinte);
+}
+
+.servicio-pagina .numerada > li::before {
+  color: var(--tinte);
+}
+
+/* ---- qué incluye ----
+   Cada punto bajo una línea gruesa del color del servicio. */
+.servicio-incluye {
+  list-style: none;
+  display: grid;
+  gap: var(--e-8) var(--e-12);
+  margin: var(--e-12) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .servicio-incluye {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicio-incluye {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.servicio-incluye li {
+  padding-top: var(--e-4);
+  border-top: 3px solid var(--tinte);
+}
+
+.servicio-incluye p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* ---- la regla del servicio ----
+   Sobre el velo de su color, como lo que pide: desde L, el titular a la
+   izquierda y los puntos a la derecha. */
+.servicio-principio {
+  display: grid;
+  gap: var(--e-6);
+  padding: var(--e-8) var(--e-6);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
+}
+
+@media (min-width: 640px) {
+  .servicio-principio {
+    padding: var(--e-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicio-principio {
+    grid-template-columns: 2fr 3fr;
+    gap: var(--e-12);
+  }
+}
+
+/* ---- te sirve si ----
+   Desde L, la pregunta a la izquierda y las señales a la derecha. */
+.servicio-cuando {
+  display: grid;
+  gap: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .servicio-cuando {
+    grid-template-columns: 1fr 2fr;
+    gap: var(--e-12);
+  }
+}
+
+.servicio-cuando .vistos {
+  gap: var(--e-4);
+  font-size: var(--texto-lg);
+  line-height: 1.4;
+}
+
+/* ---- cómo trabajamos ---- */
+
+.servicio-pones {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinte);
+}
+
+/* Lo que pide este servicio, sobre un velo de su color: es lo único de la
+   sección que cambia de una página a otra. */
+.servicio-pedimos {
+  max-width: 48rem;
+  margin-top: var(--e-12);
+  padding: var(--e-8) var(--e-6);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
+}
+
+@media (min-width: 640px) {
+  .servicio-pedimos {
+    padding: var(--e-8) var(--e-12);
+  }
+}
+
+.servicio-pedimos h3 {
+  margin-bottom: var(--e-6);
+}
+
+/* ---- compruébalo ----
+   La obra que lo prueba, en una lámina oscura como las de proyectos. Con
+   captura, desde L, el texto a un lado y la pantalla al otro. */
+.servicio-prueba {
+  display: grid;
+  gap: var(--e-8);
+  padding: var(--e-8) var(--e-6);
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+@media (min-width: 640px) {
+  .servicio-prueba {
+    padding: var(--e-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicio-prueba.con-vista {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    align-items: center;
+    gap: var(--e-12);
+  }
+}
+
+.servicio-prueba-credencial {
+  margin-top: var(--e-3);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.servicio-prueba-bajada {
+  margin-top: var(--e-4);
+  color: var(--texto-suave);
+}
+
+.servicio-prueba-enlaces {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--e-6);
+  margin: var(--e-4) 0 0;
+  padding: 0;
+}
+
+.servicio-prueba-enlaces a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+}
+
+.servicio-prueba-vista {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+/* ---- preguntas frecuentes ----
+   Todas a la vista, sin acordeón: se leen, se buscan y se citan enteras. */
+.servicio-preguntas {
+  display: grid;
+  gap: var(--e-8) var(--e-12);
+  margin: var(--e-12) 0 0;
+}
+
+@media (min-width: 1024px) {
+  .servicio-preguntas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.servicio-preguntas > div {
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea);
+}
+
+.servicio-preguntas dt {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.servicio-preguntas dd {
+  max-width: var(--medida-lectura);
+  margin: var(--e-2) 0 0;
+  color: var(--texto-suave);
+}
+
+/* ---- sigue leyendo ---- */
+
+.servicio-otros-titulo {
+  margin-top: var(--e-16);
+}

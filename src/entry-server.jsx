@@ -7,5 +7,5 @@ export function render(ruta) {
   const Pagina = COMPONENTES[ruta]
   if (!Pagina) throw new Error(`Ruta sin componente: ${ruta}`)
 
-  return renderToString(<Pagina />)
+  return renderToString(<Pagina ruta={ruta} />)
 }

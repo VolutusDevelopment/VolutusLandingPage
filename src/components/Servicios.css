@@ -68,12 +68,11 @@
   opacity: 0;
 }
 
-/* La costa: alga, mar hondo, ola, roca, coral, atardecer, arena quemada y
-   huiro. Colores de la naturaleza, hondos para contrastar con el cielo y sin
-   morado (DESIGN-BRIEF, A.2). Todas llevan texto blanco, que da 4.6:1 o más
-   en el punto más claro del prisma; un blanco translúcido ya no llega, así
-   que el texto suave es blanco y se distingue por su tamaño. El botón de cada
-   servicio, abajo, lleva el mismo tono. */
+/* Cada card trae su color (`--panel`, de lib/servicios.js). Todas llevan
+   texto blanco, que da 4.6:1 o más en el punto más claro del prisma; un
+   blanco translúcido ya no llega, así que el texto suave es blanco y se
+   distingue por su tamaño. El botón de cada servicio, abajo, lleva el mismo
+   tono. */
 .servicio.zona-plano {
   --texto: #ffffff;
   --texto-suave: #ffffff;
@@ -81,15 +80,6 @@
   --foco: #ffffff;
   --linea: rgb(255 255 255 / 0.3);
 }
-
-.servicio:nth-child(1) {  --panel: #007192;}
-.servicio:nth-child(2) {  --panel: #405f74;}
-.servicio:nth-child(3) {  --panel: #b8342c;}
-.servicio:nth-child(4) {  --panel: #af4000;}
-.servicio:nth-child(5) {  --panel: #905500;}
-.servicio:nth-child(6) {  --panel: #005d37;}
-.servicio:nth-child(7) {  --panel: #007156;}
-.servicio:nth-child(8) {  --panel: #00588d;}
 
 .servicio-cabecera {
   display: flex;
@@ -116,6 +106,18 @@
 
 .servicio-nombre {
   margin-top: var(--e-4);
+}
+
+/* El nombre que lleva a su página: en el blanco de la card, con la flecha
+   que dice que sigue. */
+.servicio-nombre a {
+  color: inherit;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.servicio-nombre a::after {
+  content: ' →' / '';
 }
 
 .servicio-texto {
@@ -369,6 +371,12 @@
 
     .servicio-nombre {
       margin-top: var(--e-3);
+    }
+
+    /* La card tiene alto fijo y la flecha partía en dos líneas el nombre
+       más largo («Prospección de clientes»): aquí basta el subrayado. */
+    .servicio-nombre a::after {
+      content: none;
     }
 
     .servicio-puntos {

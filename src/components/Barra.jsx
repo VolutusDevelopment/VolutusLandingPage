@@ -96,7 +96,7 @@ function Lente() {
  * Sigue sin menú desplegable en móvil: son tres enlaces y un botón, y un
  * hamburguesa sería JavaScript de navegación que el presupuesto de §8 no paga.
  */
-export default function Barra({ enHome = true, ruta, hora = 'manana' }) {
+export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, contactoAqui = false }) {
   // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
   // `#proyectos` resuelve a `/privacidad#proyectos`, que no existe. El enlace
   // parece correcto hasta que alguien lo pulsa, que es el peor momento para
@@ -104,7 +104,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana' }) {
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
 
   return (
-    <header className={`barra zona-cielo hora-${hora}`}>
+    <header className={`barra zona-cielo hora-${hora}`} style={estilo}>
       <div className="barra-velo" aria-hidden="true">
         <span />
         <span />
@@ -140,7 +140,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana' }) {
               <a href={ancla('proyectos')}>Proyectos</a>
             </li>
             <li className="barra-contacto">
-              <a href={ancla('contacto')}>Cuéntanos tu proyecto</a>
+              <a href={contactoAqui ? '#contacto' : ancla('contacto')}>Cuéntanos tu proyecto</a>
             </li>
           </ul>          
         </nav>

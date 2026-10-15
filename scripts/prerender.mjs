@@ -18,12 +18,14 @@
 //
 // Al final escribe los dos archivos que también salen de esas fuentes: el
 // sitemap, desde PAGINAS, y `_headers`, desde lib/seguridad.js.
-import { readFileSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
+import { ARTICULOS, ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
 import { SERVICIOS } from '../src/lib/servicios.js'
+import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
@@ -31,6 +33,15 @@ const dist = `${root}dist/`
 const { render } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const ORGANIZACION = `${ORIGEN}/#organizacion`
+
+// Un servicio con página la tiene que tener de verdad: si no, la rueda y el
+// pie enlazarían a la 404.
+for (const { id, ruta } of SERVICIOS) {
+  if (ruta && !(PAGINAS[ruta] && PAGINAS_DE_SERVICIO[id])) throw new Error(`prerender: falta la página de ${ruta}`)
+}
+
+/** El servicio como entidad: uno solo, que nombran la portada y su página. */
+const idDeServicio = (ruta) => `${canonicalDe(ruta)}#servicio`
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -40,10 +51,71 @@ function atributo(texto) {
 /**
  * La Organization se declara una sola vez, en la portada, y el resto de las
  * páginas la nombran por su `@id`. Repetirla entera en cada URL no la refuerza:
- * obliga a mantener el mismo bloque en varios sitios.
+ * obliga a mantener el mismo bloque en varios sitios. Lo mismo cada servicio:
+ * su página lo declara y la portada lo nombra.
+ *
+ * Una página de servicio es su FAQPage, porque sus preguntas van a la vista;
+ * un artículo, su Article con la ruta para volver al índice.
  */
-function datosEstructurados(ruta, canonical, titulo) {
+function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, publicada, actualizada }) {
   const pagina = { name: titulo, url: canonical, inLanguage: 'es-CL' }
+  const servicio = SERVICIOS.find((s) => s.ruta === ruta)
+  if (servicio) {
+    const { antetitulo, preguntas } = PAGINAS_DE_SERVICIO[servicio.id]
+    return ldJson([
+      {
+        '@type': 'Service',
+        '@id': idDeServicio(ruta),
+        name: antetitulo,
+        serviceType: antetitulo,
+        description: descripcion,
+        url: canonical,
+        provider: { '@id': ORGANIZACION },
+        areaServed: { '@type': 'Country', name: 'Chile' },
+      },
+      {
+        '@type': 'FAQPage',
+        ...pagina,
+        about: { '@id': idDeServicio(ruta) },
+        mainEntity: preguntas.map(({ pregunta, respuesta }) => ({
+          '@type': 'Question',
+          name: pregunta,
+          acceptedAnswer: { '@type': 'Answer', text: respuesta },
+        })),
+      },
+    ])
+  }
+  if (publicada) {
+    const migas = [
+      ['Inicio', '/'],
+      ['Artículos', '/articulos'],
+      [tituloCorto(titulo), ruta],
+    ]
+    return ldJson([
+      {
+        '@type': 'Article',
+        headline: tituloCorto(titulo),
+        description: descripcion,
+        url: canonical,
+        mainEntityOfPage: canonical,
+        image: `${ORIGEN}${tarjetaDe(archivo)}`,
+        inLanguage: 'es-CL',
+        datePublished: publicada,
+        dateModified: actualizada,
+        author: { '@id': ORGANIZACION },
+        publisher: { '@id': ORGANIZACION },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: migas.map(([name, destino], i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name,
+          item: canonicalDe(destino),
+        })),
+      },
+    ])
+  }
   const grafo = {
     '/': [
       { '@type': 'WebSite', name: 'Volutus', url: `${ORIGEN}/`, inLanguage: 'es-CL' },
@@ -62,23 +134,48 @@ function datosEstructurados(ruta, canonical, titulo) {
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: 'Servicios',
-          itemListElement: SERVICIOS.map(({ nombre, texto }) => ({
+          itemListElement: SERVICIOS.map(({ nombre, texto, ruta: enlace }) => ({
             '@type': 'Offer',
-            itemOffered: { '@type': 'Service', name: nombre.replace(/­/g, ''), description: texto },
+            itemOffered: {
+              '@type': 'Service',
+              ...(enlace && { '@id': idDeServicio(enlace), url: canonicalDe(enlace) }),
+              name: nombre.replace(/­/g, ''),
+              description: texto,
+            },
           })),
         },
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }],
+    '/articulos': [
+      {
+        '@type': 'CollectionPage',
+        ...pagina,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: ARTICULOS.map((articulo, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: tituloCorto(articulo.titulo),
+            url: canonicalDe(articulo.ruta),
+          })),
+        },
+      },
+    ],
   }[ruta] ?? [{ '@type': 'WebPage', ...pagina }]
 
+  return ldJson(grafo)
+}
+
+function ldJson(grafo) {
   return `<script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': grafo,
   })}</script>`
 }
 
-function cabecera(ruta, { archivo, titulo, descripcion, indexar = true, tarjetaAlt }) {
+function cabecera(ruta, pagina) {
+  const { archivo, titulo, descripcion, indexar = true, tarjetaAlt } = pagina
   const t = atributo(titulo)
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
@@ -110,7 +207,7 @@ function cabecera(ruta, { archivo, titulo, descripcion, indexar = true, tarjetaA
     `<meta name="twitter:description" content="${d}" />`,
     `<meta name="twitter:image" content="${imagen}" />`,
     `<meta name="twitter:image:alt" content="${alt}" />`,
-    datosEstructurados(ruta, canonical, titulo),
+    datosEstructurados(ruta, canonical, pagina),
   ].join('\n    ')
 }
 
@@ -134,13 +231,17 @@ for (const [ruta, pagina] of Object.entries(PAGINAS)) {
     .replace('<div id="root"></div>', () => `<div id="root">${render(ruta)}</div>`)
     .replace(enlace[0], () => `<style>${css}</style>`)
 
+  mkdirSync(dirname(`${dist}${pagina.archivo}`), { recursive: true })
   writeFileSync(`${dist}${pagina.archivo}`, html)
   console.log(`prerender: ${pagina.archivo} (${ruta})`)
 }
 
 const urls = Object.entries(PAGINAS)
   .filter(([, { indexar = true }]) => indexar)
-  .map(([ruta]) => `  <url><loc>${canonicalDe(ruta)}</loc></url>`)
+  .map(([ruta, { actualizada }]) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(actualizada ?? '')) throw new Error(`prerender: ${ruta} necesita actualizada (AAAA-MM-DD)`)
+    return `  <url><loc>${canonicalDe(ruta)}</loc><lastmod>${actualizada}</lastmod></url>`
+  })
 writeFileSync(
   `${dist}sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
@@ -149,10 +250,12 @@ writeFileSync(
 // Cloudflare lee `_headers` de la raíz de los assets y no lo sirve como archivo.
 // Lo que va en /assets/ lleva el hash de su contenido en el nombre, así que
 // puede quedarse en caché para siempre: si cambia, cambia de nombre.
+// llms.txt lleva tildes y Cloudflare lo sirve como `text/plain` sin charset,
+// que algunos clientes (`requests` de Python) leen como Latin-1.
 const reglas = Object.entries(CABECERAS).map(([nombre, valor]) => `  ${nombre}: ${valor}`)
 writeFileSync(
   `${dist}_headers`,
-  `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n`
+  `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n`
 )
 
 rmSync(`${dist}${enlace[1]}`)

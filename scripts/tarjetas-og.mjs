@@ -11,6 +11,7 @@
 // lib/logotipo.js, la misma geometría que pinta la barra, así que la tarjeta
 // no puede quedar con una marca vieja.
 import { mkdirSync, readFileSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { PAGINAS, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
@@ -86,7 +87,6 @@ function htmlPato() {
 </body></html>`
 }
 
-mkdirSync(`${root}public/image/og`, { recursive: true })
 const navegador = await chromium.launch()
 const pagina = await navegador.newPage({ viewport: { width: ANCHO, height: ALTO } })
 
@@ -95,6 +95,7 @@ for (const [ruta, { archivo, titulo, indexar = true }] of Object.entries(PAGINAS
   await pagina.setContent(ruta === '/patos' ? htmlPato() : html(tituloCorto(titulo)))
   await pagina.evaluate(() => document.fonts.ready)
   const destino = `${root}public${tarjetaDe(archivo)}`
+  mkdirSync(dirname(destino), { recursive: true })
   await pagina.screenshot({ path: destino, type: 'jpeg', quality: 90 })
   console.log(`og: ${destino.slice(root.length)}`)
 }

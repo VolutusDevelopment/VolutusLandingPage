@@ -12,15 +12,15 @@
  * - **La barra**, una franja fina a la altura de la cápsula y a todo lo ancho:
  *   la sección que pasa por debajo da el tono al velo.
  * - **El logo, la cápsula y cada enlace**, cada uno lo que tiene detrás: un
- *   punto en el medio de su canto de arriba y otro en el de abajo. Dentro de
- *   una sección clara pasan tarjetas oscuras, y cada pieza tiene que
- *   reaccionar a su propio fondo, no a la sección: con el canto de una
- *   tarjeta cruzando la cápsula, «Nosotros» puede ir en blanco y «Proyectos»
- *   en tinta. La cápsula solo tiñe su indicador; las letras son de cada
- *   enlace. Manda el canto por el que entra el fondo nuevo —el de abajo al
- *   bajar, el de arriba al subir—, así que el color empieza a cambiar en
- *   cuanto el fondo asoma, y a mitad de la transición (Barra.css) el fondo ya
- *   cubre media pieza.
+ *   punto en su centro, a la altura de las letras. Dentro de una sección
+ *   clara pasan tarjetas oscuras, y cada pieza tiene que reaccionar a su
+ *   propio fondo, no a la sección: con el canto de una tarjeta cruzando la
+ *   cápsula, «Nosotros» puede ir en blanco y «Proyectos» en tinta. La cápsula
+ *   solo tiñe su indicador; las letras son de cada enlace. Manda el centro y
+ *   no un canto: el canto cambiaba el color en cuanto el fondo nuevo asomaba,
+ *   y si la página se detenía ahí, las letras quedaban en el color de un
+ *   fondo que aún no tenían detrás (blanco sobre blanco, bajo la cabecera de
+ *   un artículo).
  * - **La sección actual**, a un tercio de la pantalla, para `aria-current`.
  *   Detrás del vidrio no sirve: al saltar a un ancla, `scroll-padding` deja
  *   el final de la sección anterior bajo la barra y se marcaría el enlace
@@ -51,7 +51,8 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
 
 // Copia la zona y la hora de lo que hay detrás. Una tarjeta no lleva hora
 // propia: la hereda de su sección. Una franja de día dentro de una sección
-// (`.alba`) sí la lleva, y manda la suya.
+// (`.alba`) sí la lleva, y manda la suya; el final del fundido de una
+// cabecera no lleva ninguna, porque ya es el blanco de la página.
 function tomarZona(destino, debajo) {
   if (!debajo) return
   const plano = debajo.classList.contains('zona-plano')
@@ -59,45 +60,26 @@ function tomarZona(destino, debajo) {
   destino.classList.toggle('zona-cielo', !plano)
   const esHora = (clase) => clase.startsWith('hora-')
   destino.classList.remove(...[...destino.classList].filter(esHora))
-  const hora = [...(debajo.closest('.hora-dia, .seccion, .pie')?.classList ?? [])].find(esHora)
+  const hora = [...(debajo.closest('.hora-dia, .cabecera-fundido, .seccion, .pie')?.classList ?? [])].find(esHora)
   if (hora) destino.classList.add(hora)
 }
 
-// Hacia dónde va el scroll: decide qué canto de cada pieza manda.
-let bajando = true
-let ultimoY = 0
-addEventListener(
-  'scroll',
-  () => {
-    bajando = scrollY >= ultimoY
-    ultimoY = scrollY
-  },
-  { passive: true }
-)
-
-// El margen negativo recorta la pantalla hasta dejar un punto de 1 px a la
-// altura `y`, en el medio de la pieza: manda el fondo que ya cubre su mitad,
-// no el canto de una tarjeta que apenas roza un extremo. La barra es fija
-// arriba, así que los puntos solo se mueven al cambiar el tamaño de la
-// ventana; una pieza oculta (la cápsula en S) no mide nada y no se vigila.
+// El margen negativo recorta la pantalla hasta dejar un punto de 1 px en el
+// centro de la pieza: manda el fondo que tienen detrás sus letras, no el
+// canto de una tarjeta que apenas roza un extremo. La barra es fija arriba,
+// así que el punto solo se mueve al cambiar el tamaño de la ventana; una
+// pieza oculta (la cápsula en S) no mide nada y no se vigila.
 function vigilarDetras(pieza, fondos) {
-  const detras = { arriba: undefined, abajo: undefined }
-  const decidir = () => tomarZona(pieza, bajando ? detras.abajo : detras.arriba)
-  let observadores = []
+  let observador
   const medir = () => {
-    observadores.forEach((observador) => observador.disconnect())
+    observador?.disconnect()
     const caja = pieza.getBoundingClientRect()
     if (!caja.width) return
     const { clientWidth: ancho, clientHeight: alto } = document.documentElement
-    const medio = (caja.left + caja.right) / 2
-    const punto = (y) =>
-      [y, ancho - medio - 1, alto - y - 1, medio].map((px) => `${-Math.round(px)}px`).join(' ')
-    observadores = ['arriba', 'abajo'].map((canto) =>
-      vigilarFranja(fondos, punto(canto === 'arriba' ? caja.top : caja.bottom - 1), (debajo) => {
-        detras[canto] = debajo
-        decidir()
-      })
-    )
+    const x = Math.round((caja.left + caja.right) / 2)
+    const y = Math.round((caja.top + caja.bottom) / 2)
+    const punto = [y, ancho - x - 1, alto - y - 1, x].map((px) => `${-px}px`).join(' ')
+    observador = vigilarFranja(fondos, punto, (debajo) => tomarZona(pieza, debajo))
   }
   medir()
   addEventListener('resize', medir)
@@ -115,7 +97,13 @@ export default function initBarra() {
 
   vigilarFranja(zonas, '-4% 0px -95% 0px', (debajo) => tomarZona(barra, debajo))
 
-  const fondos = document.querySelectorAll('.seccion, .seccion :is(.zona-plano, .hora-dia), .pie')
+  // La franja va en cada cabecera desde aquí y no en cada página: así ninguna
+  // cabecera nueva se queda sin ella. Va antes de buscar los fondos.
+  document
+    .querySelectorAll('.cabecera-cielo')
+    .forEach((cabecera) => cabecera.append(Object.assign(document.createElement('div'), { className: 'cabecera-fundido' })))
+
+  const fondos = document.querySelectorAll('.seccion, .seccion :is(.zona-plano, .hora-dia, .cabecera-fundido), .pie')
   barra
     .querySelectorAll('.barra-marca, .barra-capsula, .barra-enlaces a')
     .forEach((pieza) => vigilarDetras(pieza, fondos))

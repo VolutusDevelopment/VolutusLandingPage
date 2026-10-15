@@ -28,6 +28,8 @@ import { fileURLToPath } from 'node:url'
 
 import { chromium } from 'playwright'
 
+import { PAGINAS } from '../src/lib/meta.js'
+
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8787'
 const REFERENCIA = fileURLToPath(new URL('../tests/referencia.json', import.meta.url))
 const actualizar = process.argv.includes('--actualizar')
@@ -172,6 +174,10 @@ async function enlacesRotos(ruta) {
   for (const { href, abs } of enlaces) {
     if (href.startsWith('http') || href.startsWith('mailto:')) continue
 
+    // `#top` no necesita un id: el estándar lo resuelve al principio del
+    // documento (es el «Volver arriba» del pie).
+    if (href === '#top') continue
+
     if (href.startsWith('#')) {
       const existe = await pagina.evaluate((id) => Boolean(document.getElementById(id)), href.slice(1))
       if (!existe) rotos.push(`${ruta}: «${href}» no existe en esta página`)
@@ -199,9 +205,12 @@ async function enlacesRotos(ruta) {
 const actual = { rutas: {}, foco: {} }
 const enlaces = []
 
-// `/no-existe` es la 404: Cloudflare la sirve en cualquier dirección que no
-// existe, así que se mide en una que no existe y no en /404.
-for (const ruta of ['/', '/nosotros', '/privacidad', '/ley21719', '/no-existe', '/patos']) {
+// Todas las páginas indexables, y la 404 en `/no-existe`: Cloudflare la sirve
+// en cualquier dirección que no existe, así que se mide en una que no existe y
+// no en /404.
+const RUTAS = [...Object.keys(PAGINAS).filter((ruta) => PAGINAS[ruta].indexar !== false), '/no-existe']
+
+for (const ruta of RUTAS) {
   actual.rutas[ruta] = {}
   for (const [nombre, ancho, alto] of ANCHOS) {
     actual.rutas[ruta][nombre] = await medir(ruta, ancho, alto, null)

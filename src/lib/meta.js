@@ -16,6 +16,12 @@
  * se sirven en cualquier dirección y no tienen una URL propia que declarar.
  * Ninguna debe aparecer en un buscador.
  *
+ * `actualizada` (AAAA-MM-DD) es la fecha del último cambio del contenido de la
+ * página: texto, datos o enlaces, no colores ni animaciones. Va al `<lastmod>`
+ * del sitemap, y Privacidad y Ley 21.719 la muestran. Los buscadores dejan de
+ * creerle a un lastmod que cambia sin que cambie la página. Toda página
+ * indexable la lleva; si falta, el prerender falla.
+ *
  * `tarjetaAlt` es para la página cuya tarjeta para compartir no es la de
  * siempre, el logotipo con el título: la de /patos es el pato del juego (ver
  * scripts/tarjetas-og.mjs).
@@ -26,24 +32,146 @@ export const ORIGEN = 'https://volutus.cl'
 export const PAGINAS = {
   '/': {
     archivo: 'index.html',
+    actualizada: '2026-10-14',
     titulo: 'Páginas web, apps y agentes de IA en Chile — Volutus',
     descripcion:
       'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. Te responde una persona en menos de 48 horas hábiles.',
   },
   '/nosotros': {
     archivo: 'nosotros.html',
+    actualizada: '2026-10-13',
     titulo: 'Quiénes somos — Volutus',
     descripcion:
       'Volutus es una empresa de desarrollo de software en Chile. De dónde viene su nombre, cómo trabajamos y dónde revisar lo que hemos hecho.',
   },
+  // Las páginas de servicio (paginas/Servicio.jsx). Cada ruta es la `ruta` de
+  // su servicio en lib/servicios.js, y la entradilla de la página es su
+  // descripción.
+  '/desarrollo-web': {
+    archivo: 'desarrollo-web.html',
+    actualizada: '2026-10-14',
+    titulo: 'Desarrollo web en Chile: páginas rápidas y en Google — Volutus',
+    descripcion:
+      'Diseñamos y programamos páginas web para negocios en Chile: rápidas en el celular, fáciles de encontrar en Google y con tu marca. Te responde una persona en 48 horas hábiles.',
+  },
+  '/tiendas-online': {
+    archivo: 'tiendas-online.html',
+    actualizada: '2026-10-14',
+    titulo: 'Tiendas online para vender por internet en Chile — Volutus',
+    descripcion:
+      'Creamos tu tienda online con catálogo, carrito, pagos y pedidos, lista para vender por internet y fácil de administrar por ti. Te responde una persona en 48 horas hábiles.',
+  },
+  '/desarrollo-software-a-medida': {
+    archivo: 'desarrollo-software-a-medida.html',
+    actualizada: '2026-10-14',
+    titulo: 'Desarrollo de software a medida y apps en Chile — Volutus',
+    descripcion:
+      'Desarrollamos software a medida para tu negocio: apps para iOS y Android, aplicaciones web y paneles conectados a tus datos. Te responde una persona en 48 horas hábiles.',
+  },
+  '/agentes-ia': {
+    archivo: 'agentes-ia.html',
+    actualizada: '2026-10-14',
+    titulo: 'Agentes de IA para negocios en Chile — Volutus',
+    descripcion:
+      'Creamos agentes de inteligencia artificial que responden con la información de tu negocio, atienden solicitudes y hacen tareas por ti a cualquier hora, con una persona de respaldo.',
+  },
+  '/automatizacion-procesos': {
+    archivo: 'automatizacion-procesos.html',
+    actualizada: '2026-10-14',
+    titulo: 'Automatización de procesos para tu negocio — Volutus',
+    descripcion:
+      'Conectamos tus herramientas para que las tareas repetitivas ocurran solas: traspaso de datos, formularios y documentos, avisos y tareas programadas, sin cambiar lo que ya usas.',
+  },
+  '/sistemas-de-gestion': {
+    archivo: 'sistemas-de-gestion.html',
+    actualizada: '2026-10-14',
+    titulo: 'Sistemas de gestión a medida para tu negocio — Volutus',
+    descripcion:
+      'Un sistema hecho a tu medida para llevar inventario, clientes, agenda o cotizaciones en un solo lugar, con tus números al día y acceso por rol desde cualquier dispositivo.',
+  },
+  '/prospeccion-de-clientes': {
+    archivo: 'prospeccion-de-clientes.html',
+    actualizada: '2026-10-14',
+    titulo: 'Prospección de clientes con datos públicos — Volutus',
+    descripcion:
+      'Encontramos los negocios del rubro y la zona que elijas, solo con datos públicos: nombre, correo, valoración en Google y sitio web, en una planilla lista para ofrecerles lo tuyo.',
+  },
+  // Los artículos (paginas/articulos/). Los que llevan `publicada` entran al
+  // índice de /articulos, del más nuevo al más viejo; `servicios` dice en qué
+  // páginas de servicio se sugieren, y uno sin `servicios` se sugiere en
+  // todas.
+  '/articulos': {
+    archivo: 'articulos.html',
+    actualizada: '2026-10-14',
+    titulo: 'Artículos sobre software para negocios — Volutus',
+    descripcion:
+      'Guías cortas y sin jerga para decidir qué software necesita tu negocio: páginas web, tiendas online, agentes de IA, automatizaciones y sistemas de gestión.',
+  },
+  '/articulos/que-es-un-agente-de-ia': {
+    archivo: 'articulos/que-es-un-agente-de-ia.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    servicios: ['agente', 'automatizacion'],
+    titulo: 'Qué es un agente de IA y cuándo le sirve a tu negocio — Volutus',
+    descripcion:
+      'Un agente de IA no solo conversa: consulta tus sistemas y hace tareas. En qué se diferencia de un chatbot, qué puede hacer por un negocio y cuándo no conviene.',
+  },
+  '/articulos/pagina-web-o-tienda-online': {
+    archivo: 'articulos/pagina-web-o-tienda-online.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    servicios: ['web', 'tienda'],
+    titulo: 'Página web o tienda online: cuál necesita tu negocio — Volutus',
+    descripcion:
+      'Las dos viven en internet, pero hacen trabajos distintos. Cómo saber si te basta una página web, si necesitas una tienda online o por cuál conviene empezar.',
+  },
+  '/articulos/software-a-medida-o-ya-hecho': {
+    archivo: 'articulos/software-a-medida-o-ya-hecho.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    servicios: ['app', 'gestion'],
+    titulo: 'Software a medida o uno ya hecho: cómo decidir — Volutus',
+    descripcion:
+      'Un software ya hecho es más barato y está listo hoy; uno a medida calza con tu forma de trabajar. Cuándo conviene cada uno, y por qué muchas veces la respuesta es una mezcla.',
+  },
+  '/articulos/planilla-o-sistema-de-gestion': {
+    archivo: 'articulos/planilla-o-sistema-de-gestion.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    servicios: ['gestion'],
+    titulo: 'Planilla o sistema de gestión: cuándo dar el paso — Volutus',
+    descripcion:
+      'La planilla sirve hasta que deja de servir. Cinco señales de que tu negocio ya necesita un sistema de gestión, y qué hacer antes de cambiarte.',
+  },
+  '/articulos/que-automatizar-primero': {
+    archivo: 'articulos/que-automatizar-primero.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    servicios: ['automatizacion'],
+    titulo: 'Qué tareas automatizar primero en tu negocio — Volutus',
+    descripcion:
+      'Una forma simple de elegir qué automatizar: cuánto se repite, cuánto tarda y cuánto cuesta un error. Con ejemplos de tareas que casi todo negocio puede dejar de hacer a mano.',
+  },
+  '/articulos/que-preparar-antes-de-cotizar': {
+    archivo: 'articulos/que-preparar-antes-de-cotizar.html',
+    publicada: '2026-10-14',
+    actualizada: '2026-10-14',
+    titulo: 'Qué preparar antes de pedir una cotización de software — Volutus',
+    descripcion:
+      'Lo que conviene tener a mano antes de escribirle a una empresa de software: el problema en tus palabras, cómo lo resuelves hoy y qué sería un buen resultado.',
+  },
   '/privacidad': {
     archivo: 'privacidad.html',
+    actualizada: '2026-10-13',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',
   },
   '/ley21719': {
     archivo: 'ley21719.html',
+    publicada: '2026-10-03',
+    actualizada: '2026-10-03',
+    servicios: ['datos'],
     titulo: 'Ley 21.719 de protección de datos: qué cambia — Volutus',
     descripcion:
       'La nueva ley de datos personales rige desde el 1 de diciembre de 2026. Qué cambia, qué tiene que hacer tu negocio para cumplirla y cuánto arriesga si no.',
@@ -63,6 +191,7 @@ export const PAGINAS = {
   },
   '/patos': {
     archivo: 'patos.html',
+    actualizada: '2026-10-13',
     titulo: 'Caza de patos — Volutus',
     descripcion:
       'Un Duck Hunt hecho con la nube de Volutus: los patos salen de los cúmulos y caen a través de ellos. Se juega en el navegador, sin instalar nada.',
@@ -79,6 +208,27 @@ export const canonicalDe = (ruta) => (ruta === '/' ? `${ORIGEN}/` : `${ORIGEN}${
 
 /** El título sin la marca, que es lo que va escrito en la tarjeta para compartir. */
 export const tituloCorto = (titulo) => titulo.replace(/ — Volutus$/, '')
+
+/**
+ * La fecha `actualizada` de una página (o la que diga `campo`, como
+ * `publicada`) como se lee en ella: «13 de octubre de 2026». En UTC porque
+ * `new Date('2026-10-13')` es la medianoche UTC, que en Chile todavía es el
+ * día 12.
+ */
+export const fechaDe = (ruta, campo = 'actualizada') =>
+  new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+    new Date(PAGINAS[ruta][campo])
+  )
+
+/** Los artículos, del más nuevo al más viejo: las páginas con `publicada`. */
+export const ARTICULOS = Object.entries(PAGINAS)
+  .filter(([, { publicada }]) => publicada)
+  .map(([ruta, pagina]) => ({ ruta, ...pagina }))
+  .sort((a, b) => b.publicada.localeCompare(a.publicada))
+
+/** Los artículos que se sugieren en la página de un servicio. */
+export const articulosDe = (servicio) =>
+  ARTICULOS.filter(({ servicios }) => !servicios || servicios.includes(servicio))
 
 /**
  * La tarjeta para compartir de cada página, derivada de su archivo para que

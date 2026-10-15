@@ -10,6 +10,6 @@ export function renderApp() {
   const ruta = location.pathname.replace(/\.html$|\/$/, '') || '/'
   const Pagina = COMPONENTES[ruta] ?? COMPONENTES['/404']
   flushSync(() => {
-    createRoot(document.getElementById('root')).render(<Pagina />)
+    createRoot(document.getElementById('root')).render(<Pagina ruta={ruta} />)
   })
 }

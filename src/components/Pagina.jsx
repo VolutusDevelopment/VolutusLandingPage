@@ -16,6 +16,12 @@ import Pie from './Pie.jsx'
  * `hora` es la de la cabecera de la página, para que la barra ya salga del
  * servidor con sus colores y no cambie al cargar (barra.js la sigue después).
  *
+ * `tinte` es el color de un servicio: tiñe el cielo del día de la cabecera
+ * (`.hora-dia` en index.css) y la barra cuando pasa por encima.
+ *
+ * `contactoAqui` dice que el formulario está en esta página, así que el botón
+ * de la barra lleva a él y no al de la portada.
+ *
  * `pie` en falso lo quita: las páginas de error son una sola pantalla, sin
  * caída que recorrer.
  *
@@ -25,16 +31,28 @@ import Pie from './Pie.jsx'
  * (`.caida`): así el degradado es uno, de arriba de la última sección al
  * final de la página, y no dos que hay que empalmar.
  */
-export default function Pagina({ enHome = false, ruta, hora, className, pie = true, pieDeDia = false, cierre, children }) {
+export default function Pagina({
+  enHome = false,
+  ruta,
+  hora,
+  tinte,
+  contactoAqui = false,
+  className,
+  pie = true,
+  pieDeDia = false,
+  cierre,
+  children,
+}) {
+  const estilo = tinte && { '--tinte': tinte }
   return (
     <>
       <a className="salto" href="#contenido">
         Saltar al contenido
       </a>
 
-      <Barra enHome={enHome} ruta={ruta} hora={hora} />
+      <Barra enHome={enHome} ruta={ruta} hora={hora} estilo={estilo} contactoAqui={contactoAqui} />
 
-      <main id="contenido" className={className}>
+      <main id="contenido" className={className} style={estilo}>
         {children}
       </main>
 

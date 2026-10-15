@@ -1,0 +1,70 @@
+/* Lo que se sugiere al final de las páginas de servicio y de los artículos.
+   Ver Sugerencias.jsx. */
+
+/* Artículos: el título como enlace y su resumen debajo; desde L, de a dos. */
+.lista-articulos {
+  list-style: none;
+  display: grid;
+  gap: var(--e-6) var(--e-12);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .lista-articulos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.lista-articulos a {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.lista-articulos p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* Servicios, cada uno en el color de su card (`--tinte`): la rueda, en fila.
+   El blanco encima da 5.5:1 o más. */
+.fila-servicios {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: var(--e-3);
+  margin: var(--e-6) 0 0;
+  padding: 0;
+}
+
+.fila-servicios a {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  min-height: 56px;
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--radio-tarjeta);
+  background: var(--tinte);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform var(--t-pulsar) var(--ease-out);
+}
+
+.fila-servicios a:hover {
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.fila-servicios-icono {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fila-servicios a:hover {
+    transform: none;
+  }
+}

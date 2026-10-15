@@ -18,7 +18,10 @@
 @import '../components/Servicios.css';
 @import '../components/Contacto.css';
 @import '../components/Pie.css';
+@import '../components/Sugerencias.css';
 @import '../paginas/Nosotros.css';
 @import '../paginas/Privacidad.css';
 @import '../paginas/Ley21719.css';
+@import '../paginas/Servicio.css';
+@import '../paginas/Articulos.css';
 @import '../paginas/PaginaDeError.css';

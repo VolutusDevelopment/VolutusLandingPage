@@ -46,6 +46,9 @@ export default function Pie({ dia = false }) {
               <a href="/nosotros">Quiénes somos</a>
             </li>
             <li>
+              <a href="/articulos">Artículos</a>
+            </li>
+            <li>
               <a href="/privacidad">Privacidad</a>
             </li>
             <li>

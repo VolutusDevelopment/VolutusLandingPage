@@ -32,6 +32,22 @@ Portada, Servicios, Proyectos y Contacto; no tiene sección de métricas. Agrega
 una página es una entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES`
 (paginas/rutas.js).
 
+Cada servicio con `ruta` en [src/lib/servicios.js](src/lib/servicios.js) tiene
+su página (`/desarrollo-web`, `/tiendas-online`, `/desarrollo-software-a-medida`,
+`/agentes-ia`, `/automatizacion-procesos`, `/sistemas-de-gestion` y
+`/prospeccion-de-clientes`): una sola plantilla,
+[src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con el contenido en
+[src/data/paginas-de-servicio.js](src/data/paginas-de-servicio.js) y la escena
+de su cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx). Lleva el
+color de su card en la rueda y termina en el formulario, con el servicio ya
+marcado.
+
+Los artículos viven en `/articulos/…` y su índice en `/articulos`. Publicar uno
+es: su entrada en `PAGINAS` con `publicada` (y `servicios`, para sugerirlo en
+esas páginas de servicio), su cuerpo en `src/paginas/articulos/` envuelto en
+`<Articulo>`, su línea en `COMPONENTES`, su tarjeta con `pnpm og` y su enlace en
+`public/llms.txt`. El índice, el sitemap y los datos estructurados salen solos.
+
 **La página de los 5xx no se sirve todavía.** Cloudflare sirve el sitio y el
 Worker solo atiende `/api/*`, así que un 5xx que vea un visitante lo genera
 Cloudflare, y solo Cloudflare puede reemplazar su página: con una
@@ -83,9 +99,10 @@ scripts/
   prerender.mjs         # un HTML por página, sitemap.xml y _headers
   verificar.mjs         # verificación con Playwright
 src/
-  paginas/              # Inicio, Nosotros, Privacidad, Ley21719 y las de error (404 y 5xx)
+  paginas/              # Inicio, Nosotros, Privacidad, Ley21719, Servicio, Articulos y las de error (404 y 5xx)
+    articulos/          # el cuerpo de cada artículo
   components/           # secciones con su CSS
-  data/                 # proyectos
+  data/                 # proyectos y contenido de las páginas de servicio
   lib/                  # metadatos, servicios, seguridad y geometría de la marca
   styles/               # tokens y base (index.css) + orden de la cascada (main.css)
   main.js, client.js    # entrada y comportamiento en el navegador
@@ -100,7 +117,14 @@ public/
 
 - HTML completo prerenderizado (sin depender de JS para indexar).
 - Meta description, canonical, Open Graph, Twitter Card y JSON-LD por página,
-  desde [src/lib/meta.js](src/lib/meta.js).
+  desde [src/lib/meta.js](src/lib/meta.js): cada servicio es un `Service` con
+  su `FAQPage`, y cada artículo un `Article` con su `BreadcrumbList`.
 - `sitemap.xml` contiene las páginas indexables; `/404` y `/500` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
+  Cada URL lleva `<lastmod>` desde `actualizada` en meta.js: hay que moverla
+  al cambiar el contenido de la página.
+- `robots.txt` deja leer y citar el sitio a buscadores y agentes de IA
+  (`Content-Signal: search=yes, ai-input=yes, ai-train=no`) y cierra el paso a
+  GPTBot y ClaudeBot, que rastrean para entrenar modelos. Cloudflare ya los
+  bloquea (AI Crawl Control); el archivo declara la misma política.
 - Imágenes con `srcset`, dimensiones explícitas y `loading="lazy"` fuera del
   viewport inicial.
