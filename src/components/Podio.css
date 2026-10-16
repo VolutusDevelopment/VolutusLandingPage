@@ -33,23 +33,57 @@
   --tinta-suave: #5a3a20;
   /* Los textos naranjas sobre el papel: este tono pasa 5.6:1. */
   --naranja: #9a4f0f;
-  container-type: inline-size;
-  max-width: 36rem;
+  max-width: 40rem;
   margin: var(--e-12) auto 0;
 }
 
-.podio-marco,
-.podio-honor {
+/* El tamaño, según el dispositivo:
+   - Teléfono y tablet: una columna, la escena a lo ancho y debajo el panel
+     (la tabla y el cartel). En la tablet, centrada hasta 40rem.
+   - Escritorio: la escena a la izquierda y el panel a la derecha, y la
+     escena nunca más alta que la pantalla: mide unos 131 píxeles de juego de
+     alto por 120 de ancho, así que su ancho se limita al alto disponible
+     (bajo la barra) por 120/131. */
+@media (min-width: 1024px) {
+  .podio {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--e-12);
+    align-items: center;
+    max-width: none;
+  }
+
+  .podio-lienzo {
+    justify-self: center;
+    width: min(100%, calc((100svh - 160px) * 120 / 131));
+  }
+}
+
+/* El lienzo es el contenedor que mide la escena: un píxel de juego es 1/120
+   de su ancho, sea cual sea el dispositivo. */
+.podio-lienzo {
+  container-type: inline-size;
+  /* Deja ver el marco de madera, que va por fuera. */
+  padding: 4px;
+}
+
+.podio-marco {
   --p: calc(100cqi / 120);
 }
 
 /* El marco recorta la escena: el fondo se apoya abajo, con la isla, y si la
-   escena queda más alta que él, arriba sigue el color del cielo. */
+   escena queda más alta que él, arriba sigue el color del cielo. El borde es
+   de madera y con las esquinas mordidas, como la tabla y el cartel. */
 .podio-marco {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   background: var(--cielo);
+  box-shadow:
+    0 -4px 0 0 var(--madera),
+    0 4px 0 0 var(--madera),
+    -4px 0 0 0 var(--madera),
+    4px 0 0 0 var(--madera);
 }
 
 .podio-fondo {
@@ -173,7 +207,7 @@
  * ------------------------------------------------------------------------ */
 
 .podio-honor {
-  margin: calc(var(--e-4) + 4px) 4px 0;
+  margin: calc(var(--e-6) + 4px) 4px 0;
   padding: var(--e-4) var(--e-3) var(--e-3);
   background: var(--papel);
   box-shadow:
@@ -266,6 +300,12 @@
 
   .podio-tabla {
     font-size: 11px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .podio-panel > .podio-honor {
+    margin-top: 4px;
   }
 }
 

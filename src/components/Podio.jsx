@@ -203,7 +203,17 @@ function Torre({ metal, puesto }) {
 
 // La isla bajo el castillo: capas de roca cada vez más angostas, hasta la
 // punta. [x, ancho] de cada capa, de 3 píxeles de alto.
-const ROCA = [[2, 116], [5, 110], [9, 102], [14, 92], [20, 80], [27, 66], [35, 50], [44, 32], [52, 16]]
+const ROCA = [
+  [2, 116],
+  [5, 110],
+  [9, 102],
+  [14, 92],
+  [20, 80],
+  [27, 66],
+  [35, 50],
+  [44, 32],
+  [52, 16],
+]
 
 // Las torrecillas de los extremos: techo cónico y banderín en la punta.
 const TORRECILLAS = [
@@ -250,7 +260,13 @@ function Fondo() {
   r(59, base + 32, 2, 2, CONTORNO)
 
   // Enredaderas que cuelgan del borde.
-  for (const [x, largo] of [[8, 5], [20, 8], [38, 10], [97, 7], [110, 4]]) {
+  for (const [x, largo] of [
+    [8, 5],
+    [20, 8],
+    [38, 10],
+    [97, 7],
+    [110, 4],
+  ]) {
     r(x, base + 5, 1, largo, '#4caf3c')
     r(x - 1, base + 4 + largo, 2, 1, '#7ed957')
   }
@@ -330,88 +346,94 @@ export default function Podio({ logros }) {
 
   return (
     <div className="podio" data-podio>
-      <div className="podio-marco">
-        <Fondo />
-        <div className="podio-escena" role="tablist" aria-label="Logros con jurado externo">
-          {columnas.map((logro) => {
-            const { metal, titulo, evento } = logro.credencial
-            const activo = logro === elegido
-            return (
-              <button
-                key={logro.id}
-                type="button"
-                role="tab"
-                id={`podio-${logro.id}`}
-                className={`podio-columna podio-${metal}`}
-                aria-selected={activo}
-                aria-controls={`cartel-${logro.id}`}
-                tabIndex={activo ? 0 : -1}
-              >
-                <span className="podio-flecha" aria-hidden="true" />
-                <span className="podio-premio">
-                  {metal === 'oro' && <Destellos />}
-                  <Sprite className="podio-sprite" {...SPRITES[metal]} />
-                </span>
-                <Torre metal={metal} puesto={lugar(logro)} />
-                <span className="solo-lectores">
-                  {titulo}: {logro.nombre}, {evento}
-                </span>
-              </button>
-            )
-          })}
+      {/* El lienzo mide la escena: los píxeles de juego son 1/120 de su ancho
+          (Podio.css). En escritorio va a la izquierda y el panel a la derecha. */}
+      <div className="podio-lienzo">
+        <div className="podio-marco">
+          <Fondo />
+          <div className="podio-escena" role="tablist" aria-label="Logros con jurado externo">
+            {columnas.map((logro) => {
+              const { metal, titulo, evento } = logro.credencial
+              const activo = logro === elegido
+              return (
+                <button
+                  key={logro.id}
+                  type="button"
+                  role="tab"
+                  id={`podio-${logro.id}`}
+                  className={`podio-columna podio-${metal}`}
+                  aria-selected={activo}
+                  aria-controls={`cartel-${logro.id}`}
+                  tabIndex={activo ? 0 : -1}
+                >
+                  <span className="podio-flecha" aria-hidden="true" />
+                  <span className="podio-premio">
+                    {metal === 'oro' && <Destellos />}
+                    <Sprite className="podio-sprite" {...SPRITES[metal]} />
+                  </span>
+                  <Torre metal={metal} puesto={lugar(logro)} />
+                  <span className="solo-lectores">
+                    {titulo}: {logro.nombre}, {evento}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
-      {/* La tabla repite lo que ya dicen las pestañas, así que se esconde a
+      <div className="podio-panel">
+        {/* La tabla repite lo que ya dicen las pestañas, así que se esconde a
           los lectores de pantalla: es un atajo para el dedo y el ratón. */}
-      <div className="podio-honor" aria-hidden="true">
-        <p className="podio-honor-titulo">TABLA DE HONOR</p>
-        <ol className="podio-tabla">
-          {porPuesto.map((logro) => (
-            <li key={logro.id} data-elegir={logro.id} className={logro === elegido ? 'es-elegido' : undefined}>
-              <span className="podio-tabla-cursor">▶</span>
-              <span className={`podio-tabla-puesto podio-tabla-${logro.credencial.metal}`}>
-                {lugar(logro)}
-                <span className="podio-grado">°</span>
-              </span>
-              <span className="podio-tabla-nombre">{logro.credencial.corto ?? logro.nombre}</span>
-              <span className="podio-tabla-anio">{anio(logro)}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
+        <div className="podio-honor" aria-hidden="true">
+          <p className="podio-honor-titulo">TABLA DE HONOR</p>
+          <ol className="podio-tabla">
+            {porPuesto.map((logro) => (
+              <li key={logro.id} data-elegir={logro.id} className={logro === elegido ? 'es-elegido' : undefined}>
+                <span className="podio-tabla-cursor">▶</span>
+                <span className={`podio-tabla-puesto podio-tabla-${logro.credencial.metal}`}>
+                  {lugar(logro)}
+                  <span className="podio-grado">°</span>
+                </span>
+                <span className="podio-tabla-nombre">{logro.credencial.corto ?? logro.nombre}</span>
+                <span className="podio-tabla-anio">{anio(logro)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
 
-      {columnas.map((logro) => (
-        <article
-          key={logro.id}
-          id={`cartel-${logro.id}`}
-          className={`podio-cartel podio-cartel-${logro.credencial.metal}`}
-          role="tabpanel"
-          aria-labelledby={`podio-${logro.id}`}
-          hidden={logro !== elegido}
-        >
-          <p className="podio-puesto dato">
-            <span className="podio-insignia">{logro.credencial.puesto}</span>
-            {logro.credencial.titulo}
-          </p>
-          <h3>{logro.nombre}</h3>
-          <p className="podio-evento dato">{logro.credencial.evento}</p>
-          <p className="podio-resumen">{logro.resumen}</p>
-          {(logro.repositorio || logro.publicacion || logro.sitio) && (
-            <p className="podio-enlaces">
-              <Enlace href={logro.sitio} nombre={logro.nombre}>
-                Abrir el sitio
-              </Enlace>
-              <Enlace href={logro.repositorio} nombre={logro.nombre}>
-                Ver el código
-              </Enlace>
-              <Enlace href={logro.publicacion} nombre={logro.nombre}>
-                Ver la publicación
-              </Enlace>
+        {columnas.map((logro) => (
+          <article
+            key={logro.id}
+            id={`cartel-${logro.id}`}
+            className={`podio-cartel podio-cartel-${logro.credencial.metal}`}
+            role="tabpanel"
+            aria-labelledby={`podio-${logro.id}`}
+            hidden={logro !== elegido}
+          >
+            <p className="podio-puesto dato">
+              <span className="podio-insignia">{logro.credencial.puesto}</span>
+              {logro.credencial.titulo}
             </p>
-          )}
-        </article>
-      ))}
+            <h3>{logro.nombre}</h3>
+            <p className="podio-evento dato">{logro.credencial.evento}</p>
+            <p className="podio-resumen">{logro.resumen}</p>
+            {(logro.repositorio || logro.publicacion || logro.sitio) && (
+              <p className="podio-enlaces">
+                <Enlace href={logro.sitio} nombre={logro.nombre}>
+                  Abrir el sitio
+                </Enlace>
+                <Enlace href={logro.repositorio} nombre={logro.nombre}>
+                  Ver el código
+                </Enlace>
+                <Enlace href={logro.publicacion} nombre={logro.nombre}>
+                  Ver la publicación
+                </Enlace>
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
       <noscript>
         <style dangerouslySetInnerHTML={{ __html: SIN_SCRIPT }} />
       </noscript>
