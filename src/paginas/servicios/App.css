@@ -1,0 +1,178 @@
+/* Software a medida. Ver paginas/servicios/App.jsx.
+
+   Un marco del color del servicio —lo que lo cuida— y dentro, de arriba
+   abajo: las caras, sus conexiones con la base, la base y sus conexiones con
+   los sistemas. Las columnas de las conexiones son las de lo que conectan
+   (`--columnas`), así que cada línea cae al centro de su tarjeta. */
+
+.app-marco {
+  position: relative;
+  margin-top: var(--e-12);
+  padding: var(--e-12) var(--e-4) var(--e-8);
+  border: 2px solid var(--tinte);
+  border-radius: var(--radio-panel);
+}
+
+@media (min-width: 640px) {
+  .app-marco {
+    padding-inline: var(--e-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-marco {
+    padding: var(--e-12);
+  }
+}
+
+/* Sobre el borde, con el fondo de la página detrás. */
+.app-marco-rotulo {
+  position: absolute;
+  top: 0;
+  left: var(--e-6);
+  padding: 0 var(--e-3);
+  background: var(--fondo);
+  color: var(--tinte);
+  transform: translateY(-50%);
+}
+
+.app-caras,
+.app-flujos,
+.app-sistemas {
+  display: grid;
+  grid-template-columns: repeat(var(--columnas), minmax(0, 1fr));
+  gap: var(--e-3) var(--e-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-caras {
+  margin-top: var(--e-4);
+}
+
+.app-caras li {
+  padding: var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.app-caras p,
+.app-cuida p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+@media (min-width: 640px) {
+  .app-caras li {
+    padding: var(--e-6);
+  }
+}
+
+/* En S, dos columnas: los títulos de las caras bajan un paso y, de los
+   sistemas, solo la primera fila lleva su conexión. */
+@media (max-width: 639px) {
+  .app-caras,
+  .app-flujos,
+  .app-sistemas {
+    column-gap: var(--e-3);
+  }
+
+  .app-caras h4 {
+    font-size: var(--texto-base);
+  }
+
+  .app-flujos,
+  .app-sistemas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-flujos span:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+/* Cada conexión, dos líneas punteadas: por la de la izquierda bajan los
+   datos y por la de la derecha suben. Cada línea es una tira más larga que su
+   tramo, que se corre lo que mide un trazo y su hueco, con `transform`. */
+.app-flujos span {
+  position: relative;
+  height: var(--e-12);
+  overflow: hidden;
+}
+
+.app-flujos span::before,
+.app-flujos span::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  bottom: 0;
+  left: calc(50% - 6px);
+  width: 2px;
+  background: repeating-linear-gradient(var(--tinte) 0 6px, transparent 6px 12px);
+}
+
+.app-flujos span::after {
+  left: calc(50% + 4px);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .app-flujos span::before {
+    animation: app-flujo 1.2s linear infinite;
+  }
+
+  .app-flujos span::after {
+    animation: app-flujo 1.2s linear infinite reverse;
+  }
+}
+
+@keyframes app-flujo {
+  to {
+    transform: translateY(12px);
+  }
+}
+
+/* La base, en el color del servicio (`.hora-dia`, como el cielo de la
+   cabecera). */
+.app-base {
+  padding: var(--e-6);
+  border-radius: var(--radio-tarjeta);
+  background: var(--fondo);
+  color: var(--texto);
+  text-align: center;
+}
+
+.app-base p {
+  margin: var(--e-2) auto 0;
+}
+
+.app-conectado {
+  margin-top: var(--e-6);
+  color: var(--tinte);
+  text-align: center;
+}
+
+.app-sistemas li {
+  padding: var(--e-2) var(--e-3);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: var(--texto-sm);
+  text-align: center;
+}
+
+.app-cuida {
+  display: grid;
+  gap: var(--e-6) var(--e-12);
+  margin: var(--e-12) 0 0;
+  padding: var(--e-6) 0 0;
+  border-top: 1px solid var(--linea);
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .app-cuida {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

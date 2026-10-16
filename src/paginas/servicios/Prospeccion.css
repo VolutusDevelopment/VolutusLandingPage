@@ -1,0 +1,418 @@
+/* Prospección de clientes. Ver paginas/servicios/Prospeccion.jsx.
+
+   El mapa y la planilla, unidos por una vía por donde pasan los datos: desde
+   L lado a lado, y en S y M uno bajo otro. */
+
+.prospeccion-trabajo {
+  display: grid;
+  align-items: center;
+  gap: var(--e-4);
+  margin-top: var(--e-12);
+}
+
+@media (min-width: 1024px) {
+  .prospeccion-trabajo {
+    grid-template-columns: minmax(0, 5fr) var(--e-16) minmax(0, 7fr);
+    gap: 0;
+  }
+}
+
+.prospeccion-trabajo p {
+  max-width: none;
+  margin: 0;
+}
+
+/* ---- el mapa ----
+   Las calles son las líneas blancas sobre el fondo. Los pines y las calles
+   van en el SVG; el radar, encima del fondo y debajo del SVG, es un círculo
+   del HTML, para que su pulso se anime en la GPU. */
+
+.prospeccion-mapa {
+  position: relative;
+  justify-self: center;
+  width: 100%;
+  max-width: 30rem;
+  overflow: hidden;
+  border-radius: var(--radio-panel);
+  background: color-mix(in oklab, var(--linea) 55%, var(--superficie));
+}
+
+@media (min-width: 1024px) {
+  .prospeccion-mapa {
+    max-width: none;
+  }
+}
+
+.prospeccion-mapa svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.prospeccion-calle {
+  stroke: var(--superficie);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+.prospeccion-zona {
+  fill: color-mix(in oklab, var(--tinte) 14%, transparent);
+  stroke: var(--tinte);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+}
+
+.prospeccion-pin path {
+  fill: var(--tinte);
+}
+
+.prospeccion-pin circle {
+  fill: var(--superficie);
+}
+
+.prospeccion-pin-hueco path {
+  fill: var(--superficie);
+  stroke: var(--tinte);
+  stroke-width: 2;
+}
+
+.prospeccion-pin-hueco circle {
+  fill: var(--tinte);
+}
+
+/* Centrado en la zona (158, 150 del SVG) y con 140 de diámetro. El margen en
+   porcentaje se mide sobre el ancho, igual que el círculo. */
+.prospeccion-radar {
+  position: absolute;
+  top: 50%;
+  left: 49.4%;
+  width: 43.75%;
+  aspect-ratio: 1;
+  margin: -21.875% 0 0 -21.875%;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--tinte) 25%, transparent);
+  opacity: 0;
+}
+
+.prospeccion-rubros {
+  position: absolute;
+  top: var(--e-4);
+  left: var(--e-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+}
+
+.prospeccion-rubros span,
+.prospeccion-publicos {
+  padding: 0 var(--e-3);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: var(--texto-xs);
+}
+
+.prospeccion-publicos {
+  position: absolute;
+  bottom: var(--e-4);
+  left: var(--e-4);
+  font-family: var(--fuente-datos);
+  color: var(--texto-suave);
+}
+
+/* ---- la vía ----
+   Punteada, con la punta hacia la planilla y un paquete que la recorre:
+   hacia abajo en S y M, a la derecha desde L. */
+
+.prospeccion-traslado {
+  position: relative;
+  justify-self: center;
+  width: 2px;
+  height: var(--e-12);
+  background: repeating-linear-gradient(color-mix(in oklab, var(--tinte) 45%, var(--superficie)) 0 6px, transparent 6px 12px);
+}
+
+.prospeccion-traslado::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tinte);
+  opacity: 0;
+}
+
+.prospeccion-traslado::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -5px;
+  border: 6px solid transparent;
+  border-bottom: 0;
+  border-top-color: var(--tinte);
+}
+
+@media (min-width: 1024px) {
+  .prospeccion-traslado {
+    justify-self: stretch;
+    width: auto;
+    height: 2px;
+    margin: 0 var(--e-2);
+    background: repeating-linear-gradient(90deg, color-mix(in oklab, var(--tinte) 45%, var(--superficie)) 0 6px, transparent 6px 12px);
+  }
+
+  .prospeccion-traslado::before {
+    top: -3px;
+    left: 0;
+  }
+
+  .prospeccion-traslado::after {
+    top: -5px;
+    right: -2px;
+    bottom: auto;
+    left: auto;
+    border: 6px solid transparent;
+    border-right: 0;
+    border-left-color: var(--tinte);
+  }
+}
+
+/* ---- la planilla ----
+   En S sale la columna de la nota: no cabe y la reputación ya va en las
+   reseñas. */
+
+.prospeccion-hoja {
+  overflow: hidden;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+  font-size: var(--texto-xs);
+}
+
+.prospeccion-archivo {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding: var(--e-2) var(--e-3);
+  border-bottom: 1px solid var(--linea);
+  font-family: var(--fuente-datos);
+  white-space: nowrap;
+  color: var(--texto-suave);
+}
+
+/* En S no cabe entero: el nombre del archivo cede, no el formato. */
+.prospeccion-archivo span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prospeccion-fila {
+  display: grid;
+  grid-template-columns: 22px 1.3fr 1.2fr 1.1fr 1.1fr;
+  border-bottom: 1px solid var(--linea);
+}
+
+.prospeccion-fila > span {
+  display: flex;
+  align-items: center;
+  gap: var(--e-1);
+  min-width: 0;
+  min-height: 30px;
+  padding: 0 var(--e-2);
+  border-left: 1px solid var(--linea);
+}
+
+@media (max-width: 639px) {
+  .prospeccion-fila > span:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .prospeccion-fila {
+    grid-template-columns: 28px 1.6fr 1.6fr 0.6fr 0.8fr 1.1fr;
+  }
+}
+
+.prospeccion-cabecera > span {
+  background: color-mix(in oklab, var(--tinte) 8%, var(--superficie));
+  font-family: var(--fuente-datos);
+  color: var(--tinte);
+}
+
+/* El número de la fila, como en cualquier planilla. */
+.prospeccion-fila > span:first-child {
+  justify-content: center;
+  padding: 0;
+  border-left: 0;
+  background: color-mix(in oklab, var(--tinte) 8%, var(--superficie));
+  font-family: var(--fuente-datos);
+  color: var(--texto-suave);
+}
+
+.prospeccion-dato {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--texto-suave) 35%, var(--superficie));
+}
+
+.prospeccion-pocas {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--aviso);
+}
+
+.prospeccion-sin-web {
+  font-family: var(--fuente-datos);
+  color: var(--tinte);
+}
+
+.prospeccion-pestanas {
+  display: flex;
+  gap: 2px;
+  padding: var(--e-1) var(--e-2) 0;
+  background: var(--fondo);
+}
+
+.prospeccion-pestanas span {
+  padding: var(--e-1) var(--e-3);
+  border-radius: var(--radio) var(--radio) 0 0;
+  color: var(--texto-suave);
+}
+
+.prospeccion-pestanas span:first-child {
+  background: var(--superficie);
+  box-shadow: inset 0 2px 0 var(--tinte);
+  color: var(--texto);
+}
+
+/* ---- lo que trae, en palabras ---- */
+
+.prospeccion-leyenda {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--e-6) var(--e-12);
+  margin: var(--e-12) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prospeccion-leyenda h3 {
+  font-size: var(--texto-base);
+  letter-spacing: 0;
+}
+
+.prospeccion-leyenda p {
+  margin-top: var(--e-1);
+  color: var(--texto-suave);
+}
+
+/* ---- el movimiento ----
+   El radar late y el paquete recorre la vía todo el tiempo, despacio. Los
+   pines caen y las filas llegan al bajar, cada uno con su línea de tiempo:
+   el mapa y la planilla, que en S quedan lejos uno del otro. Sin estas
+   animaciones, el mapa y la planilla están completos. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .prospeccion-radar {
+    animation: prospeccion-radar 3.2s ease-out infinite;
+  }
+
+  .prospeccion-traslado::before {
+    animation: prospeccion-bajar 1.6s ease-in-out infinite;
+  }
+}
+
+@media screen and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .prospeccion-traslado::before {
+    animation-name: prospeccion-cruzar;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .prospeccion-mapa {
+      view-timeline: --prospeccion-mapa block;
+    }
+
+    .prospeccion-hoja {
+      view-timeline: --prospeccion-hoja block;
+    }
+
+    .prospeccion-pin {
+      animation: prospeccion-caer linear both;
+      animation-timeline: --prospeccion-mapa;
+      animation-range: cover calc(10% + var(--i) * 3%) cover calc(14% + var(--i) * 3%);
+    }
+
+    .prospeccion-negocio {
+      animation: prospeccion-llegar linear both;
+      animation-timeline: --prospeccion-hoja;
+      animation-range: cover calc(14% + var(--i) * 3%) cover calc(18% + var(--i) * 3%);
+    }
+  }
+}
+
+@keyframes prospeccion-radar {
+  from {
+    opacity: 0.7;
+    transform: scale(0.15);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes prospeccion-bajar {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+@keyframes prospeccion-cruzar {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+@keyframes prospeccion-caer {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes prospeccion-llegar {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}

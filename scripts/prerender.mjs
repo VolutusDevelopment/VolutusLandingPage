@@ -54,7 +54,7 @@ function atributo(texto) {
  * obliga a mantener el mismo bloque en varios sitios. Lo mismo cada servicio:
  * su página lo declara y la portada lo nombra.
  *
- * Una página de servicio es su FAQPage, porque sus preguntas van a la vista;
+ * Una página de servicio es su FAQPage, porque sus preguntas van en el HTML;
  * un artículo, su Article con la ruta para volver al índice.
  */
 function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, publicada, actualizada }) {

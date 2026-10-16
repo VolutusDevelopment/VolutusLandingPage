@@ -1,0 +1,181 @@
+/* Agentes de IA. Ver paginas/servicios/Agente.jsx.
+
+   Las preguntas frecuentes en un chat: la pregunta a la derecha, en el color
+   del servicio, y la respuesta a la izquierda. */
+
+.agente-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+  max-width: 46rem;
+  margin: var(--e-8) 0 0;
+  padding: var(--e-6) var(--e-4);
+  /* Las burbujas entran desde un costado: que no asomen fuera del chat. Con
+     `clip` y no `hidden`, que lo volvería un contenedor de scroll: cada
+     mensaje mediría su avance contra el chat, que no se mueve, y no contra la
+     página. */
+  overflow: hidden;
+  overflow: clip;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--superficie);
+}
+
+@media (min-width: 640px) {
+  .agente-chat {
+    padding: var(--e-8);
+  }
+}
+
+.agente-mensaje {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.agente-mensaje dt,
+.agente-mensaje p,
+.agente-escribiendo {
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) var(--radio-tarjeta) var(--radio);
+  background: color-mix(in oklab, var(--linea) 45%, var(--superficie));
+  line-height: 1.5;
+}
+
+.agente-mensaje dt {
+  align-self: flex-end;
+  max-width: min(32rem, 88%);
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) var(--radio) var(--radio-tarjeta);
+  background: var(--tinte);
+  font-weight: 800;
+  color: #fff;
+}
+
+.agente-mensaje dd {
+  position: relative;
+  align-self: flex-start;
+  max-width: min(34rem, 92%);
+  margin: 0;
+}
+
+/* «Escribiendo…»: tres puntos que saltan sobre el lugar de la respuesta,
+   antes de que llegue. Solo existe con las animaciones. */
+.agente-escribiendo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  gap: 5px;
+  padding-block: var(--e-4);
+  pointer-events: none;
+}
+
+.agente-escribiendo span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--texto-suave);
+}
+
+/* Al bajar, cada mensaje es su línea de tiempo: la pregunta entra mientras
+   asoma, los puntos saltan mientras termina de entrar y la respuesta llega
+   cuando ya está entero en la pantalla. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .agente-mensaje {
+      view-timeline: --agente-mensaje block;
+    }
+
+    .agente-mensaje dt {
+      animation: agente-pregunta linear both;
+      animation-timeline: --agente-mensaje;
+      animation-range: entry 0% entry 30%;
+    }
+
+    .agente-escribiendo {
+      display: flex;
+      animation: agente-escribe linear both;
+      animation-timeline: --agente-mensaje;
+      animation-range: entry 30% entry 95%;
+    }
+
+    .agente-escribiendo span {
+      animation: agente-salto 1s ease-in-out infinite;
+    }
+
+    .agente-escribiendo span:nth-child(2) {
+      animation-delay: 150ms;
+    }
+
+    .agente-escribiendo span:nth-child(3) {
+      animation-delay: 300ms;
+    }
+
+    .agente-mensaje p {
+      animation: agente-respuesta linear both;
+      animation-timeline: --agente-mensaje;
+      animation-range: entry 90% contain 12%;
+    }
+  }
+}
+
+@keyframes agente-pregunta {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes agente-escribe {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+}
+
+@keyframes agente-salto {
+  0%,
+  60%,
+  100% {
+    opacity: 0.45;
+    transform: none;
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes agente-respuesta {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---- qué incluye ---- */
+
+.agente-puntos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--e-8) var(--e-12);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agente-puntos li {
+  padding-top: var(--e-4);
+  border-top: 3px solid var(--tinte);
+}
+
+.agente-puntos p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}

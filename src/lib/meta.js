@@ -45,53 +45,53 @@ export const PAGINAS = {
       'Volutus es una empresa de desarrollo de software en Chile. De dónde viene su nombre, cómo trabajamos y dónde revisar lo que hemos hecho.',
   },
   // Las páginas de servicio (paginas/Servicio.jsx). Cada ruta es la `ruta` de
-  // su servicio en lib/servicios.js, y la entradilla de la página es su
-  // descripción.
+  // su servicio en lib/servicios.js. La descripción es para buscadores; la
+  // página lleva una entradilla más corta (data/paginas-de-servicio.js).
   '/desarrollo-web': {
     archivo: 'desarrollo-web.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Desarrollo web en Chile: páginas rápidas y en Google — Volutus',
     descripcion:
       'Diseñamos y programamos páginas web para negocios en Chile: rápidas en el celular, fáciles de encontrar en Google y con tu marca. Te responde una persona en 48 horas hábiles.',
   },
   '/tiendas-online': {
     archivo: 'tiendas-online.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Tiendas online para vender por internet en Chile — Volutus',
     descripcion:
       'Creamos tu tienda online con catálogo, carrito, pagos y pedidos, lista para vender por internet y fácil de administrar por ti. Te responde una persona en 48 horas hábiles.',
   },
   '/desarrollo-software-a-medida': {
     archivo: 'desarrollo-software-a-medida.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Desarrollo de software a medida y apps en Chile — Volutus',
     descripcion:
       'Desarrollamos software a medida para tu negocio: apps para iOS y Android, aplicaciones web y paneles conectados a tus datos. Te responde una persona en 48 horas hábiles.',
   },
   '/agentes-ia': {
     archivo: 'agentes-ia.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Agentes de IA para negocios en Chile — Volutus',
     descripcion:
       'Creamos agentes de inteligencia artificial que responden con la información de tu negocio, atienden solicitudes y hacen tareas por ti a cualquier hora, con una persona de respaldo.',
   },
   '/automatizacion-procesos': {
     archivo: 'automatizacion-procesos.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Automatización de procesos para tu negocio — Volutus',
     descripcion:
       'Conectamos tus herramientas para que las tareas repetitivas ocurran solas: traspaso de datos, formularios y documentos, avisos y tareas programadas, sin cambiar lo que ya usas.',
   },
   '/sistemas-de-gestion': {
     archivo: 'sistemas-de-gestion.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Sistemas de gestión a medida para tu negocio — Volutus',
     descripcion:
       'Un sistema hecho a tu medida para llevar inventario, clientes, agenda o cotizaciones en un solo lugar, con tus números al día y acceso por rol desde cualquier dispositivo.',
   },
   '/prospeccion-de-clientes': {
     archivo: 'prospeccion-de-clientes.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-16',
     titulo: 'Prospección de clientes con datos públicos — Volutus',
     descripcion:
       'Encontramos los negocios del rubro y la zona que elijas, solo con datos públicos: nombre, correo, valoración en Google y sitio web, en una planilla lista para ofrecerles lo tuyo.',

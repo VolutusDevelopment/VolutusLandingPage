@@ -23,5 +23,12 @@
 @import '../paginas/Privacidad.css';
 @import '../paginas/Ley21719.css';
 @import '../paginas/Servicio.css';
+@import '../paginas/servicios/Web.css';
+@import '../paginas/servicios/Tienda.css';
+@import '../paginas/servicios/App.css';
+@import '../paginas/servicios/Agente.css';
+@import '../paginas/servicios/Automatizacion.css';
+@import '../paginas/servicios/Gestion.css';
+@import '../paginas/servicios/Prospeccion.css';
 @import '../paginas/Articulos.css';
 @import '../paginas/PaginaDeError.css';

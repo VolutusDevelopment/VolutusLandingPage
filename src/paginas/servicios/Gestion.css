@@ -1,0 +1,333 @@
+/* Sistemas de gestión. Ver paginas/servicios/Gestion.jsx.
+
+   Un solo panel: los módulos son celdas separadas por 1 px de línea, que es
+   el fondo del panel asomando entre ellas. En S, una columna; en M, dos, y
+   desde L, tres, con los números en dos de ellas. */
+
+/* `clip` y no `hidden` para recortar las esquinas: `hidden` volvería el panel
+   un contenedor de scroll, y los módulos medirían su avance contra él y no
+   contra la página. */
+.gestion-panel {
+  display: grid;
+  gap: 1px;
+  margin: var(--e-12) 0 0;
+  padding: 0;
+  overflow: hidden;
+  overflow: clip;
+  list-style: none;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--linea);
+}
+
+@media (min-width: 640px) {
+  .gestion-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gestion-panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gestion-panel > li {
+  padding: var(--e-6);
+  background: var(--superficie);
+}
+
+@media (min-width: 640px) {
+  .gestion-panel > li {
+    padding: var(--e-8);
+  }
+}
+
+.gestion-panel p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+.gestion-dibujo {
+  display: grid;
+  gap: var(--e-2);
+  margin-top: var(--e-6);
+}
+
+/* Los números: el texto y el gráfico, en el color del servicio. */
+.gestion-panel > .gestion-numeros {
+  display: grid;
+  align-items: end;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+.gestion-numeros h3 {
+  font-size: var(--texto-xl);
+}
+
+/* Desde M, el texto a un lado y el gráfico al otro: a todo el ancho, el
+   gráfico solo crecía. */
+@media (min-width: 640px) {
+  .gestion-numeros,
+  .gestion-roles {
+    grid-column: 1 / -1;
+  }
+
+  .gestion-panel > .gestion-numeros {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: var(--e-8);
+  }
+
+  .gestion-numeros .gestion-dibujo {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gestion-panel > .gestion-numeros {
+    grid-column: span 2;
+  }
+}
+
+.gestion-grafico {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* El mes en curso, entero; los anteriores, más tenues. */
+.gestion-columna {
+  fill: currentColor;
+  opacity: 0.4;
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+.gestion-columna:last-of-type {
+  opacity: 1;
+}
+
+.gestion-tendencia {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 300;
+}
+
+.gestion-punta {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* El stock, ya por debajo de su mínimo: la marca en el color del aviso. */
+.gestion-stock {
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--linea) 60%, var(--superficie));
+}
+
+.gestion-stock::before {
+  content: '';
+  position: absolute;
+  inset: 0 20% 0 0;
+  border-radius: 5px;
+  background: var(--tinte);
+  transform: scaleX(0.22);
+  transform-origin: left;
+}
+
+.gestion-stock::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: 25%;
+  width: 2px;
+  background: var(--aviso);
+}
+
+.gestion-alerta {
+  justify-self: start;
+  padding: 0 var(--e-3);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--aviso) 14%, var(--superficie));
+  font-size: var(--texto-xs);
+  color: var(--aviso);
+}
+
+.gestion-cliente,
+.gestion-cotizacion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.gestion-cliente::before {
+  content: '';
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--tinte) 30%, var(--superficie));
+}
+
+.gestion-barra {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--linea);
+}
+
+.gestion-semana {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--e-1);
+}
+
+.gestion-semana span {
+  height: 14px;
+  border-radius: var(--radio);
+  background: color-mix(in oklab, var(--linea) 60%, var(--superficie));
+}
+
+.gestion-semana .gestion-tomada {
+  background: var(--tinte);
+}
+
+.gestion-cotizacion {
+  justify-content: space-between;
+}
+
+.gestion-cotizacion span:last-child {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: 2px solid var(--tinte);
+  border-radius: 50%;
+}
+
+.gestion-cotizacion .gestion-cerrada {
+  background: var(--tinte);
+}
+
+/* Los permisos, a todo el ancho y en una línea. */
+.gestion-panel > .gestion-roles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-4) var(--e-8);
+  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
+}
+
+.gestion-roles .gestion-dibujo {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.gestion-rol {
+  padding: 0 var(--e-3);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: var(--texto-xs);
+}
+
+/* Al bajar, cada módulo es su línea de tiempo y su dibujo pasa mientras
+   cruza la pantalla. Sin estas animaciones, al imprimir o con movimiento
+   reducido, cada dibujo muestra cómo termina. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .gestion-panel > li {
+      view-timeline: --gestion-modulo block;
+    }
+
+    .gestion-columna {
+      animation: gestion-crecer linear both;
+      animation-timeline: --gestion-modulo;
+      animation-range: cover calc(10% + var(--i) * 3%) cover calc(24% + var(--i) * 3%);
+    }
+
+    .gestion-tendencia {
+      animation: gestion-trazar linear both;
+      animation-timeline: --gestion-modulo;
+      animation-range: cover 28% cover 44%;
+    }
+
+    .gestion-punta,
+    .gestion-alerta {
+      animation: gestion-aparecer linear both;
+      animation-timeline: --gestion-modulo;
+    }
+
+    .gestion-punta {
+      animation-range: cover 42% cover 46%;
+    }
+
+    .gestion-alerta {
+      animation-range: cover 40% cover 45%;
+    }
+
+    .gestion-stock::before {
+      animation: gestion-gastar linear both;
+      animation-timeline: --gestion-modulo;
+      animation-range: cover 15% cover 40%;
+    }
+
+    .gestion-tomada {
+      animation: gestion-tomar linear both;
+      animation-timeline: --gestion-modulo;
+      animation-range: cover calc(15% + var(--i) * 1.5%) cover calc(17% + var(--i) * 1.5%);
+    }
+
+    .gestion-cerrada {
+      animation: gestion-cerrar linear both;
+      animation-timeline: --gestion-modulo;
+      animation-range: cover calc(18% + var(--i) * 6%) cover calc(22% + var(--i) * 6%);
+    }
+  }
+}
+
+@keyframes gestion-crecer {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes gestion-trazar {
+  from {
+    stroke-dashoffset: 300;
+  }
+}
+
+@keyframes gestion-aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes gestion-gastar {
+  from {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gestion-tomar {
+  from {
+    background: color-mix(in oklab, var(--linea) 60%, var(--superficie));
+  }
+}
+
+@keyframes gestion-cerrar {
+  from {
+    background: transparent;
+  }
+}

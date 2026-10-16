@@ -35,10 +35,13 @@ una página es una entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES`
 Cada servicio con `ruta` en [src/lib/servicios.js](src/lib/servicios.js) tiene
 su página (`/desarrollo-web`, `/tiendas-online`, `/desarrollo-software-a-medida`,
 `/agentes-ia`, `/automatizacion-procesos`, `/sistemas-de-gestion` y
-`/prospeccion-de-clientes`): una sola plantilla,
-[src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con el contenido en
-[src/data/paginas-de-servicio.js](src/data/paginas-de-servicio.js) y la escena
-de su cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx). Lleva el
+`/prospeccion-de-clientes`). El marco es uno,
+[src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con la escena de su
+cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx); lo de en medio
+es de cada servicio, en [src/paginas/servicios/](src/paginas/servicios/), que
+cuenta lo que incluye con la forma de lo que entrega y ordena a su manera las
+piezas que comparten (`Bloques.jsx`). El contenido va en
+[src/data/paginas-de-servicio.js](src/data/paginas-de-servicio.js). Lleva el
 color de su card en la rueda y termina en el formulario, con el servicio ya
 marcado.
 
@@ -101,6 +104,7 @@ scripts/
 src/
   paginas/              # Inicio, Nosotros, Privacidad, Ley21719, Servicio, Articulos y las de error (404 y 5xx)
     articulos/          # el cuerpo de cada artículo
+    servicios/          # el cuerpo de cada página de servicio, con su CSS
   components/           # secciones con su CSS
   data/                 # proyectos y contenido de las páginas de servicio
   lib/                  # metadatos, servicios, seguridad y geometría de la marca

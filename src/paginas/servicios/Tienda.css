@@ -1,0 +1,578 @@
+/* Tiendas online. Ver paginas/servicios/Tienda.jsx.
+
+   Las fases de una compra, una bajo otra, y al lado su índice, que se queda a
+   la vista mientras pasan: desde L con sus nombres; en S y M, la columna de
+   puntos, con el nombre para el lector de pantalla. */
+
+.tienda-recorrido {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: var(--e-3);
+  margin-top: var(--e-12);
+}
+
+@media (min-width: 1024px) {
+  .tienda-recorrido {
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: var(--e-16);
+  }
+}
+
+/* ---- el índice ---- */
+
+.tienda-indice {
+  position: sticky;
+  top: calc(var(--barra-alto) + var(--e-6));
+  align-self: start;
+}
+
+.tienda-indice ol {
+  position: relative;
+  display: grid;
+  gap: var(--e-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* La vía entre los puntos y, encima, lo que ya se recorrió. */
+.tienda-indice ol::before,
+.tienda-indice ol::after {
+  content: '';
+  position: absolute;
+  top: 22px;
+  bottom: 22px;
+  left: 21px;
+  width: 2px;
+  background: var(--linea);
+}
+
+.tienda-indice ol::after {
+  background: var(--tinte);
+  transform-origin: top;
+}
+
+.tienda-indice a {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  min-height: 44px;
+  color: inherit;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tienda-punto {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 15px;
+  box-sizing: border-box;
+  border: 2px solid var(--tinte);
+  border-radius: 50%;
+  background: var(--tinte);
+}
+
+@media (max-width: 1023px) {
+  .tienda-paso-nombre {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ---- las fases ----
+   Desde L, el texto a un lado y la escena al otro, con alto de sobra para que
+   el índice alcance a marcar cada una. */
+
+.tienda-fases {
+  display: grid;
+  gap: var(--e-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tienda-fase {
+  display: grid;
+  gap: var(--e-6);
+}
+
+@media (min-width: 1024px) {
+  .tienda-fase {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    align-items: center;
+    gap: var(--e-12);
+    min-height: 400px;
+  }
+}
+
+.tienda-fase h3 {
+  font-size: var(--texto-xl);
+}
+
+.tienda-fase-texto p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* ---- las escenas ---- */
+
+.tienda-escena {
+  display: grid;
+  align-content: center;
+  gap: var(--e-3);
+  padding: var(--e-4);
+  border-radius: var(--radio-panel);
+  background: color-mix(in oklab, var(--tinte) 8%, var(--superficie));
+}
+
+@media (min-width: 640px) {
+  .tienda-escena {
+    padding: var(--e-6);
+  }
+}
+
+/* Desde L, todas del mismo alto, lado a lado con su texto. */
+@media (min-width: 1024px) {
+  .tienda-escena {
+    min-height: 240px;
+  }
+}
+
+.tienda-barra {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--linea);
+}
+
+.tienda-barra-tinte {
+  background: var(--tinte);
+}
+
+/* La foto de un producto: la trama de puntos de la marca. */
+.tienda-foto {
+  display: block;
+  border-radius: var(--radio);
+  background:
+    radial-gradient(circle, color-mix(in oklab, var(--tinte) 40%, var(--superficie)) 1px, transparent 1.6px) 0 0 / 8px 8px,
+    color-mix(in oklab, var(--tinte) 14%, var(--superficie));
+}
+
+.tienda-chips,
+.tienda-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  margin: 0;
+}
+
+.tienda-chips span {
+  padding: 0 var(--e-3);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.tienda-chips span:first-child {
+  border-color: var(--tinte);
+  background: var(--tinte);
+  color: #fff;
+}
+
+.tienda-productos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e-3);
+}
+
+.tienda-producto {
+  display: grid;
+  gap: var(--e-2);
+  padding: var(--e-2);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+
+.tienda-producto .tienda-foto {
+  aspect-ratio: 1;
+}
+
+.tienda-linea,
+.tienda-total {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: var(--e-2) var(--e-3);
+}
+
+.tienda-linea {
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+
+.tienda-total {
+  justify-content: space-between;
+}
+
+.tienda-linea .tienda-foto {
+  flex: none;
+  width: 40px;
+  height: 40px;
+}
+
+.tienda-cantidad {
+  margin-left: auto;
+  padding: 0 var(--e-2);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  white-space: nowrap;
+  color: var(--texto-suave);
+}
+
+.tienda-pagar {
+  padding: var(--e-1) var(--e-4);
+  border-radius: var(--radio);
+  background: var(--tinte);
+  font-size: var(--texto-sm);
+  color: #fff;
+}
+
+.tienda-pago {
+  display: grid;
+  gap: var(--e-4);
+}
+
+@media (min-width: 640px) {
+  .tienda-pago {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--e-6);
+  }
+}
+
+.tienda-tarjeta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 180px;
+  aspect-ratio: 1.6;
+  padding: var(--e-4);
+  box-sizing: border-box;
+  border-radius: var(--radio-tarjeta);
+  background: var(--tinte);
+}
+
+.tienda-chip-tarjeta {
+  width: 32px;
+  height: 24px;
+  border-radius: var(--radio);
+  background: color-mix(in oklab, var(--tinte) 40%, var(--superficie));
+}
+
+.tienda-digitos {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  color: #fff;
+}
+
+.tienda-cobro {
+  display: grid;
+  gap: var(--e-3);
+}
+
+.tienda-progreso {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--linea);
+}
+
+.tienda-progreso::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--tinte);
+  transform-origin: left;
+}
+
+.tienda-pagado {
+  justify-self: start;
+  padding: 0 var(--e-3);
+  border-radius: 999px;
+  background: var(--exito);
+  font-size: var(--texto-sm);
+  color: #fff;
+}
+
+.tienda-estados span {
+  padding: var(--e-1) var(--e-3);
+  border-radius: 999px;
+  background: var(--tinte);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: #fff;
+}
+
+.tienda-panel {
+  display: grid;
+  align-items: end;
+  gap: var(--e-6);
+}
+
+@media (min-width: 640px) {
+  .tienda-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tienda-barras {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e-2);
+  height: 130px;
+}
+
+.tienda-barras span {
+  flex: 1;
+  border-radius: var(--radio) var(--radio) 0 0;
+  background: var(--tinte);
+  transform-origin: bottom;
+}
+
+.tienda-ajustes {
+  display: grid;
+  gap: var(--e-2);
+}
+
+.tienda-ajuste {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding: var(--e-2) var(--e-3);
+  border-radius: var(--radio);
+  background: var(--superficie);
+}
+
+.tienda-interruptor {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--tinte);
+}
+
+.tienda-interruptor::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 18px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ---- al bajar ----
+   Cada fase es una línea de tiempo y su escena se arma mientras cruza la
+   pantalla. El índice las lee todas (`timeline-scope`): su vía se llena con
+   el recorrido entero y cada punto crece mientras su fase pasa por el
+   centro; las que ya pasaron quedan llenas. Sin estas animaciones, al
+   imprimir o con movimiento reducido, todo está completo y quieto. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .tienda-fase-catalogo {
+      view-timeline: --tienda-catalogo block;
+    }
+
+    .tienda-fase-carrito {
+      view-timeline: --tienda-carrito block;
+    }
+
+    .tienda-fase-pago {
+      view-timeline: --tienda-pago block;
+    }
+
+    .tienda-fase-pedido {
+      view-timeline: --tienda-pedido block;
+    }
+
+    .tienda-fase-panel {
+      view-timeline: --tienda-panel block;
+    }
+
+    .tienda-sube {
+      animation: tienda-sube linear both;
+      animation-range: cover calc(10% + var(--i, 0) * 6%) cover calc(24% + var(--i, 0) * 6%);
+    }
+
+    .tienda-fase-catalogo .tienda-sube {
+      animation-timeline: --tienda-catalogo;
+    }
+
+    .tienda-fase-carrito .tienda-sube {
+      animation-timeline: --tienda-carrito;
+    }
+
+    .tienda-fase-pago .tienda-sube {
+      animation-timeline: --tienda-pago;
+    }
+
+    .tienda-fase-panel .tienda-sube {
+      animation-timeline: --tienda-panel;
+    }
+
+    .tienda-progreso::before {
+      animation: tienda-llenar-x linear both;
+      animation-timeline: --tienda-pago;
+      animation-range: cover 20% cover 40%;
+    }
+
+    .tienda-estados span {
+      animation: tienda-estado linear both;
+      animation-timeline: --tienda-pedido;
+      animation-range: cover calc(18% + var(--i) * 10%) cover calc(22% + var(--i) * 10%);
+    }
+
+    .tienda-barras span {
+      animation: tienda-llenar-y linear both;
+      animation-timeline: --tienda-panel;
+      animation-range: cover calc(12% + var(--i) * 4%) cover calc(30% + var(--i) * 4%);
+    }
+
+    .tienda-interruptor::after {
+      animation: tienda-interruptor linear both;
+      animation-timeline: --tienda-panel;
+      animation-range: cover 34% cover 42%;
+    }
+  }
+}
+
+@supports (timeline-scope: none) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .tienda-recorrido {
+      timeline-scope: --tienda-fases, --tienda-catalogo, --tienda-carrito, --tienda-pago, --tienda-pedido, --tienda-panel;
+    }
+
+    .tienda-fases {
+      view-timeline: --tienda-fases block;
+    }
+
+    .tienda-indice ol::after {
+      animation: tienda-llenar-y linear both;
+      animation-timeline: --tienda-fases;
+      animation-range: contain 0% contain 100%;
+    }
+
+    .tienda-indice li {
+      animation: tienda-paso linear both;
+      animation-range: cover 25% cover 75%;
+    }
+
+    .tienda-indice .tienda-punto {
+      animation: tienda-punto linear both;
+      animation-range: cover 25% cover 75%;
+    }
+
+    .tienda-indice .tienda-paso-catalogo,
+    .tienda-paso-catalogo .tienda-punto {
+      animation-timeline: --tienda-catalogo;
+    }
+
+    .tienda-indice .tienda-paso-carrito,
+    .tienda-paso-carrito .tienda-punto {
+      animation-timeline: --tienda-carrito;
+    }
+
+    .tienda-indice .tienda-paso-pago,
+    .tienda-paso-pago .tienda-punto {
+      animation-timeline: --tienda-pago;
+    }
+
+    .tienda-indice .tienda-paso-pedido,
+    .tienda-paso-pedido .tienda-punto {
+      animation-timeline: --tienda-pedido;
+    }
+
+    .tienda-indice .tienda-paso-panel,
+    .tienda-paso-panel .tienda-punto {
+      animation-timeline: --tienda-panel;
+    }
+  }
+}
+
+@keyframes tienda-sube {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes tienda-llenar-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes tienda-llenar-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes tienda-estado {
+  from {
+    background: var(--superficie);
+    color: var(--texto-suave);
+  }
+}
+
+@keyframes tienda-interruptor {
+  from {
+    transform: translateX(-16px);
+  }
+}
+
+@keyframes tienda-paso {
+  0%,
+  100% {
+    color: var(--texto-suave);
+  }
+
+  15%,
+  85% {
+    color: var(--texto);
+  }
+}
+
+@keyframes tienda-punto {
+  0% {
+    background: var(--fondo);
+    transform: none;
+  }
+
+  15%,
+  85% {
+    background: var(--tinte);
+    transform: scale(1.4);
+  }
+
+  100% {
+    background: var(--tinte);
+    transform: none;
+  }
+}

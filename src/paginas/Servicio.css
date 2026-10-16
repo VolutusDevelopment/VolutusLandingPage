@@ -1,7 +1,8 @@
-/* Las páginas de servicio. Ver paginas/Servicio.jsx y components/Pieza.jsx.
+/* Las páginas de servicio. Ver paginas/Servicio.jsx, servicios/Bloques.jsx y
+   components/Pieza.jsx; lo propio de cada servicio, en servicios/.
    El color de cada una es `--tinte` (Pagina.jsx), el de su card en la rueda:
    tiñe la cabecera y marca lo que es propio del servicio —las líneas, los
-   vistos, los números—, mientras los enlaces y botones siguen en la acción
+   vistos, los rótulos—, mientras los enlaces y botones siguen en la acción
    de siempre (decisión 7). */
 
 /* ---- la cabecera ----
@@ -112,122 +113,25 @@
   --visto: var(--tinte);
 }
 
-.servicio-pagina .numerada > li::before {
-  color: var(--tinte);
-}
-
-/* ---- qué incluye ----
-   Cada punto bajo una línea gruesa del color del servicio. */
-.servicio-incluye {
-  list-style: none;
-  display: grid;
-  gap: var(--e-8) var(--e-12);
-  margin: var(--e-12) 0 0;
-  padding: 0;
-}
-
-@media (min-width: 640px) {
-  .servicio-incluye {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .servicio-incluye {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.servicio-incluye li {
-  padding-top: var(--e-4);
-  border-top: 3px solid var(--tinte);
-}
-
-.servicio-incluye p {
-  margin-top: var(--e-2);
+/* El rótulo de un grupo o de una columna: una etiqueta en mono, como el
+   antetítulo, aunque a veces sea un encabezado. */
+.servicio-rotulo {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--texto-suave);
 }
 
-/* ---- la regla del servicio ----
-   Sobre el velo de su color, como lo que pide: desde L, el titular a la
-   izquierda y los puntos a la derecha. */
-.servicio-principio {
-  display: grid;
-  gap: var(--e-6);
-  padding: var(--e-8) var(--e-6);
-  border-radius: var(--radio-tarjeta);
-  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
-}
-
-@media (min-width: 640px) {
-  .servicio-principio {
-    padding: var(--e-12);
-  }
-}
-
-@media (min-width: 1024px) {
-  .servicio-principio {
-    grid-template-columns: 2fr 3fr;
-    gap: var(--e-12);
-  }
-}
-
-/* ---- te sirve si ----
-   Desde L, la pregunta a la izquierda y las señales a la derecha. */
-.servicio-cuando {
-  display: grid;
-  gap: var(--e-8);
-}
-
-@media (min-width: 1024px) {
-  .servicio-cuando {
-    grid-template-columns: 1fr 2fr;
-    gap: var(--e-12);
-  }
-}
-
-.servicio-cuando .vistos {
-  gap: var(--e-4);
-  font-size: var(--texto-lg);
-  line-height: 1.4;
-}
-
-/* ---- cómo trabajamos ---- */
-
-.servicio-pones {
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tinte);
-}
-
-/* Lo que pide este servicio, sobre un velo de su color: es lo único de la
-   sección que cambia de una página a otra. */
-.servicio-pedimos {
-  max-width: 48rem;
-  margin-top: var(--e-12);
-  padding: var(--e-8) var(--e-6);
-  border-radius: var(--radio-tarjeta);
-  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
-}
-
-@media (min-width: 640px) {
-  .servicio-pedimos {
-    padding: var(--e-8) var(--e-12);
-  }
-}
-
-.servicio-pedimos h3 {
-  margin-bottom: var(--e-6);
-}
-
 /* ---- compruébalo ----
-   La obra que lo prueba, en una lámina oscura como las de proyectos. Con
-   captura, desde L, el texto a un lado y la pantalla al otro. */
+   La obra que lo prueba, en una lámina oscura como las de proyectos. Sin
+   captura, desde L, una franja: el texto a un lado y los enlaces al otro.
+   Con captura, el texto y los enlaces a un lado y la pantalla al otro. */
 .servicio-prueba {
   display: grid;
-  gap: var(--e-8);
+  gap: var(--e-6) var(--e-12);
   padding: var(--e-8) var(--e-6);
   border-radius: var(--radio-panel);
   background: var(--fondo);
@@ -236,39 +140,51 @@
 
 @media (min-width: 640px) {
   .servicio-prueba {
-    padding: var(--e-12);
+    padding: var(--e-8) var(--e-12);
   }
 }
 
 @media (min-width: 1024px) {
+  .servicio-prueba {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
   .servicio-prueba.con-vista {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    align-items: center;
-    gap: var(--e-12);
+    padding-block: var(--e-12);
+  }
+
+  .con-vista .servicio-prueba-texto {
+    align-self: end;
+  }
+
+  .con-vista .servicio-prueba-enlaces {
+    align-self: start;
+  }
+
+  .servicio-prueba-vista {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 
-.servicio-prueba-credencial {
-  margin-top: var(--e-3);
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-}
-
 .servicio-prueba-bajada {
-  margin-top: var(--e-4);
+  margin-top: var(--e-3);
   color: var(--texto-suave);
 }
 
 .servicio-prueba-enlaces {
-  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0 var(--e-6);
-  margin: var(--e-4) 0 0;
+  align-items: center;
+  gap: var(--e-3) var(--e-6);
+  margin: 0;
   padding: 0;
+  list-style: none;
 }
 
-.servicio-prueba-enlaces a {
+.servicio-prueba-enlaces a:not(.boton) {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
@@ -282,35 +198,150 @@
   border-radius: var(--radio-tarjeta);
 }
 
-/* ---- preguntas frecuentes ----
-   Todas a la vista, sin acordeón: se leen, se buscan y se citan enteras. */
-.servicio-preguntas {
+/* ---- para empezar ----
+   Si le sirve, en blanco, y qué le vamos a pedir, sobre el velo de su color:
+   desde L, lado a lado. Debajo, cómo trabajamos, en una línea. */
+.servicio-empezar {
   display: grid;
-  gap: var(--e-8) var(--e-12);
-  margin: var(--e-12) 0 0;
+  gap: var(--e-6);
 }
 
 @media (min-width: 1024px) {
-  .servicio-preguntas {
+  .servicio-empezar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-.servicio-preguntas > div {
-  padding-top: var(--e-4);
+.servicio-empezar > div {
+  padding: var(--e-8) var(--e-6);
+  border-radius: var(--radio-tarjeta);
+}
+
+@media (min-width: 640px) {
+  .servicio-empezar > div {
+    padding: var(--e-8);
+  }
+}
+
+.servicio-cuando {
+  border: 1px solid var(--linea);
+  background: var(--superficie);
+}
+
+.servicio-pedimos {
+  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
+}
+
+.servicio-empezar h2,
+.servicio-pasos h2 {
+  font-size: var(--texto-lg);
+}
+
+.servicio-empezar .vistos {
+  margin-top: var(--e-6);
+}
+
+/* Solo (la automatización no lleva señales: son sus tareas de hoy), el
+   pedido va a todo el ancho y, desde L, en una fila. */
+@media (min-width: 1024px) {
+  .servicio-pedimos:only-child {
+    display: flex;
+    align-items: baseline;
+    gap: var(--e-12);
+    grid-column: 1 / -1;
+  }
+
+  .servicio-pedimos:only-child h2 {
+    flex: none;
+  }
+
+  .servicio-pedimos:only-child .vistos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-3) var(--e-12);
+    margin-top: 0;
+  }
+}
+
+.servicio-pasos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--e-3) var(--e-8);
+  margin-top: var(--e-12);
+}
+
+.servicio-pasos ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--texto-suave);
+}
+
+.servicio-pasos li {
+  display: flex;
+  gap: var(--e-3);
+}
+
+.servicio-pasos li + li::before {
+  content: '→';
+  content: '→' / '';
+  color: var(--tinte);
+}
+
+/* ---- preguntas frecuentes ----
+   Plegadas, con un + que gira a × al abrirlas. El + va posicionado y no con
+   flex: WebKit no siempre deja que un `<summary>` sea contenedor flex. */
+.servicio-preguntas {
+  max-width: 52rem;
+  margin-top: var(--e-8);
   border-top: 1px solid var(--linea);
 }
 
-.servicio-preguntas dt {
-  font-size: var(--texto-lg);
-  font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
+.servicio-preguntas details {
+  border-bottom: 1px solid var(--linea);
 }
 
-.servicio-preguntas dd {
-  max-width: var(--medida-lectura);
-  margin: var(--e-2) 0 0;
+.servicio-preguntas summary {
+  position: relative;
+  padding: var(--e-4) var(--e-12) var(--e-4) 0;
+  font-weight: 800;
+  list-style: none;
+  cursor: pointer;
+}
+
+.servicio-preguntas summary::-webkit-details-marker {
+  display: none;
+}
+
+.servicio-preguntas summary::after {
+  content: '+';
+  content: '+' / '';
+  position: absolute;
+  top: 50%;
+  right: var(--e-2);
+  font-size: var(--texto-lg);
+  line-height: 1;
+  color: var(--tinte);
+  transform: translateY(-50%);
+  transition: transform var(--t-pulsar) var(--ease-out);
+}
+
+.servicio-preguntas details[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .servicio-preguntas summary::after {
+    transition: none;
+  }
+}
+
+.servicio-preguntas p {
+  padding-bottom: var(--e-6);
   color: var(--texto-suave);
 }
 

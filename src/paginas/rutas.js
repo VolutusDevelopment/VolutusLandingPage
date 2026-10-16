@@ -19,7 +19,8 @@ import { SERVICIOS } from '../lib/servicios.js'
 // falla al construir y no en producción. Lo usan el prerender y el modo dev,
 // que le pasan a cada componente su `ruta`.
 //
-// Las páginas de servicio son una sola plantilla: la ruta dice cuál pinta.
+// Las páginas de servicio comparten su marco (Servicio.jsx): la ruta dice cuál
+// pinta.
 export const COMPONENTES = {
   '/': Inicio,
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
