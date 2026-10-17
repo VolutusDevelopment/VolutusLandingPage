@@ -84,8 +84,8 @@ export default function PaginaWebOTiendaOnline({ ruta }) {
         </li>
       </ul>
       <p>
-        Si ya sabes cuál necesitas, en <a href="/desarrollo-web">desarrollo web</a> y en{' '}
-        <a href="/tiendas-online">tiendas online</a> contamos qué incluye cada una y qué te vamos a pedir.
+        Si ya sabes cuál necesitas, en <a href="/servicios/desarrollo-web">desarrollo web</a> y en{' '}
+        <a href="/servicios/tiendas-online">tiendas online</a> contamos qué incluye cada una y qué te vamos a pedir.
       </p>
     </Articulo>
   )

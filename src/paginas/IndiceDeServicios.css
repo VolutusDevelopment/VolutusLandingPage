@@ -1,0 +1,233 @@
+/* El índice de servicios. Ver IndiceDeServicios.jsx. */
+
+/* ---- la cabecera ----
+   El cielo del día de las páginas internas, con la nube detrás. El texto es
+   blanco y sobre los puntos no se leería, así que la nube nunca pasa detrás
+   de él: en S va arriba, y desde L, a la derecha, y se deshace antes de
+   llegar al texto. */
+.indice-cabecera {
+  overflow: clip;
+}
+
+.indice-cielo {
+  --nubes-luz: #ffffff;
+  --nubes-sombra: #6a8cb2;
+  --nubes-alfa: 1;
+  position: absolute;
+  inset: var(--barra-alto) 0 auto;
+  height: 11rem;
+}
+
+.cabecera-cielo.indice-cabecera {
+  padding-top: calc(var(--barra-alto) + 11rem);
+}
+
+.indice-cabecera-texto {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .indice-cielo {
+    inset: 0 0 var(--e-16) 42%;
+    height: auto;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
+    mask-image: linear-gradient(90deg, transparent, #000 45%);
+  }
+
+  .cabecera-cielo.indice-cabecera {
+    padding-top: calc(var(--barra-alto) + var(--e-24));
+  }
+
+  .indice-cabecera-texto > * {
+    max-width: 34rem;
+  }
+}
+
+/* ---- los servicios ----
+   Cada uno es la portada de su página en chico: el cielo del día en su color
+   (`.hora-dia` con su `--tinte`, index.css), su glifo y, abajo, su nombre y su
+   titular en la voz de los h1. Uno bajo otro en S y de a dos desde M; desde L, en filas de
+   dos, tres y dos, y la ley de datos, que no se construye sino que adapta lo
+   que ya existe, en una franja a todo el ancho. */
+.indice-servicios {
+  list-style: none;
+  display: grid;
+  gap: var(--e-4);
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .indice-servicios {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* En M la prospección queda sola en su fila, y la ocupa entera. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .indice-servicio:nth-child(n + 7) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .indice-servicios {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .indice-servicio {
+    grid-column: span 3;
+  }
+
+  .indice-servicio:nth-child(n + 3):nth-child(-n + 5) {
+    grid-column: span 2;
+  }
+
+  .indice-servicio:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.indice-servicio {
+  position: relative;
+  /* El titular se mide por el ancho de su card (`cqi`). */
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  padding: var(--e-6);
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+/* La flecha, arriba a la derecha, dice que la card entera lleva a su página. */
+.indice-servicio::after {
+  content: '→' / '';
+  position: absolute;
+  top: var(--e-6);
+  right: var(--e-6);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgb(255 255 255 / 0.55);
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+@media (min-width: 640px) {
+  .indice-servicio {
+    padding: var(--e-8);
+  }
+
+  .indice-servicio::after {
+    top: var(--e-8);
+    right: var(--e-8);
+  }
+}
+
+.indice-servicio-icono {
+  flex: none;
+  width: 36px;
+  height: 36px;
+}
+
+@media (min-width: 640px) {
+  .indice-servicio-icono {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* El nombre, abajo, habla como el antetítulo de su página. Es el enlace, y
+   cubre la card entera. */
+.indice-servicio-nombre {
+  margin-top: auto;
+  padding-top: var(--e-6);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-sm);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .indice-servicio-nombre {
+    padding-top: var(--e-12);
+  }
+}
+
+.indice-servicio-nombre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.indice-servicio-nombre a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* Crece con su card, de 26 px en un teléfono a 40 en las anchas de XL. */
+.indice-servicio-titular {
+  margin-top: var(--e-3);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: clamp(26px, 11cqi, 40px);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* La franja: el glifo a un lado, el nombre y el titular al otro, y la flecha
+   al centro de su alto. */
+@media (min-width: 1024px) {
+  .indice-servicio:last-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--e-8);
+    padding-right: calc(2 * var(--e-8) + 44px);
+  }
+
+  .indice-servicio:last-child .indice-servicio-icono {
+    grid-row: 1 / span 2;
+  }
+
+  .indice-servicio:last-child .indice-servicio-nombre {
+    padding-top: 0;
+  }
+
+  .indice-servicio:last-child::after {
+    top: 50%;
+    translate: 0 -50%;
+  }
+}
+
+/* Al llegar con el teclado, el glifo hace su gesto (Icono.css); al pasar el
+   cursor, además, la card se levanta un poco, como las que asoman en la
+   rueda. */
+@media (prefers-reduced-motion: no-preference) {
+  .indice-servicio:focus-within .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .indice-servicio {
+    transition: translate var(--t-pulsar) var(--ease-out);
+  }
+
+  .indice-servicio:hover {
+    translate: 0 calc(-1 * var(--e-2));
+  }
+
+  .indice-servicio:hover .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}

@@ -1,6 +1,5 @@
 import { canonicalDe } from '../../lib/meta.js'
 import { PROYECTOS } from '../../data/proyectos.js'
-import { PASOS } from '../../data/paginas-de-servicio.js'
 
 /**
  * Las piezas que comparten las páginas de servicio. Cada servicio (los demás
@@ -83,10 +82,10 @@ export function Prueba({ prueba: { proyecto: id, vista: tituloVista, texto, medi
 }
 
 /**
- * Lo que hay que saber antes de escribir: si le sirve, qué le vamos a pedir y
- * cómo trabajamos. Sin `cuando` (la automatización), el pedido va solo.
+ * Lo que hay que saber antes de escribir: si le sirve y qué le vamos a pedir.
+ * Sin `cuando` (la automatización), el pedido va solo.
  */
-export function ParaEmpezar({ cuando, pedimos, pasos = PASOS }) {
+export function ParaEmpezar({ cuando, pedimos }) {
   return (
     <section className="seccion zona-cielo">
       <div className="contenedor">
@@ -109,14 +108,6 @@ export function ParaEmpezar({ cuando, pedimos, pasos = PASOS }) {
               ))}
             </ul>
           </div>
-        </div>
-        <div className="servicio-pasos entra">
-          <h2>Cómo trabajamos</h2>
-          <ol>
-            {pasos.map((paso) => (
-              <li key={paso}>{paso}</li>
-            ))}
-          </ol>
         </div>
       </div>
     </section>

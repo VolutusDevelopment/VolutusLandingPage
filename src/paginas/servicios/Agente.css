@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--e-8);
-  max-width: 46rem;
   margin: var(--e-8) 0 0;
   padding: var(--e-6) var(--e-4);
   /* Las burbujas entran desde un costado: que no asomen fuera del chat. Con
@@ -58,6 +57,37 @@
   margin: 0;
 }
 
+/* La hora, bajo cada burbuja y del lado de quien escribe; la pone chat.js en
+   `data-hora`. Va en el CSS y no en el texto porque no es parte de la
+   pregunta ni de la respuesta: así no la leen los buscadores ni los lectores
+   de pantalla. */
+.agente-mensaje dt,
+.agente-mensaje p {
+  position: relative;
+  margin-bottom: var(--e-6);
+}
+
+.agente-mensaje dt::after,
+.agente-mensaje p::after {
+  content: attr(data-hora);
+  content: attr(data-hora) / '';
+  position: absolute;
+  top: calc(100% + var(--e-1));
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+
+.agente-mensaje dt::after {
+  right: var(--e-1);
+}
+
+.agente-mensaje p::after {
+  left: var(--e-1);
+}
+
 /* «Escribiendo…»: tres puntos que saltan sobre el lugar de la respuesta,
    antes de que llegue. Solo existe con las animaciones. */
 .agente-escribiendo {
@@ -78,8 +108,8 @@
 }
 
 /* Al bajar, cada mensaje es su línea de tiempo: la pregunta entra mientras
-   asoma, los puntos saltan mientras termina de entrar y la respuesta llega
-   cuando ya está entero en la pantalla. */
+   asoma, los puntos saltan mientras sube y la respuesta llega cuando el
+   mensaje se acerca al centro de la pantalla, ya leída la pregunta. */
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
     .agente-mensaje {
@@ -96,7 +126,7 @@
       display: flex;
       animation: agente-escribe linear both;
       animation-timeline: --agente-mensaje;
-      animation-range: entry 30% entry 95%;
+      animation-range: entry 30% cover 42%;
     }
 
     .agente-escribiendo span {
@@ -114,7 +144,7 @@
     .agente-mensaje p {
       animation: agente-respuesta linear both;
       animation-timeline: --agente-mensaje;
-      animation-range: entry 90% contain 12%;
+      animation-range: cover 38% cover 46%;
     }
   }
 }

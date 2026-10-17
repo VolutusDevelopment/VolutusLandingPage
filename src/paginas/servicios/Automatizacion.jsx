@@ -70,7 +70,7 @@ export default function Automatizacion({ pagina, ruta }) {
         </div>
       </Incluye>
       <Prueba prueba={pagina.prueba} ruta={ruta} />
-      <ParaEmpezar pedimos={pagina.pedimos} pasos={pagina.pasos} />
+      <ParaEmpezar pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>
   )

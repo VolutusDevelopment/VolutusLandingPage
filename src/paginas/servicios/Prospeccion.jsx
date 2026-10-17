@@ -131,7 +131,7 @@ export default function Prospeccion({ pagina }) {
           ))}
         </ul>
       </Incluye>
-      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} pasos={pagina.pasos} />
+      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>
   )

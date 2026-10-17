@@ -10,15 +10,15 @@
  * para contrastar con el cielo y sin morado (DESIGN-BRIEF, A.2). El blanco
  * encima da 5.5:1 o más.
  *
- * `ruta` es la de su página propia (paginas/Servicio.jsx), que tiene que
- * estar declarada en PAGINAS (lib/meta.js). La ley de datos no tiene página
+ * `ruta` es la de su página propia (paginas/Servicio.jsx), bajo /servicios,
+ * el índice de todos, y tiene que estar declarada en PAGINAS (lib/meta.js). La ley de datos no tiene página
  * de servicio: su card lleva a la guía de la ley (`enlace`).
  */
 export const SERVICIOS = [
   {
     id: 'web',
     color: '#007192',
-    ruta: '/desarrollo-web',
+    ruta: '/servicios/desarrollo-web',
     nombre: 'Páginas web',
     opcion: 'Una página web',
     texto: 'Una web rápida, clara y pensada para convertir visitas en clientes.',
@@ -33,7 +33,7 @@ export const SERVICIOS = [
   {
     id: 'tienda',
     color: '#405f74',
-    ruta: '/tiendas-online',
+    ruta: '/servicios/tiendas-online',
     nombre: 'Tiendas online',
     opcion: 'Una tienda online',
     texto: 'Vende tus productos por internet con una tienda que puedas administrar.',
@@ -49,7 +49,7 @@ export const SERVICIOS = [
   {
     id: 'app',
     color: '#b8342c',
-    ruta: '/desarrollo-software-a-medida',
+    ruta: '/servicios/desarrollo-software-a-medida',
     nombre: 'Aplicaciones',
     opcion: 'Una app',
     texto: 'Una aplicación hecha para resolver una necesidad concreta de tu negocio.',
@@ -64,7 +64,7 @@ export const SERVICIOS = [
   {
     id: 'gestion',
     color: '#af4000',
-    ruta: '/sistemas-de-gestion',
+    ruta: '/servicios/sistemas-de-gestion',
     nombre: 'Sistemas de gestión',
     opcion: 'Un sistema de gestión',
     texto: 'Un sistema a la medida para ordenar la operación de tu negocio en un solo lugar.',
@@ -80,7 +80,7 @@ export const SERVICIOS = [
   {
     id: 'agente',
     color: '#905500',
-    ruta: '/agentes-ia',
+    ruta: '/servicios/agentes-ia',
     nombre: 'Agentes de IA',
     opcion: 'Un agente de IA',
     texto: 'Un agente de IA que entiende tu información y se encarga de tareas por ti.',
@@ -96,7 +96,7 @@ export const SERVICIOS = [
   {
     id: 'automatizacion',
     color: '#005d37',
-    ruta: '/automatizacion-procesos',
+    ruta: '/servicios/automatizacion-procesos',
     nombre: 'Automatizaciones',
     opcion: 'Una automatización',
     texto: 'Conectamos tus herramientas para que las tareas repetitivas ocurran automáticamente.',
@@ -111,7 +111,7 @@ export const SERVICIOS = [
   {
     id: 'prospeccion',
     color: '#007156',
-    ruta: '/prospeccion-de-clientes',
+    ruta: '/servicios/prospeccion-de-clientes',
     nombre: 'Prospección de clientes',
     opcion: 'Encontrar clientes potenciales',
     texto: 'Encontramos los negocios de tu rubro y zona con sus datos de contacto, listos para ofrecerles lo tuyo.',

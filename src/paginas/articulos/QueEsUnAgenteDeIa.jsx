@@ -40,7 +40,7 @@ export default function QueEsUnAgenteDeIa({ ruta }) {
       </ul>
       <p>
         No compiten entre sí. Muchas veces lo mejor es combinar dos: una{' '}
-        <a href="/automatizacion-procesos">automatización</a> que mueve los datos y un agente que se encarga de la
+        <a href="/servicios/automatizacion-procesos">automatización</a> que mueve los datos y un agente que se encarga de la
         parte que hay que entender.
       </p>
 
@@ -99,7 +99,7 @@ export default function QueEsUnAgenteDeIa({ ruta }) {
       </p>
       <p>
         Mide cuánto tarda y cuántas veces se repite. Con eso se puede diseñar un primer agente acotado, probarlo con
-        casos reales y crecer desde ahí. En <a href="/agentes-ia">Agentes de IA</a> contamos cómo lo hacemos y qué te
+        casos reales y crecer desde ahí. En <a href="/servicios/agentes-ia">Agentes de IA</a> contamos cómo lo hacemos y qué te
         vamos a pedir.
       </p>
     </Articulo>

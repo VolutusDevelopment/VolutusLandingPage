@@ -16,8 +16,9 @@
 //   3. Incrusta el CSS, porque un <link rel="stylesheet"> bloquea el primer
 //      pintado con una petición extra.
 //
-// Al final escribe los dos archivos que también salen de esas fuentes: el
-// sitemap, desde PAGINAS, y `_headers`, desde lib/seguridad.js.
+// Al final escribe los tres archivos que también salen de esas fuentes: el
+// sitemap, desde PAGINAS; `_headers`, desde lib/seguridad.js, y `_redirects`,
+// desde lib/servicios.js.
 import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -147,6 +148,21 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }],
+    '/servicios': [
+      {
+        '@type': 'CollectionPage',
+        ...pagina,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: SERVICIOS.map(({ nombre, ruta: destino, enlace }, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: nombre,
+            url: canonicalDe(destino ?? enlace),
+          })),
+        },
+      },
+    ],
     '/articulos': [
       {
         '@type': 'CollectionPage',
@@ -257,6 +273,14 @@ writeFileSync(
   `${dist}_headers`,
   `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n`
 )
+
+// Las páginas de servicio vivían en la raíz (/desarrollo-web) hasta que
+// pasaron bajo /servicios: el enlace viejo, guardado o compartido, sigue
+// llegando a su página, y el buscador le traspasa lo ganado a la nueva.
+const traslados = SERVICIOS.filter(({ ruta }) => ruta).map(
+  ({ ruta }) => `${ruta.replace(/^\/servicios/, '')} ${ruta} 301`
+)
+writeFileSync(`${dist}_redirects`, `${traslados.join('\n')}\n`)
 
 rmSync(`${dist}${enlace[1]}`)
 rmSync(`${root}.prerender`, { recursive: true, force: true })

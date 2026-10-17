@@ -83,7 +83,7 @@ export default function Gestion({ pagina, ruta }) {
         </ul>
       </Incluye>
       <Prueba prueba={pagina.prueba} ruta={ruta} />
-      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} pasos={pagina.pasos} />
+      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>
   )

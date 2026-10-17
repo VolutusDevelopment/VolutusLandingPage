@@ -128,7 +128,7 @@ export default function Tienda({ pagina }) {
           </ol>
         </div>
       </Incluye>
-      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} pasos={pagina.pasos} />
+      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>
   )

@@ -25,7 +25,6 @@
  *   automatización no lo lleva: sus señales son las tareas de hoy (`antes`).
  * - `pedimos`: lo que el cliente pone de su parte, la objeción que §2 llama la
  *   más valiosa: «¿qué tengo que entregarles yo?».
- * - `pasos`: cómo trabajamos, si no son los de siempre (`PASOS`, abajo).
  * - `prueba`: un proyecto de data/proyectos.js que lo demuestra, con una línea
  *   que dice por qué; `vista` muestra una de sus capturas y `medir` suma el
  *   botón para medir esta misma página.
@@ -41,12 +40,6 @@ const INDEPENDIENTE = {
   pregunta: '¿Puedo contratar solo este servicio?',
   respuesta: 'Sí. Cada servicio es independiente: no necesitas contratar otro antes ni después.',
 }
-
-// El paso que no cambia nunca, aunque un servicio cambie los demás.
-const COTIZAMOS = 'Te cotizamos en menos de 48 horas hábiles'
-
-/** Cómo trabajamos, si el servicio no dice otra cosa. Sin plazos, por lo de arriba. */
-export const PASOS = ['Nos cuentas el problema', COTIZAMOS, 'Construimos por entregas', 'El código queda a tu nombre']
 
 export const PAGINAS_DE_SERVICIO = {
   web: {
@@ -116,7 +109,6 @@ export const PAGINAS_DE_SERVICIO = {
       'Llevas los pedidos en un cuaderno.',
     ],
     pedimos: ['Tu catálogo. Una planilla sirve.', 'Cómo despachas y cuánto cobras.', 'Una cuenta en la pasarela de pago.'],
-    pasos: ['Nos cuentas el problema', COTIZAMOS, 'Construimos por entregas', 'La tienda queda a tu nombre'],
     preguntas: [
       { pregunta: '¿Cuánto cuesta una tienda online?', respuesta: PRECIO },
       {
@@ -200,7 +192,6 @@ export const PAGINAS_DE_SERVICIO = {
     ],
     cuando: ['Respondes lo mismo todos los días.', 'Te escriben fuera de horario.', 'Quieres IA, pero con tus datos.'],
     pedimos: ['Las preguntas que más te hacen.', 'De dónde sale la información.', 'Qué pasa siempre por una persona.'],
-    pasos: ['Nos cuentas el problema', COTIZAMOS, 'Lo probamos con preguntas reales', 'El código queda a tu nombre'],
     prueba: {
       proyecto: 'hackathon',
       texto: 'Nuestro agente de alertas de infraestructura, con jurado externo.',
@@ -267,7 +258,6 @@ export const PAGINAS_DE_SERVICIO = {
       },
     },
     pedimos: ['Un recorrido por la tarea.', 'Acceso a las herramientas.', 'Ejemplos de lo que entra y lo que sale.'],
-    pasos: ['Nos cuentas la tarea', COTIZAMOS, 'La automatizamos por partes', 'Queda a tu nombre'],
     prueba: {
       proyecto: 'hackathon',
       texto: 'Nuestro agente atiende solo las alertas de infraestructura.',
@@ -353,7 +343,6 @@ export const PAGINAS_DE_SERVICIO = {
       'Quieres abrir una zona o un rubro nuevo.',
     ],
     pedimos: ['La zona.', 'Los rubros que te interesan.', 'Los datos que te importan.'],
-    pasos: ['Nos cuentas qué buscas', COTIZAMOS, 'Hacemos la búsqueda', 'Te entregamos la planilla'],
     preguntas: [
       {
         pregunta: 'Si el dato es público, ¿puedo usarlo para cualquier cosa?',

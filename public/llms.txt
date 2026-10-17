@@ -14,7 +14,7 @@ Contacto: contacto@volutus.cl
 
 - [Portada](https://volutus.cl/): qué hacemos, los servicios, los proyectos y el formulario; no hay una sección de métricas
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
-- [Servicios](https://volutus.cl/#servicios): los ocho servicios, cada uno con su prueba cuando la hay
+- [Servicios](https://volutus.cl/servicios): los ocho servicios en una rejilla, cada uno con el enlace a su página
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
 - [Artículos](https://volutus.cl/articulos): guías cortas para decidir qué software necesita un negocio
@@ -44,13 +44,13 @@ cliente, dónde comprobar obra parecida y las preguntas frecuentes. No
 publicamos precios: se cotizan en la primera respuesta, en menos de 48 horas
 hábiles.
 
-- [Desarrollo web](https://volutus.cl/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA
-- [Tiendas online](https://volutus.cl/tiendas-online): catálogo, carrito, pagos en línea y pedidos, administrados por el propio negocio
-- [Desarrollo de software a medida](https://volutus.cl/desarrollo-software-a-medida): apps para iOS y Android, aplicaciones web y paneles conectados a los datos del negocio
-- [Agentes de IA](https://volutus.cl/agentes-ia): agentes que responden con la información del negocio, atienden solicitudes y hacen tareas, con una persona de respaldo
-- [Automatización de procesos](https://volutus.cl/automatizacion-procesos): traspaso de datos, formularios y documentos, avisos y tareas programadas
-- [Sistemas de gestión](https://volutus.cl/sistemas-de-gestion): inventario, clientes, agenda o cotizaciones en un solo lugar
-- [Prospección de clientes](https://volutus.cl/prospeccion-de-clientes): los negocios de un rubro y una zona marcada en el mapa, con su correo, su valoración en Google y su sitio web, en Google Sheets y Excel. Solo datos públicos: lo que cada negocio publica en Google Maps y en su propio sitio
+- [Desarrollo web](https://volutus.cl/servicios/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA
+- [Tiendas online](https://volutus.cl/servicios/tiendas-online): catálogo, carrito, pagos en línea y pedidos, administrados por el propio negocio
+- [Desarrollo de software a medida](https://volutus.cl/servicios/desarrollo-software-a-medida): apps para iOS y Android, aplicaciones web y paneles conectados a los datos del negocio
+- [Agentes de IA](https://volutus.cl/servicios/agentes-ia): agentes que responden con la información del negocio, atienden solicitudes y hacen tareas, con una persona de respaldo
+- [Automatización de procesos](https://volutus.cl/servicios/automatizacion-procesos): traspaso de datos, formularios y documentos, avisos y tareas programadas
+- [Sistemas de gestión](https://volutus.cl/servicios/sistemas-de-gestion): inventario, clientes, agenda o cotizaciones en un solo lugar
+- [Prospección de clientes](https://volutus.cl/servicios/prospeccion-de-clientes): los negocios de un rubro y una zona marcada en el mapa, con su correo, su valoración en Google y su sitio web, en Google Sheets y Excel. Solo datos públicos: lo que cada negocio publica en Google Maps y en su propio sitio
 - Adaptación técnica a la Ley 21.719 de protección de datos
 
 ## Artículos

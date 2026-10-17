@@ -4,7 +4,8 @@ import { Incluye, ParaEmpezar, Prueba } from './Bloques.jsx'
  * Agentes de IA: las preguntas frecuentes van primero y como una
  * conversación. Al bajar, cada pregunta entra, el agente escribe y llega su
  * respuesta (Agente.css); sin esas animaciones se leen enteras, como
- * cualquier lista de preguntas. Lo que incluye viene después.
+ * cualquier lista de preguntas. La hora de cada burbuja la pone chat.js. Lo
+ * que incluye viene después.
  */
 export default function Agente({ pagina, ruta }) {
   return (
@@ -42,7 +43,7 @@ export default function Agente({ pagina, ruta }) {
         </ul>
       </Incluye>
       <Prueba prueba={pagina.prueba} ruta={ruta} />
-      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} pasos={pagina.pasos} />
+      <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
     </>
   )
 }

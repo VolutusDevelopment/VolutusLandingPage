@@ -67,8 +67,8 @@ function Lente() {
 
 /**
  * Barra de navegación: la marca suelta a la izquierda y, a la derecha, una
- * cápsula flotante con el ancla a servicios, el enlace a /nosotros y la
- * acción principal.
+ * cápsula flotante con los enlaces a /nosotros y a /servicios y la acción
+ * principal.
  *
  * La barra en sí no tiene fondo: lo único que tapa el contenido al desplazar
  * son las dos piezas, cada una con su vidrio translúcido. Así la portada
@@ -98,7 +98,7 @@ function Lente() {
  */
 export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, contactoAqui = false }) {
   // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
-  // `#servicios` resuelve a `/privacidad#servicios`, que no existe. El enlace
+  // `#contacto` resuelve a `/privacidad#contacto`, que no existe. El enlace
   // parece correcto hasta que alguien lo pulsa, que es el peor momento para
   // enterarse. Desde otra página los anclas se cuelgan de la raíz.
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
@@ -127,14 +127,20 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
           <ul className="barra-enlaces">
             
             <li>
-              {/* Una página y no una sección: en ella el indicador descansa
-                  desde el HTML, sin esperar a barra.js. */}
+              {/* Páginas y no secciones: en ellas el indicador descansa
+                  desde el HTML, sin esperar a barra.js. En la página de un
+                  servicio descansa en su madre, /servicios. */}
               <a href="/nosotros" aria-current={ruta === '/nosotros' ? 'page' : undefined}>
                 Nosotros
               </a>
             </li>
             <li>
-              <a href={ancla('servicios')}>Servicios</a>
+              <a
+                href="/servicios"
+                aria-current={ruta === '/servicios' ? 'page' : ruta?.startsWith('/servicios/') ? 'true' : undefined}
+              >
+                Servicios
+              </a>
             </li>
             <li className="barra-contacto">
               <a href={contactoAqui ? '#contacto' : ancla('contacto')}>Cuéntanos tu proyecto</a>

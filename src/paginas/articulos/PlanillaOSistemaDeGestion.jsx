@@ -58,9 +58,9 @@ export default function PlanillaOSistemaDeGestion({ ruta }) {
         diseñar el siguiente, porque ya dice qué datos importan y cómo se usan.
       </p>
       <p>
-        En <a href="/sistemas-de-gestion">sistemas de gestión</a> contamos qué incluye uno hecho a tu medida. Y si lo
+        En <a href="/servicios/sistemas-de-gestion">sistemas de gestión</a> contamos qué incluye uno hecho a tu medida. Y si lo
         que más duele es copiar datos de un lado a otro, puede bastar con una{' '}
-        <a href="/automatizacion-procesos">automatización</a>.
+        <a href="/servicios/automatizacion-procesos">automatización</a>.
       </p>
     </Articulo>
   )
