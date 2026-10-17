@@ -61,13 +61,13 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
   const pagina = { name: titulo, url: canonical, inLanguage: 'es-CL' }
   const servicio = SERVICIOS.find((s) => s.ruta === ruta)
   if (servicio) {
-    const { antetitulo, preguntas } = PAGINAS_DE_SERVICIO[servicio.id]
+    const { tipo, preguntas } = PAGINAS_DE_SERVICIO[servicio.id]
     return ldJson([
       {
         '@type': 'Service',
         '@id': idDeServicio(ruta),
-        name: antetitulo,
-        serviceType: antetitulo,
+        name: tipo,
+        serviceType: tipo,
         description: descripcion,
         url: canonical,
         provider: { '@id': ORGANIZACION },

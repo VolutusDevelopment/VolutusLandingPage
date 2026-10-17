@@ -1,0 +1,131 @@
+/* Los gestos de los glifos de servicio (Icono.jsx). Cada parte que se mueve
+   es un `.gesto` con su dibujo adentro, y aquí se define qué hace: su
+   animación en `--gesto` y, con `--n`, en qué orden entra. Cuándo lo hace lo
+   decide quien usa el icono: la card de la rueda al quedar al frente
+   (Servicios.css) y la fila de servicios al pasar el cursor (Sugerencias.css),
+   con estas dos líneas:
+
+     animation: var(--gesto);
+     animation-delay: calc(var(--n, 0) * 90ms);
+
+   Medio segundo o menos; la etiqueta, que se mece, algo más. */
+.gesto,
+.gesto > path {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* La marea sube desde el fondo de la ventana. */
+.gesto-marea,
+.gesto-marea > path {
+  transform-origin: bottom;
+}
+
+.gesto-marea {
+  --gesto: gesto-marea 500ms var(--ease-out) both;
+}
+
+/* La etiqueta se mece colgada de su hoyo. */
+.gesto-mece,
+.gesto-mece > path {
+  transform-origin: 35% 50%;
+}
+
+.gesto-mece {
+  --gesto: gesto-mece 900ms var(--ease-in-out) both;
+}
+
+/* La pantalla del teléfono se llena desde abajo. */
+.gesto-sube {
+  --gesto: gesto-sube 400ms var(--ease-out) both;
+}
+
+/* Las carpetas entran a su lugar una tras otra. */
+.gesto-archiva {
+  --gesto: gesto-archiva 450ms var(--ease-out) both;
+}
+
+/* El globo nace de su punta. */
+.gesto-globo,
+.gesto-globo > path {
+  transform-origin: 17% 100%;
+}
+
+.gesto-globo {
+  --gesto: gesto-globo 400ms var(--ease-out) both;
+}
+
+/* Las dos flechas avanzan, una tras otra. */
+.gesto-avanza {
+  --gesto: gesto-avanza 450ms var(--ease-out) both;
+}
+
+/* El anillo y después el centro caen en el blanco. */
+.gesto-cae {
+  --gesto: gesto-cae 400ms var(--ease-out) both;
+}
+
+/* El carnet se da vuelta hacia quien lo mira. */
+.gesto-voltea {
+  --gesto: gesto-voltea 500ms var(--ease-out) both;
+}
+
+@keyframes gesto-marea {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes gesto-mece {
+  0% {
+    transform: rotate(-16deg);
+  }
+  55% {
+    transform: rotate(6deg);
+  }
+  80% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes gesto-sube {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+}
+
+@keyframes gesto-archiva {
+  from {
+    opacity: 0;
+    transform: translateX(-18%);
+  }
+}
+
+@keyframes gesto-globo {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes gesto-avanza {
+  from {
+    opacity: 0;
+    transform: translateX(-45%);
+  }
+}
+
+@keyframes gesto-cae {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes gesto-voltea {
+  from {
+    opacity: 0;
+    transform: scaleX(0.1);
+  }
+}

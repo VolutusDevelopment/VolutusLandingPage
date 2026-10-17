@@ -53,7 +53,6 @@ export default function Servicio({ ruta }) {
       <section className="seccion zona-cielo hora-dia cabecera-cielo servicio-cabecera">
         <div className="contenedor servicio-portada">
           <div>
-            <p className="antetitulo">{pagina.antetitulo}</p>
             <h1>{pagina.titular}</h1>
             <p className="entradilla servicio-entradilla">{pagina.entradilla}</p>
             <p className="servicio-acciones">

@@ -71,8 +71,7 @@
 /* Cada card trae su color (`--panel`, de lib/servicios.js). Todas llevan
    texto blanco, que da 4.6:1 o más en el punto más claro del prisma; un
    blanco translúcido ya no llega, así que el texto suave es blanco y se
-   distingue por su tamaño. El botón de cada servicio, abajo, lleva el mismo
-   tono. */
+   distingue por su tamaño. */
 .servicio.zona-plano {
   --texto: #ffffff;
   --texto-suave: #ffffff;
@@ -92,6 +91,22 @@
   width: 28px;
   height: 28px;
   flex-shrink: 0;
+}
+
+/* El glifo hace su gesto (Icono.css) cuando su card queda al frente, y lo
+   repite cada vez que el cursor entra en ella. */
+@media (prefers-reduced-motion: no-preference) {
+  .servicio.activo .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .rueda:not(.arrastrando) .servicio.activo .servicio-cara:hover .gesto > path {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
 }
 
 /* El número es la firma de la card y habla como el logotipo: Archivo negra
@@ -155,10 +170,6 @@
   border-radius: 50%;
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
-}
-
-.servicio-enlace {
-  margin-top: var(--e-4);
 }
 
 /* ---- sin rueda: la lista ----
@@ -381,10 +392,6 @@
 
     .servicio-puntos {
       padding-top: var(--e-3);
-    }
-
-    .servicio-enlace {
-      margin-top: var(--e-3);
     }
 
     /* Las vecinas asoman a los lados con el texto cortado por la del

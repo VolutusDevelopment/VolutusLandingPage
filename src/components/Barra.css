@@ -359,7 +359,7 @@
    hay ninguno, descansa en el de la sección actual (`aria-current`, que pone
    barra.js). Anchor Positioning: el enlace que corresponde se declara ancla y
    la píldora se estira entre sus cuatro bordes, así que el mismo trazo mide
-   «Proyectos» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
+   «Nosotros» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
    de largo y vuelve: el gesto de algo con masa, no de un salto.
 
    Sin soporte, cada enlace pinta su propio fondo: el mismo resultado, sin el
@@ -411,7 +411,7 @@
   }
 }
 
-/* Por debajo de 768 px el logotipo y los cuatro enlaces no caben en una fila:
+/* Por debajo de 768 px el logotipo y los tres enlaces no caben en una fila:
    se retira «Cuéntanos tu proyecto», que sigue a mano en la portada. */
 @media (max-width: 767px) {
   .barra-contacto {
@@ -419,7 +419,7 @@
   }
 }
 
-/* Por debajo de 560 px el logotipo se queda, más bajo, y con los tres
+/* Por debajo de 560 px el logotipo se queda, más bajo, y con los dos
    enlaces cabe en una línea. */
 @media (max-width: 559px) {
   .marca-logotipo {

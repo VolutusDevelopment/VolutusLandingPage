@@ -178,7 +178,7 @@ const FRENTES = [
   },
   {
     id: 'construye',
-    icono: 'datos',
+    icono: 'escudo',
     nombre: 'Construye',
     bajada: 'Tus sistemas.',
     nota: 'Lo hacemos nosotros',

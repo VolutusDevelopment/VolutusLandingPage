@@ -25,9 +25,10 @@ export function Incluye({ className, children }) {
 /**
  * Un proyecto de data/proyectos.js como prueba: su nombre, por qué y sus
  * enlaces y, si tiene, una captura. Sin captura es una franja: el texto a un
- * lado y los enlaces al otro.
+ * lado y los enlaces al otro. `className` se suma a la sección, para el
+ * servicio que la pinta a su manera (la web).
  */
-export function Prueba({ prueba: { proyecto: id, vista: tituloVista, texto, medir }, ruta }) {
+export function Prueba({ prueba: { proyecto: id, vista: tituloVista, texto, medir }, ruta, className }) {
   const { nombre, credencial, sitio, repositorio, publicacion, vistas } = PROYECTOS.find((p) => p.id === id)
   const vista = vistas?.find((v) => v.titulo === tituloVista)
 
@@ -43,7 +44,7 @@ export function Prueba({ prueba: { proyecto: id, vista: tituloVista, texto, medi
   ].filter(Boolean)
 
   return (
-    <section className="seccion zona-cielo" aria-labelledby="prueba-titulo">
+    <section className={className ? `seccion zona-cielo ${className}` : 'seccion zona-cielo'} aria-labelledby="prueba-titulo">
       <div className="contenedor">
         <div className={`servicio-prueba zona-plano entra${vista ? ' con-vista' : ''}`}>
           <div className="servicio-prueba-texto">

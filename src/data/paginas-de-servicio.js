@@ -12,7 +12,8 @@
  * tres señales y tres pedidos. Lo que la página ya dibuja no se repite en
  * texto ni en las preguntas.
  *
- * - `antetitulo`: el nombre del servicio como se busca.
+ * - `tipo`: el nombre del servicio como se busca, el del Service del JSON-LD
+ *   (scripts/prerender.mjs).
  * - `titular`: el h1. Ninguna palabra pasa de ocho letras, para que el
  *   titular quepa en su columna desde L y en un teléfono de 360 px.
  * - `entradilla`: una frase bajo el titular. La descripción larga, la de
@@ -49,7 +50,7 @@ export const PASOS = ['Nos cuentas el problema', COTIZAMOS, 'Construimos por ent
 
 export const PAGINAS_DE_SERVICIO = {
   web: {
-    antetitulo: 'Desarrollo web',
+    tipo: 'Desarrollo web',
     titular: 'Páginas web rápidas de verdad',
     entradilla: 'Rápidas en el celular, fáciles de encontrar en Google y con tu marca.',
     // Lo que se ve, sobre la onda, y lo que no, debajo.
@@ -96,7 +97,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   tienda: {
-    antetitulo: 'Tiendas online',
+    tipo: 'Tiendas online',
     titular: 'Tu tienda online, en tus manos',
     entradilla: 'Catálogo, carrito, pagos y pedidos, en una tienda que administras tú.',
     // Las fases, en el orden en que las recorre una compra; la última es la de
@@ -133,7 +134,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   app: {
-    antetitulo: 'Desarrollo de software a medida',
+    tipo: 'Desarrollo de software a medida',
     titular: 'Software hecho a tu medida',
     entradilla: 'Apps, aplicaciones web y paneles, conectados a tus datos.',
     // Las caras donde se usa, la base que las une, los sistemas a los que se
@@ -187,7 +188,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   agente: {
-    antetitulo: 'Agentes de IA',
+    tipo: 'Agentes de IA',
     titular: 'IA que conoce tu negocio',
     entradilla: 'Responde con tu información y hace tareas por ti, a cualquier hora.',
     incluye: [
@@ -230,7 +231,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   automatizacion: {
-    antetitulo: 'Automatización de procesos',
+    tipo: 'Automatización de procesos',
     titular: 'Deja de copiar y pegar',
     entradilla: 'Las tareas repetitivas ocurren solas, con las herramientas que ya usas.',
     // Cada tarea de hoy (`antes`) junto a cómo queda automatizada; después,
@@ -293,7 +294,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   gestion: {
-    antetitulo: 'Sistemas de gestión',
+    tipo: 'Sistemas de gestión',
     titular: 'Tu negocio en un solo lugar',
     entradilla: 'Inventario, clientes, agenda y cotizaciones, con tus números al día.',
     // Los módulos de un solo panel. Cada `id` tiene su dibujo en Gestion.jsx:
@@ -334,7 +335,7 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   prospeccion: {
-    antetitulo: 'Prospección de clientes',
+    tipo: 'Prospección de clientes',
     titular: 'Tus próximos clientes, en una planilla',
     entradilla: 'Los negocios de tu rubro y tu zona, con su contacto. Solo datos públicos.',
     // Lo que trae la planilla, al pie del mapa y la planilla que lo dibujan.

@@ -15,7 +15,7 @@
  *   punto en su centro, a la altura de las letras. Dentro de una sección
  *   clara pasan tarjetas oscuras, y cada pieza tiene que reaccionar a su
  *   propio fondo, no a la sección: con el canto de una tarjeta cruzando la
- *   cápsula, «Nosotros» puede ir en blanco y «Proyectos» en tinta. La cápsula
+ *   cápsula, «Nosotros» puede ir en blanco y «Servicios» en tinta. La cápsula
  *   solo tiñe su indicador; las letras son de cada enlace. Manda el centro y
  *   no un canto: el canto cambiaba el color en cuanto el fondo nuevo asomaba,
  *   y si la página se detenía ahí, las letras quedaban en el color de un

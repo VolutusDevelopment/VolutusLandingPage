@@ -11,8 +11,8 @@
  * encima da 5.5:1 o más.
  *
  * `ruta` es la de su página propia (paginas/Servicio.jsx), que tiene que
- * estar declarada en PAGINAS (lib/meta.js). El que no la tiene se queda en la
- * rueda.
+ * estar declarada en PAGINAS (lib/meta.js). La ley de datos no tiene página
+ * de servicio: su card lleva a la guía de la ley (`enlace`).
  */
 export const SERVICIOS = [
   {
@@ -135,10 +135,7 @@ export const SERVICIOS = [
       'Privacidad y control de los datos',
       'Recopilación de solo la información necesaria',
     ],
-    enlace: {
-      texto: 'Conoce lo que cambia',
-      href: '/ley21719',
-    },
+    enlace: '/ley21719',
   },
 ]
 

@@ -6,11 +6,50 @@
    de siempre (decisión 7). */
 
 /* ---- la cabecera ----
-   El cielo del día en el color del servicio (index.css). Al bajar se aclara
-   por un claro de su mismo color, no por el celeste. Desde L, el texto a la
-   izquierda y la pieza a la derecha. */
-.servicio-cabecera {
-  --tinte-claro: color-mix(in oklab, var(--tinte) 45%, #f6f9fc);
+   El cielo del día en el color del servicio (index.css). Desde L, el texto a
+   la izquierda y la pieza a la derecha, los dos desde arriba.
+
+   Se aclara en una curva suave (smoothstep, en tramos de 48 px) que no deja
+   esquina donde empieza ni donde termina: ocupa todo el relleno de abajo
+   (192 px) y sigue 96 px en la sección siguiente, sin mover nada. Ahí ya es
+   claro: la tinta da 10.7:1 o más, y el texto suave llega a 4.5:1 a los
+   18 px, donde solo cae un título. */
+:root .servicio-cabecera {
+  --fondo-hora: linear-gradient(
+    var(--fondo) calc(100% - 4 * var(--e-12)),
+    color-mix(in oklab, var(--tinte) 93%, #f6f9fc) calc(100% - 3 * var(--e-12)),
+    color-mix(in oklab, var(--tinte) 74%, #f6f9fc) calc(100% - 2 * var(--e-12)),
+    color-mix(in oklab, var(--tinte) 50%, #f6f9fc) calc(100% - var(--e-12)),
+    color-mix(in oklab, var(--tinte) 26%, #f6f9fc)
+  );
+}
+
+:root .servicio-cabecera + .seccion {
+  --fondo-hora: linear-gradient(
+    color-mix(in oklab, var(--tinte) 26%, #f6f9fc),
+    color-mix(in oklab, var(--tinte) 7%, #f6f9fc) var(--e-12),
+    var(--fondo) calc(2 * var(--e-12))
+  );
+}
+
+/* Menos aire sobre el titular que en las demás cabeceras (index.css): la
+   pieza ya llena la pantalla. Va con `.cabecera-cielo` porque las cards de
+   la rueda (Servicios.css) también tienen un `.servicio-cabecera`. */
+.cabecera-cielo.servicio-cabecera {
+  padding-top: calc(var(--barra-alto) + var(--e-8));
+}
+
+@media (min-width: 1024px) {
+  .cabecera-cielo.servicio-cabecera {
+    padding-top: calc(var(--barra-alto) + var(--e-12));
+  }
+}
+
+/* La franja de barra.js (index.css), donde la tinta ya contrasta más que el
+   blanco: medido sobre los siete tintes, entre 67 y 100 px del comienzo del
+   fundido, casi siempre cerca de 75. */
+.servicio-cabecera .cabecera-fundido {
+  height: calc(var(--e-24) + var(--e-6));
 }
 
 /* `minmax(0, …)` y no `auto`: en WebKit el SVG de la pieza aporta un ancho
@@ -25,7 +64,7 @@
 @media (min-width: 1024px) {
   .servicio-portada {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: center;
+    align-items: start;
     gap: var(--e-16);
   }
 }
@@ -50,8 +89,11 @@
 /* ---- la pieza ----
    La card de la rueda en grande: su color, un poco más hondo, la trama de
    puntos de la marca, su anillo blanco y su sombra de objeto (la excepción de
-   la decisión 31). La proporción es fija, así que no mueve nada al cargar. */
+   la decisión 31). La proporción es fija, así que no mueve nada al cargar.
+   Como la card del frente, se inclina hacia el cursor y un brillo lo sigue
+   (pieza.js). */
 .pieza {
+  position: relative;
   aspect-ratio: 4 / 3;
   padding: 3%;
   border-radius: var(--radio-panel);
@@ -61,6 +103,29 @@
   box-shadow:
     inset 0 0 0 2px rgb(255 255 255 / 0.8),
     0 14px 30px -16px rgb(10 26 42 / 0.4);
+  transform: perspective(900px) rotateX(var(--inclina-x, 0deg)) rotateY(var(--inclina-y, 0deg));
+  transition: transform 250ms var(--ease-out);
+}
+
+.pieza::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    28rem circle at var(--brillo-x, 50%) var(--brillo-y, 0%),
+    rgb(255 255 255 / 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .pieza:hover::after {
+    opacity: 1;
+  }
 }
 
 .pieza svg {
@@ -73,37 +138,417 @@
   font-family: var(--fuente-datos);
 }
 
-/* Al cargar, las partes entran en su orden (`--n`); las líneas por donde
-   viajan los datos corren unas vueltas y se quedan quietas, y las barras del
-   panel crecen desde su base. Con movimiento reducido o al imprimir, la
-   escena está entera desde el principio. */
+.pz-titular {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-style: italic;
+  font-weight: 800;
+}
+
+/* Cada parte que se mueve gira y escala desde su propio centro, salvo las que
+   crecen desde su base, el cursor, que hace clic con la punta, y la etiqueta,
+   que cuelga de su hoyo. Solo las que llevan clase: los grupos que ubican,
+   escalan o inclinan el dibujo (`transform` en Pieza.jsx) lo hacen desde el
+   origen de la escena, y con otro centro quedarían corridos. */
+:where(.pieza svg [class]) {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pz-crece,
+.pz-h-oleaje,
+.pz-h-barra {
+  transform-origin: bottom;
+}
+
+.pz-cursor,
+.pz-h-clic {
+  transform-origin: 0 0;
+}
+
+.pz-columpio,
+.pz-h-mece {
+  transform-origin: 35% 50%;
+}
+
+.pz-h-globo {
+  transform-origin: 5% 100%;
+}
+
+/* Las tres capas de la escena se corren hacia el cursor según su hondura, en
+   px de la escena: lo de atrás 5, lo del medio 10 y lo de adelante 18. La
+   posición la escribe pieza.js; sin ella, todo queda en su lugar. */
+.pz-capa {
+  transform: translate(calc(var(--cursor-x, 0) * var(--hondo) * 2px), calc(var(--cursor-y, 0) * var(--hondo) * 2px));
+  transition: transform 250ms var(--ease-out);
+}
+
+.pz-lejos {
+  --hondo: 5;
+}
+
+.pz-medio {
+  --hondo: 10;
+}
+
+.pz-cerca {
+  --hondo: 18;
+}
+
+/* El pedido de la automatización solo se ve mientras viaja. */
+.pz-ficha,
+.pz-h-ficha {
+  opacity: 0;
+}
+
+/* Al cargar, la escena cuenta su historia una vez: cada parte entra con su
+   retardo (Pieza.jsx) y después todo queda quieto. Con movimiento reducido o
+   al imprimir, está entera desde el principio: el final de cada animación es
+   el dibujo sin animar. Los trazos que se dibujan solos llevan su largo: 24 el
+   visto, 66 el de la automatización y 790 el borde del área. */
 @media screen and (prefers-reduced-motion: no-preference) {
   .pz-entra {
     animation: entrar var(--t-entrada) var(--ease-out) both;
-    animation-delay: calc(150ms + var(--n) * 110ms);
   }
 
-  .pz-flujo {
-    animation: pz-fluir 1.4s 700ms linear 4;
+  .pz-baja {
+    animation: pz-baja var(--t-entrada) var(--ease-out) both;
   }
 
-  .pz-barra {
-    transform-box: fill-box;
-    transform-origin: bottom;
-    animation: pz-crecer 600ms var(--ease-out) both;
-    animation-delay: calc(450ms + var(--n) * 50ms);
+  .pz-izq {
+    animation: pz-izq var(--t-entrada) var(--ease-out) both;
+  }
+
+  .pz-aparece {
+    animation: pz-aparece 400ms var(--ease-out) both;
+  }
+
+  .pz-crece {
+    animation: pz-crece 600ms var(--ease-out) both;
+  }
+
+  .pz-columpio {
+    animation: pz-columpio 1s var(--ease-in-out) both;
+  }
+
+  .pz-sello {
+    animation: pz-sello 380ms var(--ease-out) both;
+  }
+
+  .pz-globo {
+    animation: pz-globo 400ms var(--ease-out) both;
+  }
+
+  .pz-pop {
+    animation: pz-pop 400ms var(--ease-out) both;
+  }
+
+  .pz-cae {
+    animation: pz-cae 450ms var(--ease-out) both;
+  }
+
+  .pz-cursor {
+    animation: pz-cursor 1.1s var(--ease-in-out) both;
+  }
+
+  .pz-tinta {
+    animation: pz-tinta 120ms linear both;
+  }
+
+  .pz-fluye {
+    animation: pz-fluye 1.4s 900ms linear 3;
+  }
+
+  /* Los puntos de «escribiendo…» aparecen, saltan dos veces y se van cuando
+     llega la respuesta: los dos retardos van en Pieza.jsx. */
+  .pz-tecleando {
+    animation:
+      pz-aparece 200ms both,
+      pz-se-va 150ms forwards;
+  }
+
+  .pz-tecleo {
+    animation: pz-tecleo 480ms var(--ease-in-out) 2;
+  }
+
+  .pz-pulso {
+    animation: pz-pulso 320ms var(--ease-in-out) both;
+  }
+
+  .pz-ficha {
+    animation: pz-ficha 2s var(--ease-in-out) both;
+  }
+
+  .pz-traza-24 {
+    stroke-dasharray: 24;
+    animation: pz-traza-24 350ms var(--ease-out) both;
+  }
+
+  .pz-traza-66 {
+    stroke-dasharray: 66;
+    animation: pz-traza-66 400ms var(--ease-out) both;
+  }
+
+  .pz-traza-790 {
+    stroke-dasharray: 790;
+    animation: pz-traza-790 1s var(--ease-in-out) both;
   }
 }
 
-@keyframes pz-fluir {
+/* Con el cursor encima, repite el gesto de su servicio: la ola se hincha y el
+   cursor hace clic, la etiqueta se mece y el sello vuelve a marcar, los datos
+   corren mientras siga encima, la respuesta se adelanta, entra otro pedido y
+   recorre los pasos, la semana se vuelve a contar y se apagan los negocios
+   que ya tienen web. */
+.pz-con-web {
+  transition: opacity 300ms var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .pieza:hover .pz-h-oleaje {
+    animation: pz-oleaje 900ms var(--ease-in-out);
+  }
+
+  .pieza:hover .pz-h-clic {
+    animation: pz-clic 300ms 200ms var(--ease-in-out);
+  }
+
+  .pieza:hover .pz-h-mece {
+    animation: pz-mece 900ms var(--ease-in-out);
+  }
+
+  .pieza:hover .pz-h-sello {
+    animation: pz-latido 300ms 450ms var(--ease-out);
+  }
+
+  .pieza:hover .pz-fluye {
+    animation: pz-fluye-sin-fin 1.4s linear infinite;
+  }
+
+  .pieza:hover .pz-h-globo {
+    animation: pz-asoma 500ms var(--ease-in-out);
+  }
+
+  .pieza:hover .pz-h-ficha {
+    animation: pz-ficha 2s var(--ease-in-out) both;
+  }
+
+  .pieza:hover .pz-h-paso {
+    animation: pz-pulso 320ms var(--ease-in-out) both;
+  }
+
+  .pieza:hover .pz-h-barra {
+    animation: pz-crece 600ms var(--ease-out) both;
+  }
+
+  .pieza:hover .pz-con-web {
+    opacity: 0.3;
+  }
+}
+
+@keyframes pz-baja {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes pz-izq {
+  from {
+    opacity: 0;
+    transform: translateX(-18%);
+  }
+}
+
+@keyframes pz-aparece {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pz-crece {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes pz-columpio {
+  0% {
+    opacity: 0;
+    transform: rotate(-16deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  55% {
+    transform: rotate(6deg);
+  }
+  80% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes pz-sello {
+  0% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes pz-globo {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes pz-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes pz-cae {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pz-cursor {
+  0% {
+    opacity: 0;
+    transform: translate(46px, 40px);
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    transform: none;
+  }
+  82% {
+    transform: scale(0.86);
+  }
+}
+
+@keyframes pz-tinta {
+  from {
+    fill-opacity: 0;
+  }
+}
+
+@keyframes pz-fluye {
   to {
     stroke-dashoffset: -28;
   }
 }
 
-@keyframes pz-crecer {
+@keyframes pz-fluye-sin-fin {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes pz-se-va {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pz-tecleo {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pz-pulso {
+  50% {
+    transform: scale(1.14);
+  }
+}
+
+/* El pedido sube de un paso al siguiente, que están a 108 × −48 px uno del
+   otro, y se detiene un momento en cada uno. */
+@keyframes pz-ficha {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+  8%,
+  15% {
+    opacity: 1;
+    transform: none;
+  }
+  35%,
+  45% {
+    transform: translate(108px, -48px);
+  }
+  65%,
+  75% {
+    transform: translate(216px, -96px);
+  }
+  95% {
+    opacity: 1;
+    transform: translate(324px, -144px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(324px, -144px);
+  }
+}
+
+@keyframes pz-traza-24 {
   from {
-    transform: scaleY(0);
+    stroke-dashoffset: 24;
+  }
+}
+
+@keyframes pz-traza-66 {
+  from {
+    stroke-dashoffset: 66;
+  }
+}
+
+@keyframes pz-traza-790 {
+  from {
+    stroke-dashoffset: 790;
+  }
+}
+
+@keyframes pz-oleaje {
+  50% {
+    transform: scaleY(1.2);
+  }
+}
+
+@keyframes pz-clic {
+  50% {
+    transform: scale(0.86);
+  }
+}
+
+@keyframes pz-mece {
+  30% {
+    transform: rotate(-7deg);
+  }
+  65% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes pz-latido {
+  50% {
+    transform: scale(0.94);
+  }
+}
+
+@keyframes pz-asoma {
+  50% {
+    transform: scale(1.04);
   }
 }
 

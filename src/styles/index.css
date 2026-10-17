@@ -591,13 +591,13 @@ svg {
 
    La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), que
    se sostiene bajo todo su texto, y solo en el relleno de abajo (`--fundido`)
-   se difumina al blanco de la página. Teñida, pasa por un claro de su
-   propio color. */
+   se difumina al blanco de la página. La de un servicio se aclara a su
+   manera (Servicio.css). */
 :root .cabecera-cielo {
   --fundido: calc(var(--e-24) + var(--e-16));
   --fondo-hora: linear-gradient(
     var(--fondo) calc(100% - var(--fundido)),
-    var(--tinte-claro, #7cbcf1) calc(100% - var(--fundido) / 2),
+    #7cbcf1 calc(100% - var(--fundido) / 2),
     #f6f9fc
   );
 }
