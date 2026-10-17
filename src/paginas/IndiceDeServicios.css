@@ -1,12 +1,27 @@
 /* El índice de servicios. Ver IndiceDeServicios.jsx. */
 
 /* ---- la cabecera ----
-   El cielo del día de las páginas internas, con la nube detrás. El texto es
-   blanco y sobre los puntos no se leería, así que la nube nunca pasa detrás
-   de él: en S va arriba, y desde L, a la derecha, y se deshace antes de
-   llegar al texto. */
+   El cielo del día de las páginas internas con la nube de borde a borde, vista
+   desde abajo, y el título dentro de ella. El título va en tinta: sobre los
+   puntos blancos el blanco no se leería, y la tinta da 3.8:1 sobre el azul,
+   que basta para un titular, mientras la nube no aparece o sin WebGL.
+
+   El lienzo envuelve el título y sobresale 11rem por arriba y por abajo, así
+   la nube queda centrada en él, tenga una línea o dos. Los rellenos de la
+   cabecera le dejan ese lugar y, bajo la base de la nube, un poco de azul
+   antes del fundido: sin él, la base caía en el degradado y parecía cortada.
+   `clip` porque `100vw` cuenta la barra de desplazamiento. */
 .indice-cabecera {
   overflow: clip;
+}
+
+.cabecera-cielo.indice-cabecera {
+  padding-top: calc(var(--barra-alto) + 8rem);
+  padding-bottom: calc(var(--fundido) + 10rem);
+}
+
+.indice-cabecera-texto {
+  position: relative;
 }
 
 .indice-cielo {
@@ -14,33 +29,12 @@
   --nubes-sombra: #6a8cb2;
   --nubes-alfa: 1;
   position: absolute;
-  inset: var(--barra-alto) 0 auto;
-  height: 11rem;
+  inset: -11rem calc(50% - 50vw);
 }
 
-.cabecera-cielo.indice-cabecera {
-  padding-top: calc(var(--barra-alto) + 11rem);
-}
-
-.indice-cabecera-texto {
+.indice-cabecera h1 {
   position: relative;
-}
-
-@media (min-width: 1024px) {
-  .indice-cielo {
-    inset: 0 0 var(--e-16) 42%;
-    height: auto;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
-    mask-image: linear-gradient(90deg, transparent, #000 45%);
-  }
-
-  .cabecera-cielo.indice-cabecera {
-    padding-top: calc(var(--barra-alto) + var(--e-24));
-  }
-
-  .indice-cabecera-texto > * {
-    max-width: 34rem;
-  }
+  color: #0a1a2a;
 }
 
 /* ---- los servicios ----

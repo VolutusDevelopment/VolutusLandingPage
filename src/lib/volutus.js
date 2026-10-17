@@ -70,9 +70,10 @@ export const VISTAS = {
   // /nosotros: de costado y a la altura del eje, frente a su frente, que
   // sube. Cruza el lienzo casi paralelo a él.
   costado: { ojo: [0, 700, 2500], rumbo: -96, cabeceo: 0, campo: 33, centro: [null, 0.5] },
-  // /servicios: frente a su frente, a la altura del eje y en diagonal. Entra
-  // grande por la derecha y se aleja hacia el texto, a la izquierda.
-  lejos: { ojo: [0, 700, 2600], rumbo: -62, cabeceo: 2, campo: 44, centro: [null, 0.5], cubre: 2.5 },
+  // /servicios: desde el suelo, a 2,1 km de su frente, mirando hacia arriba.
+  // Cruza el lienzo casi paralelo a él, con su frente y su base plana, y el
+  // título va dentro.
+  abajo: { ojo: [0, 2, 2100], rumbo: -87, cabeceo: 18, campo: 42, centro: [null, 0.62] },
   // La 404: desde el suelo, viéndola llegar. Pasa alta por la izquierda y se
   // pierde en el horizonte de la derecha, abajo, donde el cielo es blanco.
   suelo: { ojo: [0, 2, 2000], rumbo: -120, cabeceo: 20, campo: 60, centro: [null, 0.5], cubre: 2.5 },

@@ -591,13 +591,19 @@ svg {
 
    La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), que
    se sostiene bajo todo su texto, y solo en el relleno de abajo (`--fundido`)
-   se difumina al blanco de la página. La de un servicio se aclara a su
-   manera (Servicio.css). */
+   se difumina al blanco de la página, pasando por el celeste. Se aclara en
+   una curva suave (smoothstep, en sextos del fundido): en línea recta, el
+   quiebre donde el azul empieza a aclararse se veía como una raya. La de un
+   servicio se aclara a su manera (Servicio.css). */
 :root .cabecera-cielo {
   --fundido: calc(var(--e-24) + var(--e-16));
   --fondo-hora: linear-gradient(
     var(--fondo) calc(100% - var(--fundido)),
+    color-mix(in srgb, #7cbcf1 15%, var(--fondo)) calc(100% - var(--fundido) * 5 / 6),
+    color-mix(in srgb, #7cbcf1 52%, var(--fondo)) calc(100% - var(--fundido) * 4 / 6),
     #7cbcf1 calc(100% - var(--fundido) / 2),
+    color-mix(in srgb, #f6f9fc 48%, #7cbcf1) calc(100% - var(--fundido) / 3),
+    color-mix(in srgb, #f6f9fc 85%, #7cbcf1) calc(100% - var(--fundido) / 6),
     #f6f9fc
   );
 }
@@ -616,8 +622,8 @@ svg {
 }
 
 /* Lo contrario de `.alba`: el tramo del fundido que ya es claro. Desde ahí la
-   tinta contrasta más que el blanco: medido sobre los ocho tintes, el cruce
-   cae entre 9 y 41 px del comienzo del fundido, casi siempre cerca de 24.
+   tinta contrasta más que el blanco: con el azul del día, el cruce cae a
+   22 px del comienzo del fundido.
    Es una franja vacía que pone barra.js; la barra la ve detrás de cada pieza
    y vuelve a la tinta, en vez de seguir en blanco sobre un fondo casi blanco. */
 .cabecera-fundido {

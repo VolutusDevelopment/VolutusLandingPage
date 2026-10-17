@@ -5,8 +5,9 @@ import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
 
 /**
- * El índice de servicios, la madre de las páginas de /servicios/…. Abre bajo
- * la nube, vista con su propia cámara (`lejos`, lib/volutus.js).
+ * El índice de servicios, la madre de las páginas de /servicios/…. Abre con
+ * el título dentro de la nube, vista desde abajo con su propia cámara
+ * (`abajo`, lib/volutus.js).
  *
  * La rueda de la portada ya explica cada servicio y su página lo cuenta
  * entero, así que aquí no se explica: cada servicio es la portada de su
@@ -27,12 +28,11 @@ export default function IndiceDeServicios({ ruta }) {
   return (
     <Pagina ruta={ruta} hora="dia" contactoAqui cierre={<Contacto />}>
       <section className="seccion zona-cielo hora-dia cabecera-cielo indice-cabecera">
-        <div className="indice-cielo">
-          <canvas className="nubes" data-vista="cielo" data-perspectiva="lejos" aria-hidden="true" />
-        </div>
         <div className="contenedor indice-cabecera-texto">
-          <p className="antetitulo">Servicios</p>
-          <h1>Lo que hacemos</h1>
+          <div className="indice-cielo">
+            <canvas className="nubes" data-vista="cielo" data-perspectiva="abajo" aria-hidden="true" />
+          </div>
+          <h1>Nuestros servicios</h1>
         </div>
       </section>
 
