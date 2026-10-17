@@ -5,10 +5,11 @@ import { quieto } from './lib/movimiento.js'
  * La pieza de la cabecera de un servicio (components/Pieza.jsx) se inclina
  * hacia el cursor como la card del frente de la rueda (servicios.js), y las
  * capas de su escena se corren según su hondura (Servicio.css). Solo con un
- * ratón de verdad y nunca con el movimiento reducido.
+ * ratón de verdad y nunca con el movimiento reducido. Las de /servicios no:
+ * ahí se levanta la card entera (IndiceDeServicios.css).
  */
 export default function initPieza() {
-  const pieza = document.querySelector('.pieza')
+  const pieza = document.querySelector('.servicio-cabecera .pieza')
   if (!pieza) return
 
   pieza.addEventListener('pointermove', (e) => {

@@ -39,11 +39,11 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 
 ## Servicios
 
-Cada página dice qué incluye el servicio, cuándo sirve, qué le pedimos al
-cliente, dónde comprobar obra parecida y las preguntas frecuentes. No
-publicamos precios: cada proyecto se cotiza según su alcance, cuando
-entendemos lo que necesita. La primera respuesta llega pronto, pero no es la
-cotización.
+Cada página dice qué incluye el servicio, qué le pedimos al cliente y las
+preguntas frecuentes; casi todas dicen también cuándo sirve y, si la hay,
+dónde comprobar obra parecida. No publicamos precios: cada proyecto se
+cotiza según su alcance, cuando entendemos lo que necesita. La primera
+respuesta llega pronto, pero no es la cotización.
 
 - [Desarrollo web](https://volutus.cl/servicios/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA
 - [Tiendas online](https://volutus.cl/servicios/tiendas-online): catálogo, carrito, pagos en línea y pedidos, administrados por el propio negocio

@@ -10,7 +10,8 @@ import { CARPETAS, ETIQUETA, OLA, PANTALLA, TELEFONO, VENTANA } from './Icono.js
  * clientes.
  *
  * Es decorativa: el texto de la página ya dice lo mismo, así que se esconde
- * del lector de pantalla.
+ * del lector de pantalla. La repite, en chico, la card de su servicio en el
+ * índice (/servicios).
  *
  * Se mueve en dos tiempos (Servicio.css). Al cargar cuenta su historia una
  * vez, cada parte con su retardo (`tras`), y se queda quieta. Con el cursor

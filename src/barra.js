@@ -31,8 +31,16 @@
 // Recuerda TODOS los elementos dentro de la franja, también los que salen:
 // bajando despacio el scroll retrocede a veces unos píxeles, y si solo se
 // atendiera a los que entran, se quedaría con uno que ya se fue. El Set guarda
-// el orden de entrada, así que el último es el que acaba de asomar (y una
-// tarjeta entra después que la sección que la contiene).
+// el orden de entrada, así que el último es el que acaba de asomar.
+//
+// Pero manda el más hondo: lo que está dentro de otro se pinta encima. Una
+// tarjeta puede asomar antes que su sección —las cards de /servicios suben
+// sobre el fundido de la cabecera— y la sección, al entrar después, no puede
+// quitarle la barra.
+function masHondo(elementos) {
+  return elementos.filter((elemento) => !elementos.some((otro) => otro !== elemento && elemento.contains(otro))).at(-1)
+}
+
 function vigilarFranja(elementos, rootMargin, alCambiar) {
   const enLaFranja = new Set()
   const observador = new IntersectionObserver(
@@ -41,7 +49,7 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
         if (isIntersecting) enLaFranja.add(target)
         else enLaFranja.delete(target)
       })
-      alCambiar([...enLaFranja].at(-1))
+      alCambiar(masHondo([...enLaFranja]))
     },
     { rootMargin }
   )

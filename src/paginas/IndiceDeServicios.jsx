@@ -1,18 +1,22 @@
 import Pagina from '../components/Pagina.jsx'
 import Contacto from '../components/Contacto.jsx'
 import Icono from '../components/Icono.jsx'
+import Pieza from '../components/Pieza.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
 
 /**
  * El índice de servicios, la madre de las páginas de /servicios/…. Abre con
  * el título dentro de la nube, vista desde abajo con su propia cámara
- * (`abajo`, lib/volutus.js).
+ * (`abajo`, lib/volutus.js), con la entradilla y el botón al formulario,
+ * para quien ya sabe lo que quiere.
  *
  * La rueda de la portada ya explica cada servicio y su página lo cuenta
  * entero, así que aquí no se explica: cada servicio es la portada de su
- * página en chico, el cielo en su color con su glifo, su nombre y su titular
- * (data/paginas-de-servicio.js), y entero lleva a ella.
+ * página en chico, el cielo en su color con su pieza (Pieza.jsx), su nombre
+ * en grande, que es lo que se busca aquí, y el titular de su página
+ * (data/paginas-de-servicio.js), y entero lleva a ella. La ley de datos no
+ * tiene página ni pieza: lleva su glifo.
  *
  * Debajo, lo que se pregunta antes de pedir una cotización. El precio no se
  * publica (decisión 11 del brief): se dice por qué y cuándo llega.
@@ -33,6 +37,12 @@ export default function IndiceDeServicios({ ruta }) {
             <canvas className="nubes" data-vista="cielo" data-perspectiva="abajo" aria-hidden="true" />
           </div>
           <h1>Nuestros servicios</h1>
+          <p className="entradilla">Elige lo que necesita tu negocio.</p>
+          <p className="indice-acciones">
+            <a className="boton boton-primario" href="#contacto">
+              Cuéntanos tu proyecto
+            </a>
+          </p>
         </div>
       </section>
 
@@ -41,7 +51,7 @@ export default function IndiceDeServicios({ ruta }) {
           <ul className="indice-servicios">
             {SERVICIOS.map(({ id, color, ruta: destino, enlace, nombre }) => (
               <li key={id} className="indice-servicio hora-dia entra" style={{ '--tinte': color }}>
-                <Icono id={id} className="indice-servicio-icono" />
+                {destino ? <Pieza id={id} /> : <Icono id={id} className="indice-servicio-icono" />}
                 <h2 className="indice-servicio-nombre">
                   <a href={destino ?? enlace}>{nombre}</a>
                 </h2>

@@ -1,7 +1,7 @@
 .barra {
   /* El cambio de tono al pasar de un fondo a otro: el logo, las letras de la
-     cápsula y sus halos lo hacen con la misma duración y la misma curva, así
-     que cambian juntos. Entra y sale suave: acompaña al scroll sin
+     cápsula y el halo de la marca lo hacen con la misma duración y la misma
+     curva, así que cambian juntos. Entra y sale suave: acompaña al scroll sin
      parpadear. */
   --t-tono: 280ms;
   position: sticky;
@@ -324,16 +324,6 @@
   }
 }
 
-/* El cristal es incoloro, así que por detrás pasa de todo, también un
-   titular grande del mismo tono que las letras. Cada letra lleva un halo del
-   fondo de su zona (lo que macOS llama vibrancy): separa la letra de lo que
-   cruza por detrás sin teñir el vidrio. Cambia con la zona, como la letra. */
-.barra-capsula .barra-enlaces a {
-  text-shadow:
-    0 0 4px var(--fondo),
-    0 0 12px var(--fondo);
-}
-
 /* El aire entre enlaces es su propio relleno: así el indicador cubre el
    enlace entero y no solo la palabra. */
 .barra-enlaces a {
@@ -350,7 +340,6 @@
   text-decoration: none;
   transition:
     color var(--t-tono) var(--ease-in-out),
-    text-shadow var(--t-tono) var(--ease-in-out),
     background-color 200ms var(--ease-out);
 }
 

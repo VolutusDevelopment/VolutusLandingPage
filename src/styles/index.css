@@ -317,9 +317,8 @@
    (`.cabecera-cielo`), un azul parejo con todo el texto en blanco, que sobre
    él da 4.7:1 y alcanza también para la letra chica. La barra lo copia al
    pasar por encima, así que su logo y sus letras también van en blanco. El
-   halo de las letras de la cápsula (`--fondo`) es el mismo azul. El botón
-   primario se invierte: blanco, con el texto en el azul de la acción, que da
-   6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo.
+   botón primario se invierte: blanco, con el texto en el azul de la acción,
+   que da 6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo.
 
    Una página de servicio tiñe este cielo con el color de su servicio
    (`--tinte`, ver Pagina.jsx): todos dan 5.5:1 o más con el blanco, y el

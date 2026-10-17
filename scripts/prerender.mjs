@@ -55,8 +55,8 @@ function atributo(texto) {
  * obliga a mantener el mismo bloque en varios sitios. Lo mismo cada servicio:
  * su página lo declara y la portada lo nombra.
  *
- * Una página de servicio es su FAQPage, porque sus preguntas van en el HTML;
- * un artículo, su Article con la ruta para volver al índice.
+ * Una página de servicio es su FAQPage, porque sus preguntas van en el HTML,
+ * y un artículo, su Article; los dos con la ruta para volver a su índice.
  */
 function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, publicada, actualizada }) {
   const pagina = { name: titulo, url: canonical, inLanguage: 'es-CL' }
@@ -84,14 +84,14 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
           acceptedAnswer: { '@type': 'Answer', text: respuesta },
         })),
       },
+      migas([
+        ['Inicio', '/'],
+        ['Servicios', '/servicios'],
+        [servicio.nombre, ruta],
+      ]),
     ])
   }
   if (publicada) {
-    const migas = [
-      ['Inicio', '/'],
-      ['Artículos', '/articulos'],
-      [tituloCorto(titulo), ruta],
-    ]
     return ldJson([
       {
         '@type': 'Article',
@@ -106,15 +106,11 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         author: { '@id': ORGANIZACION },
         publisher: { '@id': ORGANIZACION },
       },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: migas.map(([name, destino], i) => ({
-          '@type': 'ListItem',
-          position: i + 1,
-          name,
-          item: canonicalDe(destino),
-        })),
-      },
+      migas([
+        ['Inicio', '/'],
+        ['Artículos', '/articulos'],
+        [tituloCorto(titulo), ruta],
+      ]),
     ])
   }
   const grafo = {
@@ -181,6 +177,19 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
   }[ruta] ?? [{ '@type': 'WebPage', ...pagina }]
 
   return ldJson(grafo)
+}
+
+/** El camino desde la portada hasta la página, como `[nombre, ruta]`. */
+function migas(camino) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: camino.map(([name, destino], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: canonicalDe(destino),
+    })),
+  }
 }
 
 function ldJson(grafo) {

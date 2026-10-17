@@ -275,49 +275,50 @@
    cursor hace clic, la etiqueta se mece y el sello vuelve a marcar, los datos
    corren mientras siga encima, la respuesta se adelanta, entra otro pedido y
    recorre los pasos, la semana se vuelve a contar y se apagan los negocios
-   que ya tienen web. */
+   que ya tienen web. En /servicios, la pieza va bajo el enlace que cubre su
+   card, así que el gesto lo pide la card. */
 .pz-con-web {
   transition: opacity 300ms var(--ease-out);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .pieza:hover .pz-h-oleaje {
+  :is(.pieza, .indice-servicio):hover .pz-h-oleaje {
     animation: pz-oleaje 900ms var(--ease-in-out);
   }
 
-  .pieza:hover .pz-h-clic {
+  :is(.pieza, .indice-servicio):hover .pz-h-clic {
     animation: pz-clic 300ms 200ms var(--ease-in-out);
   }
 
-  .pieza:hover .pz-h-mece {
+  :is(.pieza, .indice-servicio):hover .pz-h-mece {
     animation: pz-mece 900ms var(--ease-in-out);
   }
 
-  .pieza:hover .pz-h-sello {
+  :is(.pieza, .indice-servicio):hover .pz-h-sello {
     animation: pz-latido 300ms 450ms var(--ease-out);
   }
 
-  .pieza:hover .pz-fluye {
+  :is(.pieza, .indice-servicio):hover .pz-fluye {
     animation: pz-fluye-sin-fin 1.4s linear infinite;
   }
 
-  .pieza:hover .pz-h-globo {
+  :is(.pieza, .indice-servicio):hover .pz-h-globo {
     animation: pz-asoma 500ms var(--ease-in-out);
   }
 
-  .pieza:hover .pz-h-ficha {
+  :is(.pieza, .indice-servicio):hover .pz-h-ficha {
     animation: pz-ficha 2s var(--ease-in-out) both;
   }
 
-  .pieza:hover .pz-h-paso {
+  :is(.pieza, .indice-servicio):hover .pz-h-paso {
     animation: pz-pulso 320ms var(--ease-in-out) both;
   }
 
-  .pieza:hover .pz-h-barra {
+  :is(.pieza, .indice-servicio):hover .pz-h-barra {
     animation: pz-crece 600ms var(--ease-out) both;
   }
 
-  .pieza:hover .pz-con-web {
+  :is(.pieza, .indice-servicio):hover .pz-con-web {
     opacity: 0.3;
   }
 }
