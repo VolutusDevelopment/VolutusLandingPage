@@ -10,6 +10,8 @@ equipo pueda comprobar la obra antes de seguir.
 
 Contacto: contacto@volutus.cl
 
+Ubicación: residimos en Santiago de Chile. Las reuniones son preferentemente telemáticas; también pueden ser presenciales.
+
 ## Páginas
 
 - [Portada](https://volutus.cl/): qué hacemos, los servicios, los proyectos y el formulario; no hay una sección de métricas
@@ -62,6 +64,14 @@ respuesta llega pronto, pero no es la cotización.
 - [Planilla o sistema de gestión: cuándo dar el paso](https://volutus.cl/articulos/planilla-o-sistema-de-gestion)
 - [Qué tareas automatizar primero en tu negocio](https://volutus.cl/articulos/que-automatizar-primero)
 - [Qué preparar antes de pedir una cotización de software](https://volutus.cl/articulos/que-preparar-antes-de-cotizar)
+- [Comprar el producto o pagarlo en cuotas: cómo elegir](https://volutus.cl/articulos/dos-formas-de-trabajar)
+- [Qué datos guardas sin saberlo, antes de la Ley 21.719](https://volutus.cl/articulos/datos-de-tus-clientes-y-la-ley)
+- [Por qué no te sirvió la herramienta que probaste](https://volutus.cl/articulos/por-que-no-te-sirvio-la-herramienta)
+- [Conectar lo que ya usas: correo, planillas y facturación](https://volutus.cl/articulos/conectar-con-lo-que-ya-usas)
+- [Boleta, factura y SII: qué preguntar a cualquier proveedor](https://volutus.cl/articulos/boleta-factura-y-sii)
+- [Cómo se paga en línea: pasarelas, transferencias y comisiones](https://volutus.cl/articulos/como-se-paga-en-linea)
+- [Casos para un agente de IA: dónde sirve y dónde no](https://volutus.cl/articulos/casos-para-un-agente-de-ia)
+- [Cómo trabajamos: lo que conviene saber antes de escribirnos](https://volutus.cl/articulos/como-trabajamos)
 - [La Ley 21.719, en simple](https://volutus.cl/ley21719)
 
 ## Qué no tomamos

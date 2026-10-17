@@ -169,6 +169,78 @@ export const PAGINAS = {
     descripcion:
       'Lo que conviene tener a mano antes de escribirle a una empresa de software: el problema en tus palabras, cómo lo resuelves hoy y qué sería un buen resultado.',
   },
+  '/articulos/dos-formas-de-trabajar': {
+    archivo: 'articulos/dos-formas-de-trabajar.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['web', 'tienda', 'app', 'gestion', 'agente', 'automatizacion', 'prospeccion'],
+    titulo: 'Comprar el producto o pagarlo en cuotas: cómo elegir — Volutus',
+    descripcion:
+      'Dos formas de trabajar con Volutus: propiedad total, con mantención opcional, o suscripción para pagar en cuotas. Qué incluye cada una y cuál conviene según tu momento.',
+  },
+  '/articulos/datos-de-tus-clientes-y-la-ley': {
+    archivo: 'articulos/datos-de-tus-clientes-y-la-ley.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['datos', 'gestion', 'agente', 'prospeccion'],
+    titulo: 'Qué datos guardas sin saberlo, antes de la Ley 21.719 — Volutus',
+    descripcion:
+      'Un formulario, un chat o una planilla ya son datos personales. Qué revisar en tu negocio antes de que la Ley 21.719 rija desde el 1 de diciembre de 2026.',
+  },
+  '/articulos/por-que-no-te-sirvio-la-herramienta': {
+    archivo: 'articulos/por-que-no-te-sirvio-la-herramienta.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['app', 'gestion', 'automatizacion'],
+    titulo: 'Por qué no te sirvió la herramienta que probaste — Volutus',
+    descripcion:
+      'Antes de elegir la siguiente, mira qué no encajó: el proceso, los datos o la gente. Preguntas para no repetir la compra.',
+  },
+  '/articulos/conectar-con-lo-que-ya-usas': {
+    archivo: 'articulos/conectar-con-lo-que-ya-usas.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['automatizacion', 'gestion', 'tienda'],
+    titulo: 'Conectar lo que ya usas: correo, planillas y facturación — Volutus',
+    descripcion:
+      'Cómo se enlaza un sistema nuevo con el correo, las planillas y la facturación que ya tienes, qué preguntar antes de contratar y qué no conviene dar por hecho.',
+  },
+  '/articulos/boleta-factura-y-sii': {
+    archivo: 'articulos/boleta-factura-y-sii.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['tienda', 'gestion'],
+    titulo: 'Boleta, factura y SII: qué preguntar a cualquier proveedor — Volutus',
+    descripcion:
+      'Antes de contratar una tienda o un sistema, pregunta si emite boleta o factura electrónica, cómo se integra con el SII y quién responde por ello.',
+  },
+  '/articulos/como-se-paga-en-linea': {
+    archivo: 'articulos/como-se-paga-en-linea.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['tienda', 'web', 'app'],
+    titulo: 'Cómo se paga en línea: pasarelas, transferencias y comisiones — Volutus',
+    descripcion:
+      'Las opciones de pago de una tienda en Chile: pasarelas de tarjeta, transferencias y billeteras. Qué cambia en cada una y qué preguntar antes de elegir.',
+  },
+  '/articulos/casos-para-un-agente-de-ia': {
+    archivo: 'articulos/casos-para-un-agente-de-ia.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['agente', 'automatizacion'],
+    titulo: 'Casos para un agente de IA: dónde sirve y dónde no — Volutus',
+    descripcion:
+      'Situaciones típicas donde un agente de IA ahorra tiempo a un negocio, y las que conviene dejar a una persona. Patrones, no clientes.',
+  },
+  '/articulos/como-trabajamos': {
+    archivo: 'articulos/como-trabajamos.html',
+    publicada: '2026-10-17',
+    actualizada: '2026-10-17',
+    servicios: ['web', 'tienda', 'app', 'gestion', 'agente', 'automatizacion', 'prospeccion'],
+    titulo: 'Cómo trabajamos: lo que conviene saber antes de escribirnos — Volutus',
+    descripcion:
+      'Presupuesto, mockups, funcionamiento sin internet, tecnologías, documentación, confidencialidad y ubicación: cómo trabajamos en Volutus antes de que nos escribas.',
+  },
   '/privacidad': {
     archivo: 'privacidad.html',
     actualizada: '2026-10-17',

@@ -34,11 +34,29 @@
 
 // La respuesta al precio es la misma en todos: §3 decidió no publicarlo.
 const PRECIO =
-  'No publicamos precios, porque cada proyecto se cotiza según su alcance. Te respondemos pronto y, cuando entendemos lo que necesitas, te mandamos alcance y precio, sin compromiso.'
+  'Cada presupuesto es único: depende del alcance del proyecto y de los indicadores (KPI) que quieras medir. Te respondemos pronto y, cuando entendemos lo que necesitas, te mandamos alcance y precio, sin compromiso.'
+
+const EJEMPLO = {
+  pregunta: '¿Puedo ver un ejemplo parecido a mi negocio?',
+  respuesta:
+    'Podemos mostrarte un mockup del diseño y de lo que necesitas resolver. Como estamos empezando, todavía no tenemos casos de clientes para mostrar.',
+}
+
+const SIN_INTERNET = {
+  pregunta: '¿Funciona si no tengo internet?',
+  respuesta:
+    'Cada solución es única. Si lo necesitas, la diseñamos para que siga funcionando sin conexión.',
+}
 
 const INDEPENDIENTE = {
   pregunta: '¿Puedo contratar solo este servicio?',
   respuesta: 'Sí. Cada servicio es independiente: no necesitas contratar otro antes ni después.',
+}
+
+const POST_ENTREGA = {
+  pregunta: '¿Qué pasa después de la entrega?',
+  respuesta:
+    'Dejamos la solución documentada y fácil de modificar, para que puedas cambiar algo sin ayuda externa. También puede operarla Volutus por ti, con un costo asociado. Con propiedad total, el producto es tuyo desde la entrega y la mantención es opcional: si la contratas con nosotros, corregimos a nuestro costo los errores de nuestra autoría y los cambios entran en el plan; una falla causada por un servicio de terceros no está incluida sin un plan aparte. Con suscripción, el producto pasa a ser tuyo al terminar de pagar, con un costo mayor y cláusulas de mutuo acuerdo en caso de no pago. Lo explicamos en el artículo «Comprar el producto o pagarlo en cuotas».',
 }
 
 export const PAGINAS_DE_SERVICIO = {
@@ -86,6 +104,8 @@ export const PAGINAS_DE_SERVICIO = {
           'La página web presenta tu negocio y te trae contactos. La tienda online además vende: tiene catálogo, carrito, pagos y pedidos.',
       },
       INDEPENDIENTE,
+      EJEMPLO,
+      POST_ENTREGA,
     ],
   },
 
@@ -122,6 +142,8 @@ export const PAGINAS_DE_SERVICIO = {
           'Una tienda trata datos de sus clientes: nombre, dirección, correo y lo que compran. La construimos con consentimiento claro, pidiendo solo los datos necesarios y con un canal para que cada cliente ejerza sus derechos.',
       },
       INDEPENDIENTE,
+      EJEMPLO,
+      POST_ENTREGA,
     ],
   },
 
@@ -176,6 +198,9 @@ export const PAGINAS_DE_SERVICIO = {
           'Sí, y casi siempre conviene. Construimos por entregas que puedes revisar, así ves algo funcionando pronto y decides lo que sigue con el producto en la mano.',
       },
       INDEPENDIENTE,
+      EJEMPLO,
+      SIN_INTERNET,
+      POST_ENTREGA,
     ],
   },
 
@@ -218,6 +243,8 @@ export const PAGINAS_DE_SERVICIO = {
         respuesta: `${PRECIO} Además del desarrollo, el modelo de IA cobra por uso, según cuántas conversaciones atienda: ese costo mensual también va estimado en la cotización.`,
       },
       INDEPENDIENTE,
+      EJEMPLO,
+      POST_ENTREGA,
     ],
   },
 
@@ -280,6 +307,9 @@ export const PAGINAS_DE_SERVICIO = {
       },
       { pregunta: '¿Cuánto cuesta automatizar un proceso?', respuesta: PRECIO },
       INDEPENDIENTE,
+      EJEMPLO,
+      SIN_INTERNET,
+      POST_ENTREGA,
     ],
   },
 
@@ -321,6 +351,9 @@ export const PAGINAS_DE_SERVICIO = {
       },
       { pregunta: '¿Cuánto cuesta un sistema de gestión?', respuesta: PRECIO },
       INDEPENDIENTE,
+      EJEMPLO,
+      SIN_INTERNET,
+      POST_ENTREGA,
     ],
   },
 
@@ -361,6 +394,8 @@ export const PAGINAS_DE_SERVICIO = {
       },
       { pregunta: '¿Cuánto cuesta una búsqueda?', respuesta: PRECIO },
       INDEPENDIENTE,
+      EJEMPLO,
+      POST_ENTREGA,
     ],
   },
 }

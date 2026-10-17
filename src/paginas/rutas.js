@@ -11,6 +11,14 @@ import SoftwareAMedidaOYaHecho from './articulos/SoftwareAMedidaOYaHecho.jsx'
 import PlanillaOSistemaDeGestion from './articulos/PlanillaOSistemaDeGestion.jsx'
 import QueAutomatizarPrimero from './articulos/QueAutomatizarPrimero.jsx'
 import QuePrepararAntesDeCotizar from './articulos/QuePrepararAntesDeCotizar.jsx'
+import DosFormasDeTrabajar from './articulos/DosFormasDeTrabajar.jsx'
+import DatosDeTusClientesYLaLey from './articulos/DatosDeTusClientesYLaLey.jsx'
+import PorQueNoTeSirvioLaHerramienta from './articulos/PorQueNoTeSirvioLaHerramienta.jsx'
+import ConectarConLoQueYaUsas from './articulos/ConectarConLoQueYaUsas.jsx'
+import BoletaFacturaYSii from './articulos/BoletaFacturaYSii.jsx'
+import ComoSePagaEnLinea from './articulos/ComoSePagaEnLinea.jsx'
+import CasosParaUnAgenteDeIa from './articulos/CasosParaUnAgenteDeIa.jsx'
+import ComoTrabajamos from './articulos/ComoTrabajamos.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 
@@ -33,6 +41,14 @@ export const COMPONENTES = {
   '/articulos/planilla-o-sistema-de-gestion': PlanillaOSistemaDeGestion,
   '/articulos/que-automatizar-primero': QueAutomatizarPrimero,
   '/articulos/que-preparar-antes-de-cotizar': QuePrepararAntesDeCotizar,
+  '/articulos/dos-formas-de-trabajar': DosFormasDeTrabajar,
+  '/articulos/datos-de-tus-clientes-y-la-ley': DatosDeTusClientesYLaLey,
+  '/articulos/por-que-no-te-sirvio-la-herramienta': PorQueNoTeSirvioLaHerramienta,
+  '/articulos/conectar-con-lo-que-ya-usas': ConectarConLoQueYaUsas,
+  '/articulos/boleta-factura-y-sii': BoletaFacturaYSii,
+  '/articulos/como-se-paga-en-linea': ComoSePagaEnLinea,
+  '/articulos/casos-para-un-agente-de-ia': CasosParaUnAgenteDeIa,
+  '/articulos/como-trabajamos': ComoTrabajamos,
   '/nosotros': Nosotros,
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,

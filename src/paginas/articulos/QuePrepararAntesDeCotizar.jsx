@@ -30,7 +30,8 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
       <h2>4. Qué sería un buen resultado</h2>
       <p>
         Algo que se pueda comprobar: responder en minutos y no en horas, saber el stock sin contar, dejar de copiar
-        datos a mano. Sirve para decidir qué entra en la primera versión y qué puede esperar.
+        datos a mano. Sirve para decidir qué entra en la primera versión y qué puede esperar. Esos resultados se miden
+        con indicadores (KPI), y junto con el alcance son lo que define el presupuesto.
       </p>
 
       <h2>5. Con qué se tiene que conectar</h2>
@@ -42,7 +43,8 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
       <h2>6. Tus límites</h2>
       <p>
         Una fecha que de verdad importa —una temporada, un lanzamiento— y un rango de presupuesto, aunque sea
-        aproximado. No es para cobrarte más: es para proponerte lo que cabe.
+        aproximado. No es para cobrarte más: es para proponerte lo que cabe. Cada presupuesto es único, y depende del
+        alcance del proyecto y de los KPI que quieras medir.
       </p>
 
       <h2>Una lista para copiar</h2>
