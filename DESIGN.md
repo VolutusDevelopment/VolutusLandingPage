@@ -35,10 +35,20 @@ Los valores se resuelven por zona y por estado. Las tarjetas y los componentes p
 | Acción oscura | #38a9e8; hover #6dc0ef; activa #8fd0f4 |
 | Estados | Cielo: éxito #12714b, aviso #8a5a00, error #b3261e; plano: #4fcf96, #e8b14c, #ff8a80 |
 | Vitrina de proyectos | Ciruela: fondo #1f141c, acción #e2b6cf; petróleo: #0a1e27, acción #8fc6d9; pizarra: #13171e, acción #b4c6e0 |
-| Mañana | Degradado #2b8de4 → #4d9fea → #7cbcf1 → #c2e1f8 → #f6f9fc |
+| Mañana | Degradado #2b8de4 → #4d9fea → #7cbcf1 → #c2e1f8 → #f6f9fc, en curva suave (ver «Degradados sin rayas») |
 | Noche | Degradado #0a1a2a → #050d18; mar #0e2c47 / #3b86bf / #eef3ff |
 
 El cielo base define nube #b9dcf2 / #56779b y mar #116492 / #38a9e8 / #9fd3f2. La mañana ajusta la nube a #ffffff / #6a8cb2. El plano nocturno define nube #34506e / #16293d y mar #155a86 / #38a9e8 / #d9f0fc. Los tonos de marca y acción tienen usos distintos para mantener contraste.
+
+### Degradados sin rayas
+
+Un degradado de fondo no va en tramos rectos donde empieza o termina en un color liso. En cada parada de `linear-gradient` el color cambia de golpe de ritmo, y donde un color liso empieza a aclararse, o donde el degradado llega al blanco de la sección siguiente, el ojo ve ese quiebre como una raya (banda de Mach). Pasó en las cabeceras, en la portada, en la caída, en el cielo de las páginas de error y detrás de los socios de /nosotros, y se corrigió en octubre de 2026.
+
+- **Curva suave, plana en los extremos.** El fundido recorre sus colores en una curva sin quiebres, con pendiente cero donde toca un color liso, escrita como muchas paradas tomadas de esa curva: cada 16 px en las cabeceras y cada 10 % en los cielos grandes. Entre parada y parada el navegador interpola en recta, así que con pocas paradas cada una vuelve a ser un quiebre: un smoothstep en tramos de 48 px todavía se veía.
+- **No forzar la parada vecina al color liso.** Si el último tramo es corto y empinado, la curva tiene que frenar de golpe y la raya vuelve. Se conserva el camino de colores; lo que cambia es dónde cae cada uno. Después hay que comprobar que el texto que va encima sigue contrastando igual.
+- **Un solo fundido para las cabeceras.** Todas las cabeceras del cielo comparten el de `:root .cabecera-cielo` y `:root .cabecera-cielo + .seccion` (index.css): una parábola de ida y vuelta en oklab, del color de la página (`--fondo`, o sea `--tinte` o el azul del día) a #f6f9fc. Ocupa 12 tramos de 16 px en el relleno de abajo (`--fundido`, 192 px) y 6 más en la sección siguiente, sin mover nada. Una cabecera nueva lo hereda: no se le escribe otro.
+- **La franja de la barra va con el fundido.** Si un fundido cambia de largo o de colores, se recalculan sus paradas y también `.cabecera-fundido`: es el punto donde la tinta empieza a contrastar más que el blanco, y ahí barra.js cambia la barra a tinta.
+- **Se revisa de cerca.** Al tocar un degradado, se mira ampliado (captura a 2×) dónde empieza y dónde termina. Medido en claridad percibida (OKLab L), el salto de ritmo entre tramos queda bajo ~0.1 por px; la raya que se veía medía 0.68.
 
 ## Espaciado, contenedor y radios
 
