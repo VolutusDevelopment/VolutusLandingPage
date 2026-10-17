@@ -6,32 +6,9 @@
    de siempre (decisión 7). */
 
 /* ---- la cabecera ----
-   El cielo del día en el color del servicio (index.css). Desde L, el texto a
-   la izquierda y la pieza a la derecha, los dos desde arriba.
-
-   Se aclara en una curva suave (smoothstep, en tramos de 48 px) que no deja
-   esquina donde empieza ni donde termina: ocupa todo el relleno de abajo
-   (192 px) y sigue 96 px en la sección siguiente, sin mover nada. Ahí ya es
-   claro: la tinta da 10.7:1 o más, y el texto suave llega a 4.5:1 a los
-   18 px, donde solo cae un título. */
-:root .servicio-cabecera {
-  --fondo-hora: linear-gradient(
-    var(--fondo) calc(100% - 4 * var(--e-12)),
-    color-mix(in oklab, var(--tinte) 93%, #f6f9fc) calc(100% - 3 * var(--e-12)),
-    color-mix(in oklab, var(--tinte) 74%, #f6f9fc) calc(100% - 2 * var(--e-12)),
-    color-mix(in oklab, var(--tinte) 50%, #f6f9fc) calc(100% - var(--e-12)),
-    color-mix(in oklab, var(--tinte) 26%, #f6f9fc)
-  );
-}
-
-:root .servicio-cabecera + .seccion {
-  --fondo-hora: linear-gradient(
-    color-mix(in oklab, var(--tinte) 26%, #f6f9fc),
-    color-mix(in oklab, var(--tinte) 7%, #f6f9fc) var(--e-12),
-    var(--fondo) calc(2 * var(--e-12))
-  );
-}
-
+   El cielo del día en el color del servicio, con el fundido de todas las
+   cabeceras (index.css). Desde L, el texto a la izquierda y la pieza a la
+   derecha, los dos desde arriba. */
 /* Menos aire sobre el titular que en las demás cabeceras (index.css): la
    pieza ya llena la pantalla. Va con `.cabecera-cielo` porque las cards de
    la rueda (Servicios.css) también tienen un `.servicio-cabecera`. */
@@ -46,10 +23,10 @@
 }
 
 /* La franja de barra.js (index.css), donde la tinta ya contrasta más que el
-   blanco: medido sobre los siete tintes, entre 67 y 100 px del comienzo del
-   fundido, casi siempre cerca de 75. */
+   blanco: medido sobre los ocho tintes, entre 78 y 108 px del comienzo del
+   fundido, casi siempre cerca de 85. */
 .servicio-cabecera .cabecera-fundido {
-  height: calc(var(--e-24) + var(--e-6));
+  height: calc(var(--fundido) - var(--e-24) + var(--e-2));
 }
 
 /* `minmax(0, …)` y no `auto`: en WebKit el SVG de la pieza aporta un ancho

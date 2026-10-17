@@ -26,7 +26,9 @@
    de la pantalla: empieza en la primera y llega al blanco de la página un poco
    bajo la segunda (`--fundido-fin`), dentro de los 96 px que quedan hasta el
    final de la escena. El blanco sigue hasta ese final, que recorta lo que
-   sobra (`overflow: clip`, Portada.css). */
+   sobra (`overflow: clip`, Portada.css). Pasa por el celeste en una curva
+   suave, plana donde sale del azul y donde llega al blanco: en tramos
+   rectos, esos quiebres se veían como rayas. */
 .socios::before,
 .socios::after {
   --fundido-fin: calc(100% + var(--e-16));
@@ -38,7 +40,17 @@
 
 .socios::before {
   inset-block: 0 calc(100% - var(--fundido-fin));
-  background: linear-gradient(#1976cc, #7cbcf1, #f6f9fc);
+  background: linear-gradient(
+    #1976cc,
+    #247ed0 12.5%,
+    #3e90da 25%,
+    #5ea7e6 37.5%,
+    #7cbcf1 50%,
+    #a0cef4 62.5%,
+    #c8e2f8 75%,
+    #e8f2fb 87.5%,
+    #f6f9fc
+  );
 }
 
 .socios::after {
