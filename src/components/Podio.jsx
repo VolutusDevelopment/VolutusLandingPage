@@ -5,8 +5,9 @@
  * como la pantalla de puntajes de un juego.
  *
  * Los sprites son mapas de texto (un carácter por píxel) o rectángulos
- * calculados, que se convierten en `<rect>` al prerenderizar: no hay imágenes
- * que descargar y escalan nítidos a cualquier tamaño. Cada columna del podio
+ * calculados, que se convierten en un `<path>` por color al prerenderizar
+ * (ver `lienzo`): no hay imágenes que descargar y escalan nítidos a
+ * cualquier tamaño. Cada columna del podio
  * es una pestaña; el cartel de abajo cuenta el logro elegido, y la tabla elige
  * lo mismo al tocar una fila (src/podio.js). Sin JavaScript se ven todos los
  * carteles (ver SIN_SCRIPT) y el contenido sigue en el HTML para los
@@ -15,20 +16,62 @@
 
 const CONTORNO = '#2a1d3d'
 
-// Una fila de píxeles iguales es un solo `<rect>`: el trofeo baja de ~200
-// nodos a ~60.
-function Sprite({ mapa, paleta, className }) {
-  const rects = []
-  mapa.forEach((fila, y) => {
-    let x = 0
-    while (x < fila.length) {
-      const c = fila[x]
-      let fin = x
-      while (fila[fin + 1] === c) fin++
-      if (paleta[c]) rects.push(<rect key={`${x}-${y}`} x={x} y={y} width={fin - x + 1} height={1} fill={paleta[c]} />)
-      x = fin + 1
+/**
+ * Un lienzo de píxeles: `r(x, y, ancho, alto, color)` pinta un rectángulo
+ * encima de lo que haya, y `pintar()` entrega lo pintado como un `<path>` por
+ * color, con un tramo por fila, y deja el lienzo vacío para la capa
+ * siguiente. Un `<rect>` por tramo eran unos 900 nodos en la página, que el
+ * navegador recorre en cada cálculo de estilos; así son unos pocos por pieza,
+ * y se ve igual.
+ */
+function lienzo() {
+  const pixeles = new Map()
+  const r = (x, y, w, h, color) => {
+    for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) pixeles.set(`${i},${j}`, color)
+  }
+  const pintar = () => {
+    // Los píxeles de cada color, agrupados por fila.
+    const colores = new Map()
+    for (const [punto, color] of pixeles) {
+      const [x, y] = punto.split(',').map(Number)
+      if (!colores.has(color)) colores.set(color, new Map())
+      const filas = colores.get(color)
+      if (!filas.has(y)) filas.set(y, [])
+      filas.get(y).push(x)
     }
-  })
+    pixeles.clear()
+
+    return [...colores].map(([color, filas]) => {
+      // Cada fila en tramos seguidos; un tramo igual al de la fila de arriba
+      // la alarga hacia abajo, en vez de empezar otro.
+      const bloques = new Map()
+      const hechos = []
+      for (const y of [...filas.keys()].sort((m, n) => m - n)) {
+        const xs = filas.get(y).sort((m, n) => m - n)
+        for (let i = 0; i < xs.length; ) {
+          let fin = i
+          while (xs[fin + 1] === xs[fin] + 1) fin++
+          const clave = `${xs[i]},${fin - i + 1}`
+          const abierto = bloques.get(clave)
+          if (abierto && abierto.y + abierto.h === y) abierto.h++
+          else {
+            const bloque = { x: xs[i], y, w: fin - i + 1, h: 1 }
+            bloques.set(clave, bloque)
+            hechos.push(bloque)
+          }
+          i = fin + 1
+        }
+      }
+      const d = hechos.map(({ x, y, w, h }) => `M${x} ${y}h${w}v${h}h-${w}z`).join('')
+      return <path key={color} d={d} fill={color} />
+    })
+  }
+  return { r, pintar }
+}
+
+function Sprite({ mapa, paleta, className }) {
+  const { r, pintar } = lienzo()
+  mapa.forEach((fila, y) => [...fila].forEach((c, x) => paleta[c] && r(x, y, 1, 1, paleta[c])))
   const ancho = Math.max(...mapa.map((fila) => fila.length))
   return (
     <svg
@@ -38,16 +81,9 @@ function Sprite({ mapa, paleta, className }) {
       aria-hidden="true"
       style={{ '--ancho': ancho }}
     >
-      {rects}
+      {pintar()}
     </svg>
   )
-}
-
-// Un lienzo de rectángulos: `r(x, y, ancho, alto, color)` agrega uno.
-function lienzo() {
-  const rects = []
-  const r = (x, y, w, h, fill) => rects.push(<rect key={rects.length} x={x} y={y} width={w} height={h} fill={fill} />)
-  return { rects, r }
 }
 
 const TROFEO = [
@@ -141,7 +177,7 @@ const PIEDRA = { luz: '#c7ccdd', cara: '#9aa1ba', sombra: '#727a96', junta: '#6b
  */
 function Torre({ metal, puesto }) {
   const t = TORRES[metal]
-  const { rects, r } = lienzo()
+  const { r, pintar } = lienzo()
   const w = t.ancho
   const top = 4
 
@@ -189,7 +225,7 @@ function Torre({ metal, puesto }) {
       aria-hidden="true"
       style={{ '--ancho': w }}
     >
-      {rects}
+      {pintar()}
     </svg>
   )
 }
@@ -286,30 +322,18 @@ const SONRISA = [
  * con el centro en el 15, 15. Por detrás de las nubes.
  */
 function Sol() {
-  const { rects, r } = lienzo()
+  const { r, pintar } = lienzo()
   const centro = 15
-  // Un círculo de píxeles: una fila de rectángulo por cada altura.
-  const circulo = (radio, color, opacidad) => {
+  // Un círculo de píxeles, fila por fila.
+  const circulo = (radio, color) => {
     for (let dy = -radio; dy <= radio; dy++) {
       const mitad = Math.floor(Math.sqrt(radio * radio - dy * dy))
-      rects.push(
-        <rect
-          key={rects.length}
-          x={centro - mitad}
-          y={centro + dy}
-          width={mitad * 2 + 1}
-          height={1}
-          fill={color}
-          fillOpacity={opacidad}
-        />,
-      )
+      r(centro - mitad, centro + dy, mitad * 2 + 1, 1, color)
     }
   }
-  // Lo dibujado hasta aquí, y el lienzo vacío para la capa siguiente.
-  const capa = () => rects.splice(0)
 
-  circulo(10, '#fff8d6', 0.35)
-  const brillo = capa()
+  circulo(10, '#fff8d6')
+  const brillo = pintar()
 
   const rayos = RAYOS.map(([desde, hasta]) => {
     for (let d = desde; d <= hasta; d++) {
@@ -317,22 +341,22 @@ function Sol() {
       const e = Math.round(d * 0.75)
       for (const [x, y] of DIAGONALES) r(centro + x * e, centro + y * e, 1, 1, '#ffd23f')
     }
-    return capa()
+    return pintar()
   })
 
   circulo(7, '#f29a00')
   circulo(6, '#ffd23f')
   r(12, 10, 4, 1, '#fff3a0')
   for (const [x, y] of SONRISA) r(x, y, 1, 1, '#7a3d00')
-  const cara = capa()
+  const cara = pintar()
 
   r(13, 13, 1, 2, '#7a3d00')
   r(17, 13, 1, 2, '#7a3d00')
-  const ojos = capa()
+  const ojos = pintar()
 
   return (
     <svg className="podio-sol" viewBox="0 0 31 31" shapeRendering="crispEdges" aria-hidden="true">
-      {brillo}
+      <g fillOpacity={0.35}>{brillo}</g>
       {rayos.map((cuadro, i) => (
         <g key={i} className="podio-sol-rayos">
           {cuadro}
@@ -350,6 +374,7 @@ function Sol() {
  * del mástil que pinta el fondo.
  */
 function Banderas() {
+  const { r, pintar } = lienzo()
   return TORRECILLAS.map(({ x, techo, sombra }) => (
     <svg
       key={x}
@@ -359,17 +384,12 @@ function Banderas() {
       aria-hidden="true"
       style={{ '--x': x + 5 }}
     >
-      {BANDERA.map((cuadro, i) => (
-        <g key={i}>
-          {cuadro.flatMap((fila, y) =>
-            [...fila].map((c, cx) =>
-              c === '.' ? null : (
-                <rect key={`${cx}-${y}`} x={cx} y={y} width={1} height={1} fill={c === 'd' ? sombra : techo} />
-              ),
-            ),
-          )}
-        </g>
-      ))}
+      {BANDERA.map((cuadro, i) => {
+        cuadro.forEach((fila, y) =>
+          [...fila].forEach((c, cx) => c !== '.' && r(cx, y, 1, 1, c === 'd' ? sombra : techo)),
+        )
+        return <g key={i}>{pintar()}</g>
+      })}
     </svg>
   ))
 }
@@ -381,7 +401,7 @@ function Banderas() {
  * arriba sigue el color del cielo.
  */
 function Fondo() {
-  const { rects, r } = lienzo()
+  const { r, pintar } = lienzo()
   const base = 90
 
   ;['#7cc4f5', '#86c9f6', '#92cff8', '#9ed5f9', '#aadbfa', '#b6e1fb', '#c2e7fc', '#c8e9ff'].forEach((c, i) =>
@@ -438,7 +458,7 @@ function Fondo() {
 
   return (
     <svg className="podio-fondo" viewBox="0 0 120 128" shapeRendering="crispEdges" aria-hidden="true">
-      {rects}
+      {pintar()}
     </svg>
   )
 }
