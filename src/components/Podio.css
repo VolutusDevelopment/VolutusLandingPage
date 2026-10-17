@@ -96,7 +96,48 @@
   height: auto;
 }
 
+/* Las nubes, por delante del cielo y por detrás del castillo. Quietas, cada
+   una está donde la dibuja el fondo (Podio.jsx). */
+.podio-nube {
+  position: absolute;
+  left: calc(var(--x) * var(--p));
+  bottom: calc(var(--abajo) * var(--p));
+}
+
+.podio-nube svg {
+  display: block;
+  width: calc(var(--ancho) * var(--p));
+}
+
+/* El sol, arriba a la derecha, con el centro en el 104, 15 del fondo.
+   Quieto, se ven los rayos cortos. */
+.podio-sol {
+  position: absolute;
+  left: calc(89 * var(--p));
+  bottom: calc(97 * var(--p));
+  width: calc(31 * var(--p));
+}
+
+.podio-sol-rayos + .podio-sol-rayos {
+  opacity: 0;
+}
+
+/* La bandera, colgada del mástil de su torrecilla (a 52 del borde de arriba
+   del fondo). Quieta, se ve el primer cuadro. */
+.podio-bandera {
+  position: absolute;
+  left: calc(var(--x) * var(--p));
+  bottom: calc(72 * var(--p));
+  width: calc(6 * var(--p));
+}
+
+.podio-bandera g + g {
+  opacity: 0;
+}
+
 .podio-escena {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
@@ -462,6 +503,66 @@
 
   .podio-cartel:not([hidden]) {
     animation: podio-aparecer 240ms steps(3, end);
+  }
+
+  /* Cada nube cruza el cielo de punta a punta, un píxel de juego por paso:
+     entra entera por la izquierda (33 píxeles antes del borde, uno más que su
+     ancho) y sale por la derecha, 153 pasos en total. El retraso negativo la
+     deja, al cargar, en su lugar del dibujo. */
+  .podio-nube {
+    animation: podio-nube var(--segundos) steps(153, end) infinite;
+    animation-delay: calc(var(--segundos) * (var(--x) + 33) / -153);
+  }
+
+  /* Las banderas alternan sus dos cuadros, cada una a destiempo, y los rayos
+     del sol los suyos, más lento. */
+  .podio-bandera g {
+    animation: podio-ondear 700ms steps(1, end) infinite;
+  }
+
+  .podio-sol-rayos {
+    animation: podio-ondear 1600ms steps(1, end) infinite;
+  }
+
+  .podio-bandera g + g,
+  .podio-sol-rayos + .podio-sol-rayos {
+    animation-name: podio-ondear-b;
+  }
+
+  /* El sol pestañea cada cuatro segundos y medio. */
+  .podio-sol-ojos {
+    animation: podio-pestanear 4500ms steps(1, end) infinite;
+  }
+
+  .podio-bandera + .podio-bandera g {
+    animation-delay: -350ms;
+  }
+}
+
+@keyframes podio-pestanear {
+  96% {
+    opacity: 0;
+  }
+}
+
+@keyframes podio-ondear {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes podio-ondear-b {
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes podio-nube {
+  from {
+    translate: calc((-33 - var(--x)) * var(--p)) 0;
+  }
+  to {
+    translate: calc((120 - var(--x)) * var(--p)) 0;
   }
 }
 

@@ -29,7 +29,7 @@ function Sprite({ mapa, paleta, className }) {
       x = fin + 1
     }
   })
-  const ancho = mapa[0].length
+  const ancho = Math.max(...mapa.map((fila) => fila.length))
   return (
     <svg
       className={className}
@@ -86,32 +86,25 @@ const MEDALLA = [
   '...oooooo...',
 ]
 
-const SOL = [
-  '.......r.......',
-  '.r.....r.....r.',
-  '..r.........r..',
-  '.....ooooo.....',
-  '....owwwwyo....',
-  '...owwwwwyyo...',
-  'rr.owwwwwwyo.rr',
-  '...owwwwwwyo...',
-  '...oywwwwyyo...',
-  '....oyyyyyo....',
-  '.....ooooo.....',
-  '..r.........r..',
-  '.r.....r.....r.',
-  '.......r.......',
+const NUBE = [
+  '..........oooooo................',
+  '........oowwwwwwoo....oooo......',
+  '.......owwwwwwwwwwo.oowwwwoo....',
+  '......owwwwwwwwwwwwowwwwwwwwo...',
+  '..oooowwwwwwwwwwwwwwwwwwwwwwwo..',
+  '.owwwwwwwwwwwwwwwwwwwwwwwwwwwwo.',
+  'owwwwwwwwwwwwwwwwwwwwwwwwwwwwwwo',
+  'owwwwwwwwwwwwwwwwwwwwwwwwwwwwwwo',
+  'osswwwwwwwwwwwwwwwwwwwwwwwwwssso',
+  '.osssssswwwwwwwwwwwwwwwwsssssso.',
+  '..osssssssssssssssssssssssssso..',
+  '...oooooooooooooooooooooooooo...',
 ]
 
-const NUBE = [
-  '.....oooo...........',
-  '...oowwwwoo..oooo....',
-  '..owwwwwwwwoowwwwoo..',
-  '.owwwwwwwwwwwwwwwwwo.',
-  'owwwwwwwwwwwwwwwwwwwo',
-  'osswwwwwwwwwwwwwwssso',
-  '.osssssssssssssssso..',
-  '..oooooooooooooooo...',
+// La bandera de cada torrecilla, en dos cuadros que se alternan al flamear.
+const BANDERA = [
+  ['ffff..', 'fdffff', 'ffff..', 'f.....'],
+  ['fff...', 'ffdfff', 'fffffd', 'ff....'],
 ]
 
 const SPRITES = {
@@ -221,27 +214,179 @@ const TORRECILLAS = [
   { x: 108, techo: '#3d8bff', sombra: '#2a63c4' },
 ]
 
+const PALETA_NUBE = { o: '#9ccbe8', w: '#ffffff', s: '#dff1fc' }
+
+// Una nube por altura (y, en el fondo de 120 × 128): cruza todo el cielo y
+// vuelve a entrar al salir, así que su franja nunca queda vacía. Las de
+// arriba van juntas a la misma velocidad, separadas por un tercio del
+// recorrido de 153 píxeles (ver Podio.css), en diagonal: no se amontonan
+// nunca. Las de abajo, más cerca, van más rápido y a media vuelta. `x` es
+// dónde está cada nube al cargar.
+const NUBES = [
+  { y: 2, x: 40, segundos: 100 },
+  { y: 18, x: -11, segundos: 100 },
+  { y: 34, x: 91, segundos: 100 },
+  { y: 100, x: -6, segundos: 70 },
+  { y: 114, x: 70, segundos: 70 },
+]
+
 /**
- * El fondo: el cielo de día con el sol y las nubes, las dos torrecillas y la
- * isla de piedra que flota bajo el castillo. Mide 120 × 128 píxeles; las
- * torres se apoyan en el pasto, a 90 del borde de arriba. Si la escena es
- * más alta, arriba sigue el color del cielo.
+ * Las nubes van fuera del fondo para poder moverse (Podio.css): por delante
+ * del cielo y por detrás del castillo.
+ */
+function Nubes() {
+  return NUBES.map(({ x, y, segundos }) => (
+    <span
+      key={`${x}-${y}`}
+      className="podio-nube"
+      aria-hidden="true"
+      style={{ '--x': x, '--abajo': 128 - y - NUBE.length, '--segundos': `${segundos}s` }}
+    >
+      <Sprite mapa={NUBE} paleta={PALETA_NUBE} />
+    </span>
+  ))
+}
+
+// Los dos cuadros de los rayos, [desde, hasta] contados desde el centro: en
+// el segundo, los rayos crecen un píxel. Al alternarlos, el sol brilla
+// (Podio.css).
+const RAYOS = [
+  [10, 11],
+  [10, 12],
+]
+
+// Hacia dónde sale cada rayo: los cuatro rectos y los cuatro en diagonal.
+const RECTOS = [
+  [0, -1],
+  [0, 1],
+  [1, 0],
+  [-1, 0],
+]
+const DIAGONALES = [
+  [1, 1],
+  [-1, 1],
+  [1, -1],
+  [-1, -1],
+]
+
+// La sonrisa: una línea con las puntas hacia arriba.
+const SONRISA = [
+  [12, 18],
+  [13, 19],
+  [14, 19],
+  [15, 19],
+  [16, 19],
+  [17, 19],
+  [18, 18],
+]
+
+/**
+ * El sol, fuera del fondo para poder moverse: un brillo tenue, ocho rayos y el
+ * disco con su carita, que pestañea de vez en cuando. Mide 31 × 31 píxeles,
+ * con el centro en el 15, 15. Por detrás de las nubes.
+ */
+function Sol() {
+  const { rects, r } = lienzo()
+  const centro = 15
+  // Un círculo de píxeles: una fila de rectángulo por cada altura.
+  const circulo = (radio, color, opacidad) => {
+    for (let dy = -radio; dy <= radio; dy++) {
+      const mitad = Math.floor(Math.sqrt(radio * radio - dy * dy))
+      rects.push(
+        <rect
+          key={rects.length}
+          x={centro - mitad}
+          y={centro + dy}
+          width={mitad * 2 + 1}
+          height={1}
+          fill={color}
+          fillOpacity={opacidad}
+        />,
+      )
+    }
+  }
+  // Lo dibujado hasta aquí, y el lienzo vacío para la capa siguiente.
+  const capa = () => rects.splice(0)
+
+  circulo(10, '#fff8d6', 0.35)
+  const brillo = capa()
+
+  const rayos = RAYOS.map(([desde, hasta]) => {
+    for (let d = desde; d <= hasta; d++) {
+      for (const [x, y] of RECTOS) r(centro + x * d, centro + y * d, 1, 1, '#ffd23f')
+      const e = Math.round(d * 0.75)
+      for (const [x, y] of DIAGONALES) r(centro + x * e, centro + y * e, 1, 1, '#ffd23f')
+    }
+    return capa()
+  })
+
+  circulo(7, '#f29a00')
+  circulo(6, '#ffd23f')
+  r(12, 10, 4, 1, '#fff3a0')
+  for (const [x, y] of SONRISA) r(x, y, 1, 1, '#7a3d00')
+  const cara = capa()
+
+  r(13, 13, 1, 2, '#7a3d00')
+  r(17, 13, 1, 2, '#7a3d00')
+  const ojos = capa()
+
+  return (
+    <svg className="podio-sol" viewBox="0 0 31 31" shapeRendering="crispEdges" aria-hidden="true">
+      {brillo}
+      {rayos.map((cuadro, i) => (
+        <g key={i} className="podio-sol-rayos">
+          {cuadro}
+        </g>
+      ))}
+      {cara}
+      <g className="podio-sol-ojos">{ojos}</g>
+    </svg>
+  )
+}
+
+/**
+ * Las banderas de las torrecillas, fuera del fondo para poder flamear: los
+ * dos cuadros van uno sobre otro y el CSS los alterna (Podio.css). Se cuelgan
+ * del mástil que pinta el fondo.
+ */
+function Banderas() {
+  return TORRECILLAS.map(({ x, techo, sombra }) => (
+    <svg
+      key={x}
+      className="podio-bandera"
+      viewBox="0 0 6 4"
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+      style={{ '--x': x + 5 }}
+    >
+      {BANDERA.map((cuadro, i) => (
+        <g key={i}>
+          {cuadro.flatMap((fila, y) =>
+            [...fila].map((c, cx) =>
+              c === '.' ? null : (
+                <rect key={`${cx}-${y}`} x={cx} y={y} width={1} height={1} fill={c === 'd' ? sombra : techo} />
+              ),
+            ),
+          )}
+        </g>
+      ))}
+    </svg>
+  ))
+}
+
+/**
+ * El fondo: el cielo de día, las dos torrecillas y la isla de
+ * piedra que flota bajo el castillo. Mide 120 × 128 píxeles; las torres se
+ * apoyan en el pasto, a 90 del borde de arriba. Si la escena es más alta,
+ * arriba sigue el color del cielo.
  */
 function Fondo() {
   const { rects, r } = lienzo()
   const base = 90
-  const pintar = (mapa, paleta, ox, oy) =>
-    mapa.forEach((fila, y) => [...fila].forEach((c, x) => paleta[c] && r(ox + x, oy + y, 1, 1, paleta[c])))
 
   ;['#7cc4f5', '#86c9f6', '#92cff8', '#9ed5f9', '#aadbfa', '#b6e1fb', '#c2e7fc', '#c8e9ff'].forEach((c, i) =>
     r(0, i * 16, 120, 17, c),
   )
-  pintar(SOL, { o: '#f29a00', w: '#fff3a0', y: '#ffd23f', r: '#ffe45c' }, 100, 3)
-  const nube = { o: '#9ccbe8', w: '#ffffff', s: '#dff1fc' }
-  pintar(NUBE, nube, 4, 8)
-  pintar(NUBE.slice(1), nube, 68, 20)
-  pintar(NUBE, nube, -8, 112)
-  pintar(NUBE, nube, 100, 106)
 
   // El pasto, con brotes claros.
   r(2, base, 116, 1, CONTORNO)
@@ -289,7 +434,6 @@ function Fondo() {
       }
     }
     r(x + 4, base - 38, 1, 5, CONTORNO)
-    for (let i = 0; i < 3; i++) r(x + 5, base - 38 + i, 4 - i, 1, techo)
   }
 
   return (
@@ -351,6 +495,9 @@ export default function Podio({ logros }) {
       <div className="podio-lienzo">
         <div className="podio-marco">
           <Fondo />
+          <Sol />
+          <Nubes />
+          <Banderas />
           <div className="podio-escena" role="tablist" aria-label="Logros con jurado externo">
             {columnas.map((logro) => {
               const { metal, titulo, evento } = logro.credencial

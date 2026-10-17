@@ -243,9 +243,6 @@ export default function Proyectos() {
       <div className="contenedor">
         <h2 className="titular entra">proyectos y Logros</h2>
 
-        {/* Los logros con jurado externo suben al podio (Podio.jsx). */}
-        <Podio logros={destacados} />
-
         <div className="obras-bloque">
           <div className="obras-intro entra">
             <p className="antetitulo">Proyectos</p>
@@ -257,6 +254,9 @@ export default function Proyectos() {
             ))}
           </ul>
         </div>
+
+        {/* Los logros con jurado externo suben al podio (Podio.jsx). */}
+        <Podio logros={destacados} />
 
         {obras.filter(tieneFicha).map((proyecto) => (
           <Ficha key={proyecto.id} proyecto={proyecto} />
