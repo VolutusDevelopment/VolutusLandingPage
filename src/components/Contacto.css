@@ -271,6 +271,42 @@
   outline-offset: 2px;
 }
 
+/* «WhatsApp», marcada, se vuelve un mensaje de WhatsApp: el verde claro de su
+   globo, la letra de su logotipo —Helvetica Neue en negrita y apretada; Arial
+   donde no está, sin descargar nada— y, en
+   vez del ✓ de las demás pastillas, su doble check azul al final. El check es
+   un SVG y no el carácter «✓✓»: cada fuente dibuja ese carácter a su manera.
+   Está siempre, transparente, para que aparecer no mueva el texto; el cambio
+   lo hace la transición de `.chip`. */
+.chip-whatsapp::after {
+  content: '';
+  flex: none;
+  width: 16px;
+  height: 10px;
+  margin-left: auto;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M1.5 5.5l3 3 6.5-7M7 7l1.5 1.5 6.5-7' fill='none' stroke='%2334B7F1' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  opacity: 0;
+  transition: opacity 140ms var(--ease-out);
+}
+
+.chip-whatsapp:has(input:checked) {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: #dcf8c6;
+  border-color: #dcf8c6;
+  color: #111b21;
+}
+
+.chip-whatsapp:has(input:checked)::before {
+  content: none;
+}
+
+.chip-whatsapp:has(input:checked)::after {
+  opacity: 1;
+}
+
 /* La trampa para robots. `display: none` la delataría: los que valen algo lo
    comprueban. Se saca del flujo dejándola técnicamente presente. */
 .trampa {

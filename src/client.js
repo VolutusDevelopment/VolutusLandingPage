@@ -20,7 +20,14 @@ import initSocios from './socios.js'
 import initChat from './chat.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
-import { CORREO_VALIDO, LIMITES, NOMBRE_VALIDO, TURNSTILE_ACCION, TURNSTILE_SITEKEY } from './lib/contacto.js'
+import {
+  CORREO_VALIDO,
+  LIMITES,
+  NOMBRE_VALIDO,
+  TURNSTILE_ACCION,
+  TURNSTILE_SITEKEY,
+  enlaceDeWhatsapp,
+} from './lib/contacto.js'
 
 // Los textos salen de §5 y dicen qué hacer, no qué falló.
 const MENSAJES = {
@@ -79,6 +86,18 @@ function validar(campo) {
 
   marcarError(campo, '')
   return true
+}
+
+// Lo que llega escrito al chat de WhatsApp, con lo mismo que el correo que
+// arma el Worker: quién escribe y su correo, qué necesita y su mensaje.
+function mensajeDeWhatsapp(form) {
+  const { nombre, correo, proyecto } = form.elements
+  const servicios = new FormData(form).getAll('servicio').join(' · ')
+  return (
+    `Hola, soy ${nombre.value.trim()} (${correo.value.trim()}).` +
+    (servicios ? `\nNecesito: ${servicios}` : '') +
+    `\n\n${proyecto.value.trim()}`
+  )
 }
 
 function initFormulario() {
@@ -180,6 +199,14 @@ function initFormulario() {
     const valido = campos.map(validar).every(Boolean)
     if (!valido) {
       campos.find((c) => c.getAttribute('aria-invalid') === 'true')?.focus()
+      return
+    }
+
+    // Antes de cualquier `await`: así Safari lo cuenta como gesto de la
+    // persona y no bloquea la pestaña nueva. El formulario queda como estaba,
+    // por si vuelve.
+    if (form.elements.canal?.value === 'whatsapp') {
+      window.open(enlaceDeWhatsapp(mensajeDeWhatsapp(form)), '_blank', 'noopener')
       return
     }
 

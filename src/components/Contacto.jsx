@@ -1,5 +1,5 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
-import { LIMITES } from '../lib/contacto.js'
+import { LIMITES, WHATSAPP_DE_CONTACTO } from '../lib/contacto.js'
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
@@ -18,6 +18,10 @@ import { LIMITES } from '../lib/contacto.js'
  * una página que ofrece el correo directo. Las
  * opciones de «Qué necesitas» son casillas nativas: se marcan y se envían sin
  * una línea de código.
+ *
+ * «Enviar por» elige el canal: por correo, el Worker manda el mensaje; por
+ * WhatsApp, client.js abre el chat con el nombre, el correo, los servicios y
+ * el mensaje ya escritos.
  *
  * Los mensajes de error están escritos en el HTML servido y ocultos con
  * `hidden`, no creados al vuelo. Ojo: `hidden` por sí solo NO reserva espacio
@@ -120,6 +124,26 @@ export default function Contacto({ marcado }) {
           {/* Turnstile monta aquí su comprobación, invisible salvo que dude.
               El script lo descarga client.js al primer foco en el formulario. */}
           <div className="turnstile" />
+
+          {/* Radios nativos con las mismas pastillas de «Qué necesitas»: las
+              flechas cambian de opción sin código. Sin JavaScript, WhatsApp
+              cae en el envío normal, y el Worker responde con su página de
+              siempre, que ofrece el correo. */}
+          {WHATSAPP_DE_CONTACTO && (
+            <fieldset className="campo opciones">
+              <legend>Enviar por</legend>
+              <div className="chips">
+                <label className="chip">
+                  <input type="radio" name="canal" value="correo" defaultChecked />
+                  Correo
+                </label>
+                <label className="chip chip-whatsapp">
+                  <input type="radio" name="canal" value="whatsapp" />
+                  WhatsApp
+                </label>
+              </div>
+            </fieldset>
+          )}
 
           {/* El mensaje es un «composer»: un solo cuadro con el texto arriba y,
               en su base, el contador y el botón de enviar. Un `<textarea>` no

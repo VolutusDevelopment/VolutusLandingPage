@@ -180,6 +180,40 @@
   display: inline-block;
 }
 
+/* WhatsApp va arriba y el correo debajo, centrados. El botón es el logo y el
+   texto sin fondo; al pasar o enfocar, un cuadro blanco de borde fino los
+   rodea. El borde transparente de `.boton` ya reserva su espacio: no mueve nada. */
+.pie-contacto-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e-1);
+}
+
+.pie-whatsapp {
+  flex: none;
+  padding: 0 var(--e-4);
+  font-size: var(--texto-lg);
+  color: #fff;
+  border-radius: var(--radio-panel);
+  border-color: rgb(255 255 255 / 0);
+  transition:
+    border-color 300ms var(--ease-out),
+    transform var(--t-pulsar) var(--ease-out);
+}
+
+.pie-whatsapp img {
+  width: 28px;
+  height: 28px;
+}
+
+/* El texto sigue blanco al pasar: `a:hover` lo teñiría de azul. */
+.pie-whatsapp:hover,
+.pie-whatsapp:focus-visible {
+  color: #fff;
+  border-color: #fff;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .pie-correo span {
     transition: transform 200ms var(--ease-out);

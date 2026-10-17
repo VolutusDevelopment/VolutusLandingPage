@@ -23,3 +23,11 @@ export const TURNSTILE_SITEKEY = '0x4AAAAAAFNL4PmSlH4OWPEc'
 // La acción que el widget sella en su token y el Worker exige de vuelta: un
 // token sacado de otro formulario con la misma clave no sirve aquí.
 export const TURNSTILE_ACCION = 'contacto'
+
+// Formato internacional sin «+» ni espacios, por ejemplo 56912345678. Mientras
+// esté vacío, ni el pie ni el formulario ofrecen WhatsApp.
+export const WHATSAPP_DE_CONTACTO = '56957567989'
+
+// El enlace que abre el chat con `texto` ya escrito.
+export const enlaceDeWhatsapp = (texto) =>
+  `https://wa.me/${WHATSAPP_DE_CONTACTO}?text=${encodeURIComponent(texto)}`

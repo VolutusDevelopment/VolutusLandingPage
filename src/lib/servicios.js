@@ -1,14 +1,26 @@
 /**
+ * La paleta de las cards, en orden: la costa —mar hondo, roca, coral,
+ * atardecer, arena quemada, alga, huiro y ola—, colores hondos para contrastar
+ * con el cielo y sin morado (DESIGN-BRIEF, A.2). El blanco encima da 5.5:1 o
+ * más. El color va con el lugar y no con el servicio: el primero lleva siempre
+ * el mar hondo, y si cambia el orden cada uno toma el color de su lugar nuevo.
+ */
+const PALETA = ['#007192', '#405f74', '#b8342c', '#af4000', '#905500', '#005d37', '#007156', '#00588d']
+
+/**
  * Lo que ofrecemos. Una sola lista para todo el sitio.
+ *
+ * Van en orden de necesidad (DESIGN-BRIEF, decisión 46): la página web
+ * primero, como puerta de entrada, después lo que más piden las fichas de
+ * clientes y la ley de datos al final, que el índice (/servicios) pone en una
+ * franja a todo el ancho.
  *
  * Cada servicio es independiente: el cliente puede contratar una prestación
  * sin necesitar contratar otra previamente. Los puntos describen capacidades
  * concretas de la solución, no dependencias entre servicios.
  *
- * `color` es el de su card en la rueda y el de su página: la costa —mar hondo,
- * roca, coral, atardecer, arena quemada, alga, huiro y ola—, colores hondos
- * para contrastar con el cielo y sin morado (DESIGN-BRIEF, A.2). El blanco
- * encima da 5.5:1 o más.
+ * `color` es el de su card en la rueda y el de su página, y sale de su lugar
+ * en la lista (`PALETA`).
  *
  * `ruta` es la de su página propia (paginas/Servicio.jsx), bajo /servicios,
  * el índice de todos, y tiene que estar declarada en PAGINAS (lib/meta.js). La ley de datos no tiene página
@@ -17,7 +29,6 @@
 export const SERVICIOS = [
   {
     id: 'web',
-    color: '#007192',
     ruta: '/servicios/desarrollo-web',
     nombre: 'Páginas web',
     opcion: 'Una página web',
@@ -31,39 +42,7 @@ export const SERVICIOS = [
   },
 
   {
-    id: 'tienda',
-    color: '#405f74',
-    ruta: '/servicios/tiendas-online',
-    nombre: 'Tiendas online',
-    opcion: 'Una tienda online',
-    texto: 'Vende tus productos por internet con una tienda que puedas administrar.',
-    puntos: [
-      'Catálogo de productos y categorías',
-      'Carrito y proceso de compra',
-      'Pagos y gestión de pedidos',
-      'Seguimiento de tus estadísticas',
-    ],
-    enlace: null,
-  },
-
-  {
-    id: 'app',
-    color: '#b8342c',
-    ruta: '/servicios/desarrollo-software-a-medida',
-    nombre: 'Aplicaciones',
-    opcion: 'Una app',
-    texto: 'Una aplicación hecha para resolver una necesidad concreta de tu negocio.',
-    puntos: [
-      'Para clientes, trabajadores o uso interno',
-      'Conectada a tus datos y sistemas',
-      'Desarrollo en iOS y Android',
-    ],
-    enlace: null,
-  },
-
-  {
     id: 'gestion',
-    color: '#af4000',
     ruta: '/servicios/sistemas-de-gestion',
     nombre: 'Sistemas de gestión',
     opcion: 'Un sistema de gestión',
@@ -78,8 +57,36 @@ export const SERVICIOS = [
   },
 
   {
+    id: 'automatizacion',
+    ruta: '/servicios/automatizacion-procesos',
+    nombre: 'Automatizaciones',
+    opcion: 'Una automatización',
+    texto: 'Conectamos tus herramientas para que las tareas repetitivas ocurran automáticamente.',
+    puntos: [
+      'Traspaso automático de información',
+      'Procesamiento de formularios y documentos',
+      'Avisos, registros y tareas programadas',
+    ],
+    enlace: null,
+  },
+
+  {
+    id: 'tienda',
+    ruta: '/servicios/tiendas-online',
+    nombre: 'Tiendas online',
+    opcion: 'Una tienda online',
+    texto: 'Vende tus productos por internet con una tienda que puedas administrar.',
+    puntos: [
+      'Catálogo de productos y categorías',
+      'Carrito y proceso de compra',
+      'Pagos y gestión de pedidos',
+      'Seguimiento de tus estadísticas',
+    ],
+    enlace: null,
+  },
+
+  {
     id: 'agente',
-    color: '#905500',
     ruta: '/servicios/agentes-ia',
     nombre: 'Agentes de IA',
     opcion: 'Un agente de IA',
@@ -94,23 +101,21 @@ export const SERVICIOS = [
   },
 
   {
-    id: 'automatizacion',
-    color: '#005d37',
-    ruta: '/servicios/automatizacion-procesos',
-    nombre: 'Automatizaciones',
-    opcion: 'Una automatización',
-    texto: 'Conectamos tus herramientas para que las tareas repetitivas ocurran automáticamente.',
+    id: 'app',
+    ruta: '/servicios/desarrollo-software-a-medida',
+    nombre: 'Aplicaciones',
+    opcion: 'Una app',
+    texto: 'Una aplicación hecha para resolver una necesidad concreta de tu negocio.',
     puntos: [
-      'Traspaso automático de información',
-      'Procesamiento de formularios y documentos',
-      'Avisos, registros y tareas programadas',
+      'Para clientes, trabajadores o uso interno',
+      'Conectada a tus datos y sistemas',
+      'Desarrollo en iOS y Android',
     ],
     enlace: null,
   },
 
   {
     id: 'prospeccion',
-    color: '#007156',
     ruta: '/servicios/prospeccion-de-clientes',
     nombre: 'Prospección de clientes',
     opcion: 'Encontrar clientes potenciales',
@@ -126,7 +131,6 @@ export const SERVICIOS = [
 
   {
     id: 'datos',
-    color: '#00588d',
     nombre: 'Ley de datos',
     opcion: 'Adaptarme a la ley de datos',
     texto: 'Adaptamos técnicamente tus sistemas para gestionar los datos personales de acuerdo con la Ley 21.719.',
@@ -137,7 +141,7 @@ export const SERVICIOS = [
     ],
     enlace: '/ley21719',
   },
-]
+].map((servicio, i) => ({ ...servicio, color: PALETA[i] }))
 
 /** Las opciones del menú del formulario: un servicio de la lista, u otra cosa. */
 export const OPCIONES_DE_CONTACTO = [
