@@ -41,8 +41,9 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 
 Cada página dice qué incluye el servicio, cuándo sirve, qué le pedimos al
 cliente, dónde comprobar obra parecida y las preguntas frecuentes. No
-publicamos precios: se cotizan en la primera respuesta, en menos de 48 horas
-hábiles.
+publicamos precios: cada proyecto se cotiza según su alcance, cuando
+entendemos lo que necesita. La primera respuesta llega pronto, pero no es la
+cotización.
 
 - [Desarrollo web](https://volutus.cl/servicios/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA
 - [Tiendas online](https://volutus.cl/servicios/tiendas-online): catálogo, carrito, pagos en línea y pedidos, administrados por el propio negocio

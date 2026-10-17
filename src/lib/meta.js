@@ -35,7 +35,7 @@ export const PAGINAS = {
     actualizada: '2026-10-17',
     titulo: 'Páginas web, apps y agentes de IA en Chile — Volutus',
     descripcion:
-      'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. Te responde una persona en menos de 48 horas hábiles.',
+      'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. Una persona te responde pronto.',
   },
   '/nosotros': {
     archivo: 'nosotros.html',
@@ -61,21 +61,21 @@ export const PAGINAS = {
     actualizada: '2026-10-17',
     titulo: 'Desarrollo web en Chile: páginas rápidas y en Google — Volutus',
     descripcion:
-      'Diseñamos y programamos páginas web para negocios en Chile: rápidas en el celular, fáciles de encontrar en Google y con tu marca. Te responde una persona en 48 horas hábiles.',
+      'Diseñamos y programamos páginas web para negocios en Chile: rápidas en el celular, fáciles de encontrar en Google y con tu marca. Una persona te responde pronto.',
   },
   '/servicios/tiendas-online': {
     archivo: 'servicios/tiendas-online.html',
     actualizada: '2026-10-17',
     titulo: 'Tiendas online para vender por internet en Chile — Volutus',
     descripcion:
-      'Creamos tu tienda online con catálogo, carrito, pagos y pedidos, lista para vender por internet y fácil de administrar por ti. Te responde una persona en 48 horas hábiles.',
+      'Creamos tu tienda online con catálogo, carrito, pagos y pedidos, lista para vender por internet y fácil de administrar por ti. Una persona te responde pronto.',
   },
   '/servicios/desarrollo-software-a-medida': {
     archivo: 'servicios/desarrollo-software-a-medida.html',
     actualizada: '2026-10-17',
     titulo: 'Desarrollo de software a medida y apps en Chile — Volutus',
     descripcion:
-      'Desarrollamos software a medida para tu negocio: apps para iOS y Android, aplicaciones web y paneles conectados a tus datos. Te responde una persona en 48 horas hábiles.',
+      'Desarrollamos software a medida para tu negocio: apps para iOS y Android, aplicaciones web y paneles conectados a tus datos. Una persona te responde pronto.',
   },
   '/servicios/agentes-ia': {
     archivo: 'servicios/agentes-ia.html',
@@ -111,7 +111,7 @@ export const PAGINAS = {
   // todas.
   '/articulos': {
     archivo: 'articulos.html',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-17',
     titulo: 'Artículos sobre software para negocios — Volutus',
     descripcion:
       'Guías cortas y sin jerga para decidir qué software necesita tu negocio: páginas web, tiendas online, agentes de IA, automatizaciones y sistemas de gestión.',
@@ -164,14 +164,14 @@ export const PAGINAS = {
   '/articulos/que-preparar-antes-de-cotizar': {
     archivo: 'articulos/que-preparar-antes-de-cotizar.html',
     publicada: '2026-10-14',
-    actualizada: '2026-10-14',
+    actualizada: '2026-10-17',
     titulo: 'Qué preparar antes de pedir una cotización de software — Volutus',
     descripcion:
       'Lo que conviene tener a mano antes de escribirle a una empresa de software: el problema en tus palabras, cómo lo resuelves hoy y qué sería un buen resultado.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',
-    actualizada: '2026-10-13',
+    actualizada: '2026-10-17',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',

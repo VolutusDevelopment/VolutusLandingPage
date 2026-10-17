@@ -55,8 +55,8 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
         <li>Fecha importante y presupuesto aproximado: …</li>
       </ul>
       <p className="destacado">
-        Con eso basta para <a href="/#contacto">escribirnos</a>. Te mandamos alcance y precio en nuestra primera
-        respuesta, en menos de 48 horas hábiles.
+        Con eso basta para <a href="/#contacto">escribirnos</a>. Te respondemos pronto y, cuando entendemos
+        tu proyecto, te mandamos alcance y precio.
       </p>
 
       <h2>Lo que no hace falta</h2>

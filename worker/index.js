@@ -229,7 +229,7 @@ async function manejarContacto(request, env) {
         from: env.REMITENTE ?? REMITENTE_POR_DEFECTO,
         to: [DESTINO],
         // Responder al correo contesta a quien escribió, no al remitente
-        // técnico. Es lo que hace que el compromiso de 48 horas sea un clic.
+        // técnico. Es lo que hace que responder pronto sea un clic.
         reply_to: correo,
         // Los servicios van en el asunto: es lo primero que se ve en la
         // bandeja y lo que decide cuál de los dos socios contesta.

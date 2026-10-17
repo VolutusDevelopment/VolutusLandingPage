@@ -207,6 +207,41 @@
   }
 }
 
+/* ---- antes de escribirnos ----
+   Lo que se pregunta antes de pedir una cotización, cada cosa con su
+   porqué: una bajo otra en S, de a dos en M y en una fila desde L. */
+.indice-saber {
+  list-style: none;
+  display: grid;
+  gap: var(--e-8);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .indice-saber {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--e-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .indice-saber {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--e-8);
+  }
+}
+
+.indice-saber li {
+  padding-top: var(--e-4);
+  border-top: 2px solid var(--linea);
+}
+
+.indice-saber p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
 /* Al llegar con el teclado, el glifo hace su gesto (Icono.css); al pasar el
    cursor, además, la card se levanta un poco, como las que asoman en la
    rueda. */

@@ -217,7 +217,7 @@ trayectoria, sino mostrando obra verificable.
 | Objeción | Dónde se responde | Cómo |
 | --- | --- | --- |
 | "¿Qué hacen y eso me sirve a mí?" | Portada y bloque 4 | Resultados en el idioma del cliente, no tecnologías. "Una app Android en producción", no "Kotlin" |
-| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde en la primera contestación al formulario, dentro de las 48 horas hábiles comprometidas, y ahí sí con un rango concreto |
+| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde por correo cuando se entiende el proyecto, con alcance y precio concretos. La primera respuesta llega pronto, pero no es la cotización (decisión 43) |
 | "¿En cuánto tiempo?" | Bloque 4 | Rango de plazos por tipo de proyecto, nunca una promesa única |
 | "¿Qué tengo que entregar yo?" | Bloque 4, dentro del "cómo lo hacemos" | Lista concreta de lo que se le pide al cliente en cada paso |
 
@@ -380,8 +380,9 @@ mismos términos.
 | Envío correcto | "Mensaje enviado, te responderemos pronto." |
 | Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
 
-**Compromiso público:** respuesta en menos de **48 horas hábiles**. Si se
-escribe en la página, se cumple.
+**Compromiso público:** responder **pronto**, sin un plazo en horas
+(decisión 43). La cotización no es la primera respuesta: llega cuando se
+entiende el proyecto. Si se escribe en la página, se cumple.
 
 **Correo de contacto:** `contacto@volutus.cl`. El Gmail personal que hoy
 aparece en el `JSON-LD` se retira: contradice la decisión de hablar como
@@ -742,6 +743,7 @@ tener dueño ni fecha.
 | 40 | 2026-10-16 | Cada página de servicio cuenta lo que incluye con la forma de lo que entrega, y eso mismo se anima al bajar: la web partida por una onda, la tienda por fases con un índice fijo, el software como diagrama con el flujo de los datos, el agente como chat, la automatización con las tareas de hoy que se tachan, la gestión como un panel de módulos y la prospección del mapa a la planilla. Una línea por punto, tres señales y tres pedidos; las preguntas frecuentes, plegadas pero en el HTML, y lo que repetía otra parte de la página se quita | La misma plantilla para los siete servicios, con párrafos largos y todas las preguntas abiertas: se leía como un folleto y costaba recorrerla | Diego |
 | 41 | 2026-10-16 | Los iconos de los servicios, en las cards de la rueda y en la fila de servicios, son glifos macizos inclinados 10°, como el logotipo y el número de la card: el dibujo se hace con el hueco, sin trazo. La tienda es una etiqueta de precio, la gestión unas carpetas con sus pestañas, la automatización un » que avanza, la prospección un blanco y la ley de datos un carnet. La guía de la ley sigue con sus iconos de trazo | Los iconos de trazo redondeado de cualquier paquete gratuito, con la chispa de la IA, el escudo con visto y el pin del mapa: se leían como hechos por una IA. También se probaron una trama de puntos, un plano técnico con cotas y objetos de la costa | Diego |
 | 42 | 2026-10-16 | Las piezas de las páginas de servicio se redibujan en el idioma de los iconos (decisión 41): glifos macizos inclinados 10°, en blanco y medio blanco, con un solo dato concreto en Archivo. Al cargar cada una cuenta su historia una vez y se queda quieta: la marea llena la web, el sello cae sobre el pedido, el pedido sube solo por sus pasos. Con ratón se inclina hacia el cursor como la card del frente, sus tres capas se corren según su hondura y repite el gesto de su servicio; los glifos de las cards hacen el suyo al quedar al frente y al pasar el cursor. Solo CSS, salvo la posición del cursor, y quietas con movimiento reducido | Las escenas de interfaz con ventana de navegador, barras grises, avatar con chispa y paneles de relleno: el mismo problema que los iconos | Diego |
+| 43 | 2026-10-17 | No se promete un plazo en horas: la página dice que una persona responde pronto. Responder y cotizar no son lo mismo: la cotización, con alcance y precio, llega cuando se entiende el proyecto, no en la primera respuesta. Las 48 horas hábiles quedan solo en /privacidad, para responder cuando alguien ejerce sus derechos sobre sus datos | Responder y cotizar en menos de 48 horas hábiles: un plazo demasiado corto para comprometerlo, y una cotización sin entender el proyecto | Diego |
 
 ---
 

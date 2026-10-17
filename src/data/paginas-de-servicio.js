@@ -34,7 +34,7 @@
 
 // La respuesta al precio es la misma en todos: §3 decidió no publicarlo.
 const PRECIO =
-  'No publicamos precios, porque cada proyecto se cotiza según su alcance. Te mandamos alcance y precio en nuestra primera respuesta, en menos de 48 horas hábiles y sin compromiso.'
+  'No publicamos precios, porque cada proyecto se cotiza según su alcance. Te respondemos pronto y, cuando entendemos lo que necesitas, te mandamos alcance y precio, sin compromiso.'
 
 const INDEPENDIENTE = {
   pregunta: '¿Puedo contratar solo este servicio?',
