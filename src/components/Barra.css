@@ -1,7 +1,7 @@
 .barra {
   /* El cambio de tono al pasar de un fondo a otro: el logo, las letras de la
-     cápsula y sus halos lo hacen con la misma duración y la misma curva, así
-     que cambian juntos. Entra y sale suave: acompaña al scroll sin
+     cápsula y el halo de la marca lo hacen con la misma duración y la misma
+     curva, así que cambian juntos. Entra y sale suave: acompaña al scroll sin
      parpadear. */
   --t-tono: 280ms;
   position: sticky;
@@ -324,16 +324,6 @@
   }
 }
 
-/* El cristal es incoloro, así que por detrás pasa de todo, también un
-   titular grande del mismo tono que las letras. Cada letra lleva un halo del
-   fondo de su zona (lo que macOS llama vibrancy): separa la letra de lo que
-   cruza por detrás sin teñir el vidrio. Cambia con la zona, como la letra. */
-.barra-capsula .barra-enlaces a {
-  text-shadow:
-    0 0 4px var(--fondo),
-    0 0 12px var(--fondo);
-}
-
 /* El aire entre enlaces es su propio relleno: así el indicador cubre el
    enlace entero y no solo la palabra. */
 .barra-enlaces a {
@@ -350,7 +340,6 @@
   text-decoration: none;
   transition:
     color var(--t-tono) var(--ease-in-out),
-    text-shadow var(--t-tono) var(--ease-in-out),
     background-color 200ms var(--ease-out);
 }
 
@@ -359,7 +348,7 @@
    hay ninguno, descansa en el de la sección actual (`aria-current`, que pone
    barra.js). Anchor Positioning: el enlace que corresponde se declara ancla y
    la píldora se estira entre sus cuatro bordes, así que el mismo trazo mide
-   «Proyectos» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
+   «Nosotros» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
    de largo y vuelve: el gesto de algo con masa, no de un salto.
 
    Sin soporte, cada enlace pinta su propio fondo: el mismo resultado, sin el
@@ -411,7 +400,7 @@
   }
 }
 
-/* Por debajo de 768 px el logotipo y los cuatro enlaces no caben en una fila:
+/* Por debajo de 768 px el logotipo y los tres enlaces no caben en una fila:
    se retira «Cuéntanos tu proyecto», que sigue a mano en la portada. */
 @media (max-width: 767px) {
   .barra-contacto {
@@ -419,7 +408,7 @@
   }
 }
 
-/* Por debajo de 560 px el logotipo se queda, más bajo, y con los tres
+/* Por debajo de 560 px el logotipo se queda, más bajo, y con los dos
    enlaces cabe en una línea. */
 @media (max-width: 559px) {
   .marca-logotipo {

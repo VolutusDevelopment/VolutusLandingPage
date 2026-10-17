@@ -1,0 +1,327 @@
+/* El índice de servicios. Ver IndiceDeServicios.jsx. */
+
+/* ---- la cabecera ----
+   El cielo del día de las páginas internas con la nube de borde a borde, vista
+   desde abajo, y dentro de ella el título, la entradilla y el botón. Van en
+   tinta: sobre los puntos blancos el blanco no se leería. Mientras la nube no
+   aparece, o sin WebGL, la tinta da 3.8:1 sobre el azul, que basta para texto
+   grande: el título lo es, y la entradilla también, porque va en negrita. El
+   botón es el de la portada y la barra, azul hondo con letras blancas, que se
+   distingue sobre los puntos y sobre el azul; el foco va en tinta por lo
+   mismo.
+
+   El lienzo envuelve el texto y sobresale 11rem por arriba y por abajo, así
+   la nube queda centrada en él, ocupe lo que ocupe. Los rellenos de la
+   cabecera le dejan ese lugar y, bajo la base de la nube, un poco de azul
+   antes del fundido: sin él, la base caía en el degradado y parecía cortada.
+   `clip` porque `100vw` cuenta la barra de desplazamiento. */
+.indice-cabecera {
+  overflow: clip;
+}
+
+.cabecera-cielo.indice-cabecera {
+  padding-top: calc(var(--barra-alto) + 8rem);
+  padding-bottom: calc(var(--fundido) + 10rem);
+}
+
+.indice-cabecera-texto {
+  --accion: #093d66;
+  --accion-hover: #073355;
+  --accion-activa: #052a47;
+  --sobre-accion: #ffffff;
+  --foco: #0a1a2a;
+  position: relative;
+}
+
+.indice-cielo {
+  --nubes-luz: #ffffff;
+  --nubes-sombra: #6a8cb2;
+  --nubes-alfa: 1;
+  position: absolute;
+  inset: -11rem calc(50% - 50vw);
+}
+
+/* Sobre el lienzo, que va posicionado. */
+.indice-cabecera-texto > :not(.indice-cielo) {
+  position: relative;
+}
+
+.indice-cabecera :is(h1, .entradilla) {
+  color: #0a1a2a;
+}
+
+.indice-cabecera .entradilla {
+  margin-top: var(--e-4);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.indice-acciones {
+  margin-top: var(--e-6);
+}
+
+/* ---- los servicios ----
+   Cada uno es la portada de su página en chico: el cielo del día en su color
+   (`.hora-dia` con su `--tinte`, index.css), su pieza y, abajo, su nombre en
+   grande y el titular de su página. Uno bajo otro en S y de a dos desde M;
+   desde L, en filas de dos, tres y dos, y la ley de datos, que no se
+   construye sino que adapta lo que ya existe, en una franja a todo el
+   ancho. */
+.indice-servicios {
+  list-style: none;
+  display: grid;
+  gap: var(--e-4);
+  margin: 0;
+  padding: 0;
+}
+
+/* La primera fila sube 128 px sobre el fundido de la cabecera, cerca de la
+   nube, para que asome en la primera pantalla e invite a bajar. No más: la
+   franja de la barra (`.cabecera-fundido`, index.css) mide 144 px, y la card
+   tiene que empezar dentro de ella para que la barra pase a la tinta sobre el
+   fundido antes de pasar al blanco sobre la card. `flow-root` para que el
+   margen no arrastre a la sección, que no tiene relleno arriba, y con ella su
+   fondo. */
+.indice-cabecera + .seccion {
+  display: flow-root;
+}
+
+.indice-cabecera + .seccion .indice-servicios {
+  margin-top: calc(-8 * var(--e-4));
+}
+
+@media (min-width: 768px) {
+  .indice-servicios {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* En M la prospección queda sola en su fila, y la ocupa entera. Su pieza va
+   a la derecha, del ancho de las demás, y el texto al pie, a su izquierda:
+   encima, la pieza crecía hasta llenar la pantalla. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .indice-servicio:nth-child(n + 7) {
+    grid-column: 1 / -1;
+  }
+
+  .indice-servicio:nth-child(7) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto;
+  }
+
+  .indice-servicio:nth-child(7) .pieza {
+    grid-row: 1 / -1;
+    grid-column: 3;
+    margin-bottom: 0;
+  }
+
+  .indice-servicio:nth-child(7) .indice-servicio-nombre {
+    grid-row: 2;
+    grid-column: 1 / span 2;
+  }
+
+  .indice-servicio:nth-child(7) .indice-servicio-titular {
+    grid-row: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .indice-servicios {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .indice-servicio {
+    grid-column: span 3;
+  }
+
+  .indice-servicio:nth-child(n + 3):nth-child(-n + 5) {
+    grid-column: span 2;
+  }
+
+  .indice-servicio:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Arriba, la pieza (o el glifo); al pie, el nombre a todo el ancho y el
+   titular con la flecha a su lado. El nombre baja hasta el titular, así las
+   flechas de una fila quedan a la misma altura aunque un nombre ocupe dos
+   líneas. */
+.indice-servicio {
+  position: relative;
+  /* El nombre se mide por el ancho de su card (`cqi`). */
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  column-gap: var(--e-4);
+  padding: var(--e-6);
+  border-radius: var(--radio-panel);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+@media (min-width: 640px) {
+  .indice-servicio {
+    padding: var(--e-8);
+  }
+}
+
+.indice-servicio > :first-child {
+  grid-column: 1 / -1;
+  margin-bottom: var(--e-6);
+}
+
+/* La pieza de su página, con el radio de una tarjeta: dentro del panel, el
+   de 28 px no seguiría su curva. */
+.indice-servicio .pieza {
+  border-radius: var(--radio-tarjeta);
+}
+
+/* La flecha, junto al titular, dice que la card entera lleva a su página. */
+.indice-servicio::after {
+  content: '→' / '';
+  grid-row: 3;
+  grid-column: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgb(255 255 255 / 0.55);
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.indice-servicio-icono {
+  width: 36px;
+  height: 36px;
+}
+
+@media (min-width: 640px) {
+  .indice-servicio-icono {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* El nombre es lo que se busca en el índice, así que va en grande, en la voz
+   de los h1. Crece con su card hasta 40 px, y a 8cqi la palabra más larga,
+   «automatizaciones» (12 em), cabe en una línea en cualquier ancho. Es el
+   enlace, y cubre la card entera. */
+.indice-servicio-nombre {
+  grid-column: 1 / -1;
+  align-self: end;
+  margin-bottom: var(--e-3);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: min(8cqi, 40px);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.indice-servicio-nombre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.indice-servicio-nombre a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* El titular de su página, debajo, como una línea de texto. */
+.indice-servicio-titular {
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+/* La franja: el glifo a un lado, el nombre y el titular al otro, y la flecha
+   al centro de su alto. */
+@media (min-width: 1024px) {
+  .indice-servicio:last-child {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--e-8);
+  }
+
+  .indice-servicio:last-child .indice-servicio-icono {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .indice-servicio:last-child :is(.indice-servicio-nombre, .indice-servicio-titular) {
+    grid-column: 2;
+  }
+
+  .indice-servicio:last-child::after {
+    grid-row: 1 / span 2;
+    grid-column: 3;
+  }
+}
+
+/* ---- antes de escribirnos ----
+   Lo que se pregunta antes de pedir una cotización, cada cosa con su
+   porqué: una bajo otra en S, de a dos en M y en una fila desde L. */
+.indice-saber {
+  list-style: none;
+  display: grid;
+  gap: var(--e-8);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .indice-saber {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--e-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  .indice-saber {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--e-8);
+  }
+}
+
+.indice-saber li {
+  padding-top: var(--e-4);
+  border-top: 2px solid var(--linea);
+}
+
+.indice-saber p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* Al pasar el cursor, la card se levanta un poco, como las que asoman en la
+   rueda, y su pieza repite el gesto de su servicio (Servicio.css). El glifo
+   de la ley de datos hace el suyo (Icono.css), también al llegar con el
+   teclado. */
+@media (prefers-reduced-motion: no-preference) {
+  .indice-servicio:focus-within .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .indice-servicio {
+    transition: translate var(--t-pulsar) var(--ease-out);
+  }
+
+  .indice-servicio:hover {
+    translate: 0 calc(-1 * var(--e-2));
+  }
+
+  .indice-servicio:hover .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}

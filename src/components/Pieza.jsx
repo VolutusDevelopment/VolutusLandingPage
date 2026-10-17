@@ -1,34 +1,59 @@
+import { CARPETAS, ETIQUETA, OLA, PANTALLA, TELEFONO, VENTANA } from './Icono.jsx'
+
 /**
  * La pieza de la cabecera de cada página de servicio: lo que hace el servicio,
- * dibujado. Es lo que le da a cada página su identidad dentro del sistema: la
- * card de la rueda en grande, en el color del servicio y con su anillo
- * blanco, y dentro, su escena.
- *
- * Gráfica propia en SVG en línea (DESIGN-BRIEF §6): blanco sobre el color, y
- * en las piezas de interfaz, la tinta y el color del servicio
- * (`currentColor`). La trama de puntos de la marca hace de fondo. Los negocios
- * y las cifras son de ejemplo, como el Café Luna de PonleNota: no son clientes.
+ * dibujado. Es la card de la rueda en grande, en el color del servicio y con
+ * su anillo blanco, y dentro, su escena, en el idioma de los iconos de las
+ * cards: glifos macizos inclinados 10° (Icono.jsx), sin trazo, en blanco y
+ * medio blanco, con un solo dato concreto en la letra de los titulares. Los
+ * negocios y las cifras son de ejemplo, como el Café Luna de PonleNota: no son
+ * clientes.
  *
  * Es decorativa: el texto de la página ya dice lo mismo, así que se esconde
- * del lector de pantalla. Las partes entran una tras otra al cargar
- * (`pz-entra`, con su orden en `--n`) y, donde hay datos que viajan, sus
- * líneas corren un rato y se quedan quietas (Servicio.css).
+ * del lector de pantalla. La repite, en chico, la card de su servicio en el
+ * índice (/servicios).
+ *
+ * Se mueve en dos tiempos (Servicio.css). Al cargar cuenta su historia una
+ * vez, cada parte con su retardo (`tras`), y se queda quieta. Con el cursor
+ * encima se inclina como la card de la rueda (pieza.js), sus tres capas se
+ * corren hacia él según su hondura y repite el gesto de su servicio: las
+ * clases `pz-h-*`. Cada gesto va en un elemento distinto del que entra al
+ * cargar, para que uno no corte ni repita al otro.
  */
 
-const n = (orden) => ({ className: 'pz-entra', style: { '--n': orden } })
+// La inclinación del logotipo, desde el centro de la escena: tan(10°) × 180.
+const ITALICA = 'translate(31.74 0) skewX(-10)'
 
-// La boleta termina en dientes, como el papel cortado.
-const DIENTES = Array.from({ length: 16 }, (_, i) => `L${444 - (i * 2 + 1) * 6.5} 300L${444 - (i + 1) * 13} 292`).join('')
+function Italica({ children }) {
+  return <g transform={ITALICA}>{children}</g>
+}
+
+// Una capa de la escena: `lejos`, `medio` o `cerca` del que mira.
+function Capa({ hondo, children }) {
+  return <g className={`pz-capa pz-${hondo}`}>{children}</g>
+}
+
+// El retardo de una animación, en ms.
+const tras = (ms, estilo) => ({ style: { animationDelay: `${ms}ms`, ...estilo } })
+
+const circulo = (x, y, r) => `M${x - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0z`
 
 // El área de búsqueda de la prospección, con la forma del cuadrilátero del
-// oriente de Santiago: Lo Barnechea, El Arrayán, Macul y Barrio Italia. Los
-// negocios son los puntos de una trama que caen dentro de ella; uno de cada
-// cinco, hueco, no tiene sitio web.
+// oriente de Santiago: Lo Barnechea, El Arrayán, Macul y Barrio Italia. Su
+// borde se dibuja de esquina en esquina y cada una aparece cuando él llega.
 const AREA = [
   [150, 50],
   [282, 86],
   [236, 316],
   [40, 214],
+]
+const AREA_D = `M${AREA.join('L')}Z`
+const ESQUINAS = [100, 270, 570, 850]
+const BARRIOS = [
+  { nombre: 'LO BARNECHEA', x: 176, y: 30, centro: true },
+  { nombre: 'EL ARRAYÁN', x: 316, y: 80 },
+  { nombre: 'MACUL', x: 205, y: 346, centro: true },
+  { nombre: 'BARRIO ITALIA', x: 8, y: 270 },
 ]
 
 function dentro([x, y]) {
@@ -44,439 +69,408 @@ function dentro([x, y]) {
 // Un punto entra si queda dentro con su aire: así ninguno pisa el borde.
 const conAire = ([x, y]) => [-7, 7].every((d) => dentro([x + d, y]) && dentro([x, y + d]))
 
-const NEGOCIOS = Array.from({ length: 15 * 16 }, (_, i) => [52 + (i % 15) * 16 + ((i / 15) & 1) * 8, 62 + Math.floor(i / 15) * 16])
+// Los negocios son los puntos de una trama que caen dentro del área; uno de
+// cada cinco, hueco, no tiene sitio web. Caen en ocho franjas, de arriba
+// abajo, y cada franja lleva los suyos en dos trazos: con web y sin web.
+const FRANJAS = Array.from({ length: 8 }, () => ({ con: '', sin: '' }))
+Array.from({ length: 15 * 16 }, (_, i) => [52 + (i % 15) * 16 + ((i / 15) & 1) * 8, 62 + Math.floor(i / 15) * 16])
   .filter(conAire)
-  .map((punto, i) => ({ punto, sinWeb: (i * 7) % 5 === 0 }))
+  .forEach(([x, y], i) => {
+    const franja = FRANJAS[Math.floor((y - 62) / 32)]
+    if ((i * 7) % 5 === 0) franja.sin += circulo(x, y, 4.4) + circulo(x, y, 2.2)
+    else franja.con += circulo(x, y, 4.2)
+  })
+
+// Los pasos de la automatización, de abajo arriba: su cuadro, su glifo en el
+// color del servicio y su rótulo. El pedido llega a cada uno a los
+// `LLEGADAS` ms de echar a andar (pz-ficha, en Servicio.css), y el paso late.
+const PASOS = [
+  { x: 40, y: 214, rotulo: [16, 318, 'FORMULARIO'], glifo: <path d="M20 24h44v8H20zM20 38h44v8H20zM20 52h28v8H20z" /> },
+  {
+    x: 148,
+    y: 166,
+    rotulo: [132, 270, 'PLANILLA'],
+    glifo: (
+      <path d="M20 20h12v12H20zM36 20h12v12H36zM52 20h12v12H52zM20 36h12v12H20zM36 36h12v12H36zM52 36h12v12H52zM20 52h12v12H20zM36 52h12v12H36zM52 52h12v12H52z" />
+    ),
+  },
+  {
+    x: 256,
+    y: 118,
+    rotulo: [249, 222, 'CORREO'],
+    glifo: (
+      <>
+        <rect x="16" y="22" width="52" height="40" />
+        <path d="M16 24l26 20 26-20" fill="none" stroke="#fff" strokeWidth="4" />
+      </>
+    ),
+  },
+  {
+    x: 364,
+    y: 70,
+    rotulo: [365, 174, 'HISTORIAL'],
+    glifo: <path className="pz-traza-66" {...tras(2600)} d="M18 44l14 14 32-32" fill="none" stroke="currentColor" strokeWidth="10" />,
+  },
+]
+const SALIDA = 700
+const LLEGADAS = [160, 700, 1300, 1900]
+
+// Los pedidos de la semana, de lunes a domingo.
+const SEMANA = [40, 62, 48, 76, 90, 70, 34]
 
 const ESCENAS = {
-  // El sitio en su ventana y, delante, cómo aparece cuando lo buscan.
+  // El sitio en su ventana, la marea que lo llena y cómo lo encuentran.
   web: (
     <>
-      <defs>
-        <pattern id="pz-trama" width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="1.6" fill="#fff" fillOpacity=".6" />
-        </pattern>
-      </defs>
-      <g {...n(0)}>
-        <rect x="40" y="28" width="400" height="236" rx="14" fill="#fff" fillOpacity=".1" stroke="#fff" strokeWidth="2" />
-        <path d="M40 62h400" stroke="#fff" strokeOpacity=".5" strokeWidth="2" />
-        <circle cx="62" cy="45" r="4.5" fill="#fff" fillOpacity=".6" />
-        <circle cx="78" cy="45" r="4.5" fill="#fff" fillOpacity=".6" />
-        <circle cx="94" cy="45" r="4.5" fill="#fff" fillOpacity=".6" />
-        <rect x="150" y="36" width="180" height="18" rx="9" fill="#fff" fillOpacity=".18" />
-        <text x="240" y="49" textAnchor="middle" fontSize="11" fill="#fff" className="pz-mono">
-          tunegocio.cl
+      <Capa hondo="lejos">
+        <Italica>
+          <g className="pz-entra">
+            <g transform="translate(30 0) scale(12.0833)">
+              <path d={VENTANA} />
+              <g className="pz-crece" {...tras(300)}>
+                <path className="pz-h-oleaje" d={OLA} />
+              </g>
+            </g>
+          </g>
+        </Italica>
+      </Capa>
+      <Capa hondo="medio">
+        <Italica>
+          <g className="pz-entra" {...tras(950)}>
+            <rect x="150" y="272" width="290" height="54" rx="12" />
+            <path
+              fill="currentColor"
+              d="M169 299a11 11 0 1 0 22 0a11 11 0 1 0-22 0zM173.5 299a6.5 6.5 0 1 1 13 0a6.5 6.5 0 1 1-13 0zM187.5 305.5l3-3 9 9-3 3z"
+            />
+          </g>
+        </Italica>
+        <text className="pz-mono pz-aparece" {...tras(850)} x="137" y="262" fontSize="12" letterSpacing="1.5">
+          ASÍ TE ENCUENTRAN
         </text>
-      </g>
-      <g {...n(1)}>
-        <rect x="68" y="86" width="196" height="16" rx="4" fill="#fff" />
-        <rect x="68" y="108" width="140" height="16" rx="4" fill="#fff" />
-        <rect x="292" y="86" width="120" height="106" rx="8" fill="url(#pz-trama)" />
-      </g>
-      <g {...n(2)}>
-        <rect x="68" y="138" width="176" height="6" rx="3" fill="#fff" fillOpacity=".6" />
-        <rect x="68" y="150" width="132" height="6" rx="3" fill="#fff" fillOpacity=".6" />
-        <rect x="68" y="168" width="84" height="24" rx="4" fill="#fff" />
-      </g>
-      <g {...n(3)} fill="none" stroke="#fff" strokeOpacity=".5" strokeWidth="2">
-        <rect x="68" y="210" width="100" height="36" rx="6" />
-        <rect x="180" y="210" width="100" height="36" rx="6" />
-        <rect x="292" y="210" width="120" height="36" rx="6" />
-      </g>
-      <g {...n(4)}>
-        <rect x="16" y="226" width="272" height="112" rx="12" fill="#fff" />
-        <rect x="32" y="242" width="240" height="28" rx="14" fill="#eef3f7" />
-        <circle cx="50" cy="255" r="6" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M54.5 259.5l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <text x="66" y="260.5" fontSize="13" fill="#0a1a2a">
-          pastelería en ñuñoa
+        <text className="pz-titular" x="184" y="307" fontSize="21" letterSpacing="0.5" fill="currentColor">
+          <tspan className="pz-tinta" {...tras(1250)}>
+            TORTAS
+          </tspan>
+          <tspan className="pz-tinta" {...tras(1400)}>
+            {' EN'}
+          </tspan>
+          <tspan className="pz-tinta" {...tras(1550)}>
+            {' ÑUÑOA'}
+          </tspan>
         </text>
-        <text x="32" y="292" fontSize="11" fill="#47607a" className="pz-mono">
-          tunegocio.cl
-        </text>
-        <text x="32" y="311" fontSize="14" fontWeight="800" fill="currentColor">
-          Tortas por encargo en Ñuñoa
-        </text>
-        <rect x="32" y="322" width="200" height="5" rx="2.5" fill="#d6e2ec" />
-      </g>
+      </Capa>
+      <Capa hondo="cerca">
+        <Italica>
+          <g className="pz-cursor" {...tras(500)}>
+            <path className="pz-h-clic" d="M318 150v34l9-8 7 15 7-3-7-15h12z" />
+          </g>
+        </Italica>
+      </Capa>
     </>
   ),
 
-  // Un producto en su vitrina, el pedido que llega y su boleta.
+  // La etiqueta con su precio y el sello del pedido pagado.
   tienda: (
     <>
-      <g {...n(0)}>
-        <rect x="32" y="52" width="176" height="252" rx="14" fill="#fff" />
-        <rect x="46" y="66" width="148" height="122" rx="8" fill="currentColor" fillOpacity=".14" />
-        <path
-          d="M101 98L84 107l7 15 8-4v38h42v-38l8 4 7-15-17-9c-2 6-8 10-19 10s-17-4-19-10z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-        />
-        <text x="46" y="212" fontSize="13" fontWeight="800" fill="#0a1a2a">
-          Polera de algodón
-        </text>
-        <text x="46" y="232" fontSize="13" fill="currentColor" className="pz-mono">
+      <Capa hondo="lejos">
+        <Italica>
+          <g className="pz-columpio">
+            <g className="pz-h-mece">
+              <path transform="translate(20 6) scale(9.5833)" d={ETIQUETA} />
+            </g>
+          </g>
+        </Italica>
+      </Capa>
+      <Capa hondo="medio">
+        <text className="pz-titular pz-entra" {...tras(300)} x="30" y="272" fontSize="56">
           $12.990
         </text>
-        <rect x="46" y="250" width="148" height="36" rx="6" fill="currentColor" />
-        <text x="120" y="272.5" textAnchor="middle" fontSize="13" fill="#fff">
-          Agregar al carro
+        <text className="pz-mono pz-aparece" {...tras(500)} x="26" y="302" fontSize="12" letterSpacing="1.5">
+          POLERA DE ALGODÓN
         </text>
-      </g>
-      <g {...n(1)}>
-        <path d={`M236 64H444V292${DIENTES}Z`} fill="#fff" />
-        <text x="254" y="94" fontSize="14" fontWeight="800" fill="#0a1a2a">
-          Pedido #1042
-        </text>
-        <g fontSize="11" fill="#47607a" className="pz-mono">
-          <text x="254" y="124">Polera ×2</text>
-          <text x="426" y="124" textAnchor="end">
-            $25.980
+      </Capa>
+      <Capa hondo="cerca">
+        <g transform="rotate(-10 360 156)">
+          <g className="pz-sello" {...tras(1100)}>
+            <g className="pz-h-sello">
+              <path d="M282 124h156v64H282zM288 130h144v52H288z" />
+              <text className="pz-titular" x="360" y="166" textAnchor="middle" fontSize="27" letterSpacing="1">
+                PAGADO
+              </text>
+            </g>
+          </g>
+        </g>
+        <g className="pz-mono" fontSize="12" letterSpacing="1.5">
+          <text className="pz-aparece" {...tras(1400)} x="316" y="236">
+            PEDIDO #1042
           </text>
-          <text x="254" y="144">Envío</text>
-          <text x="426" y="144" textAnchor="end">
-            $3.500
+          <text className="pz-aparece" {...tras(1500)} x="316" y="256">
+            TOTAL $29.480
           </text>
         </g>
-        <path d="M254 160H426" stroke="#d6e2ec" strokeWidth="1.5" strokeDasharray="4 4" />
-        <g fontSize="12" fontWeight="800" fill="#0a1a2a" className="pz-mono">
-          <text x="254" y="182">Total</text>
-          <text x="426" y="182" textAnchor="end">
-            $29.480
-          </text>
-        </g>
-        <g transform="rotate(-8 340 238)">
-          <rect x="288" y="220" width="104" height="36" rx="6" fill="none" stroke="currentColor" strokeWidth="2.5" />
-          <text x="340" y="244" textAnchor="middle" fontSize="15" fontWeight="800" letterSpacing="2" fill="currentColor">
-            PAGADO
-          </text>
-        </g>
-      </g>
-      <g {...n(2)}>
-        <rect x="252" y="18" width="200" height="34" rx="17" fill="#fff" />
-        <circle cx="272" cy="35" r="6" fill="currentColor" />
-        <text x="286" y="39.5" fontSize="12" fill="#0a1a2a">
-          Nuevo pedido · $29.480
-        </text>
-      </g>
+      </Capa>
     </>
   ),
 
-  // La app, la web y el panel, los tres sobre una sola base de datos.
+  // La app, la web y el panel, los tres sobre tus datos, y los datos que
+  // corren entre ellos.
   app: (
     <>
-      <g fill="none" stroke="#fff" strokeOpacity=".75" strokeWidth="2" strokeDasharray="6 8" className="pz-flujo">
-        <path d="M82 206c0 40 60 46 102 46" />
-        <path d="M240 140v92" />
-        <path d="M394 150c0 46-58 52-98 52" />
-      </g>
-      <g {...n(0)}>
-        <text x="82" y="44" textAnchor="middle" fontSize="11" fill="#fff" letterSpacing="1.5" className="pz-mono">
-          APP
-        </text>
-        <rect x="40" y="56" width="84" height="150" rx="16" fill="#fff" fillOpacity=".12" stroke="#fff" strokeWidth="2" />
-        <rect x="70" y="64" width="24" height="5" rx="2.5" fill="#fff" fillOpacity=".6" />
-        <rect x="52" y="82" width="60" height="22" rx="5" fill="#fff" />
-        <rect x="52" y="110" width="60" height="22" rx="5" fill="#fff" fillOpacity=".7" />
-        <rect x="52" y="138" width="60" height="22" rx="5" fill="#fff" fillOpacity=".7" />
-        <rect x="52" y="174" width="60" height="18" rx="9" fill="#fff" />
-      </g>
-      <g {...n(1)}>
-        <text x="240" y="36" textAnchor="middle" fontSize="11" fill="#fff" letterSpacing="1.5" className="pz-mono">
-          WEB
-        </text>
-        <rect x="172" y="48" width="136" height="92" rx="8" fill="#fff" fillOpacity=".12" stroke="#fff" strokeWidth="2" />
-        <path d="M172 66h136" stroke="#fff" strokeOpacity=".5" strokeWidth="2" />
-        <rect x="186" y="78" width="70" height="10" rx="3" fill="#fff" />
-        <rect x="186" y="94" width="50" height="10" rx="3" fill="#fff" />
-        <rect x="186" y="112" width="34" height="14" rx="3" fill="#fff" fillOpacity=".7" />
-        <rect x="264" y="78" width="32" height="48" rx="4" fill="#fff" fillOpacity=".35" />
-      </g>
-      <g {...n(2)}>
-        <text x="394" y="52" textAnchor="middle" fontSize="11" fill="#fff" letterSpacing="1.5" className="pz-mono">
-          PANEL
-        </text>
-        <rect x="340" y="64" width="108" height="76" rx="6" fill="#fff" fillOpacity=".12" stroke="#fff" strokeWidth="2" />
-        <path d="M328 140h132l-8 10H336z" fill="#fff" />
-        <rect x="352" y="104" width="12" height="26" rx="2" fill="#fff" />
-        <rect x="370" y="90" width="12" height="40" rx="2" fill="#fff" />
-        <rect x="388" y="112" width="12" height="18" rx="2" fill="#fff" />
-        <rect x="406" y="80" width="12" height="50" rx="2" fill="#fff" />
-        <rect x="424" y="96" width="12" height="34" rx="2" fill="#fff" />
-      </g>
-      <g {...n(3)}>
-        <path d="M182 246v52a58 14 0 0 0 116 0v-52" fill="#fff" fillOpacity=".14" stroke="#fff" strokeWidth="2" />
-        <path d="M182 272a58 14 0 0 0 116 0" fill="none" stroke="#fff" strokeWidth="2" />
-        <ellipse cx="240" cy="246" rx="58" ry="14" fill="#fff" />
-        <text x="240" y="340" textAnchor="middle" fontSize="12" fill="#fff" letterSpacing="1.5" className="pz-mono">
+      <Capa hondo="lejos">
+        <Italica>
+          <rect className="pz-entra" x="50" y="230" width="380" height="74" rx="12" />
+        </Italica>
+        <text
+          className="pz-titular pz-entra"
+          x="225"
+          y="280"
+          textAnchor="middle"
+          fontSize="34"
+          letterSpacing="2"
+          fill="currentColor"
+        >
           TUS DATOS
         </text>
-      </g>
+      </Capa>
+      <Capa hondo="medio">
+        <Italica>
+          <g className="pz-aparece" {...tras(900)}>
+            <path
+              className="pz-fluye"
+              d="M106 166v60M245 152v74M377 168v58"
+              fill="none"
+              stroke="#fff"
+              strokeOpacity=".75"
+              strokeWidth="3"
+              strokeDasharray="6 8"
+            />
+          </g>
+        </Italica>
+      </Capa>
+      <Capa hondo="cerca">
+        <Italica>
+          <g className="pz-baja" {...tras(250)}>
+            <g transform="translate(36 28) scale(5.8333)">
+              <path d={TELEFONO} />
+              {PANTALLA.map((d) => (
+                <path key={d} d={d} />
+              ))}
+            </g>
+          </g>
+          <g className="pz-baja" {...tras(400)}>
+            <g transform="translate(170 14) scale(6.25)">
+              <path d={VENTANA} />
+              <path d={OLA} />
+            </g>
+          </g>
+          <rect className="pz-baja" {...tras(550)} x="324" y="154" width="106" height="6" />
+          {[38, 58, 30, 74, 50].map((alto, i) => (
+            <rect key={i} className="pz-crece" {...tras(700 + i * 60)} x={330 + i * 20} y={150 - alto} width="14" height={alto} />
+          ))}
+        </Italica>
+      </Capa>
     </>
   ),
 
-  // Una conversación: la pregunta, la consulta a la agenda y la respuesta.
+  // La pregunta, el agente que escribe y revisa la agenda, y la respuesta.
   agente: (
     <>
-      <g {...n(0)}>
-        <rect x="56" y="20" width="368" height="320" rx="18" fill="#fff" />
-        <circle cx="88" cy="52" r="15" fill="currentColor" />
-        <path d="M88 42.5l2.6 6.9 6.9 2.6-6.9 2.6-2.6 6.9-2.6-6.9-6.9-2.6 6.9-2.6z" fill="#fff" />
-        <text x="114" y="49" fontSize="13" fontWeight="800" fill="#0a1a2a">
-          Asistente de Café Luna
+      <Capa hondo="lejos">
+        <Italica>
+          <path
+            className="pz-globo"
+            style={{ transformOrigin: '94% 100%' }}
+            fillOpacity=".28"
+            d="M222 20h196a22 22 0 0 1 22 22v56a22 22 0 0 1-22 22h-6l14 30-44-30H222a22 22 0 0 1-22-22V42a22 22 0 0 1 22-22z"
+          />
+        </Italica>
+        <g className="pz-titular pz-aparece" {...tras(150)} fontSize="24">
+          <text x="242" y="64">
+            ¿MESA PARA 4
+          </text>
+          <text x="236" y="96">
+            EL VIERNES?
+          </text>
+        </g>
+      </Capa>
+      <Capa hondo="medio">
+        <Italica>
+          <g className="pz-tecleando" style={{ animationDelay: '450ms, 1450ms' }}>
+            {[72, 94, 116].map((cx, i) => (
+              <circle key={cx} className="pz-tecleo" {...tras(450 + i * 120)} cx={cx} cy="232" r="6" />
+            ))}
+          </g>
+        </Italica>
+        <path className="pz-traza-24" {...tras(1100)} d="M290 174l5 5 10-11" fill="none" stroke="#fff" strokeWidth="3" />
+        <text className="pz-mono pz-aparece" {...tras(1150)} x="314" y="180" fontSize="12" letterSpacing="1.5">
+          REVISÓ LA AGENDA
         </text>
-        <text x="114" y="65" fontSize="11" fill="#47607a">
-          Responde con la agenda del local
-        </text>
-        <path d="M56 84h368" stroke="#d6e2ec" />
-      </g>
-      <g {...n(1)}>
-        <rect x="190" y="100" width="214" height="50" rx="14" fill="currentColor" />
-        <text fontSize="13" fill="#fff">
-          <tspan x="206" y="121">
-            ¿Tienen mesa para 4 el
-          </tspan>
-          <tspan x="206" y="139">
-            viernes a las 21:00?
-          </tspan>
-        </text>
-      </g>
-      <g {...n(2)}>
-        <rect x="76" y="166" width="168" height="26" rx="13" fill="#eef3f7" />
-        <path d="M90 179l4 4 7-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="108" y="183" fontSize="11" fill="#47607a" className="pz-mono">
-          Revisó la agenda
-        </text>
-      </g>
-      <g {...n(3)}>
-        <rect x="76" y="204" width="248" height="68" rx="14" fill="#eef3f7" />
-        <text fontSize="13" fill="#0a1a2a">
-          <tspan x="92" y="226">
-            Sí: queda una mesa a las
-          </tspan>
-          <tspan x="92" y="244">
-            21:00. ¿La reservo a tu
-          </tspan>
-          <tspan x="92" y="262">
-            nombre?
-          </tspan>
-        </text>
-      </g>
-      <g {...n(4)} fontSize="12" textAnchor="middle" fill="currentColor">
-        <rect x="76" y="288" width="116" height="30" rx="15" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <text x="134" y="307.5">Sí, resérvala</text>
-        <rect x="200" y="288" width="116" height="30" rx="15" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <text x="258" y="307.5">Otra hora</text>
-      </g>
+      </Capa>
+      <Capa hondo="cerca">
+        <g className="pz-h-globo">
+          <Italica>
+            <path
+              className="pz-globo"
+              {...tras(1500, { transformOrigin: '5% 100%' })}
+              d="M62 196h246a22 22 0 0 1 22 22v76a22 22 0 0 1-22 22H106l-52 30 16-30h-8a22 22 0 0 1-22-22v-76a22 22 0 0 1 22-22z"
+            />
+          </Italica>
+          <g className="pz-titular" fontSize="27" fill="currentColor">
+            <text className="pz-entra" {...tras(1650)} x="56" y="246">
+              SÍ: QUEDA UNA
+            </text>
+            <text className="pz-entra" {...tras(1750)} x="50" y="282">
+              A LAS 21:00.
+            </text>
+          </g>
+        </g>
+      </Capa>
     </>
   ),
 
-  // Un pedido que pasa solo de un paso al siguiente, y lo que corre a su hora.
+  // Un pedido que sube solo de un paso al siguiente, y lo que corre a su hora.
   automatizacion: (
     <>
-      <g fill="none" stroke="#fff" strokeOpacity=".75" strokeWidth="2" strokeDasharray="6 8" className="pz-flujo">
-        <path d="M226 88h28" />
-        <path d="M360 120v84" />
-        <path d="M254 244h-28" />
-      </g>
-      <g fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M248 82l6 6-6 6" />
-        <path d="M354 198l6 6 6-6" />
-        <path d="M232 238l-6 6 6 6" />
-      </g>
-      <text x="22" y="40" fontSize="11" fill="#fff" letterSpacing="1.5" className="pz-mono">
-        CADA VEZ QUE ENTRA UN PEDIDO
-      </text>
-      {[
-        { x: 22, y: 56, titulo: 'Llega un pedido', sub: 'formulario web', glifo: 'M-6-4h12M-6 0h12M-6 4h7' },
-        { x: 256, y: 56, titulo: 'Pasa a la planilla', sub: 'Google Sheets', glifo: 'M-7-6h14v12h-14zM-7-1h14M-2-6v12' },
-        { x: 256, y: 212, titulo: 'Avisa a tu equipo', sub: 'correo', glifo: 'M-7-5h14v10h-14zM-7-5l7 6 7-6' },
-        { x: 22, y: 212, titulo: 'Queda registrado', sub: 'historial', glifo: 'M-6 0l4 4 8-8' },
-      ].map(({ x, y, titulo, sub, glifo }, i) => (
-        <g key={titulo} {...n(i)}>
-          <rect x={x} y={y} width="204" height="64" rx="12" fill="#fff" />
-          <circle cx={x + 30} cy={y + 32} r="16" fill="currentColor" />
+      <Capa hondo="lejos">
+        <Italica>
           <path
-            d={glifo}
-            transform={`translate(${x + 30} ${y + 32})`}
+            className="pz-aparece"
+            d="M82 256L406 112"
             fill="none"
             stroke="#fff"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeOpacity=".6"
+            strokeWidth="3"
+            strokeDasharray="6 8"
           />
-          <text x={x + 56} y={y + 29} fontSize="13" fontWeight="800" fill="#0a1a2a">
-            {titulo}
+        </Italica>
+      </Capa>
+      <Capa hondo="medio">
+        <Italica>
+          {PASOS.map(({ x, y, glifo }, i) => (
+            <g key={x} className="pz-entra" {...tras(i * 150)}>
+              <rect x={x} y={y} width="84" height="84" rx="14" />
+              <g className="pz-pulso" {...tras(SALIDA + LLEGADAS[i])}>
+                <g className="pz-h-paso" {...tras(LLEGADAS[i])}>
+                  <g transform={`translate(${x} ${y})`} fill="currentColor">
+                    {glifo}
+                  </g>
+                </g>
+              </g>
+            </g>
+          ))}
+        </Italica>
+        <g className="pz-mono" fontSize="11" letterSpacing="1.2">
+          <text className="pz-aparece" x="62" y="48" fontSize="12" letterSpacing="1.5">
+            CADA VEZ QUE ENTRA UN PEDIDO
           </text>
-          <text x={x + 56} y={y + 47} fontSize="10.5" fill="#47607a" className="pz-mono">
-            {sub}
+          {PASOS.map(({ rotulo: [x, y, texto] }, i) => (
+            <text key={texto} className="pz-aparece" {...tras(100 + i * 150)} x={x} y={y}>
+              {texto}
+            </text>
+          ))}
+          <text className="pz-aparece" {...tras(2800)} x="446" y="322" textAnchor="end" fontSize="12" letterSpacing="1.5">
+            LUNES 08:00 · REPORTE ENVIADO
           </text>
         </g>
-      ))}
-      <g {...n(4)}>
-        <rect x="104" y="306" width="272" height="32" rx="16" fill="#fff" fillOpacity=".14" stroke="#fff" strokeOpacity=".6" />
-        <circle cx="126" cy="322" r="7" fill="none" stroke="#fff" strokeWidth="1.8" />
-        <path d="M126 318v4l3 2" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
-        <text x="142" y="326" fontSize="11" fill="#fff" className="pz-mono">
-          Lunes 08:00 · reporte enviado
+      </Capa>
+      <Capa hondo="cerca">
+        <Italica>
+          <circle className="pz-ficha" {...tras(SALIDA)} cx="82" cy="256" r="10" fill="currentColor" stroke="#fff" strokeWidth="4" />
+          <circle className="pz-h-ficha" cx="82" cy="256" r="10" fill="currentColor" stroke="#fff" strokeWidth="4" />
+        </Italica>
+      </Capa>
+    </>
+  ),
+
+  // Las carpetas de la operación, los pedidos del mes y su semana.
+  gestion: (
+    <>
+      <Capa hondo="lejos">
+        <Italica>
+          <g transform="translate(24 10) scale(8.3333)">
+            {CARPETAS.map((d, i) => (
+              <path key={d} className="pz-izq" {...tras(i * 120)} d={d} />
+            ))}
+          </g>
+        </Italica>
+      </Capa>
+      <Capa hondo="medio">
+        <text className="pz-mono pz-aparece" {...tras(350)} x="271" y="62" fontSize="12" letterSpacing="1.5">
+          PEDIDOS ESTE MES
         </text>
-      </g>
+        <text className="pz-titular pz-entra" {...tras(400)} x="258" y="152" fontSize="88">
+          318
+        </text>
+      </Capa>
+      <Capa hondo="cerca">
+        <Italica>
+          {SEMANA.map((alto, i) => (
+            <g key={i} className="pz-crece" {...tras(650 + i * 60)}>
+              <rect className="pz-h-barra" {...tras(i * 60)} x={60 + i * 56} y={300 - alto} width="34" height={alto} />
+            </g>
+          ))}
+        </Italica>
+        <g className="pz-mono pz-aparece" {...tras(650)} fontSize="11" textAnchor="middle">
+          {[...'LMMJVSD'].map((dia, i) => (
+            <text key={i} x={52 + i * 56} y="324">
+              {dia}
+            </text>
+          ))}
+        </g>
+      </Capa>
     </>
   ),
 
   // El área marcada en el mapa, sus negocios dentro y lo que mide.
   prospeccion: (
     <>
-      <g {...n(0)}>
-        <path
-          d={`M${AREA.join('L')}Z`}
-          fill="#fff"
-          fillOpacity=".1"
-          stroke="#fff"
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-        />
-      </g>
-      <g {...n(1)}>
-        {NEGOCIOS.map(({ punto: [x, y], sinWeb }) =>
-          sinWeb ? (
-            <circle key={`${x},${y}`} cx={x} cy={y} r="3.2" fill="none" stroke="#fff" strokeWidth="1.5" />
-          ) : (
-            <circle key={`${x},${y}`} cx={x} cy={y} r="3.2" fill="#fff" />
-          )
-        )}
-      </g>
-      <g {...n(2)}>
-        {AREA.map(([x, y]) => (
-          <g key={x}>
-            <circle cx={x} cy={y} r="9" fill="currentColor" stroke="#fff" strokeWidth="2.5" />
-            <circle cx={x} cy={y} r="3" fill="#fff" />
+      <Capa hondo="lejos">
+        <Italica>
+          <path className="pz-aparece" d={AREA_D} fillOpacity=".16" />
+          <path
+            className="pz-traza-790"
+            {...tras(100)}
+            d={AREA_D}
+            fill="none"
+            stroke="#fff"
+            strokeOpacity=".7"
+            strokeWidth="2"
+          />
+        </Italica>
+      </Capa>
+      <Capa hondo="medio">
+        <Italica>
+          <g className="pz-con-web">
+            {FRANJAS.map(({ con }, i) => (
+              <path key={i} className="pz-cae" {...tras(1000 + i * 90)} d={con} />
+            ))}
           </g>
-        ))}
-        <g fontSize="9.5" fill="#fff" letterSpacing="1" className="pz-mono">
-          <text x="150" y="30" textAnchor="middle">
-            LO BARNECHEA
-          </text>
-          <text x="282" y="66" textAnchor="middle">
-            EL ARRAYÁN
-          </text>
-          <text x="236" y="342" textAnchor="middle">
-            MACUL
-          </text>
-          <text x="20" y="268">
-            BARRIO ITALIA
-          </text>
+          {FRANJAS.map(({ sin }, i) => (
+            <path key={i} className="pz-cae" {...tras(1000 + i * 90)} d={sin} />
+          ))}
+          {AREA.map(([x, y], i) => (
+            <path key={x} className="pz-pop" {...tras(ESQUINAS[i])} d={circulo(x, y, 9) + circulo(x, y, 3.5)} />
+          ))}
+        </Italica>
+        <g className="pz-mono" fontSize="10" letterSpacing="1">
+          {BARRIOS.map(({ nombre, x, y, centro }, i) => (
+            <text key={nombre} className="pz-aparece" {...tras(ESQUINAS[i] + 50)} x={x} y={y} textAnchor={centro ? 'middle' : undefined}>
+              {nombre}
+            </text>
+          ))}
         </g>
-      </g>
-      <g {...n(3)}>
-        <rect x="318" y="112" width="146" height="132" rx="12" fill="#fff" />
-        <text x="332" y="136" fontSize="9" fill="#47607a" letterSpacing="1" className="pz-mono">
-          ÁREA DE BÚSQUEDA
+      </Capa>
+      <Capa hondo="cerca">
+        <text className="pz-mono pz-aparece" {...tras(1800)} x="276" y="236" fontSize="12" letterSpacing="1">
+          ÁREA DE BÚSQUEDA EN KM²
         </text>
-        <text x="332" y="164" fontSize="18" fontWeight="800" fill="#0a1a2a" className="pz-mono">
-          195,53 km²
+        <text className="pz-titular pz-entra" {...tras(1900)} x="272" y="284" fontSize="44">
+          195,53
         </text>
-        <text x="332" y="184" fontSize="11" fill="#47607a">
-          Perímetro 58,58 km
+        <text className="pz-mono pz-aparece" {...tras(2000)} x="268" y="308" fontSize="12" letterSpacing="1">
+          PERÍMETRO 58,58 KM
         </text>
-        <path d="M332 198h118" stroke="#d6e2ec" />
-        <circle cx="337" cy="216" r="3.2" fill="currentColor" />
-        <text x="346" y="219.5" fontSize="10" fill="#0a1a2a">
-          con web
-        </text>
-        <circle cx="337" cy="232" r="3.2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <text x="346" y="235.5" fontSize="10" fill="#0a1a2a">
-          sin web
-        </text>
-      </g>
-    </>
-  ),
-
-  // El panel de un negocio: sus cifras, su semana y lo que falta reponer.
-  gestion: (
-    <>
-      <g {...n(0)}>
-        <rect x="20" y="20" width="440" height="320" rx="16" fill="#fff" />
-        <path d="M36 20h40v320H36a16 16 0 0 1-16-16V36a16 16 0 0 1 16-16z" fill="currentColor" />
-        <rect x="40" y="44" width="16" height="16" rx="4" fill="#fff" />
-        <rect x="40" y="76" width="16" height="16" rx="4" fill="#fff" fillOpacity=".55" />
-        <rect x="40" y="108" width="16" height="16" rx="4" fill="#fff" fillOpacity=".55" />
-        <rect x="40" y="140" width="16" height="16" rx="4" fill="#fff" fillOpacity=".55" />
-      </g>
-      {[
-        { x: 96, etiqueta: 'VENTAS', valor: '$4,2 M' },
-        { x: 218, etiqueta: 'PEDIDOS', valor: '318' },
-        { x: 340, etiqueta: 'STOCK BAJO', valor: '6' },
-      ].map(({ x, etiqueta, valor }) => (
-        <g key={etiqueta} {...n(1)}>
-          <rect x={x} y="40" width="106" height="58" rx="8" fill="#f6f9fc" stroke="#d6e2ec" />
-          <text x={x + 12} y="60" fontSize="9.5" fill="#47607a" letterSpacing="1" className="pz-mono">
-            {etiqueta}
-          </text>
-          <text x={x + 12} y="86" fontSize="18" fontWeight="800" fill="#0a1a2a" className="pz-mono">
-            {valor}
-          </text>
-        </g>
-      ))}
-      <g {...n(2)}>
-        <text x="96" y="132" fontSize="12" fontWeight="800" fill="#0a1a2a">
-          Ventas de la semana
-        </text>
-        <path d="M96 228h232" stroke="#d6e2ec" />
-        {[40, 62, 48, 76, 90, 70, 34].map((alto, i) => (
-          <g key={i}>
-            <rect
-              className="pz-barra"
-              style={{ '--n': i }}
-              x={104 + i * 32}
-              y={228 - alto}
-              width="22"
-              height={alto}
-              rx="3"
-              fill="currentColor"
-            />
-            <text x={115 + i * 32} y="244" textAnchor="middle" fontSize="10" fill="#47607a" className="pz-mono">
-              {'LMMJVSD'[i]}
-            </text>
-          </g>
-        ))}
-      </g>
-      <g {...n(3)}>
-        <text x="344" y="132" fontSize="12" fontWeight="800" fill="#0a1a2a">
-          Por reponer
-        </text>
-        {['Café en grano', 'Vasos 12 oz', 'Leche de avena'].map((producto, i) => (
-          <g key={producto}>
-            <circle cx="350" cy={156 + i * 26} r="4" fill="currentColor" />
-            <text x="362" y={160 + i * 26} fontSize="11" fill="#0a1a2a">
-              {producto}
-            </text>
-          </g>
-        ))}
-      </g>
-      <g {...n(4)}>
-        <path d="M96 262h352" stroke="#d6e2ec" />
-        {[
-          ['Pedido #1041', '$8.400', 'Listo'],
-          ['Pedido #1042', '$29.480', 'Pagado'],
-        ].map(([pedido, monto, estado], i) => (
-          <g key={pedido} fontSize="11">
-            <text x="96" y={286 + i * 28} fill="#0a1a2a">
-              {pedido}
-            </text>
-            <text x="300" y={286 + i * 28} textAnchor="end" fill="#47607a" className="pz-mono">
-              {monto}
-            </text>
-            <rect x="372" y={272 + i * 28} width="76" height="20" rx="10" fill="currentColor" fillOpacity=".14" />
-            <text x="410" y={286 + i * 28} textAnchor="middle" fill="currentColor">
-              {estado}
-            </text>
-          </g>
-        ))}
-      </g>
+      </Capa>
     </>
   ),
 }
@@ -484,7 +478,7 @@ const ESCENAS = {
 export default function Pieza({ id }) {
   return (
     <div className="pieza" aria-hidden="true">
-      <svg viewBox="0 0 480 360" focusable="false">
+      <svg viewBox="0 0 480 360" fill="#fff" fillRule="evenodd" focusable="false">
         {ESCENAS[id]}
       </svg>
     </div>

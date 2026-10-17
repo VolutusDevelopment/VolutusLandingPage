@@ -1,0 +1,105 @@
+/* Páginas web. Ver paginas/servicios/Web.jsx.
+
+   «Qué incluye» a todo el ancho: arriba, en el claro de la página, lo que se
+   ve; una onda, y debajo, en el color del servicio, lo que no se ve y la
+   prueba (Bloques.jsx), que se cierra con la onda volteada. */
+
+/* El color pasa sin corte de la franja a la sección de la prueba, que ya
+   llega sin relleno arriba (index.css, `.zona-cielo + .zona-cielo`). */
+.web-incluye {
+  padding-bottom: 0;
+}
+
+.web-superficie {
+  padding: var(--e-16) 0 var(--e-4);
+}
+
+.web-fondo {
+  padding: var(--e-6) 0 var(--e-16);
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+@media (min-width: 1024px) {
+  .web-superficie {
+    padding-top: var(--e-24);
+  }
+
+  .web-fondo {
+    padding-bottom: var(--e-24);
+  }
+}
+
+.web-superficie .web-grupo {
+  margin-top: var(--e-12);
+}
+
+.web-puntos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--e-8) var(--e-12);
+  margin: var(--e-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.web-puntos p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* La onda: dos capas que se corren despacio, en sentidos contrarios. Cada
+   una es un SVG del doble del ancho, y correrlo la mitad lo deja igual que al
+   empezar. Se mueve el SVG entero con `transform`, que va a la GPU: la onda
+   no se vuelve a pintar en cada cuadro. Va sobre el claro de la página
+   (`--fondo-claro`, que también existe fuera de una zona, donde queda la
+   volteada). */
+.web-onda {
+  position: relative;
+  height: 56px;
+  margin-bottom: -1px;
+  overflow: hidden;
+  background: var(--fondo-claro);
+}
+
+/* La que cierra la franja: la misma, girada, con el color arriba. El píxel de
+   más va arriba, contra la franja. */
+.web-onda-volteada {
+  margin: -1px 0 0;
+  rotate: 180deg;
+}
+
+/* `max-width: none`: el tope de 100 % que index.css pone a todo SVG lo dejaba
+   del ancho de la pantalla, y al correrlo se le veía el final. */
+.web-onda svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  max-width: none;
+  height: 100%;
+}
+
+.web-onda-atras {
+  fill: color-mix(in oklab, var(--tinte) 40%, var(--fondo-claro));
+}
+
+.web-onda-frente {
+  fill: var(--tinte);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .web-onda-atras {
+    animation: web-onda 40s linear infinite reverse;
+  }
+
+  .web-onda-frente {
+    animation: web-onda 26s linear infinite;
+  }
+}
+
+@keyframes web-onda {
+  to {
+    transform: translateX(-50%);
+  }
+}

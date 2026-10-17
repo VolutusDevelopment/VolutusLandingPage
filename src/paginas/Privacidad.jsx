@@ -209,7 +209,7 @@ function Cierre() {
             ¿Te queda una duda?
           </h2>
           <p className="entradilla">
-            Escríbenos y te responde una persona en menos de 48 horas hábiles. O copia la política y
+            Escríbenos y una persona te responde pronto. O copia la política y
             pregúntale a tu IA.
           </p>
           <p className="cierre-acciones">

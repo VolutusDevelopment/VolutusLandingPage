@@ -21,19 +21,10 @@
 }
 
 /* ---- la card ----
-   Metal cepillado, solo con degradados: una franja de luz que se abre en oro
-   y cobre, como el sol del atardecer pasando por un prisma, con otro ángulo
-   en cada card; una sombra en diagonal y líneas verticales finísimas. No pesa
-   nada ni se anima. */
+   Metal cepillado, solo con degradados: una sombra en diagonal y líneas
+   verticales finísimas. No pesa nada ni se anima. */
 .servicio-cara {
   --metal:
-    linear-gradient(
-      calc(100deg + var(--i, 0) * 20deg),
-      transparent 34%,
-      rgb(255 210 122 / 0.14) 44%,
-      rgb(255 154 92 / 0.22) 52%,
-      transparent 62%
-    ),
     linear-gradient(115deg, transparent 55%, rgb(0 0 0 / 0.22)),
     repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
   --anillo: rgb(255 255 255 / 0.8);
@@ -69,10 +60,8 @@
 }
 
 /* Cada card trae su color (`--panel`, de lib/servicios.js). Todas llevan
-   texto blanco, que da 4.6:1 o más en el punto más claro del prisma; un
-   blanco translúcido ya no llega, así que el texto suave es blanco y se
-   distingue por su tamaño. El botón de cada servicio, abajo, lleva el mismo
-   tono. */
+   texto blanco, que da 4.6:1 o más; un blanco translúcido ya no llega, así
+   que el texto suave es blanco y se distingue por su tamaño. */
 .servicio.zona-plano {
   --texto: #ffffff;
   --texto-suave: #ffffff;
@@ -92,6 +81,22 @@
   width: 28px;
   height: 28px;
   flex-shrink: 0;
+}
+
+/* El glifo hace su gesto (Icono.css) cuando su card queda al frente, y lo
+   repite cada vez que el cursor entra en ella. */
+@media (prefers-reduced-motion: no-preference) {
+  .servicio.activo .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .rueda:not(.arrastrando) .servicio.activo .servicio-cara:hover .gesto > path {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
 }
 
 /* El número es la firma de la card y habla como el logotipo: Archivo negra
@@ -155,10 +160,6 @@
   border-radius: 50%;
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
-}
-
-.servicio-enlace {
-  margin-top: var(--e-4);
 }
 
 /* ---- sin rueda: la lista ----
@@ -381,10 +382,6 @@
 
     .servicio-puntos {
       padding-top: var(--e-3);
-    }
-
-    .servicio-enlace {
-      margin-top: var(--e-3);
     }
 
     /* Las vecinas asoman a los lados con el texto cortado por la del

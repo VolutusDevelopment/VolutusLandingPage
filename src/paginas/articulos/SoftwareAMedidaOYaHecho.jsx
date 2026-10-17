@@ -58,8 +58,8 @@ export default function SoftwareAMedidaOYaHecho({ ruta }) {
       <p>
         Si después de responderlas un producto del mercado alcanza, úsalo. Si no, una primera versión acotada,
         construida por entregas que puedes revisar, es la forma de bajar el riesgo. En{' '}
-        <a href="/desarrollo-software-a-medida">software a medida</a> contamos cómo lo hacemos, y si lo que buscas es
-        ordenar la operación, mira <a href="/sistemas-de-gestion">sistemas de gestión</a>.
+        <a href="/servicios/desarrollo-software-a-medida">software a medida</a> contamos cómo lo hacemos, y si lo que buscas es
+        ordenar la operación, mira <a href="/servicios/sistemas-de-gestion">sistemas de gestión</a>.
       </p>
     </Articulo>
   )

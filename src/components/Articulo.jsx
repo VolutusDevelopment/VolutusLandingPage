@@ -17,7 +17,7 @@ export function Invitacion({ servicio }) {
             ¿Lo vemos juntos?
           </h2>
           <p className="entradilla">
-            Cuéntanos qué estás resolviendo y te responde una persona en menos de 48 horas hábiles.
+            Cuéntanos qué estás resolviendo y una persona te responde pronto.
           </p>
           <p className="cierre-acciones">
             <a className="boton boton-primario" href="/#contacto">

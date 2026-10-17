@@ -16,8 +16,9 @@
 //   3. Incrusta el CSS, porque un <link rel="stylesheet"> bloquea el primer
 //      pintado con una petición extra.
 //
-// Al final escribe los dos archivos que también salen de esas fuentes: el
-// sitemap, desde PAGINAS, y `_headers`, desde lib/seguridad.js.
+// Al final escribe los tres archivos que también salen de esas fuentes: el
+// sitemap, desde PAGINAS; `_headers`, desde lib/seguridad.js, y `_redirects`,
+// desde lib/servicios.js.
 import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -54,20 +55,20 @@ function atributo(texto) {
  * obliga a mantener el mismo bloque en varios sitios. Lo mismo cada servicio:
  * su página lo declara y la portada lo nombra.
  *
- * Una página de servicio es su FAQPage, porque sus preguntas van a la vista;
- * un artículo, su Article con la ruta para volver al índice.
+ * Una página de servicio es su FAQPage, porque sus preguntas van en el HTML,
+ * y un artículo, su Article; los dos con la ruta para volver a su índice.
  */
 function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, publicada, actualizada }) {
   const pagina = { name: titulo, url: canonical, inLanguage: 'es-CL' }
   const servicio = SERVICIOS.find((s) => s.ruta === ruta)
   if (servicio) {
-    const { antetitulo, preguntas } = PAGINAS_DE_SERVICIO[servicio.id]
+    const { tipo, preguntas } = PAGINAS_DE_SERVICIO[servicio.id]
     return ldJson([
       {
         '@type': 'Service',
         '@id': idDeServicio(ruta),
-        name: antetitulo,
-        serviceType: antetitulo,
+        name: tipo,
+        serviceType: tipo,
         description: descripcion,
         url: canonical,
         provider: { '@id': ORGANIZACION },
@@ -83,14 +84,14 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
           acceptedAnswer: { '@type': 'Answer', text: respuesta },
         })),
       },
+      migas([
+        ['Inicio', '/'],
+        ['Servicios', '/servicios'],
+        [servicio.nombre, ruta],
+      ]),
     ])
   }
   if (publicada) {
-    const migas = [
-      ['Inicio', '/'],
-      ['Artículos', '/articulos'],
-      [tituloCorto(titulo), ruta],
-    ]
     return ldJson([
       {
         '@type': 'Article',
@@ -105,15 +106,11 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         author: { '@id': ORGANIZACION },
         publisher: { '@id': ORGANIZACION },
       },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: migas.map(([name, destino], i) => ({
-          '@type': 'ListItem',
-          position: i + 1,
-          name,
-          item: canonicalDe(destino),
-        })),
-      },
+      migas([
+        ['Inicio', '/'],
+        ['Artículos', '/articulos'],
+        [tituloCorto(titulo), ruta],
+      ]),
     ])
   }
   const grafo = {
@@ -147,6 +144,21 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }],
+    '/servicios': [
+      {
+        '@type': 'CollectionPage',
+        ...pagina,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: SERVICIOS.map(({ nombre, ruta: destino, enlace }, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: nombre,
+            url: canonicalDe(destino ?? enlace),
+          })),
+        },
+      },
+    ],
     '/articulos': [
       {
         '@type': 'CollectionPage',
@@ -165,6 +177,19 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
   }[ruta] ?? [{ '@type': 'WebPage', ...pagina }]
 
   return ldJson(grafo)
+}
+
+/** El camino desde la portada hasta la página, como `[nombre, ruta]`. */
+function migas(camino) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: camino.map(([name, destino], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: canonicalDe(destino),
+    })),
+  }
 }
 
 function ldJson(grafo) {
@@ -257,6 +282,14 @@ writeFileSync(
   `${dist}_headers`,
   `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n`
 )
+
+// Las páginas de servicio vivían en la raíz (/desarrollo-web) hasta que
+// pasaron bajo /servicios: el enlace viejo, guardado o compartido, sigue
+// llegando a su página, y el buscador le traspasa lo ganado a la nueva.
+const traslados = SERVICIOS.filter(({ ruta }) => ruta).map(
+  ({ ruta }) => `${ruta.replace(/^\/servicios/, '')} ${ruta} 301`
+)
+writeFileSync(`${dist}_redirects`, `${traslados.join('\n')}\n`)
 
 rmSync(`${dist}${enlace[1]}`)
 rmSync(`${root}.prerender`, { recursive: true, force: true })

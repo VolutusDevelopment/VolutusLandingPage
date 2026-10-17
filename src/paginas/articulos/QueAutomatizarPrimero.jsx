@@ -58,7 +58,7 @@ export default function QueAutomatizarPrimero({ ruta }) {
         <li>Empieza por una sola tarea, mide cuánto tiempo devuelve y sigue con la siguiente.</li>
       </ul>
       <p>
-        En <a href="/automatizacion-procesos">automatización de procesos</a> contamos cómo lo hacemos y qué te vamos a
+        En <a href="/servicios/automatizacion-procesos">automatización de procesos</a> contamos cómo lo hacemos y qué te vamos a
         pedir para empezar.
       </p>
     </Articulo>

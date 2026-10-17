@@ -403,7 +403,7 @@ export default function Podio({ logros }) {
         </div>
 
         {columnas.map((logro) => (
-          <article
+          <div
             key={logro.id}
             id={`cartel-${logro.id}`}
             className={`podio-cartel podio-cartel-${logro.credencial.metal}`}
@@ -431,7 +431,7 @@ export default function Podio({ logros }) {
                 </Enlace>
               </p>
             )}
-          </article>
+          </div>
         ))}
       </div>
       <noscript>

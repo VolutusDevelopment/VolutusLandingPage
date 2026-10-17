@@ -3,6 +3,7 @@ import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
 import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
+import IndiceDeServicios from './IndiceDeServicios.jsx'
 import Articulos from './Articulos.jsx'
 import QueEsUnAgenteDeIa from './articulos/QueEsUnAgenteDeIa.jsx'
 import PaginaWebOTiendaOnline from './articulos/PaginaWebOTiendaOnline.jsx'
@@ -19,9 +20,11 @@ import { SERVICIOS } from '../lib/servicios.js'
 // falla al construir y no en producción. Lo usan el prerender y el modo dev,
 // que le pasan a cada componente su `ruta`.
 //
-// Las páginas de servicio son una sola plantilla: la ruta dice cuál pinta.
+// Las páginas de servicio comparten su marco (Servicio.jsx): la ruta dice cuál
+// pinta.
 export const COMPONENTES = {
   '/': Inicio,
+  '/servicios': IndiceDeServicios,
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
   '/articulos': Articulos,
   '/articulos/que-es-un-agente-de-ia': QueEsUnAgenteDeIa,

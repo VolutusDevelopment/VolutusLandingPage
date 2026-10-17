@@ -19,8 +19,8 @@ En producción **React no se envía al navegador**. El script de build:
 2. `vite build --ssr src/entry-server.jsx --outDir .prerender` — genera el bundle SSR en `.prerender/`.
 3. `node scripts/prerender.mjs` — usa `dist/index.html` como plantilla y escribe
    un HTML por cada página de [src/lib/meta.js](src/lib/meta.js), con su
-   `<head>`, el HTML de React y el CSS incrustado. Genera también `sitemap.xml`
-   y `_headers`.
+   `<head>`, el HTML de React y el CSS incrustado. Genera también `sitemap.xml`,
+   `_headers` y `_redirects`.
 
 Las páginas son `/`, `/nosotros`, `/privacidad`, `/ley21719` (la Ley 21.719
 explicada para un negocio), las de error —la 404 y la de los 5xx, en `/500`— y
@@ -32,13 +32,22 @@ Portada, Servicios, Proyectos y Contacto; no tiene sección de métricas. Agrega
 una página es una entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES`
 (paginas/rutas.js).
 
-Cada servicio con `ruta` en [src/lib/servicios.js](src/lib/servicios.js) tiene
-su página (`/desarrollo-web`, `/tiendas-online`, `/desarrollo-software-a-medida`,
-`/agentes-ia`, `/automatizacion-procesos`, `/sistemas-de-gestion` y
-`/prospeccion-de-clientes`): una sola plantilla,
-[src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con el contenido en
-[src/data/paginas-de-servicio.js](src/data/paginas-de-servicio.js) y la escena
-de su cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx). Lleva el
+Los servicios tienen su índice en `/servicios`
+([src/paginas/IndiceDeServicios.jsx](src/paginas/IndiceDeServicios.jsx)), bajo
+la nube, con cada servicio en el color de su card, su glifo, su nombre y su
+titular, y cada servicio con `ruta` en
+[src/lib/servicios.js](src/lib/servicios.js) tiene su página bajo él
+(`/servicios/desarrollo-web`, `/servicios/tiendas-online`,
+`/servicios/desarrollo-software-a-medida`, `/servicios/agentes-ia`,
+`/servicios/automatizacion-procesos`, `/servicios/sistemas-de-gestion` y
+`/servicios/prospeccion-de-clientes`). Las direcciones viejas, en la raíz,
+redirigen con un 301 (`_redirects`, que escribe el prerender). El marco es uno,
+[src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con la escena de su
+cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx); lo de en medio
+es de cada servicio, en [src/paginas/servicios/](src/paginas/servicios/), que
+cuenta lo que incluye con la forma de lo que entrega y ordena a su manera las
+piezas que comparten (`Bloques.jsx`). El contenido va en
+[src/data/paginas-de-servicio.js](src/data/paginas-de-servicio.js). Lleva el
 color de su card en la rueda y termina en el formulario, con el servicio ya
 marcado.
 
@@ -101,6 +110,7 @@ scripts/
 src/
   paginas/              # Inicio, Nosotros, Privacidad, Ley21719, Servicio, Articulos y las de error (404 y 5xx)
     articulos/          # el cuerpo de cada artículo
+    servicios/          # el cuerpo de cada página de servicio, con su CSS
   components/           # secciones con su CSS
   data/                 # proyectos y contenido de las páginas de servicio
   lib/                  # metadatos, servicios, seguridad y geometría de la marca

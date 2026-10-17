@@ -1,0 +1,287 @@
+/* Automatización de procesos. Ver paginas/servicios/Automatizacion.jsx.
+
+   Cada tarea en una fila: a la izquierda cómo se hace hoy, una vía punteada y
+   a la derecha cómo queda. En S van una bajo otra y los rótulos de las
+   columnas se van: la tachadura dice cuál es cuál. */
+
+.automatizacion-columnas {
+  display: none;
+}
+
+.automatizacion-tareas {
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.automatizacion-tarea {
+  display: grid;
+  align-items: center;
+  gap: var(--e-4);
+  padding: var(--e-6) 0;
+  border-top: 1px solid var(--linea);
+}
+
+@media (min-width: 768px) {
+  .automatizacion-columnas,
+  .automatizacion-tarea {
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    column-gap: var(--e-6);
+  }
+
+  .automatizacion-columnas {
+    display: grid;
+    margin: var(--e-12) 0 0;
+    padding-bottom: var(--e-3);
+  }
+
+  .automatizacion-columnas span:last-child {
+    grid-column: 3;
+    color: var(--tinte);
+  }
+
+  .automatizacion-tareas {
+    margin-top: 0;
+  }
+}
+
+.automatizacion-antes {
+  font-size: var(--texto-lg);
+  line-height: 1.35;
+  color: var(--texto-suave);
+}
+
+/* La tachadura es un fondo de 2 px a la altura del centro de las letras: así
+   puede dibujarse de izquierda a derecha, línea por línea. */
+.automatizacion-tachado {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 60% / 100% 2px;
+}
+
+.automatizacion-via {
+  position: relative;
+  width: 120px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, color-mix(in oklab, var(--tinte) 45%, var(--superficie)) 0 6px, transparent 6px 12px);
+}
+
+/* El paquete que cruza. Quieto, ya llegó: no se ve. */
+.automatizacion-via::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radio);
+  background: var(--tinte);
+  opacity: 0;
+}
+
+.automatizacion-despues {
+  position: relative;
+  padding: var(--e-4) var(--e-6);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
+}
+
+.automatizacion-despues p {
+  margin-top: var(--e-1);
+  color: var(--texto-suave);
+}
+
+.automatizacion-despues::after {
+  content: '✓';
+  content: '✓' / '';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tinte);
+  font-size: var(--texto-sm);
+  line-height: 1;
+  color: #fff;
+}
+
+/* Al bajar, cada fila es su línea de tiempo: la tarea de hoy se tacha
+   mientras sube, y al pasar por el centro el paquete cruza, el reemplazo se
+   enciende y recibe su visto. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .automatizacion-tarea {
+      view-timeline: --automatizacion-tarea block;
+    }
+
+    .automatizacion-tachado {
+      animation: automatizacion-tachar linear both;
+      animation-timeline: --automatizacion-tarea;
+      animation-range: entry 50% cover 42%;
+    }
+
+    .automatizacion-via::after {
+      animation: automatizacion-cruzar linear both;
+      animation-timeline: --automatizacion-tarea;
+      animation-range: cover 40% cover 52%;
+    }
+
+    .automatizacion-despues {
+      animation: automatizacion-encender linear both;
+      animation-timeline: --automatizacion-tarea;
+      animation-range: cover 48% cover 56%;
+    }
+
+    .automatizacion-despues::after {
+      animation: automatizacion-marcar linear both;
+      animation-timeline: --automatizacion-tarea;
+      animation-range: cover 52% cover 58%;
+    }
+  }
+}
+
+@keyframes automatizacion-tachar {
+  from {
+    background-size: 0% 2px;
+  }
+}
+
+@keyframes automatizacion-cruzar {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(106px);
+  }
+}
+
+/* Se enciende el fondo y no la opacidad: el texto se lee entero desde antes,
+   también para quien mide su contraste sin bajar. */
+@keyframes automatizacion-encender {
+  from {
+    background: var(--superficie);
+  }
+}
+
+@keyframes automatizacion-marcar {
+  from {
+    transform: scale(0);
+  }
+}
+
+/* ---- lo que va en todas ---- */
+
+/* `minmax(0, …)`: las líneas del registro no se parten, y con una columna
+   `auto` ensanchaban la tarjeta más allá de la pantalla. */
+.automatizacion-siempre {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--e-6);
+  margin-top: var(--e-12);
+}
+
+@media (min-width: 1024px) {
+  .automatizacion-siempre {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.automatizacion-siempre > div {
+  padding: var(--e-8) var(--e-6);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+@media (min-width: 640px) {
+  .automatizacion-siempre > div {
+    padding: var(--e-8);
+  }
+}
+
+.automatizacion-siempre h3 + p {
+  margin-top: var(--e-2);
+  color: var(--texto-suave);
+}
+
+/* El registro: una pantalla de la zona de plano donde las líneas suben solas,
+   en bucle, y se desvanecen arriba y abajo. */
+.automatizacion-registro {
+  height: 150px;
+  margin-top: var(--e-6);
+  padding: 0 var(--e-4);
+  overflow: hidden;
+  border-radius: var(--radio-tarjeta);
+  background: var(--fondo);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  line-height: 30px;
+  color: var(--texto);
+  -webkit-mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+}
+
+.automatizacion-registro ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.automatizacion-registro li {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.automatizacion-registro li::before {
+  content: '✓';
+  display: inline-block;
+  width: 1.5em;
+  color: var(--exito);
+}
+
+.automatizacion-registro .automatizacion-aviso::before {
+  content: '!';
+  color: var(--aviso);
+}
+
+.automatizacion-registro li span {
+  color: var(--texto-suave);
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .automatizacion-registro ul {
+    animation: automatizacion-registro 24s linear infinite;
+  }
+}
+
+@keyframes automatizacion-registro {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.automatizacion-herramientas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  margin: var(--e-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.automatizacion-herramientas li {
+  padding: var(--e-1) var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  font-size: var(--texto-sm);
+}

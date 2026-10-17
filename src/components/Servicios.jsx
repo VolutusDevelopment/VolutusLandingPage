@@ -41,17 +41,14 @@ export default function Servicios() {
                     {i + 1}
                   </span>
                 </div>
-                {/* El nombre lleva a la página del servicio, si tiene. La
-                    flecha la pone el CSS, para que no entre en el aviso de
-                    la card que queda al frente (servicios.js). */}
+                {/* El nombre lleva a la página del servicio o, en la ley
+                    de datos, a su guía. La flecha la pone el CSS, para que
+                    no entre en el aviso de la card que queda al frente
+                    (servicios.js). */}
                 <h3 className="servicio-nombre">
-                  {servicio.ruta ? (
-                    <a href={servicio.ruta} draggable="false">
-                      {servicio.nombre}
-                    </a>
-                  ) : (
-                    servicio.nombre
-                  )}
+                  <a href={servicio.ruta ?? servicio.enlace} draggable="false">
+                    {servicio.nombre}
+                  </a>
                 </h3>
                 <p className="servicio-texto">{servicio.texto}</p>
                 <ol className="servicio-puntos">
@@ -59,20 +56,6 @@ export default function Servicios() {
                     <li key={punto}>{punto}</li>
                   ))}
                 </ol>
-                {servicio.enlace && (
-                  <p className="servicio-enlace">
-                    <a
-                      className="boton boton-secundario"
-                      href={servicio.enlace.href}
-                      // Arrastrar el enlace lo sacaría de la página en vez de
-                      // girar la rueda.
-                      draggable="false"
-                      {...(servicio.enlace.href.startsWith('http') && { rel: 'noopener' })}
-                    >
-                      {servicio.enlace.texto}
-                    </a>
-                  </p>
-                )}
               </div>
             </li>
           ))}

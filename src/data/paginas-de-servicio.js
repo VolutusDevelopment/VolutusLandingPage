@@ -8,25 +8,33 @@
  * clientes, y la prueba de cada servicio es obra con enlace (`prueba`, de
  * data/proyectos.js) o no aparece.
  *
- * - `antetitulo`: el nombre del servicio como se busca.
+ * Todo va corto, para que la página se lea de una pasada: una línea por punto,
+ * tres señales y tres pedidos. Lo que la página ya dibuja no se repite en
+ * texto ni en las preguntas.
+ *
+ * - `tipo`: el nombre del servicio como se busca, el del Service del JSON-LD
+ *   (scripts/prerender.mjs).
  * - `titular`: el h1. Ninguna palabra pasa de ocho letras, para que el
  *   titular quepa en su columna desde L y en un teléfono de 360 px.
- * - `incluye`: lo que recibe el cliente, dicho por su resultado.
- * - `cuando`: las señales de que le sirve, en palabras de quien llega.
- * - `principio`: opcional, una regla del servicio que merece su propio bloque,
- *   como que la prospección solo usa datos públicos.
+ * - `entradilla`: una frase bajo el titular. La descripción larga, la de
+ *   meta.js, queda para los buscadores.
+ * - `incluye`: lo que recibe el cliente, dicho por su resultado. Cada servicio
+ *   lo cuenta con la forma de lo que entrega, así que cada uno lo guarda a su
+ *   manera: la forma la explica su cuerpo, en paginas/servicios/.
+ * - `cuando`: las señales de que le sirve, en palabras de quien llega. La
+ *   automatización no lo lleva: sus señales son las tareas de hoy (`antes`).
  * - `pedimos`: lo que el cliente pone de su parte, la objeción que §2 llama la
  *   más valiosa: «¿qué tengo que entregarles yo?».
  * - `prueba`: un proyecto de data/proyectos.js que lo demuestra, con una línea
  *   que dice por qué; `vista` muestra una de sus capturas y `medir` suma el
- *   enlace para medir esta misma página.
+ *   botón para medir esta misma página.
  * - `preguntas`: en texto plano, porque también van a los datos estructurados
- *   (FAQPage) del prerender.
+ *   (FAQPage) del prerender. La primera va abierta.
  */
 
 // La respuesta al precio es la misma en todos: §3 decidió no publicarlo.
 const PRECIO =
-  'No publicamos precios, porque cada proyecto se cotiza según su alcance. Te mandamos alcance y precio en nuestra primera respuesta, en menos de 48 horas hábiles y sin compromiso.'
+  'No publicamos precios, porque cada proyecto se cotiza según su alcance. Te respondemos pronto y, cuando entendemos lo que necesitas, te mandamos alcance y precio, sin compromiso.'
 
 const INDEPENDIENTE = {
   pregunta: '¿Puedo contratar solo este servicio?',
@@ -35,50 +43,34 @@ const INDEPENDIENTE = {
 
 export const PAGINAS_DE_SERVICIO = {
   web: {
-    antetitulo: 'Desarrollo web',
+    tipo: 'Desarrollo web',
     titular: 'Páginas web rápidas de verdad',
+    entradilla: 'Rápidas en el celular, fáciles de encontrar en Google y con tu marca.',
+    // Lo que se ve, sobre la onda, y lo que no, debajo.
     incluye: [
       {
-        titulo: 'Para cada pantalla',
-        texto: 'Se ve y se usa bien en celulares, tablets y computadores. Partimos por el celular, que es desde donde te va a abrir casi todo el mundo.',
+        grupo: 'Lo que se ve',
+        puntos: [
+          { titulo: 'Para cada pantalla', texto: 'Pensada primero para el celular.' },
+          { titulo: 'Con tu identidad', texto: 'Tus colores y tu voz, no una plantilla.' },
+          { titulo: 'Lista para que te escriban', texto: 'Un formulario que llega a tu correo.' },
+        ],
       },
       {
-        titulo: 'Hecha para Google',
-        texto: 'HTML que los buscadores leen sin esfuerzo, un título y una descripción por página, datos estructurados y un mapa del sitio.',
-      },
-      {
-        titulo: 'Rápida al abrir',
-        texto: 'Imágenes optimizadas, el mínimo de JavaScript y nada que sobre. La medimos con Lighthouse, la herramienta de Google, antes de entregarla.',
-      },
-      {
-        titulo: 'Con tu identidad',
-        texto: 'Tus colores, tu tipografía y tu forma de hablar. No una plantilla con tu logo encima.',
-      },
-      {
-        titulo: 'Lista para que te escriban',
-        texto: 'Un formulario que llega a tu correo y los enlaces de contacto que de verdad usas.',
-      },
-      {
-        titulo: 'Legible para la IA',
-        texto: 'Contenido claro y ordenado, y un archivo llms.txt, para que asistentes como ChatGPT, Gemini o Claude puedan leer tu negocio y citarlo.',
+        grupo: 'Lo que no se ve',
+        puntos: [
+          { titulo: 'Hecha para Google', texto: 'Títulos, datos estructurados y mapa del sitio.' },
+          { titulo: 'Rápida al abrir', texto: 'La medimos con Lighthouse antes de entregarla.' },
+          { titulo: 'Legible para la IA', texto: 'Para que ChatGPT, Gemini o Claude puedan citarte.' },
+        ],
       },
     ],
-    cuando: [
-      'Te buscan por tu nombre y no te encuentran, o encuentran algo desactualizado.',
-      'Hoy dependes solo de redes sociales y quieres un lugar propio.',
-      'Tu página actual tarda en abrir o se ve mal en el celular.',
-      'Necesitas un sitio al que mandar a tus clientes con toda la información.',
-    ],
-    pedimos: [
-      'Tu logo y tus colores, si los tienes.',
-      'Los textos, o una conversación para escribirlos juntos.',
-      'Fotos de tu negocio, tus productos o tu equipo.',
-      'Tu dominio, si ya tienes uno.',
-    ],
+    cuando: ['No te encuentran en Google.', 'Hoy dependes solo de redes sociales.', 'Tu página tarda o se ve mal en el celular.'],
+    pedimos: ['Tu logo y tus colores, si los tienes.', 'Los textos, o los escribimos juntos.', 'Fotos de tu negocio.'],
     prueba: {
       proyecto: 'ponlenota',
       vista: 'El sitio',
-      texto: 'El sitio de PonleNota explica el producto y vende sus planes. Lo hicimos nosotros, igual que esta página.',
+      texto: 'Su sitio lo hicimos nosotros, igual que esta página.',
       medir: true,
     },
     preguntas: [
@@ -87,11 +79,6 @@ export const PAGINAS_DE_SERVICIO = {
         pregunta: '¿Mi página va a aparecer en Google?',
         respuesta:
           'La dejamos lista para que Google la lea y la entienda: contenido en HTML, un título y una descripción por página, datos estructurados y un mapa del sitio. Nadie puede prometerte una posición en los resultados; lo que sí controlamos es que nada técnico te impida aparecer.',
-      },
-      {
-        pregunta: '¿Cómo sé si una página es rápida?',
-        respuesta:
-          'Ábrela en PageSpeed Insights, de Google, y mira la nota de rendimiento en celular. Esta misma página la puedes medir tú.',
       },
       {
         pregunta: '¿Qué diferencia hay entre una página web y una tienda online?',
@@ -103,57 +90,31 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   tienda: {
-    antetitulo: 'Tiendas online',
+    tipo: 'Tiendas online',
     titular: 'Tu tienda online, en tus manos',
+    entradilla: 'Catálogo, carrito, pagos y pedidos, en una tienda que administras tú.',
+    // Las fases, en el orden en que las recorre una compra; la última es la de
+    // quien vende. Cada `id` tiene su escena en Tienda.jsx y su línea de
+    // tiempo en Tienda.css.
     incluye: [
-      {
-        titulo: 'Catálogo y categorías',
-        texto: 'Tus productos con fotos, precios, variantes y stock, ordenados para que se encuentren rápido.',
-      },
-      {
-        titulo: 'Compra en pocos pasos',
-        texto: 'Un carrito y un pago cortos y claros, pensados primero para el celular.',
-      },
-      {
-        titulo: 'Pagos en línea',
-        texto: 'Cobros con tarjeta de débito y crédito a través de una pasarela de pago, con la plata en tu cuenta.',
-      },
-      {
-        titulo: 'Pedidos con su estado',
-        texto: 'Cada compra llega como un pedido: pagado, preparado, enviado o entregado. Siempre sabes en qué va.',
-      },
-      {
-        titulo: 'Tus estadísticas',
-        texto: 'Qué se vende, cuánto y cuándo, para decidir con números y no a ojo.',
-      },
-      {
-        titulo: 'La administras tú',
-        texto: 'Subir un producto, cambiar un precio o marcar un pedido como enviado lo haces tú, sin tener que escribirnos.',
-      },
+      { id: 'catalogo', titulo: 'Catálogo', texto: 'Fotos, precios, variantes y stock, por categoría.' },
+      { id: 'carrito', titulo: 'Carrito', texto: 'Pocos pasos, pensados para el celular.' },
+      { id: 'pago', titulo: 'Pago', texto: 'Débito y crédito, con la plata en tu cuenta.' },
+      { id: 'pedido', titulo: 'Pedido', texto: 'Pagado, preparado, enviado o entregado: siempre sabes en qué va.' },
+      { id: 'panel', titulo: 'Tu panel', texto: 'Ves qué se vende y cambias productos, precios y pedidos tú mismo.' },
     ],
     cuando: [
-      'Vendes por Instagram o WhatsApp y respondes precios y stock a mano todo el día.',
-      'Pagas comisiones en un marketplace y quieres un canal propio.',
-      'Llevas los pedidos en un cuaderno o en una planilla.',
-      'Quieres vender fuera de tu horario o fuera de tu ciudad.',
+      'Vendes por Instagram o WhatsApp y respondes todo a mano.',
+      'Pagas comisiones en un marketplace.',
+      'Llevas los pedidos en un cuaderno.',
     ],
-    pedimos: [
-      'Tu catálogo: nombre, precio y fotos de cada producto. Una planilla sirve.',
-      'Cómo despachas y cuánto cobras por el envío.',
-      'Una cuenta en la pasarela de pago, a nombre de tu negocio.',
-      'Tus condiciones de cambio y devolución.',
-    ],
+    pedimos: ['Tu catálogo. Una planilla sirve.', 'Cómo despachas y cuánto cobras.', 'Una cuenta en la pasarela de pago.'],
     preguntas: [
       { pregunta: '¿Cuánto cuesta una tienda online?', respuesta: PRECIO },
       {
         pregunta: '¿Por qué una tienda propia y no solo un marketplace?',
         respuesta:
           'En un marketplace vendes en la vitrina de otro, con sus reglas y sus comisiones. En tu tienda, los clientes y los datos son tuyos. Muchos negocios usan los dos: el marketplace para que los encuentren y la tienda para que vuelvan.',
-      },
-      {
-        pregunta: '¿Puedo administrar la tienda yo mismo?',
-        respuesta:
-          'Sí, esa es la idea. Subir productos, cambiar precios y gestionar pedidos lo haces tú desde un panel, sin depender de nosotros.',
       },
       {
         pregunta: '¿Mi tienda cumple la Ley 21.719 de datos personales?',
@@ -165,57 +126,46 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   app: {
-    antetitulo: 'Desarrollo de software a medida',
+    tipo: 'Desarrollo de software a medida',
     titular: 'Software hecho a tu medida',
-    incluye: [
-      {
-        titulo: 'Apps para iOS y Android',
-        texto: 'Para tus clientes o para tu equipo: publicadas en App Store y Google Play, o solo en los teléfonos de tu empresa.',
+    entradilla: 'Apps, aplicaciones web y paneles, conectados a tus datos.',
+    // Las caras donde se usa, la base que las une, los sistemas a los que se
+    // conecta y, alrededor de todo, lo que lo cuida.
+    incluye: {
+      caras: {
+        titulo: 'Donde se usa',
+        puntos: [
+          { titulo: 'Apps para iOS y Android', texto: 'En las tiendas o solo en tu empresa.' },
+          { titulo: 'Aplicaciones web', texto: 'Desde el navegador, sin instalar nada.' },
+        ],
       },
-      {
-        titulo: 'Aplicaciones web',
-        texto: 'Se abren desde el navegador, sin instalar nada, en el computador de la oficina o en el celular.',
+      base: { titulo: 'Una base para todo', texto: 'Lo que cambias en uno se ve en los otros.' },
+      conectado: { titulo: 'Conectado a tus datos', sistemas: ['Planillas', 'Ventas', 'Facturación', 'Cualquier API'] },
+      cuida: {
+        titulo: 'Lo que lo cuida',
+        puntos: [
+          { titulo: 'Usuarios y permisos', texto: 'Cada persona ve solo lo suyo.' },
+          { titulo: 'Seguro desde el inicio', texto: 'Cifrado y Ley 21.719, desde el diseño.' },
+        ],
       },
-      {
-        titulo: 'Conectado a tus datos',
-        texto: 'Se integra con lo que ya usas: planillas, tu sistema de ventas, tu facturación o cualquier servicio con API.',
-      },
-      {
-        titulo: 'Una base para todo',
-        texto: 'La app, la web y el panel trabajan sobre los mismos datos: lo que cambias en uno se ve en los otros.',
-      },
-      {
-        titulo: 'Usuarios y permisos',
-        texto: 'Cada persona entra con su cuenta y ve y hace solo lo que le corresponde.',
-      },
-      {
-        titulo: 'Seguro desde el inicio',
-        texto: 'Accesos protegidos, datos cifrados donde corresponde y lo que pide la Ley 21.719, pensado desde el diseño y no al final.',
-      },
-    ],
+    },
     cuando: [
-      'Tu forma de trabajar no calza con ningún software del mercado, o lo tienes que forzar.',
-      'Pagas varias herramientas que no se hablan entre sí.',
-      'Tienes una idea de producto y necesitas llevarla a una app real.',
-      'Tu equipo repite a mano lo que una aplicación podría hacer sola.',
+      'Ningún software calza con tu forma de trabajar.',
+      'Pagas herramientas que no se hablan entre sí.',
+      'Tienes una idea y quieres llevarla a una app.',
     ],
-    pedimos: [
-      'Quién lo va a usar y para qué: clientes, trabajadores o tú.',
-      'Cómo lo resuelves hoy, aunque sea en papel o en una planilla.',
-      'Acceso a los sistemas con los que se tiene que conectar.',
-      'Una persona de tu lado que pruebe cada entrega.',
-    ],
+    pedimos: ['Quién lo va a usar y para qué.', 'Cómo lo resuelves hoy.', 'Alguien de tu lado que pruebe cada entrega.'],
     prueba: {
       proyecto: 'ponlenota',
-      texto: 'PonleNota es nuestro: un sitio, una app Android para el negocio y un panel web, los tres sobre la misma base de datos.',
+      texto: 'Sitio, app Android y panel web sobre la misma base.',
     },
     preguntas: [
-      { pregunta: '¿Cuánto cuesta desarrollar una app?', respuesta: PRECIO },
       {
         pregunta: '¿Conviene software a medida o uno ya hecho?',
         respuesta:
           'Si un producto del mercado resuelve tu proceso sin forzarlo, úsalo: es más barato y está listo hoy. El software a medida conviene cuando tu forma de trabajar es tu ventaja, cuando pagas varias herramientas que no se conectan o cuando el software es tu negocio.',
       },
+      { pregunta: '¿Cuánto cuesta desarrollar una app?', respuesta: PRECIO },
       {
         pregunta: '¿Hacen apps para iPhone y Android?',
         respuesta: 'Sí, para los dos. Y si basta con una aplicación web, te lo decimos: se usa desde el navegador y no hay que publicarla en ninguna tienda.',
@@ -230,50 +180,23 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   agente: {
-    antetitulo: 'Agentes de IA',
+    tipo: 'Agentes de IA',
     titular: 'IA que conoce tu negocio',
+    entradilla: 'Responde con tu información y hace tareas por ti, a cualquier hora.',
     incluye: [
-      {
-        titulo: 'Responde con lo tuyo',
-        texto: 'Contesta con tus documentos, tu catálogo, tus horarios o tu base de datos, y no con lo que inventaría un chat genérico.',
-      },
-      {
-        titulo: 'Atiende solicitudes',
-        texto: 'Agenda horas, toma pedidos, prepara cotizaciones o deriva a una persona cuando hace falta.',
-      },
-      {
-        titulo: 'Hace, no solo conversa',
-        texto: 'Consulta tus sistemas, completa registros y avisa a tu equipo: un agente actúa sobre tus herramientas.',
-      },
-      {
-        titulo: 'A cualquier hora',
-        texto: 'En tu web o en tus canales de mensajería, también de noche y en fin de semana.',
-      },
-      {
-        titulo: 'Probado antes de salir',
-        texto: 'Lo probamos con preguntas reales antes de publicarlo, acotamos lo que puede hacer y queda registro de cada respuesta.',
-      },
-      {
-        titulo: 'Sabe cuándo no sabe',
-        texto: 'Si no tiene la respuesta, lo dice y deriva a una persona en vez de adivinar.',
-      },
+      { titulo: 'Responde con lo tuyo', texto: 'Tus documentos, catálogo y horarios.' },
+      { titulo: 'Atiende solicitudes', texto: 'Agenda, toma pedidos y cotiza.' },
+      { titulo: 'Hace, no solo conversa', texto: 'Consulta tus sistemas y avisa a tu equipo.' },
+      { titulo: 'A cualquier hora', texto: 'En tu web o en tu mensajería.' },
+      { titulo: 'Probado antes de salir', texto: 'Con preguntas reales y registro de todo.' },
     ],
-    cuando: [
-      'Respondes las mismas preguntas todos los días.',
-      'Los mensajes llegan fuera de horario y se quedan sin respuesta.',
-      'Tu equipo pierde tiempo buscando información en documentos o sistemas.',
-      'Quieres usar IA, pero con tus datos y bajo tu control.',
-    ],
-    pedimos: [
-      'Las preguntas que más te hacen y cómo las respondes hoy.',
-      'Los documentos o sistemas de donde sale la información.',
-      'Qué puede resolver solo y qué tiene que pasar por una persona.',
-      'Ejemplos de conversaciones reales, sin datos personales.',
-    ],
+    cuando: ['Respondes lo mismo todos los días.', 'Te escriben fuera de horario.', 'Quieres IA, pero con tus datos.'],
+    pedimos: ['Las preguntas que más te hacen.', 'De dónde sale la información.', 'Qué pasa siempre por una persona.'],
     prueba: {
       proyecto: 'hackathon',
-      texto: 'Nuestro agente para alertas de infraestructura ganó el segundo lugar con un jurado externo. Su código es público.',
+      texto: 'Nuestro agente de alertas de infraestructura, con jurado externo.',
     },
+    // Van primero y en conversación (Agente.jsx).
     preguntas: [
       {
         pregunta: '¿Qué es un agente de IA?',
@@ -299,60 +222,51 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   automatizacion: {
-    antetitulo: 'Automatización de procesos',
+    tipo: 'Automatización de procesos',
     titular: 'Deja de copiar y pegar',
-    incluye: [
-      {
-        titulo: 'Datos que se mueven solos',
-        texto: 'Lo que entra por un lado aparece en el otro: del formulario a la planilla, de la venta al inventario, del correo al sistema.',
-      },
-      {
-        titulo: 'Formularios y documentos',
-        texto: 'Leemos formularios, PDF y correos, sacamos los datos que importan y los dejamos donde tienen que estar.',
-      },
-      {
-        titulo: 'Avisos a tiempo',
-        texto: 'Un mensaje a la persona correcta cuando pasa algo: un pedido nuevo, un pago atrasado, un stock que se acaba.',
-      },
-      {
-        titulo: 'Tareas programadas',
-        texto: 'Reportes que se envían solos cada lunes, respaldos cada noche y recordatorios antes de cada vencimiento.',
-      },
-      {
-        titulo: 'Registro de todo',
-        texto: 'Cada paso queda anotado, para saber qué pasó y cuándo, y para que nada falle en silencio.',
-      },
-      {
+    entradilla: 'Las tareas repetitivas ocurren solas, con las herramientas que ya usas.',
+    // Cada tarea de hoy (`antes`) junto a cómo queda automatizada; después,
+    // lo que va en todas: el registro y las herramientas que se conectan.
+    incluye: {
+      tareas: [
+        {
+          antes: 'Copias datos de un sistema a otro.',
+          titulo: 'Datos que se mueven solos',
+          texto: 'Del formulario a la planilla, sin tocarlos.',
+        },
+        {
+          antes: 'Armas el mismo reporte cada semana.',
+          titulo: 'Tareas programadas',
+          texto: 'Reportes, respaldos y recordatorios, solos.',
+        },
+        {
+          antes: 'Se te pasan cobros y vencimientos.',
+          titulo: 'Avisos a tiempo',
+          texto: 'A la persona correcta, cuando pasa algo.',
+        },
+        {
+          antes: 'Un error de tipeo ya te costó plata.',
+          titulo: 'Formularios y documentos',
+          texto: 'Leemos PDF y correos. Nadie tipea.',
+        },
+      ],
+      registro: { titulo: 'Registro de todo', texto: 'Cada paso queda anotado. Si algo no se completa, avisa.' },
+      herramientas: {
         titulo: 'Con lo que ya usas',
-        texto: 'Tu correo, tus planillas, Google Workspace, Microsoft 365 o tu sistema: conectamos lo que tienes antes de proponerte algo nuevo.',
+        texto: 'Conectamos lo que tienes antes de proponerte algo nuevo.',
+        lista: ['Correo', 'Planillas', 'Google Workspace', 'Microsoft 365', 'Tu sistema'],
       },
-    ],
-    cuando: [
-      'Copias datos de un sistema a otro varias veces al día.',
-      'Alguien de tu equipo pasa horas armando el mismo reporte.',
-      'Se te pasan vencimientos, cobros o seguimientos.',
-      'Un error de tipeo ya te costó plata.',
-    ],
-    pedimos: [
-      'Un recorrido por la tarea: quién la hace, con qué y cada cuánto.',
-      'Acceso a las herramientas que hay que conectar.',
-      'Ejemplos reales de lo que entra y de lo que tiene que salir.',
-      'Quién recibe el aviso cuando algo no se puede completar.',
-    ],
+    },
+    pedimos: ['Un recorrido por la tarea.', 'Acceso a las herramientas.', 'Ejemplos de lo que entra y lo que sale.'],
     prueba: {
       proyecto: 'hackathon',
-      texto: 'Nuestro agente atiende solo las alertas de infraestructura: junta el contexto de varios sistemas y propone un diagnóstico, sin esperar a una persona.',
+      texto: 'Nuestro agente atiende solo las alertas de infraestructura.',
     },
     preguntas: [
       {
         pregunta: '¿Qué procesos conviene automatizar primero?',
         respuesta:
           'Los que se repiten seguido, siguen siempre los mismos pasos y hoy se hacen copiando y pegando. Si una tarea ocurre varias veces por semana y nadie tiene que decidir nada en ella, es buena candidata.',
-      },
-      {
-        pregunta: '¿Tengo que cambiar mis herramientas?',
-        respuesta:
-          'Casi nunca. Lo normal es conectar lo que ya usas; solo te proponemos algo nuevo si lo que tienes no se puede conectar.',
       },
       {
         pregunta: '¿Qué pasa si una automatización falla?',
@@ -370,50 +284,25 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   gestion: {
-    antetitulo: 'Sistemas de gestión',
+    tipo: 'Sistemas de gestión',
     titular: 'Tu negocio en un solo lugar',
+    entradilla: 'Inventario, clientes, agenda y cotizaciones, con tus números al día.',
+    // Los módulos de un solo panel. Cada `id` tiene su dibujo en Gestion.jsx:
+    // los números van primero y en grande, y los permisos lo cruzan entero.
     incluye: [
-      {
-        titulo: 'Inventario',
-        texto: 'El stock de cada producto con sus entradas y salidas, y un aviso cuando algo se está acabando.',
-      },
-      {
-        titulo: 'Clientes',
-        texto: 'La ficha de cada cliente con su historial: qué compró, qué cotizó y qué se conversó.',
-      },
-      {
-        titulo: 'Agenda',
-        texto: 'Horas, turnos y reservas a la vista de todo el equipo, sin topes ni dobles reservas.',
-      },
-      {
-        titulo: 'Cotizaciones',
-        texto: 'Cotizaciones con tu formato en minutos, y el seguimiento de cuáles se cerraron.',
-      },
-      {
-        titulo: 'Tus números al día',
-        texto: 'Un panel con las ventas, los pedidos o lo que importe en tu negocio, sin armar reportes a mano.',
-      },
-      {
-        titulo: 'Cada uno en lo suyo',
-        texto: 'Usuarios y permisos según el rol de cada persona, y acceso desde cualquier dispositivo.',
-      },
+      { id: 'numeros', titulo: 'Tus números al día', texto: 'Ventas y pedidos, sin armar reportes a mano.' },
+      { id: 'inventario', titulo: 'Inventario', texto: 'Te avisa cuando algo se acaba.' },
+      { id: 'clientes', titulo: 'Clientes', texto: 'Cada ficha con su historial.' },
+      { id: 'agenda', titulo: 'Agenda', texto: 'Sin topes ni dobles reservas.' },
+      { id: 'cotizaciones', titulo: 'Cotizaciones', texto: 'Con tu formato, y sabes cuáles se cierran.' },
+      { id: 'roles', titulo: 'Cada uno en lo suyo', texto: 'Permisos por rol, desde cualquier dispositivo.' },
     ],
-    cuando: [
-      'Tu operación vive en planillas que solo una persona entiende.',
-      'Dos personas editan el mismo archivo y nadie sabe cuál es la versión buena.',
-      'No sabes cuánto vendiste este mes sin pasar una tarde sumando.',
-      'Pagas un sistema genérico y usas la mitad, o le falta justo lo que necesitas.',
-    ],
-    pedimos: [
-      'Tus planillas actuales, tal como están.',
-      'Quién usa el sistema y qué necesita ver cada uno.',
-      'Los números que quieres mirar cada semana.',
-      'Una persona de tu lado que pruebe cada entrega.',
-    ],
+    cuando: ['Tu operación vive en planillas.', 'Nadie sabe cuál es la versión buena.', 'Sumar el mes te toma una tarde.'],
+    pedimos: ['Tus planillas, tal como están.', 'Quién usa qué.', 'Los números que quieres mirar.'],
     prueba: {
       proyecto: 'ponlenota',
       vista: 'El panel web',
-      texto: 'El panel web de PonleNota es un sistema de gestión: el negocio ve sus valoraciones, cupones y campañas, y cómo va el mes.',
+      texto: 'Su panel web es un sistema de gestión.',
     },
     preguntas: [
       {
@@ -426,10 +315,6 @@ export const PAGINAS_DE_SERVICIO = {
         respuesta: 'Sí. Partimos de tus planillas y las cargamos al sistema, para que no empieces de cero.',
       },
       {
-        pregunta: '¿Funciona en el celular?',
-        respuesta: 'Sí. Se usa desde el navegador en el computador, la tablet o el celular, sin instalar nada.',
-      },
-      {
         pregunta: '¿Se conecta con otros sistemas?',
         respuesta:
           'Puede conectarse con tu facturación, tu tienda online o tus planillas, para que la misma información no se escriba dos veces.',
@@ -440,69 +325,34 @@ export const PAGINAS_DE_SERVICIO = {
   },
 
   prospeccion: {
-    antetitulo: 'Prospección de clientes',
+    tipo: 'Prospección de clientes',
     titular: 'Tus próximos clientes, en una planilla',
+    entradilla: 'Los negocios de tu rubro y tu zona, con su contacto. Solo datos públicos.',
+    // Lo que trae la planilla, al pie del mapa y la planilla que lo dibujan.
     incluye: [
-      {
-        titulo: 'Tu zona, en el mapa',
-        texto: 'Marcamos el área exacta: un barrio, una comuna o un polígono a tu medida. Solo entran los negocios que quedan dentro.',
-      },
-      {
-        titulo: 'Los rubros que te sirven',
-        texto: 'Restaurantes, peluquerías, veterinarias, hoteles o el rubro al que le vendes. Cada negocio aparece una sola vez.',
-      },
-      {
-        titulo: 'Con su contacto',
-        texto: 'El correo que cada negocio publica en su propio sitio web. Si no publica uno, la celda queda vacía: no lo adivinamos.',
-      },
-      {
-        titulo: 'Su reputación',
-        texto: 'La valoración en Google y cuántas reseñas la sostienen, con un aviso cuando una nota alta descansa en muy pocas.',
-      },
-      {
-        titulo: 'Los que no tienen web',
-        texto: 'Una pestaña aparte con los negocios sin sitio web: los primeros a los que ofrecer presencia en internet.',
-      },
-      {
-        titulo: 'En Google Sheets y Excel',
-        texto: 'Una planilla compartida, ordenada por pestañas, y una copia en Excel con la fecha de la búsqueda.',
-      },
+      { titulo: 'Tu zona', texto: 'Un barrio, una comuna o un área en el mapa.' },
+      { titulo: 'Tus rubros', texto: 'Cada negocio aparece una sola vez.' },
+      { titulo: 'Su correo', texto: 'El que publica en su web. Si no hay, queda vacío.' },
+      { titulo: 'Su reputación', texto: 'Su nota en Google y cuántas reseñas la sostienen.' },
+      { titulo: 'Los que no tienen web', texto: 'En una pestaña aparte.' },
+      { titulo: 'Sheets y Excel', texto: 'Con la fecha de la búsqueda.' },
     ],
-    principio: {
-      titulo: 'Siempre datos públicos',
-      puntos: [
-        'Todo sale de lo que cada negocio publica: su ficha en Google Maps y su propio sitio web.',
-        'No compramos bases de datos ni usamos información privada.',
-        'Son datos de negocios, no de personas: el nombre del local, su correo de contacto, su nota y su web.',
-      ],
-    },
     cuando: [
-      'Le vendes a negocios y no sabes por dónde empezar a buscarlos.',
-      'Tu equipo arma listas a mano, buscando local por local.',
-      'Quieres abrir una zona o un rubro nuevo y saber cuántos negocios hay.',
-      'Ofreces páginas web o marketing y quieres encontrar a quienes todavía no tienen.',
+      'Le vendes a negocios y no sabes dónde buscarlos.',
+      'Tu equipo arma listas a mano.',
+      'Quieres abrir una zona o un rubro nuevo.',
     ],
-    pedimos: [
-      'La zona: comunas, barrios o un área marcada en el mapa.',
-      'Los rubros de los negocios que te interesan.',
-      'Qué datos te importan y en qué orden quieres verlos.',
-      'Una cuenta de Google para compartirte la planilla, si la quieres en Sheets.',
-    ],
+    pedimos: ['La zona.', 'Los rubros que te interesan.', 'Los datos que te importan.'],
     preguntas: [
-      {
-        pregunta: '¿De dónde salen los datos?',
-        respuesta:
-          'Solo de fuentes públicas: la ficha que cada negocio tiene en Google Maps y su propio sitio web. No compramos bases de datos ni usamos información privada.',
-      },
-      {
-        pregunta: '¿Qué trae cada negocio?',
-        respuesta:
-          'Su nombre, el correo de contacto que publica en su sitio web, su valoración en Google, cuántas reseñas tiene y su sitio web, si tiene uno.',
-      },
       {
         pregunta: 'Si el dato es público, ¿puedo usarlo para cualquier cosa?',
         respuesta:
           'No. Desde el 1 de diciembre de 2026, la Ley 21.719 también rige los datos que vienen de fuentes públicas. Úsalos para lo que el negocio los publicó, que lo contacten, y saca de tu lista a quien te pida que no le escribas más.',
+      },
+      {
+        pregunta: '¿De dónde salen los datos?',
+        respuesta:
+          'Solo de fuentes públicas: la ficha que cada negocio tiene en Google Maps y su propio sitio web. No compramos bases de datos ni usamos información privada.',
       },
       {
         pregunta: '¿Los datos se actualizan?',
@@ -514,14 +364,3 @@ export const PAGINAS_DE_SERVICIO = {
     ],
   },
 }
-
-/**
- * Cómo trabajamos, igual para todos los servicios: cuatro pasos y, en cada
- * uno, qué pones tú. Sin plazos, por lo mismo que arriba.
- */
-export const PROCESO = [
-  { titulo: 'Nos cuentas el problema', pones: 'El problema, en tus palabras.' },
-  { titulo: 'Te mandamos alcance y precio', pones: 'Decidir si seguimos. Sin compromiso.' },
-  { titulo: 'Construimos por entregas revisables', pones: 'Media hora por entrega para revisarla.' },
-  { titulo: 'Lo publicamos y te lo entregamos', pones: 'Los accesos. El código queda a tu nombre.' },
-]

@@ -217,7 +217,7 @@ trayectoria, sino mostrando obra verificable.
 | Objeción | Dónde se responde | Cómo |
 | --- | --- | --- |
 | "¿Qué hacen y eso me sirve a mí?" | Portada y bloque 4 | Resultados en el idioma del cliente, no tecnologías. "Una app Android en producción", no "Kotlin" |
-| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde en la primera contestación al formulario, dentro de las 48 horas hábiles comprometidas, y ahí sí con un rango concreto |
+| "¿Cuánto me cobran?" | No se responde en la página | **Decisión: no se publican precios.** Se responde por correo cuando se entiende el proyecto, con alcance y precio concretos. La primera respuesta llega pronto, pero no es la cotización (decisión 43) |
 | "¿En cuánto tiempo?" | Bloque 4 | Rango de plazos por tipo de proyecto, nunca una promesa única |
 | "¿Qué tengo que entregar yo?" | Bloque 4, dentro del "cómo lo hacemos" | Lista concreta de lo que se le pide al cliente en cada paso |
 
@@ -380,8 +380,9 @@ mismos términos.
 | Envío correcto | "Mensaje enviado, te responderemos pronto." |
 | Fallo del envío | "No pudimos enviar tu mensaje. Escríbenos directamente a contacto@volutus.cl." |
 
-**Compromiso público:** respuesta en menos de **48 horas hábiles**. Si se
-escribe en la página, se cumple.
+**Compromiso público:** responder **pronto**, sin un plazo en horas
+(decisión 43). La cotización no es la primera respuesta: llega cuando se
+entiende el proyecto. Si se escribe en la página, se cumple.
 
 **Correo de contacto:** `contacto@volutus.cl`. El Gmail personal que hoy
 aparece en el `JSON-LD` se retira: contradice la decisión de hablar como
@@ -507,8 +508,9 @@ degradados" y "que no se vea pobre":
    luz rasante, calidad de cuadro. Como máximo dos apariciones en la página.
    Se genera y se exporta a `webp` con `srcset`, dimensiones explícitas y peso
    máximo de **120 KB** en el tamaño que recibe un móvil.
-2. **Gráfica vectorial propia:** la onda de marca, diagramas e iconos de trazo,
-   en SVG inline, de un solo color, sin degradados.
+2. **Gráfica vectorial propia:** la onda de marca, diagramas e iconos, en SVG
+   inline, de un solo color, sin degradados. Los iconos de los servicios son
+   glifos macizos en itálica (decisión 41); los demás, de trazo.
 3. **Capturas reales de producto: dos espacios reservados.** El diseño deja
    dos huecos preparados que el equipo rellena con los proyectos que está
    desarrollando. Hasta que lleguen las capturas, el hueco se ocupa con un
@@ -738,6 +740,10 @@ tener dueño ni fecha.
 | 37 | 2026-10-13 | El plano de la marca en `/nosotros` muestra la ola del logotipo, punto por punto, con la trama de la nube: al asomar se dibuja desde la S hasta la voluta, y el cursor o el dedo la mueven como viento, en un aire viscoso: se estira sin abrirse y vuelve a su forma en menos de un segundo. Título «Tres líneas de puntos». Sin JavaScript o sin WebGL queda la ola quieta | La construcción de la voluta de Fibonacci de una sola línea, que ya no era la marca | Diego |
 | 38 | 2026-10-13 | Las nubes son una sola volutus física (`src/lib/volutus.js`), vista con una cámara de verdad por página: la portada desde el aire, a lo largo del rollo y con su base entera en el lienzo; /nosotros de costado; la 404 desde el suelo, viéndola llegar; la 500 pasando por encima, y /patos lejos, sobre el horizonte. El rollo mide 1,7 × 1,2 km, se forma en su frente, donde el aire sube, con la base plana en el nivel de condensación, y se evapora detrás en jirones: eso es lo que se ve rodar. Es un estratocúmulo: bultos bajos, sin torres, vetas en el frente laminar. La luz es la misma en todas las páginas: un sol alto detrás de quien mira, sin dorado, con una sola extinción, dispersión múltiple y la fase de las gotas; la bruma depende de la distancia (80 km de visibilidad) y aclara lo lejano hacia la luz de la nube, sin achicar sus puntos. El detalle llega hasta ~2,5 puntos según la distancia. El punto mide 2 px y nunca menos de 3 px del aparato, el lienzo se pinta a la densidad real de la pantalla (hasta 3×) y es un cuadrado redondeado, entre el círculo y el cuadrado. El cursor sopla en px de pantalla, suave y local, y la estela se cierra en ~1 s. Jugando, los cúmulos se reparten por el cielo, alto y bajo, a la distancia del rollo y hasta 3 km, se dan sombra y tapan al pato que pasa detrás. El mar no cambia | La perspectiva inventada (un rollo que se achicaba exponencialmente), el sol de media mañana con filo dorado, el sol rasante del alba (demasiado contraste), las torres de cúmulo, el giro rígido, el punto de 3 px en escritorio y 2 px en el teléfono pintado a 1,5×, el viento medido en altos del lienzo, que crecía con la nube y la deformaba entera, la cámara de la portada pegada al rollo, que lo cortaba abajo, la bruma que achicaba los puntos y deshacía la volutus hacia la derecha, y los cúmulos con una misma base, que quedaban en fila sobre el horizonte | Diego |
 | 39 | 2026-10-14 | Cada servicio tiene su página, para explicar más de lo que cabe en su card y para que buscadores y agentes de IA lo encuentren por su nombre: qué incluye, cuándo sirve, qué le pedimos al cliente, la obra que lo prueba si la hay y las preguntas frecuentes, sin precios ni plazos. Cada una lleva el color de su card en la cabecera y una pieza propia en SVG, y termina en el formulario con el servicio marcado. Se suma `/articulos`, con guías cortas por servicio. Revisa la decisión 12 y la tabla de §11: la página sigue siendo de respaldo, pero ahora también apuesta por búsqueda | Una sola página con todos los servicios, que no se encontraba por cada uno | Diego |
+| 40 | 2026-10-16 | Cada página de servicio cuenta lo que incluye con la forma de lo que entrega, y eso mismo se anima al bajar: la web partida por una onda, la tienda por fases con un índice fijo, el software como diagrama con el flujo de los datos, el agente como chat, la automatización con las tareas de hoy que se tachan, la gestión como un panel de módulos y la prospección del mapa a la planilla. Una línea por punto, tres señales y tres pedidos; las preguntas frecuentes, plegadas pero en el HTML, y lo que repetía otra parte de la página se quita | La misma plantilla para los siete servicios, con párrafos largos y todas las preguntas abiertas: se leía como un folleto y costaba recorrerla | Diego |
+| 41 | 2026-10-16 | Los iconos de los servicios, en las cards de la rueda y en la fila de servicios, son glifos macizos inclinados 10°, como el logotipo y el número de la card: el dibujo se hace con el hueco, sin trazo. La tienda es una etiqueta de precio, la gestión unas carpetas con sus pestañas, la automatización un » que avanza, la prospección un blanco y la ley de datos un carnet. La guía de la ley sigue con sus iconos de trazo | Los iconos de trazo redondeado de cualquier paquete gratuito, con la chispa de la IA, el escudo con visto y el pin del mapa: se leían como hechos por una IA. También se probaron una trama de puntos, un plano técnico con cotas y objetos de la costa | Diego |
+| 42 | 2026-10-16 | Las piezas de las páginas de servicio se redibujan en el idioma de los iconos (decisión 41): glifos macizos inclinados 10°, en blanco y medio blanco, con un solo dato concreto en Archivo. Al cargar cada una cuenta su historia una vez y se queda quieta: la marea llena la web, el sello cae sobre el pedido, el pedido sube solo por sus pasos. Con ratón se inclina hacia el cursor como la card del frente, sus tres capas se corren según su hondura y repite el gesto de su servicio; los glifos de las cards hacen el suyo al quedar al frente y al pasar el cursor. Solo CSS, salvo la posición del cursor, y quietas con movimiento reducido | Las escenas de interfaz con ventana de navegador, barras grises, avatar con chispa y paneles de relleno: el mismo problema que los iconos | Diego |
+| 43 | 2026-10-17 | No se promete un plazo en horas: la página dice que una persona responde pronto. Responder y cotizar no son lo mismo: la cotización, con alcance y precio, llega cuando se entiende el proyecto, no en la primera respuesta. Las 48 horas hábiles quedan solo en /privacidad, para responder cuando alguien ejerce sus derechos sobre sus datos | Responder y cotizar en menos de 48 horas hábiles: un plazo demasiado corto para comprometerlo, y una cotización sin entender el proyecto | Diego |
 
 ---
 

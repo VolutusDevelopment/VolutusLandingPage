@@ -1,8 +1,23 @@
 /* La portada es el cielo del pie (`.caida`, Contacto.css) al revés, con el
    mismo fundido, pero parte del azul hondo de las cabeceras internas
-   (`.hora-dia`), para que el cielo tenga el mismo tono en todo el sitio. */
+   (`.hora-dia`), para que el cielo tenga el mismo tono en todo el sitio.
+   Pasa por #1976cc, #4d9fea, #7cbcf1, #c2e1f8 y #f6f9fc en una curva suave,
+   que llega plana al blanco de la sección siguiente: en tramos rectos, el
+   quiebre al llegar se veía como una raya. */
 :root .portada {
-  --fondo-hora: linear-gradient(#1976cc, #4d9fea 42%, #7cbcf1 70%, #c2e1f8 90%, #f6f9fc);
+  --fondo-hora: linear-gradient(
+    #1976cc,
+    #257fd3 10%,
+    #3088d9 20%,
+    #3c92e0 30%,
+    #4a9de8 40%,
+    #61abed 50%,
+    #83c0f2 60%,
+    #aad4f6 70%,
+    #cfe7f9 80%,
+    #ebf4fb 90%,
+    #f6f9fc
+  );
 }
 
 .portada {

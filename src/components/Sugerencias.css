@@ -63,6 +63,22 @@
   height: 24px;
 }
 
+/* Al pasar el cursor o llegar con el teclado, el glifo hace el gesto de su
+   servicio (Icono.css). */
+@media (prefers-reduced-motion: no-preference) {
+  .fila-servicios a:focus-visible .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .fila-servicios a:hover .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fila-servicios a:hover {
     transform: none;

@@ -284,8 +284,12 @@
    costura), con la acción en azul hondo. El azul intenso vive detrás de la
    barra y el logo: el logo da 5.1:1 y la barra, con su vidrio, 12.8:1 el
    texto y 6.7:1 el suave. Donde empieza el titular —nunca antes del 35 % del
-   alto—, el texto da 6.8:1 y la acción, que colorea su primera línea, 4.4:1
-   (es texto grande: pide 3:1). Blanco sobre la acción, 11.2:1. */
+   alto—, el texto da 6.8:1 y la acción, que colorea su primera línea, 4.3:1
+   (es texto grande: pide 3:1). Blanco sobre la acción, 11.2:1.
+
+   Pasa por #2b8de4, #4d9fea, #7cbcf1, #c2e1f8 y #f6f9fc en una curva suave,
+   que llega plana al blanco: en tramos rectos, cada parada era un quiebre en
+   el ritmo del color, y el ojo lo ve como una raya. */
 :root .hora-manana {
   --texto-suave: #2f4a63;
   --accion: #093d66;
@@ -294,16 +298,27 @@
   --foco: #093d66;
   --nube-luz: #ffffff;
   --nube-sombra: #6a8cb2;
-  --fondo-hora: linear-gradient(#2b8de4, #4d9fea 28%, #7cbcf1 52%, #c2e1f8 76%, #f6f9fc 94%);
+  --fondo-hora: linear-gradient(
+    #2b8de4,
+    #3693e6 9.4%,
+    #4198e8 18.8%,
+    #4d9fea 28.2%,
+    #5da9ec 37.6%,
+    #71b5ef 47%,
+    #88c2f2 56.4%,
+    #a9d4f6 65.8%,
+    #cde6f9 75.2%,
+    #eaf4fb 84.6%,
+    #f6f9fc 94%
+  );
 }
 
 /* El día: el cielo alto de las cabeceras de las páginas internas
    (`.cabecera-cielo`), un azul parejo con todo el texto en blanco, que sobre
    él da 4.7:1 y alcanza también para la letra chica. La barra lo copia al
    pasar por encima, así que su logo y sus letras también van en blanco. El
-   halo de las letras de la cápsula (`--fondo`) es el mismo azul. El botón
-   primario se invierte: blanco, con el texto en el azul de la acción, que da
-   6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo.
+   botón primario se invierte: blanco, con el texto en el azul de la acción,
+   que da 6.4:1 sobre el blanco y 4.7:1 sobre el celeste al pulsarlo.
 
    Una página de servicio tiñe este cielo con el color de su servicio
    (`--tinte`, ver Pagina.jsx): todos dan 5.5:1 o más con el blanco, y el
@@ -589,16 +604,44 @@ svg {
    cielo, y abajo `.caida` (Contacto.css), que pinta el cierre y el pie de día
    con un solo degradado. Va después de `.seccion` para ganarle el relleno.
 
-   La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), que
-   se sostiene bajo todo su texto, y solo en el relleno de abajo (`--fundido`)
-   se difumina al blanco de la página. Teñida, pasa por un claro de su
-   propio color. */
+   La cabecera sube detrás de la barra con el azul del día (`.hora-dia`), o
+   el color de su servicio (`--tinte`), que se sostiene bajo todo su texto, y
+   se aclara al blanco de la página en el relleno de abajo (`--fundido`, 192
+   px), y 96 px más en la sección siguiente, sin mover nada. Va en una curva
+   suave, una parábola de ida y vuelta en tramos de 16 px (`--e-4`), plana
+   donde empieza y donde termina: en línea recta, el quiebre donde el color
+   empieza a aclararse se veía como una raya. En la sección siguiente ya es
+   claro: la tinta da 11.5:1 o más, y el texto suave llega a 4.5:1 a los 8 px. */
 :root .cabecera-cielo {
-  --fundido: calc(var(--e-24) + var(--e-16));
+  --fundido: calc(12 * var(--e-4));
   --fondo-hora: linear-gradient(
-    var(--fondo) calc(100% - var(--fundido)),
-    var(--tinte-claro, #7cbcf1) calc(100% - var(--fundido) / 2),
-    #f6f9fc
+    var(--fondo) calc(100% - 12 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 99.4%, #f6f9fc) calc(100% - 11 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 97.5%, #f6f9fc) calc(100% - 10 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 94.4%, #f6f9fc) calc(100% - 9 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 90.1%, #f6f9fc) calc(100% - 8 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 84.6%, #f6f9fc) calc(100% - 7 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 77.8%, #f6f9fc) calc(100% - 6 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 69.8%, #f6f9fc) calc(100% - 5 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 60.5%, #f6f9fc) calc(100% - 4 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 50%, #f6f9fc) calc(100% - 3 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 39.5%, #f6f9fc) calc(100% - 2 * var(--e-4)),
+    color-mix(in oklab, var(--fondo) 30.2%, #f6f9fc) calc(100% - var(--e-4)),
+    color-mix(in oklab, var(--fondo) 22.2%, #f6f9fc)
+  );
+}
+
+/* La sección siguiente no hereda el color de la cabecera: lo vuelve a tomar
+   de `--tinte`, con el azul del día si la página no tiene. */
+:root .cabecera-cielo + .seccion {
+  --fondo-hora: linear-gradient(
+    color-mix(in oklab, var(--tinte, #1976cc) 22.2%, #f6f9fc),
+    color-mix(in oklab, var(--tinte, #1976cc) 15.4%, #f6f9fc) var(--e-4),
+    color-mix(in oklab, var(--tinte, #1976cc) 9.9%, #f6f9fc) calc(2 * var(--e-4)),
+    color-mix(in oklab, var(--tinte, #1976cc) 5.6%, #f6f9fc) calc(3 * var(--e-4)),
+    color-mix(in oklab, var(--tinte, #1976cc) 2.5%, #f6f9fc) calc(4 * var(--e-4)),
+    color-mix(in oklab, var(--tinte, #1976cc) 0.6%, #f6f9fc) calc(5 * var(--e-4)),
+    var(--fondo) calc(6 * var(--e-4))
   );
 }
 
@@ -606,7 +649,7 @@ svg {
   position: relative;
   margin-top: calc(-1 * var(--barra-alto));
   padding-top: calc(var(--barra-alto) + var(--e-16));
-  padding-bottom: calc(var(--e-8) + var(--fundido));
+  padding-bottom: var(--fundido);
 }
 
 @media (min-width: 1024px) {
@@ -616,14 +659,14 @@ svg {
 }
 
 /* Lo contrario de `.alba`: el tramo del fundido que ya es claro. Desde ahí la
-   tinta contrasta más que el blanco: medido sobre los ocho tintes, el cruce
-   cae entre 9 y 41 px del comienzo del fundido, casi siempre cerca de 24.
+   tinta contrasta más que el blanco: con el azul del día, el cruce cae a
+   50 px del comienzo del fundido.
    Es una franja vacía que pone barra.js; la barra la ve detrás de cada pieza
    y vuelve a la tinta, en vez de seguir en blanco sobre un fondo casi blanco. */
 .cabecera-fundido {
   position: absolute;
   inset: auto 0 0;
-  height: calc(var(--fundido) - var(--e-6));
+  height: calc(var(--fundido) - var(--e-12));
   pointer-events: none;
 }
 
