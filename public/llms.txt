@@ -43,8 +43,9 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 
 Cada página dice qué incluye el servicio, qué le pedimos al cliente y las
 preguntas frecuentes; casi todas dicen también cuándo sirve y, si la hay,
-dónde comprobar obra parecida. No publicamos precios: cada proyecto se
-cotiza según su alcance, cuando entendemos lo que necesita. La primera
+dónde comprobar obra parecida. Cada página tiene un estimado de precio en UF,
+sin IVA, que se calcula según lo que se marque. Es un estimado: el precio
+final sale de la cotización, cuando entendemos lo que necesita. La primera
 respuesta llega pronto, pero no es la cotización.
 
 - [Desarrollo web](https://volutus.cl/servicios/desarrollo-web): páginas web rápidas en el celular, legibles para Google y para asistentes de IA

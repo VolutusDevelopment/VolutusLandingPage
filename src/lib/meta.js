@@ -251,7 +251,7 @@ export const PAGINAS = {
   '/ley21719': {
     archivo: 'ley21719.html',
     publicada: '2026-10-03',
-    actualizada: '2026-10-03',
+    actualizada: '2026-10-17',
     servicios: ['datos'],
     titulo: 'Ley 21.719 de protección de datos: qué cambia — Volutus',
     descripcion:

@@ -1,5 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import Icono from '../components/Icono.jsx'
+import Estimado from '../components/Estimado.jsx'
 import { PAGINAS, fechaDe } from '../lib/meta.js'
 
 /**
@@ -423,6 +424,9 @@ export default function Ley21719() {
           </div>
         </div>
       </section>
+
+      {/* Esta guía es la página del servicio «Ley de datos»: aquí va su estimado. */}
+      <Estimado servicio="datos" contacto="/#contacto" />
     </Pagina>
   )
 }

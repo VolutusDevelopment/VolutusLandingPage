@@ -1,0 +1,456 @@
+/* ---- El estimado de precio (Estimado.jsx) ----
+ *
+ * Las opciones son las pastillas del formulario de contacto (Contacto.css):
+ * aquí va lo propio. Desde L, las opciones a la izquierda y la boleta a la
+ * derecha, que acompaña al bajar; en S y M, la boleta va debajo y una barra
+ * con el total se pega abajo mientras se marca. */
+
+.estimado {
+  /* El color del servicio. La guía de la ley no tiene tinte: el azul de la
+     acción del tema claro, que con letras blancas da 6.4:1 en los dos temas. */
+  --estimado-color: var(--tinte, #116492);
+  /* El mismo color para letras sobre la superficie: mezclado con la tinta, se
+     oscurece en el tema claro y se aclara en el oscuro. */
+  --estimado-tinta: color-mix(in oklab, var(--estimado-color) 70%, var(--texto));
+
+  display: grid;
+  gap: var(--e-8);
+  margin-top: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .estimado {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+    align-items: start;
+    gap: var(--e-16);
+  }
+
+  .estimado-boleta {
+    position: sticky;
+    top: calc(var(--barra-alto) + var(--e-4));
+  }
+}
+
+.estimado-titulo {
+  margin-top: var(--e-2);
+}
+
+.estimado-bajada {
+  margin-top: var(--e-3);
+  color: var(--texto-suave);
+}
+
+.estimado-opciones {
+  display: grid;
+  gap: var(--e-8);
+  min-width: 0;
+}
+
+/* ---- los pasos ---- */
+
+/* El número de cada paso, en la itálica de los titulares y en el color del
+   servicio; su nombre, como rótulo. */
+.estimado .estimado-leyenda {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-3);
+  margin: 0 0 var(--e-3);
+  padding: 0;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.estimado-paso {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-lg);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--estimado-tinta);
+}
+
+/* Con su precio, una pastilla pide más ancho que las del contacto: una
+   columna en S y las que quepan desde M. Marcada, toma el color del
+   servicio. */
+.estimado .chips {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+}
+
+.estimado .chip {
+  min-height: 44px;
+  padding-inline: var(--e-4);
+  font-size: var(--texto-sm);
+}
+
+.estimado .chip:hover {
+  border-color: var(--estimado-color);
+}
+
+.estimado .chip:has(input:checked) {
+  background: var(--estimado-color);
+  border-color: var(--estimado-color);
+  color: #ffffff;
+}
+
+/* El precio de cada opción, en la mono y al otro extremo. */
+.estimado-precio {
+  margin-left: auto;
+  padding-left: var(--e-2);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  white-space: nowrap;
+}
+
+/* El punto de partida, cuando no hay que elegirlo: va incluido. */
+.estimado-base {
+  display: flex;
+  align-items: baseline;
+  padding: var(--e-3) var(--e-4);
+  font-size: var(--texto-sm);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--estimado-color) 9%, var(--superficie));
+}
+
+/* Una cantidad: el nombre y su precio, y el número entre − y +. */
+.estimado-cantidad {
+  display: flex;
+  align-items: center;
+  gap: var(--e-1);
+  min-height: 44px;
+  padding: var(--e-1) var(--e-1) var(--e-1) var(--e-4);
+  font-size: var(--texto-sm);
+  line-height: 1.3;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+}
+
+.estimado-cantidad label {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  min-width: 0;
+}
+
+/* 17 px: con menos, iOS acerca la página al enfocarlo. Sin las flechas del
+   navegador: las reemplazan − y +, y sin JavaScript se escribe el número. */
+.estimado-cantidad input {
+  flex: none;
+  width: 3rem;
+  min-height: 36px;
+  padding: 0;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-base);
+  text-align: center;
+  color: var(--texto);
+  background: color-mix(in srgb, var(--texto) 4%, transparent);
+  border: 0;
+  border-radius: var(--radio);
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.estimado-cantidad input::-webkit-inner-spin-button,
+.estimado-cantidad input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.estimado-cantidad input:focus-visible,
+.estimado-paso-boton:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.estimado-paso-boton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font: inherit;
+  font-size: var(--texto-lg);
+  line-height: 1;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    border-color 140ms var(--ease-out),
+    color 140ms var(--ease-out);
+}
+
+.estimado-paso-boton[hidden] {
+  display: none;
+}
+
+.estimado-paso-boton:hover {
+  border-color: var(--estimado-color);
+  color: var(--estimado-tinta);
+}
+
+/* ---- la barra de S y M ----
+   Pegada abajo mientras se recorren las opciones, de borde a borde. Al
+   terminarlas se queda en su sitio, encima de la boleta. Desde L no hace
+   falta: la boleta va al lado. */
+.estimado-barra {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  margin-inline: calc(-1 * var(--margen-lateral));
+  padding: var(--e-3) var(--margen-lateral) calc(var(--e-3) + env(safe-area-inset-bottom));
+  background: var(--superficie);
+  border-top: 1px solid var(--linea);
+  box-shadow: 0 -12px 28px rgb(10 26 42 / 0.08);
+}
+
+@media (min-width: 1024px) {
+  .estimado-barra {
+    display: none;
+  }
+}
+
+.estimado-barra-texto {
+  display: grid;
+  gap: 2px;
+}
+
+.estimado-barra-cifra {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-base);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--estimado-tinta);
+}
+
+.estimado-barra-cifra strong {
+  font-size: var(--texto-xl);
+  font-variant-numeric: tabular-nums;
+}
+
+.estimado-barra-cifra small,
+.estimado-cifra small {
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-xs);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+/* Los botones de la barra y de la boleta, en el color del servicio. */
+.estimado .boton-primario {
+  background: var(--estimado-color);
+  color: #ffffff;
+}
+
+.estimado .boton-primario:hover {
+  background: color-mix(in oklab, var(--estimado-color) 82%, #000000);
+  color: #ffffff;
+}
+
+/* ---- la boleta ----
+   Una tarjeta con la cabeza en el color del servicio y el borde de abajo
+   picado, como una boleta cortada. La sombra la da `drop-shadow`, que sigue
+   la forma del corte. */
+.estimado-boleta {
+  filter: drop-shadow(0 18px 32px rgb(10 26 42 / 0.12));
+}
+
+.estimado-boleta::after {
+  content: '';
+  display: block;
+  height: 14px;
+  background: radial-gradient(circle at 10px 100%, transparent 7px, var(--superficie) 7.5px) 0 0 / 20px 14px repeat-x;
+}
+
+.estimado-boleta-cabeza {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding: var(--e-4) var(--e-6);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: var(--estimado-color);
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+}
+
+.estimado-boleta-cuerpo {
+  display: grid;
+  gap: var(--e-6);
+  padding: var(--e-6);
+  background: var(--superficie);
+}
+
+@media (min-width: 640px) {
+  .estimado-boleta-cabeza {
+    padding-inline: var(--e-8);
+  }
+
+  .estimado-boleta-cuerpo {
+    padding: var(--e-8);
+  }
+}
+
+/* Cada cosa marcada, con puntos hasta su monto. */
+.estimado-lineas {
+  display: grid;
+  gap: var(--e-2);
+  margin: 0;
+  padding: 0;
+  font-size: var(--texto-sm);
+  list-style: none;
+}
+
+.estimado-lineas li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-2);
+}
+
+.estimado-relleno {
+  flex: 1;
+  min-width: var(--e-4);
+  border-bottom: 2px dotted var(--linea);
+}
+
+.estimado-monto {
+  font-family: var(--fuente-datos);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* El total, en grande. Cabe en una línea en cualquier ancho. */
+.estimado-total {
+  padding-top: var(--e-4);
+  border-top: 2px solid var(--texto);
+}
+
+.estimado-cifra {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-2);
+  margin-top: var(--e-1);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-lg);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--estimado-tinta);
+}
+
+.estimado-cifra strong {
+  font-size: clamp(44px, 12vw, 64px);
+  font-variant-numeric: tabular-nums;
+}
+
+.estimado-pesos {
+  margin-top: var(--e-2);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+/* La UF con que se pasaron los pesos: su día y su valor. */
+.estimado-uf {
+  margin-top: var(--e-1);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.estimado-detalle {
+  display: grid;
+  gap: var(--e-3);
+  margin: 0;
+}
+
+.estimado-detalle dt {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+/* Cambian al marcar, y cada uno tiene reservado el alto de su texto más
+   largo, para que nada salte, parta donde parta cada navegador: el pago, tres
+   líneas en S y lo que se paga al mes, dos. En M la boleta va a todo el ancho
+   y todo cabe en una; desde L vuelve a ser angosta, y cabe en dos. */
+.estimado-detalle dd {
+  min-height: 3em;
+  margin: 0;
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.estimado-detalle [data-salida='pago'] {
+  min-height: 4.5em;
+}
+
+@media (min-width: 640px) {
+  .estimado-detalle dd,
+  .estimado-detalle [data-salida='pago'] {
+    min-height: 1.5em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .estimado-detalle dd,
+  .estimado-detalle [data-salida='pago'] {
+    min-height: 3em;
+  }
+}
+
+.estimado-aviso {
+  display: flex;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-4);
+  font-size: var(--texto-xs);
+  line-height: 1.5;
+  color: var(--texto-suave);
+  background: color-mix(in oklab, var(--estimado-color) 9%, var(--superficie));
+  border-radius: var(--radio-tarjeta);
+}
+
+.estimado-aviso svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--estimado-tinta);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.estimado-aviso strong {
+  color: var(--texto);
+}
+
+.estimado-pedir {
+  width: 100%;
+}
+
+.estimado-nota {
+  margin-top: calc(-1 * var(--e-3));
+  font-size: var(--texto-xs);
+  text-align: center;
+  color: var(--texto-suave);
+}

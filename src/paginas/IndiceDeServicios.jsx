@@ -18,8 +18,8 @@ import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
  * (data/paginas-de-servicio.js), y entero lleva a ella. La ley de datos no
  * tiene página ni pieza: lleva su glifo.
  *
- * Debajo, lo que se pregunta antes de pedir una cotización. El precio no se
- * publica (decisión 11 del brief): se dice por qué y cuándo llega.
+ * Debajo, lo que se pregunta antes de pedir una cotización. El precio de
+ * cada servicio se estima en su página (decisión 48 del brief).
  *
  * Cierra con el formulario, como cada servicio: quien ya eligió, escribe aquí.
  */
@@ -71,8 +71,8 @@ export default function IndiceDeServicios({ ruta }) {
           </h2>
           <ul className="indice-saber">
             <li className="entra">
-              <h3>No publicamos precios</h3>
-              <p>Cada proyecto se cotiza según su alcance, así que un precio de lista no te diría nada.</p>
+              <h3>Un estimado en cada servicio</h3>
+              <p>En su página calculas cuánto costaría. Es un estimado: lo que necesites puede cambiar el precio final.</p>
             </li>
             <li className="entra">
               <h3>Cada solución es única</h3>

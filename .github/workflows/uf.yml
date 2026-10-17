@@ -1,0 +1,26 @@
+name: UF del día
+
+on:
+  schedule:
+    # 09:00 UTC: las 6 de la mañana en Chile en horario de verano, las 5 en invierno.
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  uf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      # El script no usa dependencias: basta el Node que trae el runner.
+      - run: node scripts/uf.mjs
+      - name: Guarda la UF si cambió
+        run: |
+          git diff --quiet && exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -am 'Actualiza la UF'
+          git push

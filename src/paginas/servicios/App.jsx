@@ -35,7 +35,7 @@ function Puntos({ className, puntos }) {
   )
 }
 
-export default function App({ pagina, ruta }) {
+export default function App({ pagina, ruta, estimado }) {
   const { caras, base, conectado, cuida } = pagina.incluye
 
   return (
@@ -60,6 +60,7 @@ export default function App({ pagina, ruta }) {
           <Puntos className="app-cuida" puntos={cuida.puntos} />
         </div>
       </Incluye>
+      {estimado}
       <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />

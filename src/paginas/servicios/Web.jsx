@@ -51,7 +51,7 @@ function Grupo({ grupo, puntos }) {
   )
 }
 
-export default function Web({ pagina, ruta }) {
+export default function Web({ pagina, ruta, estimado }) {
   const [seVe, noSeVe] = pagina.incluye
 
   return (
@@ -74,6 +74,9 @@ export default function Web({ pagina, ruta }) {
       </section>
       <Prueba prueba={pagina.prueba} ruta={ruta} className="hora-dia" />
       <Onda volteada />
+      {/* El estimado va después de la franja de color, que se cierra con la
+          onda volteada: dentro de ella partiría la onda en dos. */}
+      {estimado}
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>

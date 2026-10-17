@@ -7,7 +7,7 @@ import { Incluye, ParaEmpezar, Prueba } from './Bloques.jsx'
  * cualquier lista de preguntas. La hora de cada burbuja la pone chat.js. Lo
  * que incluye viene después.
  */
-export default function Agente({ pagina, ruta }) {
+export default function Agente({ pagina, ruta, estimado }) {
   return (
     <>
       <section className="seccion zona-cielo" aria-labelledby="preguntas-titulo">
@@ -42,6 +42,7 @@ export default function Agente({ pagina, ruta }) {
           ))}
         </ul>
       </Incluye>
+      {estimado}
       <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
     </>

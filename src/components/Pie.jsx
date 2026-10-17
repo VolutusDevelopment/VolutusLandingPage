@@ -1,6 +1,5 @@
 import { Logotipo } from './Marca.jsx'
-import { CORREO_DE_CONTACTO } from './Contacto.jsx'
-import { WHATSAPP_DE_CONTACTO, enlaceDeWhatsapp } from '../lib/contacto.js'
+import { CORREO_DE_CONTACTO, SALUDO_DE_WHATSAPP, WHATSAPP_DE_CONTACTO, enlaceDeWhatsapp } from '../lib/contacto.js'
 
 /**
  * Pie.
@@ -23,9 +22,6 @@ import { WHATSAPP_DE_CONTACTO, enlaceDeWhatsapp } from '../lib/contacto.js'
  * de cada socio, en /nosotros (decisión 34 del brief).
  */
 
-// Texto que llega ya escrito en el chat de WhatsApp.
-const MENSAJE_DE_WHATSAPP = 'Hola, vi la página de Volutus y quiero conversar sobre un proyecto.'
-
 // `dia` lo pone la home: ahí el pie cierra el espejo de la portada y es de día
 // (ver `.caida` en Contacto.css). En las demás páginas sigue siendo la noche.
 export default function Pie({ dia = false }) {
@@ -44,7 +40,7 @@ export default function Pie({ dia = false }) {
             {WHATSAPP_DE_CONTACTO && (
               <a
                 className="boton pie-whatsapp"
-                href={enlaceDeWhatsapp(MENSAJE_DE_WHATSAPP)}
+                href={enlaceDeWhatsapp(SALUDO_DE_WHATSAPP)}
                 target="_blank"
                 rel="noopener"
                 aria-label="Escribir por WhatsApp"

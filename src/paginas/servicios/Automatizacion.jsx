@@ -19,7 +19,7 @@ const REGISTRO = [
   ['08:14', 'Correo sin datos: lo revisa ventas', true],
 ]
 
-export default function Automatizacion({ pagina, ruta }) {
+export default function Automatizacion({ pagina, ruta, estimado }) {
   const { tareas, registro, herramientas } = pagina.incluye
 
   return (
@@ -69,6 +69,7 @@ export default function Automatizacion({ pagina, ruta }) {
           </div>
         </div>
       </Incluye>
+      {estimado}
       <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />

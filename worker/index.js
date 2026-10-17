@@ -1,6 +1,6 @@
 import { OPCIONES_DE_CONTACTO } from '../src/lib/servicios.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
-import { LIMITES, CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION } from '../src/lib/contacto.js'
+import { CORREO_DE_CONTACTO, LIMITES, CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION } from '../src/lib/contacto.js'
 /**
  * El Worker que entrega el formulario de contacto.
  *
@@ -26,8 +26,6 @@ import { LIMITES, CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_ACCION } from '../src/
  * omitir el token.
  */
 
-const DESTINO = 'contacto@volutus.cl'
-
 // Resend solo deja enviar desde un dominio verificado en la cuenta. Mientras
 // volutus.cl no lo esté, `REMITENTE` se configura por variable de entorno y cae
 // al remitente de pruebas de Resend, que entrega pero marca el correo como tal.
@@ -50,7 +48,7 @@ const MENSAJES = {
   enviado: 'Mensaje enviado, te responderemos pronto.',
   invalido: 'Faltan datos o el correo no es válido. Revísalo y vuelve a enviarlo.',
   demasiados: 'Recibimos varios mensajes seguidos. Espera un minuto y vuelve a intentarlo.',
-  fallo: `No pudimos enviar tu mensaje. Escríbenos directamente a ${DESTINO}.`,
+  fallo: `No pudimos enviar tu mensaje. Escríbenos directamente a ${CORREO_DE_CONTACTO}.`,
 }
 
 /**
@@ -227,7 +225,7 @@ async function manejarContacto(request, env) {
       },
       body: JSON.stringify({
         from: env.REMITENTE ?? REMITENTE_POR_DEFECTO,
-        to: [DESTINO],
+        to: [CORREO_DE_CONTACTO],
         // Responder al correo contesta a quien escribió, no al remitente
         // técnico. Es lo que hace que responder pronto sea un clic.
         reply_to: correo,

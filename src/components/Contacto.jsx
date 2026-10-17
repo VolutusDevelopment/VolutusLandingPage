@@ -1,5 +1,5 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
-import { LIMITES, WHATSAPP_DE_CONTACTO } from '../lib/contacto.js'
+import { CORREO_DE_CONTACTO, ERRORES, LIMITES, PLACEHOLDERS, WHATSAPP_DE_CONTACTO } from '../lib/contacto.js'
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
@@ -28,9 +28,9 @@ import { LIMITES, WHATSAPP_DE_CONTACTO } from '../lib/contacto.js'
  * —es `display: none`— y durante un tiempo eso movió el botón de enviar hacia
  * abajo en cuanto aparecía el primer error. El hueco lo reserva el CSS, que le
  * devuelve el `display` y lo esconde con `visibility`.
+ *
+ * El correo, el WhatsApp y los textos de los campos viven en `lib/contacto.js`.
  */
-
-export const CORREO_DE_CONTACTO = 'contacto@volutus.cl'
 
 // Lo que trae quien llega (§2), dicho como lo diría: cada problema es uno de
 // los servicios visto desde el otro lado del mostrador.
@@ -58,11 +58,11 @@ export default function Contacto({ marcado }) {
                 type="text"
                 autoComplete="name"
                 maxLength={LIMITES.nombre}
-                placeholder="Tu Nombre"
+                placeholder={PLACEHOLDERS.nombre}
                 required
               />
               <p className="campo-error" id="error-nombre" hidden>
-                Falta tu nombre.
+                {ERRORES.nombre}
               </p>
             </div>
 
@@ -76,11 +76,11 @@ export default function Contacto({ marcado }) {
                 maxLength={LIMITES.correo}
                 spellCheck="false"
                 autoCapitalize="off"
-                placeholder="tu@correo.cl"
+                placeholder={PLACEHOLDERS.correo}
                 required
               />
               <p className="campo-error" id="error-correo" hidden>
-                Falta tu correo.
+                {ERRORES.correo}
               </p>
             </div>
           </div>
@@ -155,15 +155,12 @@ export default function Contacto({ marcado }) {
               encoge (ver Contacto.css). */}
           <div className="campo">
             <div className="composer">
-              {/* El marcador de posición enseña QUÉ clase de respuesta sirve,
-                  que es la duda real de quien se queda mirando un recuadro
-                  vacío. */}
               <textarea
                 id="proyecto"
                 name="proyecto"
                 rows="3"
                 maxLength={LIMITES.proyecto}
-                placeholder="El problema, en tus palabras."
+                placeholder={PLACEHOLDERS.proyecto}
                 aria-describedby="cuenta-proyecto"
                 required
               />
@@ -177,7 +174,7 @@ export default function Contacto({ marcado }) {
               </div>
             </div>
             <p className="campo-error" id="error-proyecto" hidden>
-              Falta el problema.
+              {ERRORES.proyecto}
             </p>
           </div>
         </form>

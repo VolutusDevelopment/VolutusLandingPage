@@ -32,9 +32,10 @@
  *   (FAQPage) del prerender. La primera va abierta.
  */
 
-// La respuesta al precio es la misma en todos: §3 decidió no publicarlo.
+// La respuesta al precio es la misma en todos: lleva al estimado de la página
+// (components/Estimado.jsx) y dice que el precio final llega en la cotización.
 const PRECIO =
-  'Cada presupuesto es único: depende del alcance del proyecto y de los indicadores (KPI) que quieras medir. Te respondemos pronto y, cuando entendemos lo que necesitas, te mandamos alcance y precio, sin compromiso.'
+  'En esta página puedes calcular un estimado según lo que necesites. Es un estimado: tus necesidades pueden cambiar el precio final. Cuando entendemos tu proyecto, te mandamos alcance y precio, sin compromiso.'
 
 const EJEMPLO = {
   pregunta: '¿Puedo ver un ejemplo parecido a mi negocio?',

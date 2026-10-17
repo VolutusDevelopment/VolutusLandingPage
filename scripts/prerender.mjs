@@ -25,8 +25,10 @@ import { fileURLToPath } from 'node:url'
 
 import { ARTICULOS, ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
+import { CORREO_DE_CONTACTO } from '../src/lib/contacto.js'
 import { SERVICIOS } from '../src/lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
+import { ESTIMADOS, desde } from '../src/lib/precios.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
@@ -47,6 +49,23 @@ const idDeServicio = (ruta) => `${canonicalDe(ruta)}#servicio`
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
   return texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
+}
+
+/**
+ * El precio de partida del estimado de un servicio (lib/precios.js), en UF,
+ * cuyo código ISO 4217 es CLF. Sin IVA, y dice que es un estimado.
+ */
+function ofertaDe(id) {
+  return {
+    '@type': 'Offer',
+    description: 'Estimado: el precio final depende de lo que necesites y se confirma en la cotización.',
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      minPrice: desde(ESTIMADOS[id]),
+      priceCurrency: 'CLF',
+      valueAddedTaxIncluded: false,
+    },
+  }
 }
 
 /**
@@ -73,6 +92,7 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         url: canonical,
         provider: { '@id': ORGANIZACION },
         areaServed: { '@type': 'Country', name: 'Chile' },
+        offers: ofertaDe(servicio.id),
       },
       {
         '@type': 'FAQPage',
@@ -125,7 +145,7 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         url: `${ORIGEN}/`,
         logo: `${ORIGEN}/apple-touch-icon.png`,
         description: 'Empresa de desarrollo de software en Chile.',
-        email: 'contacto@volutus.cl',
+        email: CORREO_DE_CONTACTO,
         areaServed: 'CL',
         sameAs: ['https://github.com/VolutusDevelopment'],
         hasOfferCatalog: {

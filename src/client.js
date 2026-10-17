@@ -18,28 +18,19 @@ import initNubes from './nubes.js'
 import initCopiar from './copiar.js'
 import initSocios from './socios.js'
 import initChat from './chat.js'
+import initEstimado from './estimado.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
 import {
   CORREO_VALIDO,
+  ERRORES,
   LIMITES,
   NOMBRE_VALIDO,
   TURNSTILE_ACCION,
   TURNSTILE_SITEKEY,
   enlaceDeWhatsapp,
+  mensajeDeWhatsapp,
 } from './lib/contacto.js'
-
-// Los textos salen de §5 y dicen qué hacer, no qué falló.
-const MENSAJES = {
-  nombre: 'Falta tu nombre.',
-  // Todos cortos: la reserva bajo el campo es de una línea, y un aviso de dos
-  // empuja el botón justo cuando el dedo va hacia él. El más angosto es el
-  // nombre en L (158 px): ningún aviso pasa de unos 110 px.
-  nombreInvalido: 'Usa solo letras.',
-  correo: 'Falta tu correo.',
-  correoInvalido: 'Revisa tu correo.',
-  proyecto: 'Falta el problema.',
-}
 
 // Título y texto del toast con el resultado del envío. El del fallo no lleva
 // el correo en el texto: va debajo, como enlace (ver Contacto.jsx). La marca
@@ -70,34 +61,22 @@ function validar(campo) {
   const valor = campo.value.trim()
 
   if (!valor) {
-    marcarError(campo, MENSAJES[campo.name])
+    marcarError(campo, ERRORES[campo.name])
     return false
   }
 
   if (campo.name === 'nombre' && !NOMBRE_VALIDO.test(valor)) {
-    marcarError(campo, MENSAJES.nombreInvalido)
+    marcarError(campo, ERRORES.nombreInvalido)
     return false
   }
 
   if (campo.name === 'correo' && !CORREO_VALIDO.test(valor)) {
-    marcarError(campo, MENSAJES.correoInvalido)
+    marcarError(campo, ERRORES.correoInvalido)
     return false
   }
 
   marcarError(campo, '')
   return true
-}
-
-// Lo que llega escrito al chat de WhatsApp, con lo mismo que el correo que
-// arma el Worker: quién escribe y su correo, qué necesita y su mensaje.
-function mensajeDeWhatsapp(form) {
-  const { nombre, correo, proyecto } = form.elements
-  const servicios = new FormData(form).getAll('servicio').join(' · ')
-  return (
-    `Hola, soy ${nombre.value.trim()} (${correo.value.trim()}).` +
-    (servicios ? `\nNecesito: ${servicios}` : '') +
-    `\n\n${proyecto.value.trim()}`
-  )
 }
 
 function initFormulario() {
@@ -206,7 +185,13 @@ function initFormulario() {
     // persona y no bloquea la pestaña nueva. El formulario queda como estaba,
     // por si vuelve.
     if (form.elements.canal?.value === 'whatsapp') {
-      window.open(enlaceDeWhatsapp(mensajeDeWhatsapp(form)), '_blank', 'noopener')
+      const texto = mensajeDeWhatsapp({
+        nombre: nombre.value.trim(),
+        correo: correo.value.trim(),
+        servicios: new FormData(form).getAll('servicio').join(' · '),
+        proyecto: proyecto.value.trim(),
+      })
+      window.open(enlaceDeWhatsapp(texto), '_blank', 'noopener')
       return
     }
 
@@ -305,4 +290,5 @@ export default function init() {
   initCopiar()
   initSocios()
   initChat()
+  initEstimado()
 }

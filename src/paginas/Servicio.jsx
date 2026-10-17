@@ -1,10 +1,12 @@
 import Pagina from '../components/Pagina.jsx'
 import Contacto from '../components/Contacto.jsx'
+import Estimado from '../components/Estimado.jsx'
 import Pieza from '../components/Pieza.jsx'
 import { FilaDeServicios, ListaDeArticulos } from '../components/Sugerencias.jsx'
 import { articulosDe } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
+import { ESTIMADOS, desde, numero, pesos } from '../lib/precios.js'
 import Web from './servicios/Web.jsx'
 import Tienda from './servicios/Tienda.jsx'
 import App from './servicios/App.jsx'
@@ -24,7 +26,9 @@ import Prospeccion from './servicios/Prospeccion.jsx'
  *
  * Lo de en medio es de cada servicio (servicios/): cuenta lo que incluye con
  * la forma de lo que entrega y ordena a su manera las piezas que comparten
- * todos. El precio no se publica (§3), pero la pregunta se responde igual.
+ * todos. Cada uno pone el estimado de precio (Estimado.jsx) justo después de
+ * «Qué incluye», y la cabecera lleva a él con el precio de partida a la vista
+ * (decisión 49 del brief).
  */
 const CUERPOS = {
   web: Web,
@@ -40,6 +44,7 @@ export default function Servicio({ ruta }) {
   const servicio = SERVICIOS.find((s) => s.ruta === ruta)
   const pagina = PAGINAS_DE_SERVICIO[servicio.id]
   const Cuerpo = CUERPOS[servicio.id]
+  const precio = desde(ESTIMADOS[servicio.id])
 
   return (
     <Pagina
@@ -59,16 +64,22 @@ export default function Servicio({ ruta }) {
               <a className="boton boton-primario" href="#contacto">
                 Cuéntanos tu proyecto
               </a>
-              <a className="boton boton-secundario" href="#incluye">
-                Qué incluye
+              <a className="boton boton-secundario servicio-desde" href="#estimado">
+                Calcula tu estimado
+                <span className="servicio-desde-cifra">
+                  desde <strong>{numero(precio)} UF</strong>
+                </span>
               </a>
+            </p>
+            <p className="servicio-desde-nota">
+              + IVA · {pesos(precio)} · Es un estimado: lo que necesites puede cambiar el precio final.
             </p>
           </div>
           <Pieza id={servicio.id} />
         </div>
       </section>
 
-      <Cuerpo pagina={pagina} ruta={ruta} />
+      <Cuerpo pagina={pagina} ruta={ruta} estimado={<Estimado servicio={servicio.id} />} />
 
       <section className="seccion zona-cielo" aria-labelledby="sigue-titulo">
         <div className="contenedor">

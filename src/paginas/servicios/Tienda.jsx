@@ -96,7 +96,7 @@ const ESCENAS = {
   ),
 }
 
-export default function Tienda({ pagina }) {
+export default function Tienda({ pagina, estimado }) {
   return (
     <>
       <Incluye className="tienda-incluye">
@@ -128,6 +128,7 @@ export default function Tienda({ pagina }) {
           </ol>
         </div>
       </Incluye>
+      {estimado}
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>

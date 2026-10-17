@@ -62,7 +62,7 @@ const DIBUJOS = {
   )),
 }
 
-export default function Gestion({ pagina, ruta }) {
+export default function Gestion({ pagina, ruta, estimado }) {
   return (
     <>
       <Incluye className="gestion-incluye">
@@ -82,6 +82,7 @@ export default function Gestion({ pagina, ruta }) {
           ))}
         </ul>
       </Incluye>
+      {estimado}
       <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />

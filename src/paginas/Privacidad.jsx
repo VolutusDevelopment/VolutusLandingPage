@@ -1,5 +1,5 @@
 import Pagina from '../components/Pagina.jsx'
-import { CORREO_DE_CONTACTO } from '../components/Contacto.jsx'
+import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
 import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.js'
 
 /**

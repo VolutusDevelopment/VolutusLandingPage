@@ -55,7 +55,7 @@ const POCAS = 3
 
 const Dato = ({ ancho }) => <span className="prospeccion-dato" style={{ width: `${ancho}%` }} />
 
-export default function Prospeccion({ pagina }) {
+export default function Prospeccion({ pagina, estimado }) {
   return (
     <>
       <Incluye className="prospeccion-incluye">
@@ -131,6 +131,7 @@ export default function Prospeccion({ pagina }) {
           ))}
         </ul>
       </Incluye>
+      {estimado}
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>
