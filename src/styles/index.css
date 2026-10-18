@@ -924,9 +924,10 @@ svg {
   opacity: 1;
 }
 
-/* El punto de la nube, en px CSS: el mismo en todas las páginas, y el lienzo
-   lo pinta a la densidad real de la pantalla (`rejilla` en src/nubes.js). El
-   mar del pie lleva el suyo (Pie.css). */
+/* El punto de la nube, en px CSS: el mismo en todas las páginas, salvo la
+   portada en el teléfono (Portada.css), y el lienzo lo pinta a la densidad
+   real de la pantalla (`rejilla` en src/nubes.js). El mar del pie lleva el
+   suyo (Pie.css). */
 .nubes[data-vista='cielo'] {
   --nubes-celda: 2;
 }

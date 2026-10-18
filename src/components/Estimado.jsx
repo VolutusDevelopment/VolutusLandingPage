@@ -103,7 +103,7 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
             )}
 
             {planes.length > 0 && (
-              <Grupo paso={++paso} titulo="Mantención">
+              <Grupo paso={paso + 1} titulo="Mantención">
                 <Pastilla tipo="radio" nombre="plan" valor="" marcada>
                   Sin mantención
                 </Pastilla>

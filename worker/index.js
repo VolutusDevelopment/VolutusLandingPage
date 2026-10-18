@@ -41,8 +41,10 @@ const TIPOS_ACEPTADOS = ['application/x-www-form-urlencoded', 'multipart/form-da
 // Caracteres de control. En el nombre se quitan todos —va en el asunto, y un
 // salto de línea ahí es la puerta a inyectar cabeceras—; en el mensaje se
 // conservan el salto y la tabulación, que son parte del texto.
+/* eslint-disable no-control-regex -- buscarlos es justo lo que hacen */
 const CONTROL = /[\u0000-\u001f\u007f]/g
 const CONTROL_SALVO_SALTOS = /[\u0000-\u0008\u000b-\u001f\u007f]/g
+/* eslint-enable no-control-regex */
 
 const MENSAJES = {
   enviado: 'Mensaje enviado, te responderemos pronto.',

@@ -122,9 +122,9 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //   - El movimiento, en el tiempo propio de la nube (`tiempo`), que va en
 //     cámara rápida (`lapso` en lib/volutus.js): el ruido gira alrededor del
 //     eje a la velocidad de la circulación (`VUELTA`), así que cada bulto nace
-//     en el frente, sube, cruza la cresta y se deshace detrás; deriva a lo
-//     largo del eje (`DERIVA`), y cada octava hierve un poco más que la
-//     anterior (`HERVOR`).
+//     en el frente, sube, cruza la cresta y se deshace detrás (en la
+//     portada, al revés: `giro`); deriva a lo largo del eje (`DERIVA`), y
+//     cada octava hierve un poco más que la anterior (`HERVOR`).
 //   - Los cúmulos, solo en el juego de la 404 (patos.js): la volutus se
 //     deshace en hasta diez nubes, `cumulos`, cada una con su centro y su
 //     radio en metros. `forma` dice cuánto va: en 0 el shader no las mira y en
@@ -217,7 +217,7 @@ float ruido3(vec3 x) {
 
 const CAMPO = `precision highp float;
 uniform vec2 res, centro;
-uniform float t, tiempo, celda, forma, lado, focal;
+uniform float t, tiempo, celda, forma, lado, focal, giro;
 uniform vec3 luz, sombra, ojo, frente, derecha, arriba, sol;
 uniform vec4 cumulos[10];
 uniform sampler2D estado;
@@ -250,7 +250,7 @@ float rollo(vec3 p, float ppm, float tope) {
   float arriba = smoothstep(0.1, 0.9, s.x);
   float delante = smoothstep(-0.6, 0.6, s.y);
   float lisa = delante * (1.0 - arriba);
-  float a = VUELTA * tiempo;
+  float a = giro * VUELTA * tiempo;
   vec2 q = vec2(cos(a) * s.y + sin(a) * s.x, cos(a) * s.x - sin(a) * s.y);
   float ks = mix(3.0, 4.5, lisa);
   vec3 n = vec3(p.x / RY * mix(3.0, 1.2, lisa) + DERIVA * tiempo, q * ks);
@@ -557,7 +557,7 @@ const inicio = performance.now()
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
-  'ola', 'crece', 'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol',
+  'ola', 'crece', 'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -1038,6 +1038,7 @@ function aplicar(escena, data) {
         for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
         gl.uniform2fv(u.centro, encuadre.centro)
         gl.uniform1f(u.focal, encuadre.focal)
+        gl.uniform1f(u.giro, encuadre.giro)
       }
     })
     // Los cúmulos de la 404 están donde estaba el rollo, que acaba de moverse.

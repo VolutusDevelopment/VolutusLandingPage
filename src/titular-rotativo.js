@@ -23,10 +23,12 @@ const DURACION = 600
 const ESCALON = 25
 
 // Cada letra en su caja para que la cascada sea una sola ola. Los espacios
-// quedan como texto: una caja con solo un espacio no mide nada.
-function enLetras(texto) {
+// quedan como texto: una caja con solo un espacio no mide nada. La frase lleva
+// el color de la card de su servicio (`--servicio`, ver Portada.css).
+function enLetras(texto, color) {
   const palabra = document.createElement('span')
   palabra.className = 'rotativo-palabra'
+  palabra.style.setProperty('--servicio', color)
   let indice = 0
   for (const caracter of texto) {
     if (caracter === ' ') {
@@ -48,9 +50,10 @@ export default function initTitularRotativo() {
   if (!palabra) return
 
   const palabras = rotativo.dataset.palabras.split('|')
+  const colores = rotativo.dataset.colores.split('|')
 
   let actual = 0
-  const inicial = enLetras(palabra.textContent)
+  const inicial = enLetras(palabra.textContent, colores[0])
   palabra.replaceWith(inicial)
   palabra = inicial
 
@@ -59,7 +62,7 @@ export default function initTitularRotativo() {
 
     const saliente = palabra
     actual = (actual + 1) % palabras.length
-    palabra = enLetras(palabras[actual])
+    palabra = enLetras(palabras[actual], colores[actual])
     palabra.classList.add('rotativo-entra')
     saliente.classList.remove('rotativo-entra')
     saliente.classList.add('rotativo-sale')

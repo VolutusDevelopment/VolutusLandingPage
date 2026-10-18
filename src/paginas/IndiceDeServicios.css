@@ -301,9 +301,9 @@
 }
 
 /* Al pasar el cursor, la card se levanta un poco, como las que asoman en la
-   rueda, y su pieza repite el gesto de su servicio (Servicio.css). El glifo
-   de la ley de datos hace el suyo (Icono.css), también al llegar con el
-   teclado. */
+   rueda, y su pieza se inclina hacia él (pieza.js) y repite el gesto de su
+   servicio, como en su página (Servicio.css). El glifo de la ley de datos
+   hace el suyo (Icono.css), también al llegar con el teclado. */
 @media (prefers-reduced-motion: no-preference) {
   .indice-servicio:focus-within .gesto {
     animation: var(--gesto);

@@ -137,7 +137,7 @@ const MULTAS = [
 
 const MULTA_MAXIMA = 20000
 
-// Entre la cifra y el «%» va un espacio que no se parte (` `).
+// Entre la cifra y el «%» va un espacio que no se parte (U+00A0).
 const NOTAS = [
   {
     texto:

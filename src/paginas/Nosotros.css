@@ -109,6 +109,10 @@
   color: var(--texto-suave);
 }
 
+.socio-educacion {
+  font-style: italic;
+}
+
 /* Los perfiles, al lado del nombre, en el gris del texto y en el color de su
    marca al pasar (`--color-red`, Nosotros.jsx). Si el nombre no cabe en una línea, se parte y los logos
    siguen a su lado. Cada enlace mide 44 px, lo cómodo para el dedo, y el

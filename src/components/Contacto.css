@@ -380,7 +380,7 @@
 }
 
 /* La cuenta habla como las etiquetas: mono, chica, en tono suave. Alineada con
-   el texto de arriba, y sin partirse («123 / 500» nunca ocupa dos líneas). */
+   el texto de arriba, y sin partirse («1234 / 2000» nunca ocupa dos líneas). */
 .campo-cuenta {
   margin: 0;
   padding-left: var(--e-2);

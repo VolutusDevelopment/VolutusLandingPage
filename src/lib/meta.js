@@ -42,7 +42,7 @@ export const PAGINAS = {
     actualizada: '2026-10-13',
     titulo: 'Quiénes somos — Volutus',
     descripcion:
-      'Volutus es una empresa de desarrollo de software en Chile. De dónde viene su nombre, cómo trabajamos y dónde revisar lo que hemos hecho.',
+      'Volutus es una empresa de desarrollo de software en Chile. Quiénes somos, de dónde viene nuestro nombre y dónde revisar lo que hemos hecho.',
   },
   // El índice de servicios (paginas/IndiceDeServicios.jsx) y, bajo él, la
   // página de cada uno (paginas/Servicio.jsx). Cada ruta de servicio es la

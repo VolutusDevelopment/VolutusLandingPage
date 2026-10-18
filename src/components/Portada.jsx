@@ -10,16 +10,36 @@
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
  * rollo que da nombre a la marca, en volumen y de puntos finos, con su luz y
  * su sombra, formándose en su frente y deshaciéndose detrás; el cursor la
- * mueve como viento (ver nubes-lienzo.js). Desde M, o en una pantalla
- * apaisada, cruza la portada en perspectiva, detrás del titular centrado; en
- * un teléfono vertical va arriba y el texto debajo, sin empujarlo nunca. La página baja por las horas del día
- * hasta la noche del pie (DESIGN-BRIEF A.8).
+ * mueve como viento (ver nubes-lienzo.js). En toda pantalla cruza la portada
+ * en perspectiva, detrás del titular centrado, y es ella la que se impone. La
+ * página baja por las horas del día hasta la noche del pie (DESIGN-BRIEF A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
  * La obra la enseña el índice que viene debajo, con sus enlaces, que es donde
- * §3 quiere que esté — cada afirmación con lo que la sostiene al lado.
+ * §3 quiere que esté — cada afirmación con lo que la sostiene al lado. Los
+ * logros con jurado externo sí van, porque no se caen, salen de
+ * data/proyectos.js y llevan al podio donde está su prueba.
  */
+
+import { Fragment } from 'react'
+
+import { PROYECTOS } from '../data/proyectos.js'
+import { SERVICIOS } from '../lib/servicios.js'
+
+// Las frases que rotan en el titular y el servicio de cada una, del que toman
+// el color de su card. Cada una cabe en una línea a 360 px: por eso «sistemas»
+// y no «sistemas de gestión», y «automatización» y no «automatizaciones».
+const ROTATIVO = [
+  ['páginas web', 'web'],
+  ['tiendas online', 'tienda'],
+  ['apps', 'app'],
+  ['sistemas', 'gestion'],
+  ['agentes de IA', 'agente'],
+  ['automatización', 'automatizacion'],
+].map(([palabra, id]) => ({ palabra, color: SERVICIOS.find((servicio) => servicio.id === id).color }))
+
+const LOGROS = PROYECTOS.filter((proyecto) => proyecto.destacado)
 
 /**
  * El cielo de la mañana con la volutus y el texto encima. Lo comparten la
@@ -53,11 +73,8 @@ export default function Portada() {
     <Escena id="portada">
       {/* El gancho va de antetítulo y el titular dice lo que hacemos,
           sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
-          de `lib/servicios.js` (menos la prospección y la ley de datos,
-          que no son algo que se cree). Cada uno cabe en una línea a
-          360 px: por eso «sistemas» y no «sistemas de gestión», y
-          «automatización» y no «automatizaciones», que no caben y
-          desbordarían.
+          de `lib/servicios.js` (`ROTATIVO`, menos la prospección y la ley
+          de datos, que no son algo que se cree).
 
           Buscadores y lectores de pantalla leen la lista entera y fija,
           con los nombres que la gente busca («aplicaciones», «agentes de
@@ -75,18 +92,44 @@ export default function Portada() {
         <span
           className="rotativo"
           aria-hidden="true"
-          data-palabras="páginas web|tiendas online|apps|sistemas|agentes de IA|automatización"
+          data-palabras={ROTATIVO.map(({ palabra }) => palabra).join('|')}
+          data-colores={ROTATIVO.map(({ color }) => color).join('|')}
         >
-          <span className="rotativo-palabra">páginas web</span>
+          <span className="rotativo-palabra" style={{ '--servicio': ROTATIVO[0].color }}>
+            {ROTATIVO[0].palabra}
+          </span>
         </span>{' '}
         para tu negocio
       </h1>
+
+      {/* Lo que gana quien contrata, sin prometer ventas ni horas que no
+          podemos mostrar (§3): que deja de hacerlo a mano y que el producto
+          es suyo desde la entrega (decisión 44). */}
+      <p className="entradilla portada-entradilla">
+        Deja de hacerlo a mano: lo hacemos a tu medida y es tuyo desde la entrega.
+      </p>
 
       <div className="portada-acciones">
         <a className="boton boton-primario" href="#contacto">
           Cuéntanos tu proyecto
         </a>
       </div>
+
+      {/* El puesto se ve como «1°» y se lee como «Primer lugar en». */}
+      <p className="portada-credenciales">
+        Con jurado externo:{' '}
+        <a href="#proyectos">
+          {LOGROS.map(({ id, credencial }, i) => (
+            <Fragment key={id}>
+              {i > 0 && ' · '}
+              <span>
+                <strong aria-hidden="true">{credencial.puesto}</strong>
+                <span className="solo-lectores">{credencial.titulo} en</span> {credencial.corto}
+              </span>
+            </Fragment>
+          ))}
+        </a>
+      </p>
     </Escena>
   )
 }

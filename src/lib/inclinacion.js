@@ -1,3 +1,5 @@
+const acotar = (n) => Math.min(Math.max(n, 0), 1)
+
 /**
  * Una tarjeta que se inclina hacia el cursor, como una placa en la mano. Aquí
  * solo se escribe dónde está el puntero sobre ella; el giro, el brillo y lo que
@@ -7,11 +9,14 @@
  * - `--inclina-x` e `--inclina-y`: el giro, de `-grados / 2` a `grados / 2`.
  * - `--cursor-x` y `--cursor-y`: el punto del cursor desde el centro, de -0.5
  *   a 0.5 y sin unidad, para multiplicarlo por lo que haga falta.
+ *
+ * Con el cursor fuera de ella (la pieza dentro de su card, en /servicios),
+ * cuenta desde su borde más cercano.
  */
 export function inclinar(tarjeta, { clientX, clientY }, grados) {
   const { left, top, width, height } = tarjeta.getBoundingClientRect()
-  const x = (clientX - left) / width
-  const y = (clientY - top) / height
+  const x = acotar((clientX - left) / width)
+  const y = acotar((clientY - top) / height)
   tarjeta.style.setProperty('--brillo-x', `${(x * 100).toFixed(1)}%`)
   tarjeta.style.setProperty('--brillo-y', `${(y * 100).toFixed(1)}%`)
   tarjeta.style.setProperty('--inclina-x', `${((0.5 - y) * grados).toFixed(2)}deg`)

@@ -15,7 +15,8 @@
  * dónde se ve.
  *
  * Cada página mira con su cámara (`VISTAS`), y lo que cambia entre ellas es
- * solo desde dónde se mira: la nube, su aire y su luz son los mismos.
+ * desde dónde se mira: la nube, su aire y su luz son los mismos. La única
+ * licencia es la de la portada, que la ve girar al revés (`giro`).
  */
 
 // El rollo. Su sección mide 1,7 km de ancho por 1,2 km de alto, con el eje a
@@ -59,14 +60,20 @@ const REFERENCIA = 1500
  * cruza el rollo antes de perderse en su punto de fuga: en un lienzo más
  * ancho que eso, la cámara lo mide por el ancho, como si el lienzo fuera más
  * alto. Sin eso, en una ventana baja el rollo se acababa a media pantalla y
- * dejaba el resto vacío.
+ * dejaba el resto vacío. `apaisado`, si lo hay, es el rumbo en un lienzo más
+ * ancho que alto, y `giro: -1` invierte el sentido en que circula la
+ * superficie.
  */
 export const VISTAS = {
   // La portada: desde el aire, detrás del rollo y a la altura de su cima,
   // mirándolo a lo largo. Entra enorme por la izquierda y se aleja hacia el
   // horizonte de la derecha. A 1,4 km de su espalda, para que su base entre
-  // entera en el lienzo: más cerca, el lienzo la cortaba.
-  aire: { ojo: [0, 1170, -2300], rumbo: 63, cabeceo: 0, campo: 52, centro: [0.9, 0.28], cubre: 2.8 },
+  // entera en el lienzo: más cerca, el lienzo la cortaba. En un lienzo
+  // apaisado mira el rollo más de frente: a 63° se perdía en una cuña hacia la
+  // derecha, y en el borde medía la mitad de alto que en un iPad vertical.
+  // Gira al revés: la espalda del rollo baja, y la nube se veía caer; así
+  // sube, como su frente en las otras páginas.
+  aire: { ojo: [0, 1170, -2300], rumbo: 63, apaisado: 80, cabeceo: 0, campo: 52, centro: [0.9, 0.28], cubre: 1.8, giro: -1 },
   // /nosotros: de costado y a la altura del eje, frente a su frente, que
   // sube. Cruza el lienzo casi paralelo a él.
   costado: { ojo: [0, 700, 2500], rumbo: -96, cabeceo: 0, campo: 33, centro: [null, 0.5] },
@@ -97,11 +104,11 @@ const normal = (a) => {
 /**
  * La cámara de `perspectiva` para un lienzo de `ancho` × `alto` px: su ojo,
  * sus ejes (`frente`, `derecha` y `arriba`), la focal y el centro en px del
- * lienzo, y hacia dónde está el sol.
+ * lienzo, hacia dónde está el sol y el sentido del giro.
  */
 export function encuadrar(perspectiva, ancho, alto) {
   const vista = VISTAS[perspectiva] ?? VISTAS.aire
-  const rumbo = grados(vista.rumbo)
+  const rumbo = grados(ancho > alto ? (vista.apaisado ?? vista.rumbo) : vista.rumbo)
   const cabeceo = grados(vista.cabeceo)
   const frente = [Math.cos(cabeceo) * Math.cos(rumbo), Math.sin(cabeceo), Math.cos(cabeceo) * Math.sin(rumbo)]
   const derecha = normal(cruz([0, 1, 0], frente))
@@ -121,7 +128,7 @@ export function encuadrar(perspectiva, ancho, alto) {
     Math.sin(altura),
     Math.cos(altura) * (Math.cos(giro) * plano[2] + Math.sin(giro) * lado[2]),
   ])
-  return { ojo: vista.ojo, frente, derecha, arriba, focal, centro, sol }
+  return { ojo: vista.ojo, frente, derecha, arriba, focal, centro, sol, giro: vista.giro ?? 1 }
 }
 
 // Dónde se ve un punto del mundo, en px del lienzo, y a qué hondura (la

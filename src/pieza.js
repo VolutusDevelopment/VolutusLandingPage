@@ -2,19 +2,19 @@ import { enderezar, inclinar } from './lib/inclinacion.js'
 import { quieto } from './lib/movimiento.js'
 
 /**
- * La pieza de la cabecera de un servicio (components/Pieza.jsx) se inclina
- * hacia el cursor como la card del frente de la rueda (servicios.js), y las
- * capas de su escena se corren según su hondura (Servicio.css). Solo con un
- * ratón de verdad y nunca con el movimiento reducido. Las de /servicios no:
- * ahí se levanta la card entera (IndiceDeServicios.css).
+ * La pieza de un servicio (components/Pieza.jsx) se inclina hacia el cursor
+ * como la card del frente de la rueda (servicios.js), y las capas de su escena
+ * se corren según su hondura (Servicio.css). Solo con un ratón de verdad y
+ * nunca con el movimiento reducido. En /servicios la pieza va bajo el enlace
+ * que cubre su card, así que el cursor lo escucha la card.
  */
 export default function initPieza() {
-  const pieza = document.querySelector('.servicio-cabecera .pieza')
-  if (!pieza) return
-
-  pieza.addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse' || quieto()) return
-    inclinar(pieza, e, 6)
-  })
-  pieza.addEventListener('pointerleave', () => enderezar(pieza))
+  for (const pieza of document.querySelectorAll('.pieza')) {
+    const zona = pieza.closest('.indice-servicio') ?? pieza
+    zona.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || quieto()) return
+      inclinar(pieza, e, 6)
+    })
+    zona.addEventListener('pointerleave', () => enderezar(pieza))
+  }
 }

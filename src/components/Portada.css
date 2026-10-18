@@ -1,22 +1,44 @@
-/* La portada es el cielo del pie (`.caida`, Contacto.css) al revés, con el
-   mismo fundido, pero parte del azul hondo de las cabeceras internas
-   (`.hora-dia`), para que el cielo tenga el mismo tono en todo el sitio.
-   Pasa por #1976cc, #4d9fea, #7cbcf1, #c2e1f8 y #f6f9fc en una curva suave,
-   que llega plana al blanco de la sección siguiente: en tramos rectos, el
-   quiebre al llegar se veía como una raya. */
+/* La portada parte del azul hondo de las cabeceras internas (`.hora-dia`),
+   para que el cielo tenga el mismo tono en todo el sitio, y cubre la nube
+   entera: va azul, del hondo al celeste, hasta pasar su punto más bajo, que en
+   cualquier pantalla cae al 83.5 % del alto, y recién ahí se aclara. El
+   fundido es la curva de las cabeceras internas (`.cabecera-cielo`,
+   index.css) en tramos de 12 px: diez en la portada y ocho en la sección
+   siguiente, plano donde empieza y donde termina, porque en línea recta el
+   quiebre se veía como una raya. */
 :root .portada {
   --fondo-hora: linear-gradient(
     #1976cc,
-    #257fd3 10%,
-    #3088d9 20%,
-    #3c92e0 30%,
-    #4a9de8 40%,
-    #61abed 50%,
-    #83c0f2 60%,
-    #aad4f6 70%,
-    #cfe7f9 80%,
-    #ebf4fb 90%,
-    #f6f9fc
+    #257fd3 calc((100% - 10 * var(--e-3)) * 0.2),
+    #3088d9 calc((100% - 10 * var(--e-3)) * 0.4),
+    #3c92e0 calc((100% - 10 * var(--e-3)) * 0.6),
+    #4a9de8 calc((100% - 10 * var(--e-3)) * 0.8),
+    #61abed calc(100% - 10 * var(--e-3)),
+    color-mix(in oklab, #61abed 99.4%, #f6f9fc) calc(100% - 9 * var(--e-3)),
+    color-mix(in oklab, #61abed 97.5%, #f6f9fc) calc(100% - 8 * var(--e-3)),
+    color-mix(in oklab, #61abed 94.4%, #f6f9fc) calc(100% - 7 * var(--e-3)),
+    color-mix(in oklab, #61abed 90.1%, #f6f9fc) calc(100% - 6 * var(--e-3)),
+    color-mix(in oklab, #61abed 84.6%, #f6f9fc) calc(100% - 5 * var(--e-3)),
+    color-mix(in oklab, #61abed 77.8%, #f6f9fc) calc(100% - 4 * var(--e-3)),
+    color-mix(in oklab, #61abed 69.8%, #f6f9fc) calc(100% - 3 * var(--e-3)),
+    color-mix(in oklab, #61abed 60.5%, #f6f9fc) calc(100% - 2 * var(--e-3)),
+    color-mix(in oklab, #61abed 50%, #f6f9fc) calc(100% - var(--e-3)),
+    color-mix(in oklab, #61abed 39.5%, #f6f9fc)
+  );
+}
+
+/* La sección siguiente termina el fundido y llega al blanco de la página. */
+:root .portada:not(.portada-costado) + .seccion {
+  --fondo-hora: linear-gradient(
+    color-mix(in oklab, #61abed 39.5%, #f6f9fc),
+    color-mix(in oklab, #61abed 30.2%, #f6f9fc) var(--e-3),
+    color-mix(in oklab, #61abed 22.2%, #f6f9fc) calc(2 * var(--e-3)),
+    color-mix(in oklab, #61abed 15.4%, #f6f9fc) calc(3 * var(--e-3)),
+    color-mix(in oklab, #61abed 9.9%, #f6f9fc) calc(4 * var(--e-3)),
+    color-mix(in oklab, #61abed 5.6%, #f6f9fc) calc(5 * var(--e-3)),
+    color-mix(in oklab, #61abed 2.5%, #f6f9fc) calc(6 * var(--e-3)),
+    color-mix(in oklab, #61abed 0.6%, #f6f9fc) calc(7 * var(--e-3)),
+    var(--fondo) calc(8 * var(--e-3))
   );
 }
 
@@ -31,11 +53,11 @@
 }
 
 /* ---- la escena ----
-   Una sola pieza y un mensaje. En móvil, la nube arriba y el texto debajo:
-   la nube se queda con lo que el texto no usa, así que la portada entera
-   —gancho, titular y botones— cabe en la primera pantalla y nadie calcula
-   dónde va el titular. El `::after` guarda el aire mínimo bajo los botones.
-   `svh` y no `vh`: en móvil es el alto con la barra del navegador visible. */
+   Una sola pieza y un mensaje. De costado (/nosotros, ver `Escena`), la nube
+   arriba y el texto debajo: la nube se queda con lo que el texto no usa, así
+   que nadie calcula dónde va el titular. El `::after` guarda el aire mínimo
+   bajo el texto. `svh` y no `vh`: en móvil es el alto con la barra del
+   navegador visible. */
 .portada-escena {
   display: flex;
   flex-direction: column;
@@ -49,6 +71,7 @@
 }
 
 .portada-interior {
+  position: relative;
   padding-block: var(--e-8);
 }
 
@@ -65,9 +88,7 @@
 
 /* La nube empieza debajo de la barra: ni ella ni el texto quedan tapados. El
    rollo se mide en altos del lienzo, así que es el alto el que decide su
-   tamaño y nunca depende del ancho de la pantalla. Crece hasta media pantalla
-   con lo que el texto deja libre; en un teléfono bajo se encoge antes que
-   empujar los botones fuera, hasta un mínimo en que aún se lee como nube. */
+   tamaño. Crece con lo que el texto deja libre. */
 .portada-cielo {
   position: relative;
   flex: 1 1 0;
@@ -87,55 +108,94 @@
   max-height: 60svh;
 }
 
-/* Desde M, y en S si la pantalla es apaisada o casi cuadrada, la nube es el
-   fondo de la portada: su lienzo cubre casi todo el alto y el rollo, en
-   perspectiva, entra enorme por abajo a la izquierda y se aleja hacia arriba
-   a la derecha, pasando detrás del titular. Arriba del titular, en una
-   pantalla baja, no le quedaba más que una franja.
+/* ---- la escena de la portada ----
+   En toda pantalla la nube es el fondo de la portada y manda, como en un iPad
+   vertical: su lienzo cubre casi todo el alto y el rollo, en perspectiva,
+   entra enorme por la izquierda y se aleja hacia la derecha, detrás del
+   titular. En el teléfono, con la nube en una franja sobre el texto, no le
+   quedaba más que un tercio de la pantalla.
 
    De costado (/nosotros, ver `Escena`) no: el rollo cruza a lo ancho, y
-   detrás del titular lo taparía entero. Se queda como en S vertical, arriba
-   y con el texto debajo, que así nunca se tocan, tenga la pantalla el alto
-   que tenga.
+   detrás del titular lo taparía entero. Se queda arriba y con el texto
+   debajo, que así nunca se tocan, tenga la pantalla el alto que tenga.
 
-   El texto va al centro de la nube, un poco más arriba que el de la
-   pantalla, más ancho para que el titular quepa en tres líneas, y en una
-   pantalla baja, como un teléfono apaisado, nunca sube detrás de la barra. */
-@media (min-width: 768px), (min-aspect-ratio: 4/5) {
-  .portada:not(.portada-costado) .portada-escena {
-    justify-content: center;
-    padding-block: var(--barra-alto) calc(var(--barra-alto) + var(--e-16));
-  }
+   El texto va al centro de la nube, angosto y con el titular más chico (ver
+   `h1`), para que la nube se vea a los dos lados; en una pantalla baja, como
+   un teléfono apaisado, nunca sube detrás de la barra. La portada no lleva
+   relleno abajo: Servicios queda 32 px más cerca. */
+.portada:not(.portada-costado) {
+  padding-bottom: 0;
+}
 
-  .portada:not(.portada-costado) .portada-escena::after {
-    content: none;
-  }
+.portada:not(.portada-costado) .portada-escena {
+  justify-content: center;
+  padding-block: var(--barra-alto);
+}
 
-  .portada:not(.portada-costado) .portada-cielo {
-    position: absolute;
-    inset: 0 0 auto;
-    height: 88%;
-    max-height: none;
-    margin: 0;
-  }
+.portada:not(.portada-costado) .portada-escena::after {
+  content: none;
+}
 
-  .portada-interior {
-    position: relative;
-  }
+.portada:not(.portada-costado) .portada-cielo {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 88%;
+  max-height: none;
+  margin: 0;
+}
 
-  .portada:not(.portada-costado) .portada-texto {
-    max-width: 66rem;
-    margin-inline: auto;
-    text-align: center;
-  }
+.portada:not(.portada-costado) .portada-texto {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
 
-  .portada .antetitulo {
-    margin-inline: auto;
-  }
+.portada .antetitulo {
+  margin-inline: auto;
+}
 
-  .portada-acciones {
-    justify-content: center;
+/* En el teléfono el punto de la trama baja de 2 a 1.5 px (5 píxeles del
+   aparato y no 6 en un iPhone): con la nube a pantalla completa, el de 2 px la
+   hacía ver pixelada. Solo aquí: en la 404 los patos se dibujan en la misma
+   rejilla (patos.js) y se achicarían con ella. */
+@media (max-width: 767px) {
+  .portada:not(.portada-costado) .nubes {
+    --nubes-celda: 1.5;
   }
+}
+
+/* El gancho, la entradilla y las credenciales van en la tinta y no en el gris
+   azulado de la mañana: donde la nube se abre, caen sobre el cielo azul, y ahí
+   la tinta da 6:1 o más y el gris no llega a 3:1. */
+.portada:not(.portada-costado) :is(.antetitulo, .portada-entradilla) {
+  color: var(--texto);
+}
+
+.portada:not(.portada-costado) .portada-entradilla {
+  max-width: 34rem;
+  margin: var(--e-4) auto 0;
+  text-wrap: balance;
+}
+
+/* Los logros con jurado externo (data/proyectos.js), con el enlace al podio
+   de Proyectos, donde está la prueba de cada uno. Cada logro va entero: la
+   línea se parte entre ellos y nunca a mitad de un nombre. */
+.portada-credenciales {
+  margin-top: var(--e-4);
+  font-size: var(--texto-sm);
+}
+
+.portada-credenciales a {
+  color: inherit;
+}
+
+.portada-credenciales span {
+  white-space: nowrap;
+}
+
+.portada-credenciales strong {
+  font-family: var(--fuente-datos);
+  font-weight: 600;
 }
 
 /* ---- la escena de costado ----
@@ -154,8 +214,7 @@
   --fondo-hora: #1976cc;
 }
 
-.portada-costado h1,
-.portada-entradilla {
+.portada-costado :is(h1, .portada-entradilla) {
   color: #ffffff;
 }
 
@@ -177,10 +236,14 @@
 /* La palabra que rota no se parte, y la más larga («AUTOMATIZACIÓN») mide
    10.6 em en Archivo mayúscula con su espaciado: el titular se achica lo justo
    para que quepa en el ancho del texto (`cqi`): el del contenedor, hasta su
-   tope (36rem, o 66rem con la nube de fondo). Si sobra, manda el paso de
-   siempre. */
+   tope (36rem, o 46rem con la nube de fondo). Si sobra, manda el paso de
+   siempre; sobre la nube, al 72 %, para que la nube sea la que se impone. */
 .portada h1 {
   font-size: min(var(--texto-2xl), 100cqi / 10.6);
+}
+
+.portada:not(.portada-costado) h1 {
+  font-size: min(var(--texto-2xl) * 0.72, 100cqi / 10.6);
 }
 
 /* ---- la palabra que rota ----
@@ -208,8 +271,14 @@
   );
 }
 
+/* Cada frase lleva el color de la card de su servicio (`--servicio`, que pone
+   Portada.jsx y repite titular-rotativo.js), oscurecido con la tinta: tal
+   cual, sobre el cielo azul no llegaba a 3:1, y así da 3:1 o más sobre el
+   cielo y 3.9:1 sobre la sombra más honda de la nube. Sin `--servicio`, la
+   frase queda en el azul de la acción. */
 .rotativo-palabra {
   grid-area: 1 / 1;
+  color: color-mix(in oklab, var(--servicio) 60%, var(--texto));
 }
 
 .rotativo-letra {
@@ -278,8 +347,9 @@
 .portada-acciones {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--e-3);
-  margin-top: var(--e-8);
+  margin-top: var(--e-6);
 }
 
 /* El secundario puede caer sobre la nube: sin fondo, su texto se pierde entre

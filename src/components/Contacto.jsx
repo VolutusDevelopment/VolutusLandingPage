@@ -92,7 +92,7 @@ export default function Contacto({ marcado }) {
               de más arriba, sacados de la misma lista (`lib/servicios.js`), y
               «Otro» recoge el resto. */}
           <fieldset className="campo opciones">
-            <legend>Dinos lo qué necesitas</legend>
+            <legend>Dinos lo que necesitas</legend>
             <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
                 <label key={opcion} className="chip">

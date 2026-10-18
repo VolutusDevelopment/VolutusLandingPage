@@ -34,7 +34,7 @@ export const enlaceDeWhatsapp = (texto) =>
 // ---- los textos del formulario ----
 
 export const PLACEHOLDERS = {
-  nombre: 'Tu Nombre',
+  nombre: 'Tu nombre',
   correo: 'tu@correo.cl',
   // Enseña QUÉ clase de respuesta sirve, que es la duda real de quien se
   // queda mirando un recuadro vacío.
@@ -56,7 +56,7 @@ export const ERRORES = {
 
 // ---- las reglas ----
 
-export const LIMITES = { nombre: 60, correo: 100, proyecto: 500 }
+export const LIMITES = { nombre: 60, correo: 100, proyecto: 2000 }
 
 // Sin espacios ni separadores de direcciones (`,` `;` `<>` `"`...): el correo
 // termina en `reply_to`, y una coma ahí lo convertiría en varios destinatarios.

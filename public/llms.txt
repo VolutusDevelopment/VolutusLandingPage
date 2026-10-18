@@ -18,7 +18,7 @@ Ubicación: residimos en Santiago de Chile. Las reuniones son preferentemente te
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
 - [Servicios](https://volutus.cl/servicios): los ocho servicios en una rejilla, cada uno con el enlace a su página
 - [Contacto](https://volutus.cl/#contacto): el formulario
-- [Quiénes somos](https://volutus.cl/nosotros): de dónde viene el nombre y cómo trabajamos
+- [Quiénes somos](https://volutus.cl/nosotros): quiénes somos y de dónde viene el nombre
 - [Artículos](https://volutus.cl/articulos): guías cortas para decidir qué software necesita un negocio
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 - [Ley 21.719](https://volutus.cl/ley21719): qué cambia con la nueva ley de datos personales y qué tiene que hacer un negocio para cumplirla
@@ -42,8 +42,9 @@ Los proyectos tienen un sitio o repositorio público. Los logros individuales se
 ## Servicios
 
 Cada página dice qué incluye el servicio, qué le pedimos al cliente y las
-preguntas frecuentes; casi todas dicen también cuándo sirve y, si la hay,
-dónde comprobar obra parecida. Cada página tiene un estimado de precio en UF,
+preguntas frecuentes; casi todas dicen también cuándo sirve. Todavía no hay
+casos de clientes para mostrar: antes de contratar se puede pedir un mockup
+del diseño. Cada página tiene un estimado de precio en UF,
 sin IVA, que se calcula según lo que se marque. Es un estimado: el precio
 final sale de la cotización, cuando entendemos lo que necesita. La primera
 respuesta llega pronto, pero no es la cotización.

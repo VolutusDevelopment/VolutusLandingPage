@@ -122,7 +122,7 @@ export const SERVICIOS = [
     texto: 'Encontramos los negocios de tu rubro y zona con sus datos de contacto, listos para ofrecerles lo tuyo.',
     puntos: [
       'Búsqueda por rubro y zona en Google Maps',
-      'Correos y teléfonos desde sus sitios web',
+      'Correos desde sus sitios web',
       'Lista ordenada en Google Sheets o Excel',
       'Detección de negocios sin sitio web',
     ],
