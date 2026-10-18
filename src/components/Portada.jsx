@@ -64,13 +64,13 @@ export default function Portada() {
           inteligencia artificial»); el rotativo es solo para la vista.
           Ocupa siempre una línea, así que el titular no salta al cambiar. */}
       <p className="antetitulo">
-        El mundo avanza. <span>No te quedes atrás.</span>
+        ¿Qué estás <span>resolviendo a mano?</span>
       </p>
       <h1>
         Creamos{' '}
         <span className="solo-lectores">
           páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
-          automatizaciones
+          automatizaciones{' '}
         </span>
         <span
           className="rotativo"

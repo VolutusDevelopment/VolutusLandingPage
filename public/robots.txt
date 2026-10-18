@@ -1,11 +1,7 @@
 # Content-Signal: https://contentsignals.org
-# Search engines and AI agents may read and cite this site; models may not train on it.
+# Search engines, AI agents and AI training may read, cite and learn from this site.
 User-agent: *
-Content-Signal: search=yes, ai-input=yes, ai-train=no
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Disallow: /api/
-
-User-agent: GPTBot
-User-agent: ClaudeBot
-Disallow: /
 
 Sitemap: https://volutus.cl/sitemap.xml

@@ -4,6 +4,12 @@
   margin-top: var(--e-6);
 }
 
+/* El fundido de la cabecera mide la mitad (96 px, no 192): la misma curva en
+   tramos de 8 px que las páginas de servicio en S y M (Servicio.css). */
+.articulos-pagina {
+  --tramo: var(--e-2);
+}
+
 /* «Artículos», sobre el título: la vuelta al índice, con la voz del
    antetítulo. */
 .articulo-volver {

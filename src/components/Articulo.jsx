@@ -45,7 +45,7 @@ export default function Articulo({ ruta, children }) {
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
 
   return (
-    <Pagina ruta={ruta} hora="dia" cierre={<Invitacion servicio={servicio} />}>
+    <Pagina ruta={ruta} hora="dia" className="articulos-pagina" cierre={<Invitacion servicio={servicio} />}>
       <article>
         <header className="seccion zona-cielo hora-dia cabecera-cielo">
           <div className="contenedor">

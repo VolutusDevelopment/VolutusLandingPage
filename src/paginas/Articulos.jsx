@@ -27,7 +27,7 @@ export default function Articulos({ ruta }) {
   const pagina = numeroDePagina(ruta)
 
   return (
-    <Pagina ruta={ruta} hora="dia" cierre={<Invitacion />}>
+    <Pagina ruta={ruta} hora="dia" className="articulos-pagina" cierre={<Invitacion />}>
       <section className="seccion zona-cielo hora-dia cabecera-cielo">
         <div className="contenedor">
           <p className="antetitulo">{pagina === 1 ? 'Artículos' : `Artículos · página ${pagina}`}</p>
