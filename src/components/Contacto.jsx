@@ -193,7 +193,7 @@ export default function Contacto({ marcado }) {
               {CORREO_DE_CONTACTO}
             </a>
           </div>
-          <button className="contacto-toast-cerrar" type="button" aria-label="Cerrar aviso">
+          <button className="boton-cuadro contacto-toast-cerrar" type="button" aria-label="Cerrar aviso">
             <span aria-hidden="true">✕</span>
           </button>
         </div>

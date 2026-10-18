@@ -57,13 +57,14 @@ export default function Articulos({ ruta }) {
           {PAGINAS_DEL_INDICE > 1 && (
             <nav className="paginacion" aria-label="Páginas de artículos">
               {pagina > 1 && (
-                <a className="paginacion-paso" href={rutaDePagina(pagina - 1)}>
+                <a className="boton boton-secundario paginacion-paso" href={rutaDePagina(pagina - 1)}>
                   <span aria-hidden="true">←</span> Anterior
                 </a>
               )}
               {Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => i + 1).map((n) => (
                 <a
                   key={n}
+                  className="boton-cuadro"
                   href={rutaDePagina(n)}
                   aria-label={`Página ${n}`}
                   aria-current={n === pagina ? 'page' : undefined}
@@ -72,7 +73,7 @@ export default function Articulos({ ruta }) {
                 </a>
               ))}
               {pagina < PAGINAS_DEL_INDICE && (
-                <a className="paginacion-paso" href={rutaDePagina(pagina + 1)}>
+                <a className="boton boton-secundario paginacion-paso" href={rutaDePagina(pagina + 1)}>
                   Siguiente <span aria-hidden="true">→</span>
                 </a>
               )}

@@ -476,7 +476,7 @@ function Destellos() {
 function Enlace({ href, children, nombre }) {
   if (!href) return null
   return (
-    <a href={href} rel="noopener" className="podio-boton">
+    <a href={href} rel="noopener" className="boton podio-boton">
       {children}
       <span className="solo-lectores"> de {nombre}</span>
     </a>

@@ -588,6 +588,10 @@ svg {
     transform: none;
   }
 
+  .boton-cuadro:active::before {
+    transform: skewX(-10deg);
+  }
+
   .salto {
     transition: none;
   }
@@ -756,12 +760,6 @@ svg {
   margin-top: var(--e-6);
 }
 
-/* La línea de la zona apenas se distingue de la tarjeta: el contorno del
-   secundario va más claro, para que se lea como botón. */
-.cierre-invitacion .boton-secundario {
-  border-color: color-mix(in srgb, var(--texto) 35%, transparent);
-}
-
 .cierre-acciones {
   display: flex;
   flex-wrap: wrap;
@@ -861,6 +859,11 @@ svg {
    Ninguno lleva sombra. La jerarquía la dan el color de superficie y 1 px de
    línea. Todos funcionan en los dos temas sin variante propia. */
 
+/* Dos botones (decisión 51). Con palabras, la píldora; con un signo o un
+   número, el cuadro. Los dos hablan con la voz de las secciones: Archivo
+   negra itálica, en minúscula. La píldora va siempre en una línea; la única
+   que se parte es «Calcula tu estimado», que baja su precio dentro del
+   botón (Servicio.css). */
 .boton {
   display: inline-flex;
   align-items: center;
@@ -870,10 +873,13 @@ svg {
   min-height: 44px;
   padding: 0 var(--e-6);
   border: 1px solid transparent;
-  border-radius: var(--radio);
-  font-family: inherit;
+  border-radius: 999px;
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-base);
-  font-weight: 400;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
   /* Quita el retardo de 300 ms que el navegador móvil espera por si el toque
@@ -891,11 +897,12 @@ svg {
 
 /* Respuesta al pulsar. Es la única animación de esta página que no se elige:
    confirma que la interfaz oyó el toque, y su ausencia se nota más que su
-   presencia. 0.97 y no menos — `scale` afecta también al texto de dentro, así
-   que pasado cierto punto deja de leerse como un botón que se hunde y empieza
-   a leerse como uno que encoge. */
+   presencia. El botón se inclina como la marca y vuelve; 0.98 y no menos —
+   `scale` afecta también al texto de dentro, así que pasado cierto punto deja
+   de leerse como un botón que se hunde y empieza a leerse como uno que
+   encoge. */
 .boton:active {
-  transform: scale(0.97);
+  transform: skewX(-8deg) scale(0.98);
 }
 
 .boton:disabled:active {
@@ -922,6 +929,12 @@ svg {
   color: var(--texto);
 }
 
+/* Sobre lo oscuro la línea de la zona apenas se distingue: el contorno va
+   más claro, para que se lea como botón. */
+.zona-plano .boton-secundario {
+  border-color: color-mix(in srgb, var(--texto) 35%, transparent);
+}
+
 .boton-secundario:hover {
   border-color: var(--accion);
   color: var(--accion);
@@ -932,6 +945,89 @@ svg {
 .boton:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+/* En los teléfonos más angostos la píldora se aprieta a los lados, para que
+   un nombre largo como «Prospección de clientes» siga en una línea. */
+@media (max-width: 359px) {
+  .boton {
+    padding-inline: var(--e-4);
+  }
+}
+
+/* El cuadro: cerrar, − y +, las páginas. Se inclina 10°, como los glifos de
+   las cards. La caja es un ::before inclinado y el contenido queda derecho,
+   así el número, ya en cursiva, se inclina con ella y no el doble. Lleva su
+   línea; relleno, es el actual. */
+.boton-cuadro {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-base);
+  font-style: italic;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.boton-cuadro[hidden] {
+  display: none;
+}
+
+.boton-cuadro::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: 1px solid var(--linea);
+  border-radius: 6px;
+  transform: skewX(-10deg);
+  transition:
+    background-color 140ms var(--ease-out),
+    border-color 140ms var(--ease-out),
+    transform var(--t-pulsar) var(--ease-out);
+}
+
+.zona-plano .boton-cuadro::before {
+  border-color: color-mix(in srgb, var(--texto) 35%, transparent);
+}
+
+.boton-cuadro:hover::before {
+  border-color: var(--accion);
+}
+
+.boton-cuadro:active::before {
+  transform: skewX(-16deg);
+}
+
+.boton-cuadro[aria-current] {
+  color: var(--sobre-accion);
+}
+
+.boton-cuadro[aria-current]::before {
+  border-color: var(--accion);
+  background: var(--accion);
+}
+
+/* El anillo de foco sigue a la caja inclinada. */
+.boton-cuadro:focus-visible {
+  outline: none;
+}
+
+.boton-cuadro:focus-visible::before {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
 }
 
 /* El lienzo de las nubes (src/nubes.js). Ocupa su contenedor sin mover el

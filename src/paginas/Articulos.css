@@ -22,28 +22,24 @@
 }
 
 /* En S y M, bajo la fecha, el servicio del que habla el artículo: una
-   pastilla de contorno, en el blanco del cielo. */
+   píldora de contorno, en el blanco del cielo. El rótulo va a su lado y no
+   dentro: con él, «Sistemas de gestión» no cabía en una línea en S. */
 .articulo-servicio {
   display: none;
 }
 
 @media (max-width: 1023px) {
   .articulo-servicio {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e-2) var(--e-3);
     margin-top: var(--e-4);
   }
 
-  .articulo-servicio a {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--e-2);
-    min-height: 44px;
-    padding: 0 var(--e-4);
-    border: 1px solid rgb(255 255 255 / 0.55);
-    border-radius: 999px;
+  .articulo-servicio .boton {
+    border-color: rgb(255 255 255 / 0.55);
     color: inherit;
-    font-weight: 600;
-    text-decoration: none;
   }
 
   .articulo-servicio small {
@@ -104,32 +100,6 @@
   gap: var(--e-2);
   max-width: 52rem;
   margin-top: var(--e-12);
-}
-
-.paginacion a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--e-2);
-  min-width: 44px;
-  min-height: 44px;
-  padding-inline: var(--e-3);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-tarjeta);
-  color: var(--texto);
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.paginacion a:hover {
-  border-color: var(--accion);
-  color: var(--accion);
-}
-
-.paginacion a[aria-current] {
-  border-color: var(--accion);
-  background: var(--accion);
-  color: var(--sobre-accion);
 }
 
 .paginacion .paginacion-paso:last-child {

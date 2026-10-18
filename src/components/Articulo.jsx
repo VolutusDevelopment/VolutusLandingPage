@@ -67,8 +67,8 @@ export default function Articulo({ ruta, children }) {
             </p>
             {servicio && (
               <p className="articulo-servicio">
-                <a href={servicio.ruta}>
-                  <small>Servicio</small>
+                <small>Servicio</small>
+                <a className="boton" href={servicio.ruta}>
                   {servicio.nombre}
                   <span aria-hidden="true">→</span>
                 </a>

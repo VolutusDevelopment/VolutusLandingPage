@@ -180,9 +180,10 @@
   display: inline-block;
 }
 
-/* WhatsApp va arriba y el correo debajo, centrados. El botón es el logo y el
-   texto sin fondo; al pasar o enfocar, un cuadro blanco de borde fino los
-   rodea. El borde transparente de `.boton` ya reserva su espacio: no mueve nada. */
+/* WhatsApp va arriba y el correo debajo, centrados. En S y M WhatsApp es una
+   píldora de contorno blanco, como el servicio de los artículos; en L y XL va
+   sin contorno. Al pasar o enfocar, el contorno se cierra en blanco entero;
+   es un cambio de tono, así que entra y sale en ease-in-out, como la barra. */
 .pie-contacto-acciones {
   display: flex;
   flex-direction: column;
@@ -192,19 +193,16 @@
 
 .pie-whatsapp {
   flex: none;
-  padding: 0 var(--e-4);
-  font-size: var(--texto-lg);
   color: #fff;
-  border-radius: var(--radio-panel);
-  border-color: rgb(255 255 255 / 0);
+  border-color: rgb(255 255 255 / 0.55);
   transition:
-    border-color 300ms var(--ease-out),
+    border-color 280ms var(--ease-in-out),
     transform var(--t-pulsar) var(--ease-out);
 }
 
 .pie-whatsapp img {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
 }
 
 /* El texto sigue blanco al pasar: `a:hover` lo teñiría de azul. */
@@ -212,6 +210,12 @@
 .pie-whatsapp:focus-visible {
   color: #fff;
   border-color: #fff;
+}
+
+@media (min-width: 1024px) {
+  .pie-whatsapp {
+    border-color: transparent;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

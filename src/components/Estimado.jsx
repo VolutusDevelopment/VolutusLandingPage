@@ -233,11 +233,11 @@ function Cantidad({ extra: { id, nombre, horas, inicial = 0, max } }) {
         {nombre}
         <span className="estimado-precio">{enUF(horas)} c/u</span>
       </label>
-      <button type="button" className="estimado-paso-boton" data-paso="-1" aria-controls={campo} aria-label={`${nombre}: uno menos`} hidden>
+      <button type="button" className="boton-cuadro estimado-paso-boton" data-paso="-1" aria-controls={campo} aria-label={`${nombre}: uno menos`} hidden>
         −
       </button>
       <input id={campo} type="number" name={id} inputMode="numeric" min="0" max={max} defaultValue={inicial} />
-      <button type="button" className="estimado-paso-boton" data-paso="1" aria-controls={campo} aria-label={`${nombre}: uno más`} hidden>
+      <button type="button" className="boton-cuadro estimado-paso-boton" data-paso="1" aria-controls={campo} aria-label={`${nombre}: uno más`} hidden>
         +
       </button>
     </div>

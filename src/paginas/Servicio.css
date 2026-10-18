@@ -74,27 +74,37 @@
   margin-top: var(--e-8);
 }
 
+/* A todo el ancho el texto va al centro y el relleno no se ve: el de
+   «Calcula tu estimado» baja, para que entre en una línea desde 375 px. */
 @media (max-width: 479px) {
   .servicio-acciones .boton {
     width: 100%;
   }
+
+  .servicio-acciones .servicio-desde {
+    padding-inline: var(--e-4);
+  }
 }
 
 /* «Calcula tu estimado», con el precio de partida al lado, separado por una
-   raya. Si no cabe en una línea, el precio baja dentro del mismo botón. */
+   raya. Si no cabe en una línea, el precio baja dentro del mismo botón: es el
+   único botón que se parte. */
 .servicio-desde {
   flex-wrap: wrap;
-  column-gap: var(--e-3);
+  column-gap: var(--e-2);
   row-gap: 0;
 }
 
+/* «Desde», en la mono y derecho, como todo rótulo; el número va en la
+   cursiva del botón. */
 .servicio-desde-cifra {
   display: inline-flex;
   align-items: baseline;
   gap: var(--e-1);
-  padding-left: var(--e-3);
+  padding-left: var(--e-2);
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
+  font-style: normal;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   /* Del color del texto del botón y no de la zona: el botón relleno puede ir

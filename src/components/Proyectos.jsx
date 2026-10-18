@@ -148,7 +148,12 @@ function Obra({ proyecto }) {
           <p className="obra-resumen">{proyecto.resumen}</p>
           <Pruebas proyecto={proyecto} />
           {conFicha && (
-            <button type="button" className="obra-abrir" data-ficha={`ficha-${proyecto.id}`} aria-haspopup="dialog">
+            <button
+              type="button"
+              className="boton boton-secundario obra-abrir"
+              data-ficha={`ficha-${proyecto.id}`}
+              aria-haspopup="dialog"
+            >
               Ver cómo funciona<span className="solo-lectores"> {proyecto.nombre}</span>
               <span className="obra-flecha" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -180,7 +185,7 @@ function Ficha({ proyecto }) {
         </div>
         {/* Cerrar no necesita script: un formulario `dialog` cierra el suyo. */}
         <form method="dialog">
-          <button className="ficha-cerrar" aria-label={`Cerrar la ficha de ${proyecto.nombre}`}>
+          <button className="boton-cuadro ficha-cerrar" aria-label={`Cerrar la ficha de ${proyecto.nombre}`}>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>

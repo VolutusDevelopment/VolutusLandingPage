@@ -78,12 +78,13 @@ La escala de espacios usa múltiplos de 4 px: 4, 8, 12, 16, 24, 32, 48, 64 y 96 
 
 La altura de la barra es 64 px y pasa a 84 px desde 768 px de ancho. Las secciones usan 64 px de espacio vertical en móvil primero y 96 px desde 1024 px.
 
-Los radios efectivos no son uniformes: 4 px en controles y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes: servicios, y láminas y fichas de proyectos.
+Los radios efectivos no son uniformes: 4 px en campos y superficies pequeñas, 12 px en tarjetas y 28 px en paneles grandes: servicios, y láminas y fichas de proyectos. Los botones van aparte (decisión 51): la píldora, de extremos redondos, y el cuadro, inclinado 10° con 6 px de radio.
 
 ## Componentes y escenas
 
 - Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella.
-- Botones, etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
+- Dos botones (decisión 51). Con palabras, la píldora (`.boton`): Archivo itálica 800 en minúscula, siempre en una línea, rellena para lo principal y de contorno para lo demás. Con un signo o un número, el cuadro (`.boton-cuadro`): inclinado 10°, para cerrar, − y + y las páginas. Al pulsar, los dos se inclinan un poco más y vuelven.
+- Etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
 - Servicios en ocho cards, en una rueda en todos los tamaños: muestra todas y gira (arrastre con el ratón o el dedo, trackpad o pulsando una que asoma). El glifo de cada card hace un gesto corto al quedar al frente y al pasar el cursor (Icono.css). Sin JavaScript, una lista con todas a la vista.
 - Logros en tarjetas con medalla, siempre a la vista: uno bajo otro hasta M y lado a lado desde L. Con ratón se inclinan hacia el cursor. Proyectos en láminas oscuras: resumen, la dirección donde se abre cada uno («En línea» o «Código público») y, si hay capturas, el producto en sus pantallas reales saliendo del borde de la lámina; tocarla abre su ficha en un `<dialog>`, que sale de la lámina (arranca encima, con su ancho, y crece hasta su sitio) y al cerrar vuelve a ella; es Web Animations y no View Transitions, que en Safari no captura bien un `<dialog>` modal. Un proyecto sin capturas ni pasos no tiene ficha y su lámina es una fila. Cada lámina toma su forma por su propio ancho (container query).
 - Tarjeta clara de contacto sobre el cierre oscuro de la portada.

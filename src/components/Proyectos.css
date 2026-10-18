@@ -128,20 +128,6 @@
   stroke-linejoin: round;
 }
 
-.obra-abrir {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e-3);
-  min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  font-size: var(--texto-sm);
-  color: var(--texto);
-  cursor: pointer;
-}
-
 /* Toda la lámina responde al toque, no solo la línea del botón. La capa la
    pone encima de las capturas, que también van posicionadas. */
 .obra-abrir::after {
@@ -149,6 +135,12 @@
   position: absolute;
   z-index: 1;
   inset: 0;
+}
+
+/* Al pulsar no se inclina: con `transform` el botón pasaría a contener su
+   capa, que a mitad del toque dejaría de cubrir la lámina. */
+.obra-abrir:active {
+  transform: none;
 }
 
 /* Con el teclado, además del anillo del botón, se marca la lámina entera. */
@@ -159,16 +151,6 @@
 
 .obra-flecha {
   display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  /* Tinte de acción y no de superficie: sobre la lámina oscura un círculo del
-     color del fondo desaparecía, y es justo la pieza que invita. */
-  background: color-mix(in srgb, var(--accion) 20%, transparent);
-  transition:
-    background-color 200ms var(--ease-out),
-    color 200ms var(--ease-out);
 }
 
 .obra-flecha svg {
@@ -180,9 +162,11 @@
   stroke-linejoin: round;
 }
 
+/* Pasar por la lámina rellena su botón: es el que la abre. */
 @media (hover: hover) {
-  .obra:hover .obra-flecha {
+  .obra:hover .obra-abrir {
     background: var(--accion);
+    border-color: var(--accion);
     color: var(--sobre-accion);
   }
 }
@@ -401,35 +385,12 @@ html:has(.ficha[open]) {
   color: var(--texto-suave);
 }
 
-.ficha-cerrar {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--accion) 16%, transparent);
-  color: var(--texto);
-  cursor: pointer;
-  transition:
-    background-color 200ms var(--ease-out),
-    color 200ms var(--ease-out);
-}
-
 .ficha-cerrar svg {
   width: 20px;
   height: 20px;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
-}
-
-@media (hover: hover) {
-  .ficha-cerrar:hover {
-    background: var(--accion);
-    color: var(--sobre-accion);
-  }
 }
 
 /* El margen va en una variable porque la tira de capturas lo usa dos veces:

@@ -426,47 +426,15 @@
   margin: var(--e-6) 0 0;
 }
 
-/* Botones de menú de juego, dorados con marco de madera y una sombra de
-   cuatro píxeles que desaparece al pulsarlos, como si se hundieran. */
+/* Los enlaces del cartel: la píldora rellena, en el oro del juego. */
 .podio-boton {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 var(--e-4);
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-  margin: 3px;
   color: var(--tinta);
   background: var(--oro);
-  box-shadow:
-    0 -3px 0 0 var(--madera),
-    0 3px 0 0 var(--madera),
-    -3px 0 0 0 var(--madera),
-    3px 0 0 0 var(--madera),
-    inset 0 -4px 0 0 rgb(0 0 0 / 0.18);
 }
 
 .podio-boton:hover {
   color: var(--tinta);
   filter: brightness(1.08);
-}
-
-.podio-boton:active {
-  translate: 0 2px;
-  box-shadow:
-    0 -3px 0 0 var(--madera),
-    0 3px 0 0 var(--madera),
-    -3px 0 0 0 var(--madera),
-    3px 0 0 0 var(--madera);
-}
-
-.podio-boton:focus-visible {
-  outline: 3px dashed var(--madera);
-  outline-offset: 4px;
 }
 
 /* ---------------------------------------------------------------------------
