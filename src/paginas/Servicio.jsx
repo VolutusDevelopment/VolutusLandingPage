@@ -97,7 +97,7 @@ export default function Servicio({ ruta }) {
 
       <section className="seccion zona-cielo" aria-labelledby="sigue-titulo">
         <div className="contenedor">
-          <h2 id="sigue-titulo" className="entra">
+          <h2 id="sigue-titulo" className="titular entra">
             Sigue leyendo
           </h2>
           <ListaDeArticulos articulos={articulosDe(servicio.id)} />

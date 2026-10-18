@@ -9,7 +9,7 @@ export function Incluye({ className, children }) {
   return (
     <section id="incluye" className={`seccion zona-cielo ${className}`} aria-labelledby="incluye-titulo">
       <div className="contenedor">
-        <h2 id="incluye-titulo" className="entra">
+        <h2 id="incluye-titulo" className="titular entra">
           Qué incluye
         </h2>
         {children}
@@ -62,7 +62,7 @@ export function Preguntas({ preguntas }) {
   return (
     <section className="seccion zona-cielo" aria-labelledby="preguntas-titulo">
       <div className="contenedor">
-        <h2 id="preguntas-titulo" className="entra">
+        <h2 id="preguntas-titulo" className="titular entra">
           Preguntas frecuentes
         </h2>
         <div className="servicio-preguntas">

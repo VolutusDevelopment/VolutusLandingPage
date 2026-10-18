@@ -17,7 +17,29 @@ Las fuentes se alojan en public/fonts/ y usan font-display: swap:
 - Archivo en cursiva 800, para los titulares h1 que comparten inclinación con la marca.
 - Geist respaldo y Archivo respaldo son caras locales ajustadas a las métricas de las fuentes para reducir el cambio de líneas mientras cargan.
 
-El texto base usa 17 px y line-height 1.6. Los encabezados h1–h3 usan peso 800; h1 usa Archivo cursiva, mayúsculas y tamaño fluido. La escala CSS es: 13, 15, 17, 22 y 34 px, más clamp(40px, 7vw, 76px) para el título principal y para `.titular`, y clamp(26px, 8vw, 60px) para `.titular-menor`, el de las tarjetas y los bloques dentro de una sección.
+El texto base usa 17 px y line-height 1.6. La escala CSS es: 13, 15, 17, 22 y 34 px, más los tres tamaños fluidos de los títulos (`--texto-2xl`, `--texto-seccion` y `--texto-bloque`).
+
+### Jerarquía de títulos
+
+Cuatro niveles, todos en peso 800, para que no pesen lo mismo y suenen igual de fuerte (decisión 50). La Archivo cursiva abre: la página en mayúscula y cada sección en minúscula. La Geist ordena lo de adentro. De un nivel al siguiente baja el tamaño y la caja, no la voz.
+
+| Nivel | Marcado | Letra | Caja y aire | S · 390 | M · 820 | L y XL · 1440 | Ejemplo |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 · página | `h1` | Archivo cursiva | Mayúscula, +0.065em | 40 px (la portada, 32) | 57 px | 76 px | «Páginas web rápidas de verdad» |
+| 1 · título largo | `h1.titular-largo` | Archivo cursiva | Minúscula, −0.005em, interlineado 1.04 | 34 px | 44 px | 60 px | El título de un artículo |
+| 2 · sección | `h2.titular` | Archivo cursiva | Minúscula, −0.01em, interlineado 1.05 | 26 px | 36 px | 52 px | «Preguntas frecuentes», «¿Lo vemos juntos?» |
+| 3 · bloque | `h2`, `h3.subtitulo` | Geist | −0.02em | 22 px | 22 px | 28 px | «Te sirve si…», los subtítulos de un artículo |
+| 4 · elemento | `h3`, `h4` | Geist | −0.015em | 22 px | 22 px | 22 px | «Para cada pantalla», una pregunta frecuente |
+| Antetítulo | `.antetitulo` | Geist Mono 400 | Mayúscula, +0.14em | 15 px | 15 px | 15 px | «Lo que se ve», sobre un nivel 2 o 3 |
+
+Reglas de uso:
+
+- Un solo h1 por página, y la mayúscula es solo suya. El h1 de un artículo es una frase larga y va en minúscula.
+- El h2 que abre una sección, o una tarjeta de cierre, lleva `.titular`. Sin la clase, un h2 es un bloque. El h3 que hace de subtítulo dentro de una sección lleva `.subtitulo`.
+- El CSS de un componente no escribe el tamaño de un título: elige su nivel. Si un título no encaja en ninguno, se discute antes de agregar un tamaño.
+- El texto se escribe como se lee, en oración: la mayúscula la pone el CSS, y solo en el h1.
+- Quedan fuera de la jerarquía, a propósito: el nombre de cada card del índice de servicios (`.indice-servicio-nombre`, Archivo en mayúscula, crece con su card), el nombre de cada proyecto y de cada fase de la tienda (34 px), el título del formulario y el nombre de cada socio en /nosotros (22 px).
+- La cabecera de la portada ajusta su h1 a su ancho (Portada.css), y en S queda en 32 px: por eso la sección no pasa de 26 px en S.
 
 ## Color implementado
 

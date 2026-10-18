@@ -241,7 +241,7 @@ export default function Proyectos() {
   return (
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
-        <h2 className="titular entra">proyectos y Logros</h2>
+        <h2 className="titular entra">Proyectos y logros</h2>
 
         <div className="obras-bloque">
           <div className="obras-intro entra">

@@ -217,7 +217,7 @@ function Cierre() {
     <section className="seccion zona-cielo cierre" aria-labelledby="cierre-titulo">
       <div className="contenedor">
         <div className="cierre-tarjeta zona-plano cierre-invitacion entra">
-          <h2 id="cierre-titulo" className="titular titular-menor">
+          <h2 id="cierre-titulo" className="titular">
             ¿Te queda una duda?
           </h2>
           <p className="entradilla">
@@ -264,7 +264,7 @@ export default function Privacidad() {
         <div className="contenedor">
           <div className="privacidad-resumen zona-plano entra">
             <p className="antetitulo">En resumen</p>
-            <h2 id="resumen-titulo" className="titular titular-menor">
+            <h2 id="resumen-titulo" className="titular">
               Pedimos lo justo
             </h2>
             <ul className="cifras privacidad-cifras">

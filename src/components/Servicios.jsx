@@ -21,7 +21,7 @@ export default function Servicios() {
   return (
     <section id="servicios" className="seccion zona-cielo servicios">
       <div className="contenedor">
-        <h2 className="titular entra">Nuestros Servicios</h2>
+        <h2 className="titular entra">Nuestros servicios</h2>
       </div>
 
       <div className="rueda">

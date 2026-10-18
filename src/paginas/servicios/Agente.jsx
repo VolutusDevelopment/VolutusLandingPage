@@ -27,7 +27,7 @@ export default function Agente({ pagina, estimado }) {
     <>
       <section className="seccion zona-cielo" aria-labelledby="preguntas-titulo">
         <div className="contenedor">
-          <h2 id="preguntas-titulo" className="entra">
+          <h2 id="preguntas-titulo" className="titular entra">
             Preguntas frecuentes
           </h2>
           <dl className="agente-chat">

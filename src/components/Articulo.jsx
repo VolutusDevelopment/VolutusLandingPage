@@ -13,7 +13,7 @@ export function Invitacion({ servicio }) {
     <section className="seccion zona-cielo cierre" aria-labelledby="cierre-titulo">
       <div className="contenedor">
         <div className="cierre-tarjeta zona-plano cierre-invitacion entra">
-          <h2 id="cierre-titulo" className="titular titular-menor">
+          <h2 id="cierre-titulo" className="titular">
             ¿Lo vemos juntos?
           </h2>
           <p className="entradilla">
@@ -54,7 +54,7 @@ export default function Articulo({ ruta, children }) {
                 Artículos
               </a>
             </p>
-            <h1 className="titular-menor">{tituloCorto(titulo)}</h1>
+            <h1 className="titular-largo">{tituloCorto(titulo)}</h1>
             <p className="entradilla articulo-entradilla">{descripcion}</p>
             <p className="articulo-fecha dato">
               <time dateTime={publicada}>{fechaDe(ruta, 'publicada')}</time>
@@ -86,7 +86,7 @@ export default function Articulo({ ruta, children }) {
 
       <section className="seccion zona-cielo" aria-labelledby="relacionados-titulo">
         <div className="contenedor">
-          <h2 id="relacionados-titulo" className="entra">
+          <h2 id="relacionados-titulo" className="titular entra">
             Artículos relacionados
           </h2>
           <ListaDeArticulos articulos={relacionadosDe(ruta)} />

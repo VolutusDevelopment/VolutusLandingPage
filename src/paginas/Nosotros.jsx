@@ -82,6 +82,8 @@ const REDES = [
 
 // Los socios (decisiones 16 y 34 del brief). Las fotos son provisorias, y
 // cada descripción dice solo lo que se puede comprobar en la portada.
+// `fotoSrcSet` suma una versión más liviana cuando la foto tiene píxeles de
+// sobra para el teléfono; la de Rodrigo no los tiene, y va sola.
 const SOCIOS = [
   {
     nombre: 'Diego',
@@ -89,6 +91,7 @@ const SOCIOS = [
     educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
     rol: 'Socio co-fundador',
     foto: '/image/Diego.jpeg',
+    fotoSrcSet: '/image/Diego-720.webp 720w, /image/Diego.jpeg 960w',
     perfiles: {
       github: 'https://github.com/DiegoPyLL',
       linkedin: 'https://www.linkedin.com/in/diegopyll/',
@@ -199,7 +202,7 @@ function Cierre() {
         <div className="plano zona-plano entra">
           <div>
             <p className="antetitulo">La marca</p>
-            <h2 id="marca-titulo" className="titular titular-menor">
+            <h2 id="marca-titulo" className="titular">
               Tres líneas de puntos
             </h2>
             <ul className="plano-piezas">
@@ -234,9 +237,21 @@ export default function Nosotros() {
         {/* Una tarjeta por socio, con la foto encima y en lados alternos,
             como el formulario de contacto sobre su tarjeta. */}
         <ul className="socios">
-          {SOCIOS.map(({ nombre, apellidos, educacion, rol, foto, perfiles, descripcion }) => (
+          {/* `sizes` es el ancho al que se pinta la foto, no el de su hueco:
+              con `object-fit: cover` se agranda hasta llenarlo, y en la
+              tarjeta angosta y alta desde 640 px llega a unos 580 px. */}
+          {SOCIOS.map(({ nombre, apellidos, educacion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
             <li key={nombre} className="socio entra">
-              <img src={foto} alt="" width={800} height={1000} loading="lazy" decoding="async" />
+              <img
+                src={foto}
+                srcSet={fotoSrcSet}
+                sizes={fotoSrcSet && '(max-width: 639px) calc(100vw - 72px), 580px'}
+                alt=""
+                width={800}
+                height={1000}
+                loading="lazy"
+                decoding="async"
+              />
               <div className="socio-cuerpo">
                 <div className="socio-nombre">
                   <h2>
@@ -309,7 +324,7 @@ export default function Nosotros() {
           </figure>
 
           <div className="nosotros-bloque">
-            <h3 className="titular titular-menor entra" lang="en">
+            <h3 className="subtitulo entra" lang="en">
              The Morning Glory
             </h3>
 
@@ -353,7 +368,7 @@ export default function Nosotros() {
           </div>
 
           <div className="nosotros-bloque">
-            <h3 className="titular titular-menor entra">Para nosotros</h3>
+            <h3 className="subtitulo entra">Para nosotros</h3>
             <p className="entradilla entra">Cuatro palabras de su definición dicen lo que queremos ser.</p>
 
             <ol className="numerada">

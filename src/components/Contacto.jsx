@@ -42,7 +42,7 @@ export default function Contacto({ marcado }) {
     <section id="contacto" className="seccion zona-cielo contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
         <div className="contacto-relato zona-plano">
-          <h2 id="contacto-titulo" className="titular titular-menor entra">¿Qué estás resolviendo a mano?</h2>
+          <h2 id="contacto-titulo" className="titular entra">¿Qué estás resolviendo a mano?</h2>
         </div>
 
         <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>

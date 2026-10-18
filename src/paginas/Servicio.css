@@ -630,10 +630,6 @@
   background: color-mix(in oklab, var(--tinte) 9%, var(--superficie));
 }
 
-.servicio-empezar h2 {
-  font-size: var(--texto-lg);
-}
-
 .servicio-empezar .vistos {
   margin-top: var(--e-6);
 }
@@ -673,10 +669,6 @@
     border: 0;
     border-radius: 0;
     background: none;
-  }
-
-  .servicio-empezar h2 {
-    font-size: var(--texto-xl);
   }
 
   .servicio-cuando .vistos {
