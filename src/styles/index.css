@@ -791,6 +791,11 @@ svg {
   font-variant-numeric: tabular-nums;
 }
 
+/* Un dato que no se parte al final de la línea, como el RUT en su guion. */
+.sin-corte {
+  white-space: nowrap;
+}
+
 .solo-lectores {
   position: absolute;
   width: 1px;

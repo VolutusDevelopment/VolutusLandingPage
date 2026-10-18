@@ -1,4 +1,5 @@
 import Articulo from '../../components/Articulo.jsx'
+import { RAZON_SOCIAL, RUT } from '../../lib/contacto.js'
 
 export default function ComoTrabajamos({ ruta }) {
   return (
@@ -13,6 +14,18 @@ export default function ComoTrabajamos({ ruta }) {
         Cada presupuesto es único. Depende del alcance del proyecto y de los indicadores (KPI) que quieras medir. Con
         eso definido, te mandamos alcance y precio, sin compromiso. Las dos formas de pagarlo están en{' '}
         <a href="/articulos/dos-formas-de-trabajar">comprar el producto o pagarlo en cuotas</a>.
+      </p>
+
+      <h2>Factura</h2>
+      <p>
+        Le pagas a <strong>{RAZON_SOCIAL}</strong>, RUT <span className="sin-corte">{RUT}</span>, una sociedad con
+        inicio de actividades en el SII.
+        Emitimos factura electrónica afecta a IVA, así que si compras a nombre de tu empresa puedes justificar el gasto.
+        Los estimados de cada servicio van en UF y sin IVA: el IVA se suma en la factura. El RUT se puede comprobar en la{' '}
+        <a href="https://www.sii.cl/como_se_hace_para/situacion_trib_terceros.html" rel="noopener">
+          consulta de situación tributaria del SII
+        </a>
+        .
       </p>
 
       <h2>Ver algo antes de contratar</h2>

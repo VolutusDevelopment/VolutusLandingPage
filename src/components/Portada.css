@@ -80,9 +80,9 @@
   container-type: inline-size;
 }
 
-/* El gancho. Si en S no cabe en una línea, se parte entre sus dos frases y no
-   deja una palabra suelta. */
-.portada .antetitulo span {
+/* El gancho y la entradilla. Si en S no caben en una línea, se parten entre
+   sus dos frases y no dejan una palabra suelta. */
+.portada :is(.antetitulo, .portada-entradilla) span {
   display: inline-block;
 }
 
@@ -177,6 +177,15 @@
   text-wrap: balance;
 }
 
+/* En el teléfono el titular ya no puede crecer (ver `h1`), y con 22 px la
+   entradilla le competía. Va a 19 px, a medio camino entre dos pasos de la
+   escala (index.css), 17 y 22: elegido mirándolo, no calculado. */
+@media (max-width: 767px) {
+  .portada:not(.portada-costado) .portada-entradilla {
+    font-size: 19px;
+  }
+}
+
 /* Los logros con jurado externo (data/proyectos.js), con el enlace al podio
    de Proyectos, donde está la prueba de cada uno. Cada logro va entero: la
    línea se parte entre ellos y nunca a mitad de un nombre. */
@@ -237,13 +246,15 @@
    10.6 em en Archivo mayúscula con su espaciado: el titular se achica lo justo
    para que quepa en el ancho del texto (`cqi`): el del contenedor, hasta su
    tope (36rem, o 46rem con la nube de fondo). Si sobra, manda el paso de
-   siempre; sobre la nube, al 72 %, para que la nube sea la que se impone. */
+   siempre. Sobre la nube va al 85 %, para que la nube siga imponiéndose, y la
+   línea más larga es «PARA TU NEGOCIO», de 10.7 em: el tope de 10.8 le deja
+   aire para que «NEGOCIO» nunca caiga sola a una cuarta línea. */
 .portada h1 {
   font-size: min(var(--texto-2xl), 100cqi / 10.6);
 }
 
 .portada:not(.portada-costado) h1 {
-  font-size: min(var(--texto-2xl) * 0.72, 100cqi / 10.6);
+  font-size: min(var(--texto-2xl) * 0.85, 100cqi / 10.8);
 }
 
 /* ---- la palabra que rota ----

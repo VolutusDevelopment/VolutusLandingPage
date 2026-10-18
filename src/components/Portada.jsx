@@ -102,11 +102,12 @@ export default function Portada() {
         para tu negocio
       </h1>
 
-      {/* Lo que gana quien contrata, sin prometer ventas ni horas que no
-          podemos mostrar (§3): que deja de hacerlo a mano y que el producto
-          es suyo desde la entrega (decisión 44). */}
+      {/* El reparto del trabajo, sin prometer ventas ni horas que no podemos
+          mostrar (§3), y la respuesta corta a «¿qué tengo que entregar yo?»
+          (§2). «Lo resolvemos» y no «la solución», que el glosario descarta
+          (§5). La segunda frase no se parte: en S, la línea cae en el punto. */}
       <p className="entradilla portada-entradilla">
-        Deja de hacerlo a mano: lo hacemos a tu medida y es tuyo desde la entrega.
+        Tú pones el problema. <span>Nosotros lo resolvemos.</span>
       </p>
 
       <div className="portada-acciones">

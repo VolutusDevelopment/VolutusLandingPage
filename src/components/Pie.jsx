@@ -1,5 +1,12 @@
 import { Logotipo } from './Marca.jsx'
-import { CORREO_DE_CONTACTO, SALUDO_DE_WHATSAPP, WHATSAPP_DE_CONTACTO, enlaceDeWhatsapp } from '../lib/contacto.js'
+import {
+  CORREO_DE_CONTACTO,
+  RAZON_SOCIAL,
+  RUT,
+  SALUDO_DE_WHATSAPP,
+  WHATSAPP_DE_CONTACTO,
+  enlaceDeWhatsapp,
+} from '../lib/contacto.js'
 
 /**
  * Pie.
@@ -74,7 +81,15 @@ export default function Pie({ dia = false }) {
           </ul>
         </nav>
 
-        <p className="pie-legal">© {new Date().getFullYear()} Volutus · Desarrollo de software · Chile</p>
+        {/* A quién se le paga: la razón social y el RUT. El domicilio legal es
+            una casa particular, así que va la ciudad y no la calle. */}
+        <p className="pie-legal">
+          <span>
+            © {new Date().getFullYear()} {RAZON_SOCIAL}
+          </span>
+          <span>RUT {RUT}</span>
+          <span>Santiago, Chile</span>
+        </p>
       </div>
 
       {/* La página termina en el mar que hay bajo la nube de la portada: la

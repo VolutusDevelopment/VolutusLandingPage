@@ -1,5 +1,5 @@
 import Pagina from '../components/Pagina.jsx'
-import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
+import { CORREO_DE_CONTACTO, RAZON_SOCIAL, RUT } from '../lib/contacto.js'
 import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.js'
 
 /**
@@ -29,7 +29,7 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * protegen, los derechos y el reclamo ante la Agencia, con versión y fecha.
  */
 
-const VERSION = 3
+const VERSION = 4
 const ACTUALIZADO = fechaDe('/privacidad')
 
 const CORREO = `[${CORREO_DE_CONTACTO}](mailto:${CORREO_DE_CONTACTO})`
@@ -49,7 +49,7 @@ const APARTADOS = [
     id: 'responsable',
     titulo: 'Quién responde por tus datos',
     cuerpo: [
-      `El responsable es **Volutus**, empresa de desarrollo de software con domicilio en Chile. Para cualquier asunto sobre tus datos, incluido ejercer tus derechos, escríbenos a ${CORREO}.`,
+      `El responsable es **${RAZON_SOCIAL}**, RUT ${RUT}, empresa de desarrollo de software con domicilio en Santiago, Chile. Para cualquier asunto sobre tus datos, incluido ejercer tus derechos, escríbenos a ${CORREO}.`,
       'Esta política sigue la **Ley 19.628**, con las modificaciones de la **Ley 21.719** que rigen desde el 1 de diciembre de 2026. Qué cambia con ellas, [lo explicamos en simple](/ley21719).',
     ],
   },
@@ -166,9 +166,21 @@ const TEXTO = enMarkdown()
 // tiempo. Si alguna vez aparece uno, el build se detiene aquí.
 if (TEXTO.includes('<')) throw new Error('Privacidad: el texto para copiar no puede llevar «<»')
 
-/** Pasa `**negrita**` y `[enlace](destino)` a sus etiquetas. */
+// Lo que `enLinea` separa del texto: la negrita, los enlaces y el RUT.
+const PARTES = new RegExp(`(\\*\\*.+?\\*\\*|\\[.+?\\]\\(.+?\\)|${RUT.replaceAll('.', '\\.')})`)
+
+/**
+ * Pasa `**negrita**` y `[enlace](destino)` a sus etiquetas. El RUT va en una
+ * `.sin-corte`, para que la línea no lo parta en el guion.
+ */
 function enLinea(texto) {
-  return texto.split(/(\*\*.+?\*\*|\[.+?\]\(.+?\))/).map((parte, indice) => {
+  return texto.split(PARTES).map((parte, indice) => {
+    if (parte === RUT)
+      return (
+        <span key={indice} className="sin-corte">
+          {parte}
+        </span>
+      )
     const negrita = parte.match(/^\*\*(.+)\*\*$/)
     if (negrita) return <strong key={indice}>{negrita[1]}</strong>
     const enlace = parte.match(/^\[(.+)\]\((.+)\)$/)

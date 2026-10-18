@@ -32,7 +32,7 @@ export const ORIGEN = 'https://volutus.cl'
 export const PAGINAS = {
   '/': {
     archivo: 'index.html',
-    actualizada: '2026-10-17',
+    actualizada: '2026-10-18',
     titulo: 'Páginas web, apps y agentes de IA en Chile — Volutus',
     descripcion:
       'Creamos páginas web, tiendas online, apps, agentes de IA y automatizaciones para tu negocio. Una persona te responde pronto.',
@@ -235,15 +235,15 @@ export const PAGINAS = {
   '/articulos/como-trabajamos': {
     archivo: 'articulos/como-trabajamos.html',
     publicada: '2026-10-17',
-    actualizada: '2026-10-17',
+    actualizada: '2026-10-18',
     servicios: ['web', 'tienda', 'app', 'gestion', 'agente', 'automatizacion', 'prospeccion'],
     titulo: 'Cómo trabajamos: lo que conviene saber antes de escribirnos — Volutus',
     descripcion:
-      'Presupuesto, mockups, funcionamiento sin internet, tecnologías, documentación, confidencialidad y ubicación: cómo trabajamos en Volutus antes de que nos escribas.',
+      'Presupuesto, factura, mockups, funcionamiento sin internet, tecnologías, documentación, confidencialidad y ubicación: cómo trabajamos en Volutus antes de que nos escribas.',
   },
   '/privacidad': {
     archivo: 'privacidad.html',
-    actualizada: '2026-10-17',
+    actualizada: '2026-10-18',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',

@@ -35,7 +35,7 @@ import {
   tituloCorto,
 } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
-import { CORREO_DE_CONTACTO } from '../src/lib/contacto.js'
+import { CORREO_DE_CONTACTO, RAZON_SOCIAL, RUT } from '../src/lib/contacto.js'
 import { SERVICIOS } from '../src/lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
 import { ESTIMADOS, desde } from '../src/lib/precios.js'
@@ -172,10 +172,14 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         '@type': ['Organization', 'ProfessionalService'],
         '@id': ORGANIZACION,
         name: 'Volutus',
+        legalName: RAZON_SOCIAL,
+        taxID: RUT,
         url: `${ORIGEN}/`,
         logo: `${ORIGEN}/apple-touch-icon.png`,
         description: 'Empresa de desarrollo de software en Chile.',
         email: CORREO_DE_CONTACTO,
+        // La ciudad y no la calle: el domicilio legal es una casa particular.
+        address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
         areaServed: 'CL',
         sameAs: ['https://github.com/VolutusDevelopment'],
         hasOfferCatalog: {

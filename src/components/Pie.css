@@ -236,7 +236,8 @@
   list-style: none;
 }
 
-.pie-enlaces li + li::before {
+.pie-enlaces li + li::before,
+.pie-legal span + span::before {
   content: '·' / '';
   margin-inline: var(--e-3);
   color: var(--texto-suave);
@@ -264,16 +265,21 @@
 }
 
 /* ---- línea legal ----
-   Al centro y cerca de los enlaces: es lo último que se lee antes del mar. */
+   Al centro y cerca de los enlaces: es lo último que se lee antes del mar.
+   Separada por puntos medios como los enlaces, y por lo mismo se parte solo
+   entre sus partes. */
 .pie-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   margin: 0 auto;
-  text-align: center;
   font-size: var(--texto-xs);
   color: var(--texto-suave);
 }
 
-/* En S los tres enlaces pueden no caber en una línea, y un punto medio al
-   principio de la segunda se ve suelto: ahí se separan solo por aire. */
+/* En S ni los tres enlaces ni la línea legal caben en una línea, y un punto
+   medio al principio de la segunda se ve suelto: ahí se separan solo por
+   aire. */
 @media (max-width: 559px) {
   .pie {
     padding-top: var(--e-8);
@@ -287,7 +293,12 @@
     column-gap: var(--e-6);
   }
 
-  .pie-enlaces li + li::before {
+  .pie-legal {
+    column-gap: var(--e-4);
+  }
+
+  .pie-enlaces li + li::before,
+  .pie-legal span + span::before {
     content: none;
   }
 }

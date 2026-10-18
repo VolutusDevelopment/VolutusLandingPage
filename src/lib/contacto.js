@@ -8,8 +8,17 @@
  * campo, se perdería texto sin aviso.
  *
  * `public/llms.txt` y `public/.well-known/security.txt` son estáticos y
- * repiten el correo a mano: si cambia, hay que cambiarlo también ahí.
+ * repiten el correo a mano: si cambia, hay que cambiarlo también ahí. Lo
+ * mismo la razón social y el RUT en `llms.txt`.
  */
+
+// ---- quién responde ----
+
+// Como figuran en el Registro de Empresas y Sociedades y en el SII: a quién se
+// le paga y quién emite la factura. Los usan el pie, la política de
+// privacidad, el artículo «Cómo trabajamos» y la Organization del prerender.
+export const RAZON_SOCIAL = 'Volutus SpA'
+export const RUT = '78.473.668-7'
 
 // ---- cómo escribirle a Volutus ----
 
