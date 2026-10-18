@@ -202,7 +202,7 @@ function Cierre() {
         <div className="plano zona-plano entra">
           <div>
             <p className="antetitulo">La marca</p>
-            <h2 id="marca-titulo" className="titular titular-menor">
+            <h2 id="marca-titulo" className="titular">
               Tres líneas de puntos
             </h2>
             <ul className="plano-piezas">
@@ -324,7 +324,7 @@ export default function Nosotros() {
           </figure>
 
           <div className="nosotros-bloque">
-            <h3 className="titular titular-menor entra" lang="en">
+            <h3 className="subtitulo entra" lang="en">
              The Morning Glory
             </h3>
 
@@ -368,7 +368,7 @@ export default function Nosotros() {
           </div>
 
           <div className="nosotros-bloque">
-            <h3 className="titular titular-menor entra">Para nosotros</h3>
+            <h3 className="subtitulo entra">Para nosotros</h3>
             <p className="entradilla entra">Cuatro palabras de su definición dicen lo que queremos ser.</p>
 
             <ol className="numerada">

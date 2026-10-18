@@ -255,7 +255,7 @@ function Cierre() {
       <div className="contenedor">
         <div className="cierre-tarjeta">
           <p className="antetitulo">Cómo te ayudamos</p>
-          <h2 id="cierre-titulo">¿Tu web o tu app tratan datos personales?</h2>
+          <h2 id="cierre-titulo" className="titular">¿Tu web o tu app tratan datos personales?</h2>
           <p className="ley-bajada">
             Hacemos la parte técnica: formularios con consentimiento, un canal para los derechos, borrado a tiempo y
             datos protegidos. Lo legal, mejor con tu abogado.
@@ -307,7 +307,7 @@ export default function Ley21719() {
 
       <section className="seccion zona-cielo" aria-labelledby="basico-titulo">
         <div className="contenedor">
-          <h2 id="basico-titulo">Lo básico</h2>
+          <h2 id="basico-titulo" className="titular">Lo básico</h2>
           <ul className="ley-basico">
             {BASICO.map(({ icono, titulo, texto, articulos }) => (
               <li key={titulo} className="entra">
@@ -324,7 +324,7 @@ export default function Ley21719() {
 
       <section className="seccion zona-cielo" aria-labelledby="cambios-titulo">
         <div className="contenedor">
-          <h2 id="cambios-titulo">Qué cambia</h2>
+          <h2 id="cambios-titulo" className="titular">Qué cambia</h2>
           <p className="ley-bajada">La ley de 1999 al lado de la nueva, punto por punto.</p>
           <ul className="ley-cambios">
             {CAMBIOS.map(({ tema, antes, ahora, articulos }) => (
@@ -344,7 +344,7 @@ export default function Ley21719() {
 
       <section className="seccion zona-cielo" aria-labelledby="multas-titulo">
         <div className="contenedor">
-          <h2 id="multas-titulo">Cuánto arriesgas</h2>
+          <h2 id="multas-titulo" className="titular">Cuánto arriesgas</h2>
           <p className="ley-bajada">La multa máxima de cada tipo de infracción, al lado de la que había.</p>
           <ul className="ley-multas">
             {MULTAS.map(({ nivel, tono, utm, ejemplo, articulos }) => (
@@ -372,7 +372,7 @@ export default function Ley21719() {
 
       <section className="seccion zona-cielo" aria-labelledby="tareas-titulo">
         <div className="contenedor">
-          <h2 id="tareas-titulo">Qué tiene que hacer tu negocio</h2>
+          <h2 id="tareas-titulo" className="titular">Qué tiene que hacer tu negocio</h2>
           <p className="ley-bajada">Doce tareas, en tres frentes.</p>
           <div className="ley-frentes">
             {FRENTES.map(({ id, icono, nombre, bajada, nota, tareas }, indice) => (
@@ -406,7 +406,7 @@ export default function Ley21719() {
           <div className="ley-pyme entra">
             <div>
               <Icono id="negocio" className="ley-icono" />
-              <h2 id="pyme-titulo">¿Tu empresa es pyme?</h2>
+              <h2 id="pyme-titulo" className="titular">¿Tu empresa es pyme?</h2>
               <p className="ley-bajada">Micro, pequeña o mediana: hasta 100.000 UF de ventas al año.</p>
             </div>
             <div>

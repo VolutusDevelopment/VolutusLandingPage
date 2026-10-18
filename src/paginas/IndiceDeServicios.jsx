@@ -66,7 +66,7 @@ export default function IndiceDeServicios({ ruta }) {
 
       <section className="seccion zona-cielo" aria-labelledby="saber-titulo">
         <div className="contenedor">
-          <h2 id="saber-titulo" className="entra">
+          <h2 id="saber-titulo" className="titular entra">
             Antes de escribirnos
           </h2>
           <ul className="indice-saber">

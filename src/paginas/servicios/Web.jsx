@@ -104,7 +104,7 @@ export default function Web({ pagina, estimado }) {
       <section id="incluye" className="seccion zona-cielo web-incluye" aria-labelledby="incluye-titulo">
         <div className="web-superficie">
           <div className="contenedor">
-            <h2 id="incluye-titulo" className="entra">
+            <h2 id="incluye-titulo" className="titular entra">
               Qué incluye
             </h2>
             <Grupo {...seVe} />

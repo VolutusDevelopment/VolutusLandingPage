@@ -97,7 +97,7 @@
   --fuente-texto: 'Geist', 'Geist respaldo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fuente-datos: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  /* Escala de seis pasos (§6). No se sale de aquí: un tamaño que no esté en
+  /* Escala de ocho pasos (§6). No se sale de aquí: un tamaño que no esté en
      esta tabla es un tamaño que nadie decidió. */
   --texto-xs: 13px;
   --texto-sm: 15px;
@@ -110,6 +110,10 @@
      en tres y devuelve una línea entera de pantalla. En escritorio no cambia
      nada: ahí manda el 7vw y el techo de 76. */
   --texto-2xl: clamp(40px, 7vw, 76px);
+  /* Los títulos de sección y de bloque (decisión 50). La sección no baja de
+     26 px: en S el titular de la portada mide 32 y la sección no lo alcanza. */
+  --texto-seccion: clamp(26px, 4.4vw, 52px);
+  --texto-bloque: clamp(22px, 2vw, 28px);
 
   /* Escala de espaciado, múltiplos de 4 (§6). */
   --e-1: 4px;
@@ -399,13 +403,16 @@ h4 {
   margin: 0;
 }
 
-/* Los h1 hablan como el logotipo: Archivo negra itálica, en mayúscula y con
-   su mismo aire entre letras. En el logotipo «VOLUTUS» mide 534.9 de tinta
-   con un em de 100; la fuente sola, 495.9: 6.5 por cada uno de los seis
-   espacios. `.titular` es la misma voz para un h2 que abre una sección
-   grande: se ve como titular, pero la página tiene un solo h1. */
-h1,
-.titular {
+/* Cuatro niveles de título (decisión 50). La Archivo itálica abre: la página
+   en mayúscula y cada sección en minúscula. La Geist ordena lo de adentro.
+   Todos van en 800; lo que baja de un nivel al siguiente es el tamaño y la
+   caja, no la voz. */
+
+/* Nivel 1, la página. Los h1 hablan como el logotipo: Archivo negra itálica,
+   en mayúscula y con su mismo aire entre letras. En el logotipo «VOLUTUS»
+   mide 534.9 de tinta con un em de 100; la fuente sola, 495.9: 6.5 por cada
+   uno de los seis espacios. */
+h1 {
   font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-2xl);
   font-style: italic;
@@ -413,17 +420,34 @@ h1,
   text-transform: uppercase;
 }
 
-/* El titular más chico, para el que va dentro de una tarjeta o abre un bloque
-   dentro de una sección: con el tamaño de sección, «RESOLVIENDO» no cabía en
-   la tarjeta del contacto y la ensanchaba más allá de la pantalla, en S y en L. */
-.titular-menor {
-  font-size: clamp(26px, 8vw, 60px);
+/* El h1 de un artículo es una frase larga, y en mayúscula costaba leerla: va
+   en minúscula, más grande que una sección. */
+.titular-largo {
+  font-size: clamp(34px, 5.4vw, 60px);
+  letter-spacing: -0.005em;
+  line-height: 1.04;
+  text-transform: none;
 }
 
-h2 {
-  font-size: var(--texto-xl);
+/* Nivel 2, la sección: el h2 que abre una sección o una tarjeta de cierre.
+   La voz del h1, en minúscula y más chica. */
+.titular {
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: var(--texto-seccion);
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
 }
 
+/* Nivel 3, el bloque: un h2 sin `.titular`, o un h3 que hace de subtítulo,
+   ordena lo de adentro de una sección. */
+h2,
+.subtitulo {
+  font-size: var(--texto-bloque);
+  letter-spacing: -0.02em;
+}
+
+/* Nivel 4, el elemento: tarjetas, ítems y preguntas. */
 h3,
 h4 {
   font-size: var(--texto-lg);

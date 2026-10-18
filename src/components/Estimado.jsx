@@ -47,7 +47,7 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
     <section id="estimado" className="seccion zona-cielo" aria-labelledby="estimado-titulo">
       <div className="contenedor">
         <p className="antetitulo entra">Precio</p>
-        <h2 id="estimado-titulo" className="estimado-titulo entra">
+        <h2 id="estimado-titulo" className="estimado-titulo titular entra">
           Calcula un estimado
         </h2>
         <p className="estimado-bajada entra">Marca lo que necesitas: la boleta se arma sola, con cada cosa y lo que cuesta.</p>

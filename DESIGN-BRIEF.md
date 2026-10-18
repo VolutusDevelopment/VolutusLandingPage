@@ -456,16 +456,18 @@ Reglas de uso, obligatorias (razón en el anexo A.7):
 - Wordmark `VOLUTUS` en mayúsculas con tracking positivo amplio.
 - Geist Mono solo para números y datos reales, nunca como decoración.
 
-**Escala de tamaños:** seis pasos, y no se sale de ahí.
+**Escala de tamaños:** ocho pasos, y no se sale de ahí. Los títulos, en cuatro niveles (decisión 50).
 
 | Paso | Tamaño | Uso |
 | --- | --- | --- |
 | `xs` | 13 px | Etiquetas, pies |
 | `sm` | 15 px | Texto secundario |
 | `base` | 17 px | Texto corrido |
-| `lg` | 22 px | Entradilla |
-| `xl` | 34 px | Título de sección |
-| `2xl` | fluido, 48 a 76 px | Titular de portada |
+| `lg` | 22 px | Entradilla; título de un elemento (nivel 4) |
+| `xl` | 34 px | Cifras, citas y nombres destacados: proyectos, fases y el formulario |
+| `bloque` | fluido, 22 a 28 px | Título de bloque (nivel 3) |
+| `seccion` | fluido, 26 a 52 px | Título de sección (nivel 2) |
+| `2xl` | fluido, 40 a 76 px | Título de página (nivel 1) |
 
 ### Espaciado y forma `[x]`
 
@@ -750,6 +752,7 @@ tener dueño ni fecha.
 | 47 | 2026-10-17 | El formulario de contacto pregunta «Enviar por»: correo o WhatsApp, justo sobre el mensaje. Por WhatsApp el mismo botón abre el chat con el nombre, el correo, los servicios marcados y el mensaje ya escritos, sin pasar por el Worker. La pastilla de WhatsApp, al marcarla, toma su verde y su letra | Un botón de WhatsApp aparte en la barra del mensaje, junto a «Enviar mensaje» | Diego |
 | 48 | 2026-10-17 | Cada página de servicio, y la guía de la ley de datos, tiene un estimado de precio: se marca lo que se necesita (base, extras, urgencia, forma de pago y mantención) y el precio se calcula al momento, en UF y sin IVA, con su equivalente en pesos. Junto al precio dice que es un estimado y que las necesidades de cada uno pueden cambiar el precio final. La fórmula y las variables son las del estándar de precios del Vault («2. Areas/Estándar de precios»); el sitio usa las suyas desde `src/lib/precios.js`. Reemplaza la decisión 11 | Seguir sin publicar precios (decisión 11), con el precio como el freno que más detiene a los perfiles (15,8 % de los que se detienen, `docs/perfiles-clientes-100000.md`) | Diego |
 | 49 | 2026-10-17 | El estimado se ve y se entiende. La cabecera de cada servicio lleva «Calcula tu estimado · desde N UF», con su equivalente en pesos y el aviso de que es un estimado, en lugar de «Qué incluye». El estimado va justo después de «Qué incluye»: las opciones en pasos numerados y una boleta que lista cada cosa marcada con lo que suma, el total, la UF del día con su fecha y su valor, el pago y lo que cuesta al mes. Desde L la boleta acompaña al bajar; en S y M, una barra con el total se pega abajo mientras se marca. «Pedir esta cotización» deja lo marcado escrito en el mensaje del formulario. Las piezas de la cabecera no cambian. Elegido en el lienzo de Design (https://claude.ai/artifact/1cACsR5hKXpca8ysAPrhqs) | El estimado después de las preguntas frecuentes, con un solo total, que en S quedaba bajo todas las opciones; y un estimado por pasos, que escondía opciones y sumaba clics | Diego |
+| 50 | 2026-10-18 | Los títulos van en cuatro niveles, todos en 800, para que no pesen lo mismo y suenen igual de fuerte. La página, el h1, en Archivo itálica y mayúscula; la sección, `.titular` (el h2 que abre una sección o una tarjeta de cierre), en Archivo itálica y minúscula, de 26 a 52 px; el bloque, el h2 sin `.titular` y `.subtitulo`, en Geist, de 22 a 28 px, y el elemento, h3 y h4, en Geist de 22 px. El h1 de los artículos, una frase larga, va en minúscula, de 34 a 60 px. La cabecera de la portada no cambia. Elegido en el lienzo de Design (https://claude.ai/artifact/KVNhKCvXFBnoi5fz9S2kpV) | El h1 y los títulos de sección con la misma regla, Archivo mayúscula de 40 a 76 px, que en el teléfono dejaba «Proyectos y logros» (40 px) más grande que el titular de la portada (32 px); y los h2 de las páginas de servicio y los artículos en Geist de 34 px, otra voz para el mismo nivel | Diego |
 
 ---
 

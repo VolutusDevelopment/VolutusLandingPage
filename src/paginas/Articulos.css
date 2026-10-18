@@ -78,7 +78,6 @@
 
 .articulos h2 {
   margin-top: var(--e-2);
-  font-size: var(--texto-xl);
 }
 
 .articulos h2 a {
@@ -137,8 +136,9 @@
   margin-left: auto;
 }
 
-/* En S y M, el índice más apretado: títulos un paso más chicos y el resumen
-   en tres líneas (entero en el HTML); en M, de a dos. Entre secciones, 48 px. */
+/* En S y M, el índice más apretado: el resumen en tres líneas (entero en el
+   HTML); en M, de a dos. Entre secciones, 48 px. Los títulos ya bajan solos:
+   son nivel 3 (index.css). */
 @media (max-width: 1023px) {
   main > .seccion:not(.cabecera-cielo):has(:is(.articulos, .lista-articulos)) {
     padding-bottom: var(--e-12);
@@ -146,10 +146,6 @@
 
   .articulos {
     gap: var(--e-8);
-  }
-
-  .articulos h2 {
-    font-size: var(--texto-lg);
   }
 
   .articulos-resumen {
@@ -183,7 +179,6 @@
 
 .prosa h2 {
   margin-top: var(--e-12);
-  font-size: var(--texto-xl);
 }
 
 .prosa h3 {
