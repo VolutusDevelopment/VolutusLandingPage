@@ -183,14 +183,11 @@ function Ficha({ proyecto }) {
           <h3 id={titulo}>{proyecto.nombre}</h3>
           <p>{proyecto.lema}</p>
         </div>
-        {/* Cerrar no necesita script: un formulario `dialog` cierra el suyo. */}
-        <form method="dialog">
-          <button className="boton-cuadro ficha-cerrar" aria-label={`Cerrar la ficha de ${proyecto.nombre}`}>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </form>
+        <button type="button" className="boton-cuadro ficha-cerrar" aria-label={`Cerrar la ficha de ${proyecto.nombre}`}>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
       </div>
 
       <div className="ficha-cuerpo">

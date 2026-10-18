@@ -53,6 +53,11 @@ export default function initEstimado() {
     })
   })
 
+  // Lo marcado, en una frase: lo que llega al mensaje del formulario y lo que
+  // recibe un agente de IA.
+  const resumen = () =>
+    `${form.dataset.servicio}: ${textos.lineas.map(({ nombre }) => nombre).join(', ')}. ${textos.total} UF + IVA. Pago: ${textos.pago}. Al mes: ${textos.mes}.`
+
   // «Pedir esta cotización» deja lo marcado escrito en el mensaje del
   // formulario. Solo si el mensaje está vacío o tiene lo que se escribió aquí
   // antes: lo que la persona haya escrito no se toca.
@@ -60,9 +65,7 @@ export default function initEstimado() {
   let escrito = ''
   form.querySelector('[data-pedir]')?.addEventListener('click', () => {
     if (!mensaje || (mensaje.value.trim() && mensaje.value !== escrito)) return
-    const lineas = textos.lineas.map(({ nombre }) => nombre).join(', ')
-    const resumen = `Calculé un estimado de ${form.dataset.servicio}: ${lineas}. ${textos.total} UF + IVA. Pago: ${textos.pago}. Al mes: ${textos.mes}.\n\n`
-    mensaje.value = resumen.slice(0, mensaje.maxLength)
+    mensaje.value = `Calculé un estimado de ${resumen()}\n\n`.slice(0, mensaje.maxLength)
     escrito = mensaje.value
     // Así el contador de caracteres del formulario se entera.
     mensaje.dispatchEvent(new Event('input'))
@@ -72,8 +75,15 @@ export default function initEstimado() {
   // casilla, solo avisan con `change`.
   form.addEventListener('input', calcular)
   form.addEventListener('change', calcular)
-  // No hay nada que enviar: Enter en una cantidad no recarga la página.
-  form.addEventListener('submit', (evento) => evento.preventDefault())
+  // No hay nada que enviar: Enter en una cantidad no recarga la página. Si
+  // envía un agente de IA (WebMCP), recibe el estimado; antes se recalcula, por
+  // si marcó sin avisar con `input`. Fuera de Chrome, `agentInvoked` no existe.
+  form.addEventListener('submit', (evento) => {
+    evento.preventDefault()
+    if (!evento.agentInvoked) return
+    calcular()
+    evento.respondWith(Promise.resolve(`Estimado de ${resumen()} El precio final se confirma en la cotización.`))
+  })
   // Al volver con «atrás», el navegador puede restaurar lo marcado.
   calcular()
 }

@@ -3,10 +3,9 @@
  *
  * El navegador hace casi todo. `showModal()` deja inerte el resto de la página,
  * lleva el foco adentro y lo devuelve a la lámina al cerrar, y Escape cierra.
- * El botón de cerrar es un `<form method="dialog">`, que no necesita script.
- * Aquí queda lo que el navegador no hace solo: abrir, cerrar al tocar el velo,
- * abrir la ficha que pida la dirección (/#ponlenota) y que la ficha salga de
- * su lámina y vuelva a ella, en vez de aparecer de la nada.
+ * Aquí queda lo que el navegador no hace solo: abrir, cerrar con su botón o al
+ * tocar el velo, abrir la ficha que pida la dirección (/#ponlenota) y que la
+ * ficha salga de su lámina y vuelva a ella, en vez de aparecer de la nada.
  *
  * Va con Web Animations y no con View Transitions: Safari no captura bien un
  * `<dialog>` modal en una View Transition, y lo pinta en su sitio final
@@ -87,10 +86,10 @@ export default function initFichas() {
 
     boton.addEventListener('click', abrir)
 
-    ficha.querySelector('form[method="dialog"]').addEventListener('submit', (evento) => {
-      evento.preventDefault()
-      cerrar()
-    })
+    // Un botón y no un `<form method="dialog">`: la ficha solo se abre con
+    // JavaScript, y un formulario de más Lighthouse lo cuenta como uno sin
+    // anotar para los agentes de IA (WebMCP).
+    ficha.querySelector('.ficha-cerrar').addEventListener('click', cerrar)
 
     // Escape. Si el navegador no deja detenerlo, cierra a su manera.
     ficha.addEventListener('cancel', (evento) => {

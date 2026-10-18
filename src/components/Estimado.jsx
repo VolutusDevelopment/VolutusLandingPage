@@ -31,6 +31,11 @@ import { SERVICIOS } from '../lib/servicios.js'
  * Lo que se puede elegir viaja en `data-estimado`: así el navegador recibe
  * solo lo de este servicio y no el catálogo entero.
  *
+ * Lleva las anotaciones de WebMCP: un agente de IA puede marcar las opciones y
+ * recibir el estimado (estimado.js). Como solo calcula y no le manda nada a
+ * nadie, se envía sin esperar a la persona (`toolautosubmit`). Las casillas se
+ * describen con su etiqueta; los grupos de radios, con la de su `<fieldset>`.
+ *
  * `contacto` es a dónde lleva «Pedir esta cotización». Si es el formulario de
  * la misma página, llega con lo marcado escrito en el mensaje; donde no hay
  * formulario, lleva al de la portada.
@@ -52,10 +57,17 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
         </h2>
         <p className="estimado-bajada entra">Marca lo que necesitas: la boleta se arma sola, con cada cosa y lo que cuesta.</p>
 
-        <form className="estimado" data-estimado={JSON.stringify(estimado)} data-servicio={nombre}>
+        <form
+          className="estimado"
+          data-estimado={JSON.stringify(estimado)}
+          data-servicio={nombre}
+          toolname="estimar_precio"
+          tooldescription={`Calcula un estimado del precio de ${nombre} con Volutus, en UF + IVA, según lo que se marque. Responde el total, lo incluido, cómo se paga y el costo mensual.`}
+          toolautosubmit=""
+        >
           <div className="estimado-opciones">
             {bases.length > 1 ? (
-              <Grupo paso={++paso} titulo="Parte con">
+              <Grupo paso={++paso} titulo="Parte con" descripcion="El punto de partida: se elige uno">
                 {bases.map(({ id, nombre, horas }, i) => (
                   <Pastilla key={id} tipo="radio" nombre="base" valor={id} marcada={i === 0} precio={enUF(horas)}>
                     {nombre}
@@ -90,7 +102,7 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
             </Grupo>
 
             {cuotas.length > 0 && (
-              <Grupo paso={++paso} titulo="Cómo pagas">
+              <Grupo paso={++paso} titulo="Cómo pagas" descripcion="Cómo se paga: 0 es pago total; si no, el número de cuotas">
                 <Pastilla tipo="radio" nombre="plazo" valor="0" marcada>
                   Pago total
                 </Pastilla>
@@ -103,7 +115,7 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
             )}
 
             {planes.length > 0 && (
-              <Grupo paso={paso + 1} titulo="Mantención">
+              <Grupo paso={paso + 1} titulo="Mantención" descripcion="Plan de mantención mensual; vacío es sin mantención">
                 <Pastilla tipo="radio" nombre="plan" valor="" marcada>
                   Sin mantención
                 </Pastilla>
@@ -201,9 +213,9 @@ export default function Estimado({ servicio, contacto = '#contacto' }) {
   )
 }
 
-function Grupo({ paso, titulo, children }) {
+function Grupo({ paso, titulo, descripcion, children }) {
   return (
-    <fieldset className="opciones estimado-grupo entra">
+    <fieldset className="opciones estimado-grupo entra" toolparamdescription={descripcion}>
       <legend className="estimado-leyenda">
         <span className="estimado-paso">{paso}</span>
         {titulo}
@@ -213,12 +225,14 @@ function Grupo({ paso, titulo, children }) {
   )
 }
 
+// El espacio antes del precio no se ve, pero separa el nombre del precio en el
+// texto de la etiqueta, que es lo que lee un agente de IA (WebMCP).
 function Pastilla({ tipo, nombre, valor, marcada = false, precio, children }) {
   return (
     <label className="chip">
       <input type={tipo} name={nombre} value={valor} defaultChecked={marcada} />
       {children}
-      {precio && <span className="estimado-precio">{precio}</span>}
+      {precio && <span className="estimado-precio"> {precio}</span>}
     </label>
   )
 }
@@ -231,7 +245,7 @@ function Cantidad({ extra: { id, nombre, horas, inicial = 0, max } }) {
     <div className="estimado-cantidad">
       <label htmlFor={campo}>
         {nombre}
-        <span className="estimado-precio">{enUF(horas)} c/u</span>
+        <span className="estimado-precio"> {enUF(horas)} c/u</span>
       </label>
       <button type="button" className="boton-cuadro estimado-paso-boton" data-paso="-1" aria-controls={campo} aria-label={`${nombre}: uno menos`} hidden>
         −

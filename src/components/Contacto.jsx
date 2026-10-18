@@ -29,6 +29,11 @@ import { CORREO_DE_CONTACTO, ERRORES, LIMITES, PLACEHOLDERS, WHATSAPP_DE_CONTACT
  * abajo en cuanto aparecía el primer error. El hueco lo reserva el CSS, que le
  * devuelve el `display` y lo esconde con `visibility`.
  *
+ * Lleva las anotaciones de WebMCP, para que un agente de IA pueda rellenarlo.
+ * Rellenarlo, no enviarlo: sin `toolautosubmit`, el navegador deja el foco en
+ * «Enviar mensaje» y la persona revisa lo escrito antes de mandarlo, porque es
+ * un mensaje a personas de verdad.
+ *
  * El correo, el WhatsApp y los textos de los campos viven en `lib/contacto.js`.
  */
 
@@ -45,7 +50,14 @@ export default function Contacto({ marcado }) {
           <h2 id="contacto-titulo" className="titular entra">¿Qué estás resolviendo a mano?</h2>
         </div>
 
-        <form className="formulario tarjeta" method="post" action="/api/contacto" noValidate>
+        <form
+          className="formulario tarjeta"
+          method="post"
+          action="/api/contacto"
+          noValidate
+          toolname="escribir_a_volutus"
+          tooldescription="Escribe un mensaje a Volutus, empresa chilena de desarrollo de software, para cotizar o conversar un proyecto. La persona lo revisa y lo envía."
+        >
           <h3 className="formulario-titulo">Escríbenos</h3>
 
           {/* Nombre y correo en dos columnas: son cortos y ponerlos uno debajo
@@ -59,6 +71,7 @@ export default function Contacto({ marcado }) {
                 autoComplete="name"
                 maxLength={LIMITES.nombre}
                 placeholder={PLACEHOLDERS.nombre}
+                toolparamdescription="Nombre de quien escribe"
                 required
               />
               <p className="campo-error" id="error-nombre" hidden>
@@ -77,6 +90,7 @@ export default function Contacto({ marcado }) {
                 spellCheck="false"
                 autoCapitalize="off"
                 placeholder={PLACEHOLDERS.correo}
+                toolparamdescription="Correo donde responderle"
                 required
               />
               <p className="campo-error" id="error-correo" hidden>
@@ -91,7 +105,7 @@ export default function Contacto({ marcado }) {
               suele venir con su automatización. Las opciones son los servicios
               de más arriba, sacados de la misma lista (`lib/servicios.js`), y
               «Otro» recoge el resto. */}
-          <fieldset className="campo opciones">
+          <fieldset className="campo opciones" toolparamdescription="Servicios que necesita: uno, varios o ninguno">
             <legend>Dinos lo que necesitas</legend>
             <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
@@ -130,7 +144,7 @@ export default function Contacto({ marcado }) {
               cae en el envío normal, y el Worker responde con su página de
               siempre, que ofrece el correo. */}
           {WHATSAPP_DE_CONTACTO && (
-            <fieldset className="campo opciones">
+            <fieldset className="campo opciones" toolparamdescription="Por dónde se envía el mensaje: correo o WhatsApp">
               <legend>Enviar por</legend>
               <div className="chips">
                 <label className="chip">
@@ -162,6 +176,7 @@ export default function Contacto({ marcado }) {
                 maxLength={LIMITES.proyecto}
                 placeholder={PLACEHOLDERS.proyecto}
                 aria-describedby="cuenta-proyecto"
+                toolparamdescription="Qué necesita resolver, en sus palabras"
                 required
               />
               <div className="composer-barra">

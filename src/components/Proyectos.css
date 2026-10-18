@@ -8,10 +8,12 @@
  * horizontal; tres juntas se quedan en columna.
  * ========================================================================= */
 
+/* Con el aire de entre secciones (64 px) el titular quedaba suelto de lo
+   suyo; con 32, todavía. */
 .obras-bloque {
   display: grid;
   gap: var(--e-6);
-  margin-top: var(--e-16);
+  margin-top: var(--e-6);
 }
 
 .obras-bajada {

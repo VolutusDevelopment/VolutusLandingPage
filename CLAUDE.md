@@ -132,6 +132,20 @@ El sitio debe funcionar bien en Safari de macOS, iOS y iPadOS, incluidas version
 
 ---
 
+## 7. Agentes de IA (WebMCP)
+
+Todo formulario debe poder usarlo un agente de IA mediante WebMCP. Es parte del 3/3 de Agentic Search en Lighthouse.
+
+- Usar la API declarativa (atributos en el HTML) y no la imperativa (`navigator.modelContext`): no suma JavaScript.
+- Cada `<form>` lleva `toolname` (en snake_case, con verbo: `estimar_precio`) y `tooldescription` (qué hace y qué responde).
+- Los campos y `<fieldset>` cuya etiqueta no baste llevan `toolparamdescription`. El agente lee el texto de las etiquetas, así que debe leerse bien como texto, no solo verse bien.
+- Lighthouse cuenta todo `<form>` sin anotar. Lo que no es un formulario (cerrar un diálogo, por ejemplo) va con un `<button>`, no con un `<form>`.
+- `toolautosubmit` solo en formularios que no le envían nada a nadie (calcular, filtrar). Los que escriben a personas los rellena el agente y los envía la persona.
+- Si el formulario le responde algo al agente, se hace en el `submit` con `evento.agentInvoked` y `evento.respondWith(...)`, que solo existen en Chrome: sin WebMCP el formulario funciona igual.
+- Lo que envía un agente se valida y sanitiza igual que lo que escribe una persona.
+
+---
+
 # Optimización del Código
 
 Siempre:
@@ -201,6 +215,7 @@ Antes de considerar una tarea terminada, verificar:
 - No se degradó el SEO.
 - No se degradó la accesibilidad.
 - No se degradó la seguridad.
+- Todo formulario lleva sus anotaciones de WebMCP.
 - Funciona correctamente en XL, L, M y S.
 - No introduce complejidad innecesaria.
 - Mantiene la consistencia visual del proyecto.
