@@ -82,7 +82,7 @@ Los radios efectivos no son uniformes: 4 px en campos y superficies pequeñas, 1
 
 ## Componentes y escenas
 
-- Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella.
+- Barra fija translúcida, enlaces de navegación y botón principal; el estilo responde al fondo bajo ella. Una gota marca dónde estás (decisión 52): descansa en el enlace de la página o la sección actual, sigue al cursor estirándose y, mientras está en otro enlace, deja un punto bajo el tuyo.
 - Dos botones (decisión 51). Con palabras, la píldora (`.boton`): Archivo itálica 800 en minúscula, siempre en una línea, rellena para lo principal y de contorno para lo demás. Con un signo o un número, el cuadro (`.boton-cuadro`): inclinado 10°, para cerrar, − y + y las páginas. Al pulsar, los dos se inclinan un poco más y vuelven.
 - Etiquetas, tarjetas, formulario, estados de foco y utilidades para contenido accesible.
 - Servicios en ocho cards, en una rueda en todos los tamaños: muestra todas y gira (arrastre con el ratón o el dedo, trackpad o pulsando una que asoma). El glifo de cada card hace un gesto corto al quedar al frente y al pasar el cursor (Icono.css). Sin JavaScript, una lista con todas a la vista.

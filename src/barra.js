@@ -93,10 +93,71 @@ function vigilarDetras(pieza, fondos) {
   addEventListener('resize', medir)
 }
 
+// La gota de la cápsula (Barra.css) va al enlace que se señala, con el cursor
+// o con el teclado, y si no hay ninguno al de la página o la sección actual.
+// Aquí solo se mide: la cápsula recibe los bordes del enlace y hacia dónde
+// viaja, y el CSS hace el resto. Con el dedo no viaja: un toque no señala, y
+// la gota iría y volvería con cada roce al desplazar.
+function initGota(capsula) {
+  const enlaces = [...capsula.querySelectorAll('.barra-enlaces a')]
+  let donde
+  let bajoElCursor
+
+  // En la sección de contacto de una página de servicio hay dos actuales, la
+  // página y la sección: manda la sección, que es la última.
+  const actual = () => enlaces.findLast((enlace) => enlace.hasAttribute('aria-current'))
+
+  const ir = (enlace) => {
+    // Mientras la gota está en otro enlace, el actual lleva la gotita.
+    const casa = actual()
+    enlaces.forEach((otro) => otro.toggleAttribute('data-gotita', otro === casa && otro !== enlace))
+    // Un enlace oculto (el contacto en S) no mide nada: la gota se apaga ahí
+    // mismo.
+    if (!enlace?.offsetWidth) {
+      capsula.dataset.gota = 'oculta'
+      donde = undefined
+      return
+    }
+    // Viaja solo de un enlace a otro: si estaba apagada, aparece en su sitio.
+    if (!donde) delete capsula.dataset.hacia
+    else if (enlace !== donde) {
+      capsula.dataset.hacia = enlaces.indexOf(enlace) > enlaces.indexOf(donde) ? 'derecha' : 'izquierda'
+    }
+    capsula.style.setProperty('--gota-izq', `${enlace.offsetLeft}px`)
+    capsula.style.setProperty('--gota-der', `${capsula.clientWidth - enlace.offsetLeft - enlace.offsetWidth}px`)
+    capsula.dataset.gota = 'visible'
+    donde = enlace
+  }
+
+  const reposar = () => ir(bajoElCursor ?? capsula.querySelector('a:focus-visible') ?? actual())
+
+  capsula.addEventListener('pointerover', ({ target, pointerType }) => {
+    if (pointerType === 'touch') return
+    bajoElCursor = target.closest('a') ?? bajoElCursor
+    reposar()
+  })
+  capsula.addEventListener('pointerleave', () => {
+    bajoElCursor = undefined
+    reposar()
+  })
+  capsula.addEventListener('focusin', reposar)
+  capsula.addEventListener('focusout', ({ relatedTarget }) => {
+    if (!capsula.contains(relatedTarget)) ir(bajoElCursor ?? actual())
+  })
+  // Los enlaces cambian de ancho al cargar la letra y en cada punto de
+  // quiebre, y con ellos la cápsula.
+  new ResizeObserver(reposar).observe(capsula)
+
+  reposar()
+  return reposar
+}
+
 export default function initBarra() {
   const barra = document.querySelector('.barra')
   const zonas = document.querySelectorAll('.seccion, .pie')
   if (!barra || !zonas.length) return
+
+  const reposarGota = initGota(barra.querySelector('.barra-capsula'))
 
   // La lente (Barra.jsx) va en `backdrop-filter`, y un filtro SVG ahí solo lo
   // pinta Chromium. CSS no puede preguntarlo —`@supports` dice que sí también
@@ -125,5 +186,6 @@ export default function initBarra() {
       if (destinos[i] && destinos[i] === actual) enlace.setAttribute('aria-current', 'location')
       else enlace.removeAttribute('aria-current')
     })
+    reposarGota()
   })
 }

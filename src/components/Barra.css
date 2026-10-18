@@ -149,6 +149,7 @@
   --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
   --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
   --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
+  --ease-masa: cubic-bezier(0.34, 1.2, 0.64, 1);
   display: flex;
   align-items: center;
   gap: var(--e-2);
@@ -325,14 +326,20 @@
 }
 
 /* El aire entre enlaces es su propio relleno: así el indicador cubre el
-   enlace entero y no solo la palabra. */
+   enlace entero y no solo la palabra. Hablan con la voz de los botones
+   (decisión 51), en el tamaño chico de la barra. */
 .barra-enlaces a {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding-inline: var(--e-4);
   border-radius: 999px;
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
   font-size: var(--texto-sm);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   /* `--texto` y no `--texto-suave`: el cristal es casi incoloro, así que el
      contraste lo pone la zona de detrás, y el tono suave no llega a 4.5:1
      sobre el cielo de la portada. */
@@ -340,63 +347,131 @@
   text-decoration: none;
   transition:
     color var(--t-tono) var(--ease-in-out),
-    background-color 200ms var(--ease-out);
+    transform var(--t-pulsar) var(--ease-out);
 }
 
-/* ---- el indicador ----
-   Una sola píldora que viaja al enlace bajo el cursor o con el foco y, si no
-   hay ninguno, descansa en el de la sección actual (`aria-current`, que pone
-   barra.js). Anchor Positioning: el enlace que corresponde se declara ancla y
-   la píldora se estira entre sus cuatro bordes, así que el mismo trazo mide
-   «Nosotros» y «Servicios» sin que nadie calcule nada. La curva pasa un poco
-   de largo y vuelve: el gesto de algo con masa, no de un salto.
+/* ---- la gota ----
+   Marca dónde estás: descansa en el enlace de la página o la sección actual
+   (`aria-current`), viaja al que se señala con el cursor o el teclado y
+   vuelve. barra.js mide ese enlace y le pasa sus bordes (`--gota-izq`,
+   `--gota-der`). Con Anchor Positioning no había que medir, pero Safari no
+   anima lo que se posiciona así y la píldora saltaba.
 
-   Sin soporte, cada enlace pinta su propio fondo: el mismo resultado, sin el
-   viaje. */
-@supports not (anchor-name: --a) {
-  .barra-enlaces a:is(:hover, :focus-visible, [aria-current]) {
-    background-color: var(--indicador);
-  }
+   Viaja como una gota: el borde de adelante sale primero y el de atrás lo
+   alcanza después y con algo de masa, así que se estira por el camino y se
+   asienta al llegar. `data-hacia` dice cuál es cada borde. Aparece y se va en
+   su sitio, sin venir de ninguna parte.
+
+   Nace cuando barra.js pone `data-gota`, y lo que nace no tiene de dónde
+   transicionar: aparece quieta justo donde estaba el fondo del enlace. Hasta
+   entonces, y sin JavaScript, cada enlace pinta su propio fondo: lo mismo,
+   sin el viaje. */
+.barra-capsula:not([data-gota]) .barra-enlaces a:is(:hover, :focus-visible, [aria-current]) {
+  background-color: var(--indicador);
 }
 
-@supports (anchor-name: --a) {
-  .barra-capsula::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    position-anchor: --indicador;
-    inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
-    border-radius: 999px;
-    background-color: var(--indicador);
-    pointer-events: none;
-    opacity: 0;
+.barra-capsula[data-gota]::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-block: calc((100% - 44px) / 2);
+  left: var(--gota-izq);
+  right: var(--gota-der);
+  border-radius: 999px;
+  background-color: var(--indicador);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 180ms var(--ease-out),
+    background-color var(--t-tono) var(--ease-in-out);
+}
+
+.barra-capsula[data-gota='visible']::after {
+  opacity: 1;
+}
+
+/* La gotita: mientras la gota está en otro enlace, deja un punto bajo el del
+   lugar donde estás (`data-gotita`, de barra.js). Sale cuando la gota se va y
+   espera a que vuelva para irse: la gota la recoge. */
+.barra-enlaces a::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 140ms var(--ease-out) 200ms;
+}
+
+.barra-enlaces a[data-gotita]::after {
+  opacity: 0.9;
+  transition-delay: 80ms;
+}
+
+/* Con movimiento reducido la gota no viaja ni se inclina: cambia de enlace
+   con un fundido. */
+@media (prefers-reduced-motion: no-preference) {
+  .barra-capsula[data-gota]::after {
+    transform: scale(0.92);
     transition:
-      inset 450ms cubic-bezier(0.34, 1.25, 0.64, 1),
-      opacity 200ms var(--ease-out),
+      opacity 180ms var(--ease-out),
+      transform var(--t-pulsar) var(--ease-out),
       background-color var(--t-tono) var(--ease-in-out);
   }
 
-  .barra-enlaces a:is(:hover, :focus-visible, [aria-current]) {
-    anchor-name: --indicador;
+  .barra-capsula[data-gota='visible']::after {
+    transform: none;
   }
 
-  /* Mientras se señala otro enlace, la sección actual cede el ancla. */
-  .barra-enlaces:has(a:is(:hover, :focus-visible)) a[aria-current]:not(:hover, :focus-visible) {
-    anchor-name: none;
+  .barra-capsula[data-hacia]::after {
+    transition-duration: 260ms, 360ms, 180ms, var(--t-pulsar), var(--t-tono);
+    transition-delay: 0s, 40ms, 0s, 0s, 0s;
+    transition-timing-function: var(--ease-out), var(--ease-masa), var(--ease-out), var(--ease-out), var(--ease-in-out);
   }
 
-  .barra-capsula:has(a:is(:hover, :focus-visible, [aria-current]))::after {
-    opacity: 1;
+  .barra-capsula[data-hacia='derecha']::after {
+    transition-property: right, left, opacity, transform, background-color;
+  }
+
+  .barra-capsula[data-hacia='izquierda']::after {
+    transition-property: left, right, opacity, transform, background-color;
+  }
+
+  /* Al pulsar, el enlace se inclina como los botones (decisión 51). */
+  .barra-enlaces a:active {
+    transform: skewX(-8deg) scale(0.98);
+  }
+
+  .barra-enlaces a::after {
+    transform: scale(0.3);
+    transition:
+      opacity 140ms var(--ease-out) 200ms,
+      transform 140ms var(--ease-out) 200ms;
+  }
+
+  .barra-enlaces a[data-gotita]::after {
+    transform: none;
+    transition:
+      opacity 200ms var(--ease-out) 80ms,
+      transform 320ms var(--ease-masa) 80ms;
+  }
+}
+
+/* La gota se inclina con el enlace solo donde hay cursor: con el dedo no
+   viaja (barra.js) y se inclinaría lejos del enlace pulsado. */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .barra-capsula[data-gota='visible']:has(a:active)::after {
+    transform: skewX(-8deg) scale(0.98);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .barra-capsula::before {
     animation: none;
-  }
-
-  .barra-capsula::after {
-    transition: opacity 200ms var(--ease-out);
   }
 }
 
@@ -443,6 +518,14 @@
 
   .barra-enlaces a {
     font-size: var(--texto-sm);
+  }
+}
+
+/* Por debajo de 360 px la cursiva, más ancha, no cabía: los enlaces se
+   juntan otro poco. */
+@media (max-width: 359px) {
+  .barra-enlaces a {
+    padding-inline: var(--e-1);
   }
 }
 

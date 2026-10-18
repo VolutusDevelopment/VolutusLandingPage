@@ -83,10 +83,9 @@ function Lente() {
  * del logo y el de cada enlace, por separado.
  *
  * La cápsula se nota por cómo se comporta, no por su adorno: el vidrio se
- * condensa con el scroll, y una sola píldora viaja entre los enlaces y
- * descansa en el de la sección actual (Anchor Positioning, sin JavaScript;
- * `aria-current` lo pone `barra.js`). En Chromium, además, el bisel refracta
- * el fondo (ver `Lente`).
+ * condensa con el scroll, y una gota viaja entre los enlaces y descansa en el
+ * de la página o la sección actual: marca dónde estás (Barra.css y
+ * `barra.js`). En Chromium, además, el bisel refracta el fondo (ver `Lente`).
  *
  * Lleva la acción principal porque la cápsula la hace discreta: un botón
  * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
