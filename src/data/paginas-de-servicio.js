@@ -5,8 +5,7 @@
  *
  * Rige la regla de §3 del brief: lo que no se puede comprobar, no se dice. Por
  * eso no hay plazos —el equipo no los ha fijado (pregunta abierta 6)— ni
- * clientes, y la prueba de cada servicio es obra con enlace (`prueba`, de
- * data/proyectos.js) o no aparece.
+ * clientes.
  *
  * Todo va corto, para que la página se lea de una pasada: una línea por punto,
  * tres señales y tres pedidos. Lo que la página ya dibuja no se repite en
@@ -25,9 +24,6 @@
  *   automatización no lo lleva: sus señales son las tareas de hoy (`antes`).
  * - `pedimos`: lo que el cliente pone de su parte, la objeción que §2 llama la
  *   más valiosa: «¿qué tengo que entregarles yo?».
- * - `prueba`: un proyecto de data/proyectos.js que lo demuestra, con una línea
- *   que dice por qué; `vista` muestra una de sus capturas y `medir` suma el
- *   botón para medir esta misma página.
  * - `preguntas`: en texto plano, porque también van a los datos estructurados
  *   (FAQPage) del prerender. La primera va abierta.
  */
@@ -65,33 +61,28 @@ export const PAGINAS_DE_SERVICIO = {
     tipo: 'Desarrollo web',
     titular: 'Páginas web rápidas de verdad',
     entradilla: 'Rápidas en el celular, fáciles de encontrar en Google y con tu marca.',
-    // Lo que se ve, sobre la onda, y lo que no, debajo.
+    // Lo que se ve, sobre la onda, y lo que no, debajo. `icono` es el dibujo
+    // de cada punto en S y M (Web.jsx).
     incluye: [
       {
         grupo: 'Lo que se ve',
         puntos: [
-          { titulo: 'Para cada pantalla', texto: 'Pensada primero para el celular.' },
-          { titulo: 'Con tu identidad', texto: 'Tus colores y tu voz, no una plantilla.' },
-          { titulo: 'Lista para que te escriban', texto: 'Un formulario que llega a tu correo.' },
+          { icono: 'pantalla', titulo: 'Para cada pantalla', texto: 'Pensada primero para el celular.' },
+          { icono: 'identidad', titulo: 'Con tu identidad', texto: 'Tus colores y tu voz, no una plantilla.' },
+          { icono: 'correo', titulo: 'Lista para que te escriban', texto: 'Un formulario que llega a tu correo.' },
         ],
       },
       {
         grupo: 'Lo que no se ve',
         puntos: [
-          { titulo: 'Hecha para Google', texto: 'Títulos, datos estructurados y mapa del sitio.' },
-          { titulo: 'Rápida al abrir', texto: 'La medimos con Lighthouse antes de entregarla.' },
-          { titulo: 'Legible para la IA', texto: 'Para que ChatGPT, Gemini o Claude puedan citarte.' },
+          { icono: 'buscar', titulo: 'Hecha para Google', texto: 'Títulos, datos estructurados y mapa del sitio.' },
+          { icono: 'rayo', titulo: 'Rápida al abrir', texto: 'La medimos con Lighthouse antes de entregarla.' },
+          { icono: 'chispa', titulo: 'Legible para la IA', texto: 'Para que ChatGPT, Gemini o Claude puedan citarte.' },
         ],
       },
     ],
     cuando: ['No te encuentran en Google.', 'Hoy dependes solo de redes sociales.', 'Tu página tarda o se ve mal en el celular.'],
     pedimos: ['Tu logo y tus colores, si los tienes.', 'Los textos, o los escribimos juntos.', 'Fotos de tu negocio.'],
-    prueba: {
-      proyecto: 'ponlenota',
-      vista: 'El sitio',
-      texto: 'Su sitio lo hicimos nosotros, igual que esta página.',
-      medir: true,
-    },
     preguntas: [
       { pregunta: '¿Cuánto cuesta una página web?', respuesta: PRECIO },
       {
@@ -178,10 +169,6 @@ export const PAGINAS_DE_SERVICIO = {
       'Tienes una idea y quieres llevarla a una app.',
     ],
     pedimos: ['Quién lo va a usar y para qué.', 'Cómo lo resuelves hoy.', 'Alguien de tu lado que pruebe cada entrega.'],
-    prueba: {
-      proyecto: 'ponlenota',
-      texto: 'Sitio, app Android y panel web sobre la misma base.',
-    },
     preguntas: [
       {
         pregunta: '¿Conviene software a medida o uno ya hecho?',
@@ -218,10 +205,6 @@ export const PAGINAS_DE_SERVICIO = {
     ],
     cuando: ['Respondes lo mismo todos los días.', 'Te escriben fuera de horario.', 'Quieres IA, pero con tus datos.'],
     pedimos: ['Las preguntas que más te hacen.', 'De dónde sale la información.', 'Qué pasa siempre por una persona.'],
-    prueba: {
-      proyecto: 'hackathon',
-      texto: 'Nuestro agente de alertas de infraestructura, con jurado externo.',
-    },
     // Van primero y en conversación (Agente.jsx).
     preguntas: [
       {
@@ -254,7 +237,7 @@ export const PAGINAS_DE_SERVICIO = {
     titular: 'Deja de copiar y pegar',
     entradilla: 'Las tareas repetitivas ocurren solas, con las herramientas que ya usas.',
     // Cada tarea de hoy (`antes`) junto a cómo queda automatizada; después,
-    // lo que va en todas: el registro y las herramientas que se conectan.
+    // lo que va en todas: las herramientas que se conectan.
     incluye: {
       tareas: [
         {
@@ -278,7 +261,6 @@ export const PAGINAS_DE_SERVICIO = {
           texto: 'Leemos PDF y correos. Nadie tipea.',
         },
       ],
-      registro: { titulo: 'Registro de todo', texto: 'Cada paso queda anotado. Si algo no se completa, avisa.' },
       herramientas: {
         titulo: 'Con lo que ya usas',
         texto: 'Conectamos lo que tienes antes de proponerte algo nuevo.',
@@ -286,10 +268,6 @@ export const PAGINAS_DE_SERVICIO = {
       },
     },
     pedimos: ['Un recorrido por la tarea.', 'Acceso a las herramientas.', 'Ejemplos de lo que entra y lo que sale.'],
-    prueba: {
-      proyecto: 'hackathon',
-      texto: 'Nuestro agente atiende solo las alertas de infraestructura.',
-    },
     preguntas: [
       {
         pregunta: '¿Qué procesos conviene automatizar primero?',
@@ -330,11 +308,6 @@ export const PAGINAS_DE_SERVICIO = {
     ],
     cuando: ['Tu operación vive en planillas.', 'Nadie sabe cuál es la versión buena.', 'Sumar el mes te toma una tarde.'],
     pedimos: ['Tus planillas, tal como están.', 'Quién usa qué.', 'Los números que quieres mirar.'],
-    prueba: {
-      proyecto: 'ponlenota',
-      vista: 'El panel web',
-      texto: 'Su panel web es un sistema de gestión.',
-    },
     preguntas: [
       {
         pregunta: '¿Por qué un sistema y no una planilla?',
@@ -368,7 +341,6 @@ export const PAGINAS_DE_SERVICIO = {
       { titulo: 'Tus rubros', texto: 'Cada negocio aparece una sola vez.' },
       { titulo: 'Su correo', texto: 'El que publica en su web. Si no hay, queda vacío.' },
       { titulo: 'Su reputación', texto: 'Su nota en Google y cuántas reseñas la sostienen.' },
-      { titulo: 'Los que no tienen web', texto: 'En una pestaña aparte.' },
       { titulo: 'Sheets y Excel', texto: 'Con la fecha de la búsqueda.' },
     ],
     cuando: [

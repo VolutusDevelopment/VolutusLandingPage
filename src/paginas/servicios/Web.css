@@ -1,11 +1,10 @@
 /* Páginas web. Ver paginas/servicios/Web.jsx.
 
    «Qué incluye» a todo el ancho: arriba, en el claro de la página, lo que se
-   ve; una onda, y debajo, en el color del servicio, lo que no se ve y la
-   prueba (Bloques.jsx), que se cierra con la onda volteada. */
+   ve; una onda, y debajo, en el color del servicio, lo que no se ve, que se
+   cierra con la onda volteada. */
 
-/* El color pasa sin corte de la franja a la sección de la prueba, que ya
-   llega sin relleno arriba (index.css, `.zona-cielo + .zona-cielo`). */
+/* La franja de color termina en la onda volteada, sin relleno entre las dos. */
 .web-incluye {
   padding-bottom: 0;
 }
@@ -46,6 +45,68 @@
 .web-puntos p {
   margin-top: var(--e-2);
   color: var(--texto-suave);
+}
+
+/* ---- en S y M ----
+   «Qué incluye» llega justo al final del degradado de la cabecera, cada punto
+   lleva su ícono y la franja de lo que no se ve suma la trama de puntos de la
+   marca, con cada punto en su placa. */
+.web-icono {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .web-superficie {
+    padding-top: 0;
+  }
+
+  .web-puntos li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--e-4);
+  }
+
+  .web-puntos li > :not(.web-icono) {
+    grid-column: 2;
+  }
+
+  .web-icono {
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radio-tarjeta);
+    background: color-mix(in oklab, var(--tinte) 12%, var(--superficie));
+    color: var(--tinte);
+  }
+
+  .web-icono svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .web-fondo {
+    background:
+      radial-gradient(circle, rgb(255 255 255 / 0.13) 1px, transparent 1.6px) 0 0 / 12px 12px,
+      var(--fondo);
+  }
+
+  .web-fondo .web-puntos {
+    gap: var(--e-3);
+  }
+
+  .web-fondo .web-puntos li {
+    padding: var(--e-4);
+    border: 1px solid rgb(255 255 255 / 0.22);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  .web-fondo .web-icono {
+    background: #fff;
+  }
 }
 
 /* La onda: dos capas que se corren despacio, en sentidos contrarios. Cada

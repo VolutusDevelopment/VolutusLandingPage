@@ -27,60 +27,38 @@
   color: var(--texto-suave);
 }
 
-/* Servicios, cada uno en el color de su card (`--tinte`): la rueda, en fila.
-   El blanco encima da 5.5:1 o más. */
-.fila-servicios {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
-  gap: var(--e-3);
-  margin: var(--e-6) 0 0;
-  padding: 0;
-}
+/* En S y M, filas con su divisor: el título más chico y el resumen en dos
+   líneas. El resumen entero sigue en el HTML. En M, de a dos. */
+@media (max-width: 1023px) {
+  .lista-articulos {
+    gap: 0;
+    margin-top: var(--e-6);
+    border-top: 1px solid var(--linea);
+  }
 
-.fila-servicios a {
-  display: flex;
-  align-items: center;
-  gap: var(--e-3);
-  min-height: 56px;
-  padding: var(--e-3) var(--e-4);
-  border-radius: var(--radio-tarjeta);
-  background: var(--tinte);
-  color: #fff;
-  font-weight: 800;
-  text-decoration: none;
-  transition: transform var(--t-pulsar) var(--ease-out);
-}
+  .lista-articulos li {
+    padding-block: var(--e-4);
+    border-bottom: 1px solid var(--linea);
+  }
 
-.fila-servicios a:hover {
-  color: #fff;
-  transform: translateY(-2px);
-}
+  .lista-articulos a {
+    font-size: var(--texto-base);
+    line-height: 1.35;
+  }
 
-.fila-servicios-icono {
-  flex: none;
-  width: 24px;
-  height: 24px;
-}
-
-/* Al pasar el cursor o llegar con el teclado, el glifo hace el gesto de su
-   servicio (Icono.css). */
-@media (prefers-reduced-motion: no-preference) {
-  .fila-servicios a:focus-visible .gesto {
-    animation: var(--gesto);
-    animation-delay: calc(var(--n, 0) * 90ms);
+  .lista-articulos p {
+    display: -webkit-box;
+    margin-top: var(--e-1);
+    overflow: hidden;
+    font-size: var(--texto-sm);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .fila-servicios a:hover .gesto {
-    animation: var(--gesto);
-    animation-delay: calc(var(--n, 0) * 90ms);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fila-servicios a:hover {
-    transform: none;
+@media (min-width: 640px) and (max-width: 1023px) {
+  .lista-articulos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--e-8);
   }
 }

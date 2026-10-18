@@ -2,13 +2,17 @@ import { Incluye, ParaEmpezar, Preguntas } from './Bloques.jsx'
 
 /**
  * Prospección de clientes: el trabajo, del mapa a la planilla. En el mapa, la
- * zona marcada, un radar que la recorre y los negocios que caen como pines;
- * los huecos no tienen web. En la planilla llegan uno por fila, con el correo
- * vacío cuando no lo publican, el aviso de pocas reseñas y la pestaña de los
- * que no tienen web (Prospeccion.css). Debajo, lo mismo en palabras.
+ * zona marcada, un radar que la recorre y los negocios que caen como pines.
+ * En la planilla llegan uno por fila, con el correo vacío cuando no lo
+ * publican y el aviso de pocas reseñas (Prospeccion.css). Debajo, lo mismo en
+ * palabras.
  *
  * Mapa y planilla son de ejemplo y se esconden del lector de pantalla: las
  * celdas van en barras, sin nombres ni correos inventados.
+ *
+ * En S y M, la planilla no cabe: lo que trae cada negocio va en una ficha, la
+ * misma lista en palabras con un ejemplo de cada dato al lado. Los ejemplos
+ * son decoración; desde L no se ven.
  */
 
 const CALLES = [
@@ -26,21 +30,21 @@ const CALLES = [
 const ZONA = '80,70 255,92 232,238 64,205'
 const PIN = 'M0 0 C -4 -6 -11 -11 -11 -19 A 11 11 0 1 1 11 -19 C 11 -11 4 -6 0 0 Z'
 
-// Los negocios, en el orden en que caen: [x, y, sin web].
+// Los negocios, en el orden en que caen.
 const NEGOCIOS = [
   [118, 118],
   [165, 112],
-  [212, 128, true],
+  [212, 128],
   [130, 160],
   [186, 166],
-  [100, 196, true],
+  [100, 196],
   [152, 205],
   [205, 200],
 ]
 
 // Su fila en la planilla: el ancho de la barra de negocio, correo, nota,
-// reseñas y web. `null` es la celda vacía, y sin web tampoco hay correo,
-// porque sale de ahí. La cuarta es la nota alta con pocas reseñas.
+// reseñas y web. `null` es la celda vacía: sin web tampoco hay correo, porque
+// sale de ahí. La cuarta es la nota alta con pocas reseñas.
 const FILAS = [
   [80, 70, 60, 45, 75],
   [65, 82, 55, 55, 66],
@@ -53,7 +57,24 @@ const FILAS = [
 ]
 const POCAS = 3
 
+const ARCHIVO = 'prospeccion-2026-10-16.xlsx'
+
 const Dato = ({ ancho }) => <span className="prospeccion-dato" style={{ width: `${ancho}%` }} />
+const Celda = ({ ancho }) => (ancho ? <Dato ancho={ancho} /> : '—')
+
+// El ejemplo de cada dato en la ficha, por el título de la lista.
+const EJEMPLOS = {
+  'Tu zona': 'La que marcas en el mapa',
+  'Tus rubros': 'Peluquería',
+  'Su correo': <Dato ancho={58} />,
+  'Su reputación': (
+    <>
+      <span className="prospeccion-estrella">★</span>
+      <Dato ancho={22} />
+    </>
+  ),
+  'Sheets y Excel': ARCHIVO,
+}
 
 export default function Prospeccion({ pagina, estimado }) {
   return (
@@ -67,9 +88,9 @@ export default function Prospeccion({ pagina, estimado }) {
                 <line key={i} className="prospeccion-calle" x1={x1} y1={y1} x2={x2} y2={y2} />
               ))}
               <polygon className="prospeccion-zona" points={ZONA} />
-              {NEGOCIOS.map(([x, y, sinWeb], i) => (
+              {NEGOCIOS.map(([x, y], i) => (
                 <g key={i} transform={`translate(${x} ${y})`}>
-                  <g className={`prospeccion-pin${sinWeb ? ' prospeccion-pin-hueco' : ''}`} style={{ '--i': i }}>
+                  <g className="prospeccion-pin" style={{ '--i': i }}>
                     <path d={PIN} />
                     <circle cy="-19" r="4" />
                   </g>
@@ -87,7 +108,7 @@ export default function Prospeccion({ pagina, estimado }) {
 
           <div className="prospeccion-hoja">
             <p className="prospeccion-archivo">
-              <span>prospeccion-2026-10-16.xlsx</span>
+              <span>{ARCHIVO}</span>
               <span>Sheets · Excel</span>
             </p>
             <p className="prospeccion-fila prospeccion-cabecera">
@@ -104,7 +125,9 @@ export default function Prospeccion({ pagina, estimado }) {
                 <span>
                   <Dato ancho={negocio} />
                 </span>
-                <span>{correo ? <Dato ancho={correo} /> : '—'}</span>
+                <span>
+                  <Celda ancho={correo} />
+                </span>
                 <span>
                   <Dato ancho={nota} />
                 </span>
@@ -112,24 +135,31 @@ export default function Prospeccion({ pagina, estimado }) {
                   {i === POCAS && <span className="prospeccion-pocas" />}
                   <Dato ancho={resenas} />
                 </span>
-                <span>{web ? <Dato ancho={web} /> : <span className="prospeccion-sin-web">sin web</span>}</span>
+                <span>
+                  <Celda ancho={web} />
+                </span>
               </p>
             ))}
             <p className="prospeccion-pestanas">
               <span>Negocios</span>
-              <span>Sin web</span>
             </p>
           </div>
         </div>
 
-        <ul className="prospeccion-leyenda">
-          {pagina.incluye.map(({ titulo, texto }) => (
-            <li key={titulo} className="entra">
-              <h3>{titulo}</h3>
-              <p>{texto}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="prospeccion-ficha">
+          <p className="prospeccion-ficha-titulo">De cada negocio recibes</p>
+          <ul className="prospeccion-leyenda">
+            {pagina.incluye.map(({ titulo, texto }) => (
+              <li key={titulo} className="entra">
+                <h3>{titulo}</h3>
+                <span className="prospeccion-ejemplo" aria-hidden="true">
+                  {EJEMPLOS[titulo]}
+                </span>
+                <p>{texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Incluye>
       {estimado}
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />

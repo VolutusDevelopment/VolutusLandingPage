@@ -176,3 +176,183 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---- en S y M, el diagrama literal ----
+   Sin marco: el teléfono y el navegador con sus nombres debajo, la base con su
+   cilindro, cada sistema con su ícono, y lo que lo cuida en su propio recuadro.
+   Los dibujos (`.app-dibujo`, App.jsx) solo existen aquí. */
+.app-dibujo {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .app-marco {
+    margin-top: var(--e-6);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .app-dibujo {
+    display: block;
+    color: var(--tinte);
+  }
+
+  .app-dibujo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .app-caras,
+  .app-caras + .app-flujos {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: var(--e-4);
+  }
+
+  .app-caras {
+    align-items: end;
+  }
+
+  .app-caras li {
+    display: grid;
+    justify-items: center;
+    gap: var(--e-2);
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: center;
+  }
+
+  .app-caras li:first-child .app-dibujo {
+    width: 100%;
+    max-width: 104px;
+  }
+
+  .app-caras .app-dibujo {
+    width: 100%;
+    margin-bottom: var(--e-1);
+  }
+
+  .app-caras h4 {
+    font-size: var(--texto-base);
+    line-height: 1.3;
+  }
+
+  .app-caras p {
+    margin-top: 0;
+    font-size: var(--texto-sm);
+    line-height: 1.4;
+  }
+
+  .app-base {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--e-4);
+    padding: var(--e-4) var(--e-6);
+    border-radius: 16px;
+    text-align: left;
+  }
+
+  .app-base .app-dibujo {
+    grid-row: span 2;
+    color: inherit;
+  }
+
+  .app-base h3 {
+    font-size: var(--texto-lg);
+  }
+
+  .app-base p {
+    margin: 2px 0 0;
+  }
+
+  .app-conectado {
+    margin-top: var(--e-4);
+  }
+
+  .app-sistemas {
+    gap: var(--e-2);
+  }
+
+  .app-sistemas li {
+    display: flex;
+    align-items: center;
+    gap: var(--e-3);
+    min-height: 52px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .app-sistemas .app-dibujo,
+  .app-cuida .app-dibujo {
+    flex: none;
+    width: 24px;
+  }
+
+  /* Lo que lo cuida, en su recuadro: el rótulo arriba y sus puntos debajo. */
+  .app-marco-rotulo {
+    position: static;
+    margin-top: var(--e-8);
+    padding: var(--e-4) var(--e-4) 0;
+    border: 2px solid var(--tinte);
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: none;
+    color: var(--texto-suave);
+    transform: none;
+  }
+
+  .app-cuida {
+    gap: var(--e-4);
+    margin: 0;
+    padding: var(--e-4);
+    border: 2px solid var(--tinte);
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .app-cuida li {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: var(--e-3);
+  }
+
+  .app-cuida .app-dibujo {
+    grid-row: span 2;
+    margin-top: 2px;
+  }
+
+  .app-cuida li > :not(.app-dibujo) {
+    grid-column: 2;
+  }
+
+  .app-cuida h4 {
+    font-size: var(--texto-base);
+  }
+
+  .app-cuida p {
+    margin-top: 2px;
+    font-size: var(--texto-sm);
+  }
+}
+
+/* La fila viva late a la vez en el teléfono y en el navegador. */
+@media screen and (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .app-fila-viva {
+    animation: app-sincro 2.4s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes app-sincro {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

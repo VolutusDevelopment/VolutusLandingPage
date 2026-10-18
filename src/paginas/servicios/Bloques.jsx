@@ -1,6 +1,3 @@
-import { canonicalDe } from '../../lib/meta.js'
-import { PROYECTOS } from '../../data/proyectos.js'
-
 /**
  * Las piezas que comparten las páginas de servicio. Cada servicio (los demás
  * archivos de esta carpeta) las ordena alrededor de su «Qué incluye», que es
@@ -22,68 +19,9 @@ export function Incluye({ className, children }) {
 }
 
 /**
- * Un proyecto de data/proyectos.js como prueba: su nombre, por qué y sus
- * enlaces y, si tiene, una captura. Sin captura es una franja: el texto a un
- * lado y los enlaces al otro. `className` se suma a la sección, para el
- * servicio que la pinta a su manera (la web).
- */
-export function Prueba({ prueba: { proyecto: id, vista: tituloVista, texto, medir }, ruta, className }) {
-  const { nombre, credencial, sitio, repositorio, publicacion, vistas } = PROYECTOS.find((p) => p.id === id)
-  const vista = vistas?.find((v) => v.titulo === tituloVista)
-
-  const enlaces = [
-    medir && {
-      href: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(canonicalDe(ruta))}`,
-      texto: 'Medir esta página',
-      boton: true,
-    },
-    sitio && { href: sitio, texto: new URL(sitio).host },
-    repositorio && { href: repositorio, texto: 'Ver el código' },
-    publicacion && { href: publicacion, texto: 'Ver la publicación' },
-  ].filter(Boolean)
-
-  return (
-    <section className={className ? `seccion zona-cielo ${className}` : 'seccion zona-cielo'} aria-labelledby="prueba-titulo">
-      <div className="contenedor">
-        <div className={`servicio-prueba zona-plano entra${vista ? ' con-vista' : ''}`}>
-          <div className="servicio-prueba-texto">
-            <p className="antetitulo">
-              Compruébalo{credencial && ` · ${credencial.titulo}`}
-            </p>
-            <h2 id="prueba-titulo">{nombre}</h2>
-            <p className="servicio-prueba-bajada">{texto}</p>
-          </div>
-          <ul className="servicio-prueba-enlaces">
-            {enlaces.map(({ href, texto, boton }) => (
-              <li key={href}>
-                <a className={boton ? 'boton boton-primario' : undefined} href={href} rel="noopener">
-                  {texto} <span aria-hidden="true">↗</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          {vista && (
-            <img
-              className="servicio-prueba-vista"
-              src={vista.imagen.src}
-              srcSet={vista.imagen.srcSet}
-              sizes="(min-width: 1024px) 34rem, 90vw"
-              width={vista.imagen.ancho}
-              height={vista.imagen.alto}
-              alt={vista.imagen.alt}
-              loading="lazy"
-              decoding="async"
-            />
-          )}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/**
  * Lo que hay que saber antes de escribir: si le sirve y qué le vamos a pedir.
- * Sin `cuando` (la automatización), el pedido va solo.
+ * Sin `cuando` (la automatización), el pedido va solo. En S y M van sin cajas:
+ * las señales con su visto y lo que pedimos numerado (Servicio.css).
  */
 export function ParaEmpezar({ cuando, pedimos }) {
   return (
@@ -118,7 +56,7 @@ export function ParaEmpezar({ cuando, pedimos }) {
  * Las preguntas frecuentes, plegadas: se lee la pregunta y se abre la que
  * interesa. La primera viene abierta. Plegadas siguen en el HTML, así que
  * buscadores y agentes las leen enteras, y el navegador las abre al buscar
- * en la página.
+ * en la página. En S y M, preguntas.js deja una sola abierta y anima el paso.
  */
 export function Preguntas({ preguntas }) {
   return (

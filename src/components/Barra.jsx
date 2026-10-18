@@ -1,4 +1,5 @@
 import Marca from './Marca.jsx'
+import { SERVICIOS } from '../lib/servicios.js'
 
 /**
  * La lente de la cápsula: el bisel del vidrio desvía lo que hay detrás.
@@ -91,10 +92,12 @@ function Lente() {
  * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
  * cartel que persigue al visitante. Va de contorno y no relleno: la cápsula
  * nunca pesa más que el titular, y el botón relleno de la portada es el que
- * manda. En S se retira y quedan los enlaces.
+ * manda. En S se retira y quedan los enlaces, que caben desde 360 px.
  *
- * Sigue sin menú desplegable en móvil: son dos enlaces y un botón, y un
- * hamburguesa sería JavaScript de navegación que el presupuesto de §8 no paga.
+ * Sin hamburguesa: son dos enlaces y un botón. Lo único que se despliega es
+ * la lista de servicios: en S y M, «Servicios» la abre (menu-servicios.js) en
+ * vez de ir a /servicios, para saltar de un servicio a otro sin recorrer el
+ * índice. Sin JavaScript, y desde L, el enlace lleva a /servicios.
  */
 export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, contactoAqui = false }) {
   // Un ancla pelada fuera de la portada no apunta a nada: en /privacidad,
@@ -147,6 +150,23 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
             </li>
           </ul>          
         </nav>
+      </div>
+      <div id="menu-servicios" className="menu-servicios zona-cielo" hidden>
+        <p className="menu-servicios-titulo">Servicios</p>
+        <ul>
+          {SERVICIOS.filter(({ ruta: destino }) => destino).map(({ id, ruta: destino, nombre, color }) => (
+            <li key={id}>
+              <a href={destino} aria-current={destino === ruta ? 'page' : undefined} style={{ '--punto': color }}>
+                <span className="menu-servicios-punto" aria-hidden="true" />
+                {nombre}
+                {destino === ruta && <small>Estás aquí</small>}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a className="menu-servicios-todos" href="/servicios">
+          Ver todos los servicios <span aria-hidden="true">→</span>
+        </a>
       </div>
       <Lente />
     </header>

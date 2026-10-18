@@ -1,7 +1,7 @@
 /* Prospección de clientes. Ver paginas/servicios/Prospeccion.jsx.
 
    El mapa y la planilla, unidos por una vía por donde pasan los datos: desde
-   L lado a lado, y en S y M uno bajo otro. */
+   L lado a lado. En S y M la vía baja del mapa a la ficha. */
 
 .prospeccion-trabajo {
   display: grid;
@@ -69,16 +69,6 @@
 
 .prospeccion-pin circle {
   fill: var(--superficie);
-}
-
-.prospeccion-pin-hueco path {
-  fill: var(--superficie);
-  stroke: var(--tinte);
-  stroke-width: 2;
-}
-
-.prospeccion-pin-hueco circle {
-  fill: var(--tinte);
 }
 
 /* Centrado en la zona (158, 150 del SVG) y con 140 de diámetro. El margen en
@@ -180,8 +170,7 @@
 }
 
 /* ---- la planilla ----
-   En S sale la columna de la nota: no cabe y la reputación ya va en las
-   reseñas. */
+   Solo desde L: en S y M va la ficha (al final del archivo). */
 
 .prospeccion-hoja {
   overflow: hidden;
@@ -202,7 +191,7 @@
   color: var(--texto-suave);
 }
 
-/* En S no cabe entero: el nombre del archivo cede, no el formato. */
+/* Si no cabe entero, el nombre del archivo cede, no el formato. */
 .prospeccion-archivo span:first-child {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -210,7 +199,7 @@
 
 .prospeccion-fila {
   display: grid;
-  grid-template-columns: 22px 1.3fr 1.2fr 1.1fr 1.1fr;
+  grid-template-columns: 28px 1.6fr 1.6fr 0.6fr 0.8fr 1.1fr;
   border-bottom: 1px solid var(--linea);
 }
 
@@ -222,18 +211,6 @@
   min-height: 30px;
   padding: 0 var(--e-2);
   border-left: 1px solid var(--linea);
-}
-
-@media (max-width: 639px) {
-  .prospeccion-fila > span:nth-child(4) {
-    display: none;
-  }
-}
-
-@media (min-width: 640px) {
-  .prospeccion-fila {
-    grid-template-columns: 28px 1.6fr 1.6fr 0.6fr 0.8fr 1.1fr;
-  }
 }
 
 .prospeccion-cabecera > span {
@@ -265,11 +242,6 @@
   height: 8px;
   border-radius: 50%;
   background: var(--aviso);
-}
-
-.prospeccion-sin-web {
-  font-family: var(--fuente-datos);
-  color: var(--tinte);
 }
 
 .prospeccion-pestanas {
@@ -310,6 +282,85 @@
 .prospeccion-leyenda p {
   margin-top: var(--e-1);
   color: var(--texto-suave);
+}
+
+/* ---- en S y M, la ficha ----
+   La planilla se va y lo que trae cada negocio va en una tarjeta: el nombre
+   de cada dato a la izquierda y, a la derecha, un ejemplo y su explicación. */
+.prospeccion-ficha-titulo,
+.prospeccion-ejemplo {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .prospeccion-hoja {
+    display: none;
+  }
+
+  .prospeccion-ficha {
+    padding: var(--e-4);
+    border: 1px solid var(--linea);
+    border-radius: 16px;
+    background: var(--superficie);
+  }
+
+  .prospeccion-ficha-titulo {
+    display: block;
+    font-weight: 800;
+  }
+
+  .prospeccion-leyenda {
+    display: block;
+    margin: var(--e-2) 0 0;
+  }
+
+  .prospeccion-leyenda li {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: var(--e-3);
+    padding-block: var(--e-3);
+    border-top: 1px dashed var(--linea);
+  }
+
+  .prospeccion-leyenda h3 {
+    grid-row: span 2;
+    font-family: var(--fuente-datos);
+    font-size: var(--texto-xs);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+  }
+
+  .prospeccion-leyenda li > :not(h3) {
+    grid-column: 2;
+  }
+
+  .prospeccion-ejemplo {
+    display: flex;
+    align-items: center;
+    gap: var(--e-2);
+    min-height: 1.5em;
+    font-size: var(--texto-sm);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .prospeccion-ejemplo .prospeccion-dato {
+    height: 8px;
+    background: color-mix(in oklab, var(--tinte) 30%, var(--superficie));
+  }
+
+  .prospeccion-estrella {
+    color: var(--tinte);
+  }
+
+  .prospeccion-leyenda p {
+    margin-top: 2px;
+    font-size: var(--texto-xs);
+    line-height: 1.45;
+  }
 }
 
 /* ---- el movimiento ----

@@ -1,4 +1,4 @@
-import { Incluye, ParaEmpezar, Prueba } from './Bloques.jsx'
+import { Incluye, ParaEmpezar } from './Bloques.jsx'
 
 /**
  * Agentes de IA: las preguntas frecuentes van primero y como una
@@ -6,8 +6,23 @@ import { Incluye, ParaEmpezar, Prueba } from './Bloques.jsx'
  * respuesta (Agente.css); sin esas animaciones se leen enteras, como
  * cualquier lista de preguntas. La hora de cada burbuja la pone chat.js. Lo
  * que incluye viene después.
+ *
+ * En S y M la respuesta llega en varias burbujas, como escribe una persona:
+ * se parte en frases, juntando las cortas. Desde L las partes van en línea y
+ * se lee el mismo párrafo de siempre.
  */
-export default function Agente({ pagina, ruta, estimado }) {
+const LARGO_DE_BURBUJA = 120
+
+function burbujas(respuesta) {
+  return respuesta.split(/(?<=[.!?»])\s+(?=[¿¡«A-ZÁÉÍÓÚÑ])/).reduce((partes, frase) => {
+    const ultima = partes.at(-1)
+    if (ultima && ultima.length + frase.length < LARGO_DE_BURBUJA) partes[partes.length - 1] = `${ultima} ${frase}`
+    else partes.push(frase)
+    return partes
+  }, [])
+}
+
+export default function Agente({ pagina, estimado }) {
   return (
     <>
       <section className="seccion zona-cielo" aria-labelledby="preguntas-titulo">
@@ -25,7 +40,14 @@ export default function Agente({ pagina, ruta, estimado }) {
                     <span />
                     <span />
                   </span>
-                  <p>{respuesta}</p>
+                  <p>
+                    {burbujas(respuesta).map((parte, i) => (
+                      <span key={i} className="agente-burbuja">
+                        {i > 0 && ' '}
+                        {parte}
+                      </span>
+                    ))}
+                  </p>
                 </dd>
               </div>
             ))}
@@ -43,7 +65,6 @@ export default function Agente({ pagina, ruta, estimado }) {
         </ul>
       </Incluye>
       {estimado}
-      <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
     </>
   )

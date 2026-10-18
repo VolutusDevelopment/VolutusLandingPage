@@ -434,11 +434,113 @@
   }
 }
 
-/* Por debajo de 420 px la cápsula no cabe junto al logotipo sin apretarlo:
-   se retira y queda solo la marca. Las secciones siguen a un desplazamiento,
-   y el pie repite los enlaces. */
+/* Por debajo de 420 px la cápsula se queda: el logotipo baja un poco más y
+   las letras de los enlaces también, y caben desde 360 px. */
 @media (max-width: 419px) {
-  .barra-capsula {
-    display: none;
+  .marca-logotipo {
+    height: 22px;
+  }
+
+  .barra-enlaces a {
+    font-size: var(--texto-sm);
+  }
+}
+
+/* ---- la lista de servicios (S y M) ----
+   «Servicios» la abre bajo la barra (menu-servicios.js): los siete, cada uno
+   con el punto de su color y el actual marcado, y el enlace al índice. Va en
+   su propia zona de cielo, clara aunque la barra pase sobre un fondo oscuro. */
+.menu-servicios {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .menu-servicios:not([hidden]) {
+    position: absolute;
+    top: calc(var(--barra-alto) - var(--e-1));
+    left: var(--e-3);
+    right: var(--e-3);
+    display: block;
+    padding: var(--e-2);
+    border: 1px solid var(--linea);
+    border-radius: 20px;
+    background: var(--superficie);
+    box-shadow: 0 18px 40px -18px rgb(10 26 42 / 0.35);
+    pointer-events: auto;
+    transform-origin: top right;
+  }
+
+  .menu-servicios ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .menu-servicios-titulo {
+    padding: var(--e-2) var(--e-3) var(--e-1);
+    font-family: var(--fuente-datos);
+    font-size: var(--texto-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+  }
+
+  .menu-servicios a {
+    display: flex;
+    align-items: center;
+    gap: var(--e-3);
+    min-height: 48px;
+    padding-inline: var(--e-3);
+    border-radius: var(--radio-tarjeta);
+    color: var(--texto);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .menu-servicios a[aria-current] {
+    background: color-mix(in oklab, var(--punto) 10%, var(--superficie));
+  }
+
+  .menu-servicios small {
+    margin-left: auto;
+    font-family: var(--fuente-datos);
+    font-size: var(--texto-xs);
+    font-weight: 400;
+    color: var(--texto-suave);
+  }
+
+  .menu-servicios-punto {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--punto);
+  }
+
+  .menu-servicios .menu-servicios-todos {
+    margin-top: var(--e-1);
+    border-top: 1px solid var(--linea);
+    border-radius: 0 0 var(--radio-tarjeta) var(--radio-tarjeta);
+    color: var(--accion);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .menu-servicios:not([hidden]) {
+    left: auto;
+    width: 22rem;
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .menu-servicios:not([hidden]) {
+    animation: menu-servicios-abre 220ms var(--ease-out);
+  }
+}
+
+@keyframes menu-servicios-abre {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
   }
 }

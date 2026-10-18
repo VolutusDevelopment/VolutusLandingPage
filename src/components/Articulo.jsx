@@ -1,12 +1,12 @@
 import Pagina from './Pagina.jsx'
-import { FilaDeServicios, ListaDeArticulos } from './Sugerencias.jsx'
-import { ARTICULOS, PAGINAS, fechaDe, tituloCorto } from '../lib/meta.js'
+import { ListaDeArticulos } from './Sugerencias.jsx'
+import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
 
 /**
  * La invitación con que cierran los artículos y su índice: la tarjeta oscura
- * del contacto, en la caída, como en /privacidad. Lleva al formulario y, si el
- * artículo es de un servicio, a su página.
+ * del contacto, en la caída, como en /privacidad. Lleva a la calculadora de
+ * estimado del servicio del artículo, o a /servicios si no tiene uno.
  */
 export function Invitacion({ servicio }) {
   return (
@@ -20,14 +20,9 @@ export function Invitacion({ servicio }) {
             Cuéntanos qué estás resolviendo y una persona te responde pronto.
           </p>
           <p className="cierre-acciones">
-            <a className="boton boton-primario" href="/#contacto">
-              Cuéntanos tu proyecto
+            <a className="boton boton-primario" href={servicio ? `${servicio.ruta}#estimado` : '/servicios'}>
+              Calcula tu estimado
             </a>
-            {servicio && (
-              <a className="boton boton-secundario" href={servicio.ruta}>
-                Conoce el servicio
-              </a>
-            )}
           </p>
         </div>
       </div>
@@ -41,16 +36,16 @@ export function Invitacion({ servicio }) {
  * índice de /articulos dicen lo mismo; el artículo solo escribe su cuerpo.
  *
  * Abre en el cielo del día de las páginas internas y se lee en blanco, a la
- * medida de lectura. Al final sugiere los servicios de los que habla y otros
- * artículos, y cierra con la invitación en la caída.
+ * medida de lectura. Al final sugiere los artículos relacionados y cierra con
+ * la invitación en la caída. En S y M, bajo la fecha, el servicio del que
+ * habla queda a un toque.
  */
 export default function Articulo({ ruta, children }) {
   const { titulo, descripcion, publicada, actualizada, servicios = [] } = PAGINAS[ruta]
-  const relacionados = SERVICIOS.filter(({ id, ruta }) => ruta && servicios.includes(id))
-  const otros = ARTICULOS.filter((articulo) => articulo.ruta !== ruta).slice(0, 4)
+  const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
 
   return (
-    <Pagina ruta={ruta} hora="dia" cierre={<Invitacion servicio={relacionados[0]} />}>
+    <Pagina ruta={ruta} hora="dia" cierre={<Invitacion servicio={servicio} />}>
       <article>
         <header className="seccion zona-cielo hora-dia cabecera-cielo">
           <div className="contenedor">
@@ -70,6 +65,15 @@ export default function Articulo({ ruta, children }) {
                 </>
               )}
             </p>
+            {servicio && (
+              <p className="articulo-servicio">
+                <a href={servicio.ruta}>
+                  <small>Servicio</small>
+                  {servicio.nombre}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </p>
+            )}
           </div>
         </header>
 
@@ -80,18 +84,12 @@ export default function Articulo({ ruta, children }) {
         </div>
       </article>
 
-      <section className="seccion zona-cielo" aria-labelledby="sigue-titulo">
+      <section className="seccion zona-cielo" aria-labelledby="relacionados-titulo">
         <div className="contenedor">
-          <h2 id="sigue-titulo" className="entra">
-            Sigue leyendo
+          <h2 id="relacionados-titulo" className="entra">
+            Artículos relacionados
           </h2>
-          <ListaDeArticulos articulos={otros} />
-          {relacionados.length > 0 && (
-            <>
-              <h3 className="articulo-servicios-titulo entra">Te puede servir</h3>
-              <FilaDeServicios servicios={relacionados} />
-            </>
-          )}
+          <ListaDeArticulos articulos={relacionadosDe(ruta)} />
         </div>
       </section>
     </Pagina>

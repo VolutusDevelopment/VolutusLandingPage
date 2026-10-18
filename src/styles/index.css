@@ -376,6 +376,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* En S y M nada corre la página de lado: lo que se pase del ancho se recorta.
+   `clip` y no `hidden`, que volvería a la página un contenedor de scroll y
+   despegaría lo pegajoso (la barra, la guía). Antes de Safari 16 no existe y
+   no recorta, pero hoy nada se pasa: es la red por si algo llega a pasarse. */
+@media (max-width: 1023px) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
 /* Solo 400 y 800 (A.7). Los títulos van en 800 y nada más usa peso. */
 h1,
 h2,
@@ -608,25 +619,27 @@ svg {
    el color de su servicio (`--tinte`), que se sostiene bajo todo su texto, y
    se aclara al blanco de la página en el relleno de abajo (`--fundido`, 192
    px), y 96 px más en la sección siguiente, sin mover nada. Va en una curva
-   suave, una parábola de ida y vuelta en tramos de 16 px (`--e-4`), plana
+   suave, una parábola de ida y vuelta en tramos de 16 px (`--tramo`), plana
    donde empieza y donde termina: en línea recta, el quiebre donde el color
    empieza a aclararse se veía como una raya. En la sección siguiente ya es
-   claro: la tinta da 11.5:1 o más, y el texto suave llega a 4.5:1 a los 8 px. */
+   claro: la tinta da 11.5:1 o más, y el texto suave llega a 4.5:1 a los 8 px.
+   Una página puede acortar la curva entera cambiando `--tramo` (las de
+   servicio, en S y M: Servicio.css). */
 :root .cabecera-cielo {
-  --fundido: calc(12 * var(--e-4));
+  --fundido: calc(12 * var(--tramo, var(--e-4)));
   --fondo-hora: linear-gradient(
-    var(--fondo) calc(100% - 12 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 99.4%, #f6f9fc) calc(100% - 11 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 97.5%, #f6f9fc) calc(100% - 10 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 94.4%, #f6f9fc) calc(100% - 9 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 90.1%, #f6f9fc) calc(100% - 8 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 84.6%, #f6f9fc) calc(100% - 7 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 77.8%, #f6f9fc) calc(100% - 6 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 69.8%, #f6f9fc) calc(100% - 5 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 60.5%, #f6f9fc) calc(100% - 4 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 50%, #f6f9fc) calc(100% - 3 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 39.5%, #f6f9fc) calc(100% - 2 * var(--e-4)),
-    color-mix(in oklab, var(--fondo) 30.2%, #f6f9fc) calc(100% - var(--e-4)),
+    var(--fondo) calc(100% - 12 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 99.4%, #f6f9fc) calc(100% - 11 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 97.5%, #f6f9fc) calc(100% - 10 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 94.4%, #f6f9fc) calc(100% - 9 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 90.1%, #f6f9fc) calc(100% - 8 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 84.6%, #f6f9fc) calc(100% - 7 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 77.8%, #f6f9fc) calc(100% - 6 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 69.8%, #f6f9fc) calc(100% - 5 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 60.5%, #f6f9fc) calc(100% - 4 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 50%, #f6f9fc) calc(100% - 3 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 39.5%, #f6f9fc) calc(100% - 2 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--fondo) 30.2%, #f6f9fc) calc(100% - var(--tramo, var(--e-4))),
     color-mix(in oklab, var(--fondo) 22.2%, #f6f9fc)
   );
 }
@@ -636,12 +649,12 @@ svg {
 :root .cabecera-cielo + .seccion {
   --fondo-hora: linear-gradient(
     color-mix(in oklab, var(--tinte, #1976cc) 22.2%, #f6f9fc),
-    color-mix(in oklab, var(--tinte, #1976cc) 15.4%, #f6f9fc) var(--e-4),
-    color-mix(in oklab, var(--tinte, #1976cc) 9.9%, #f6f9fc) calc(2 * var(--e-4)),
-    color-mix(in oklab, var(--tinte, #1976cc) 5.6%, #f6f9fc) calc(3 * var(--e-4)),
-    color-mix(in oklab, var(--tinte, #1976cc) 2.5%, #f6f9fc) calc(4 * var(--e-4)),
-    color-mix(in oklab, var(--tinte, #1976cc) 0.6%, #f6f9fc) calc(5 * var(--e-4)),
-    var(--fondo) calc(6 * var(--e-4))
+    color-mix(in oklab, var(--tinte, #1976cc) 15.4%, #f6f9fc) var(--tramo, var(--e-4)),
+    color-mix(in oklab, var(--tinte, #1976cc) 9.9%, #f6f9fc) calc(2 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--tinte, #1976cc) 5.6%, #f6f9fc) calc(3 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--tinte, #1976cc) 2.5%, #f6f9fc) calc(4 * var(--tramo, var(--e-4))),
+    color-mix(in oklab, var(--tinte, #1976cc) 0.6%, #f6f9fc) calc(5 * var(--tramo, var(--e-4))),
+    var(--fondo) calc(6 * var(--tramo, var(--e-4)))
   );
 }
 

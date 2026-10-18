@@ -84,7 +84,9 @@ const REDES = [
 // cada descripción dice solo lo que se puede comprobar en la portada.
 const SOCIOS = [
   {
-    nombre: 'Diego Peña y Lillo Luhrs',
+    nombre: 'Diego',
+    apellidos: 'Peña y Lillo Luhrs',
+    educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
     rol: 'Socio co-fundador',
     foto: '/image/Diego.jpeg',
     perfiles: {
@@ -95,7 +97,9 @@ const SOCIOS = [
       'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y otros retos personales. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus junto a Rodrigo, con la idea de hacer soluciones que resuelvan problemas de fondo.',
   },
   {
-    nombre: 'Rodrigo Martínez Becker',
+    nombre: 'Rodrigo',
+    apellidos: 'Martínez Becker',
+    educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
     rol: 'Socio co-fundador',
     foto: '/image/Rodrigo.jpeg',
     perfiles: {
@@ -230,12 +234,14 @@ export default function Nosotros() {
         {/* Una tarjeta por socio, con la foto encima y en lados alternos,
             como el formulario de contacto sobre su tarjeta. */}
         <ul className="socios">
-          {SOCIOS.map(({ nombre, rol, foto, perfiles, descripcion }) => (
+          {SOCIOS.map(({ nombre, apellidos, educacion, rol, foto, perfiles, descripcion }) => (
             <li key={nombre} className="socio entra">
               <img src={foto} alt="" width={800} height={1000} loading="lazy" decoding="async" />
               <div className="socio-cuerpo">
                 <div className="socio-nombre">
-                  <h2>{nombre}</h2>
+                  <h2>
+                    {nombre} <span className="apellidos">{apellidos}</span>
+                  </h2>
                   <ul className="socio-perfiles">
                     {REDES.map((red) => (
                       <li key={red.id}>
@@ -244,13 +250,14 @@ export default function Nosotros() {
                             <path d={red.logo} />
                           </svg>
                           <span className="solo-lectores">
-                            {red.nombre} de {nombre}
+                            {red.nombre} de {nombre} {apellidos}
                           </span>
                         </a>
                       </li>
                     ))}
                   </ul>
                 </div>
+                <p className="socio-educacion">{educacion}</p>
                 <p className="socio-rol">{rol}</p>
                 <p className="socio-descripcion">{descripcion}</p>
               </div>

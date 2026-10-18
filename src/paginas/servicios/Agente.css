@@ -88,6 +88,43 @@
   left: var(--e-1);
 }
 
+/* En S y M cada uno escribe desde su lado —la pregunta, alineada a la
+   derecha— y la respuesta llega en varias burbujas (Agente.jsx): el párrafo
+   deja de ser burbuja y cada parte toma su lugar, con menos aire entre
+   mensajes. */
+@media (max-width: 1023px) {
+  .agente-chat {
+    gap: var(--e-4);
+    margin-top: var(--e-6);
+    padding-inline: var(--e-3);
+  }
+
+  .agente-mensaje {
+    gap: var(--e-2);
+  }
+
+  .agente-mensaje dt {
+    text-align: right;
+  }
+
+  .agente-mensaje p {
+    display: grid;
+    justify-items: start;
+    gap: var(--e-1);
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .agente-burbuja {
+    display: block;
+    max-width: 100%;
+    padding: var(--e-3) var(--e-4);
+    border-radius: var(--radio-tarjeta) var(--radio-tarjeta) var(--radio-tarjeta) var(--radio);
+    background: color-mix(in oklab, var(--linea) 45%, var(--superficie));
+  }
+}
+
 /* «Escribiendo…»: tres puntos que saltan sobre el lugar de la respuesta,
    antes de que llegue. Solo existe con las animaciones. */
 .agente-escribiendo {

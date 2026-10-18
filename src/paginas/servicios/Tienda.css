@@ -576,3 +576,108 @@
     transform: none;
   }
 }
+
+/* ---- en S y M: una fase por pantalla ----
+   Cada fase ocupa el alto que deja la barra con la guía y lleva su número. Con
+   tienda.js (`.tienda-guiada`), la vía del índice ocupa ese mismo alto con los
+   puntos repartidos, se llena hasta la fase del centro y las demás se apagan.
+   Sin él, todas se ven enteras. */
+.tienda-numero {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .tienda-recorrido {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: var(--e-4);
+  }
+
+  .tienda-numero {
+    display: block;
+    margin-bottom: var(--e-2);
+  }
+
+  .tienda-fases {
+    gap: 0;
+  }
+
+  .tienda-fase {
+    align-content: center;
+    min-height: calc(100svh - var(--barra-alto) - 46px - var(--e-8));
+  }
+
+  .tienda-indice ol::before,
+  .tienda-indice ol::after {
+    left: 13px;
+    width: 3px;
+    border-radius: 2px;
+  }
+
+  .tienda-punto {
+    margin-left: 7px;
+  }
+
+  .tienda-guiada .tienda-indice {
+    top: calc(var(--barra-alto) + 46px + var(--e-4));
+    height: calc(100svh - var(--barra-alto) - 46px - var(--e-8));
+  }
+
+  .tienda-guiada .tienda-indice ol {
+    height: 100%;
+    align-content: space-between;
+  }
+
+  .tienda-guiada .tienda-indice a {
+    min-height: 28px;
+  }
+
+  .tienda-guiada .tienda-indice li,
+  .tienda-guiada .tienda-indice .tienda-punto {
+    animation: none;
+  }
+
+  .tienda-guiada .tienda-indice ol::after {
+    animation: none;
+    transform: scaleY(var(--avance, 0));
+    transition: transform 400ms var(--ease-out);
+  }
+
+  .tienda-guiada .tienda-punto {
+    background: var(--superficie);
+    transition:
+      background-color 300ms var(--ease-out),
+      transform 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out);
+  }
+
+  .tienda-guiada :is(.tienda-paso-hecho, .tienda-paso-actual) .tienda-punto {
+    background: var(--tinte);
+  }
+
+  .tienda-guiada .tienda-paso-actual .tienda-punto {
+    transform: scale(1.4);
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--tinte) 18%, transparent);
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .tienda-guiada .tienda-fase {
+    opacity: 0.12;
+    transform: translateY(24px);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
+  }
+
+  .tienda-guiada .tienda-actual {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tienda-guiada .tienda-indice ol::after,
+  .tienda-guiada .tienda-punto {
+    transition: none;
+  }
+}

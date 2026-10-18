@@ -1,11 +1,10 @@
-import { ParaEmpezar, Preguntas, Prueba } from './Bloques.jsx'
+import { ParaEmpezar, Preguntas } from './Bloques.jsx'
 
 /**
  * Páginas web: lo que incluye, a todo el ancho y partido por una onda. Arriba,
  * en el claro de la página, lo que se ve; debajo de la onda, en el color del
- * servicio, lo que no se ve y la prueba, que es la única que se puede medir en
- * el momento: esta misma página. La franja de color se cierra con la misma
- * onda, volteada.
+ * servicio, lo que no se ve. La franja de color se cierra con la misma onda,
+ * volteada.
  *
  * Arma su propia sección, sin `Incluye`, porque ocupa todo el ancho y no el
  * del contenedor. La franja de color lleva `.hora-dia`, como el cielo de la
@@ -35,13 +34,59 @@ function Onda({ volteada = false }) {
   )
 }
 
+// El dibujo de cada punto, por su `icono` (data/paginas-de-servicio.js). Solo
+// se ve en S y M (Web.css): el título ya dice lo mismo.
+const ICONOS = {
+  pantalla: (
+    <>
+      <rect x="7" y="2" width="10" height="20" rx="2.5" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  identidad: (
+    <>
+      <path d="M12 3a9 9 0 1 0 0 18c1 0 1.5-.7 1.5-1.5 0-.5-.2-.9-.5-1.2-.3-.4-.5-.8-.5-1.3 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-4-4-7.5-9-7.5Z" />
+      <circle cx="7.5" cy="10.5" r="1" />
+      <circle cx="12" cy="7.5" r="1" />
+      <circle cx="16.5" cy="10.5" r="1" />
+    </>
+  ),
+  correo: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </>
+  ),
+  buscar: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-4-4" />
+    </>
+  ),
+  rayo: <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />,
+  chispa: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" />,
+}
+
 function Grupo({ grupo, puntos }) {
   return (
     <>
       <h3 className="servicio-rotulo web-grupo">{grupo}</h3>
       <ul className="web-puntos">
-        {puntos.map(({ titulo, texto }) => (
+        {puntos.map(({ icono, titulo, texto }) => (
           <li key={titulo} className="entra">
+            <span className="web-icono" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                focusable="false"
+              >
+                {ICONOS[icono]}
+              </svg>
+            </span>
             <h4>{titulo}</h4>
             <p>{texto}</p>
           </li>
@@ -51,7 +96,7 @@ function Grupo({ grupo, puntos }) {
   )
 }
 
-export default function Web({ pagina, ruta, estimado }) {
+export default function Web({ pagina, estimado }) {
   const [seVe, noSeVe] = pagina.incluye
 
   return (
@@ -72,7 +117,6 @@ export default function Web({ pagina, ruta, estimado }) {
           </div>
         </div>
       </section>
-      <Prueba prueba={pagina.prueba} ruta={ruta} className="hora-dia" />
       <Onda volteada />
       {/* El estimado va después de la franja de color, que se cierra con la
           onda volteada: dentro de ella partiría la onda en dos. */}

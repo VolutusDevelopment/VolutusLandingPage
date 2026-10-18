@@ -21,6 +21,7 @@ import CasosParaUnAgenteDeIa from './articulos/CasosParaUnAgenteDeIa.jsx'
 import ComoTrabajamos from './articulos/ComoTrabajamos.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
+import { PAGINAS_DEL_INDICE, rutaDePagina } from '../lib/meta.js'
 
 // Cada ruta declarada en PAGINAS (lib/meta.js) necesita su componente. El mapa
 // se indexa por ruta y no por archivo para que la fuente de verdad siga siendo
@@ -29,12 +30,12 @@ import { SERVICIOS } from '../lib/servicios.js'
 // que le pasan a cada componente su `ruta`.
 //
 // Las páginas de servicio comparten su marco (Servicio.jsx): la ruta dice cuál
-// pinta.
+// pinta. Lo mismo las páginas del índice de artículos (Articulos.jsx).
 export const COMPONENTES = {
   '/': Inicio,
   '/servicios': IndiceDeServicios,
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
-  '/articulos': Articulos,
+  ...Object.fromEntries(Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => [rutaDePagina(i + 1), Articulos])),
   '/articulos/que-es-un-agente-de-ia': QueEsUnAgenteDeIa,
   '/articulos/pagina-web-o-tienda-online': PaginaWebOTiendaOnline,
   '/articulos/software-a-medida-o-ya-hecho': SoftwareAMedidaOYaHecho,

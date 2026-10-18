@@ -312,6 +312,45 @@ export const articulosDe = (servicio) =>
   ARTICULOS.filter(({ servicios }) => !servicios || servicios.includes(servicio))
 
 /**
+ * Los tres artículos que más se parecen a `ruta`: los que comparten más
+ * servicios con él. A igual parecido gana el más nuevo (ARTICULOS ya viene así
+ * y el orden es estable).
+ */
+export const relacionadosDe = (ruta) => {
+  const { servicios = [] } = PAGINAS[ruta]
+  return ARTICULOS.filter((articulo) => articulo.ruta !== ruta)
+    .map((articulo) => ({
+      articulo,
+      comunes: (articulo.servicios ?? []).filter((servicio) => servicios.includes(servicio)).length,
+    }))
+    .sort((a, b) => b.comunes - a.comunes)
+    .slice(0, 3)
+    .map(({ articulo }) => articulo)
+}
+
+/**
+ * El índice de artículos va de a doce por página. La primera es /articulos y
+ * las demás, /articulos/pagina/2 en adelante: cada una es una página más, con
+ * su título y su descripción, que se prerenderiza y entra al sitemap. Publicar
+ * el artículo trece abre sola la segunda.
+ */
+export const POR_PAGINA = 12
+export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil(ARTICULOS.length / POR_PAGINA))
+export const rutaDePagina = (n) => (n === 1 ? '/articulos' : `/articulos/pagina/${n}`)
+export const numeroDePagina = (ruta) => (ruta === '/articulos' ? 1 : Number(ruta.split('/').at(-1)))
+export const articulosDePagina = (n) => ARTICULOS.slice((n - 1) * POR_PAGINA, n * POR_PAGINA)
+
+for (let n = 2; n <= PAGINAS_DEL_INDICE; n++) {
+  const { actualizada, descripcion } = PAGINAS['/articulos']
+  PAGINAS[rutaDePagina(n)] = {
+    archivo: `articulos/pagina/${n}.html`,
+    actualizada,
+    titulo: `Artículos sobre software para negocios, página ${n} — Volutus`,
+    descripcion: `${descripcion} Página ${n} de ${PAGINAS_DEL_INDICE}.`,
+  }
+}
+
+/**
  * La tarjeta para compartir de cada página, derivada de su archivo para que
  * `scripts/tarjetas-og.mjs`, que la genera, y el prerender, que la enlaza,
  * no puedan nombrarla distinto.

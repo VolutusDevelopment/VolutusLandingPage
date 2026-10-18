@@ -8,6 +8,11 @@ import { Incluye, ParaEmpezar, Preguntas } from './Bloques.jsx'
  *
  * Las escenas son de ejemplo y no dicen nada que el texto no diga, así que se
  * esconden del lector de pantalla.
+ *
+ * En S y M va una fase por pantalla, con su número, y la vía del índice
+ * ocupa todo el alto: tienda.js marca la fase que está en el centro y llena la
+ * vía hasta ella. El número lo dice ya la lista ordenada al lector de
+ * pantalla, así que va escondido de él.
  */
 
 const ESCENAS = {
@@ -114,9 +119,12 @@ export default function Tienda({ pagina, estimado }) {
             </ol>
           </nav>
           <ol className="tienda-fases">
-            {pagina.incluye.map(({ id, titulo, texto }) => (
+            {pagina.incluye.map(({ id, titulo, texto }, i) => (
               <li key={id} id={`fase-${id}`} className={`tienda-fase tienda-fase-${id}`}>
                 <div className="tienda-fase-texto entra">
+                  <p className="servicio-rotulo tienda-numero" aria-hidden="true">
+                    Paso {i + 1} de {pagina.incluye.length}
+                  </p>
                   <h3>{titulo}</h3>
                   <p>{texto}</p>
                 </div>

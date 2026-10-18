@@ -454,3 +454,23 @@
   text-align: center;
   color: var(--texto-suave);
 }
+
+/* En S y M, los mismos pasos y la misma boleta, con menos aire entre ellos. */
+@media (max-width: 1023px) {
+  .estimado {
+    gap: var(--e-6);
+    margin-top: var(--e-6);
+  }
+
+  .estimado-opciones {
+    gap: var(--e-6);
+  }
+
+  .estimado-boleta-cuerpo {
+    gap: var(--e-4);
+  }
+
+  .estimado-nota {
+    margin-top: calc(-1 * var(--e-2));
+  }
+}

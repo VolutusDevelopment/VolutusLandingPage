@@ -2,7 +2,8 @@ import Pagina from '../components/Pagina.jsx'
 import Contacto from '../components/Contacto.jsx'
 import Estimado from '../components/Estimado.jsx'
 import Pieza from '../components/Pieza.jsx'
-import { FilaDeServicios, ListaDeArticulos } from '../components/Sugerencias.jsx'
+import Guia from '../components/Guia.jsx'
+import { ListaDeArticulos } from '../components/Sugerencias.jsx'
 import { articulosDe } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
@@ -29,7 +30,20 @@ import Prospeccion from './servicios/Prospeccion.jsx'
  * todos. Cada uno pone el estimado de precio (Estimado.jsx) justo después de
  * «Qué incluye», y la cabecera lleva a él con el precio de partida a la vista
  * (decisión 49 del brief).
+ *
+ * En S y M, la guía (Guia.jsx) lleva a cada parte. Va al final del `main`
+ * porque es fija: así no se mete entre la cabecera y la sección que continúa
+ * su degradado.
  */
+const INCLUYE = ['incluye', 'Incluye']
+const PRECIO = ['estimado', 'Precio']
+const PREGUNTAS = ['preguntas-titulo', 'Preguntas']
+const CONTACTO = ['contacto', 'Contacto']
+
+// Las partes, en el orden de la página: en la de agentes, las preguntas van
+// primero (Agente.jsx).
+const destinosDe = (id) => (id === 'agente' ? [PREGUNTAS, INCLUYE, PRECIO, CONTACTO] : [INCLUYE, PRECIO, PREGUNTAS, CONTACTO])
+
 const CUERPOS = {
   web: Web,
   tienda: Tienda,
@@ -61,14 +75,14 @@ export default function Servicio({ ruta }) {
             <h1>{pagina.titular}</h1>
             <p className="entradilla servicio-entradilla">{pagina.entradilla}</p>
             <p className="servicio-acciones">
-              <a className="boton boton-primario" href="#contacto">
-                Cuéntanos tu proyecto
-              </a>
-              <a className="boton boton-secundario servicio-desde" href="#estimado">
+              <a className="boton boton-primario servicio-desde" href="#estimado">
                 Calcula tu estimado
                 <span className="servicio-desde-cifra">
                   desde <strong>{numero(precio)} UF</strong>
                 </span>
+              </a>
+              <a className="boton boton-secundario" href="#contacto">
+                Cuéntanos tu proyecto
               </a>
             </p>
             <p className="servicio-desde-nota">
@@ -79,7 +93,7 @@ export default function Servicio({ ruta }) {
         </div>
       </section>
 
-      <Cuerpo pagina={pagina} ruta={ruta} estimado={<Estimado servicio={servicio.id} />} />
+      <Cuerpo pagina={pagina} estimado={<Estimado servicio={servicio.id} />} />
 
       <section className="seccion zona-cielo" aria-labelledby="sigue-titulo">
         <div className="contenedor">
@@ -87,10 +101,10 @@ export default function Servicio({ ruta }) {
             Sigue leyendo
           </h2>
           <ListaDeArticulos articulos={articulosDe(servicio.id)} />
-          <h3 className="servicio-otros-titulo entra">Otros servicios</h3>
-          <FilaDeServicios servicios={SERVICIOS.filter((s) => s.ruta && s !== servicio)} />
         </div>
       </section>
+
+      <Guia destinos={destinosDe(servicio.id)} />
     </Pagina>
   )
 }

@@ -1,4 +1,4 @@
-import { Incluye, ParaEmpezar, Preguntas, Prueba } from './Bloques.jsx'
+import { Incluye, ParaEmpezar, Preguntas } from './Bloques.jsx'
 
 /**
  * Sistemas de gestión: todos los módulos en un solo panel, separados por
@@ -62,7 +62,7 @@ const DIBUJOS = {
   )),
 }
 
-export default function Gestion({ pagina, ruta, estimado }) {
+export default function Gestion({ pagina, estimado }) {
   return (
     <>
       <Incluye className="gestion-incluye">
@@ -83,7 +83,6 @@ export default function Gestion({ pagina, ruta, estimado }) {
         </ul>
       </Incluye>
       {estimado}
-      <Prueba prueba={pagina.prueba} ruta={ruta} />
       <ParaEmpezar cuando={pagina.cuando} pedimos={pagina.pedimos} />
       <Preguntas preguntas={pagina.preguntas} />
     </>

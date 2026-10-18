@@ -23,7 +23,17 @@ import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { ARTICULOS, ORIGEN, PAGINAS, canonicalDe, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
+import {
+  ORIGEN,
+  PAGINAS,
+  PAGINAS_DEL_INDICE,
+  POR_PAGINA,
+  articulosDePagina,
+  canonicalDe,
+  rutaDePagina,
+  tarjetaDe,
+  tituloCorto,
+} from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
 import { CORREO_DE_CONTACTO } from '../src/lib/contacto.js'
 import { SERVICIOS } from '../src/lib/servicios.js'
@@ -133,6 +143,26 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
       ]),
     ])
   }
+  // Cada página del índice de artículos lista los suyos, con su lugar en el
+  // índice entero.
+  const indice = Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => i + 1).find((n) => rutaDePagina(n) === ruta)
+  if (indice) {
+    return ldJson([
+      {
+        '@type': 'CollectionPage',
+        ...pagina,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: articulosDePagina(indice).map((articulo, i) => ({
+            '@type': 'ListItem',
+            position: (indice - 1) * POR_PAGINA + i + 1,
+            name: tituloCorto(articulo.titulo),
+            url: canonicalDe(articulo.ruta),
+          })),
+        },
+      },
+    ])
+  }
   const grafo = {
     '/': [
       { '@type': 'WebSite', name: 'Volutus', url: `${ORIGEN}/`, inLanguage: 'es-CL' },
@@ -175,21 +205,6 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
             position: i + 1,
             name: nombre,
             url: canonicalDe(destino ?? enlace),
-          })),
-        },
-      },
-    ],
-    '/articulos': [
-      {
-        '@type': 'CollectionPage',
-        ...pagina,
-        mainEntity: {
-          '@type': 'ItemList',
-          itemListElement: ARTICULOS.map((articulo, i) => ({
-            '@type': 'ListItem',
-            position: i + 1,
-            name: tituloCorto(articulo.titulo),
-            url: canonicalDe(articulo.ruta),
           })),
         },
       },

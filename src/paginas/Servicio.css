@@ -29,6 +29,23 @@
   height: calc(var(--fundido) - var(--e-24) + var(--e-2));
 }
 
+/* En S y M el degradado mide la mitad —la misma curva en tramos de 8 px
+   (index.css)— y «Qué incluye» llega justo donde termina; la franja de la
+   barra se acorta igual. Entre sección y sección, 48 px en vez de 64. */
+@media (max-width: 1023px) {
+  .servicio-pagina {
+    --tramo: var(--e-2);
+  }
+
+  .servicio-cabecera .cabecera-fundido {
+    height: calc(var(--fundido) / 2 + var(--e-1));
+  }
+
+  .servicio-pagina > .seccion:not(.cabecera-cielo, .web-incluye) {
+    padding-bottom: var(--e-12);
+  }
+}
+
 /* `minmax(0, …)` y no `auto`: en WebKit el SVG de la pieza aporta un ancho
    mínimo propio, y con una columna `auto` la cabecera se salía de la
    pantalla en un teléfono. */
@@ -80,7 +97,9 @@
   font-size: var(--texto-xs);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-left: 1px solid var(--linea);
+  /* Del color del texto del botón y no de la zona: el botón relleno puede ir
+     en blanco sobre el cielo teñido, y ahí la línea de la zona no se ve. */
+  border-left: 1px solid color-mix(in oklab, currentColor 35%, transparent);
 }
 
 .servicio-desde-cifra strong {
@@ -312,13 +331,8 @@
 /* Con el cursor encima, repite el gesto de su servicio: la ola se hincha y el
    cursor hace clic, la etiqueta se mece y el sello vuelve a marcar, los datos
    corren mientras siga encima, la respuesta se adelanta, entra otro pedido y
-   recorre los pasos, la semana se vuelve a contar y se apagan los negocios
-   que ya tienen web. En /servicios, la pieza va bajo el enlace que cubre su
-   card, así que el gesto lo pide la card. */
-.pz-con-web {
-  transition: opacity 300ms var(--ease-out);
-}
-
+   recorre los pasos y la semana se vuelve a contar. En /servicios, la pieza
+   va bajo el enlace que cubre su card, así que el gesto lo pide la card. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   :is(.pieza, .indice-servicio):hover .pz-h-oleaje {
     animation: pz-oleaje 900ms var(--ease-in-out);
@@ -354,10 +368,6 @@
 
   :is(.pieza, .indice-servicio):hover .pz-h-barra {
     animation: pz-crece 600ms var(--ease-out) both;
-  }
-
-  :is(.pieza, .indice-servicio):hover .pz-con-web {
-    opacity: 0.3;
   }
 }
 
@@ -586,79 +596,6 @@
   color: var(--texto-suave);
 }
 
-/* ---- compruébalo ----
-   La obra que lo prueba, en una lámina oscura como las de proyectos. Sin
-   captura, desde L, una franja: el texto a un lado y los enlaces al otro.
-   Con captura, el texto y los enlaces a un lado y la pantalla al otro. */
-.servicio-prueba {
-  display: grid;
-  gap: var(--e-6) var(--e-12);
-  padding: var(--e-8) var(--e-6);
-  border-radius: var(--radio-panel);
-  background: var(--fondo);
-  color: var(--texto);
-}
-
-@media (min-width: 640px) {
-  .servicio-prueba {
-    padding: var(--e-8) var(--e-12);
-  }
-}
-
-@media (min-width: 1024px) {
-  .servicio-prueba {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
-
-  .servicio-prueba.con-vista {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    padding-block: var(--e-12);
-  }
-
-  .con-vista .servicio-prueba-texto {
-    align-self: end;
-  }
-
-  .con-vista .servicio-prueba-enlaces {
-    align-self: start;
-  }
-
-  .servicio-prueba-vista {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-}
-
-.servicio-prueba-bajada {
-  margin-top: var(--e-3);
-  color: var(--texto-suave);
-}
-
-.servicio-prueba-enlaces {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--e-3) var(--e-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.servicio-prueba-enlaces a:not(.boton) {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  min-height: 44px;
-}
-
-.servicio-prueba-vista {
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-tarjeta);
-}
-
 /* ---- para empezar ----
    Si le sirve, en blanco, y qué le vamos a pedir, sobre el velo de su color:
    desde L, lado a lado. */
@@ -723,6 +660,91 @@
   }
 }
 
+/* En S y M, sin cajas: las señales, una por fila con su visto en un círculo
+   del color del servicio; lo que pedimos, numerado con la cifra de la marca.
+   En M, lado a lado. */
+@media (max-width: 1023px) {
+  .servicio-empezar {
+    gap: 40px;
+  }
+
+  .servicio-empezar > div {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .servicio-empezar h2 {
+    font-size: var(--texto-xl);
+  }
+
+  .servicio-cuando .vistos {
+    gap: 0;
+    margin-top: var(--e-4);
+    border-top: 1px solid var(--linea);
+  }
+
+  .servicio-cuando .vistos li {
+    padding: var(--e-3) 0 var(--e-3) 44px;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .servicio-cuando .vistos li::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--e-3) + 0.8em - 14px);
+    left: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--tinte) 14%, var(--superficie));
+  }
+
+  .servicio-cuando .vistos li::before {
+    z-index: 1;
+    top: calc(var(--e-3) + 0.8em - 9px);
+    left: 11px;
+  }
+
+  .servicio-pedimos .vistos {
+    counter-reset: pide;
+    gap: var(--e-4);
+    margin-top: var(--e-6);
+  }
+
+  .servicio-pedimos .vistos li {
+    counter-increment: pide;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding-left: 52px;
+  }
+
+  .servicio-pedimos .vistos li::before {
+    content: counter(pide);
+    top: 50%;
+    left: 0;
+    width: 40px;
+    height: auto;
+    border: 0;
+    transform: translateY(-50%);
+    font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    color: var(--tinte);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .servicio-empezar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ---- preguntas frecuentes ----
    Plegadas, con un + que gira a × al abrirlas. El + va posicionado y no con
    flex: WebKit no siempre deja que un `<summary>` sea contenedor flex. */
@@ -776,8 +798,22 @@
   color: var(--texto-suave);
 }
 
-/* ---- sigue leyendo ---- */
+/* En S y M, más juntas. Al cerrarse una (preguntas.js), su × vuelve a + desde
+   que empieza a plegarse, no cuando termina. */
+@media (max-width: 1023px) {
+  .servicio-preguntas {
+    margin-top: var(--e-6);
+  }
 
-.servicio-otros-titulo {
-  margin-top: var(--e-16);
+  .servicio-preguntas summary {
+    padding-block: var(--e-3);
+  }
+
+  .servicio-preguntas p {
+    padding-bottom: var(--e-4);
+  }
+
+  .servicio-preguntas details.cerrando summary::after {
+    transform: translateY(-50%);
+  }
 }

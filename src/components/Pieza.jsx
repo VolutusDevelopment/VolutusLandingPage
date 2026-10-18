@@ -69,16 +69,13 @@ function dentro([x, y]) {
 // Un punto entra si queda dentro con su aire: así ninguno pisa el borde.
 const conAire = ([x, y]) => [-7, 7].every((d) => dentro([x + d, y]) && dentro([x, y + d]))
 
-// Los negocios son los puntos de una trama que caen dentro del área; uno de
-// cada cinco, hueco, no tiene sitio web. Caen en ocho franjas, de arriba
-// abajo, y cada franja lleva los suyos en dos trazos: con web y sin web.
-const FRANJAS = Array.from({ length: 8 }, () => ({ con: '', sin: '' }))
+// Los negocios son los puntos de una trama que caen dentro del área. Caen en
+// ocho franjas, de arriba abajo, cada una en un solo trazo.
+const FRANJAS = Array(8).fill('')
 Array.from({ length: 15 * 16 }, (_, i) => [52 + (i % 15) * 16 + ((i / 15) & 1) * 8, 62 + Math.floor(i / 15) * 16])
   .filter(conAire)
-  .forEach(([x, y], i) => {
-    const franja = FRANJAS[Math.floor((y - 62) / 32)]
-    if ((i * 7) % 5 === 0) franja.sin += circulo(x, y, 4.4) + circulo(x, y, 2.2)
-    else franja.con += circulo(x, y, 4.2)
+  .forEach(([x, y]) => {
+    FRANJAS[Math.floor((y - 62) / 32)] += circulo(x, y, 4.2)
   })
 
 // Los pasos de la automatización, de abajo arriba: su cuadro, su glifo en el
@@ -440,13 +437,8 @@ const ESCENAS = {
       </Capa>
       <Capa hondo="medio">
         <Italica>
-          <g className="pz-con-web">
-            {FRANJAS.map(({ con }, i) => (
-              <path key={i} className="pz-cae" {...tras(1000 + i * 90)} d={con} />
-            ))}
-          </g>
-          {FRANJAS.map(({ sin }, i) => (
-            <path key={i} className="pz-cae" {...tras(1000 + i * 90)} d={sin} />
+          {FRANJAS.map((franja, i) => (
+            <path key={i} className="pz-cae" {...tras(1000 + i * 90)} d={franja} />
           ))}
           {AREA.map(([x, y], i) => (
             <path key={x} className="pz-pop" {...tras(ESQUINAS[i])} d={circulo(x, y, 9) + circulo(x, y, 3.5)} />

@@ -19,6 +19,10 @@ import initCopiar from './copiar.js'
 import initSocios from './socios.js'
 import initChat from './chat.js'
 import initEstimado from './estimado.js'
+import initGuia from './guia.js'
+import initMenuServicios from './menu-servicios.js'
+import initPreguntas from './preguntas.js'
+import initTienda from './tienda.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
 import {
@@ -291,4 +295,8 @@ export default function init() {
   initSocios()
   initChat()
   initEstimado()
+  initGuia()
+  initMenuServicios()
+  initPreguntas()
+  initTienda()
 }

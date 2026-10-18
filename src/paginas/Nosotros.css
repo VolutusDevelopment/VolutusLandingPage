@@ -97,6 +97,13 @@
   letter-spacing: -0.015em;
 }
 
+/* Los apellidos no se parten: si no cabe el nombre completo, baja el bloque
+   de apellidos entero y el nombre queda solo en su línea. */
+.socio-cuerpo .apellidos {
+  white-space: nowrap;
+}
+
+.socio-educacion,
 .socio-rol {
   margin-top: var(--e-1);
   color: var(--texto-suave);
