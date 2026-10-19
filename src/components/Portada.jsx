@@ -115,22 +115,6 @@ export default function Portada() {
           Cuéntanos tu proyecto
         </a>
       </div>
-
-      {/* El puesto se ve como «1°» y se lee como «Primer lugar en». */}
-      <p className="portada-credenciales">
-        Con jurado externo:{' '}
-        <a href="#proyectos">
-          {LOGROS.map(({ id, credencial }, i) => (
-            <Fragment key={id}>
-              {i > 0 && ' · '}
-              <span>
-                <strong aria-hidden="true">{credencial.puesto}</strong>
-                <span className="solo-lectores">{credencial.titulo} en</span> {credencial.corto}
-              </span>
-            </Fragment>
-          ))}
-        </a>
-      </p>
     </Escena>
   )
 }

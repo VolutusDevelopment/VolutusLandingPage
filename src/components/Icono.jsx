@@ -78,6 +78,11 @@ const GLIFOS = {
       d="M4.5 5h15A2.5 2.5 0 0 1 22 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 16.5v-9A2.5 2.5 0 0 1 4.5 5zM5.8 10.2a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0zM4.6 16.6c.5-2 1.8-3.1 3.4-3.1s2.9 1.1 3.4 3.1zM13.5 9H19v1.8h-5.5zM13.5 12.6h4v1.8h-4z"
     />
   ),
+  // No es un servicio: la hoja de una guía, para el artículo que habla de
+  // todos (Articulos.jsx).
+  guia: (
+    <path d="M6.5 2H14l6 6v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2zM14.6 3.6v4.8h4.8zM7.5 12h9v1.8h-9zM7.5 15.6h6v1.8h-6z" />
+  ),
 }
 
 const TRAZOS = {

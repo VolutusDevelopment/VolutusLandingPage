@@ -51,29 +51,89 @@
 }
 
 /* ---- el índice ----
-   Uno bajo otro, como un sumario: la fecha, el título y su resumen, con una
-   línea del color del servicio del que habla. */
+   Un sumario: el más nuevo en una lámina oscura a todo el ancho y los demás en
+   filas con su filete, de a dos desde M. Cada fila lleva la baldosa de su
+   servicio, su nombre y la fecha, el título y el resumen en dos líneas (entero
+   en el HTML). La fila entera lleva al artículo. */
 .articulos {
   list-style: none;
   display: grid;
-  gap: var(--e-12);
-  max-width: 52rem;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
   padding: 0;
 }
 
-.articulos li {
-  padding-left: var(--e-6);
-  border-left: 3px solid var(--tinte, var(--linea));
+@media (min-width: 640px) {
+  .articulos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--e-8);
+  }
 }
 
-.articulos-fecha {
-  font-size: var(--texto-sm);
+@media (min-width: 1024px) {
+  .articulos {
+    column-gap: var(--e-12);
+  }
+}
+
+/* El azul marino es el del artículo que habla de todos los servicios; los
+   demás traen el de su servicio en `--tinte` (Articulos.jsx). */
+.articulos > li {
+  --tinte: #1d4f78;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'tapa meta' 'titulo titulo' 'resumen resumen';
+  align-items: center;
+  align-content: start;
+  column-gap: var(--e-4);
+  padding: var(--e-6) 0;
+  border-top: 1px solid var(--linea);
+}
+
+/* La baldosa: el glifo del servicio sobre su color, con la trama de la
+   marca, como una card de la rueda en chico. */
+.articulos-tapa {
+  grid-area: tapa;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  aspect-ratio: 1;
+  border-radius: var(--radio-tarjeta);
+  color: #fff;
+  background-color: var(--tinte);
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.18) 1px, transparent 1.6px);
+  background-size: 8px 8px;
+}
+
+.articulos-tapa svg {
+  width: 58%;
+  height: auto;
+}
+
+/* El servicio en su color, que contra el blanco pasa de 5:1, y la fecha. En
+   S y M, uno sobre otra: lado a lado no cabían en todas las filas. */
+.articulos-meta {
+  grid-area: meta;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-1) var(--e-3);
+  font-size: var(--texto-xs);
   color: var(--texto-suave);
 }
 
+.articulos-servicio {
+  color: var(--tinte);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Nivel 4, el elemento: cada artículo es un ítem de la lista. */
 .articulos h2 {
-  margin-top: var(--e-2);
+  grid-area: titulo;
+  margin-top: var(--e-4);
+  font-size: var(--texto-lg);
+  letter-spacing: -0.015em;
 }
 
 .articulos h2 a {
@@ -81,14 +141,183 @@
   text-decoration: none;
 }
 
-.articulos h2 a:hover {
-  color: var(--accion);
-  text-decoration: underline;
+/* El enlace cubre la fila entera, y el anillo del foco también. */
+.articulos h2 a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.articulos h2 a:focus-visible {
+  outline: none;
+}
+
+.articulos h2 a:focus-visible::before {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: var(--radio);
 }
 
 .articulos-resumen {
-  margin-top: var(--e-3);
+  grid-area: resumen;
+  display: -webkit-box;
+  margin-top: var(--e-2);
+  overflow: hidden;
+  font-size: var(--texto-sm);
   color: var(--texto-suave);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Al pasar el cursor, el título toma el color de la acción y el glifo hace
+   el gesto de su servicio, como en la rueda (Icono.css). */
+@media (hover: hover) {
+  .articulos > li:hover h2 a {
+    color: var(--accion);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .articulos > li:hover .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+}
+
+/* Desde L, la baldosa más grande, a un lado del texto, y el servicio y la
+   fecha en una línea. */
+@media (min-width: 1024px) {
+  .articulos > li:not(.articulos-destacado) {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    grid-template-areas: 'tapa meta' 'tapa titulo' 'tapa resumen';
+    align-items: start;
+    column-gap: var(--e-6);
+    padding-block: var(--e-8);
+  }
+
+  .articulos > li:not(.articulos-destacado) .articulos-tapa {
+    width: 4rem;
+  }
+
+  .articulos-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .articulos > li:not(.articulos-destacado) h2 {
+    margin-top: var(--e-2);
+  }
+}
+
+/* ---- el más nuevo ----
+   En la primera página, una lámina oscura a todo el ancho, como las de los
+   proyectos, con el color de su servicio asomando en una esquina y su baldosa
+   en grande, con el anillo blanco de la pieza de las páginas de servicio. Su
+   título sube a nivel 3 y su resumen va entero. */
+.articulos > .articulos-destacado {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'tapa' 'meta' 'titulo' 'resumen';
+  margin-bottom: var(--e-8);
+  padding: var(--e-3) var(--e-3) var(--e-6);
+  border: 0;
+  border-radius: var(--radio-panel);
+  color: var(--texto);
+  background-color: var(--fondo);
+  background-image: radial-gradient(
+    70% 90% at 100% 0%,
+    color-mix(in srgb, var(--tinte) 45%, transparent),
+    transparent 70%
+  );
+}
+
+.articulos-destacado + li {
+  border-top: 0;
+}
+
+.articulos-destacado .articulos-tapa {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  margin-bottom: var(--e-6);
+  border-radius: calc(var(--radio-panel) - var(--e-3));
+  background-size: 12px 12px;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.8);
+}
+
+.articulos-destacado .articulos-tapa svg {
+  width: 34%;
+  filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.3));
+}
+
+.articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+  padding-inline: var(--e-3);
+}
+
+.articulos-destacado .articulos-servicio {
+  color: var(--texto);
+}
+
+.articulos-destacado h2 {
+  margin-top: var(--e-3);
+  font-size: var(--texto-bloque);
+  letter-spacing: -0.02em;
+}
+
+.articulos-destacado h2 a:focus-visible::before {
+  border-radius: var(--radio-panel);
+}
+
+.articulos-destacado .articulos-resumen {
+  display: block;
+  margin-top: var(--e-3);
+  font-size: var(--texto-base);
+}
+
+/* Desde M, el texto a la izquierda y la baldosa a la derecha. */
+@media (min-width: 640px) {
+  .articulos-destacado + li + li {
+    border-top: 0;
+  }
+
+  .articulos > .articulos-destacado {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-areas: 'meta tapa' 'titulo tapa' 'resumen tapa';
+    align-content: center;
+    column-gap: var(--e-8);
+    padding: var(--e-3);
+  }
+
+  .articulos-destacado .articulos-tapa {
+    aspect-ratio: 4 / 3;
+    margin: 0;
+  }
+
+  .articulos-destacado .articulos-meta {
+    align-self: end;
+  }
+
+  .articulos-destacado .articulos-resumen {
+    align-self: start;
+  }
+
+  .articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+    padding-inline: var(--e-6) 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .articulos > .articulos-destacado {
+    column-gap: var(--e-12);
+    padding: var(--e-4);
+  }
+
+  .articulos-destacado .articulos-tapa {
+    aspect-ratio: 16 / 10;
+  }
+
+  .articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+    padding-left: var(--e-8);
+  }
 }
 
 /* Las demás páginas del índice, al pie: el paso anterior, los números y el
@@ -98,7 +327,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--e-2);
-  max-width: 52rem;
   margin-top: var(--e-12);
 }
 
@@ -106,33 +334,10 @@
   margin-left: auto;
 }
 
-/* En S y M, el índice más apretado: el resumen en tres líneas (entero en el
-   HTML); en M, de a dos. Entre secciones, 48 px. Los títulos ya bajan solos:
-   son nivel 3 (index.css). */
+/* En S y M, entre secciones, 48 px. */
 @media (max-width: 1023px) {
   main > .seccion:not(.cabecera-cielo):has(:is(.articulos, .lista-articulos)) {
     padding-bottom: var(--e-12);
-  }
-
-  .articulos {
-    gap: var(--e-8);
-  }
-
-  .articulos-resumen {
-    display: -webkit-box;
-    margin-top: var(--e-2);
-    overflow: hidden;
-    font-size: var(--texto-sm);
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-}
-
-@media (min-width: 640px) and (max-width: 1023px) {
-  .articulos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--e-8);
-    max-width: none;
   }
 }
 

@@ -68,8 +68,8 @@ function Lente() {
 
 /**
  * Barra de navegación: la marca suelta a la izquierda y, a la derecha, una
- * cápsula flotante con los enlaces a /nosotros y a /servicios y la acción
- * principal.
+ * cápsula flotante con los enlaces a /nosotros, /servicios y /articulos y la
+ * acción principal.
  *
  * La barra en sí no tiene fondo: lo único que tapa el contenido al desplazar
  * son las dos piezas, cada una con su vidrio translúcido. Así la portada
@@ -91,9 +91,10 @@ function Lente() {
  * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
  * cartel que persigue al visitante. Va de contorno y no relleno: la cápsula
  * nunca pesa más que el titular, y el botón relleno de la portada es el que
- * manda. En S se retira y quedan los enlaces, que caben desde 360 px.
+ * manda. En S se retira y quedan los enlaces, que caben desde 360 px. Antes
+ * que él, desde M, se retira «Artículos», que sigue en el pie.
  *
- * Sin hamburguesa: son dos enlaces y un botón. Lo único que se despliega es
+ * Sin hamburguesa: son tres enlaces y un botón. Lo único que se despliega es
  * la lista de servicios: en S y M, «Servicios» la abre (menu-servicios.js) en
  * vez de ir a /servicios, para saltar de un servicio a otro sin recorrer el
  * índice. Sin JavaScript, y desde L, el enlace lleva a /servicios.
@@ -104,6 +105,9 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
   // parece correcto hasta que alguien lo pulsa, que es el peor momento para
   // enterarse. Desde otra página los anclas se cuelgan de la raíz.
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
+  // En una página hija (un servicio, un artículo, otra página del índice) el
+  // indicador descansa en su madre.
+  const actual = (destino) => (ruta === destino ? 'page' : ruta?.startsWith(`${destino}/`) ? 'true' : undefined)
 
   return (
     <header className={`barra zona-cielo hora-${hora}`} style={estilo}>
@@ -127,27 +131,27 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
 
         <nav className="barra-capsula" aria-label="Secciones">
           <ul className="barra-enlaces">
-            
             <li>
               {/* Páginas y no secciones: en ellas el indicador descansa
-                  desde el HTML, sin esperar a barra.js. En la página de un
-                  servicio descansa en su madre, /servicios. */}
-              <a href="/nosotros" aria-current={ruta === '/nosotros' ? 'page' : undefined}>
+                  desde el HTML, sin esperar a barra.js. */}
+              <a href="/nosotros" aria-current={actual('/nosotros')}>
                 Nosotros
               </a>
             </li>
             <li>
-              <a
-                href="/servicios"
-                aria-current={ruta === '/servicios' ? 'page' : ruta?.startsWith('/servicios/') ? 'true' : undefined}
-              >
+              <a href="/servicios" aria-current={actual('/servicios')}>
                 Servicios
+              </a>
+            </li>
+            <li className="barra-articulos">
+              <a href="/articulos" aria-current={actual('/articulos')}>
+                Artículos
               </a>
             </li>
             <li className="barra-contacto">
               <a href={contactoAqui ? '#contacto' : ancla('contacto')}>Cuéntanos tu proyecto</a>
             </li>
-          </ul>          
+          </ul>
         </nav>
       </div>
       <div id="menu-servicios" className="menu-servicios zona-cielo" hidden>

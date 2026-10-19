@@ -43,6 +43,18 @@ export const enlaceDeWhatsapp = (texto) =>
 
 // ---- los textos del formulario ----
 
+// El titular del contacto: una de estas frases, al azar cada vez que se carga
+// la página (Contacto.jsx). Sin JavaScript, la primera. Cortas, porque van en
+// mayúscula.
+export const TITULOS_DEL_CONTACTO = [
+  '¿Y en tu negocio, cómo sería?',
+  'Cuéntanos, no pierdes nada',
+  '¿Qué te quita más tiempo?',
+  '¿Por dónde empezamos?',
+  '¿Tienes una idea dando vueltas?',
+  'Escríbenos sin compromiso',
+]
+
 export const PLACEHOLDERS = {
   nombre: 'Tu nombre',
   correo: 'tu@correo.cl',

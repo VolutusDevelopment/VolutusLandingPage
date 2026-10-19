@@ -475,6 +475,14 @@
   }
 }
 
+/* Por debajo de 1024 px los cuatro enlaces quedan pegados al logotipo: se
+   retira «Artículos», el primero en irse, que sigue a mano en el pie. */
+@media (max-width: 1023px) {
+  .barra-articulos {
+    display: none;
+  }
+}
+
 /* Por debajo de 768 px el logotipo y los tres enlaces no caben en una fila:
    se retira «Cuéntanos tu proyecto», que sigue a mano en la portada. */
 @media (max-width: 767px) {

@@ -1,5 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
-import { Invitacion } from '../components/Articulo.jsx'
+import Contacto from '../components/Contacto.jsx'
+import Icono from '../components/Icono.jsx'
 import {
   PAGINAS,
   PAGINAS_DEL_INDICE,
@@ -10,7 +11,7 @@ import {
   rutaDePagina,
   tituloCorto,
 } from '../lib/meta.js'
-import { SERVICIOS } from '../lib/servicios.js'
+import { servicioDeArticulo } from '../lib/servicios.js'
 
 /**
  * El índice de artículos: guías cortas para decidir qué software necesita un
@@ -19,15 +20,18 @@ import { SERVICIOS } from '../lib/servicios.js'
  * toca esta página. Va de a doce por página (`ruta` dice cuál), con los
  * números de las demás al pie.
  *
- * Cada artículo lleva la marca del color del servicio del que habla, el de su
- * card en la rueda: el índice se lee también por servicio.
+ * Es un sumario: en la primera página, el más nuevo en una lámina oscura a
+ * todo el ancho, y los demás en filas. Cada uno lleva el glifo del servicio
+ * del que habla en una baldosa de su color, el de su card en la rueda, con su
+ * nombre y la fecha: el índice se lee también por servicio. El que habla de
+ * todos lleva la hoja de una guía. Termina en el formulario de contacto.
  */
 export default function Articulos({ ruta }) {
   const { descripcion } = PAGINAS['/articulos']
   const pagina = numeroDePagina(ruta)
 
   return (
-    <Pagina ruta={ruta} hora="dia" className="articulos-pagina" cierre={<Invitacion />}>
+    <Pagina ruta={ruta} hora="dia" className="articulos-pagina" contactoAqui cierre={<Contacto />}>
       <section className="seccion zona-cielo hora-dia cabecera-cielo">
         <div className="contenedor">
           <p className="antetitulo">{pagina === 1 ? 'Artículos' : `Artículos · página ${pagina}`}</p>
@@ -39,11 +43,21 @@ export default function Articulos({ ruta }) {
       <section className="seccion zona-cielo" aria-label={`Artículos, página ${pagina} de ${PAGINAS_DEL_INDICE}`}>
         <div className="contenedor">
           <ol className="articulos" start={(pagina - 1) * POR_PAGINA + 1}>
-            {articulosDePagina(pagina).map(({ ruta: enlace, titulo, descripcion: resumen, publicada, servicios = [] }) => {
-              const servicio = SERVICIOS.find(({ id }) => id === servicios[0])
+            {articulosDePagina(pagina).map((articulo, i) => {
+              const { ruta: enlace, titulo, descripcion: resumen, publicada } = articulo
+              const servicio = servicioDeArticulo(articulo)
+              const destacado = pagina === 1 && i === 0
               return (
-                <li key={enlace} className="entra" style={servicio && { '--tinte': servicio.color }}>
-                  <p className="articulos-fecha dato">
+                <li
+                  key={enlace}
+                  className={destacado ? 'articulos-destacado zona-plano entra' : 'entra'}
+                  style={servicio && { '--tinte': servicio.color }}
+                >
+                  <div className="articulos-tapa">
+                    <Icono id={servicio?.id ?? 'guia'} />
+                  </div>
+                  <p className="articulos-meta dato">
+                    <span className="articulos-servicio">{servicio?.nombre ?? 'Todos los servicios'}</span>
                     <time dateTime={publicada}>{fechaDe(enlace, 'publicada')}</time>
                   </p>
                   <h2>

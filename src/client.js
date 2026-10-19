@@ -23,6 +23,7 @@ import initGuia from './guia.js'
 import initMenuServicios from './menu-servicios.js'
 import initPreguntas from './preguntas.js'
 import initTienda from './tienda.js'
+import initTitularDelContacto from './titular-del-contacto.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
 import {
@@ -327,4 +328,5 @@ export default function init() {
   initMenuServicios()
   initPreguntas()
   initTienda()
+  initTitularDelContacto()
 }

@@ -70,6 +70,28 @@
   text-transform: uppercase;
 }
 
+/* El titular es una frase de varias, elegida al azar al cargar
+   (titular-del-contacto.js). Todas van apiladas en la misma celda: el titular
+   y una copia invisible de cada una, que solo mide. El alto es el de la más
+   larga, se parta donde se parta, así que cambiar de frase no mueve nada. */
+.contacto-titular {
+  display: grid;
+}
+
+.contacto-titular > * {
+  grid-area: 1 / 1;
+}
+
+.contacto-titular > span {
+  font-weight: 800;
+  text-wrap: balance;
+  visibility: hidden;
+}
+
+.contacto-titular > span::before {
+  content: attr(data-titulo);
+}
+
 /* ---- el formulario: la tarjeta clara ---- */
 
 .formulario {
@@ -684,11 +706,13 @@
  * cabe entero bajo la barra (`.formulario-cabe`, que pone client.js): centrar
  * algo más alto que la pantalla le cortaría arriba y abajo.
  *
- * En S y M sube 40 px sobre la tarjeta oscura y tapa un poco su título; llega
- * frenando y se queda: no acompaña hasta el pie. En L y XL, un imán: al cruzar
- * el centro baja al 70 % de la velocidad de la página, sin detenerse. Se corre
- * 20 px a cada lado y no más: sobresale 32 de la tarjeta oscura, y con su radio
- * de 12, un píxel más dejaría a la vista la esquina recta de esa tarjeta.
+ * En S y M sube sobre la tarjeta oscura hasta el titular, frenando, y se
+ * queda: no acompaña hasta el pie. Sube lo que los separa, los 24 px (`--e-6`)
+ * que `.contacto-relato` deja bajo el titular, y no más: nunca lo tapa, mida lo
+ * que mida. En L y XL, un imán: al cruzar el centro baja al 70 % de la
+ * velocidad de la página, sin detenerse. Se corre 20 px a cada lado y no más:
+ * sobresale 32 de la tarjeta oscura, y con su radio de 12, un píxel más
+ * dejaría a la vista la esquina recta de esa tarjeta.
  * Con esta curva la pendiente máxima es 1,587 veces la media, así que para ir
  * al 70 % el tramo mide 1,587 × 40 / 0,3 ≈ 212 px de scroll. */
 .formulario {
@@ -734,7 +758,7 @@
 
 @keyframes formulario-subir {
   to {
-    translate: 0 -40px;
+    translate: 0 calc(-1 * var(--e-6));
   }
 }
 

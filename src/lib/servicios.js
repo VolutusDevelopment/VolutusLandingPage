@@ -143,8 +143,18 @@ export const SERVICIOS = [
   },
 ].map((servicio, i) => ({ ...servicio, color: PALETA[i] }))
 
+/**
+ * El servicio del que habla un artículo (lib/meta.js): el primero de su lista.
+ * El que no nombra ninguno, o nombra todos los que tienen página, habla de
+ * todos y no tiene uno.
+ */
+export const servicioDeArticulo = ({ servicios = [] }) =>
+  servicios.length < SERVICIOS.filter(({ ruta }) => ruta).length
+    ? SERVICIOS.find(({ id }) => id === servicios[0])
+    : undefined
+
 /** Las opciones del menú del formulario: un servicio de la lista, u otra cosa. */
 export const OPCIONES_DE_CONTACTO = [
   ...SERVICIOS.map((s) => s.opcion),
-  'Otro',
+  'Otro...',
 ]

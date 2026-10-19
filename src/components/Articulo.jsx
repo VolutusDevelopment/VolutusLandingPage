@@ -1,34 +1,8 @@
 import Pagina from './Pagina.jsx'
+import Contacto from './Contacto.jsx'
 import { ListaDeArticulos } from './Sugerencias.jsx'
 import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
-import { SERVICIOS } from '../lib/servicios.js'
-
-/**
- * La invitación con que cierran los artículos y su índice: la tarjeta oscura
- * del contacto, en la caída, como en /privacidad. Lleva a la calculadora de
- * estimado del servicio del artículo, o a /servicios si no tiene uno.
- */
-export function Invitacion({ servicio }) {
-  return (
-    <section className="seccion zona-cielo cierre" aria-labelledby="cierre-titulo">
-      <div className="contenedor">
-        <div className="cierre-tarjeta zona-plano cierre-invitacion entra">
-          <h2 id="cierre-titulo" className="titular">
-            ¿Lo vemos juntos?
-          </h2>
-          <p className="entradilla">
-            Cuéntanos qué estás resolviendo y una persona te responde pronto.
-          </p>
-          <p className="cierre-acciones">
-            <a className="boton boton-primario" href={servicio ? `${servicio.ruta}#estimado` : '/servicios'}>
-              Calcula tu estimado
-            </a>
-          </p>
-        </div>
-      </div>
-    </section>
-  )
-}
+import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 
 /**
  * El marco de un artículo (paginas/articulos/). El título, la entradilla y las
@@ -37,15 +11,21 @@ export function Invitacion({ servicio }) {
  *
  * Abre en el cielo del día de las páginas internas y se lee en blanco, a la
  * medida de lectura. Al final sugiere los artículos relacionados y cierra con
- * la invitación en la caída. En S y M, bajo la fecha, el servicio del que
- * habla queda a un toque.
+ * el formulario de contacto en la caída, con el servicio del que habla ya
+ * marcado. En S y M, bajo la fecha, el servicio queda a un toque.
  */
 export default function Articulo({ ruta, children }) {
   const { titulo, descripcion, publicada, actualizada, servicios = [] } = PAGINAS[ruta]
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
 
   return (
-    <Pagina ruta={ruta} hora="dia" className="articulos-pagina" cierre={<Invitacion servicio={servicio} />}>
+    <Pagina
+      ruta={ruta}
+      hora="dia"
+      className="articulos-pagina"
+      contactoAqui
+      cierre={<Contacto marcado={servicioDeArticulo(PAGINAS[ruta])?.opcion} />}
+    >
       <article>
         <header className="seccion zona-cielo hora-dia cabecera-cielo">
           <div className="contenedor">

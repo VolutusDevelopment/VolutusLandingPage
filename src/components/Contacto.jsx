@@ -1,5 +1,12 @@
 import { OPCIONES_DE_CONTACTO } from '../lib/servicios.js'
-import { CORREO_DE_CONTACTO, ERRORES, LIMITES, PLACEHOLDERS, WHATSAPP_DE_CONTACTO } from '../lib/contacto.js'
+import {
+  CORREO_DE_CONTACTO,
+  ERRORES,
+  LIMITES,
+  PLACEHOLDERS,
+  TITULOS_DEL_CONTACTO,
+  WHATSAPP_DE_CONTACTO,
+} from '../lib/contacto.js'
 
 /**
  * Contacto (DESIGN-BRIEF §4, bloque 5): aquí la página convierte. Es la última
@@ -43,12 +50,24 @@ import { CORREO_DE_CONTACTO, ERRORES, LIMITES, PLACEHOLDERS, WHATSAPP_DE_CONTACT
 
 // `marcado` es la opción de «Qué necesitas» que llega marcada: en la página de
 // un servicio, ese servicio. Se puede desmarcar como cualquier otra.
+//
+// El titular es una frase de TITULOS_DEL_CONTACTO: el HTML trae la primera y
+// titular-del-contacto.js elige una al azar al cargar la página. Cada una va
+// también en una copia invisible que mide su alto (Contacto.css), así que
+// cambiarla no mueve nada.
 export default function Contacto({ marcado }) {
   return (
     <section id="contacto" className="seccion zona-cielo contacto" aria-labelledby="contacto-titulo">
       <div className="contenedor contacto-interior">
         <div className="contacto-relato zona-plano">
-          <h2 id="contacto-titulo" className="titular entra">¿Qué estás resolviendo a mano?</h2>
+          <div className="contacto-titular">
+            <h2 id="contacto-titulo" className="titular entra">
+              {TITULOS_DEL_CONTACTO[0]}
+            </h2>
+            {TITULOS_DEL_CONTACTO.map((titulo) => (
+              <span key={titulo} className="titular" data-titulo={titulo} aria-hidden="true" />
+            ))}
+          </div>
         </div>
 
         <form
