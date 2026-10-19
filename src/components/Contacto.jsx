@@ -19,9 +19,10 @@ import { CORREO_DE_CONTACTO, ERRORES, LIMITES, PLACEHOLDERS, WHATSAPP_DE_CONTACT
  * opciones de «Qué necesitas» son casillas nativas: se marcan y se envían sin
  * una línea de código.
  *
- * «Enviar por» elige el canal: por correo, el Worker manda el mensaje; por
- * WhatsApp, client.js abre el chat con el nombre, el correo, los servicios y
- * el mensaje ya escritos.
+ * «Enviar por» va primero, porque decide qué se pide: por correo, el Worker
+ * manda el mensaje y el correo es obligatorio; por WhatsApp, client.js abre el
+ * chat con el nombre, los servicios y el mensaje ya escritos, y el correo pasa
+ * a opcional, como dice la nota que aparece bajo su casilla.
  *
  * Los mensajes de error están escritos en el HTML servido y ocultos con
  * `hidden`, no creados al vuelo. Ojo: `hidden` por sí solo NO reserva espacio
@@ -58,10 +59,41 @@ export default function Contacto({ marcado }) {
           toolname="escribir_a_volutus"
           tooldescription="Escribe un mensaje a Volutus, empresa chilena de desarrollo de software, para cotizar o conversar un proyecto. La persona lo revisa y lo envía."
         >
-          <h3 className="formulario-titulo">Escríbenos</h3>
+          {/* «Enviar por» va al lado del título donde caben los dos, y
+              debajo, con su leyenda a la vista, donde no (Contacto.css). */}
+          <div className="formulario-cabeza">
+            <h3 className="formulario-titulo">Escríbenos</h3>
 
-          {/* Nombre y correo en dos columnas: son cortos y ponerlos uno debajo
-              de otro alarga el formulario sin necesidad. En S vuelven a una. */}
+            {/* Radios nativos con las mismas pastillas de «Qué necesitas»: las
+                flechas cambian de opción sin código. Sin JavaScript, WhatsApp
+                cae en el envío normal, y el Worker responde con su página de
+                siempre, que ofrece el correo. */}
+            {WHATSAPP_DE_CONTACTO && (
+              <fieldset
+                className="campo opciones opciones-canal"
+                toolparamdescription="Por dónde se envía el mensaje: correo o WhatsApp"
+              >
+                <legend>Enviar por</legend>
+                <div className="chips">
+                  <label className="chip">
+                    <input type="radio" name="canal" value="correo" defaultChecked />
+                    Correo
+                  </label>
+                  <label className="chip chip-whatsapp">
+                    <input type="radio" name="canal" value="whatsapp" />
+                    WhatsApp
+                    <svg className="doble-tick" viewBox="0 0 16 10" aria-hidden="true">
+                      <path d="M1.5 5.5l3 3 6.5-7" />
+                      <path d="M7 7l1.5 1.5 6.5-7" />
+                    </svg>
+                  </label>
+                </div>
+              </fieldset>
+            )}
+          </div>
+
+          {/* Nombre y correo en dos columnas, también en S: son cortos, y uno
+              debajo de otro el formulario no cabía en la pantalla del celular. */}
           <div className="formulario-fila">
             <div className="campo">
               <input
@@ -90,12 +122,15 @@ export default function Contacto({ marcado }) {
                 spellCheck="false"
                 autoCapitalize="off"
                 placeholder={PLACEHOLDERS.correo}
-                toolparamdescription="Correo donde responderle"
+                toolparamdescription="Correo donde responderle; opcional si se envía por WhatsApp"
                 required
               />
               <p className="campo-error" id="error-correo" hidden>
                 {ERRORES.correo}
               </p>
+              {/* Con WhatsApp el correo es opcional, y lo dice aquí, en el
+                  hueco de su aviso: aparecer no empuja nada (Contacto.css). */}
+              {WHATSAPP_DE_CONTACTO && <p className="campo-opcional">Opcional</p>}
             </div>
           </div>
 
@@ -105,7 +140,10 @@ export default function Contacto({ marcado }) {
               suele venir con su automatización. Las opciones son los servicios
               de más arriba, sacados de la misma lista (`lib/servicios.js`), y
               «Otro» recoge el resto. */}
-          <fieldset className="campo opciones" toolparamdescription="Servicios que necesita: uno, varios o ninguno">
+          <fieldset
+            className="campo opciones opciones-servicio"
+            toolparamdescription="Servicios que necesita: uno, varios o ninguno"
+          >
             <legend>Dinos lo que necesitas</legend>
             <div className="chips">
               {OPCIONES_DE_CONTACTO.map((opcion) => (
@@ -139,40 +177,22 @@ export default function Contacto({ marcado }) {
               El script lo descarga client.js al primer foco en el formulario. */}
           <div className="turnstile" />
 
-          {/* Radios nativos con las mismas pastillas de «Qué necesitas»: las
-              flechas cambian de opción sin código. Sin JavaScript, WhatsApp
-              cae en el envío normal, y el Worker responde con su página de
-              siempre, que ofrece el correo. */}
-          {WHATSAPP_DE_CONTACTO && (
-            <fieldset className="campo opciones" toolparamdescription="Por dónde se envía el mensaje: correo o WhatsApp">
-              <legend>Enviar por</legend>
-              <div className="chips">
-                <label className="chip">
-                  <input type="radio" name="canal" value="correo" defaultChecked />
-                  Correo
-                </label>
-                <label className="chip chip-whatsapp">
-                  <input type="radio" name="canal" value="whatsapp" />
-                  WhatsApp
-                </label>
-              </div>
-            </fieldset>
-          )}
-
           {/* El mensaje es un «composer»: un solo cuadro con el texto arriba y,
-              en su base, el contador y el botón de enviar. Un `<textarea>` no
-              puede contener otros elementos, así que el cuadro lo dibuja el
-              envoltorio y la barra va DEBAJO del texto, no encima: ninguna
-              palabra puede quedar tapada por el botón, mida lo que mida la
-              pantalla. El tope lo impone `maxLength`; el contador solo lo
-              muestra. Regla 4 de §7: al enviar, el botón no desaparece ni
-              encoge (ver Contacto.css). */}
+              en su base, el botón de enviar. Un `<textarea>` no puede contener
+              otros elementos, así que el cuadro lo dibuja el envoltorio y la
+              barra va DEBAJO del texto, no encima: ninguna palabra puede
+              quedar tapada por el botón, mida lo que mida la pantalla. Parte
+              en dos líneas y se agranda desde la esquina. El contador va
+              debajo, en la línea que el aviso ya tiene reservada: dentro de la
+              barra le sumaba una fila en el celular. El tope lo impone
+              `maxLength`; el contador solo lo muestra. Regla 4 de §7: al
+              enviar, el botón no desaparece ni encoge (ver Contacto.css). */}
           <div className="campo">
             <div className="composer">
               <textarea
                 id="proyecto"
                 name="proyecto"
-                rows="3"
+                rows="2"
                 maxLength={LIMITES.proyecto}
                 placeholder={PLACEHOLDERS.proyecto}
                 aria-describedby="cuenta-proyecto"
@@ -180,17 +200,19 @@ export default function Contacto({ marcado }) {
                 required
               />
               <div className="composer-barra">
-                <p className="campo-cuenta" id="cuenta-proyecto">
-                  <span className="campo-cuenta-n">0</span> / {LIMITES.proyecto}
-                </p>
                 <button className="boton boton-primario formulario-enviar" type="submit">
                   Enviar mensaje
                 </button>
               </div>
             </div>
-            <p className="campo-error" id="error-proyecto" hidden>
-              {ERRORES.proyecto}
-            </p>
+            <div className="campo-pie">
+              <p className="campo-error" id="error-proyecto" hidden>
+                {ERRORES.proyecto}
+              </p>
+              <p className="campo-cuenta" id="cuenta-proyecto">
+                <span className="campo-cuenta-n">0</span> / {LIMITES.proyecto}
+              </p>
+            </div>
           </div>
         </form>
 

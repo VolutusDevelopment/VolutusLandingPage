@@ -1,32 +1,404 @@
 {
   "rutas": {
     "/": {
-      "movil": {
-        "alto": 7119,
+      "S": {
+        "alto": 5178,
+        "desborda": false,
+        "h1": 102.609375,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 5178,
+        "desborda": false,
+        "h1": 102.5625,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 5911,
+        "desborda": false,
+        "h1": 158.0625,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 5911,
+        "desborda": false,
+        "h1": 158.015625,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 4892,
+        "desborda": false,
+        "h1": 209.25,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 4892,
+        "desborda": false,
+        "h1": 209.25,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 5107,
+        "desborda": false,
+        "h1": 209.25,
+        "bloquesQueEntran": 6,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/nosotros": {
+      "S": {
+        "alto": 8397,
+        "desborda": false,
+        "h1": 34.84375,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 8397,
+        "desborda": false,
+        "h1": 34.828125,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 6286,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 6286,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 5732,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 5732,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 5854,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 20,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios": {
+      "S": {
+        "alto": 5993,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 6116,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 4463,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 4539,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 4506,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 4583,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4593,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/desarrollo-web": {
+      "S": {
+        "alto": 7598,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 7617,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 6255,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 6299,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 5976,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 5979,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6046,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 31,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/tiendas-online": {
+      "S": {
+        "alto": 10542,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 10560,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 10962,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 11006,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 7738,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 7741,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 7807,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/desarrollo-software-a-medida": {
+      "S": {
+        "alto": 7981,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 7999,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 6671,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 6715,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 6137,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 6140,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6207,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 32,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/agentes-ia": {
+      "S": {
+        "alto": 9949,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 5997,
+      "S webkit": {
+        "alto": 9967,
         "desborda": false,
-        "h1": 174.1875,
+        "h1": 129.5625,
         "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "escritorio": {
-        "alto": 5334,
+      "M": {
+        "alto": 7947,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 25,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 7991,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 25,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 7188,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 25,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "oscuro": {
-        "alto": 5334,
+      "L webkit": {
+        "alto": 7191,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 25,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 7234,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 25,
@@ -34,135 +406,1333 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/nosotros": {
-      "movil": {
-        "alto": 3521,
+    "/servicios/automatizacion-procesos": {
+      "S": {
+        "alto": 8014,
         "desborda": false,
-        "h1": 43.1875,
-        "bloquesQueEntran": 16,
+        "h1": 129.5625,
+        "bloquesQueEntran": 30,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 2737,
+      "S webkit": {
+        "alto": 8032,
         "desborda": false,
-        "h1": 58.0625,
-        "bloquesQueEntran": 16,
+        "h1": 129.5625,
+        "bloquesQueEntran": 30,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "escritorio": {
-        "alto": 2883,
+      "M": {
+        "alto": 6609,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 30,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 6653,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 30,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 6355,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 30,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 6358,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 30,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6424,
+        "desborda": false,
+        "h1": 246.234375,
+        "bloquesQueEntran": 30,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/sistemas-de-gestion": {
+      "S": {
+        "alto": 8813,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 8832,
+        "desborda": false,
+        "h1": 129.5625,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 7000,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 7044,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 6500,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 6504,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6573,
+        "desborda": false,
+        "h1": 328.3125,
+        "bloquesQueEntran": 37,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/servicios/prospeccion-de-clientes": {
+      "S": {
+        "alto": 7011,
+        "desborda": false,
+        "h1": 172.75,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 7031,
+        "desborda": false,
+        "h1": 172.75,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 6240,
+        "desborda": false,
+        "h1": 185.953125,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 6285,
+        "desborda": false,
+        "h1": 185.90625,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 6022,
+        "desborda": false,
+        "h1": 410.390625,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 6024,
+        "desborda": false,
+        "h1": 410.390625,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6100,
+        "desborda": false,
+        "h1": 410.390625,
+        "bloquesQueEntran": 28,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos": {
+      "S": {
+        "alto": 4004,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4004,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 2727,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 2727,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3849,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 16,
+        "bloquesQueEntran": 13,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "oscuro": {
-        "alto": 2883,
+      "L webkit": {
+        "alto": 3849,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 16,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4032,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 13,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/que-es-un-agente-de-ia": {
+      "S": {
+        "alto": 5574,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 5574,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 4015,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 4015,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 4380,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 4381,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4473,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/pagina-web-o-tienda-online": {
+      "S": {
+        "alto": 4689,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4689,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3626,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3626,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3988,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3990,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4077,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/software-a-medida-o-ya-hecho": {
+      "S": {
+        "alto": 4692,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4692,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3517,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3517,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3879,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3881,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3968,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/planilla-o-sistema-de-gestion": {
+      "S": {
+        "alto": 4216,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4216,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3228,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3228,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3563,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3564,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3642,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/que-automatizar-primero": {
+      "S": {
+        "alto": 4392,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4392,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3372,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3372,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3733,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3734,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3817,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/que-preparar-antes-de-cotizar": {
+      "S": {
+        "alto": 4568,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4568,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3599,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3599,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3970,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3971,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4073,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/dos-formas-de-trabajar": {
+      "S": {
+        "alto": 4438,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4438,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3381,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3381,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3685,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3687,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3769,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/datos-de-tus-clientes-y-la-ley": {
+      "S": {
+        "alto": 4571,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4571,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3527,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3527,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3833,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3834,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3922,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/por-que-no-te-sirvio-la-herramienta": {
+      "S": {
+        "alto": 3722,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 3722,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3008,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3008,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3399,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3401,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3478,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/conectar-con-lo-que-ya-usas": {
+      "S": {
+        "alto": 3975,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 3975,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3144,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3144,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3448,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3449,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3532,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/boleta-factura-y-sii": {
+      "S": {
+        "alto": 3958,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 3958,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3049,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3049,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3441,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3443,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3525,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/como-se-paga-en-linea": {
+      "S": {
+        "alto": 4170,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4170,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3198,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3198,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3559,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3561,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3643,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/casos-para-un-agente-de-ia": {
+      "S": {
+        "alto": 4462,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4462,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3444,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3444,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3838,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3840,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3927,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/como-trabajamos": {
+      "S": {
+        "alto": 4503,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 4503,
+        "desborda": false,
+        "h1": 141.4375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 3449,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 3449,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 3760,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 3761,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 3863,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/privacidad": {
-      "movil": {
-        "alto": 4368,
+      "S": {
+        "alto": 6856,
         "desborda": false,
-        "h1": 110.15625,
-        "bloquesQueEntran": 0,
+        "h1": 129.5625,
+        "bloquesQueEntran": 14,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 3313,
+      "S webkit": {
+        "alto": 6856,
         "desborda": false,
-        "h1": 73.4375,
-        "bloquesQueEntran": 0,
+        "h1": 129.5625,
+        "bloquesQueEntran": 14,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "escritorio": {
-        "alto": 3555,
+      "M": {
+        "alto": 4787,
         "desborda": false,
-        "h1": 73.4375,
-        "bloquesQueEntran": 0,
+        "h1": 123.96875,
+        "bloquesQueEntran": 14,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "oscuro": {
-        "alto": 3555,
+      "M webkit": {
+        "alto": 4787,
         "desborda": false,
-        "h1": 73.4375,
-        "bloquesQueEntran": 0,
+        "h1": 123.9375,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 4805,
+        "desborda": false,
+        "h1": 164.15625,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 4805,
+        "desborda": false,
+        "h1": 164.15625,
+        "bloquesQueEntran": 14,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4843,
+        "desborda": false,
+        "h1": 164.15625,
+        "bloquesQueEntran": 14,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/ley21719": {
-      "movil": {
-        "alto": 7999,
+      "S": {
+        "alto": 10501,
         "desborda": false,
         "h1": 86.375,
-        "bloquesQueEntran": 15,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 6796,
+      "S webkit": {
+        "alto": 10475,
         "desborda": false,
-        "h1": 116.125,
-        "bloquesQueEntran": 15,
+        "h1": 86.375,
+        "bloquesQueEntran": 23,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "escritorio": {
-        "alto": 6585,
+      "M": {
+        "alto": 7823,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 23,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 7821,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 23,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 6735,
+        "desborda": false,
+        "h1": 164.15625,
+        "bloquesQueEntran": 23,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 6680,
+        "desborda": false,
+        "h1": 164.15625,
+        "bloquesQueEntran": 23,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 6640,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 15,
+        "bloquesQueEntran": 23,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/patos": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "oscuro": {
-        "alto": 6585,
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 15,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/pagina/2": {
+      "S": {
+        "alto": 2138,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 2138,
+        "desborda": false,
+        "h1": 86.375,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1914,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1914,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 2303,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 2303,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 4,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 2382,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 4,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
     "/no-existe": {
-      "movil": {
-        "alto": 1495,
+      "S": {
+        "alto": 844,
         "desborda": false,
         "h1": 86.375,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "tablet": {
-        "alto": 1694,
+      "S webkit": {
+        "alto": 844,
         "desborda": false,
-        "h1": 58.0625,
+        "h1": 86.375,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "escritorio": {
-        "alto": 1787,
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 123.96875,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 123.9375,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
-      "oscuro": {
-        "alto": 1787,
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 0,
@@ -173,23 +1743,123 @@
   },
   "foco": {
     "/": {
-      "paradas": 39,
+      "paradas": 40,
       "sinAnillo": 0
     },
     "/nosotros": {
-      "paradas": 15,
+      "paradas": 30,
+      "sinAnillo": 0
+    },
+    "/servicios": {
+      "paradas": 34,
+      "sinAnillo": 0
+    },
+    "/servicios/desarrollo-web": {
+      "paradas": 49,
+      "sinAnillo": 0
+    },
+    "/servicios/tiendas-online": {
+      "paradas": 55,
+      "sinAnillo": 0
+    },
+    "/servicios/desarrollo-software-a-medida": {
+      "paradas": 50,
+      "sinAnillo": 0
+    },
+    "/servicios/agentes-ia": {
+      "paradas": 41,
+      "sinAnillo": 0
+    },
+    "/servicios/automatizacion-procesos": {
+      "paradas": 54,
+      "sinAnillo": 0
+    },
+    "/servicios/sistemas-de-gestion": {
+      "paradas": 54,
+      "sinAnillo": 0
+    },
+    "/servicios/prospeccion-de-clientes": {
+      "paradas": 44,
+      "sinAnillo": 0
+    },
+    "/articulos": {
+      "paradas": 27,
+      "sinAnillo": 0
+    },
+    "/articulos/que-es-un-agente-de-ia": {
+      "paradas": 20,
+      "sinAnillo": 0
+    },
+    "/articulos/pagina-web-o-tienda-online": {
+      "paradas": 19,
+      "sinAnillo": 0
+    },
+    "/articulos/software-a-medida-o-ya-hecho": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/planilla-o-sistema-de-gestion": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/que-automatizar-primero": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/que-preparar-antes-de-cotizar": {
+      "paradas": 17,
+      "sinAnillo": 0
+    },
+    "/articulos/dos-formas-de-trabajar": {
+      "paradas": 17,
+      "sinAnillo": 0
+    },
+    "/articulos/datos-de-tus-clientes-y-la-ley": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/por-que-no-te-sirvio-la-herramienta": {
+      "paradas": 19,
+      "sinAnillo": 0
+    },
+    "/articulos/conectar-con-lo-que-ya-usas": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/boleta-factura-y-sii": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/como-se-paga-en-linea": {
+      "paradas": 16,
+      "sinAnillo": 0
+    },
+    "/articulos/casos-para-un-agente-de-ia": {
+      "paradas": 18,
+      "sinAnillo": 0
+    },
+    "/articulos/como-trabajamos": {
+      "paradas": 20,
       "sinAnillo": 0
     },
     "/privacidad": {
-      "paradas": 14,
+      "paradas": 18,
       "sinAnillo": 0
     },
     "/ley21719": {
-      "paradas": 13,
+      "paradas": 21,
+      "sinAnillo": 0
+    },
+    "/patos": {
+      "paradas": 7,
+      "sinAnillo": 0
+    },
+    "/articulos/pagina/2": {
+      "paradas": 18,
       "sinAnillo": 0
     },
     "/no-existe": {
-      "paradas": 16,
+      "paradas": 7,
       "sinAnillo": 0
     }
   }

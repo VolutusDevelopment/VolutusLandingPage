@@ -95,10 +95,10 @@ pnpm preview                    # vista previa del build de dist/
 pnpm og                         # generar tarjetas Open Graph
 pnpm iconos                     # generar iconos
 npx wrangler dev                # sitio construido con el Worker, en :8787
-pnpm verificar                  # medidas, enlaces y foco contra tests/referencia.json
+pnpm verificar                  # medidas, enlaces, foco y WebMCP contra tests/referencia.json
 ```
 
-`pnpm preview` requiere un build previo. `wrangler dev` sirve el sitio construido y atiende el Worker en :8787. `pnpm verificar` necesita Playwright y `wrangler dev` corriendo.
+`pnpm preview` requiere un build previo. `wrangler dev` sirve el sitio construido y atiende el Worker en :8787. `pnpm verificar` necesita Chromium y WebKit de Playwright y `wrangler dev` corriendo.
 
 ## Estructura
 

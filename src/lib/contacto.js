@@ -32,9 +32,10 @@ export const WHATSAPP_DE_CONTACTO = '56968695173'
 export const SALUDO_DE_WHATSAPP = 'Hola, vi la página de Volutus y quiero conversar sobre un proyecto.'
 
 // Lo que llega escrito al chat desde el formulario, con lo mismo que el correo
-// que arma el Worker: quién escribe y su correo, qué necesita y su mensaje.
+// que arma el Worker: quién escribe y su correo, qué necesita y su mensaje. Por
+// WhatsApp el correo es opcional: si no lo dio, no va.
 export const mensajeDeWhatsapp = ({ nombre, correo, servicios, proyecto }) =>
-  `Hola, soy ${nombre} (${correo}).` + (servicios ? `\nNecesito: ${servicios}` : '') + `\n\n${proyecto}`
+  `Hola, soy ${nombre}${correo ? ` (${correo})` : ''}.` + (servicios ? `\nNecesito: ${servicios}` : '') + `\n\n${proyecto}`
 
 // El enlace que abre el chat con `texto` ya escrito.
 export const enlaceDeWhatsapp = (texto) =>

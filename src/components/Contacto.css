@@ -2,8 +2,13 @@
    tarjeta oscura del relato y, encima, la tarjeta clara del formulario. Ver
    Contacto.jsx. */
 
+/* La columna mide lo que hay, nunca lo que pide el contenido: con `auto`,
+   una pantalla angosta (o el texto ampliado de Safari) la estiraba hasta el
+   mínimo del formulario —la palabra más larga de sus pastillas más sus
+   márgenes— y el bloque entero se corría a la derecha. */
 .contacto-interior {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* El final de la página es la portada en espejo: UN degradado que pinta
@@ -90,22 +95,98 @@
 
 @media (min-width: 1024px) {
   .formulario-titulo {
-    margin-bottom: var(--e-4);
+    margin-bottom: var(--e-2);
     font-size: var(--texto-xl);
   }
 }
-/* Nombre y correo comparten fila desde que hay ancho para los dos. Es lo que
-   hacen Supabase y Neon, y evita que tres campos cortos ocupen una columna
-   entera de alto. */
+
+/* «Escríbenos» y, a su lado, «Enviar por». Junto al título, «Correo» y
+   «WhatsApp» se leen solas y la leyenda queda solo para el lector de
+   pantalla. Donde no caben, las pastillas bajan a su línea con la leyenda a la
+   vista, en dos columnas; sin consultas de contenedor, también.
+
+   El corte es fijo y no depende de cómo mida el texto cada navegador: con el
+   título de S y M miden 120 + 12 + 88 + 8 + 112 = 340 px, y 22rem deja
+   holgura. Ningún celular llega (en uno de 430 px el formulario mide 324). En
+   L y XL el título crece a 185, y caben igual: el formulario nunca baja de
+   438. */
+.formulario-cabeza {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+}
+
+.formulario-cabeza .opciones-canal {
+  flex-basis: 100%;
+}
+
+@container (min-width: 22rem) {
+  .formulario-cabeza .opciones-canal {
+    flex-basis: auto;
+    margin-left: auto;
+  }
+
+  .opciones-canal legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Cada pastilla reserva el ancho de la marcada, que suma su marca: sin la
+     reserva, marcar una correría a la otra. */
+  .opciones-canal .chips {
+    display: flex;
+  }
+
+  .opciones-canal .chip {
+    min-width: 5.5rem;
+  }
+
+  .opciones-canal .chip-whatsapp {
+    min-width: 7rem;
+  }
+}
+
+/* Nombre y correo comparten fila en todos los anchos, como en Supabase y Neon:
+   uno debajo de otro, el formulario no cabía en la pantalla del celular. En S,
+   con menos relleno a los lados, «tu@correo.cl» cabe entero. */
 .formulario-fila {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   column-gap: var(--e-2);
 }
 
-@media (min-width: 560px) {
-  .formulario-fila {
-    grid-template-columns: 1fr 1fr;
+@media (max-width: 559px) {
+  .formulario-fila input {
+    padding-inline: var(--e-3);
   }
+}
+
+/* «Opcional», bajo el correo cuando se envía por WhatsApp. Va en la línea que
+   el aviso del correo ya tiene reservada, así que aparecer no empuja nada; si
+   hay un aviso (un correo mal escrito), le cede el sitio. Sin `:has`, no
+   aparece. */
+.formulario-fila .campo {
+  position: relative;
+}
+
+.campo-opcional {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: var(--texto-xs);
+  line-height: 1.3;
+  color: var(--texto-suave);
+  visibility: hidden;
+}
+
+.formulario:has(input[name='canal'][value='whatsapp']:checked) .campo-error[hidden] + .campo-opcional {
+  visibility: visible;
 }
 
 .campo {
@@ -222,11 +303,31 @@
 }
 
 /* En dos columnas: siete pastillas sueltas ocupaban hasta siete filas en S,
-   y el formulario ya no cabía en una pantalla. */
+   y el formulario ya no cabía en una pantalla. Desde M las de «Qué
+   necesitas» toman su ancho y caben en menos filas. Ninguna se desliza de
+   lado: lo que no cabe, baja. */
 .chips {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--e-2);
+}
+
+@media (max-width: 559px) {
+  .formulario .chips {
+    gap: 6px;
+  }
+
+  /* 32 px de alto: sobre los 24 que pide WCAG 2.5.8, y el formulario cabe. */
+  .formulario .chip {
+    min-height: 32px;
+  }
+}
+
+@media (min-width: 560px) {
+  .opciones-servicio .chips {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .chip {
@@ -281,18 +382,36 @@
    donde no está, sin descargar nada— y, en
    vez del ✓ de las demás pastillas, su doble check azul al final. El check es
    un SVG y no el carácter «✓✓»: cada fuente dibuja ese carácter a su manera.
-   Está siempre, transparente, para que aparecer no mueva el texto; el cambio
-   lo hace la transición de `.chip`. */
-.chip-whatsapp::after {
-  content: '';
+   Está siempre, sin trazar, para que aparecer no mueva el texto. Al marcarse
+   se dibuja un check y después el otro, como el mensaje que pasa de enviado a
+   entregado; al desmarcarse se borran los dos a la vez. No desplaza nada, así
+   que se queda también con el movimiento reducido. */
+.doble-tick {
   flex: none;
   width: 16px;
   height: 10px;
   margin-left: auto;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M1.5 5.5l3 3 6.5-7M7 7l1.5 1.5 6.5-7' fill='none' stroke='%2334B7F1' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  opacity: 0;
-  transition: opacity 140ms var(--ease-out);
+  fill: none;
+  stroke: #34b7f1;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Cada trazo mide menos de 14: con guion y hueco de 14, correrlo 14 lo deja
+   entero en el hueco. */
+.doble-tick path {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  transition: stroke-dashoffset 200ms var(--ease-out);
+}
+
+.chip-whatsapp:has(input:checked) .doble-tick path {
+  stroke-dashoffset: 0;
+}
+
+.chip-whatsapp:has(input:checked) .doble-tick path + path {
+  transition-delay: 140ms;
 }
 
 .chip-whatsapp:has(input:checked) {
@@ -308,10 +427,6 @@
   content: none;
 }
 
-.chip-whatsapp:has(input:checked)::after {
-  opacity: 1;
-}
-
 /* La trampa para robots. `display: none` la delataría: los que valen algo lo
    comprueban. Se saca del flujo dejándola técnicamente presente. */
 .trampa {
@@ -324,14 +439,14 @@
 
 /* ---- el mensaje: el composer ----
  *
- * Un solo cuadro con el texto arriba y, en su base, el contador y el botón de
- * enviar, separados por una línea. La barra es una fila propia DEBAJO del
- * textarea, no superpuesta: el texto nunca pasa por detrás del botón, y al
- * agrandar el cuadro desde la esquina la barra baja con él. */
+ * Un solo cuadro con el texto arriba y, en su base, el botón de enviar,
+ * separados por una línea. La barra es una fila propia DEBAJO del textarea, no
+ * superpuesta: el texto nunca pasa por detrás del botón, y al agrandar el
+ * cuadro desde la esquina la barra baja con él. */
 .composer {
   display: flex;
   flex-direction: column;
-  /* El contador y el botón se apilan cuando el cuadro es angosto (abajo). */
+  /* El botón llena el ancho cuando el cuadro es angosto (abajo). */
   container-type: inline-size;
 }
 
@@ -374,21 +489,29 @@
   min-width: 11rem;
 }
 
-/* En un cuadro angosto (S), el botón baja a su propia fila y llena el ancho:
-   el blanco grande para el pulgar, y al llenar el ancho tampoco encoge. El
-   umbral es el ancho que piden juntos el contador y el botón. Sin soporte de
-   consultas de contenedor, el botón igual baja de fila, a la derecha. */
+/* En un cuadro angosto (S), el botón llena el ancho: el blanco grande para el
+   pulgar, y al llenar el ancho tampoco encoge. Sin soporte de consultas de
+   contenedor, queda a la derecha. */
 @container (max-width: 300px) {
   .formulario-enviar {
     flex-basis: 100%;
   }
 }
 
-/* La cuenta habla como las etiquetas: mono, chica, en tono suave. Alineada con
-   el texto de arriba, y sin partirse («1234 / 2000» nunca ocupa dos líneas). */
+/* Bajo el cuadro, el aviso a la izquierda y la cuenta a la derecha, en la
+   línea que el aviso ya reserva. */
+.campo-pie {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+/* La cuenta habla como las etiquetas: mono, chica, en tono suave. Sin
+   partirse: «1234 / 2000» nunca ocupa dos líneas. */
 .campo-cuenta {
-  margin: 0;
-  padding-left: var(--e-2);
+  margin: 0 0 0 auto;
+  padding-right: var(--e-2);
+  line-height: 1.3;
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   color: var(--texto-suave);
@@ -524,13 +647,14 @@
 
 /* ---- escritorio: lado a lado ----
  *
- * El relato se lleva tres quintos y el formulario los dos que quedan, con el
- * titular centrado en su tarjeta. El formulario mide más que el relato y se come esa diferencia por
- * arriba y por abajo: sobresale de la tarjeta oscura, que es el gesto de la
- * referencia. */
+ * Mitad y mitad, con el titular centrado en su tarjeta: con ese ancho las
+ * pastillas del formulario caben en tres filas y el formulario entero, en la
+ * pantalla de una laptop. El formulario mide más que el relato y se come esa
+ * diferencia por arriba y por abajo: sobresale de la tarjeta oscura, que es el
+ * gesto de la referencia. */
 @media (min-width: 1024px) {
   .contacto-interior {
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
   }
 
@@ -547,6 +671,85 @@
 
   .formulario {
     margin: calc(-1 * var(--e-8)) 0;
-    padding: var(--e-8);
+    padding: var(--e-6);
+  }
+}
+
+/* ---- el formulario busca el centro ----
+ *
+ * Al bajar, la tarjeta del formulario se acomoda al centro de la pantalla, bajo
+ * la barra, y al centrarse se levanta con una sombra suave. Va atado al scroll
+ * (`animation-timeline: view()`, como `.entra`): sin JavaScript, reversible y,
+ * donde no se implementa, la tarjeta se queda quieta. Solo donde el formulario
+ * cabe entero bajo la barra (`.formulario-cabe`, que pone client.js): centrar
+ * algo más alto que la pantalla le cortaría arriba y abajo.
+ *
+ * En S y M sube 40 px sobre la tarjeta oscura y tapa un poco su título; llega
+ * frenando y se queda: no acompaña hasta el pie. En L y XL, un imán: al cruzar
+ * el centro baja al 70 % de la velocidad de la página, sin detenerse. Se corre
+ * 20 px a cada lado y no más: sobresale 32 de la tarjeta oscura, y con su radio
+ * de 12, un píxel más dejaría a la vista la esquina recta de esa tarjeta.
+ * Con esta curva la pendiente máxima es 1,587 veces la media, así que para ir
+ * al 70 % el tramo mide 1,587 × 40 / 0,3 ≈ 212 px de scroll. */
+.formulario {
+  isolation: isolate;
+}
+
+.formulario::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow:
+    0 28px 56px -28px rgb(6 22 44 / 0.42),
+    0 2px 10px rgb(6 22 44 / 0.06);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .formulario-cabe {
+      animation: formulario-subir cubic-bezier(0.33, 1, 0.68, 1) both;
+      animation-timeline: view(block var(--barra-alto) 0px);
+      animation-range: cover 0% cover 50%;
+    }
+
+    .formulario-cabe::after {
+      animation: formulario-sombra cubic-bezier(0.37, 0, 0.63, 1) both;
+      animation-timeline: view(block var(--barra-alto) 0px);
+      animation-range: cover 20% cover 80%;
+    }
+
+    @media (min-width: 1024px) {
+      .formulario-cabe {
+        animation-name: formulario-iman;
+        animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+        animation-range: cover calc(50% - 106px) cover calc(50% + 106px);
+      }
+    }
+  }
+}
+
+@keyframes formulario-subir {
+  to {
+    translate: 0 -40px;
+  }
+}
+
+@keyframes formulario-iman {
+  from {
+    translate: 0 -20px;
+  }
+
+  to {
+    translate: 0 20px;
+  }
+}
+
+@keyframes formulario-sombra {
+  50% {
+    opacity: 1;
   }
 }

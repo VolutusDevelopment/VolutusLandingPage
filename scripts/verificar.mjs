@@ -1,13 +1,14 @@
 // Verificación de la página contra una base de referencia.
 //
-// Corre la página en un navegador real y compara un puñado de medidas con las
-// de `tests/referencia.json`. Si algo se movió, lo dice y falla.
+// Corre cada página en navegadores reales y compara un puñado de medidas con
+// las de `tests/referencia.json`. Si algo se movió, lo dice y falla.
 //
 //   node scripts/verificar.mjs                 compara contra la referencia
 //   node scripts/verificar.mjs --actualizar    reescribe la referencia
 //
-// Necesita el sitio servido en http://127.0.0.1:8787 (wrangler dev) y
-// Chromium de Playwright instalado (`pnpm exec playwright install chromium`).
+// Necesita el sitio servido en http://127.0.0.1:8787 (wrangler dev; otra
+// dirección va en BASE_URL) y Chromium y WebKit de Playwright instalados
+// (`pnpm exec playwright install chromium webkit`).
 //
 // **Por qué medidas y no capturas.** Un diff de píxeles sobre una página con
 // fotografía y tipografía web da falsos positivos cada vez que cambia el
@@ -20,13 +21,15 @@
 //   - El anillo de foco desapareció del enlace de salto porque `--foco` no
 //     resolvía fuera de las zonas.
 //   - El desbordamiento horizontal aparece en un solo ancho y solo si se mira.
+//   - Las fichas de proyectos se cerraban con un `<form>` sin anotar para los
+//     agentes de IA, y Lighthouse lo cuenta.
 //
 // Cada comprobación de aquí existe porque su fallo ya ocurrió.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { chromium } from 'playwright'
+import { chromium, webkit } from 'playwright'
 
 import { PAGINAS } from '../src/lib/meta.js'
 
@@ -38,27 +41,66 @@ const actualizar = process.argv.includes('--actualizar')
 // y entre sistemas; lo que importa es que no cambien de golpe.
 const MARGEN = 24
 
+// Los puntos de quiebre de DESIGN-BRIEF §8, cada uno en una pantalla de
+// verdad: S es un iPhone; M y L, un iPad de pie y apaisado (en el apaisado
+// desbordaba la fila de logros y nadie lo medía); XL, el escritorio.
 const ANCHOS = [
-  ['movil', 390, 844],
-  ['tablet', 768, 1024],
-  // El iPad apaisado: aquí la fila de logros desbordaba y nadie lo medía.
-  ['tablet-apaisada', 1180, 820],
-  ['escritorio', 1440, 900],
+  ['S', 390, 844],
+  ['M', 820, 1180],
+  ['L', 1180, 820],
+  ['XL', 1440, 900],
 ]
 
-const navegador = await chromium.launch()
+// Safari parte las líneas y mide distinto que Chromium (CLAUDE.md §6): los
+// anchos de iPhone y iPad se miden también en WebKit, como pantalla táctil.
+const EN_WEBKIT = ['S', 'M', 'L']
 
-async function medir(ruta, ancho, alto, tema) {
-  const ctx = await navegador.newContext({ viewport: { width: ancho, height: alto } })
+const ESCRITORIO = { viewport: { width: 1280, height: 900 } }
+
+const chrome = await chromium.launch()
+const safari = await webkit.launch()
+
+async function abrir(navegador, ruta, opciones) {
+  const ctx = await navegador.newContext(opciones)
   const pagina = await ctx.newPage()
-  if (tema) {
-    await pagina.addInitScript(
-      (t) => localStorage.setItem('a11y-preferencias', JSON.stringify({ tema: t, escala: '1', movimiento: 'normal' })),
-      tema
-    )
-  }
   await pagina.goto(BASE + ruta, { waitUntil: 'networkidle' })
+  return pagina
+}
+
+// Recorrer la página resuelve las entradas al scroll y pinta las secciones con
+// `content-visibility: auto` (Ley 21.719), que hasta entonces miden lo que
+// dice su `contain-intrinsic-size`: la página crece mientras se recorre.
+//
+// Cuatro detalles que producen falsos positivos si se olvidan: se mide sobre
+// `documentElement` y no sobre `body` —el segundo puede ser más corto y deja
+// el recorrido a medias—; el final se vuelve a leer en cada paso, porque
+// crece; el desplazamiento va en `instant`, porque la página usa
+// `scroll-behavior: smooth` y con el suave todavía se está moviendo cuando se
+// lee la opacidad; y se esperan dos fotogramas al final, porque las líneas de
+// tiempo del scroll se ponen al día al pintar y no al leer el estilo, y con el
+// navegador ocupado un tiempo fijo a veces no alcanza.
+async function recorrer(pagina) {
+  await pagina.evaluate(async () => {
+    const raiz = document.documentElement
+    for (let y = 0; y < raiz.scrollHeight - window.innerHeight; y += 300) {
+      window.scrollTo({ top: y, behavior: 'instant' })
+      await new Promise((r) => setTimeout(r, 25))
+    }
+    window.scrollTo({ top: raiz.scrollHeight, behavior: 'instant' })
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+  })
+}
+
+const invisibles = (pagina) =>
+  pagina.$$eval('.entra', (els) => els.filter((e) => Number(getComputedStyle(e).opacity) < 0.05).length)
+
+async function medir(navegador, ruta, opciones) {
+  const pagina = await abrir(navegador, ruta, opciones)
   await pagina.waitForTimeout(600)
+
+  // Se mide ya recorrida: antes, el alto de la Ley 21.719 es una estimación.
+  await recorrer(pagina)
+  await pagina.waitForTimeout(300)
 
   const medidas = await pagina.evaluate(() => {
     const raiz = document.documentElement
@@ -66,86 +108,83 @@ async function medir(ruta, ancho, alto, tema) {
       alto: raiz.scrollHeight,
       desborda: raiz.scrollWidth > raiz.clientWidth,
       h1: document.querySelector('h1')?.getBoundingClientRect().height ?? 0,
-      // Todo lo que anima al entrar tiene que ser alcanzable. Si un bloque se
-      // queda en 0 después de recorrer la página, no se puede leer nunca.
       bloquesQueEntran: document.querySelectorAll('.entra').length,
     }
   })
 
-  // Recorrer la página resuelve las entradas al scroll. Después, nada puede
-  // seguir invisible.
-  //
-  // Dos detalles que producen falsos positivos si se olvidan: se mide sobre
-  // `documentElement` y no sobre `body` —el segundo puede ser más corto y deja
-  // el recorrido a medias—, y el desplazamiento va en `instant`, porque la
-  // página usa `scroll-behavior: smooth` y con el suave todavía se está
-  // moviendo cuando se lee la opacidad.
-  await pagina.evaluate(async () => {
-    const raiz = document.documentElement
-    const tope = raiz.scrollHeight - window.innerHeight
-    for (let y = 0; y <= tope; y += 300) {
-      window.scrollTo({ top: y, behavior: 'instant' })
-      await new Promise((r) => setTimeout(r, 25))
-    }
-    window.scrollTo({ top: tope, behavior: 'instant' })
-    await new Promise((r) => setTimeout(r, 120))
-  })
-  await pagina.waitForTimeout(300)
-  medidas.ocultosTrasRecorrer = await pagina.$$eval('.entra', (els) =>
-    els.filter((e) => Number(getComputedStyle(e).opacity) < 0.05).length
-  )
+  // Todo lo que anima al entrar tiene que ser alcanzable. Si un bloque se
+  // queda en 0 después de recorrer la página, no se puede leer nunca.
+  medidas.ocultosTrasRecorrer = await invisibles(pagina)
 
   // Al imprimir no hay scroll: lo que dependa de él se queda en su primer
   // fotograma. Es el modo de fallar que dejó las hojas en blanco.
   await pagina.emulateMedia({ media: 'print' })
   await pagina.evaluate(() => window.scrollTo(0, 0))
   await pagina.waitForTimeout(200)
-  medidas.ocultosAlImprimir = await pagina.$$eval('.entra', (els) =>
-    els.filter((e) => Number(getComputedStyle(e).opacity) < 0.05).length
-  )
-  await pagina.emulateMedia({ media: 'screen' })
+  medidas.ocultosAlImprimir = await invisibles(pagina)
 
-  await ctx.close()
+  await pagina.context().close()
   return medidas
+}
+
+/**
+ * Mide la página en cada ancho, y en WebKit los de iPhone y iPad. Todos a la
+ * vez: cada uno va en su propio contexto, y uno tras otro la verificación de
+ * todas las páginas pasaba de diez minutos.
+ */
+async function medirAnchos(ruta) {
+  const tomas = {}
+  for (const [nombre, width, height] of ANCHOS) {
+    const viewport = { width, height }
+    tomas[nombre] = medir(chrome, ruta, { viewport })
+    if (EN_WEBKIT.includes(nombre))
+      tomas[`${nombre} webkit`] = medir(safari, ruta, { viewport, isMobile: true, hasTouch: true })
+  }
+  const medidas = await Promise.all(Object.values(tomas))
+  return Object.fromEntries(Object.keys(tomas).map((nombre, i) => [nombre, medidas[i]]))
 }
 
 /** Recorre la página con el tabulador y comprueba que cada parada se ve. */
 async function medirFoco(ruta) {
-  const ctx = await navegador.newContext({ viewport: { width: 1280, height: 900 } })
-  const pagina = await ctx.newPage()
-  await pagina.goto(BASE + ruta, { waitUntil: 'networkidle' })
-  await pagina.evaluate(async () => {
-    const raiz = document.documentElement
-    const tope = raiz.scrollHeight - window.innerHeight
-    for (let y = 0; y <= tope; y += 300) {
-      window.scrollTo({ top: y, behavior: 'instant' })
-      await new Promise((r) => setTimeout(r, 25))
-    }
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  })
+  const pagina = await abrir(chrome, ruta, ESCRITORIO)
+  await recorrer(pagina)
+  await pagina.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
   await pagina.waitForTimeout(400)
 
   let paradas = 0
   let sinAnillo = 0
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 200; i++) {
     await pagina.keyboard.press('Tab')
     const estado = await pagina.evaluate(() => {
       const e = document.activeElement
       if (!e || e === document.body) return null
-      // El anillo puede ir en el envoltorio inmediato: el composer del
+      // El anillo puede ir en el `::before` —el de `.boton-cuadro` va en su
+      // cuadro sesgado— o en el envoltorio inmediato: el composer del
       // formulario lo lleva por su textarea, para que no lo corte la barra.
-      const conAnillo = (el) => {
-        const s = getComputedStyle(el)
+      const conAnillo = (el, pseudo) => {
+        const s = getComputedStyle(el, pseudo)
         return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2
       }
-      return { conAnillo: conAnillo(e) || conAnillo(e.parentElement) }
+      return { conAnillo: conAnillo(e) || conAnillo(e, '::before') || conAnillo(e.parentElement) }
     })
     if (!estado) break
     paradas++
     if (!estado.conAnillo) sinAnillo++
   }
-  await ctx.close()
+  await pagina.context().close()
   return { paradas, sinAnillo }
+}
+
+// Las respuestas de las rutas enlazadas, una vez por ruta: la barra y el pie
+// enlazan lo mismo desde todas las páginas.
+const respuestas = new Map()
+
+async function responder(pagina, url) {
+  if (!respuestas.has(url)) {
+    const respuesta = await pagina.request.get(url)
+    respuestas.set(url, { ok: respuesta.ok(), estado: respuesta.status(), html: await respuesta.text() })
+  }
+  return respuestas.get(url)
 }
 
 /**
@@ -161,11 +200,7 @@ async function medirFoco(ruta) {
  * ruta que responde error, y la ruta correcta con un ancla que la página de
  * destino no tiene.
  */
-async function enlacesRotos(ruta) {
-  const ctx = await navegador.newContext({ viewport: { width: 1280, height: 900 } })
-  const pagina = await ctx.newPage()
-  await pagina.goto(BASE + ruta, { waitUntil: 'networkidle' })
-
+async function enlacesRotos(pagina, ruta) {
   const enlaces = await pagina.$$eval('a[href]', (els) =>
     els.map((e) => ({ href: e.getAttribute('href'), abs: e.href }))
   )
@@ -185,25 +220,52 @@ async function enlacesRotos(ruta) {
     }
 
     const destino = new URL(abs)
-    const respuesta = await pagina.request.get(destino.origin + destino.pathname)
-    if (!respuesta.ok()) {
-      rotos.push(`${ruta}: «${href}» responde ${respuesta.status()}`)
+    const respuesta = await responder(pagina, destino.origin + destino.pathname)
+    if (!respuesta.ok) {
+      rotos.push(`${ruta}: «${href}» responde ${respuesta.estado}`)
       continue
     }
-    if (destino.hash) {
-      const html = await respuesta.text()
-      if (!html.includes(`id="${destino.hash.slice(1)}"`)) {
-        rotos.push(`${ruta}: «${href}» apunta a un ancla que el destino no tiene`)
-      }
+    if (destino.hash && !respuesta.html.includes(`id="${destino.hash.slice(1)}"`)) {
+      rotos.push(`${ruta}: «${href}» apunta a un ancla que el destino no tiene`)
     }
   }
 
-  await ctx.close()
   return rotos
 }
 
+/**
+ * Comprueba que cada formulario se lo puede dar un agente de IA (CLAUDE.md §7):
+ * Lighthouse cuenta en Agentic Search todo `<form>` sin `toolname`. Y que
+ * ninguno que escriba a una persona —los que van por POST— se envíe solo: ese
+ * lo rellena el agente y lo envía la persona.
+ */
+async function formulariosSinAnotar(pagina, ruta) {
+  const formularios = await pagina.$$eval('form', (els) =>
+    els.map((f) => ({
+      nombre: f.getAttribute('toolname'),
+      descripcion: f.getAttribute('tooldescription')?.trim(),
+      seEnviaSolo: f.hasAttribute('toolautosubmit') && f.method === 'post',
+    }))
+  )
+
+  return formularios.flatMap(({ nombre, descripcion, seEnviaSolo }, i) => {
+    if (!/^[a-z][a-z0-9_]*$/.test(nombre ?? ''))
+      return [`${ruta}: el formulario ${i + 1} no lleva un toolname en snake_case`]
+    if (!descripcion) return [`${ruta}: «${nombre}» no lleva tooldescription`]
+    if (seEnviaSolo) return [`${ruta}: «${nombre}» escribe a una persona y lleva toolautosubmit`]
+    return []
+  })
+}
+
+async function revisarMarcado(ruta) {
+  const pagina = await abrir(chrome, ruta, ESCRITORIO)
+  const problemas = [...(await enlacesRotos(pagina, ruta)), ...(await formulariosSinAnotar(pagina, ruta))]
+  await pagina.context().close()
+  return problemas
+}
+
 const actual = { rutas: {}, foco: {} }
-const enlaces = []
+const marcado = []
 
 // Todas las páginas indexables, y la 404 en `/no-existe`: Cloudflare la sirve
 // en cualquier dirección que no existe, así que se mide en una que no existe y
@@ -211,16 +273,12 @@ const enlaces = []
 const RUTAS = [...Object.keys(PAGINAS).filter((ruta) => PAGINAS[ruta].indexar !== false), '/no-existe']
 
 for (const ruta of RUTAS) {
-  actual.rutas[ruta] = {}
-  for (const [nombre, ancho, alto] of ANCHOS) {
-    actual.rutas[ruta][nombre] = await medir(ruta, ancho, alto, null)
-  }
-  actual.rutas[ruta].oscuro = await medir(ruta, 1440, 900, 'oscuro')
+  actual.rutas[ruta] = await medirAnchos(ruta)
   actual.foco[ruta] = await medirFoco(ruta)
-  enlaces.push(...(await enlacesRotos(ruta)))
+  marcado.push(...(await revisarMarcado(ruta)))
 }
 
-await navegador.close()
+await Promise.all([chrome.close(), safari.close()])
 
 if (actualizar) {
   writeFileSync(REFERENCIA, JSON.stringify(actual, null, 2) + '\n')
@@ -250,7 +308,7 @@ for (const [ruta, anchos] of Object.entries(actual.rutas)) {
   }
 }
 
-fallos.push(...enlaces)
+fallos.push(...marcado)
 
 for (const [ruta, f] of Object.entries(actual.foco)) {
   const r = referencia.foco?.[ruta]

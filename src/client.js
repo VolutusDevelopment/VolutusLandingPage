@@ -64,9 +64,10 @@ function marcarError(campo, mensaje) {
 function validar(campo) {
   const valor = campo.value.trim()
 
+  // Vacío solo es error si el campo se pide: el correo, por WhatsApp, no.
   if (!valor) {
-    marcarError(campo, ERRORES[campo.name])
-    return false
+    marcarError(campo, campo.required ? ERRORES[campo.name] : '')
+    return !campo.required
   }
 
   if (campo.name === 'nombre' && !NOMBRE_VALIDO.test(valor)) {
@@ -151,6 +152,28 @@ function initFormulario() {
     if (proyecto.getAttribute('aria-invalid') === 'true') validar(proyecto)
   })
 
+  // Por WhatsApp el correo es opcional: deja de pedirse y, si ya avisaba que
+  // faltaba, el aviso se va (Contacto.css muestra «Opcional» en su lugar). Se
+  // revisa también al cargar, por si el navegador restauró WhatsApp al volver.
+  const elegirCanal = () => {
+    correo.required = form.elements.canal?.value !== 'whatsapp'
+    if (!correo.value.trim()) marcarError(correo, '')
+  }
+  form.addEventListener('change', (evento) => {
+    if (evento.target.name === 'canal') elegirCanal()
+  })
+  elegirCanal()
+
+  // El formulario busca el centro al bajar (Contacto.css), pero solo si cabe
+  // entero bajo la barra. clientHeight, y no innerHeight, porque no cambia
+  // cuando Safari esconde sus barras: el movimiento no se prende y se apaga a
+  // mitad del scroll.
+  const barra = document.querySelector('.barra')
+  const medir = () =>
+    form.classList.toggle('formulario-cabe', form.offsetHeight + barra.offsetHeight <= document.documentElement.clientHeight)
+  new ResizeObserver(medir).observe(form)
+  addEventListener('resize', medir)
+
   // Turnstile se descarga al primer contacto con el formulario: así no pesa
   // en la carga ni en Lighthouse. Se monta a mano (`render=explicit`) para
   // guardar su id: el token vale un envío, y tras cada intento hay que pedir
@@ -163,10 +186,15 @@ function initFormulario() {
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
       script.async = true
       script.onload = () => {
-        widget = window.turnstile.render(form.querySelector('.turnstile'), {
+        const hueco = form.querySelector('.turnstile')
+        widget = window.turnstile.render(hueco, {
           sitekey: TURNSTILE_SITEKEY,
           action: TURNSTILE_ACCION,
           appearance: 'interaction-only',
+          // El reto normal mide 300 px fijos, más que el formulario en casi
+          // todos los celulares, y se salía de la tarjeta. Donde no cabe va el
+          // compacto, de 150 × 140.
+          size: hueco.clientWidth >= 300 ? 'normal' : 'compact',
         })
       }
       document.head.append(script)
