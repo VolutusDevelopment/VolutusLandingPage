@@ -1,6 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import { Escena } from '../components/Portada.jsx'
-import { TRAMAS } from '../lib/logotipo.js'
+import { OLA, trazoDe } from '../lib/logotipo.js'
 
 /**
  * Quiénes somos. Hace el recorrido de la portada: abre bajo la misma nube, en
@@ -10,8 +10,8 @@ import { TRAMAS } from '../lib/logotipo.js'
  *
  * Todo lo que dice se puede comprobar (DESIGN-BRIEF §3). Lo que viene de
  * afuera —la definición de la nube y los datos de la Morning Glory— lleva su
- * cita, que apunta a la lista de fuentes; la ola y su trama están en el
- * código de la marca (`lib/logotipo.js`), y la obra, en la portada con sus
+ * cita, que apunta a la lista de fuentes; la ola está en el código de la
+ * marca (`lib/logotipo.js`), y la obra, en la portada con sus
  * enlaces. No hay fecha de fundación ni anécdota, porque no hay de dónde
  * sacarlas.
  */
@@ -122,11 +122,11 @@ const CIFRAS = [
 ]
 
 // Las tres piezas de la marca que salen de la nube. La última se comprueba en
-// la misma página: la nube, el mar y la ola los pinta la misma trama (nubes.js).
+// la misma página: la nube y el mar los pinta la misma trama (nubes.js).
 const MARCA = [
-  { titulo: 'El símbolo', texto: '¿Qué más sencillo que el punto?' },
+  { titulo: 'El símbolo', texto: '¿Qué más sencillo que una línea?' },
   { titulo: 'La palabra', texto: 'En latín, volutus es «enrollado»: la ola nace en la S y se enrolla en voluta.' },
-  { titulo: 'Esta página', texto: 'La nube, el mar y la ola están hechos de los mismos puntos.' },
+  { titulo: 'Esta página', texto: 'La nube y el mar están hechos de los mismos puntos.' },
 ]
 
 // Lo que la nube es para nosotros. Cada rasgo sale de una palabra de su
@@ -169,23 +169,16 @@ function Cita({ fuente }) {
   )
 }
 
-// La ola de la trama fina: 22 × 22 puntos de 6 unidades, de (558, 42) a
-// (690, 174), con dos puntos de aire por lado para que el viento la pueda
-// correr sin cortarla en el borde.
-const OLA = { viewBox: '546 30 156 156', celdas: 26 }
+// La ola en su rejilla de 64 (lib/logotipo.js), centrada y con aire para la
+// punta redonda del trazo.
+const CAJA_DE_LA_OLA = '4 4 56 56'
 
-/**
- * La ola del logotipo, punto por punto. El SVG es la ola quieta: lo que se ve
- * sin JavaScript o sin WebGL, y hasta que el lienzo pinta. Entonces el lienzo
- * toma su trama y la dibuja desde la S, y el cursor la mueve como a la nube
- * (nubes.js).
- */
+/** La ola del logotipo, sola y en grande, en blanco sobre el plano. */
 function Ola() {
   return (
     <div className="ola">
-      <canvas className="nubes" data-vista="ola" data-celdas={OLA.celdas} aria-hidden="true" />
-      <svg viewBox={OLA.viewBox} aria-hidden="true" focusable="false">
-        <path d={TRAMAS.fina.puntos} />
+      <svg viewBox={CAJA_DE_LA_OLA} aria-hidden="true" focusable="false">
+        <path d={trazoDe(OLA)} strokeWidth={OLA.grosor} />
       </svg>
     </div>
   )
@@ -203,7 +196,7 @@ function Cierre() {
           <div>
             <p className="antetitulo">La marca</p>
             <h2 id="marca-titulo" className="titular">
-              Tres líneas de puntos
+              Tres líneas
             </h2>
             <ul className="plano-piezas">
               {MARCA.map(({ titulo, texto }) => (

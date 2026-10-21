@@ -15,7 +15,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { PAGINAS, tarjetaDe, tituloCorto } from '../src/lib/meta.js'
-import { LETRAS, TRAMAS } from '../src/lib/logotipo.js'
+import { LETRAS, OLA_DEL_LOGOTIPO, VIEWBOX, trazoDe } from '../src/lib/logotipo.js'
 import { ARRIBA, COLORES } from '../src/lib/pato.js'
 import { chromium } from 'playwright'
 
@@ -33,7 +33,6 @@ const mono = fuente('geist-mono-latin.woff2')
 // itálica, mayúscula, el aire del logotipo) en el azul de `--accion`, y el
 // dominio como un antetítulo (mono espaciada en `--texto-suave`).
 function html(titulo) {
-  const { viewBox, puntos } = TRAMAS.fina
   return `<!doctype html>
 <html lang="es-CL"><head><meta charset="utf-8"><style>
   @font-face { font-family: Archivo; src: url(data:font/woff2;base64,${archivo}) format('woff2'); font-style: italic; font-weight: 800; }
@@ -55,8 +54,8 @@ function html(titulo) {
     color: #47607a;
   }
 </style></head><body>
-  <svg viewBox="${viewBox}" aria-hidden="true">
-    <path d="${puntos}" fill="currentColor" />
+  <svg viewBox="${VIEWBOX}" aria-hidden="true">
+    <path d="${trazoDe(OLA_DEL_LOGOTIPO)}" fill="none" stroke="currentColor" stroke-width="${OLA_DEL_LOGOTIPO.grosor}" stroke-linecap="round" />
     <path d="${LETRAS.join('')}" fill="currentColor" />
   </svg>
   <h1>${titulo}</h1>

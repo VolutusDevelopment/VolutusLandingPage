@@ -72,13 +72,10 @@
   display: block;
 }
 
-/* El logotipo a todo el ancho, con la trama fina: a este tamaño se ven los
-   puntos uno por uno y la ola se lee como lo que es. */
 .pie-logotipo-svg {
   display: block;
   width: 100%;
   height: auto;
-  --logotipo-puntos: color-mix(in srgb, currentColor 70%, transparent);
 }
 
 /* ---- la entrada y la salida ----

@@ -275,10 +275,9 @@
 /* Solo se anima en la barra: en el pie el logotipo se queda quieto, porque
    repetir el gesto en la misma visita lo convertiría en un tic. */
 @media (prefers-reduced-motion: no-preference) {
-  /* En el logotipo la ola no es un trazo sino una trama: en vez de dibujarse,
-     rompe de izquierda a derecha, desde la S hacia la voluta. `clip-path`
-     repinta sin recalcular layout y ocurre una vez por carga. */
-  .barra-marca .logotipo-puntos {
+  /* La ola rompe de izquierda a derecha, desde la S hacia la voluta.
+     `clip-path` repinta sin recalcular layout y ocurre una vez por carga. */
+  .barra-marca .logotipo-ola {
     animation: romper-ola 900ms 150ms var(--ease-out) both;
   }
 }
@@ -296,9 +295,8 @@
    mismo peso visual que tenía la palabra suelta. */
 .marca-logotipo {
   display: block;
-  height: 38px;
+  height: 33px;
   width: auto;
-  --logotipo-puntos: color-mix(in srgb, currentColor 80%, transparent);
 }
 
 .barra-enlaces {
@@ -495,7 +493,7 @@
    enlaces cabe en una línea. */
 @media (max-width: 559px) {
   .marca-logotipo {
-    height: 26px;
+    height: 22.5px;
   }
 
   .barra-capsula {
@@ -521,7 +519,7 @@
    las letras de los enlaces también, y caben desde 360 px. */
 @media (max-width: 419px) {
   .marca-logotipo {
-    height: 22px;
+    height: 19px;
   }
 
   .barra-enlaces a {

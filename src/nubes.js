@@ -6,20 +6,16 @@
  * OffscreenCanvas, así que el hilo principal nunca espera a la GPU. Aquí solo
  * se mide, se leen los colores y se avisa de lo que cambia.
  *
- * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes),
- * `mar` (el agua bajo ellas) u `ola` (la ola del logotipo, en el plano de la
- * marca de /nosotros). La ola trae su trama en el SVG que la sigue, que es lo
- * que se ve hasta que el lienzo pinta, y dice en `data-celdas` cuántos puntos
- * mide de lado. El cielo dice además desde dónde se mira la nube, con
- * `data-perspectiva`: la cámara de su página en lib/volutus.js (`aire` si no
- * lo dice). El color lo toma de `--nubes-luz`, `--nubes-sombra`, `--nubes-alfa`
- * y, en el mar y la ola, `--nubes-borde`, que el CSS resuelve según la zona.
- * Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la trama,
- * en px CSS, lo da `--nubes-celda` (ver `rejilla`).
+ * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes) o
+ * `mar` (el agua bajo ellas). El cielo dice además desde dónde se mira la
+ * nube, con `data-perspectiva`: la cámara de su página en lib/volutus.js
+ * (`aire` si no lo dice). El color lo toma de `--nubes-luz`, `--nubes-sombra`,
+ * `--nubes-alfa` y, en el mar, `--nubes-borde`, que el CSS resuelve según la
+ * zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la
+ * trama, en px CSS, lo da `--nubes-celda` (ver `rejilla`).
  *
- * El cielo y la ola escuchan al cursor, o al dedo: le cuentan al pintor por
- * dónde pasa sobre su sección, y el pintor lo vuelve viento. La ola, además,
- * se dibuja cuando asoma a medias. Lo mismo con lo que la
+ * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
+ * sobre su sección, y el pintor lo vuelve viento. Lo mismo con lo que la
  * página haga pasar por la nube —los patos de la 404—, que lo avisa con un
  * evento `soplo` en el lienzo. Y el juego de la 404 cambia la forma de la nube
  * con un evento `forma`, que aquí solo se reenvía al pintor (ver patos.js).
@@ -84,38 +80,15 @@ function alAsomar(lienzo, hacer) {
   asomo.observe(lienzo)
 }
 
-// La trama de la ola sale del SVG que el lienzo reemplaza: el mismo dibujo,
-// sin traerlo dos veces.
-function tramaDeLaOla(lienzo) {
-  const svg = lienzo.nextElementSibling
-  return {
-    puntos: svg.querySelector('path').getAttribute('d'),
-    caja: svg.getAttribute('viewBox').split(' ').map(Number),
-    celdas: Number(lienzo.dataset.celdas),
-  }
-}
-
 function montar(pintor, lienzo, id) {
-  const { vista } = lienzo.dataset
-  const mar = vista === 'mar'
-  const ola = vista === 'ola'
+  const mar = lienzo.dataset.vista === 'mar'
   let visible = false
   // Píxeles del pintor por píxel CSS (ver `medir`).
   let escala = 1
 
-  // La ola mide `data-celdas` de lado, una celda por punto del logotipo: la
-  // celda sale del ancho y el lienzo mide justo esas celdas, así la rejilla
-  // del pintor calza con la trama. El cielo va con su `rejilla`, y el mar, a
-  // la densidad de siempre.
+  // El cielo va con su `rejilla`, y el mar, a la densidad de siempre.
   function medir() {
     const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
-    if (ola) {
-      const celdas = Number(lienzo.dataset.celdas)
-      const celda = Math.max(1, Math.round((lienzo.clientWidth * dpr) / celdas))
-      escala = (celda * celdas) / (lienzo.clientWidth || 1)
-      pintor.postMessage({ tipo: 'medir', id, ancho: celda * celdas, alto: celda * celdas, celda })
-      return
-    }
     let { lado, celda, densidad } = rejilla(lienzo)
     if (mar) {
       celda = Math.round(lado * dpr)
@@ -133,7 +106,7 @@ function montar(pintor, lienzo, id) {
     })
   }
 
-  // `--nubes-borde` es del mar y de la ola: la nube no tiene borde.
+  // `--nubes-borde` es del mar: la nube no tiene borde.
   function colorear() {
     const estilo = getComputedStyle(lienzo)
     const valor = (nombre) => estilo.getPropertyValue(nombre)
@@ -202,11 +175,9 @@ function montar(pintor, lienzo, id) {
 
   const offscreen = lienzo.transferControlToOffscreen()
   const { perspectiva } = lienzo.dataset
-  const trama = ola ? tramaDeLaOla(lienzo) : null
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva, ola: trama }, [offscreen])
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva }, [offscreen])
   colorear()
   medir()
-  if (ola) alAsomar(lienzo, () => pintor.postMessage({ tipo: 'nace', id }))
   if (mar) {
     // El pato sale a flote cuando el mar asoma: así se le ve salir.
     alAsomar(lienzo, () => {

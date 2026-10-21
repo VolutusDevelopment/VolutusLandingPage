@@ -1,25 +1,25 @@
-import { LETRAS, TRAMAS } from '../lib/logotipo.js'
+import { LETRAS, OLA_DEL_LOGOTIPO, VIEWBOX, trazoDe } from '../lib/logotipo.js'
 
 /**
  * El logotipo: la palabra y la ola en una sola pieza. La ola no va aparte,
- * nace en la S y rompe en voluta.
+ * nace junto a la S y se enrolla en voluta.
  *
- * Las letras toman `currentColor` y la trama también, a menos que quien lo usa
- * defina `--logotipo-puntos`; así funciona sobre cualquier zona sin conocerla.
- * `trama` elige el tamaño de punto: «gruesa» para la barra, «fina» en grande.
+ * Todo toma `currentColor`, así funciona sobre cualquier zona sin conocerla.
  *
  * `porLetra` pinta cada letra en su propio trazo con su orden en `--i`, y la
  * ola la última, porque nace en la S: es lo que deja al pie hacerlas caer de a
  * una. Sin él la palabra es un solo trazo, que es lo que pide la barra.
  */
-export function Logotipo({ trama = 'fina', porLetra = false, className }) {
-  const { viewBox, puntos } = TRAMAS[trama]
+export function Logotipo({ porLetra = false, className }) {
   return (
-    <svg className={className} viewBox={viewBox} aria-hidden="true" focusable="false">
+    <svg className={className} viewBox={VIEWBOX} aria-hidden="true" focusable="false">
       <path
-        className="logotipo-puntos"
-        d={puntos}
-        fill="var(--logotipo-puntos, currentColor)"
+        className="logotipo-ola"
+        d={trazoDe(OLA_DEL_LOGOTIPO)}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={OLA_DEL_LOGOTIPO.grosor}
+        strokeLinecap="round"
         style={porLetra ? { '--i': LETRAS.length } : undefined}
       />
       {porLetra ? (
@@ -37,7 +37,7 @@ export function Logotipo({ trama = 'fina', porLetra = false, className }) {
 export default function Marca({ className }) {
   return (
     <span className={className} style={{ display: 'inline-flex', alignItems: 'center' }}>
-      <Logotipo trama="gruesa" className="marca-logotipo" />
+      <Logotipo className="marca-logotipo" />
     </span>
   )
 }
