@@ -3,16 +3,21 @@ name: UF del día
 on:
   schedule:
     # 09:00 UTC: las 6 de la mañana en Chile en horario de verano, las 5 en invierno.
-    - cron: '0 9 * * *'
+    # La de las 15:00 repone la UF si la primera falló o GitHub no la corrió.
+    - cron: '0 9,15 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
+# GitHub atrasa las corridas programadas hasta varias horas: así nunca se pisan.
+concurrency: uf
+
 jobs:
   uf:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Si las dos fuentes fallan en todos los intentos, el script tarda unos cinco minutos.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       # El script no usa dependencias: basta el Node que trae el runner.
@@ -23,4 +28,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -am 'Actualiza la UF'
+          # Si main avanzó mientras corría, el commit va encima; si ya trae esta misma UF, se descarta.
+          git pull --rebase
           git push
