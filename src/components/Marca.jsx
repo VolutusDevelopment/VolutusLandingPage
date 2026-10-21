@@ -34,9 +34,10 @@ export function Logotipo({ porLetra = false, className }) {
 /**
  * El lienzo donde la ola del logotipo se traza con su estela (ola.js). Va
  * dentro de la misma caja que el logotipo, que tiene que estar posicionada.
+ * `retraso` son los ms que espera la ola desde que asoma.
  */
-export function OlaLienzo() {
-  return <canvas className="ola-lienzo" data-ola="logotipo" aria-hidden="true" />
+export function OlaLienzo({ retraso }) {
+  return <canvas className="ola-lienzo" data-ola="logotipo" data-retraso={retraso} aria-hidden="true" />
 }
 
 /**

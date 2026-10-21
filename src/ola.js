@@ -4,15 +4,20 @@
 // (`.ola-trazo`): las tres líneas corren desde la cola y se enrollan en voluta,
 // cada una con el color de un servicio en la punta —el mar hondo, el atardecer
 // y el coral de las cards—. El color es el del movimiento: la estela se alarga
-// y se tiñe cuanto más rápido va la punta, y se acorta y se destiñe hacia el
-// color de la ola a medida que frena. Las puntas se posan despacio en la
-// voluta, así que cuando dejan de moverse ya no queda color. Sale primero la
-// línea más larga y llegan las tres a la vez; ahí el lienzo se limpia y vuelve
-// el SVG, que es la ola quieta.
+// y se tiñe cuanto más rápido va la punta, y se acorta y vuelve al color de la
+// ola a medida que frena. Las puntas se posan despacio en la voluta, así que
+// cuando dejan de moverse ya no queda color. Sale primero la línea más larga y
+// llegan las tres a la vez; ahí el lienzo se limpia y vuelve el SVG, que es la
+// ola quieta.
 //
-// Se traza al asomar —la barra, apenas carga; el pie, cuando terminó de entrar—
-// y otra vez con el ratón encima.
-// `data-ola="logotipo"` dice que es la ola del logotipo y no la suelta.
+// Se traza al asomar —la barra, apenas carga— y otra vez con el ratón encima.
+// `data-ola="logotipo"` dice que es la ola del logotipo y no la suelta, y
+// `data-retraso`, cuántos ms espera desde que asoma: en el pie, a que caigan
+// las letras. Hasta que asoma, la caja lleva `espera`.
+//
+// Cada línea se pinta de un solo trazo, del color de la ola quieta, y la estela
+// se tiñe encima (`source-atop`): los tramos de color no engruesan el borde, y
+// el último cuadro calza con el SVG que lo reemplaza.
 //
 // Es un canvas 2D porque la estela es un degradado a lo largo del trazo, que SVG
 // no sabe pintar. Sin JavaScript, con movimiento reducido o al imprimir queda el
@@ -23,10 +28,10 @@ import { PALETA } from './lib/paleta.js'
 import { quieto } from './lib/movimiento.js'
 
 // Las tres líneas llegan juntas a los `LLEGA` ms.
-const LLEGA = 1500
+const LLEGA = 2000
 // La estela cuando la punta va más rápido, y el largo de cada tramo con que se
-// pinta, en unidades de la rejilla de 64: en el logotipo crecen con la ola.
-const ESTELA = 30
+// tiñe, en unidades de la rejilla de 64: en el logotipo crecen con la ola.
+const ESTELA = 55
 const TRAMO = 0.6
 // De la línea de afuera a la de adentro.
 const COLORES = [PALETA[0], PALETA[3], PALETA[2]].map((hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)))
@@ -79,21 +84,28 @@ function trazar(ctx, { cola, centro: [cx, cy] }, { r, recta }, desde, hasta) {
 }
 
 const mezcla = (color, base, cuanto) => `rgb(${base.map((b, i) => b + (color[i] - b) * cuanto).join(' ')})`
+const colorDe = (trazo) => getComputedStyle(trazo).stroke.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number)
 
 function pintar(ctx, ola, lineas, base, t) {
   const escala = ola.grosor / OLA.grosor
+  const estelas = []
+  ctx.globalCompositeOperation = 'source-over'
+  ctx.strokeStyle = `rgb(${base.join(' ')})`
   for (const linea of lineas) {
     const avance = Math.min(Math.max((t - linea.sale) / linea.dura, 0), 1)
     if (!avance) continue
     const punta = linea.largo * mover(avance)
-    const rapidez = avance < 1 ? pendiente(avance) / PENDIENTE_MAYOR : 0
-    const estela = ESTELA * escala * rapidez
-    const tinta = Math.max(0, punta - estela)
-    ctx.strokeStyle = `rgb(${base.join(' ')})`
-    if (tinta) trazar(ctx, ola, linea, 0, tinta)
-    for (let s = tinta; s < punta; s += TRAMO * escala) {
+    trazar(ctx, ola, linea, 0, punta)
+    // La raíz deja el color a la vista más tiempo y llega igual a cero.
+    const fuerza = avance < 1 ? Math.sqrt(pendiente(avance) / PENDIENTE_MAYOR) : 0
+    if (fuerza) estelas.push({ linea, punta, fuerza })
+  }
+  ctx.globalCompositeOperation = 'source-atop'
+  for (const { linea, punta, fuerza } of estelas) {
+    const largo = ESTELA * escala * fuerza
+    for (let s = Math.max(0, punta - largo); s < punta; s += TRAMO * escala) {
       const hasta = Math.min(s + TRAMO * escala, punta)
-      ctx.strokeStyle = mezcla(linea.color, base, rapidez * (1 - (punta - hasta) / estela) ** 2)
+      ctx.strokeStyle = mezcla(linea.color, base, fuerza * (1 - (punta - hasta) / largo) ** 1.3)
       trazar(ctx, ola, linea, s, hasta)
     }
   }
@@ -111,12 +123,34 @@ function montar(lienzo) {
   let corriendo = false
 
   // Hasta que asoma, la ola espera escondida: así se la ve nacer.
-  caja.classList.add('trazando')
+  caja.classList.add('espera', 'trazando')
+
+  // Del viewBox a los píxeles del lienzo: el SVG lo encaja centrado
+  // (`xMidYMid meet`) en su caja, que se mide tal como se pinta.
+  function medir() {
+    const densidad = Math.min(devicePixelRatio, 3)
+    const marco = lienzo.getBoundingClientRect()
+    const dibujo = svg.getBoundingClientRect()
+    lienzo.width = Math.round(marco.width * densidad)
+    lienzo.height = Math.round(marco.height * densidad)
+    const [sx, sy] = [lienzo.width / marco.width, lienzo.height / marco.height]
+    const s = Math.min(dibujo.width / vista.width, dibujo.height / vista.height)
+    const x = dibujo.left - marco.left + (dibujo.width - vista.width * s) / 2 - vista.x * s
+    const y = dibujo.top - marco.top + (dibujo.height - vista.height * s) / 2 - vista.y * s
+    ctx.lineWidth = ola.grosor
+    ctx.lineCap = 'round'
+    return [s * sx, 0, 0, s * sy, x * sx, y * sy]
+  }
+
+  function limpiar() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.clearRect(0, 0, lienzo.width, lienzo.height)
+  }
 
   function terminar() {
     corriendo = false
     caja.classList.remove('trazando')
-    ctx.clearRect(vista.x, vista.y, vista.width, vista.height)
+    limpiar()
   }
 
   function empezar() {
@@ -124,39 +158,30 @@ function montar(lienzo) {
     if (quieto()) return terminar()
     corriendo = true
     caja.classList.add('trazando')
-    const densidad = Math.min(devicePixelRatio, 2)
-    lienzo.width = Math.round(lienzo.clientWidth * densidad)
-    lienzo.height = Math.round(lienzo.clientHeight * densidad)
-    const k = lienzo.width / vista.width
-    ctx.setTransform(k, 0, 0, k, -vista.x * k, -vista.y * k)
-    ctx.lineWidth = ola.grosor
-    ctx.lineCap = 'round'
-    // El color de la ola quieta, el que la estela recupera al frenar.
-    const base = getComputedStyle(trazo).stroke.match(/\d+/g).slice(0, 3).map(Number)
+    const matriz = medir()
     const inicio = performance.now()
     const cuadro = (ahora) => {
       const t = ahora - inicio
-      ctx.clearRect(vista.x, vista.y, vista.width, vista.height)
+      limpiar()
       if (t >= LLEGA) return terminar()
-      pintar(ctx, ola, lineas, base, t)
+      ctx.setTransform(...matriz)
+      // El color de la ola quieta, que puede cambiar con la zona bajo la barra.
+      pintar(ctx, ola, lineas, colorDe(trazo), t)
       requestAnimationFrame(cuadro)
     }
     requestAnimationFrame(cuadro)
   }
 
-  // En el pie, la ola espera a que el pie termine de entrar, que es cuando sus
-  // letras terminan de caer (Pie.css): el pie entero a la vista, o su borde de
-  // arriba en el de la pantalla si es más alto que ella.
-  const pie = lienzo.closest('footer')
   const asomo = new IntersectionObserver(
     ([entrada]) => {
       if (!entrada.isIntersecting) return
       asomo.disconnect()
-      empezar()
+      caja.classList.remove('espera')
+      setTimeout(empezar, Number(lienzo.dataset.retraso ?? 0))
     },
-    { threshold: pie ? Math.min(1, innerHeight / pie.offsetHeight) * 0.98 : 0.5 },
+    { threshold: 0.5 },
   )
-  asomo.observe(pie ?? caja)
+  asomo.observe(caja)
   caja.addEventListener('pointerenter', ({ pointerType }) => pointerType === 'mouse' && empezar())
 }
 

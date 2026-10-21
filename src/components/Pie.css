@@ -80,63 +80,29 @@
   height: auto;
 }
 
-/* ---- la entrada y la salida ----
-   La del pie de funkhaus.io, atada al scroll: cero JavaScript, y si la persona
-   vuelve hacia arriba se deshace por el mismo camino. Son dos movimientos sobre
-   la misma línea de tiempo, la del pie desde que asoma hasta que terminó de
-   entrar:
-
-   - El interior baja desde un quinto de su alto más arriba y aparece.
-   - Cada letra cae por su cuenta, desde más arriba cuanto más a la derecha
-     está, y se enciende de 0.4 a pleno: la palabra llega al mar letra por
-     letra. Es el final de la caída que empezó en la nube. La ola no cae:
-     llega al asomar el logotipo, trazándose con su estela (ola.js).
-
-   Nada se recorta. En la original las letras salen de detrás de un borde que
-   se ve; aquí el contacto y el pie son del mismo azul, y un recorte en medio
-   de ese azul se leía como una línea invisible que rebanaba la ola. Las
-   letras llegan desde transparentes, así que no hace falta esconderlas: la
-   cascada es corta para que ninguna pase por encima del formulario.
-
-   El rango acaba en `entry 100%`: el pie entero a la vista, o arriba del todo
-   si es más alto que la pantalla. Así se completa siempre, aunque al final de
-   la página no quede scroll para subirlo más. La curva es la de la original
-   (power1.out). */
-@keyframes pie-asomar {
+/* ---- la entrada ----
+   Cuando el logotipo asoma, las letras caen de a una, desde un poco más arriba
+   y transparentes, y la ola llega después trazándose con su estela (ola.js).
+   No depende del scroll: pasa una vez y termina aunque la página no se mueva,
+   así las letras nunca se quedan a medio caer. Hasta que asoma, ola.js deja
+   la caja en `espera`, con las letras escondidas; sin JavaScript se ven
+   quietas. El porcentaje es del alto del logotipo entero (`view-box`), así la
+   caída guarda su forma en el celular y en una pantalla de 1440. */
+@keyframes letra-caer {
   from {
-    transform: translateY(-20%);
+    transform: translateY(-30%);
     opacity: 0;
   }
 }
 
-@keyframes letra-caer {
-  from {
-    transform: translateY(calc(var(--i) * -5%));
-    opacity: 0.4;
+@media screen and (prefers-reduced-motion: no-preference) {
+  .pie-logotipo-cuerpo.espera .pie-logotipo-svg path:not(.ola-trazo) {
+    opacity: 0;
   }
-}
 
-@supports (animation-timeline: view()) {
-  @media screen and (prefers-reduced-motion: no-preference) {
-    .pie {
-      view-timeline: --pie block;
-    }
-
-    .pie > .contenedor {
-      animation: pie-asomar cubic-bezier(0.5, 1, 0.89, 1) both;
-      animation-timeline: --pie;
-      animation-range: entry 0% entry 100%;
-    }
-
-    /* El porcentaje es del alto del logotipo entero (`view-box`), el mismo
-       para todas las letras: la cascada guarda su forma en el celular y en
-       una pantalla de 1440. */
-    .pie-logotipo-svg path:not(.ola-trazo) {
-      transform-box: view-box;
-      animation: letra-caer cubic-bezier(0.5, 1, 0.89, 1) both;
-      animation-timeline: --pie;
-      animation-range: entry 0% entry 100%;
-    }
+  .pie-logotipo-cuerpo:not(.espera) .pie-logotipo-svg path:not(.ola-trazo) {
+    transform-box: view-box;
+    animation: letra-caer 700ms var(--ease-out) calc(var(--i) * 60ms) both;
   }
 }
 

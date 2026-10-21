@@ -121,12 +121,16 @@ const CIFRAS = [
   { valor: '68 km', texto: 'Voló Jonny Durand junto a ella en ala delta, en 1\u00a0h\u00a045\u00a0min, en 2009.' },
 ]
 
-// Las tres piezas de la marca que salen de la nube. La última se comprueba en
-// la misma página: la nube y el mar los pinta la misma trama (nubes.js).
+// Las tres piezas de la marca que salen de la nube: de dónde viene el nombre,
+// la idea, y cómo se ve en esta misma página, donde la nube y el mar los pinta
+// una trama de puntos (nubes.js) y la ola son tres líneas.
 const MARCA = [
-  { titulo: 'El símbolo', texto: '¿Qué más sencillo que una línea?' },
   { titulo: 'La palabra', texto: 'En latín, volutus es «enrollado»: la ola nace en la S y se enrolla en voluta.' },
-  { titulo: 'Esta página', texto: 'La nube y el mar están hechos de los mismos puntos.' },
+  { titulo: 'La idea', texto: 'Buscamos la simpleza de las cosas, sin perder su complejidad.' },
+  {
+    titulo: 'Esta página',
+    texto: 'Por eso la nube y el mar son una trama de puntos, y la ola, tres líneas: piezas simples que, juntas, dibujan algo complejo.',
+  },
 ]
 
 // Lo que la nube es para nosotros. Cada rasgo sale de una palabra de su
