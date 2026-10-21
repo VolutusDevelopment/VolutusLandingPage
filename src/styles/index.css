@@ -570,6 +570,23 @@ svg {
    propia línea de tiempo y entra según DÓNDE está, así que el escalonado sale
    solo de la geometría y siempre coincide con la velocidad del scroll. */
 
+/* La estela de la ola (ola.js): el lienzo va sobre el SVG de su caja, del
+   mismo tamaño, y mientras traza se esconde la ola quieta. Al imprimir queda
+   la quieta. */
+.ola-lienzo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+@media screen {
+  .trazando .ola-trazo {
+    visibility: hidden;
+  }
+}
+
 /* ============ Movimiento reducido ============
  *
  * Reducir no es apagar. Lo que se va es el DESPLAZAMIENTO —lo que produce

@@ -181,10 +181,10 @@ const CAJA_DE_LA_OLA = '4 4 56 56'
 function Ola() {
   return (
     <div className="ola">
-      <canvas aria-hidden="true" />
       <svg viewBox={CAJA_DE_LA_OLA} aria-hidden="true" focusable="false">
-        <path d={trazoDe(OLA)} strokeWidth={OLA.grosor} />
+        <path className="ola-trazo" d={trazoDe(OLA)} strokeWidth={OLA.grosor} />
       </svg>
+      <canvas className="ola-lienzo" aria-hidden="true" />
     </div>
   )
 }

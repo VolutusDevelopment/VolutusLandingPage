@@ -1,4 +1,4 @@
-import { Logotipo } from './Marca.jsx'
+import { Logotipo, OlaLienzo } from './Marca.jsx'
 import {
   CORREO_DE_CONTACTO,
   RAZON_SOCIAL,
@@ -38,6 +38,7 @@ export default function Pie({ dia = false }) {
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
             <Logotipo className="pie-logotipo-svg" porLetra />
+            <OlaLienzo />
           </span>
         </div>
 

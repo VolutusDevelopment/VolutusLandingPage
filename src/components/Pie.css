@@ -68,8 +68,10 @@
   color: var(--texto);
 }
 
+/* Posicionado para el lienzo de la estela de la ola (ola.js). */
 .pie-logotipo-cuerpo {
   display: block;
+  position: relative;
 }
 
 .pie-logotipo-svg {
@@ -87,7 +89,8 @@
    - El interior baja desde un quinto de su alto más arriba y aparece.
    - Cada letra cae por su cuenta, desde más arriba cuanto más a la derecha
      está, y se enciende de 0.4 a pleno: la palabra llega al mar letra por
-     letra, y la ola la última. Es el final de la caída que empezó en la nube.
+     letra. Es el final de la caída que empezó en la nube. La ola no cae:
+     llega al asomar el logotipo, trazándose con su estela (ola.js).
 
    Nada se recorta. En la original las letras salen de detrás de un borde que
    se ve; aquí el contacto y el pie son del mismo azul, y un recorte en medio
@@ -126,9 +129,9 @@
     }
 
     /* El porcentaje es del alto del logotipo entero (`view-box`), el mismo
-       para todas las letras y para la ola: la cascada guarda su forma en el
-       celular y en una pantalla de 1440. */
-    .pie-logotipo-svg path {
+       para todas las letras: la cascada guarda su forma en el celular y en
+       una pantalla de 1440. */
+    .pie-logotipo-svg path:not(.ola-trazo) {
       transform-box: view-box;
       animation: letra-caer cubic-bezier(0.5, 1, 0.89, 1) both;
       animation-timeline: --pie;

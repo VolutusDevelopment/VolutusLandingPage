@@ -272,22 +272,18 @@
   }
 }
 
-/* Solo se anima en la barra: en el pie el logotipo se queda quieto, porque
-   repetir el gesto en la misma visita lo convertiría en un tic. */
-@media (prefers-reduced-motion: no-preference) {
-  /* La ola rompe de izquierda a derecha, desde la S hacia la voluta.
-     `clip-path` repinta sin recalcular layout y ocurre una vez por carga. */
-  .barra-marca .logotipo-ola {
-    animation: romper-ola 900ms 150ms var(--ease-out) both;
+/* La ola del logotipo entra trazándose con su estela (ola.js). Desde el primer
+   pintado espera escondida a que llegue el script, para no aparecer entera y
+   desaparecer; si en un segundo no llegó, aparece sola. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .barra-marca .ola-trazo {
+    animation: ola-espera 1s step-end both;
   }
 }
 
-@keyframes romper-ola {
+@keyframes ola-espera {
   from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
+    visibility: hidden;
   }
 }
 
