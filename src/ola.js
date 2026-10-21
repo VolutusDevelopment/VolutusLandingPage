@@ -10,8 +10,9 @@
 // llegan las tres a la vez; ahí el lienzo se limpia y vuelve el SVG, que es la
 // ola quieta.
 //
-// Se traza al asomar —la barra, apenas carga— y otra vez con el ratón encima.
-// `data-ola="logotipo"` dice que es la ola del logotipo y no la suelta, y
+// Se traza al asomar —la barra, apenas carga—. Con el ratón encima no se borra:
+// retrocede rápido por el mismo camino, sin color, la línea de adentro primero,
+// y desde el comienzo vuelve a trazarse. `data-ola="logotipo"` dice que es la ola del logotipo y no la suelta, y
 // `data-retraso`, cuántos ms espera desde que asoma: en el pie, a que caigan
 // las letras. Hasta que asoma, la caja lleva `espera`.
 //
@@ -27,8 +28,10 @@ import { OLA, OLA_DEL_LOGOTIPO } from './lib/logotipo.js'
 import { PALETA } from './lib/paleta.js'
 import { quieto } from './lib/movimiento.js'
 
-// Las tres líneas llegan juntas a los `LLEGA` ms.
+// Las tres líneas llegan juntas a los `LLEGA` ms, y al retroceder recorren el
+// mismo camino al revés en `RETROCEDE` ms.
 const LLEGA = 2000
+const RETROCEDE = 450
 // La estela cuando la punta va más rápido, y el largo de cada tramo con que se
 // tiñe, en unidades de la rejilla de 64: en el logotipo crecen con la ola.
 const ESTELA = 55
@@ -86,7 +89,8 @@ function trazar(ctx, { cola, centro: [cx, cy] }, { r, recta }, desde, hasta) {
 const mezcla = (color, base, cuanto) => `rgb(${base.map((b, i) => b + (color[i] - b) * cuanto).join(' ')})`
 const colorDe = (trazo) => getComputedStyle(trazo).stroke.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number)
 
-function pintar(ctx, ola, lineas, base, t) {
+// La ola en el momento `t` de su recorrido; `tinta` dice si lleva estela.
+function pintar(ctx, ola, lineas, base, t, tinta) {
   const escala = ola.grosor / OLA.grosor
   const estelas = []
   ctx.globalCompositeOperation = 'source-over'
@@ -97,7 +101,7 @@ function pintar(ctx, ola, lineas, base, t) {
     const punta = linea.largo * mover(avance)
     trazar(ctx, ola, linea, 0, punta)
     // La raíz deja el color a la vista más tiempo y llega igual a cero.
-    const fuerza = avance < 1 ? Math.sqrt(pendiente(avance) / PENDIENTE_MAYOR) : 0
+    const fuerza = tinta && avance < 1 ? Math.sqrt(pendiente(avance) / PENDIENTE_MAYOR) : 0
     if (fuerza) estelas.push({ linea, punta, fuerza })
   }
   ctx.globalCompositeOperation = 'source-atop'
@@ -120,7 +124,11 @@ function montar(lienzo) {
   const vista = svg.viewBox.baseVal
   const ola = lienzo.dataset.ola === 'logotipo' ? OLA_DEL_LOGOTIPO : OLA
   const lineas = lineasDe(ola)
+  // Dónde va la ola en su recorrido, de 0 a `LLEGA` ms, y hacia dónde.
+  let t = 0
+  let retrocede = false
   let corriendo = false
+  let trazada = false
 
   // Hasta que asoma, la ola espera escondida: así se la ve nacer.
   caja.classList.add('espera', 'trazando')
@@ -149,27 +157,43 @@ function montar(lienzo) {
 
   function terminar() {
     corriendo = false
+    trazada = true
     caja.classList.remove('trazando')
     limpiar()
   }
 
-  function empezar() {
+  function correr() {
     if (corriendo) return
     if (quieto()) return terminar()
     corriendo = true
     caja.classList.add('trazando')
     const matriz = medir()
-    const inicio = performance.now()
+    let antes = performance.now()
     const cuadro = (ahora) => {
-      const t = ahora - inicio
+      const paso = Math.max(ahora - antes, 0)
+      antes = ahora
+      t = retrocede ? t - (paso * LLEGA) / RETROCEDE : t + paso
+      if (t <= 0) {
+        t = 0
+        retrocede = false
+      }
       limpiar()
       if (t >= LLEGA) return terminar()
       ctx.setTransform(...matriz)
       // El color de la ola quieta, que puede cambiar con la zona bajo la barra.
-      pintar(ctx, ola, lineas, colorDe(trazo), t)
+      pintar(ctx, ola, lineas, colorDe(trazo), t, !retrocede)
       requestAnimationFrame(cuadro)
     }
     requestAnimationFrame(cuadro)
+  }
+
+  // Con el ratón encima, desde donde esté: entera si ya terminó, o a medio
+  // camino si todavía se traza. La primera vez no, que aún no ha llegado.
+  function repetir() {
+    if (!trazada || retrocede) return
+    if (!corriendo) t = LLEGA
+    retrocede = true
+    correr()
   }
 
   const asomo = new IntersectionObserver(
@@ -177,12 +201,12 @@ function montar(lienzo) {
       if (!entrada.isIntersecting) return
       asomo.disconnect()
       caja.classList.remove('espera')
-      setTimeout(empezar, Number(lienzo.dataset.retraso ?? 0))
+      setTimeout(correr, Number(lienzo.dataset.retraso ?? 0))
     },
     { threshold: 0.5 },
   )
   asomo.observe(caja)
-  caja.addEventListener('pointerenter', ({ pointerType }) => pointerType === 'mouse' && empezar())
+  caja.addEventListener('pointerenter', ({ pointerType }) => pointerType === 'mouse' && repetir())
 }
 
 export default function initOla() {
