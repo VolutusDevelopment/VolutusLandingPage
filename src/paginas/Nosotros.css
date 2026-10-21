@@ -428,6 +428,21 @@
   stroke-linecap: round;
 }
 
+.ola canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mientras se traza, la ola es del lienzo (ola.js) y la quieta se esconde. Al
+   imprimir queda la quieta. */
+@media screen {
+  .ola.trazando svg {
+    visibility: hidden;
+  }
+}
+
 /* ---- por qué el nombre ---- */
 
 /* Bajo la entrada del diccionario, el porqué: en el tamaño de la entradilla y

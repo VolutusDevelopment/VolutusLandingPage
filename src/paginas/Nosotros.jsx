@@ -173,10 +173,15 @@ function Cita({ fuente }) {
 // punta redonda del trazo.
 const CAJA_DE_LA_OLA = '4 4 56 56'
 
-/** La ola del logotipo, sola y en grande, en blanco sobre el plano. */
+/**
+ * La ola del logotipo, sola y en grande, en blanco sobre el plano. Al asomar
+ * se traza en el lienzo, con una estela de color (ola.js); el SVG es la ola
+ * quieta.
+ */
 function Ola() {
   return (
     <div className="ola">
+      <canvas aria-hidden="true" />
       <svg viewBox={CAJA_DE_LA_OLA} aria-hidden="true" focusable="false">
         <path d={trazoDe(OLA)} strokeWidth={OLA.grosor} />
       </svg>
