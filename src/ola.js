@@ -178,7 +178,8 @@ function montar(lienzo) {
         retrocede = false
       }
       limpiar()
-      if (t >= LLEGA) return terminar()
+      // Al retroceder parte desde el final: solo termina la que avanza.
+      if (!retrocede && t >= LLEGA) return terminar()
       ctx.setTransform(...matriz)
       // El color de la ola quieta, que puede cambiar con la zona bajo la barra.
       pintar(ctx, ola, lineas, colorDe(trazo), t, !retrocede)
