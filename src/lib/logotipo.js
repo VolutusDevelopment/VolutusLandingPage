@@ -3,9 +3,9 @@
  *
  * Las letras son Archivo 800 itálica convertida a trazo, así que el logotipo
  * no depende de cargar esa fuente. Salen de un script, no de la mano: no
- * editarlas a ojo. `LETRAS` va letra por letra, V-O-L-U-T-U-S, para que el pie
- * pueda dejarlas caer de a una. La O lleva su contraforma en el mismo trazo:
- * separada, el hueco se pintaría lleno encima de la letra.
+ * editarlas a ojo. `LETRAS` va letra por letra, V-O-L-U-T-U-S. La O lleva su
+ * contraforma en el mismo trazo: separada, el hueco se pintaría lleno encima
+ * de la letra.
  *
  * La ola es también el símbolo: tres líneas que corren paralelas y se enrollan
  * en voluta, cada una 240° alrededor del mismo centro. Se dibuja en la rejilla

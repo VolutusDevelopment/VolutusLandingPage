@@ -272,11 +272,12 @@
   }
 }
 
-/* La ola del logotipo entra trazándose con su estela (ola.js). Desde el primer
-   pintado espera escondida a que llegue el script, para no aparecer entera y
-   desaparecer; si en un segundo no llegó, aparece sola. */
+/* El logotipo entra escribiéndose: las líneas cruzan la palabra y se enrollan
+   en la ola (ola.js). Desde el primer pintado espera escondido a que llegue el
+   script, para no aparecer entero y desaparecer; si en un segundo no llegó,
+   aparece solo. */
 @media screen and (prefers-reduced-motion: no-preference) {
-  .barra-marca .ola-trazo {
+  .barra-marca path {
     animation: ola-espera 1s step-end both;
   }
 }

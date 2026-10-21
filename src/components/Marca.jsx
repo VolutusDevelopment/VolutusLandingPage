@@ -5,13 +5,9 @@ import { LETRAS, OLA_DEL_LOGOTIPO, VIEWBOX, trazoDe } from '../lib/logotipo.js'
  * nace junto a la S y se enrolla en voluta.
  *
  * Todo toma `currentColor`, así funciona sobre cualquier zona sin conocerla.
- *
- * `porLetra` pinta cada letra en su propio trazo con su orden en `--i`: es lo
- * que deja al pie hacerlas caer de a una. Sin él la palabra es un solo trazo,
- * que es lo que pide la barra. La ola no cae: entra con su estela de color,
- * en el lienzo que va encima (`OlaLienzo`).
+ * Entra escribiéndose en el lienzo que va encima (`OlaLienzo`).
  */
-export function Logotipo({ porLetra = false, className }) {
+export function Logotipo({ className }) {
   return (
     <svg className={className} viewBox={VIEWBOX} aria-hidden="true" focusable="false">
       <path
@@ -22,22 +18,20 @@ export function Logotipo({ porLetra = false, className }) {
         strokeWidth={OLA_DEL_LOGOTIPO.grosor}
         strokeLinecap="round"
       />
-      {porLetra ? (
-        LETRAS.map((letra, i) => <path key={letra} d={letra} fill="currentColor" style={{ '--i': i }} />)
-      ) : (
-        <path d={LETRAS.join('')} fill="currentColor" />
-      )}
+      <path d={LETRAS.join('')} fill="currentColor" />
     </svg>
   )
 }
 
 /**
- * El lienzo donde la ola del logotipo se traza con su estela (ola.js). Va
- * dentro de la misma caja que el logotipo, que tiene que estar posicionada.
- * `retraso` son los ms que espera la ola desde que asoma.
+ * El lienzo donde el logotipo se escribe (ola.js): la primera vez, las líneas
+ * entran desde el borde de la pantalla, cruzan la palabra y las letras
+ * aparecen a su paso; con el ratón encima, los colores pasan por la ola. Va
+ * dentro de la misma caja que el logotipo, que tiene que estar posicionada:
+ * mientras barre, el lienzo se estira desde ella hasta el borde izquierdo.
  */
-export function OlaLienzo({ retraso }) {
-  return <canvas className="ola-lienzo" data-ola="logotipo" data-retraso={retraso} aria-hidden="true" />
+export function OlaLienzo() {
+  return <canvas className="ola-lienzo" data-ola="logotipo" aria-hidden="true" />
 }
 
 /**

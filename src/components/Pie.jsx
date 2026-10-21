@@ -37,9 +37,8 @@ export default function Pie({ dia = false }) {
       <div className="contenedor">
         <div className="pie-logotipo" aria-hidden="true">
           <span className="pie-logotipo-cuerpo">
-            <Logotipo className="pie-logotipo-svg" porLetra />
-            {/* La ola sale cuando las letras van llegando (Pie.css). */}
-            <OlaLienzo retraso={400} />
+            <Logotipo className="pie-logotipo-svg" />
+            <OlaLienzo />
           </span>
         </div>
 

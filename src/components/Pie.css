@@ -68,7 +68,8 @@
   color: var(--texto);
 }
 
-/* Posicionado para el lienzo de la estela de la ola (ola.js). */
+/* Posicionado para el lienzo donde el logotipo se escribe al asomar (ola.js):
+   hasta entonces espera escondido, y sin JavaScript se ve quieto. */
 .pie-logotipo-cuerpo {
   display: block;
   position: relative;
@@ -78,32 +79,6 @@
   display: block;
   width: 100%;
   height: auto;
-}
-
-/* ---- la entrada ----
-   Cuando el logotipo asoma, las letras caen de a una, desde un poco más arriba
-   y transparentes, y la ola llega después trazándose con su estela (ola.js).
-   No depende del scroll: pasa una vez y termina aunque la página no se mueva,
-   así las letras nunca se quedan a medio caer. Hasta que asoma, ola.js deja
-   la caja en `espera`, con las letras escondidas; sin JavaScript se ven
-   quietas. El porcentaje es del alto del logotipo entero (`view-box`), así la
-   caída guarda su forma en el celular y en una pantalla de 1440. */
-@keyframes letra-caer {
-  from {
-    transform: translateY(-30%);
-    opacity: 0;
-  }
-}
-
-@media screen and (prefers-reduced-motion: no-preference) {
-  .pie-logotipo-cuerpo.espera .pie-logotipo-svg path:not(.ola-trazo) {
-    opacity: 0;
-  }
-
-  .pie-logotipo-cuerpo:not(.espera) .pie-logotipo-svg path:not(.ola-trazo) {
-    transform-box: view-box;
-    animation: letra-caer 700ms var(--ease-out) calc(var(--i) * 60ms) both;
-  }
 }
 
 /* ---- el contenido ----
