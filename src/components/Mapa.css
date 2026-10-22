@@ -1,0 +1,259 @@
+/* El mapa de un artículo. Ver Mapa.jsx y mapa.js.
+
+   Un punto por apartado, unidos por una línea que se llena hasta el que se
+   está leyendo: los leídos, rellenos; el actual, relleno y con un halo; los
+   que faltan, huecos. El tramo de cada apartado mide en proporción a sus
+   palabras (`--peso`), con un mínimo para que los puntos no se pisen.
+
+   En S y M, una barra horizontal al comienzo del texto que se pega bajo la
+   barra del sitio: arriba, el título del apartado actual, en una línea y con
+   su alto fijo, y los minutos; debajo, los puntos. */
+html:has(.mapa) {
+  --mapa-alto: 68px;
+}
+
+.mapa {
+  --mapa-punto: 12px;
+  position: sticky;
+  top: var(--barra-alto);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 24px 1fr;
+  grid-template-areas: 'actual minutos' 'puntos puntos';
+  align-items: center;
+  column-gap: var(--e-4);
+  height: var(--mapa-alto);
+  margin: 0 calc(-1 * var(--margen-lateral)) var(--e-8);
+  padding: var(--e-2) var(--margen-lateral) 0;
+  border-bottom: 1px solid var(--linea);
+  background: var(--fondo);
+}
+
+/* Pegada, su fondo sube detrás de la barra del sitio: las dos se leen como
+   una sola cabecera y el texto no asoma entre ellas. Suelta no, porque
+   taparía el fundido de la cabecera. Con ella pegada, el velo de la barra
+   sobra, como con la guía de los servicios (Guia.css). */
+.mapa::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 100%;
+  height: var(--barra-alto);
+  background: var(--fondo);
+  visibility: hidden;
+}
+
+.mapa-pegada::before {
+  visibility: visible;
+}
+
+@media (max-width: 1023px) {
+  html:has(.mapa-pegada) .barra-velo {
+    visibility: hidden;
+  }
+
+  /* El ancla queda bajo la barra y el mapa. */
+  html:has(.mapa) {
+    scroll-padding-top: calc(var(--barra-alto) + var(--mapa-alto) + var(--e-4));
+  }
+}
+
+.mapa p {
+  margin: 0;
+}
+
+.mapa-rotulo,
+.mapa-largo {
+  display: none;
+}
+
+.mapa-actual {
+  grid-area: actual;
+  overflow: hidden;
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mapa-minutos {
+  grid-area: minutos;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.mapa ol {
+  grid-area: puntos;
+  display: flex;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada apartado es un tramo con su punto al comienzo. Un tramo no baja de
+   24 px, para que cada punto se pueda tocar. El último es solo su punto y
+   asoma hasta el borde del texto. */
+.mapa li {
+  position: relative;
+  flex: var(--peso) 1 0;
+  min-width: 24px;
+}
+
+.mapa li:last-child {
+  flex: none;
+  width: 24px;
+  margin-right: calc(var(--mapa-punto) - 24px);
+}
+
+/* La línea, del centro de cada punto al del siguiente. */
+.mapa li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--mapa-punto) / 2);
+  right: calc(var(--mapa-punto) / -2);
+  height: 2px;
+  margin-top: -1px;
+  background: var(--linea);
+  transition: background-color 200ms var(--ease-out);
+}
+
+.mapa li.mapa-leido::after {
+  background: var(--accion);
+}
+
+.mapa a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--texto-suave);
+  text-decoration: none;
+}
+
+.mapa a::before {
+  content: '';
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--mapa-punto);
+  height: var(--mapa-punto);
+  border-radius: 50%;
+  background: var(--fondo);
+  box-shadow: inset 0 0 0 2px var(--linea);
+  transition:
+    background-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+.mapa :is(.mapa-leido a, a[aria-current])::before {
+  background: var(--accion);
+  box-shadow: none;
+}
+
+.mapa a[aria-current]::before {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accion) 22%, transparent);
+}
+
+/* En la barra, el título de cada punto es para el lector de pantalla: a la
+   vista va solo el del apartado actual. */
+.mapa-titulo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Desde L, la línea va vertical en el margen izquierdo, a la altura del
+   texto, con el título de cada apartado al lado de su punto, y se queda a la
+   vista al bajar. El tramo de cada apartado es su alto, que nunca baja del de
+   su título. */
+@media (min-width: 1024px) {
+  .mapa {
+    top: calc(var(--barra-alto) + var(--e-6));
+    z-index: auto;
+    display: block;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .mapa::before,
+  .mapa-actual {
+    display: none;
+  }
+
+  .mapa-rotulo {
+    display: block;
+    font-family: var(--fuente-datos);
+    font-size: var(--texto-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+  }
+
+  .mapa-largo {
+    display: inline;
+  }
+
+  .mapa .mapa-minutos {
+    margin: var(--e-1) 0 var(--e-4);
+  }
+
+  .mapa ol {
+    display: block;
+  }
+
+  .mapa li,
+  .mapa li:last-child {
+    width: auto;
+    min-width: 0;
+    min-height: calc(var(--peso) * 22rem);
+    margin: 0;
+  }
+
+  .mapa li:not(:last-child)::after {
+    top: 18px;
+    bottom: -18px;
+    left: calc(var(--mapa-punto) / 2 - 1px);
+    right: auto;
+    width: 2px;
+    height: auto;
+    margin: 0;
+  }
+
+  .mapa a {
+    align-items: flex-start;
+    gap: var(--e-3);
+    height: auto;
+    padding-block: var(--e-2);
+    font-size: var(--texto-sm);
+    line-height: 20px;
+  }
+
+  .mapa a::before {
+    margin-top: 4px;
+  }
+
+  .mapa a:hover,
+  .mapa a[aria-current] {
+    color: var(--texto);
+  }
+
+  .mapa a[aria-current] {
+    font-weight: 600;
+  }
+
+  .mapa-titulo {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+}

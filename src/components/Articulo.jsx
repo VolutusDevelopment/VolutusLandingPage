@@ -1,7 +1,9 @@
 import Pagina from './Pagina.jsx'
 import Contacto from './Contacto.jsx'
-import { ListaDeArticulos } from './Sugerencias.jsx'
+import FilaDeArticulo from './FilaDeArticulo.jsx'
+import Mapa from './Mapa.jsx'
 import { socioDe } from '../data/socios.js'
+import { leer } from '../lib/lectura.js'
 import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
 import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 
@@ -17,14 +19,17 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
  * en el grafo y en el índice.
  *
  * Abre en el cielo del día de las páginas internas y se lee en blanco, a la
- * medida de lectura. Al final sugiere los artículos relacionados y cierra con
- * el formulario de contacto en la caída, con el servicio del que habla ya
- * marcado. En S y M, bajo la fecha, el servicio queda a un toque.
+ * medida de lectura, con el mapa de sus apartados y sus minutos de lectura
+ * (components/Mapa.jsx), que cuenta lib/lectura.js. Al final sugiere los
+ * artículos relacionados, en las filas del índice, y cierra con el formulario
+ * de contacto en la caída, con el servicio del que habla ya marcado. En S y M,
+ * bajo la fecha, el servicio queda a un toque.
  */
 export default function Articulo({ ruta, children }) {
   const { titulo, descripcion, actualizada, autor, servicios = [] } = PAGINAS[ruta]
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
   const firma = socioDe(autor)
+  const { cuerpo, apartados, minutos } = leer(children)
 
   return (
     <Pagina
@@ -67,8 +72,9 @@ export default function Articulo({ ruta, children }) {
         </header>
 
         <div className="seccion zona-cielo">
-          <div className="contenedor">
-            <div className="prosa">{children}</div>
+          <div className="contenedor articulo-cuerpo">
+            {apartados.length > 1 && <Mapa apartados={apartados} minutos={minutos} />}
+            <div className="prosa">{cuerpo}</div>
           </div>
         </div>
       </article>
@@ -78,7 +84,11 @@ export default function Articulo({ ruta, children }) {
           <h2 id="relacionados-titulo" className="titular entra">
             Artículos relacionados
           </h2>
-          <ListaDeArticulos articulos={relacionadosDe(ruta)} />
+          <ul className="articulos articulos-relacionados">
+            {relacionadosDe(ruta).map((articulo) => (
+              <FilaDeArticulo key={articulo.ruta} articulo={articulo} nivel="h3" />
+            ))}
+          </ul>
         </div>
       </section>
     </Pagina>

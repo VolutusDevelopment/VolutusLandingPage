@@ -21,6 +21,7 @@ import initOla from './ola.js'
 import initChat from './chat.js'
 import initEstimado from './estimado.js'
 import initGuia from './guia.js'
+import initMapa from './mapa.js'
 import initMenuServicios from './menu-servicios.js'
 import initPreguntas from './preguntas.js'
 import initTienda from './tienda.js'
@@ -331,6 +332,7 @@ export default function init() {
     initChat,
     initEstimado,
     initGuia,
+    initMapa,
     initMenuServicios,
     initPreguntas,
     initTienda,

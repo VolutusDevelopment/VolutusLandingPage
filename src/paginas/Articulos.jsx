@@ -1,17 +1,7 @@
 import Pagina from '../components/Pagina.jsx'
 import Contacto from '../components/Contacto.jsx'
-import Icono from '../components/Icono.jsx'
-import {
-  PAGINAS,
-  PAGINAS_DEL_INDICE,
-  POR_PAGINA,
-  articulosDePagina,
-  fechaDe,
-  numeroDePagina,
-  rutaDePagina,
-  tituloCorto,
-} from '../lib/meta.js'
-import { servicioDeArticulo } from '../lib/servicios.js'
+import FilaDeArticulo from '../components/FilaDeArticulo.jsx'
+import { PAGINAS, PAGINAS_DEL_INDICE, POR_PAGINA, articulosDePagina, numeroDePagina, rutaDePagina } from '../lib/meta.js'
 
 /**
  * El índice de artículos: guías cortas para decidir qué software necesita un
@@ -21,10 +11,10 @@ import { servicioDeArticulo } from '../lib/servicios.js'
  * números de las demás al pie.
  *
  * Es un sumario: en la primera página, el más nuevo en una lámina oscura a
- * todo el ancho, y los demás en filas. Cada uno lleva el glifo del servicio
- * del que habla en una baldosa de su color, el de su card en la rueda, con su
- * nombre y la fecha: el índice se lee también por servicio. El que habla de
- * todos lleva la hoja de una guía. Termina en el formulario de contacto.
+ * todo el ancho, y los demás en filas (components/FilaDeArticulo.jsx). Cada
+ * uno lleva el glifo del servicio del que habla en una baldosa de su color, el
+ * de su card en la rueda, con su nombre y la fecha: el índice se lee también
+ * por servicio. Termina en el formulario de contacto.
  */
 export default function Articulos({ ruta }) {
   const { descripcion } = PAGINAS['/articulos']
@@ -42,31 +32,10 @@ export default function Articulos({ ruta }) {
 
       <section className="seccion zona-cielo" aria-label={`Artículos, página ${pagina} de ${PAGINAS_DEL_INDICE}`}>
         <div className="contenedor">
-          <ol className="articulos" start={(pagina - 1) * POR_PAGINA + 1}>
-            {articulosDePagina(pagina).map((articulo, i) => {
-              const { ruta: enlace, titulo, descripcion: resumen, publicada } = articulo
-              const servicio = servicioDeArticulo(articulo)
-              const destacado = pagina === 1 && i === 0
-              return (
-                <li
-                  key={enlace}
-                  className={destacado ? 'articulos-destacado zona-plano entra' : 'entra'}
-                  style={servicio && { '--tinte': servicio.color }}
-                >
-                  <div className="articulos-tapa">
-                    <Icono id={servicio?.id ?? 'guia'} />
-                  </div>
-                  <p className="articulos-meta dato">
-                    <span className="articulos-servicio">{servicio?.nombre ?? 'Todos los servicios'}</span>
-                    <time dateTime={publicada}>{fechaDe(enlace, 'publicada')}</time>
-                  </p>
-                  <h2>
-                    <a href={enlace}>{tituloCorto(titulo)}</a>
-                  </h2>
-                  <p className="articulos-resumen">{resumen}</p>
-                </li>
-              )
-            })}
+          <ol className="articulos articulos-indice" start={(pagina - 1) * POR_PAGINA + 1}>
+            {articulosDePagina(pagina).map((articulo, i) => (
+              <FilaDeArticulo key={articulo.ruta} articulo={articulo} destacado={pagina === 1 && i === 0} />
+            ))}
           </ol>
           {PAGINAS_DEL_INDICE > 1 && (
             <nav className="paginacion" aria-label="Páginas de artículos">

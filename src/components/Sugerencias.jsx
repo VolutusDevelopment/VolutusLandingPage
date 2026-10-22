@@ -1,9 +1,10 @@
 import { tituloCorto } from '../lib/meta.js'
 
 /**
- * Lo que se sugiere al final de las páginas de servicio y de los artículos:
- * otros artículos. Son los enlaces que un buscador o un agente sigue para
- * recorrer el sitio, así que van como texto y a la vista.
+ * Lo que se sugiere al final de las páginas de servicio: sus artículos. Son
+ * los enlaces que un buscador o un agente sigue para recorrer el sitio, así
+ * que van como texto y a la vista. Los artículos sugieren los suyos en las
+ * filas del índice (FilaDeArticulo.jsx).
  */
 
 /** Artículos de ARTICULOS (lib/meta.js): el título y su resumen. */

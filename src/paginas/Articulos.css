@@ -86,7 +86,8 @@
    Un sumario: el más nuevo en una lámina oscura a todo el ancho y los demás en
    filas con su filete, de a dos desde M. Cada fila lleva la baldosa de su
    servicio, su nombre y la fecha, el título y el resumen en dos líneas (entero
-   en el HTML). La fila entera lleva al artículo. */
+   en el HTML). La fila entera lleva al artículo. Las filas son las mismas al
+   pie de cada artículo, en los relacionados (FilaDeArticulo.jsx). */
 .articulos {
   list-style: none;
   display: grid;
@@ -96,7 +97,7 @@
 }
 
 @media (min-width: 640px) {
-  .articulos {
+  .articulos-indice {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: var(--e-8);
   }
@@ -160,31 +161,32 @@
   text-transform: uppercase;
 }
 
-/* Nivel 4, el elemento: cada artículo es un ítem de la lista. */
-.articulos h2 {
+/* Nivel 4, el elemento: cada artículo es un ítem de la lista. En el índice su
+   título es un h2 y en los relacionados, un h3. */
+.articulos :is(h2, h3) {
   grid-area: titulo;
   margin-top: var(--e-4);
   font-size: var(--texto-lg);
   letter-spacing: -0.015em;
 }
 
-.articulos h2 a {
+.articulos :is(h2, h3) a {
   color: var(--texto);
   text-decoration: none;
 }
 
 /* El enlace cubre la fila entera, y el anillo del foco también. */
-.articulos h2 a::before {
+.articulos :is(h2, h3) a::before {
   content: '';
   position: absolute;
   inset: 0;
 }
 
-.articulos h2 a:focus-visible {
+.articulos :is(h2, h3) a:focus-visible {
   outline: none;
 }
 
-.articulos h2 a:focus-visible::before {
+.articulos :is(h2, h3) a:focus-visible::before {
   outline: 2px solid var(--foco);
   outline-offset: 2px;
   border-radius: var(--radio);
@@ -204,7 +206,7 @@
 /* Al pasar el cursor, el título toma el color de la acción y el glifo hace
    el gesto de su servicio, como en la rueda (Icono.css). */
 @media (hover: hover) {
-  .articulos > li:hover h2 a {
+  .articulos > li:hover :is(h2, h3) a {
     color: var(--accion);
   }
 }
@@ -216,10 +218,10 @@
   }
 }
 
-/* Desde L, la baldosa más grande, a un lado del texto, y el servicio y la
-   fecha en una línea. */
+/* Desde L, en el índice, la baldosa más grande, a un lado del texto, y el
+   servicio y la fecha en una línea. */
 @media (min-width: 1024px) {
-  .articulos > li:not(.articulos-destacado) {
+  .articulos-indice > li:not(.articulos-destacado) {
     grid-template-columns: 4rem minmax(0, 1fr);
     grid-template-areas: 'tapa meta' 'tapa titulo' 'tapa resumen';
     align-items: start;
@@ -227,17 +229,30 @@
     padding-block: var(--e-8);
   }
 
-  .articulos > li:not(.articulos-destacado) .articulos-tapa {
+  .articulos-indice > li:not(.articulos-destacado) .articulos-tapa {
     width: 4rem;
   }
 
-  .articulos-meta {
+  .articulos-indice .articulos-meta {
     flex-direction: row;
     flex-wrap: wrap;
   }
 
-  .articulos > li:not(.articulos-destacado) h2 {
+  .articulos-indice > li:not(.articulos-destacado) h2 {
     margin-top: var(--e-2);
+  }
+}
+
+/* ---- los relacionados ----
+   Tres filas del índice al pie de cada artículo, como en el índice en S: una
+   bajo otra hasta M y, desde L, las tres lado a lado. */
+.articulos-relacionados {
+  margin-top: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .articulos-relacionados {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -382,6 +397,22 @@
   margin-inline: auto;
 }
 
+/* Desde L, el mapa va al margen izquierdo y el texto corre a su lado, a la
+   misma medida. El título, el mapa y el logo comparten el borde del
+   contenedor. */
+@media (min-width: 1024px) {
+  .articulo-cuerpo {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, var(--medida-lectura));
+    column-gap: var(--e-16);
+    align-items: start;
+  }
+
+  .articulo-cuerpo .prosa {
+    margin-inline: 0;
+  }
+}
+
 /* Justificado y sin cortar palabras con guion. Los subtítulos no: una línea
    estirada se lee como un error. */
 .prosa :is(p, li) {
@@ -430,12 +461,26 @@
   font-weight: 800;
 }
 
-/* La idea que hay que llevarse, destacada sobre un velo de la marca. */
+/* La idea que hay que llevarse, sin caja: una marca corta del color de la
+   acción encima y al tamaño de un bloque. Sin justificar: a ese tamaño el
+   justificado abre huecos entre las palabras. */
 .prosa .destacado {
-  padding: var(--e-4) var(--e-6);
-  border-left: 3px solid var(--marca);
-  border-radius: 0 var(--radio) var(--radio) 0;
-  background: color-mix(in oklab, var(--marca) 10%, var(--superficie));
+  padding: var(--e-4) 0 var(--e-2);
+  font-size: var(--texto-lg);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  text-align: left;
+}
+
+.prosa .destacado::before {
+  content: '';
+  display: block;
+  width: var(--e-8);
+  height: 3px;
+  margin-bottom: var(--e-4);
+  border-radius: 2px;
+  background: var(--accion);
 }
 
 /* Una comparación de lado a lado. Las celdas son cortas y caben en S; si un
