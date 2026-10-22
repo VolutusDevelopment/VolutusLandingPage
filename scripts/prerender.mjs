@@ -16,9 +16,9 @@
 //   3. Incrusta el CSS, porque un <link rel="stylesheet"> bloquea el primer
 //      pintado con una petición extra.
 //
-// Al final escribe los tres archivos que también salen de esas fuentes: el
-// sitemap, desde PAGINAS; `_headers`, desde lib/seguridad.js, y `_redirects`,
-// desde lib/servicios.js.
+// Escribe también lo que sale de esas fuentes: el favicon de cada servicio,
+// desde lib/servicios.js, y al final el sitemap, desde PAGINAS; `_headers`,
+// desde lib/seguridad.js, y `_redirects`, desde lib/servicios.js.
 import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -43,7 +43,7 @@ import { ESTIMADOS, desde } from '../src/lib/precios.js'
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
 
-const { render } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
+const { render, faviconDe } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const ORGANIZACION = `${ORIGEN}/#organizacion`
 
@@ -287,11 +287,26 @@ const enlace = plantilla.match(/<link rel="stylesheet"[^>]*href="\/(assets\/[^"]
 if (!enlace) throw new Error('prerender: no se encontró el <link rel="stylesheet"> en index.html')
 const css = readFileSync(`${dist}${enlace[1]}`, 'utf8').trim()
 
+// Cada página de servicio lleva en la pestaña el glifo de su card sobre su
+// color (`faviconDe`), en vez de la ola. El ICO y el ícono del iPhone siguen
+// siendo los del sitio.
+const FAVICON = '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />'
+if (!plantilla.includes(FAVICON)) throw new Error('prerender: falta el favicon SVG en index.html')
+const servicioDeRuta = new Map(SERVICIOS.filter(({ ruta }) => ruta).map((servicio) => [servicio.ruta, servicio]))
+mkdirSync(`${dist}iconos`, { recursive: true })
+for (const servicio of servicioDeRuta.values()) writeFileSync(`${dist}iconos/${servicio.id}.svg`, faviconDe(servicio))
+
+function favicon(ruta) {
+  const servicio = servicioDeRuta.get(ruta)
+  return servicio ? `<link rel="icon" href="/iconos/${servicio.id}.svg" type="image/svg+xml" />` : FAVICON
+}
+
 // Los reemplazos van como función para que el texto entre literal: como cadena,
 // un `$&` o un `$'` dentro del CSS o del HTML se interpretaría como patrón.
 for (const [ruta, pagina] of Object.entries(PAGINAS)) {
   const html = plantilla
     .replace('<!--meta-->', () => cabecera(ruta, pagina))
+    .replace(FAVICON, () => favicon(ruta))
     .replace('<div id="root"></div>', () => `<div id="root">${render(ruta)}</div>`)
     .replace(enlace[0], () => `<style>${css}</style>`)
 

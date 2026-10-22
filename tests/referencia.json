@@ -60,7 +60,7 @@
     },
     "/nosotros": {
       "S": {
-        "alto": 8397,
+        "alto": 8439,
         "desborda": false,
         "h1": 34.84375,
         "bloquesQueEntran": 20,
@@ -68,7 +68,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 8424,
+        "alto": 8466,
         "desborda": false,
         "h1": 34.828125,
         "bloquesQueEntran": 20,

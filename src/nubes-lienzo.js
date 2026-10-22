@@ -22,29 +22,22 @@
  *     pato, que deja estela y de rato en rato se detiene a provocar a quien
  *     mira, en un globo: «¿A QUE NO ME CAZAS?». La física y su shader viven
  *     en lib/mar.js.
- *   - `ola`: la ola del logotipo, punto por punto (lib/ola.js), en el plano de
- *     la marca de /nosotros. Al asomar se dibuja: las tres líneas nacen en la
- *     S y se enrollan en voluta. Después el cursor es viento, como en el
- *     cielo, pero el aire es viscoso: la ola se estira en una curva ancha, sin
- *     abrirse, y vuelve a su forma en menos de un segundo.
  *
- * Los colores son `luz` y `sombra`, y el mar y la ola suman `borde` (la
- * espuma y los destellos del agua).
+ * Los colores son `luz` y `sombra`, y el mar suma `borde` (la espuma y los
+ * destellos del agua).
  *
  * Recibe de la página (nubes.js) los lienzos, sus medidas, sus colores, si
- * están a la vista, por dónde pasa el cursor en el cielo y en la ola, cuándo
- * sale el pato, la trama de la ola y cuándo asoma (`nace`), la cámara de cada
- * cielo y, en el juego de la 404, la forma del cielo; le devuelve `vivo` cuando un
- * lienzo ya tiene su primer fotograma, `software` cuando un lienzo se pinta
- * quieto porque no hay GPU de verdad (o la que hay es igual de lenta: ver
- * `conectar`), `sin-gl` cuando no se va a pintar y, en el mar, dónde va el
- * pato.
+ * están a la vista, por dónde pasa el cursor en el cielo, cuándo sale el
+ * pato, la cámara de cada cielo y, en el juego de la 404, la forma del cielo;
+ * le devuelve `vivo` cuando un lienzo ya tiene su primer fotograma,
+ * `software` cuando un lienzo se pinta quieto porque no hay GPU de verdad (o
+ * la que hay es igual de lenta: ver `conectar`), `sin-gl` cuando no se va a
+ * pintar y, en el mar, dónde va el pato.
  */
 
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
-import { texturaDeLaOla } from './lib/ola.js'
 import { FISICA, JUEGO, encuadrar, lapso, rollo } from './lib/volutus.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
@@ -62,12 +55,6 @@ const DT = INTERVALO / 1000
 const CELDAS_POR_AIRE = 3
 const VUELTAS_DE_PRESION = 20
 const VUELTAS_DE_VISCOSIDAD = 1
-// En la ola cada punto lleva su celda de aire: con 3 por celda, como en el
-// cielo, un remolino taparía tres puntos. Es espesa: dos pasos de `DIFUSION`
-// por ley. Las tres líneas se dibujan en `DIBUJO` ms.
-const CELDAS_POR_AIRE_EN_LA_OLA = 1
-const VUELTAS_DE_VISCOSIDAD_EN_LA_OLA = 2
-const DIBUJO = 2500
 // El pato del mar nada a `NADO` m/s (lib/mar.js), con la línea de flotación al
 // 45 % de la franja de agua, y sale a flote desde `HUNDIDO` m en `SALIDA` s,
 // con una `GOTA` en el agua.
@@ -90,8 +77,8 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //   - `PUNTO`: el punto, con borde suavizado de 1.5 px, en el centro de su
 //     celda. En el cielo es un cuadrado redondeado (`CUADRADO`, que se define
 //     al compilar: una superelipse de grado 4, entre el círculo y el cuadrado),
-//     que llena el 93 % de su celda y dibuja mejor la textura; en el mar y en
-//     la ola, un círculo. Lo usa `TRAMA`.
+//     que llena el 93 % de su celda y dibuja mejor la textura; en el mar, un
+//     círculo. Lo usa `TRAMA`.
 //   - Dos pasadas, en el cielo y en el mar. Recorrer la nube o el agua es
 //     caro, así que no se calcula por píxel sino por celda: `CAMPO` (o `MAR`,
 //     en lib/mar.js) pinta una textura con un texel por celda —color y
@@ -171,7 +158,7 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //         `UMBRAL`: sin él avivaba el ruido de toda la rejilla.
 //       · `DIFUSION`: la viscosidad. Reparte entre vecinas la velocidad y lo
 //         que el aire corrió a la nube; apaga los remolinos de una o dos
-//         celdas. En la ola es espesa: se estira en una curva ancha y lisa.
+//         celdas.
 //       · `DIVERGENCIA`, `PRESION` y `GRADIENTE`: el aire no se comprime. Se
 //         resuelve la presión y se le resta su gradiente a la velocidad: el
 //         aire delante del cursor se aparta y lo rodea, y detrás se cierra.
@@ -182,14 +169,6 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //         porque el frente de la onda la vuelve a armar, y topa en `CORRE`. En
 //         `b` va el aire seco que la turbulencia mezcla dentro (*entrainment*):
 //         nace donde el rotor es fuerte y se evapora en `EVAPORA` s.
-//   - La ola (`OLA`, que se define al compilar): el campo no es una nube sino
-//     la textura de lib/ola.js, corrida por el aire y abierta por el aire seco
-//     igual que el rollo. Mientras se dibuja, cada punto crece cuando `crece`
-//     (de 0 a 1 en `DIBUJO` ms) pasa su orden, con un frente de una décima de
-//     la ola. Su aire es más espeso que el del cielo (ver `AIRE`): casi sin
-//     remolinos ni aire seco, se frena al soltar y la ola vuelve en medio
-//     segundo. Los números salieron de un prototipo en el que se ajustaron a
-//     la vista: vuelve entera en menos de 0.9 s.
 //   - `TRAMA`: cada píxel lee el texel de su celda y dibuja el punto, con el
 //     área proporcional a la cobertura, como una trama de imprenta. Ni
 //     jugando cierra los huecos: entre punto y punto se adivina el pato que
@@ -219,7 +198,7 @@ float punto(vec2 px, vec2 c, float r) {
 // derecha, o no salía. Ninguna textura de aquí tiene mipmaps, así que el nivel
 // 0 es el que ya se leía: con NVIDIA la nube sale idéntica, píxel a píxel. Sin
 // la extensión, `texture2D` como siempre. Se antepone a los shaders que leen
-// dentro de un bucle o una condición: `CAMPO`, `OLA` y `MAR` (lib/mar.js).
+// dentro de un bucle o una condición: `CAMPO` y `MAR` (lib/mar.js).
 const LEER_SIN_DERIVADAS = '#extension GL_EXT_shader_texture_lod : enable\n#define LEER(t, uv) texture2DLodEXT(t, uv, 0.0)\n'
 const LEER_COMO_SIEMPRE = '#define LEER(t, uv) texture2D(t, uv)\n'
 
@@ -417,24 +396,6 @@ void main() {
   gl_FragColor = vec4(color, cubre);
 }`
 
-// La ola (ver arriba): `p` y `abre` como en `CAMPO`; la textura se lee en
-// celdas, así que en reposo cada punto cae en el centro de su texel.
-const OLA = `precision highp float;
-uniform vec2 res, rejilla;
-uniform float t, celda, crece;
-uniform vec3 luz;
-uniform sampler2D estado, ola;
-${RUIDO}
-void main() {
-  vec2 p = (floor(gl_FragCoord.xy) + 0.5) * celda / res.y;
-  vec3 aire = texture2D(estado, p * vec2(res.y / res.x, 1.0)).xyz;
-  p -= aire.xy * celda / res.y;
-  float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(p * 14.0, t * 0.5))));
-  vec4 punto = texture2D(ola, p * res.y / (celda * rejilla));
-  float aparece = smoothstep(punto.r, punto.r + 0.1, crece * 1.1);
-  gl_FragColor = vec4(luz, punto.a * aparece * abre);
-}`
-
 const TRAMA = `precision highp float;
 uniform vec2 res, rejilla;
 uniform float celda, alfa, relleno;
@@ -459,13 +420,10 @@ void main() {
   gl_FragColor = vec4(m.rgb * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
 }`
 
-// El aire del cielo y el de la ola, que es viscoso (ver arriba). El del cielo
-// se mide en px CSS, así que soplar es igual en cualquier pantalla y en
-// cualquier parte de la nube: el cursor está en la pantalla, no a la distancia
-// de la nube. El de la ola, en sus celdas, porque la ola es el logotipo y
-// crece con su tarjeta. `pxPorAire` pasa de esas medidas a celdas del aire (en
-// la ola vale 1). Las velocidades van en celdas por segundo y el rotor, en
-// vueltas por segundo.
+// El aire del cielo. Se mide en px CSS, así que soplar es igual en cualquier
+// pantalla y en cualquier parte de la nube: el cursor está en la pantalla, no
+// a la distancia de la nube. `pxPorAire` pasa de px CSS a celdas del aire. Las
+// velocidades van en celdas por segundo y el rotor, en vueltas por segundo.
 //
 // `SOPLO` es el radio de la ráfaga; `TOPE`, la rapidez más alta que entra al
 // aire, para que un tirón brusco no reviente la simulación; `EMPUJE`, cuánto
@@ -480,11 +438,7 @@ void main() {
 // casi quieto, la deformaba entera con un solo gesto.
 const AIRE = `
 uniform float pxPorAire;
-#ifdef OLA
-const float SOPLO = 2.0, TOPE = 52.0, EMPUJE = 0.4, REMOLINO = 1.2, UMBRAL = 0.0, VISCOSA = 0.2, FRENO = 0.26, SECADO = 0.0308, EVAPORA = 0.2, VUELVE = 0.5, CORRE = 2.08, LEVE = 0.0;
-#else
-const float SOPLO = 14.0, TOPE = 900.0, EMPUJE = 0.25, REMOLINO = 2.0, UMBRAL = 2.0, VISCOSA = 0.05, FRENO = 0.35, SECADO = 0.03, EVAPORA = 0.5, VUELVE = 0.7, CORRE = 20.0, LEVE = 15.0;
-#endif`
+const float SOPLO = 14.0, TOPE = 900.0, EMPUJE = 0.25, REMOLINO = 2.0, UMBRAL = 2.0, VISCOSA = 0.05, FRENO = 0.35, SECADO = 0.03, EVAPORA = 0.5, VUELVE = 0.7, CORRE = 20.0, LEVE = 15.0;`
 
 // El fluido, una pasada por ley (ver arriba). `en` lee la celda vecina.
 const MALLA = `precision highp float;
@@ -605,7 +559,7 @@ const fija = (escena) => quieto || escena.software
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
-  'ola', 'crece', 'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
+  'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -771,25 +725,24 @@ function texturaDeCuadro(gl, filas) {
 // programas terminan de enlazarse (`armar`, desde `paso`). Si un programa no
 // enlaza, no hay escena.
 function encargar(escena) {
-  const { gl, mar, ola, juego } = escena
+  const { gl, mar, juego } = escena
   // Las extensiones se piden en cada encargo: un contexto recuperado no
   // conserva las de antes, y preguntar con la vieja no respondía nunca.
   escena.paralelo = gl.getExtension('KHR_parallel_shader_compile')
   const lectura = gl.getExtension('EXT_shader_texture_lod') ? LEER_SIN_DERIVADAS : LEER_COMO_SIEMPRE
-  const definiciones = ola ? '#define OLA\n' : ''
-  // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar y
-  // el de la ola, el círculo de siempre. Por software la escena no se mueve, y
-  // su aire no se compila.
+  // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar,
+  // el círculo de siempre. Por software la escena no se mueve, y su aire no se
+  // compila.
   escena.programas = null
   escena.pedidos = {
     principales: [
-      pedir(gl, lectura + (mar ? MAR : definiciones + (ola ? OLA : (juego ? '#define JUEGO\n' : '') + CAMPO))),
-      pedir(gl, (mar || ola ? '' : '#define CUADRADO\n') + TRAMA),
+      pedir(gl, lectura + (mar ? MAR : (juego ? '#define JUEGO\n' : '') + CAMPO)),
+      pedir(gl, (mar ? '' : '#define CUADRADO\n') + TRAMA),
     ],
     aire:
       mar || escena.software || !hayAire(gl)
         ? null
-        : Object.fromEntries(Object.entries(FUENTES_DEL_AIRE).map(([nombre, fuente]) => [nombre, pedir(gl, definiciones + fuente)])),
+        : Object.fromEntries(Object.entries(FUENTES_DEL_AIRE).map(([nombre, fuente]) => [nombre, pedir(gl, fuente)])),
   }
 }
 
@@ -797,7 +750,7 @@ const listos = (escena) =>
   [...escena.pedidos.principales, ...Object.values(escena.pedidos.aire ?? {})].every((programa) => listo(escena, programa))
 
 function armar(escena) {
-  const { gl, mar, ola, pedidos } = escena
+  const { gl, mar, pedidos } = escena
   escena.pedidos = null
   const programas = pedidos.principales.map((programa) => terminar(gl, programa))
   if (programas.includes(null)) return false
@@ -826,14 +779,6 @@ function armar(escena) {
     gl.uniform1i(campo.globo, 3)
   } else {
     gl.uniform1i(campo.estado, 2)
-    // La ola, en la unidad 5, que el aire no toca. Se lee interpolada: cuando
-    // el aire la corre, cada punto crece o se achica de a poco. Va antes del
-    // aire, que deja en uso sus propios programas.
-    if (ola) {
-      gl.activeTexture(gl.TEXTURE5)
-      subirTextura(gl, ola.celdas, ola.celdas, ola.datos, gl.LINEAR)
-      gl.uniform1i(campo.ola, 5)
-    }
     escena.aire = pedidos.aire && armarAire(gl, pedidos.aire)
   }
   return true
@@ -842,7 +787,7 @@ function armar(escena) {
 // La escena existe desde que la página la monta, aunque su contexto tarde: lo
 // que la página le diga mientras tanto (tamaño, colores, si se ve) se guarda y
 // se aplica al armarla.
-function montar(id, lienzo, { mar, perspectiva, ola, juego }) {
+function montar(id, lienzo, { mar, perspectiva, juego }) {
   const escena = {
     id,
     gl: null,
@@ -857,7 +802,6 @@ function montar(id, lienzo, { mar, perspectiva, ola, juego }) {
     sucia: true,
     ultimos: {},
   }
-  if (ola) escena.ola = { celdas: ola.celdas, datos: texturaDeLaOla(ola), nace: null }
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
     escena.pato = null
@@ -1050,9 +994,8 @@ function simular(escena) {
     gl.drawArrays(gl.TRIANGLES, 0, 3)
   }
   // La viscosidad: reparte un par de láminas entre vecinas.
-  const vueltas = escena.ola ? VUELTAS_DE_VISCOSIDAD_EN_LA_OLA : VUELTAS_DE_VISCOSIDAD
   const espesar = (par) => {
-    for (let i = 0; i < vueltas; i++) {
+    for (let i = 0; i < VUELTAS_DE_VISCOSIDAD; i++) {
       pasada(p.DIFUSION, par[1], par[0])
       par.reverse()
     }
@@ -1117,9 +1060,6 @@ function pintar(escena, ahora) {
     escena.antes = ahora
     gl.uniform1f(campo.tiempo, quieta ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
   }
-  // La ola se dibuja desde que asoma (`nace`); quieta, va entera.
-  const { ola } = escena
-  if (ola) gl.uniform1f(campo.crece, quieta ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
   if (escena.mar) {
     // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
     const vista = escena.camara
@@ -1197,22 +1137,20 @@ function aplicar(escena, data) {
     const vista = escena.mar && camara(data.ancho, data.alto)
     if (vista) Object.assign(escena, { camara: vista, celda: data.celda, escala: (vista.focal * OJOS) / data.celda })
     // La nube, con la cámara de su página (lib/volutus.js).
-    if (!escena.mar && !escena.ola) {
+    if (!escena.mar) {
       const encuadre = encuadrar(escena.perspectiva, data.ancho, data.alto)
       Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, data.densidad) })
     }
     const { aire, encuadre } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
-      const porAire = escena.ola ? CELDAS_POR_AIRE_EN_LA_OLA : CELDAS_POR_AIRE
-      const alto = Math.max(8, Math.round(escena.rejilla[1] / porAire))
+      const alto = Math.max(8, Math.round(escena.rejilla[1] / CELDAS_POR_AIRE))
       aire.malla = [Math.max(8, Math.round((alto * data.ancho) / data.alto)), alto]
       gl.activeTexture(gl.TEXTURE2)
       for (const hoja of laminasDelAire(aire)) dimensionar(gl, hoja, ...aire.malla)
       gl.bindTexture(gl.TEXTURE_2D, aire.estado[0].textura)
-      // Cuántos px CSS mide cada celda del aire: el del cielo se mide en px
-      // (ver `AIRE`) y el de la ola, en sus celdas.
-      const pxPorAire = escena.ola ? 1 : data.alto / (aire.malla[1] * data.densidad)
+      // Cuántos px CSS mide cada celda del aire (ver `AIRE`).
+      const pxPorAire = data.alto / (aire.malla[1] * data.densidad)
       for (const u of Object.values(aire.programas)) {
         gl.useProgram(u.programa)
         gl.uniform2f(u.malla, ...aire.malla)
@@ -1287,7 +1225,6 @@ onmessage = ({ data }) => {
     else escena.ultimos[data.tipo] = data
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
-  if (escena?.ola && data.tipo === 'nace') escena.ola.nace ??= performance.now()
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
   // si calla), `callo` cuándo terminó y `dicho`, el que sigue.

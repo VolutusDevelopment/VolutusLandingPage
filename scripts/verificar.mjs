@@ -270,8 +270,8 @@ async function revisarMarcado(ruta) {
 
 // ---- Las nubes, en cualquier equipo ----
 //
-// La nube, el mar y la ola los dibuja un worker con WebGL (src/nubes-lienzo.js),
-// y cada GPU compila sus shaders a su manera. Sus fallos ocurrieron en equipos
+// La nube y el mar los dibuja un worker con WebGL (src/nubes-lienzo.js), y
+// cada GPU compila sus shaders a su manera. Sus fallos ocurrieron en equipos
 // que no eran el del desarrollo:
 //
 //   - Con gráficos Intel la nube salía como un recorte a la derecha, o no
