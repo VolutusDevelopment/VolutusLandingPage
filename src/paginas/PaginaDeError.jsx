@@ -54,7 +54,8 @@ function PaginaDeError({ ruta, antetitulo, titulo, perspectiva, empiezaSolo = fa
       <section className="seccion zona-cielo hora-manana pagina-error">
         <div className="pagina-error-cielo">
           <canvas className="patos" aria-hidden="true" />
-          <canvas className="nubes" data-vista="cielo" data-perspectiva={perspectiva} aria-hidden="true" />
+          {/* `data-juego`: los cúmulos del juego solo se compilan aquí (nubes-lienzo.js). */}
+          <canvas className="nubes" data-vista="cielo" data-perspectiva={perspectiva} data-juego aria-hidden="true" />
         </div>
 
         <div className="contenedor pagina-error-texto">

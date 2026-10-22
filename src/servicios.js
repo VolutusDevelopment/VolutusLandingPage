@@ -31,9 +31,11 @@ const corto = (grados) => (((grados % 360) + 540) % 360) - 180
 
 export default function initServicios() {
   const rueda = document.querySelector('.rueda')
-  // La misma condición que arma la rueda en el CSS. Sin ella queda la lista
-  // de respaldo, y no hay nada que girar.
-  if (!rueda || !CSS.supports('rotate', 'calc(1deg * sin(1deg))')) return
+  // La misma condición que arma la rueda en el CSS, `scripting` incluido. Sin
+  // ella queda la lista de respaldo, y no hay nada que girar: en Safari 16 y
+  // Chromium 119, que no conocen `scripting`, girar una rueda que no estaba se
+  // tragaba el clic de cada servicio menos el primero.
+  if (!rueda || !CSS.supports('rotate', 'calc(1deg * sin(1deg))') || !matchMedia('(scripting: enabled)').matches) return
 
   const servicios = [...rueda.querySelectorAll('.servicio')]
   const aviso = document.querySelector('.servicios-aviso')

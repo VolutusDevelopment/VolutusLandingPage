@@ -660,9 +660,11 @@
   }
 }
 
+/* Las fases que no son la actual esperan ocultas, no atenuadas: a medias, su
+   texto quedaba a la vista sin contraste para leerse (1.2:1). */
 @media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
   .tienda-guiada .tienda-fase {
-    opacity: 0.12;
+    opacity: 0;
     transform: translateY(24px);
     transition:
       opacity 500ms var(--ease-out),

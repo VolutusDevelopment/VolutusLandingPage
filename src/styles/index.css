@@ -1067,6 +1067,12 @@ svg {
   opacity: 1;
 }
 
+/* La escena grabada que va sobre el lienzo en los equipos sin GPU
+   (src/nubes.js). */
+.grabado {
+  object-fit: cover;
+}
+
 /* El punto de la nube, en px CSS: el mismo en todas las páginas, salvo la
    portada en el teléfono (Portada.css), y el lienzo lo pinta a la densidad
    real de la pantalla (`rejilla` en src/nubes.js). El mar del pie lleva el

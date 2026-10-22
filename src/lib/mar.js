@@ -444,7 +444,7 @@ float red(vec2 q) {
   for (int y = -1; y <= 1; y++) {
     for (int x = -1; x <= 1; x++) {
       d = vec2(float(x), float(y));
-      d += texture2D(ruido, (i + d + 0.5) / 256.0).rg - f;
+      d += LEER(ruido, (i + d + 0.5) / 256.0).rg - f;
       d2 = dot(d, d);
       f2 = min(f2, max(f1, d2));
       f1 = min(f1, d2);
@@ -516,6 +516,9 @@ float superficie(vec2 p, float r, float cuando, out vec2 pendiente, out vec2 ori
  *   - El pato tapa el agua que está detrás de él, y el agua que está más cerca
  *     lo tapa a él: así se dibuja sola su línea de flotación, y la ola que
  *     pasa delante lo esconde. Su globo va delante del pico y de todo.
+ *   - Las texturas que se leen dentro de una condición —la espuma, el pato y
+ *     su globo— van con `LEER`, que antepone el pintor (ver nubes-lienzo.js):
+ *     ahí `texture2D` deja sus derivadas indefinidas.
  *   - La salida, para `TRAMA`: el color del punto y, en el alfa, su área a
  *     0.249 por unidad, desde 0.5 si la celda es agua y desde 0 si no —el pato
  *     contra el cielo—. El cielo vacío es 0. El agua tiene área de 0 a 1; el
@@ -614,7 +617,7 @@ void main() {
     vec2 d = celdaXY - nado.xy;
     if (d.x >= 0.0 && d.y >= 0.0 && d.x < PATO.x && d.y < PATO.y) {
       if (nado.z < 0.0) d.x = PATO.x - 1.0 - d.x;
-      vec4 punto = texture2D(pato, (d + 0.5) / PATO);
+      vec4 punto = LEER(pato, (d + 0.5) / PATO);
       if (punto.a > 0.5 && !(toca && r < nado.w)) {
         color = punto.rgb;
         area = 2.0;
@@ -622,7 +625,7 @@ void main() {
     }
     vec2 g = celdaXY - nado.xy - vec2(PATO.x + 1.0, 0.0);
     if (dice > 0.0 && g.x >= 0.0 && g.y >= 0.0 && g.x < GLOBO.x && g.y < GLOBO.y) {
-      vec4 punto = texture2D(globo, (g + vec2(0.0, (dice - 1.0) * GLOBO.y) + 0.5) / vec2(GLOBO.x, GLOBO.y * GLOBO.z));
+      vec4 punto = LEER(globo, (g + vec2(0.0, (dice - 1.0) * GLOBO.y) + 0.5) / vec2(GLOBO.x, GLOBO.y * GLOBO.z));
       if (punto.a > 0.5) {
         color = punto.rgb;
         area = 2.0;
