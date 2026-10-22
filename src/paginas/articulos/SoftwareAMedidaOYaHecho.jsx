@@ -10,27 +10,30 @@ export default function SoftwareAMedidaOYaHecho({ ruta }) {
       </p>
 
       <h2>Lo bueno de un software ya hecho</h2>
-      <ul>
-        <li>Está listo hoy: te registras y empiezas.</li>
-        <li>Cuesta menos al principio: pagas una suscripción, no un desarrollo.</li>
-        <li>Otros lo mantienen, lo actualizan y lo protegen.</li>
-      </ul>
+      <p>
+        Está listo hoy: te registras y empiezas. Cuesta menos al principio, porque pagas una suscripción y no un
+        desarrollo. Y otros se encargan de mantenerlo, actualizarlo y protegerlo.
+      </p>
 
       <h2>Y sus límites</h2>
-      <ul>
-        <li>Funciona como lo pensaron sus creadores para miles de negocios, no como trabajas tú.</li>
-        <li>Pagas por usuario o por módulo, y el costo crece contigo.</li>
-        <li>Tus datos viven en su plataforma, con sus reglas para sacarlos.</li>
-        <li>Si no se conecta con tus otras herramientas, alguien copia la información a mano.</li>
-      </ul>
+      <p>
+        Funciona como lo pensaron sus creadores para miles de negocios, no como trabajas tú. Pagas por usuario o por
+        módulo, así que el costo crece contigo.
+      </p>
+      <p>
+        Tus datos viven en su plataforma, con sus reglas para sacarlos. Y si no se conecta con tus otras herramientas,
+        alguien termina copiando la información a mano.
+      </p>
 
       <h2>Cuándo conviene a medida</h2>
-      <ul>
-        <li>Tu forma de trabajar es tu ventaja y no quieres cambiarla para calzar con un producto.</li>
-        <li>Pagas varias herramientas que no se hablan entre sí y alguien hace de puente copiando datos.</li>
-        <li>El software es tu negocio: lo vas a vender o es lo que te diferencia.</li>
-        <li>Necesitas que tus clientes usen una app con tu marca.</li>
-      </ul>
+      <p>
+        Conviene cuando tu forma de trabajar es tu ventaja y no quieres cambiarla para calzar con un producto. También
+        cuando pagas varias herramientas que no se hablan entre sí y alguien hace de puente copiando datos.
+      </p>
+      <p>
+        Y tiene sentido cuando el software es tu negocio, porque lo vas a vender o es lo que te diferencia, o cuando
+        necesitas que tus clientes usen una app con tu marca.
+      </p>
 
       <h2>La respuesta suele ser una mezcla</h2>
       <p className="destacado">

@@ -10,36 +10,27 @@ export default function PlanillaOSistemaDeGestion({ ruta }) {
       </p>
 
       <h2>Cinco señales de que ya no alcanza</h2>
-      <ol>
-        <li>
-          <strong>Varias personas la editan.</strong> Aparecen copias —«ventas_final_v3»—, alguien pisa el cambio de
-          otro y nadie sabe cuál es la versión buena.
-        </li>
-        <li>
-          <strong>Solo una persona la entiende.</strong> Si esa persona se enferma o se va, la operación se detiene.
-        </li>
-        <li>
-          <strong>Copias datos de una planilla a otra.</strong> El pedido se anota en una, el stock en otra y la
-          factura en una tercera: cada traspaso es una oportunidad de error.
-        </li>
-        <li>
-          <strong>Sacar un número toma una tarde.</strong> Saber cuánto vendiste el mes pasado o qué producto deja más
-          no debería ser un proyecto.
-        </li>
-        <li>
-          <strong>Una fórmula rota ya te costó plata.</strong> Una celda mal arrastrada no avisa: sigue mostrando un
-          número, solo que equivocado.
-        </li>
-      </ol>
+      <p>
+        La primera es que varias personas la editan. Aparecen copias como «ventas_final_v3», alguien pisa el cambio de
+        otro y nadie sabe cuál es la versión buena. La segunda es la contraria: solo una persona la entiende, y si esa
+        persona se enferma o se va, la operación se detiene.
+      </p>
+      <p>
+        También es mala señal que copies datos de una planilla a otra. El pedido se anota en una, el stock en otra y
+        la factura en una tercera, y cada traspaso es una oportunidad de error. Lo mismo si sacar un número te toma una
+        tarde: saber cuánto vendiste el mes pasado o qué producto deja más no debería ser un proyecto.
+      </p>
+      <p>
+        La última es la más cara. Si una fórmula rota ya te costó plata, sabes que una celda mal arrastrada no avisa:
+        sigue mostrando un número, solo que equivocado.
+      </p>
 
       <h2>Qué cambia con un sistema</h2>
-      <ul>
-        <li>Cada dato se escribe una vez y se ve en todas partes.</li>
-        <li>Cada persona entra con su usuario y ve lo que le corresponde.</li>
-        <li>Queda el historial de quién cambió qué y cuándo.</li>
-        <li>Los números se calculan solos y están al día.</li>
-        <li>Se usa desde el celular, la tablet o el computador.</li>
-      </ul>
+      <p>
+        Cada dato se escribe una vez y se ve en todas partes. Cada persona entra con su usuario y ve lo que le
+        corresponde, y queda el historial de quién cambió qué y cuándo. Los números se calculan solos y están al día,
+        y todo se puede usar desde el celular, la tablet o el computador.
+      </p>
 
       <h2>Antes de cambiarte</h2>
       <p>No hace falta tirar la planilla de un día para otro. Lo sensato es ir por partes:</p>

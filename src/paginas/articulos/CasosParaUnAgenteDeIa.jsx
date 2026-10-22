@@ -10,31 +10,23 @@ export default function CasosParaUnAgenteDeIa({ ruta }) {
       </p>
 
       <h2>Donde suele servir</h2>
-      <ul>
-        <li>
-          <strong>Consultas repetidas con respuesta fija.</strong> Horarios, precios vigentes, qué llevar a una cita o
-          cómo llegar.
-        </li>
-        <li>
-          <strong>Agendar en una agenda que se puede consultar.</strong> Ofrecer un horario libre y reservarlo sin que
-          alguien lo tenga que hacer a mano.
-        </li>
-        <li>
-          <strong>Registrar solicitudes.</strong> Un pedido, una reserva o un reclamo que queda con datos completos y
-          con la fecha.
-        </li>
-        <li>
-          <strong>Responder fuera de horario.</strong> Atender a las once de la noche y dejar un registro para la mañana.
-        </li>
-      </ul>
+      <p>
+        En las consultas que se repiten y tienen una respuesta fija: horarios, precios vigentes, qué llevar a una cita
+        o cómo llegar. También para agendar, si la agenda se puede consultar: el agente ofrece un horario libre y lo
+        reserva sin que alguien lo tenga que hacer a mano.
+      </p>
+      <p>
+        Sirve para registrar solicitudes, como un pedido, una reserva o un reclamo, que quedan con datos completos y
+        con la fecha. Y para responder fuera de horario: atender a las once de la noche y dejar un registro para la
+        mañana.
+      </p>
 
       <h2>Donde conviene una persona</h2>
-      <ul>
-        <li>Reclamos, devoluciones y cualquier caso en que el cliente esté molesto.</li>
-        <li>Decisiones de precio, descuentos o excepciones.</li>
-        <li>Temas de salud, legales o tributarios, donde una respuesta equivocada tiene consecuencias.</li>
-        <li>Casos nuevos que no están en lo que el agente conoce.</li>
-      </ul>
+      <p>
+        En los reclamos, las devoluciones y cualquier caso en que el cliente esté molesto. También en las decisiones de
+        precio, descuentos o excepciones, y en temas de salud, legales o tributarios, donde una respuesta equivocada
+        tiene consecuencias. Y en los casos nuevos, que no están en lo que el agente conoce.
+      </p>
 
       <h2>Una pregunta para decidir</h2>
       <p>
@@ -43,24 +35,16 @@ export default function CasosParaUnAgenteDeIa({ ruta }) {
       </p>
 
       <h2>Patrones por tipo de negocio</h2>
-      <ul>
-        <li>
-          Una clínica con la recepción saturada: el agente confirma y reagenda horas, y deriva a recepción las dudas
-          clínicas.
-        </li>
-        <li>
-          Una academia que recibe consultas de noche: el agente responde horarios y valores vigentes, y registra a
-          quienes quieren inscribirse.
-        </li>
-        <li>
-          Un hotel con reservas por varios canales: el agente responde disponibilidad y deja el registro, y una persona
-          confirma los casos especiales.
-        </li>
-        <li>
-          Un taller con clientes que preguntan por su auto: el agente informa el estado que ya está registrado, y el
-          mecánico decide lo que sigue.
-        </li>
-      </ul>
+      <p>
+        En una clínica con la recepción saturada, el agente confirma y reagenda horas, y deriva a recepción las dudas
+        clínicas. En una academia que recibe consultas de noche, responde horarios y valores vigentes, y registra a
+        quienes quieren inscribirse.
+      </p>
+      <p>
+        En un hotel con reservas por varios canales, responde la disponibilidad y deja el registro, y una persona
+        confirma los casos especiales. En un taller donde los clientes preguntan por su auto, informa el estado que ya
+        está registrado, y el mecánico decide lo que sigue.
+      </p>
 
       <h2>Lo que un agente no debería hacer</h2>
       <p>

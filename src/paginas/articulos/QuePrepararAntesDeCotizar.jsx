@@ -5,7 +5,7 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
     <Articulo ruta={ruta}>
       <p>
         Para cotizar un proyecto de software no hace falta saber de tecnología. Lo que sí ayuda es tener claro el
-        problema. Con estas seis respuestas, una empresa seria —nosotros incluidos— te puede decir alcance, precio y
+        problema. Con estas seis respuestas, una empresa seria (nosotros incluidos) te puede decir alcance, precio y
         qué viene después, sin una ronda de reuniones de por medio.
       </p>
 
@@ -42,7 +42,7 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
 
       <h2>6. Tus límites</h2>
       <p>
-        Una fecha que de verdad importa —una temporada, un lanzamiento— y un rango de presupuesto, aunque sea
+        Una fecha que de verdad importa, como una temporada o un lanzamiento, y un rango de presupuesto, aunque sea
         aproximado. No es para cobrarte más: es para proponerte lo que cabe. Cada presupuesto es único, y depende del
         alcance del proyecto y de los KPI que quieras medir.
       </p>
@@ -62,11 +62,10 @@ export default function QuePrepararAntesDeCotizar({ ruta }) {
       </p>
 
       <h2>Lo que no hace falta</h2>
-      <ul>
-        <li>Saber qué tecnología usar: eso nos toca a nosotros.</li>
-        <li>Tenerlo todo definido: el alcance se termina de afinar conversando.</li>
-        <li>Un documento formal: un correo o el formulario sirven.</li>
-      </ul>
+      <p>
+        No hace falta que sepas qué tecnología usar: eso nos toca a nosotros. Tampoco tenerlo todo definido, porque el
+        alcance se termina de afinar conversando, ni preparar un documento formal. Un correo o el formulario sirven.
+      </p>
     </Articulo>
   )
 }

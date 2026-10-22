@@ -45,21 +45,19 @@ export default function PaginaWebOTiendaOnline({ ruta }) {
         </table>
       </div>
 
-      <h2>Te basta una página web si…</h2>
-      <ul>
-        <li>Lo que vendes se cotiza o se conversa: servicios, proyectos o productos a pedido.</li>
-        <li>El precio depende de cada caso.</li>
-        <li>Lo que buscas es que te encuentren, te conozcan y te escriban.</li>
-        <li>Vendes en un local y quieres que te ubiquen: horarios, dirección y cómo llegar.</li>
-      </ul>
+      <h2>Cuándo basta una página web</h2>
+      <p>
+        Te basta una página web si lo que vendes se cotiza o se conversa, como servicios, proyectos o productos a
+        pedido, y el precio depende de cada caso. También si lo que buscas es que te encuentren, te conozcan y te
+        escriban, o si vendes en un local y quieres que te ubiquen: horarios, dirección y cómo llegar.
+      </p>
 
-      <h2>Necesitas una tienda online si…</h2>
-      <ul>
-        <li>Tienes productos con precio fijo y stock.</li>
-        <li>Respondes a mano todo el día preguntas de precio y disponibilidad.</li>
-        <li>Quieres vender fuera de tu horario o fuera de tu ciudad.</li>
-        <li>Tus clientes ya están dispuestos a pagar en línea.</li>
-      </ul>
+      <h2>Cuándo necesitas una tienda online</h2>
+      <p>
+        Necesitas una tienda online si tienes productos con precio fijo y stock, y te pasas el día respondiendo a mano
+        preguntas de precio y disponibilidad. También si quieres vender fuera de tu horario o fuera de tu ciudad, o si
+        tus clientes ya están dispuestos a pagar en línea.
+      </p>
 
       <h2>¿Y si estás en medio?</h2>
       <p>
@@ -74,15 +72,15 @@ export default function PaginaWebOTiendaOnline({ ruta }) {
       </p>
 
       <h2>Lo que vale para las dos</h2>
-      <ul>
-        <li>Que abra rápido en el celular. Lo puedes medir gratis en PageSpeed Insights, de Google.</li>
-        <li>Que Google la pueda leer: títulos claros, una descripción por página y texto real, no solo imágenes.</li>
-        <li>Que sea tuya: el dominio, el código y los accesos a tu nombre.</li>
-        <li>
-          Que cumpla la <a href="/ley21719">Ley 21.719</a> si pides datos de tus clientes, aunque sea solo un
-          formulario de contacto.
-        </li>
-      </ul>
+      <p>
+        Sea cual sea, tiene que abrir rápido en el celular. Lo puedes medir gratis en PageSpeed Insights, de Google.
+        Google también la tiene que poder leer, y para eso necesita títulos claros, una descripción por página y texto
+        real, no solo imágenes.
+      </p>
+      <p>
+        Además, tiene que ser tuya: el dominio, el código y los accesos a tu nombre. Y si pides datos de tus clientes,
+        aunque sea con un formulario de contacto, tiene que cumplir la <a href="/ley21719">Ley 21.719</a>.
+      </p>
       <p>
         Si ya sabes cuál necesitas, en <a href="/servicios/desarrollo-web">desarrollo web</a> y en{' '}
         <a href="/servicios/tiendas-online">tiendas online</a> contamos qué incluye cada una y qué te vamos a pedir.

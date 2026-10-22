@@ -27,7 +27,7 @@
 | 2. Fundamentos de diseño | 11 | 6 | 20–29 |
 | 3. Arquitectura y rendimiento | 8 | 3 | 9–12 |
 | 4. Responsive, accesibilidad y Safari | 8 | 3 | 7–10 |
-| 5. SEO técnico | 10 | 8 | 16–22 |
+| 5. SEO técnico | 13 | 5 | 11,5–15,5 |
 | 6. Agentes de IA | 6 | 5 | 9–14 |
 | 7. Dominio y Cloudflare | 7 | 8 | 5–6 |
 | 8. Seguridad | 7 | 12 + auditorías | 16–21 |
@@ -36,7 +36,7 @@
 | 11. Conversión y contenido | 6 | 4 | 9–14 |
 | 12. Presencia fuera del sitio | 2 | 9 | 10–12 |
 | 13. Medición y gobierno | 1 | 3 | 2–4 + 3–5 al mes |
-| **Total** | **79** | | **≈ 120–170** |
+| **Total** | **82** | | **≈ 115–165** |
 
 ## Línea base (2026-10-22)
 
@@ -69,7 +69,7 @@
 | 2026-10-17 | Índice de servicios, estimador en UF, WhatsApp, degradados sin rayas, paginación |
 | 2026-10-18 | Cuatro niveles de título, botones unificados, ESLint, RUT visible y WebMCP |
 | 2026-10-21 | Favicon por servicio, logotipo animado, UF diaria reforzada |
-| 2026-10-22 | Video para equipos sin GPU, entrega por partes para Safari, nubes verificadas |
+| 2026-10-22 | Video para equipos sin GPU, entrega por partes para Safari, nubes verificadas; los socios en el grafo y la firma en los artículos |
 
 ## Tecnologías integradas
 
@@ -105,7 +105,7 @@ qué reglas se decide.
 - [x] **Brief**: qué es la página, la única acción (el formulario), quién llega
   y de dónde, sus cuatro dudas en sus palabras, la promesa y la prueba, a quién
   no se le habla. *2026-09-24 · DESIGN-BRIEF.md §1–3*
-- [x] **Registro de decisiones** numeradas, 57 a la fecha. *DESIGN-BRIEF.md*
+- [x] **Registro de decisiones** numeradas, 58 a la fecha. *DESIGN-BRIEF.md*
 - [x] **Perfiles sintéticos** para encontrar las dudas que la página no
   responde. *docs/perfiles-clientes-100000.md*
 - [x] **Identidad legal visible**: razón social y RUT, comprobables en el SII.
@@ -243,14 +243,19 @@ cada uno con una regla escrita.
 - [x] **Contenido**: 7 servicios con preguntas frecuentes, 14 artículos, la guía
   de la Ley 21.719 y un índice paginado. *2026-10-03 a 2026-10-17*
 - [x] **Search Console verificado** con registro TXT en el DNS.
-- [ ] 🟠 **Personas en el grafo**: un `Person` por socio en `/nosotros`
-  (`alumniOf`, `award`, `sameAs` a LinkedIn y GitHub) y la `Organization` con
-  `founder`, `foundingDate`, `contactPoint` y más `sameAs`. *2–3 h.*
-  Comprobación: Rich Results Test y validator.schema.org sin errores.
-- [ ] 🟠 **Autor con nombre en los artículos**: firma visible con foto, y el
-  `author` del `Article` apuntando a la `Person`. *2–3 h.*
-- [ ] 🟡 **`og:type` = `article`** en los artículos, con sus fechas y autor.
-  *0,5 h.*
+- [x] **Personas en el grafo**: un `Person` por socio en `/nosotros`
+  (`alumniOf`, `award` y `sameAs` a LinkedIn y GitHub), con el ancla de su
+  tarjeta como `@id`, y la `Organization` con `founder`, `foundingDate` (la
+  constitución en el Registro, 2026-07-22) y `contactPoint`. Su `sameAs` sigue
+  siendo solo GitHub hasta que exista la página de empresa en LinkedIn
+  (etapa 12). *2026-10-22 · src/data/socios.js, scripts/prerender.mjs*
+- [x] **Autor con nombre en los artículos**: firma con foto, nombre y rol bajo
+  la entradilla, que lleva a la tarjeta del socio, y solo la fecha de
+  actualización. El `author` del `Article` es su `Person`, y cada artículo dice
+  quién lo firma (`autor`). *2026-10-22 · decisión 58, src/components/Articulo.jsx*
+- [x] **`og:type` = `article`** en los artículos y en la guía de la Ley 21.719,
+  con `article:published_time`, `article:modified_time` y `article:author`.
+  *2026-10-22 · scripts/prerender.mjs*
 - [ ] 🟡 **Logo de 512 px** para el grafo, en vez del ícono del iPhone. *0,5 h.*
 - [ ] 🟡 **H1 de la portada limpio**: hoy el buscador lee «…y automatizaciones
   **páginas web** para tu negocio», porque la palabra del rotativo se suma a la
@@ -549,10 +554,10 @@ pesa más que cualquier ajuste de código.
 | --- | --- | --- |
 | Semana 1 | Etapa 7 completa, contacto en el teléfono (4), Search Console, Bing e IndexNow (12) | 10–12 |
 | Semanas 2–4 | Etapas 1, 8 y 9; formulario (4); prueba en la portada y caras (11) | 35–50 |
-| Mes 2 | Etapas 5, 6, 10 y el resto de la 12 | 40–60 |
+| Mes 2 | Etapas 5, 6, 10 y el resto de la 12 | 35–55 |
 | Mes 3 | Etapas 2 y 3; iPad real (4); artículos y tarjeta OG (11); conversiones (13) | 35–55 |
 | Continuo | Etapa 13 | 3–5 al mes |
-| | **Total** | **≈ 120–170** |
+| | **Total** | **≈ 115–165** |
 
 ---
 
@@ -634,5 +639,5 @@ Volutus (sitio de 5 páginas, 20 páginas extra, blog y textos), sale 118 UF,
 unos $4,9 M + IVA. Ese es un precio de venta, con la tarifa de la empresa
 (1 UF la hora), no lo que cuesta pagarle a un junior.
 
-**Lo pendiente de este roadmap** suma ≈ 120–170 horas con el mismo criterio:
+**Lo pendiente de este roadmap** suma ≈ 115–165 horas con el mismo criterio:
 $0,8–1,7 M.
