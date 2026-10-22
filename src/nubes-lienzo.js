@@ -550,6 +550,8 @@ let quieto = false
 let marco = 0
 let ultimo = 0
 const inicio = performance.now()
+// Una escena queda fija con movimiento reducido o si se pinta por software.
+const fija = (escena) => quieto || escena.software
 
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
@@ -755,17 +757,24 @@ function preparar(escena) {
 }
 
 function montar(id, lienzo, mar, perspectiva, ola) {
-  // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
-  // WebGL por software y cada fotograma cuesta CPU que la persona necesita
-  // para otra cosa. En ese caso no hay nubes: son decoración.
-  const gl = lienzo.getContext('webgl', {
-    antialias: false,
-    powerPreference: 'low-power',
-    failIfMajorPerformanceCaveat: true,
-  })
-  const escena = { id, gl, mar, perspectiva, tiempo: 0, activa: false, vivo: false, perdida: false, ultimos: {} }
+  // Primero se pide GPU de verdad (`failIfMajorPerformanceCaveat`). Sin ella,
+  // el navegador pinta WebGL por software, y cada fotograma cuesta CPU que la
+  // persona necesita para otra cosa: la escena se pinta quieta, como con
+  // movimiento reducido. No se mide si el equipo podría animarla: el tiempo de
+  // un fotograma no dice cuánta CPU gasta, y en la prueba en un equipo real
+  // tironeaba aunque cupiera.
+  const atributos = { antialias: false, powerPreference: 'low-power' }
+  let gl = lienzo.getContext('webgl', { ...atributos, failIfMajorPerformanceCaveat: true })
+  const software = !gl
+  gl ??= lienzo.getContext('webgl', atributos)
+  const escena = {
+    id, gl, mar, perspectiva, tiempo: 0, activa: false, vivo: false, perdida: false, ultimos: {},
+    software, sucia: true,
+  }
   if (ola) escena.ola = { celdas: ola.celdas, datos: texturaDeLaOla(ola), nace: null }
   if (!gl || !preparar(escena)) return
+  // La página puede poner algo en movimiento que no cueste CPU (nubes.js).
+  if (software) postMessage({ tipo: 'software', id })
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
     escena.pato = null
@@ -788,6 +797,7 @@ function montar(id, lienzo, mar, perspectiva, ola) {
   lienzo.addEventListener('webglcontextrestored', () => {
     if (!preparar(escena)) return
     escena.perdida = false
+    escena.sucia = true
     Object.values(escena.ultimos).forEach((data) => aplicar(escena, data))
     if (!marco) marco = cuadro(paso)
   })
@@ -804,7 +814,7 @@ function fijar(escena, poner) {
 // Junta lo que el cursor recorrió desde el último fotograma: `simular` lo
 // sopla de una vez, como un tramo.
 function soplar(escena, { x, y, fuera }) {
-  if (fuera || quieto) {
+  if (fuera || fija(escena)) {
     escena.previo = null
     return
   }
@@ -938,7 +948,8 @@ function simular(escena) {
 function pintar(escena, ahora) {
   const { gl, programas: [campo, trama] } = escena
   const t = (ahora - inicio) / 1000
-  if (escena.aire && !quieto) simular(escena)
+  const quieta = fija(escena)
+  if (escena.aire && !quieta) simular(escena)
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
   // El tiempo de la nube va en cámara rápida (`lapso`, lib/volutus.js) y se
@@ -946,19 +957,19 @@ function pintar(escena, ahora) {
   // Suma el tiempo que de verdad pasó, hasta 0.1 s: un equipo que pierde
   // fotogramas no frena la nube, y una pestaña que vuelve no la hace saltar.
   if (escena.encuadre) {
-    if (!quieto) escena.tiempo += Math.min((ahora - (escena.antes ?? ahora)) / 1000, 0.1) * escena.lapso
+    if (!quieta) escena.tiempo += Math.min((ahora - (escena.antes ?? ahora)) / 1000, 0.1) * escena.lapso
     escena.antes = ahora
-    gl.uniform1f(campo.tiempo, quieto ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
+    gl.uniform1f(campo.tiempo, quieta ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
   }
   // La ola se dibuja desde que asoma (`nace`); quieta, va entera.
   const { ola } = escena
-  if (ola) gl.uniform1f(campo.crece, quieto ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
+  if (ola) gl.uniform1f(campo.crece, quieta ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
   if (escena.mar) {
     // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
     const vista = escena.camara
     vista.ojos = OJOS + casco(t)
     gl.uniform3f(campo.camara, vista.focal, vista.horizonte, vista.ojos)
-    if (escena.pato) nadar(escena, t)
+    if (escena.pato && !quieta) nadar(escena, t)
     gl.uniform4fv(campo.rastro, escena.rastro)
   }
   gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
@@ -974,18 +985,20 @@ function pintar(escena, ahora) {
   }
 }
 
+// Las escenas fijas se pintan solo cuando algo cambió (`sucia`).
 function paso(ahora) {
   marco = 0
   const activas = [...escenas.values()].filter((e) => e.activa && !e.perdida)
-  if (!activas.length) return
-  if (quieto) {
-    activas.forEach((e) => pintar(e, inicio + QUIETO_EN))
-    return
+  for (const e of activas.filter((e) => e.sucia && fija(e))) {
+    e.sucia = false
+    pintar(e, inicio + QUIETO_EN)
   }
+  const animadas = activas.filter((e) => !fija(e))
+  if (!animadas.length) return
   marco = cuadro(paso)
   if (ahora - ultimo < INTERVALO) return
   ultimo = ahora
-  activas.forEach((e) => pintar(e, ahora))
+  animadas.forEach((e) => pintar(e, ahora))
 }
 
 // Lo que la página fija en la GPU de cada escena: su medida, sus colores y, en
@@ -1083,7 +1096,10 @@ function cumulosEnElMundo({ encuadre, gl }, enPantalla, forma) {
 
 onmessage = ({ data }) => {
   if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar, data.perspectiva, data.ola)
-  if (data.tipo === 'quieto') quieto = data.valor
+  if (data.tipo === 'quieto') {
+    quieto = data.valor
+    escenas.forEach((e) => (e.sucia = true))
+  }
 
   const escena = escenas.get(data.id)
   if (escena && ['medir', 'colores', 'forma'].includes(data.tipo)) aplicar(escena, data)
@@ -1110,6 +1126,7 @@ onmessage = ({ data }) => {
   }
 
   // Cambiar el tamaño borra el lienzo, y quieto nadie más lo repinta: cualquier
-  // mensaje despierta un fotograma.
+  // mensaje ensucia su escena y despierta un fotograma.
+  if (escena) escena.sucia = true
   if (!marco) marco = cuadro(paso)
 }

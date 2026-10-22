@@ -34,8 +34,9 @@
  *
  *   - Nada antes del LCP. Arranca después de `load`, cuando el navegador está
  *     ocioso, y el lienzo aparece con un fundido cuando ya tiene fotograma.
- *     Sin OffscreenCanvas o sin GPU, el lienzo queda transparente y la página
- *     sigue entera.
+ *     Sin OffscreenCanvas, el lienzo queda transparente y la página sigue
+ *     entera. Sin GPU, pinta un fotograma quieto, como con movimiento
+ *     reducido.
  *   - Nada fuera de pantalla. Se para al salir del viewport y con la pestaña
  *     oculta.
  *   - Nada con movimiento reducido. Pinta un solo fotograma, quieto, el cursor
@@ -254,6 +255,24 @@ function seguirPato(enlace, { x, y, visible }) {
   if (enlace.hidden === visible) enlace.hidden = !visible
 }
 
+// Sin GPU, el pintor deja la escena quieta: encima va la misma escena grabada,
+// un video en bucle que decodificar cuesta mucho menos que pintarla. Hay del
+// mar y de la nube de la portada; los cielos con otra cámara y la ola quedan
+// quietos. El video se pide recién aquí: con GPU no se descarga.
+const GRABADOS = { mar: '/mar-sin-gpu.mp4', cielo: '/nube-sin-gpu.mp4' }
+
+function grabado(lienzo) {
+  const src = GRABADOS[lienzo.dataset.vista]
+  if (!src || lienzo.dataset.perspectiva || quieto()) return
+  const video = document.createElement('video')
+  video.className = 'nubes grabado'
+  video.src = src
+  video.muted = video.loop = video.autoplay = video.playsInline = true
+  video.setAttribute('aria-hidden', 'true')
+  video.addEventListener('playing', () => video.classList.add('vivo'), { once: true })
+  lienzo.after(video)
+}
+
 export default function initNubes() {
   const lienzos = document.querySelectorAll('canvas.nubes')
   if (!lienzos.length || !('transferControlToOffscreen' in HTMLCanvasElement.prototype)) return
@@ -262,6 +281,7 @@ export default function initNubes() {
     const pintor = new Worker(new URL('./nubes-lienzo.js', import.meta.url), { type: 'module' })
     pintor.onmessage = ({ data }) => {
       if (data.tipo === 'pato') return seguirPato(patos.get(data.id), data)
+      if (data.tipo === 'software') return grabado(lienzos[data.id])
       lienzos[data.id].classList.add('vivo')
       lienzos[data.id].dispatchEvent(new Event('vivo'))
     }
