@@ -7,7 +7,8 @@ import { CORREO_DE_CONTACTO, LIMITES, CORREO_VALIDO, NOMBRE_VALIDO, TURNSTILE_AC
  * El sitio es estático: Cloudflare sirve `dist/` sin pasar por aquí. Este
  * Worker existe por una sola ruta, `POST /api/contacto`, que es la única acción
  * que DESIGN-BRIEF §1 quiere que ocurra en toda la página. Todo lo demás cae al
- * binding de assets sin tocar nada.
+ * binding de assets sin tocar nada, salvo las grabaciones de las escenas, que
+ * pasan por aquí solo para servirse por partes (ver `porPartes`).
  *
  * Sus respuestas llevan a mano las cabeceras de `lib/seguridad.js`: el
  * `_headers` del sitio solo cubre lo que Cloudflare sirve directo.
@@ -252,6 +253,35 @@ async function manejarContacto(request, env) {
   return responder(request, MENSAJES.enviado, 200)
 }
 
+// Safari reproduce un video solo si el servidor lo entrega por partes: pide un
+// rango (`Range`) y espera un 206. Los assets de Cloudflare ignoran `Range` y
+// responden el archivo entero, así que las grabaciones de las escenas
+// (src/nubes.js) pasan por aquí, que corta la parte pedida. Un solo rango por
+// pedido, que es lo que piden los navegadores al reproducir; cualquier otra
+// cosa recibe lo que dé el binding de assets.
+async function porPartes(request, env) {
+  const archivo = await env.ASSETS.fetch(request)
+  const rango = /^bytes=(\d*)-(\d*)$/.exec(request.headers.get('range') ?? '')
+  const cabeceras = new Headers(archivo.headers)
+  Object.entries(CABECERAS).forEach(([nombre, valor]) => cabeceras.set(nombre, valor))
+  cabeceras.set('accept-ranges', 'bytes')
+  if (request.method !== 'GET' || archivo.status !== 200 || !rango || rango[1] + rango[2] === '') {
+    return new Response(archivo.body, { status: archivo.status, headers: cabeceras })
+  }
+  const datos = await archivo.arrayBuffer()
+  const total = datos.byteLength
+  // `bytes=a-b`, `bytes=a-` o, los últimos n, `bytes=-n`.
+  const desde = rango[1] === '' ? Math.max(total - Number(rango[2]), 0) : Number(rango[1])
+  const hasta = rango[1] === '' || rango[2] === '' ? total - 1 : Math.min(Number(rango[2]), total - 1)
+  if (desde > hasta) {
+    cabeceras.set('content-range', `bytes */${total}`)
+    return new Response(null, { status: 416, headers: cabeceras })
+  }
+  cabeceras.set('content-range', `bytes ${desde}-${hasta}/${total}`)
+  cabeceras.delete('content-length')
+  return new Response(datos.slice(desde, hasta + 1), { status: 206, headers: cabeceras })
+}
+
 export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url)
@@ -267,6 +297,8 @@ export default {
         return responder(request, MENSAJES.fallo, 500)
       }
     }
+
+    if (pathname.startsWith('/grabados/')) return porPartes(request, env)
 
     // Todo lo demás es el sitio estático, con su página 404 si no existe.
     return env.ASSETS.fetch(request)

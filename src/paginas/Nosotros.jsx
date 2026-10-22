@@ -104,7 +104,7 @@ const SOCIOS = [
     apellidos: 'Martínez Becker',
     educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
     rol: 'Socio co-fundador',
-    foto: '/image/Rodrigo.jpeg',
+    foto: '/image/Rodrigo.webp',
     perfiles: {
       github: 'https://github.com/Marbeck-one',
       linkedin: 'https://www.linkedin.com/in/rodrigo-mart%C3%ADnez-becker-74b6ab241/',
@@ -239,7 +239,10 @@ export default function Nosotros() {
         <ul className="socios">
           {/* `sizes` es el ancho al que se pinta la foto, no el de su hueco:
               con `object-fit: cover` se agranda hasta llenarlo, y en la
-              tarjeta angosta y alta desde 640 px llega a unos 580 px. */}
+              tarjeta angosta y alta desde 640 px llega a unos 580 px.
+              `fetchPriority` baja: en el teléfono la primera foto asoma al
+              pie de la pantalla, y con prioridad alta le quitaba la red al
+              texto de la cabecera, que es el LCP (2.3 s en vez de 1.6 s). */}
           {SOCIOS.map(({ nombre, apellidos, educacion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
             <li key={nombre} className="socio entra">
               <img
@@ -250,6 +253,7 @@ export default function Nosotros() {
                 width={800}
                 height={1000}
                 loading="lazy"
+                fetchPriority="low"
                 decoding="async"
               />
               <div className="socio-cuerpo">

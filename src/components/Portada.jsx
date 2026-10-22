@@ -17,14 +17,9 @@
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
  * La obra la enseña el índice que viene debajo, con sus enlaces, que es donde
- * §3 quiere que esté — cada afirmación con lo que la sostiene al lado. Los
- * logros con jurado externo sí van, porque no se caen, salen de
- * data/proyectos.js y llevan al podio donde está su prueba.
+ * §3 quiere que esté — cada afirmación con lo que la sostiene al lado.
  */
 
-import { Fragment } from 'react'
-
-import { PROYECTOS } from '../data/proyectos.js'
 import { SERVICIOS } from '../lib/servicios.js'
 
 // Las frases que rotan en el titular y el servicio de cada una, del que toman
@@ -38,8 +33,6 @@ const ROTATIVO = [
   ['agentes de IA', 'agente'],
   ['automatización', 'automatizacion'],
 ].map(([palabra, id]) => ({ palabra, color: SERVICIOS.find((servicio) => servicio.id === id).color }))
-
-const LOGROS = PROYECTOS.filter((proyecto) => proyecto.destacado)
 
 /**
  * El cielo de la mañana con la volutus y el texto encima. Lo comparten la

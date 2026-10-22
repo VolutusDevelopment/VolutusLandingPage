@@ -34,12 +34,20 @@
  *
  *   - Nada antes del LCP. Arranca después de `load`, cuando el navegador está
  *     ocioso, y el lienzo aparece con un fundido cuando ya tiene fotograma.
- *     Sin OffscreenCanvas o sin GPU, el lienzo queda transparente y la página
- *     sigue entera.
+ *   - Nada que no vaya a verse. Cada lienzo se monta cuando está a una pantalla
+ *     de asomar, y el pintor nace con el primero: si nadie baja hasta el pie,
+ *     el mar no se compila, y en un artículo el pintor ni se descarga.
+ *   - Nada en vivo sin GPU de verdad. Si el pintor dibuja por software, o con
+ *     una GPU igual de lenta, deja la escena quieta, como con movimiento
+ *     reducido (`software`, ver `conectar` en nubes-lienzo.js). Sin WebGL, sin
+ *     OffscreenCanvas o sin pintor, el lienzo queda transparente y se deja de
+ *     escucharlo (`sin-gl`). En todos esos casos, si la escena está grabada,
+ *     encima va su video (ver `grabado`), y la página sigue entera.
  *   - Nada fuera de pantalla. Se para al salir del viewport y con la pestaña
  *     oculta.
- *   - Nada con movimiento reducido. Pinta un solo fotograma, quieto, el cursor
- *     no lo mueve y el pato no sale.
+ *   - Nada interactivo con movimiento reducido. Pinta un solo fotograma,
+ *     quieto, el cursor no lo mueve y el pato no sale; donde la escena está
+ *     grabada, encima va su video.
  */
 
 import { quieto } from './lib/movimiento.js'
@@ -82,6 +90,7 @@ function alAsomar(lienzo, hacer) {
     { threshold: 0.5 },
   )
   asomo.observe(lienzo)
+  return asomo
 }
 
 // La trama de la ola sale del SVG que el lienzo reemplaza: el mismo dibujo,
@@ -95,10 +104,16 @@ function tramaDeLaOla(lienzo) {
   }
 }
 
+// Monta un lienzo en el pintor y devuelve con qué soltarlo: si el pintor no lo
+// va a pintar (`sin-gl`), se dejan de escuchar el cursor, su tamaño y su
+// visibilidad, y nadie le vuelve a escribir.
 function montar(pintor, lienzo, id) {
   const { vista } = lienzo.dataset
   const mar = vista === 'mar'
   const ola = vista === 'ola'
+  const control = new AbortController()
+  const { signal } = control
+  const observadores = []
   let visible = false
   // Píxeles del pintor por píxel CSS (ver `medir`).
   let escala = 1
@@ -193,44 +208,60 @@ function montar(pintor, lienzo, id) {
     const soltar = () => {
       if (!ajeno) pintor.postMessage({ tipo: 'cursor', id, fuera: true })
     }
-    const pasivo = { passive: true }
+    const pasivo = { passive: true, signal }
     zona.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
     zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
-    zona.addEventListener('pointerleave', soltar)
+    zona.addEventListener('pointerleave', soltar, { signal })
     zona.addEventListener('touchend', soltar, pasivo)
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
   const { perspectiva } = lienzo.dataset
   const trama = ola ? tramaDeLaOla(lienzo) : null
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva, ola: trama }, [offscreen])
+  // `juego`: los cúmulos del juego de la 404 solo se compilan donde se juega.
+  const juego = 'juego' in lienzo.dataset
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva, ola: trama, juego }, [offscreen])
   colorear()
   medir()
-  if (ola) alAsomar(lienzo, () => pintor.postMessage({ tipo: 'nace', id }))
+  if (ola) observadores.push(alAsomar(lienzo, () => pintor.postMessage({ tipo: 'nace', id })))
   if (mar) {
     // El pato sale a flote cuando el mar asoma: así se le ve salir.
-    alAsomar(lienzo, () => {
-      if (!quieto()) soltarPato(pintor, lienzo, id)
-    })
+    observadores.push(
+      alAsomar(lienzo, () => {
+        if (!quieto()) soltarPato(pintor, lienzo, id)
+      }),
+    )
   } else {
     seguirCursor()
-    lienzo.addEventListener('soplo', ({ detail: { x, y, fuera } }) => {
-      if (fuera) {
-        if (ajeno) ceder(false)
-        return
-      }
-      if (!ajeno) ceder(true)
-      apuntar(x, y)
-    })
-    lienzo.addEventListener('forma', ({ detail }) => pintor.postMessage({ tipo: 'forma', id, ...detail }))
+    lienzo.addEventListener(
+      'soplo',
+      ({ detail: { x, y, fuera } }) => {
+        if (fuera) {
+          if (ajeno) ceder(false)
+          return
+        }
+        if (!ajeno) ceder(true)
+        apuntar(x, y)
+      },
+      { signal },
+    )
+    lienzo.addEventListener('forma', ({ detail }) => pintor.postMessage({ tipo: 'forma', id, ...detail }), { signal })
   }
 
-  new ResizeObserver(medir).observe(lienzo)
-  new IntersectionObserver(([entrada]) => {
+  const tamano = new ResizeObserver(medir)
+  tamano.observe(lienzo)
+  const enPantalla = new IntersectionObserver(([entrada]) => {
     visible = entrada.isIntersecting
     activar()
-  }).observe(lienzo)
-  document.addEventListener('visibilitychange', activar)
+  })
+  enPantalla.observe(lienzo)
+  observadores.push(tamano, enPantalla)
+  document.addEventListener('visibilitychange', activar, { signal })
+
+  return () => {
+    control.abort()
+    observadores.forEach((observador) => observador.disconnect())
+  }
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su
@@ -254,25 +285,127 @@ function seguirPato(enlace, { x, y, visible }) {
   if (enlace.hidden === visible) enlace.hidden = !visible
 }
 
-export default function initNubes() {
-  const lienzos = document.querySelectorAll('canvas.nubes')
-  if (!lienzos.length || !('transferControlToOffscreen' in HTMLCanvasElement.prototype)) return
+// Donde el pintor no puede mover una escena, y con movimiento reducido, encima
+// va la misma escena grabada: un video en bucle, que decodificar cuesta mucho
+// menos que pintarla y no responde al cursor. Hay del mar y de la nube de la
+// portada; los cielos con otra cámara y la ola quedan quietos, o transparentes
+// sin WebGL. El video se pide recién aquí: con GPU y sin movimiento reducido no
+// se descarga, y con ahorro de datos tampoco. El navegador lo pausa fuera de
+// pantalla. Ojo: su primer fotograma cuenta para el LCP, así que tiene que
+// llegar pronto. Safari lo pide por partes: lo sirve el Worker (`porPartes`,
+// worker/index.js).
+const GRABADOS = { mar: '/grabados/mar-sin-gpu.mp4', cielo: '/grabados/nube-sin-gpu.mp4' }
+const grabados = new Map()
 
-  function arrancar() {
-    const pintor = new Worker(new URL('./nubes-lienzo.js', import.meta.url), { type: 'module' })
-    pintor.onmessage = ({ data }) => {
-      if (data.tipo === 'pato') return seguirPato(patos.get(data.id), data)
+function grabado(lienzo) {
+  const src = GRABADOS[lienzo.dataset.vista]
+  if (!src || lienzo.dataset.perspectiva || grabados.has(lienzo) || navigator.connection?.saveData) return
+  const video = document.createElement('video')
+  video.className = 'nubes grabado'
+  video.src = src
+  video.muted = video.loop = video.autoplay = video.playsInline = true
+  video.setAttribute('aria-hidden', 'true')
+  video.addEventListener('playing', () => video.classList.add('vivo'), { once: true })
+  grabados.set(lienzo, video)
+  lienzo.after(video)
+}
+
+function quitarGrabado(lienzo) {
+  grabados.get(lienzo)?.remove()
+  grabados.delete(lienzo)
+}
+
+export default function initNubes() {
+  const lienzos = [...document.querySelectorAll('canvas.nubes')]
+  if (!lienzos.length) return
+
+  let pintor = null
+  // Sin OffscreenCanvas no hay pintor, y sin WebGL (`sin-gpu`) no vale la pena
+  // montar otro lienzo: los que asoman van directo a su grabación.
+  let sinPintor = !('transferControlToOffscreen' in HTMLCanvasElement.prototype)
+  // Los lienzos que faltan por montar, con qué se suelta cada uno montado y los
+  // que el pintor deja quietos por software.
+  const pendientes = new Set(lienzos)
+  const montados = new Map()
+  const porSoftware = new Set()
+
+  // Cada lienzo se monta cuando está a una pantalla de asomar.
+  const cerca = new IntersectionObserver(
+    (entradas) => {
+      for (const { target, isIntersecting } of entradas) {
+        if (!isIntersecting) continue
+        cerca.unobserve(target)
+        pendientes.delete(target)
+        if (sinPintor) {
+          grabado(target)
+          continue
+        }
+        pintor ??= contratar()
+        const id = lienzos.indexOf(target)
+        montados.set(id, montar(pintor, target, id))
+        if (quieto()) grabado(target)
+      }
+    },
+    { rootMargin: '100% 0px' },
+  )
+
+  // Si el movimiento reducido cambia con la página abierta, la grabación va y
+  // viene en los lienzos que el pintor mueve en vivo; donde pinta por software
+  // se queda.
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => {
+    for (const id of montados.keys()) {
+      if (quieto()) grabado(lienzos[id])
+      else if (!porSoftware.has(id)) quitarGrabado(lienzos[id])
+    }
+  })
+
+  // Un lienzo que el pintor no va a pintar se suelta y queda su grabación. Si es
+  // por el equipo (`sin-gpu`), los que faltan tampoco se montan; sin nada que
+  // pintar, el pintor termina.
+  function soltar(id, motivo) {
+    montados.get(id)?.()
+    montados.delete(id)
+    patos.get(id)?.remove()
+    patos.delete(id)
+    grabado(lienzos[id])
+    if (motivo === 'sin-gpu') sinPintor = true
+    if (pintor && !montados.size && (sinPintor || !pendientes.size)) {
+      pintor.terminate()
+      pintor = null
+    }
+  }
+
+  function contratar() {
+    const nuevo = new Worker(new URL('./nubes-lienzo.js', import.meta.url), { type: 'module' })
+    let hablo = false
+    nuevo.onmessage = ({ data }) => {
+      hablo = true
+      if (data.tipo === 'sin-gl') return soltar(data.id, data.motivo)
+      if (data.tipo === 'software') {
+        porSoftware.add(data.id)
+        return grabado(lienzos[data.id])
+      }
+      if (data.tipo === 'pato') {
+        const enlace = patos.get(data.id)
+        return enlace && seguirPato(enlace, data)
+      }
       lienzos[data.id].classList.add('vivo')
       lienzos[data.id].dispatchEvent(new Event('vivo'))
     }
-
-    const avisarQuieto = () => pintor.postMessage({ tipo: 'quieto', valor: quieto() })
+    // Si el pintor no llega a cargar (la red, una extensión que lo bloquea), no
+    // hay quién pinte: los lienzos quedan como sin GPU.
+    nuevo.onerror = () => {
+      if (hablo) return
+      ;[...montados.keys()].forEach((id) => soltar(id, 'sin-gpu'))
+    }
+    const avisarQuieto = () => nuevo.postMessage({ tipo: 'quieto', valor: quieto() })
     avisarQuieto()
-    lienzos.forEach((lienzo, id) => montar(pintor, lienzo, id))
     matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', avisarQuieto)
+    return nuevo
   }
 
+  const empezar = () => lienzos.forEach((lienzo) => cerca.observe(lienzo))
   const ocioso = window.requestIdleCallback ?? ((f) => setTimeout(f, 1))
-  if (document.readyState === 'complete') ocioso(arrancar)
-  else addEventListener('load', () => ocioso(arrancar), { once: true })
+  if (document.readyState === 'complete') ocioso(empezar)
+  else addEventListener('load', () => ocioso(empezar), { once: true })
 }

@@ -35,7 +35,10 @@
  * están a la vista, por dónde pasa el cursor en el cielo y en la ola, cuándo
  * sale el pato, la trama de la ola y cuándo asoma (`nace`), la cámara de cada
  * cielo y, en el juego de la 404, la forma del cielo; le devuelve `vivo` cuando un
- * lienzo ya tiene su primer fotograma y, en el mar, dónde va el pato.
+ * lienzo ya tiene su primer fotograma, `software` cuando un lienzo se pinta
+ * quieto porque no hay GPU de verdad (o la que hay es igual de lenta: ver
+ * `conectar`), `sin-gl` cuando no se va a pintar y, en el mar, dónde va el
+ * pato.
  */
 
 import {
@@ -134,6 +137,9 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     metros (`CUMULO`), sin costuras entre ellos. Mide la mitad de un cúmulo
 //     mediano: más grande que ellos, los dejaba lisos. Hacia arriba el relieve
 //     crece hasta `COLIFLOR`, en lóbulos y jirones, y la base queda plana.
+//     Solo se compilan donde se juega (`JUEGO`, que se define al compilar):
+//     en las demás páginas `forma` es siempre 0, y con su código la nube
+//     tardaba en enlazarse el doble.
 //   - La luz: el sol va alto y detrás de quien mira, el mismo en todas las
 //     páginas. En cada paso, dos muestras hacia el sol dan la profundidad
 //     óptica, con la misma extinción (`SIGMA`) que la del rayo, y la luz
@@ -206,12 +212,23 @@ float punto(vec2 px, vec2 c, float r) {
   return 1.0 - smoothstep(r - 0.75, r + 0.75, d);
 }`
 
+// `LEER` lee una textura sin derivadas. Dentro de un bucle con salidas
+// tempranas, o de una condición que cambia de un píxel al vecino, `texture2D`
+// elige su nivel de detalle con derivadas que GLSL deja indefinidas, y hay GPU
+// que ahí devuelven basura: con Intel la nube salía como un recorte a la
+// derecha, o no salía. Ninguna textura de aquí tiene mipmaps, así que el nivel
+// 0 es el que ya se leía: con NVIDIA la nube sale idéntica, píxel a píxel. Sin
+// la extensión, `texture2D` como siempre. Se antepone a los shaders que leen
+// dentro de un bucle o una condición: `CAMPO`, `OLA` y `MAR` (lib/mar.js).
+const LEER_SIN_DERIVADAS = '#extension GL_EXT_shader_texture_lod : enable\n#define LEER(t, uv) texture2DLodEXT(t, uv, 0.0)\n'
+const LEER_COMO_SIEMPRE = '#define LEER(t, uv) texture2D(t, uv)\n'
+
 const RUIDO = `
 uniform sampler2D ruido;
 float ruido3(vec3 x) {
   vec3 i = floor(x), f = fract(x);
   f = f * f * (3.0 - 2.0 * f);
-  vec2 rg = texture2D(ruido, (i.xy + vec2(37.0, 17.0) * i.z + f.xy + 0.5) / 256.0).yx;
+  vec2 rg = LEER(ruido, (i.xy + vec2(37.0, 17.0) * i.z + f.xy + 0.5) / 256.0).yx;
   return mix(rg.x, rg.y, f.z);
 }`
 
@@ -219,7 +236,9 @@ const CAMPO = `precision highp float;
 uniform vec2 res, centro;
 uniform float t, tiempo, celda, forma, lado, focal, giro;
 uniform vec3 luz, sombra, ojo, frente, derecha, arriba, sol;
+#ifdef JUEGO
 uniform vec4 cumulos[10];
+#endif
 uniform sampler2D estado;
 ${RUIDO}
 ${FISICA}
@@ -263,6 +282,7 @@ float rollo(vec3 p, float ppm, float tope) {
   float rho = firme * (base + (borla(n, min(tope, detalle(RY / ks * ppm)), vacio, lleno) - 0.35) * relieve);
   return clamp(rho * smoothstep(nivel, nivel + mix(0.5, 0.03, delante), s.x), 0.0, 1.0);
 }
+#ifdef JUEGO
 float cumulo(vec3 p, float ppm, float tope) {
   float base = -1.0, mejor = -1.0;
   for (int i = 0; i < 10; i++) {
@@ -282,10 +302,13 @@ float cumulo(vec3 p, float ppm, float tope) {
   float vacio = 0.35 - base / relieve, lleno = vacio + 0.2 / relieve;
   return clamp(5.0 * (base + (borla(p / CUMULO, min(tope, detalle(CUMULO * ppm)), vacio, lleno) - 0.35) * relieve), 0.0, 1.0);
 }
+#endif
 float densidad(vec3 p, float ppm, float tope) {
   float rho = 0.0;
   if (forma < 1.0) rho = rollo(p, ppm, tope) * (1.0 - smoothstep(0.1, 0.6, forma));
+#ifdef JUEGO
   if (forma > 0.0) rho = max(rho, cumulo(p, ppm, tope) * smoothstep(0.0, 0.3, forma));
+#endif
   return rho;
 }
 float hg(float c, float g) {
@@ -302,6 +325,7 @@ vec2 cilindro(vec3 d) {
   h = sqrt(h);
   return vec2(-b - h, -b + h) / a;
 }
+#ifdef JUEGO
 vec2 esfera(vec3 d, vec4 c) {
   vec3 o = ojo - c.xyz;
   float b = dot(o, d), r = ENVUELVE * 1.6 * c.w, h = b * b - dot(o, o) + r * r;
@@ -309,6 +333,7 @@ vec2 esfera(vec3 d, vec4 c) {
   h = sqrt(h);
   return vec2(-b - h, -b + h);
 }
+#endif
 void main() {
   vec2 celdaXY = floor(gl_FragCoord.xy) + 0.5;
   vec2 px = celdaXY * celda;
@@ -317,6 +342,7 @@ void main() {
   float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(px / celda * lado / SECO, t * 0.5))));
   vec3 d = normalize(frente * focal + derecha * (px.x - centro.x) - arriba * (px.y - centro.y));
   vec2 tramo = forma < 1.0 ? cilindro(d) : vec2(1e9, -1e9);
+#ifdef JUEGO
   if (forma > 0.0) {
     for (int i = 0; i < 10; i++) {
       if (cumulos[i].w <= 0.0) continue;
@@ -324,6 +350,7 @@ void main() {
       tramo = vec2(min(tramo.x, e.x), max(tramo.y, e.y));
     }
   }
+#endif
   tramo.x = max(tramo.x, 1.0);
   if (d.y < 0.0) tramo.y = min(tramo.y, -ojo.y / d.y);
   tramo.y = min(tramo.y, LEJOS);
@@ -364,7 +391,9 @@ void main() {
         relieve = clamp(0.65 + 3.0 * (densidad(entrada, ppm / va, 5.0) - densidad(entrada + sol * h, ppm / va, 5.0)) * abre, 0.2, 1.1);
       }
       float hondo = (PASO * densidad(p + sol * PASO, ppm / va, 2.0) + 3.0 * PASO * densidad(p + sol * (4.0 * PASO), ppm / va, 1.0)) * abre;
+#ifdef JUEGO
       if (forma > 0.0) hondo += 440.0 * densidad(p + sol * 600.0, ppm / va, 1.0) * abre;
+#endif
       float opacidad = 1.0 - exp(-SIGMA * rho * paso * dentro);
       float peso = transmite * opacidad;
       solar += peso * SOLAR * delSol(hondo) * relieve * (1.0 - exp(-6.0 * rho));
@@ -545,11 +574,30 @@ void main() {
 // `requestAnimationFrame` dentro de un worker es reciente; sin él, un reloj.
 const cuadro = self.requestAnimationFrame ?? ((f) => setTimeout(() => f(performance.now()), 16))
 
+// Lo que `failIfMajorPerformanceCaveat` deja pasar y dibuja igual de lento (ver
+// `conectar`): el dibujo por software de Windows sin driver de video (WARP,
+// «Microsoft Basic Render Driver», 274 ms por fotograma en un portátil), y los
+// de Chromium y Linux, por si algún navegador no los marca.
+const SOFTWARE = /basic render|swiftshader|llvmpipe|softpipe|software/i
+// Lo que puede tardar en dibujarse una escena (ver `estrenar`) antes de tratarla
+// como dibujada por software: WARP y SwiftShader pasan de 270 ms, y una GPU
+// integrada no llega a 5.
+const LENTO = 150
+// Cada cuánto se cronometra un fotograma para fijar el ritmo (ver `paso`).
+const MEDIR_CADA = 2000
+
 const escenas = new Map()
 let quieto = false
 let marco = 0
 let ultimo = 0
+// El intervalo entre fotogramas y cuándo se midió por última vez (ver `paso`).
+let intervalo = INTERVALO
+let medido = 0
 const inicio = performance.now()
+// Una escena queda fija, en un solo fotograma, con movimiento reducido o si se
+// pinta por software (ver `conectar`), y se repinta solo cuando algo la cambia
+// (`sucia`).
+const fija = (escena) => quieto || escena.software
 
 // Todos los uniforms de todos los programas. El que un programa no tiene da
 // una ubicación nula, y WebGL ignora en silencio lo que se fija en una nula:
@@ -561,7 +609,13 @@ const UNIFORMS = [
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
-function compilar(gl, fragmentos, uniforms = UNIFORMS) {
+// Un programa se pide (`pedir`) y se termina después (`terminar`). Enlazar la
+// nube tarda —casi 2 s la primera vez en un portátil con Intel—, y preguntar por
+// el enlace apenas pedido hacía esperar a la GPU de toda la página: en la
+// primera visita nada se movía hasta que terminaba. Con
+// `KHR_parallel_shader_compile` el navegador enlaza aparte y `listo` pregunta
+// sin esperar; sin ella, `listo` dice que sí y `terminar` espera, como antes.
+function pedir(gl, fragmentos) {
   const programa = gl.createProgram()
   for (const [tipo, fuente] of [
     [gl.VERTEX_SHADER, VERTICES],
@@ -574,6 +628,12 @@ function compilar(gl, fragmentos, uniforms = UNIFORMS) {
   }
   gl.bindAttribLocation(programa, 0, 'p')
   gl.linkProgram(programa)
+  return programa
+}
+
+const listo = ({ gl, paralelo }, programa) => !paralelo || gl.getProgramParameter(programa, paralelo.COMPLETION_STATUS_KHR)
+
+function terminar(gl, programa, uniforms = UNIFORMS) {
   if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) return null
   const u = { programa }
   for (const nombre of uniforms) u[nombre] = gl.getUniformLocation(programa, nombre)
@@ -633,10 +693,14 @@ function dimensionar(gl, hoja, ancho, alto) {
 // presión y estado van en pares, porque una pasada no puede leer la lámina en
 // la que escribe: se lee `[0]`, se escribe `[1]` y se dan vuelta. Sin texturas
 // de medio float que se puedan filtrar y pintar, no hay viento: `CAMPO` lee
-// entonces una unidad vacía, que da cero, y la nube se pinta igual.
-function montarAire(gl, definiciones) {
+// entonces una unidad vacía, que da cero, y la nube se pinta igual. Sus
+// programas se piden con los de la escena (`encargar`) y se arman con ella.
+const FUENTES_DEL_AIRE = { FUERZA, ROTOR, CONFINA, DIFUSION, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
+
+const hayAire = (gl) => Boolean(gl.getExtension('OES_texture_half_float') && gl.getExtension('OES_texture_half_float_linear'))
+
+function armarAire(gl, pedidos) {
   const medio = gl.getExtension('OES_texture_half_float')
-  if (!medio || !gl.getExtension('OES_texture_half_float_linear')) return null
   gl.getExtension('EXT_color_buffer_half_float')
   gl.activeTexture(gl.TEXTURE2)
   const nueva = () => lamina(gl, medio.HALF_FLOAT_OES, gl.LINEAR)
@@ -646,10 +710,9 @@ function montarAire(gl, definiciones) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   if (!pinta) return null
 
-  const fuentes = { FUERZA, ROTOR, CONFINA, DIFUSION, DIVERGENCIA, PRESION, GRADIENTE, ADVECCION, ESTADO }
   const programas = {}
-  for (const [nombre, fuente] of Object.entries(fuentes)) {
-    const u = compilar(gl, definiciones + fuente, UNIFORMS_DEL_AIRE)
+  for (const [nombre, programa] of Object.entries(pedidos)) {
+    const u = terminar(gl, programa, UNIFORMS_DEL_AIRE)
     if (!u) return null
     gl.useProgram(u.programa)
     gl.uniform1i(u.uno, 2)
@@ -703,18 +766,40 @@ function texturaDeCuadro(gl, filas) {
 }
 
 // Todo lo que la escena guarda en la GPU: sus programas, el triángulo, las
-// texturas y las láminas. Se arma al montar, y otra vez cuando el navegador
-// devuelve un contexto perdido, que vuelve vacío. Si un programa no compila,
-// no hay escena.
-function preparar(escena) {
-  const { gl, mar, ola } = escena
+// texturas y las láminas. Se pide al montar (`encargar`), y otra vez cuando el
+// navegador devuelve un contexto perdido, que vuelve vacío; se arma cuando sus
+// programas terminan de enlazarse (`armar`, desde `paso`). Si un programa no
+// enlaza, no hay escena.
+function encargar(escena) {
+  const { gl, mar, ola, juego } = escena
+  // Las extensiones se piden en cada encargo: un contexto recuperado no
+  // conserva las de antes, y preguntar con la vieja no respondía nunca.
+  escena.paralelo = gl.getExtension('KHR_parallel_shader_compile')
+  const lectura = gl.getExtension('EXT_shader_texture_lod') ? LEER_SIN_DERIVADAS : LEER_COMO_SIEMPRE
   const definiciones = ola ? '#define OLA\n' : ''
   // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar y
-  // el de la ola, el círculo de siempre.
-  const programas = [
-    compilar(gl, mar ? MAR : definiciones + (ola ? OLA : CAMPO)),
-    compilar(gl, (mar || ola ? '' : '#define CUADRADO\n') + TRAMA),
-  ]
+  // el de la ola, el círculo de siempre. Por software la escena no se mueve, y
+  // su aire no se compila.
+  escena.programas = null
+  escena.pedidos = {
+    principales: [
+      pedir(gl, lectura + (mar ? MAR : definiciones + (ola ? OLA : (juego ? '#define JUEGO\n' : '') + CAMPO))),
+      pedir(gl, (mar || ola ? '' : '#define CUADRADO\n') + TRAMA),
+    ],
+    aire:
+      mar || escena.software || !hayAire(gl)
+        ? null
+        : Object.fromEntries(Object.entries(FUENTES_DEL_AIRE).map(([nombre, fuente]) => [nombre, pedir(gl, definiciones + fuente)])),
+  }
+}
+
+const listos = (escena) =>
+  [...escena.pedidos.principales, ...Object.values(escena.pedidos.aire ?? {})].every((programa) => listo(escena, programa))
+
+function armar(escena) {
+  const { gl, mar, ola, pedidos } = escena
+  escena.pedidos = null
+  const programas = pedidos.principales.map((programa) => terminar(gl, programa))
   if (programas.includes(null)) return false
 
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
@@ -749,23 +834,30 @@ function preparar(escena) {
       subirTextura(gl, ola.celdas, ola.celdas, ola.datos, gl.LINEAR)
       gl.uniform1i(campo.ola, 5)
     }
-    escena.aire = montarAire(gl, definiciones)
+    escena.aire = pedidos.aire && armarAire(gl, pedidos.aire)
   }
   return true
 }
 
-function montar(id, lienzo, mar, perspectiva, ola) {
-  // `failIfMajorPerformanceCaveat`: sin GPU de verdad el navegador pinta
-  // WebGL por software y cada fotograma cuesta CPU que la persona necesita
-  // para otra cosa. En ese caso no hay nubes: son decoración.
-  const gl = lienzo.getContext('webgl', {
-    antialias: false,
-    powerPreference: 'low-power',
-    failIfMajorPerformanceCaveat: true,
-  })
-  const escena = { id, gl, mar, perspectiva, tiempo: 0, activa: false, vivo: false, perdida: false, ultimos: {} }
+// La escena existe desde que la página la monta, aunque su contexto tarde: lo
+// que la página le diga mientras tanto (tamaño, colores, si se ve) se guarda y
+// se aplica al armarla.
+function montar(id, lienzo, { mar, perspectiva, ola, juego }) {
+  const escena = {
+    id,
+    gl: null,
+    mar,
+    perspectiva,
+    juego,
+    tiempo: 0,
+    activa: false,
+    vivo: false,
+    perdida: false,
+    software: false,
+    sucia: true,
+    ultimos: {},
+  }
   if (ola) escena.ola = { celdas: ola.celdas, datos: texturaDeLaOla(ola), nace: null }
-  if (!gl || !preparar(escena)) return
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
     escena.pato = null
@@ -773,25 +865,97 @@ function montar(id, lienzo, mar, perspectiva, ola) {
     escena.previo = null
     escena.tramo = null
   }
+  escenas.set(id, escena)
+  conectar(escena, lienzo)
+}
+
+function conectar(escena, lienzo) {
+  const { id } = escena
+  // Primero se pide GPU de verdad (`failIfMajorPerformanceCaveat`). Sin ella, el
+  // navegador pinta WebGL por software y cada fotograma cuesta CPU que la
+  // persona necesita para otra cosa: la escena se pinta quieta, como con
+  // movimiento reducido, y la página pone encima su grabación (ver
+  // `pasarASoftware`). El filtro deja pasar el dibujo por software de Windows
+  // (WARP), que es igual de lento: se reconoce por su nombre (`SOFTWARE`), y lo
+  // que se escape, por lo que tarda en dibujar (`estrenar`). Sin WebGL ni por
+  // software no hay escena (`sin-gpu`), y no se reintenta: la grabación tiene
+  // que llegar pronto, porque cuenta para el LCP.
+  const atributos = { antialias: false, powerPreference: 'low-power' }
+  const deGpu = lienzo.getContext('webgl', { ...atributos, failIfMajorPerformanceCaveat: true })
+  const gl = deGpu ?? lienzo.getContext('webgl', atributos)
+  if (!gl) return rechazar(id, null, 'sin-gpu')
+  escena.gl = gl
+  if (!deGpu || porSoftware(gl)) pasarASoftware(escena)
 
   // El navegador pierde los contextos de la página cuando reinicia su GPU: el
   // equipo duerme, la pestaña pasa un rato en segundo plano, se resetea el
   // driver. Solo los devuelve si se le pide (`preventDefault`), y vacíos: se
-  // arma la escena de nuevo y se le repite lo último que dijo la página. Sin
-  // esto, la nube y el mar quedaban en blanco hasta recargar. Mientras no
-  // vuelve no se pinta, y el enlace del pato se oculta.
+  // piden de nuevo los programas y, al armarse, se le repite lo último que dijo
+  // la página. Sin esto, la nube y el mar quedaban en blanco hasta recargar.
+  // Mientras no vuelve no se pinta, y el enlace del pato se oculta. Se escucha
+  // antes de pedir nada: si la GPU se reinicia a mitad del primer enlace, el
+  // cielo también vuelve.
   lienzo.addEventListener('webglcontextlost', (evento) => {
+    if (!escenas.has(id)) return
     evento.preventDefault()
     escena.perdida = true
     if (escena.pato) postMessage({ tipo: 'pato', id, x: 0, y: 0, visible: false })
   })
   lienzo.addEventListener('webglcontextrestored', () => {
-    if (!preparar(escena)) return
+    if (!escenas.has(id)) return
     escena.perdida = false
-    Object.values(escena.ultimos).forEach((data) => aplicar(escena, data))
+    encargar(escena)
     if (!marco) marco = cuadro(paso)
   })
-  escenas.set(id, escena)
+  encargar(escena)
+  if (!marco) marco = cuadro(paso)
+}
+
+function porSoftware(gl) {
+  const info = gl.getExtension('WEBGL_debug_renderer_info')
+  return Boolean(info) && SOFTWARE.test(gl.getParameter(info.UNMASKED_RENDERER_WEBGL))
+}
+
+// La escena queda fija (ver `fija`) y la página pone encima su grabación, si la
+// tiene (`software`, ver nubes.js).
+function pasarASoftware(escena) {
+  escena.software = true
+  escena.sucia = true
+  postMessage({ tipo: 'software', id: escena.id })
+}
+
+// La escena no se pinta: se suelta su contexto, y la página deja de hablarle y
+// pone su grabación, si la tiene (`sin-gl`). `motivo` le dice a la página si es
+// todo el equipo (`sin-gpu`: no vale la pena montar otro lienzo) o solo esta
+// escena (`no-enlaza`).
+function rechazar(id, gl, motivo) {
+  escenas.delete(id)
+  gl?.getExtension('WEBGL_lose_context')?.loseContext()
+  postMessage({ tipo: 'sin-gl', id, motivo })
+}
+
+// La primera vez que una escena que se mueve se pinta, se pinta dos veces con
+// el lienzo aún invisible (`.nubes` va en opacidad 0 hasta `vivo`): la primera
+// calienta la GPU y la segunda se cronometra esperando a que termine
+// (`readPixels` de un píxel). Si tarda lo que un dibujo por software, se trata
+// como uno. Una escena fija se pinta una sola vez.
+function estrenar(escena, ahora) {
+  const { gl } = escena
+  if (!fija(escena)) {
+    const pixel = new Uint8Array(4)
+    pintar(escena, ahora)
+    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+    const desde = performance.now()
+    pintar(escena, ahora)
+    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+    if (performance.now() - desde > LENTO) pasarASoftware(escena)
+  }
+  if (fija(escena)) {
+    escena.sucia = false
+    pintar(escena, inicio + QUIETO_EN)
+  }
+  escena.vivo = true
+  postMessage({ tipo: 'vivo', id: escena.id })
 }
 
 function fijar(escena, poner) {
@@ -804,7 +968,7 @@ function fijar(escena, poner) {
 // Junta lo que el cursor recorrió desde el último fotograma: `simular` lo
 // sopla de una vez, como un tramo.
 function soplar(escena, { x, y, fuera }) {
-  if (fuera || quieto) {
+  if (fuera || fija(escena)) {
     escena.previo = null
     return
   }
@@ -938,27 +1102,30 @@ function simular(escena) {
 function pintar(escena, ahora) {
   const { gl, programas: [campo, trama] } = escena
   const t = (ahora - inicio) / 1000
-  if (escena.aire && !quieto) simular(escena)
+  const quieta = fija(escena)
+  if (escena.aire && !quieta) simular(escena)
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
   // El tiempo de la nube va en cámara rápida (`lapso`, lib/volutus.js) y se
   // acumula fotograma a fotograma: así, cambiar el tamaño no la hace saltar.
-  // Suma el tiempo que de verdad pasó, hasta 0.1 s: un equipo que pierde
-  // fotogramas no frena la nube, y una pestaña que vuelve no la hace saltar.
+  // Suma el tiempo que de verdad pasó, hasta 0.1 s —o lo que espaciado el ritmo
+  // en una GPU lenta (ver `paso`)—: un equipo que pierde fotogramas no frena la
+  // nube, y una pestaña que vuelve no la hace saltar.
   if (escena.encuadre) {
-    if (!quieto) escena.tiempo += Math.min((ahora - (escena.antes ?? ahora)) / 1000, 0.1) * escena.lapso
+    const tope = Math.max(0.1, (1.5 * intervalo) / 1000)
+    if (!quieta) escena.tiempo += Math.min((ahora - (escena.antes ?? ahora)) / 1000, tope) * escena.lapso
     escena.antes = ahora
-    gl.uniform1f(campo.tiempo, quieto ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
+    gl.uniform1f(campo.tiempo, quieta ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
   }
   // La ola se dibuja desde que asoma (`nace`); quieta, va entera.
   const { ola } = escena
-  if (ola) gl.uniform1f(campo.crece, quieto ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
+  if (ola) gl.uniform1f(campo.crece, quieta ? 1 : ola.nace === null ? 0 : Math.min((ahora - ola.nace) / DIBUJO, 1))
   if (escena.mar) {
     // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
     const vista = escena.camara
     vista.ojos = OJOS + casco(t)
     gl.uniform3f(campo.camara, vista.focal, vista.horizonte, vista.ojos)
-    if (escena.pato) nadar(escena, t)
+    if (escena.pato && !quieta) nadar(escena, t)
     gl.uniform4fv(campo.rastro, escena.rastro)
   }
   gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
@@ -968,24 +1135,49 @@ function pintar(escena, ahora) {
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
   gl.useProgram(trama.programa)
   gl.drawArrays(gl.TRIANGLES, 0, 3)
-  if (!escena.vivo) {
-    escena.vivo = true
-    postMessage({ tipo: 'vivo', id: escena.id })
-  }
 }
 
+// Un paso del bucle: arma las escenas cuyos programas ya se enlazaron, estrena
+// las que se pintan por primera vez, repinta las fijas que algo cambió y pinta
+// las que se mueven y están a la vista.
+//
+// El ritmo: nunca más seguido que `intervalo`, que cada `MEDIR_CADA` ms se fija
+// en el doble de lo que tardó la GPU en dibujar un fotograma (`readPixels` de un
+// píxel espera a que termine), y nunca bajo `INTERVALO`. Con una GPU rápida no
+// cambia nada; con una lenta, las nubes nunca ocupan más de la mitad de la GPU
+// y la página no se traba.
 function paso(ahora) {
   marco = 0
-  const activas = [...escenas.values()].filter((e) => e.activa && !e.perdida)
-  if (!activas.length) return
-  if (quieto) {
-    activas.forEach((e) => pintar(e, inicio + QUIETO_EN))
-    return
+  for (const escena of [...escenas.values()]) {
+    if (!escena.pedidos || escena.perdida || !listos(escena)) continue
+    if (armar(escena)) {
+      Object.values(escena.ultimos).forEach((data) => aplicar(escena, data))
+      escena.sucia = true
+    } else if (!escena.gl.isContextLost()) {
+      rechazar(escena.id, escena.gl, 'no-enlaza')
+    }
   }
-  marco = cuadro(paso)
-  if (ahora - ultimo < INTERVALO) return
+  const todas = [...escenas.values()]
+  const activas = todas.filter((e) => e.programas && e.activa && !e.perdida)
+  const nuevas = activas.filter((e) => !e.vivo)
+  nuevas.forEach((e) => estrenar(e, ahora))
+  for (const e of activas.filter((e) => e.sucia && fija(e))) {
+    e.sucia = false
+    pintar(e, inicio + QUIETO_EN)
+  }
+  const animadas = activas.filter((e) => !fija(e))
+  if (todas.some((e) => e.pedidos && !e.perdida) || animadas.length) marco = cuadro(paso)
+
+  if (ahora - ultimo < intervalo) return
   ultimo = ahora
-  activas.forEach((e) => pintar(e, ahora))
+  const vivas = animadas.filter((e) => !nuevas.includes(e))
+  const desde = performance.now()
+  vivas.forEach((e) => pintar(e, ahora))
+  if (!vivas.length || ahora - medido < MEDIR_CADA) return
+  const pixel = new Uint8Array(4)
+  vivas.forEach(({ gl }) => gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel))
+  intervalo = Math.max(INTERVALO, 2 * (performance.now() - desde))
+  medido = ahora
 }
 
 // Lo que la página fija en la GPU de cada escena: su medida, sus colores y, en
@@ -1082,11 +1274,18 @@ function cumulosEnElMundo({ encuadre, gl }, enPantalla, forma) {
 }
 
 onmessage = ({ data }) => {
-  if (data.tipo === 'montar') montar(data.id, data.lienzo, data.mar, data.perspectiva, data.ola)
-  if (data.tipo === 'quieto') quieto = data.valor
+  if (data.tipo === 'montar') montar(data.id, data.lienzo, data)
+  if (data.tipo === 'quieto') {
+    quieto = data.valor
+    escenas.forEach((e) => (e.sucia = true))
+  }
 
   const escena = escenas.get(data.id)
-  if (escena && ['medir', 'colores', 'forma'].includes(data.tipo)) aplicar(escena, data)
+  // Mientras sus programas se enlazan, se guarda y se aplica al armarla.
+  if (escena && ['medir', 'colores', 'forma'].includes(data.tipo)) {
+    if (escena.programas) aplicar(escena, data)
+    else escena.ultimos[data.tipo] = data
+  }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
   if (escena?.ola && data.tipo === 'nace') escena.ola.nace ??= performance.now()
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
@@ -1109,7 +1308,8 @@ onmessage = ({ data }) => {
     return
   }
 
-  // Cambiar el tamaño borra el lienzo, y quieto nadie más lo repinta: cualquier
-  // mensaje despierta un fotograma.
+  // Cambiar el tamaño borra el lienzo, y una escena fija nadie más la repinta:
+  // cualquier mensaje ensucia su escena y despierta un fotograma.
+  if (escena) escena.sucia = true
   if (!marco) marco = cuadro(paso)
 }
