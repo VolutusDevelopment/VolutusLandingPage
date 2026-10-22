@@ -167,14 +167,15 @@ function initFormulario() {
   elegirCanal()
 
   // El formulario busca el centro al bajar (Contacto.css), pero solo si cabe
-  // entero bajo la barra. clientHeight, y no innerHeight, porque no cambia
-  // cuando Safari esconde sus barras: el movimiento no se prende y se apaga a
-  // mitad del scroll.
+  // entero bajo la barra. Se mide al cargar y cuando el formulario cambia de
+  // tamaño (al girar el teléfono, por ejemplo), nunca al cambiar solo el alto
+  // de la ventana: Brave y otros navegadores de iOS achican la página al
+  // mostrar su barra, y el formulario saltaba hasta 24 px a mitad del scroll.
+  // clientHeight, y no innerHeight, porque en Safari no cambia con sus barras.
   const barra = document.querySelector('.barra')
-  const medir = () =>
+  new ResizeObserver(() =>
     form.classList.toggle('formulario-cabe', form.offsetHeight + barra.offsetHeight <= document.documentElement.clientHeight)
-  new ResizeObserver(medir).observe(form)
-  addEventListener('resize', medir)
+  ).observe(form)
 
   // Turnstile se descarga al primer contacto con el formulario: así no pesa
   // en la carga ni en Lighthouse. Se monta a mano (`render=explicit`) para
