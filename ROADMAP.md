@@ -110,11 +110,11 @@ qué reglas se decide.
   responde. *docs/perfiles-clientes-100000.md*
 - [x] **Identidad legal visible**: razón social y RUT, comprobables en el SII.
   *2026-10-18*
-- [ ] 🟠 **Cerrar el brief.** Las secciones 1 a 6 y 9 siguen en `[~]` y los
+- [x] 🟠 **Cerrar el brief.** Las secciones 1 a 6 y 9 siguen en `[~]` y los
   indicadores de éxito, sin confirmar: el código va por delante del documento
   que dice mandar sobre él. *2–3 h.* Comprobación: ninguna sección en `[~]` sin
   su pregunta abierta escrita.
-- [ ] 🟡 **Traer al repo lo esencial del vault** (`C:\VaultObsidianVolutus`).
+- [x] 🟡 **Traer al repo lo esencial del vault** (`C:\VaultObsidianVolutus`).
   CLAUDE.md lo da como fuente de verdad, pero las sesiones en la nube no lo
   ven. *2–3 h.*
 
@@ -218,7 +218,7 @@ cada uno con una regla escrita.
   Mantener el botón de contacto (o un menú compacto) y sumar «Proyectos».
   *3–4 h.* Comprobación: en 360, 390 y 820 px el contacto está a un toque desde
   cualquier altura.
-- [ ] 🟠 **Formulario**: etiquetas visibles en vez de solo placeholders, el
+- [x] 🟠 **Formulario**: etiquetas visibles en vez de solo placeholders, el
   mensaje con 4 o 5 líneas y las pastillas en una sola línea en S (hoy
   «Un sistema de gestión» se parte en dos). *3–4 h.*
 - [ ] 🟡 **Prueba en un iPad real con Safari 18** de lo que Playwright no
@@ -257,10 +257,10 @@ cada uno con una regla escrita.
   con `article:published_time`, `article:modified_time` y `article:author`.
   *2026-10-22 · scripts/prerender.mjs*
 - [ ] 🟡 **Logo de 512 px** para el grafo, en vez del ícono del iPhone. *0,5 h.*
-- [ ] 🟡 **H1 de la portada limpio**: hoy el buscador lee «…y automatizaciones
+- [x] 🟡 **H1 de la portada limpio**: hoy el buscador lee «…y automatizaciones
   **páginas web** para tu negocio», porque la palabra del rotativo se suma a la
   frase para lectores de pantalla. *1 h.*
-- [ ] 🟠 **Enlaces internos desde la portada**: 3 artículos y el precio de
+- [x] 🟠 **Enlaces internos desde la portada**: 3 artículos y el precio de
   partida en cada servicio. Hoy la portada no enlaza a ningún artículo.
   *3–4 h.*
 - [ ] 🟠 **Contenido con intención de compra**, uno al mes, empezando por
@@ -385,11 +385,11 @@ cada uno con una regla escrita.
   same-origin` en `CABECERAS`. *0,5 h.*
 - [ ] ⚪ **Trusted Types** (`require-trusted-types-for 'script'`): probar que el
   bundle y Turnstile no se rompan. *1–2 h.*
-- [ ] 🟡 **DMARC a `p=reject`** tras cuatro semanas limpias, con los informes a
+- [x] 🟡 **DMARC a `p=reject`** tras cuatro semanas limpias, con los informes a
   un analizador (Cloudflare DMARC Management es gratis y solo se activa desde
   el panel, en Email → DMARC Management). *0,5 h.*
 - [ ] ⚪ **MTA-STS y TLS-RPT** para Zoho. *1–2 h.*
-- [ ] 🟠 **Ley 21.719** (rige el 1 de diciembre de 2026): registro de
+- [x] 🟠 **Ley 21.719** (rige el 1 de diciembre de 2026): registro de
   actividades de tratamiento, contratos con Resend, Zoho y Cloudflare como
   encargados y procedimiento para responder derechos. Volutus vende esta
   adaptación: su sitio tiene que ser el ejemplo. *4–6 h.*
@@ -524,9 +524,9 @@ pesa más que cualquier ajuste de código.
 - [x] **Search Console verificado**.
 - [x] **Organización de GitHub** enlazada desde el grafo (`sameAs`).
 - [ ] 🟠 **Search Console**: enviar `sitemap.xml` y activar avisos. *1 h.*
-- [ ] 🟠 **Bing Webmaster Tools**, importando desde Search Console. Bing
+- [x] 🟠 **Bing Webmaster Tools**, importando desde Search Console. Bing
   alimenta Copilot, DuckDuckGo, Yahoo, Ecosia y parte de ChatGPT. *0,5 h.*
-- [ ] 🟠 **IndexNow** con *Crawler Hints* de Cloudflare (Caching →
+- [x] 🟠 **IndexNow** con *Crawler Hints* de Cloudflare (Caching →
   Configuration). *0,25 h.*
 - [ ] 🔴 **Perfil de Empresa de Google** como negocio de área de servicio, sin
   dirección visible: Santiago y Chile, horario, WhatsApp y fotos. Las primeras
