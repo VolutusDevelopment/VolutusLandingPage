@@ -37,9 +37,12 @@ const POLITICA = [
 
 export const CABECERAS = {
   'Content-Security-Policy': POLITICA,
-  // Sin `includeSubDomains`: no sabemos qué otros subdominios de volutus.cl
-  // existirán, y obligarlos a HTTPS por un año no se deshace desde aquí.
-  'Strict-Transport-Security': 'max-age=31536000',
+  // `includeSubDomains` obliga a todo subdominio a HTTPS por un año, y eso no
+  // se deshace desde aquí: el único con web es www, que redirige a la raíz por
+  // HTTPS, y send y rsend son del correo de Resend y no sirven páginas. Un
+  // subdominio nuevo tiene que nacer con HTTPS. `preload` va después de dos
+  // semanas sin quejas con esta línea, porque salir de esa lista toma meses.
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',

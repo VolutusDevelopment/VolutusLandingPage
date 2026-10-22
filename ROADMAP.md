@@ -28,15 +28,15 @@
 | 3. Arquitectura y rendimiento | 8 | 3 | 9–12 |
 | 4. Responsive, accesibilidad y Safari | 8 | 3 | 7–10 |
 | 5. SEO técnico | 13 | 5 | 11,5–15,5 |
-| 6. Agentes de IA | 6 | 5 | 9–14 |
-| 7. Dominio y Cloudflare | 7 | 8 | 5–6 |
-| 8. Seguridad | 7 | 12 + auditorías | 16–21 |
+| 6. Agentes de IA | 7 | 4 | 8,5–13,5 |
+| 7. Dominio y Cloudflare | 14 | 3 | 1 |
+| 8. Seguridad | 9 | 10 + auditorías | 14,5–19,5 |
 | 9. Código y flujo de trabajo | 5 | 6 | 6–8 |
 | 10. Skills y agentes | 2 | 8 | 8–13 |
 | 11. Conversión y contenido | 6 | 4 | 9–14 |
 | 12. Presencia fuera del sitio | 2 | 9 | 10–12 |
 | 13. Medición y gobierno | 1 | 3 | 2–4 + 3–5 al mes |
-| **Total** | **82** | | **≈ 115–165** |
+| **Total** | **92** | | **≈ 110–158** |
 
 ## Línea base (2026-10-22)
 
@@ -46,8 +46,8 @@
 | Lighthouse móvil, servicio y artículo (build local) | 100 · 100 · 100 · 100 | 100 |
 | Agentic Browsing (Lighthouse 13.5) | Pasan árbol de accesibilidad, `llms.txt` y CLS. WebMCP no se evalúa sin el flag de Chrome. `ai-catalog.json` no aplica en producción | Todo lo aplicable en verde |
 | `www.volutus.cl` → `volutus.cl` | ✅ 301 en HTTP y HTTPS | — |
-| `http://volutus.cl` → HTTPS | ❌ Responde **200 en HTTP plano**, también `POST /api/contacto` | 301 a HTTPS |
-| DNSSEC / CAA | ❌ / ❌ | Activos |
+| `http://volutus.cl` → HTTPS | ✅ 301 a HTTPS (respondía 200 en HTTP plano hasta el 2026-10-22) | 301 a HTTPS |
+| DNSSEC / CAA | ⏳ Zona firmada, falta el DS en NIC Chile / ✅ | Activos |
 | Correo (SPF, DKIM de Zoho y Resend, DMARC) | ✅ DMARC en `p=quarantine` | `p=reject` |
 | CSS incrustado por página | 143 KB (27 KB gzip), el de **todo** el sitio; 22–25 KB sin usar | Solo el de la página |
 
@@ -69,7 +69,7 @@
 | 2026-10-17 | Índice de servicios, estimador en UF, WhatsApp, degradados sin rayas, paginación |
 | 2026-10-18 | Cuatro niveles de título, botones unificados, ESLint, RUT visible y WebMCP |
 | 2026-10-21 | Favicon por servicio, logotipo animado, UF diaria reforzada |
-| 2026-10-22 | Video para equipos sin GPU, entrega por partes para Safari, nubes verificadas; los socios en el grafo y la firma en los artículos |
+| 2026-10-22 | Video para equipos sin GPU, entrega por partes para Safari, nubes verificadas; los socios en el grafo y la firma en los artículos; Cloudflare endurecido (HTTPS obligatorio, TLS 1.2, CAA, WAF, alertas, sin workers.dev) |
 
 ## Tecnologías integradas
 
@@ -287,10 +287,10 @@ cada uno con una regla escrita.
   persona. *worker/index.js*
 - [x] **Árbol de accesibilidad** legible para agentes: Lighthouse lo da por
   bueno.
-- [ ] 🟠 **Alinear Cloudflare con `robots.txt`**: el README dice que AI Crawl
-  Control bloquea GPTBot y ClaudeBot, pero `robots.txt` los deja pasar desde
-  el 17 de octubre. Revisar el panel, quedarse con una política y corregir el
-  README. *0,5 h.*
+- [x] **Cloudflare alineado con `robots.txt`**: AI Crawl Control no bloquea a
+  ningún rastreador (GPTBot y ClaudeBot reciben 200) y el `robots.txt`
+  gestionado está apagado. El README decía lo contrario y ya está corregido.
+  *2026-10-22*
 - [ ] 🟡 **Respuestas citables**: en cada artículo y servicio, un primer párrafo
   que responda el título en dos o tres frases, y los precios de partida en
   texto, no solo en el estimador. *0,5 h por página, 6–10 h en total.*
@@ -319,22 +319,32 @@ cada uno con una regla escrita.
   `send`) y DMARC en `quarantine`.
 - [x] **UF diaria por GitHub Actions**, dos veces al día y con fuente de
   respaldo. *2026-10-21 · .github/workflows/uf.yml*
-- [ ] 🔴 **Always Use HTTPS** y *Automatic HTTPS Rewrites* (SSL/TLS → Edge
-  Certificates). Hoy `http://volutus.cl` responde sin cifrar, y el formulario
-  enviado desde ahí viajaría en texto plano. *0,25 h.* Comprobación:
-  `curl -I http://volutus.cl/` devuelve 301 a `https://`.
-- [ ] 🟠 **TLS mínimo 1.2** y TLS 1.3 activo. *0,25 h.*
-- [ ] 🟠 **DNSSEC** en Cloudflare y el DS cargado en NIC Chile. *0,5 h + espera.*
-  Comprobación: `dns.google/resolve?name=volutus.cl&type=DS` responde con
-  `AD=true`.
-- [ ] 🟠 **Registros CAA** con `iodef` a `contacto@volutus.cl`; revisar que
-  Cloudflare agregue los de sus CA. *0,5 h.*
-- [ ] 🟡 **HSTS por etapas** en `src/lib/seguridad.js`: inventariar
-  subdominios, sumar `includeSubDomains`, vigilar dos semanas, sumar `preload`
-  y postular en hstspreload.org. *1 h repartida.* Requiere Always Use HTTPS.
-- [ ] ⚪ **Barra final con 301**: `/privacidad/` responde hoy 307. *0,5 h.*
-- [ ] 🟡 **Despliegue desde GitHub Actions** con `wrangler deploy` al hacer merge
-  en `main`, y vista previa por PR. *2–3 h.*
+- [x] **Always Use HTTPS**: `http://` responde 301 a `https://` con la ruta y
+  la query; *Automatic HTTPS Rewrites* ya estaba activo. *2026-10-22 · cf*
+- [x] **TLS mínimo 1.2** y TLS 1.3 activo: 1.0 y 1.1 se rechazan.
+  *2026-10-22 · cf*
+- [x] **Registros CAA**: `iodef` a `contacto@volutus.cl`, y Cloudflare suma los
+  `issue` de sus CA (Google Trust Services, Sectigo, Let's Encrypt, SSL.com y
+  DigiCert). *2026-10-22 · cf*
+- [x] **Barra final con 301**: `/privacidad/`, y toda ruta con barra, va a la
+  misma sin ella. *2026-10-22 · scripts/prerender.mjs*
+- [x] **Despliegue con Workers Builds**: `wrangler deploy` al hacer merge en
+  `main` y una vista previa por rama con `wrangler versions upload`. Cumple lo
+  que se pensaba hacer con GitHub Actions sin guardar un token de Cloudflare en
+  GitHub. *Verificado el 2026-10-22*
+- [x] **workers.dev apagado**: servía el sitio entero fuera de la zona, en HTTP
+  y sin la regla del WAF. Las vistas previas siguen ahí. *2026-10-22 ·
+  wrangler.jsonc*
+- [x] **HSTS con `includeSubDomains`**: subdominios inventariados; solo `www`
+  sirve web, y redirige por HTTPS. *2026-10-22 · src/lib/seguridad.js*
+- [~] 🟠 **DNSSEC**: Cloudflare ya firma la zona; falta cargar el DS en NIC
+  Chile (key tag `2371`, algoritmo `13`, digest tipo `2`,
+  `42C802DC80BF887574309E6F532D3444E794E4D0E57A8E40751F254143B7465D`).
+  *0,25 h + espera.* Comprobación: `dns.google/resolve?name=volutus.cl&type=DS`
+  responde con `AD=true`.
+- [ ] 🟡 **HSTS con `preload`**: dos semanas después de publicar
+  `includeSubDomains` sin quejas, sumarlo en `src/lib/seguridad.js` y postular
+  en hstspreload.org. *0,5 h.*
 - [ ] ⚪ **Página de 5xx propia** al pasar la zona a Pro (pasos en el README).
 
 ## Etapa 8 — Seguridad
@@ -357,28 +367,33 @@ cada uno con una regla escrita.
   ningún dato personal en los logs.
 - [x] **`security.txt`** con contacto y vencimiento. *2026-09-30*
 - [x] **Envío por agente** validado igual que el de una persona.
+- [x] **Rate-limit en el WAF** para `/api/*`: 5 peticiones cada 10 s por IP
+  antes de llegar al Worker, que además corta a 5 por minuto. Lo que pasa de
+  ahí recibe 429. *2026-10-22 · cf*
+- [x] **Alertas** a `contacto@volutus.cl`: Workers Observability Issues avisa
+  apenas el Worker registra un error (los `console.error` de `contacto:`), y
+  Cloudflare Notifications, ante un problema de certificado o un ataque DDoS en
+  cualquier zona de la cuenta. *2026-10-22 · wrangler.jsonc*
 
 ### Lo que falta cerrar
 
 - [ ] 🟠 **Turnstile que falle cerrado**: si falta `TURNSTILE_SECRET`, hoy deja
   pasar todo. Que solo lo haga en `localhost`. *0,5 h.* Comprobación: sin el
   secreto, un envío a producción recibe 403.
-- [ ] 🟡 **Regla de rate-limit en el WAF** para `/api/*`, antes del Worker. *0,5 h.*
 - [ ] 🟡 **Retención en Resend y Zoho** igual a la que dice `/privacidad`. *1 h.*
 - [ ] 🟡 **`upgrade-insecure-requests`** y `Cross-Origin-Resource-Policy:
   same-origin` en `CABECERAS`. *0,5 h.*
 - [ ] ⚪ **Trusted Types** (`require-trusted-types-for 'script'`): probar que el
   bundle y Turnstile no se rompan. *1–2 h.*
 - [ ] 🟡 **DMARC a `p=reject`** tras cuatro semanas limpias, con los informes a
-  un analizador (Cloudflare DMARC Management es gratis). *0,5 h.*
+  un analizador (Cloudflare DMARC Management es gratis y solo se activa desde
+  el panel, en Email → DMARC Management). *0,5 h.*
 - [ ] ⚪ **MTA-STS y TLS-RPT** para Zoho. *1–2 h.*
 - [ ] 🟠 **Ley 21.719** (rige el 1 de diciembre de 2026): registro de
   actividades de tratamiento, contratos con Resend, Zoho y Cloudflare como
   encargados y procedimiento para responder derechos. Volutus vende esta
   adaptación: su sitio tiene que ser el ejemplo. *4–6 h.*
 - [ ] 🟡 **`/privacidad` al día** con lo anterior. *1 h.*
-- [ ] 🟡 **Alertas**: Cloudflare Notifications y aviso ante los
-  `console.error` de `contacto:`. *1 h.*
 - [ ] 🟡 **Prueba semanal del formulario** de punta a punta que avise si deja de
   llegar el correo. *2 h.*
 - [ ] ⚪ **Renovar `security.txt`** antes de septiembre de 2027.

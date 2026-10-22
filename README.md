@@ -41,7 +41,8 @@ titular, y cada servicio con `ruta` en
 `/servicios/desarrollo-software-a-medida`, `/servicios/agentes-ia`,
 `/servicios/automatizacion-procesos`, `/servicios/sistemas-de-gestion` y
 `/servicios/prospeccion-de-clientes`). Las direcciones viejas, en la raíz,
-redirigen con un 301 (`_redirects`, que escribe el prerender). El marco es uno,
+redirigen con un 301 (`_redirects`, que escribe el prerender), igual que toda
+dirección con barra final (`/privacidad/`) a la misma sin ella. El marco es uno,
 [src/paginas/Servicio.jsx](src/paginas/Servicio.jsx), con la escena de su
 cabecera en [src/components/Pieza.jsx](src/components/Pieza.jsx); lo de en medio
 es de cada servicio, en [src/paginas/servicios/](src/paginas/servicios/), que
@@ -132,9 +133,10 @@ public/
 - `sitemap.xml` contiene las páginas indexables; `/404` y `/500` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
   Cada URL lleva `<lastmod>` desde `actualizada` en meta.js: hay que moverla
   al cambiar el contenido de la página.
-- `robots.txt` deja leer y citar el sitio a buscadores y agentes de IA
-  (`Content-Signal: search=yes, ai-input=yes, ai-train=no`) y cierra el paso a
-  GPTBot y ClaudeBot, que rastrean para entrenar modelos. Cloudflare ya los
-  bloquea (AI Crawl Control); el archivo declara la misma política.
+- `robots.txt` deja leer, citar y entrenar a buscadores y agentes de IA
+  (`Content-Signal: search=yes, ai-input=yes, ai-train=yes`) y solo cierra
+  `/api/`. Cloudflare sigue la misma política: AI Crawl Control no bloquea a
+  ningún rastreador y el `robots.txt` gestionado está apagado, así que se sirve
+  el del repo.
 - Imágenes con `srcset`, dimensiones explícitas y `loading="lazy"` fuera del
   viewport inicial.

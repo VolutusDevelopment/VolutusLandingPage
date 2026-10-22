@@ -8,6 +8,12 @@
   // archivo, así que la portada no paga nada por que esto exista.
   "main": "worker/index.js",
 
+  // Sin workers.dev: ahí el sitio se servía entero fuera de la zona, sin la
+  // regla de rate-limit del WAF ni la redirección a HTTPS. Las vistas previas
+  // de cada rama (Workers Builds sube una versión por push) sí viven ahí.
+  "workers_dev": false,
+  "preview_urls": true,
+
   "assets": {
     "directory": "./dist",
     // El binding es lo que permite al Worker devolver el sitio estático para
@@ -37,7 +43,10 @@
   "observability": {
     // Los console.error del endpoint son el único aviso de que se están
     // perdiendo mensajes. Sin logs, un fallo de Resend es invisible.
-    "enabled": true
+    "enabled": true,
+    // Issues agrupa esos errores, y la notificación «Real-Time Issue» de
+    // Cloudflare los manda por correo a contacto@volutus.cl apenas aparecen.
+    "issues": { "enabled": true }
   },
 
   // volutus.cl está verificado en Resend: el correo sale del dominio propio y

@@ -419,7 +419,11 @@ writeFileSync(
 const traslados = SERVICIOS.filter(({ ruta }) => ruta).map(
   ({ ruta }) => `${ruta.replace(/^\/servicios/, '')} ${ruta} 301`
 )
-writeFileSync(`${dist}_redirects`, `${traslados.join('\n')}\n`)
+// La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
+// a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
+// `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare
+// pide las reglas con comodín después de las fijas.
+writeFileSync(`${dist}_redirects`, `${traslados.join('\n')}\n/*/ /:splat 301\n`)
 
 rmSync(`${dist}${enlace[1]}`)
 rmSync(`${root}.prerender`, { recursive: true, force: true })
