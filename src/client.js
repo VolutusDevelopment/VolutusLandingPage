@@ -310,23 +310,33 @@ function empezarSolo(boton, alternar) {
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
+// Cada parte arranca por su cuenta: si una falla en algún navegador, las demás
+// siguen. En fila, un error en la primera apagaba todas las que venían después.
 export default function init() {
-  initFormulario()
-  initPatos()
-  initTitularRotativo()
-  initServicios()
-  initPieza()
-  initFichas()
-  initPodio()
-  initBarra()
-  initNubes()
-  initCopiar()
-  initSocios()
-  initChat()
-  initEstimado()
-  initGuia()
-  initMenuServicios()
-  initPreguntas()
-  initTienda()
-  initTitularDelContacto()
+  for (const iniciar of [
+    initFormulario,
+    initPatos,
+    initTitularRotativo,
+    initServicios,
+    initPieza,
+    initFichas,
+    initPodio,
+    initBarra,
+    initNubes,
+    initCopiar,
+    initSocios,
+    initChat,
+    initEstimado,
+    initGuia,
+    initMenuServicios,
+    initPreguntas,
+    initTienda,
+    initTitularDelContacto,
+  ]) {
+    try {
+      iniciar()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
