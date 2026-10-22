@@ -1,9 +1,9 @@
 /* El mapa de un artículo. Ver Mapa.jsx y mapa.js.
 
-   Un punto por apartado, unidos por una línea que se llena hasta el que se
-   está leyendo: los leídos, rellenos; el actual, relleno y con un halo; los
-   que faltan, huecos. El tramo de cada apartado mide en proporción a sus
-   palabras (`--peso`), con un mínimo para que los puntos no se pisen.
+   Un punto por apartado, unidos por una línea que se llena de forma continua
+   al ritmo de la lectura: los leídos, rellenos; el actual, relleno y con un
+   halo; los que faltan, huecos. El tramo de cada apartado mide en proporción
+   a sus palabras (`--peso`), con un mínimo para que los puntos no se pisen.
 
    En S y M, una barra horizontal al comienzo del texto que se pega bajo la
    barra del sitio: arriba, el título del apartado actual, en una línea y con
@@ -106,7 +106,10 @@ html:has(.mapa) {
   margin-right: calc(var(--mapa-punto) - 24px);
 }
 
-/* La línea, del centro de cada punto al del siguiente. */
+/* La línea, del centro de cada punto al del siguiente: abajo el riel y encima
+   lo que va leído de ese apartado, que crece al ritmo del scroll
+   (`--avance`, de 0 a 1, ver mapa.js). Sin transición: la lleva el dedo. */
+.mapa li:not(:last-child)::before,
 .mapa li:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -116,11 +119,12 @@ html:has(.mapa) {
   height: 2px;
   margin-top: -1px;
   background: var(--linea);
-  transition: background-color 200ms var(--ease-out);
 }
 
-.mapa li.mapa-leido::after {
+.mapa li:not(:last-child)::after {
   background: var(--accion);
+  transform: scaleX(var(--avance, 0));
+  transform-origin: left;
 }
 
 .mapa a {
@@ -216,6 +220,7 @@ html:has(.mapa) {
     margin: 0;
   }
 
+  .mapa li:not(:last-child)::before,
   .mapa li:not(:last-child)::after {
     top: 18px;
     bottom: -18px;
@@ -224,6 +229,11 @@ html:has(.mapa) {
     width: 2px;
     height: auto;
     margin: 0;
+  }
+
+  .mapa li:not(:last-child)::after {
+    transform: scaleY(var(--avance, 0));
+    transform-origin: top;
   }
 
   .mapa a {

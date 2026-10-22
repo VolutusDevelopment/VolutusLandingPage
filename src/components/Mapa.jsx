@@ -10,7 +10,8 @@
  * actual (Mapa.css).
  *
  * Son anclas a los subtítulos: sin JavaScript, el mapa se ve entero y cada
- * punto lleva a su apartado. mapa.js marca el que se está leyendo.
+ * punto lleva a su apartado. mapa.js marca el que se está leyendo y hace
+ * avanzar la línea al ritmo del scroll.
  */
 export default function Mapa({ apartados, minutos }) {
   const entreElPrimeroYElUltimo = apartados.slice(0, -1).reduce((suma, { palabras }) => suma + palabras, 0)
