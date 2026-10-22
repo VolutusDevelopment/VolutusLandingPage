@@ -28,14 +28,14 @@
 | 3. Arquitectura y rendimiento | 8 | 3 | 9–12 |
 | 4. Responsive, accesibilidad y Safari | 8 | 3 | 7–10 |
 | 5. SEO técnico | 10 | 8 | 16–22 |
-| 6. Agentes de IA | 6 | 5 | 7–11 |
+| 6. Agentes de IA | 6 | 5 | 9–14 |
 | 7. Dominio y Cloudflare | 7 | 8 | 5–6 |
 | 8. Seguridad | 7 | 12 + auditorías | 16–21 |
 | 9. Código y flujo de trabajo | 5 | 6 | 6–8 |
 | 10. Skills y agentes | 2 | 8 | 8–13 |
 | 11. Conversión y contenido | 6 | 4 | 9–14 |
 | 12. Presencia fuera del sitio | 2 | 9 | 10–12 |
-| 13. Medición y gobierno | 1 | 3 | 2–3 + 3–5 al mes |
+| 13. Medición y gobierno | 1 | 3 | 2–4 + 3–5 al mes |
 | **Total** | **79** | | **≈ 120–170** |
 
 ## Línea base (2026-10-22)
@@ -548,9 +548,9 @@ pesa más que cualquier ajuste de código.
 | Cuándo | Qué | Horas |
 | --- | --- | --- |
 | Semana 1 | Etapa 7 completa, contacto en el teléfono (4), Search Console, Bing e IndexNow (12) | 10–12 |
-| Semanas 2–4 | Etapas 1, 8 y 9; formulario (4); prueba en la portada y caras (11) | 35–45 |
-| Mes 2 | Etapas 5, 6, 10 y el resto de la 12 | 40–55 |
-| Mes 3 | Etapas 2 y 3; iPad real (4); artículos y tarjeta OG (11); conversiones (13) | 35–50 |
+| Semanas 2–4 | Etapas 1, 8 y 9; formulario (4); prueba en la portada y caras (11) | 35–50 |
+| Mes 2 | Etapas 5, 6, 10 y el resto de la 12 | 40–60 |
+| Mes 3 | Etapas 2 y 3; iPad real (4); artículos y tarjeta OG (11); conversiones (13) | 35–55 |
 | Continuo | Etapa 13 | 3–5 al mes |
 | | **Total** | **≈ 120–170** |
 
