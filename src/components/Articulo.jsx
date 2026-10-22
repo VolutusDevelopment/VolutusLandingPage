@@ -43,8 +43,14 @@ export default function Articulo({ ruta, children }) {
         <header className="seccion zona-cielo hora-dia cabecera-cielo">
           <div className="contenedor">
             <p className="antetitulo">
-              <a className="articulo-volver" href="/articulos">
-                Artículos
+              <a
+                className="articulo-volver"
+                href="/articulos"
+                aria-label="Volver a los artículos"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 12H5M11 6l-6 6 6 6" />
+                </svg>
               </a>
             </p>
             <h1 className="titular-largo">{tituloCorto(titulo)}</h1>

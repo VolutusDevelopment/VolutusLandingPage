@@ -10,10 +10,26 @@
   --tramo: var(--e-2);
 }
 
-/* «Artículos», sobre el título: la vuelta al índice, con la voz del
-   antetítulo. */
+/* La flecha sobre el título: la vuelta al índice. El área táctil mide 44 px
+   aunque la flecha mida 24. */
 .articulo-volver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
   color: inherit;
+}
+
+.articulo-volver svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* La firma: la cara en un círculo con un filo blanco, que la despega del
