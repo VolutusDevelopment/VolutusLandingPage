@@ -1,7 +1,10 @@
 // El orden de los socios en /nosotros (Nosotros.jsx). Ninguno va siempre
 // primero: en cada visita sale un número de tres dígitos al azar; si es par,
 // queda el orden del HTML (Diego primero), y si es impar, Rodrigo pasa
-// adelante. Sin JavaScript queda el del HTML.
+// adelante. Sin JavaScript queda el del HTML, y también si se llega por un
+// ancla, como la de cada socio (/nosotros#rodrigo, la firma de sus artículos):
+// el navegador ya bajó hasta ella, y cambiar el orden la dejaba fuera de la
+// pantalla.
 
 /** Un número entero al azar entre 100 y 999: 450 pares y 450 impares. */
 function numeroDeTresDigitos() {
@@ -10,6 +13,6 @@ function numeroDeTresDigitos() {
 
 export default function initSocios() {
   const lista = document.querySelector('.socios')
-  if (!lista) return
+  if (!lista || location.hash) return
   if (numeroDeTresDigitos() % 2 === 1) lista.prepend(lista.lastElementChild)
 }

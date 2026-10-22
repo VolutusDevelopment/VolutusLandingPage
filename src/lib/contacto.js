@@ -16,9 +16,11 @@
 
 // Como figuran en el Registro de Empresas y Sociedades y en el SII: a quién se
 // le paga y quién emite la factura. Los usan el pie, la política de
-// privacidad, el artículo «Cómo trabajamos» y la Organization del prerender.
+// privacidad, el artículo «Cómo trabajamos» y la Organization del prerender,
+// que lleva también la fecha de constitución del Registro (AAAA-MM-DD).
 export const RAZON_SOCIAL = 'Volutus SpA'
 export const RUT = '78.473.668-7'
+export const FECHA_DE_CONSTITUCION = '2026-07-22'
 
 // ---- cómo escribirle a Volutus ----
 

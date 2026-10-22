@@ -18,18 +18,16 @@ export default function DosFormasDeTrabajar({ ruta }) {
         Dejamos la solución documentada y fácil de modificar, para que puedas cambiar algo sin ayuda externa. Si
         prefieres, también puede operarla Volutus por ti, con un costo asociado.
       </p>
-      <p>Después de la entrega puedes elegir si nos encargamos de la mantención. Es opcional, y así funciona:</p>
-      <ul>
-        <li>Los errores de nuestra autoría los corregimos a nuestro costo.</li>
-        <li>Los cambios y mejoras entran en el plan de mantención.</li>
-        <li>
-          Si un tercero cambia algo que el producto usa (una plataforma de pagos, un correo, un sistema de tu
-          proveedor), esa corrección no está incluida sin un plan aparte.
-        </li>
-        <li>
-          Si prefieres hacerte cargo de todo tú, los costos de mantención pasan a ser tuyos desde ese momento.
-        </li>
-      </ul>
+      <p>
+        Después de la entrega puedes elegir si nos encargamos de la mantención. Es opcional, y funciona así: los
+        errores de nuestra autoría los corregimos a nuestro costo, y los cambios y mejoras entran en el plan de
+        mantención.
+      </p>
+      <p>
+        Si un tercero cambia algo que el producto usa, como una plataforma de pagos, un correo o un sistema de tu
+        proveedor, esa corrección no está incluida sin un plan aparte. Y si prefieres hacerte cargo de todo tú, los
+        costos de mantención pasan a ser tuyos desde ese momento.
+      </p>
 
       <h2>Suscripción</h2>
       <p>
@@ -42,20 +40,15 @@ export default function DosFormasDeTrabajar({ ruta }) {
       </p>
 
       <h2>Cuál conviene</h2>
-      <ul>
-        <li>
-          Si tienes el presupuesto y quieres ser dueño desde el primer día, la <strong>propiedad total</strong> suele
-          salir más barata en el total.
-        </li>
-        <li>
-          Si necesitas empezar ahora y pagar de a poco, la <strong>suscripción</strong> te deja avanzar sin esperar a
-          juntar todo el monto.
-        </li>
-        <li>
-          En los dos casos, el alcance se conversa antes de cotizar. Ninguna opción cambia lo que el producto hace;
-          cambian las condiciones de pago y de mantención.
-        </li>
-      </ul>
+      <p>
+        Si tienes el presupuesto y quieres ser dueño desde el primer día, la propiedad total suele salir más barata en
+        el total. Si necesitas empezar ahora y pagar de a poco, la suscripción te deja avanzar sin esperar a juntar
+        todo el monto.
+      </p>
+      <p>
+        En los dos casos, el alcance se conversa antes de cotizar. Ninguna opción cambia lo que el producto hace;
+        cambian las condiciones de pago y de mantención.
+      </p>
 
       <h2>Qué pasa después de la entrega</h2>
       <p>

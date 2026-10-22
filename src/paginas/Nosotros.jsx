@@ -1,5 +1,6 @@
 import Pagina from '../components/Pagina.jsx'
 import { Escena } from '../components/Portada.jsx'
+import { SOCIOS } from '../data/socios.js'
 import { OLA, trazoDe } from '../lib/logotipo.js'
 
 /**
@@ -12,8 +13,8 @@ import { OLA, trazoDe } from '../lib/logotipo.js'
  * afuera —la definición de la nube y los datos de la Morning Glory— lleva su
  * cita, que apunta a la lista de fuentes; la ola está en el código de la
  * marca (`lib/logotipo.js`), y la obra, en la portada con sus
- * enlaces. No hay fecha de fundación ni anécdota, porque no hay de dónde
- * sacarlas.
+ * enlaces. No hay anécdota de la fundación, porque no hay de dónde sacarla, y
+ * la fecha de constitución va solo en el grafo (`lib/contacto.js`).
  */
 
 const ATLAS = {
@@ -77,40 +78,6 @@ const REDES = [
     nombre: 'LinkedIn',
     color: '#0a66c2',
     logo: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 4.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
-  },
-]
-
-// Los socios (decisiones 16 y 34 del brief). Las fotos son provisorias, y
-// cada descripción dice solo lo que se puede comprobar en la portada.
-// `fotoSrcSet` suma una versión más liviana cuando la foto tiene píxeles de
-// sobra para el teléfono; la de Rodrigo no los tiene, y va sola.
-const SOCIOS = [
-  {
-    nombre: 'Diego',
-    apellidos: 'Peña y Lillo Luhrs',
-    educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
-    rol: 'Socio co-fundador',
-    foto: '/image/Diego.jpeg',
-    fotoSrcSet: '/image/Diego-720.webp 720w, /image/Diego.jpeg 960w',
-    perfiles: {
-      github: 'https://github.com/DiegoPyLL',
-      linkedin: 'https://www.linkedin.com/in/diegopyll/',
-    },
-    descripcion:
-      'Me interesa entender las cosas, no solo usarlas. Esa necesidad me llevó a la programación, a la inteligencia artificial y a la filosofía, porque saber cómo funciona algo no sirve de mucho si no te preguntas para qué existe. La misma curiosidad me acompaña en los autos, que terminaron convirtiéndose en CarFlip, y otros retos personales. Resuelvo problemas sin apuro por la primera respuesta: los desarmo, pruebo y ajusto hasta que la solución tiene sentido. Hoy construyo Volutus junto a Rodrigo, con la idea de hacer soluciones que resuelvan problemas de fondo.',
-  },
-  {
-    nombre: 'Rodrigo',
-    apellidos: 'Martínez Becker',
-    educacion: 'Ingeniero Informático con Especialidad en Inteligencia Artificial - DuocUC',
-    rol: 'Socio co-fundador',
-    foto: '/image/Rodrigo.webp',
-    perfiles: {
-      github: 'https://github.com/Marbeck-one',
-      linkedin: 'https://www.linkedin.com/in/rodrigo-mart%C3%ADnez-becker-74b6ab241/',
-    },
-    descripcion:
-      'Hoy el conocimiento llega al instante y casi cualquier solución está a un par de prompts. Yo prefiero no apurarme y disfrutar lo que nos hace humanos: el proceso. Si tenemos a mano toda la inteligencia reunida, lo mínimo es sacar de ella buenas ideas. Por eso quiero que cada producto que hago se note hecho a mano y no en serie. Si el camino A es el más rápido y rentable, y el B el que nos deja más lejos, tomo el B. Con esa paciencia gané el primer lugar en Cisco CyberGames Americas 2026, y hoy construyo Volutus junto a mi socio Diego.',
   },
 ]
 
@@ -245,8 +212,8 @@ export default function Nosotros() {
               `fetchPriority` baja: en el teléfono la primera foto asoma al
               pie de la pantalla, y con prioridad alta le quitaba la red al
               texto de la cabecera, que es el LCP (2.3 s en vez de 1.6 s). */}
-          {SOCIOS.map(({ nombre, apellidos, educacion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
-            <li key={nombre} className="socio entra">
+          {SOCIOS.map(({ id, nombre, apellidos, titulo, institucion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
+            <li key={id} id={id} className="socio entra">
               <img
                 src={foto}
                 srcSet={fotoSrcSet}
@@ -278,7 +245,7 @@ export default function Nosotros() {
                     ))}
                   </ul>
                 </div>
-                <p className="socio-educacion">{educacion}</p>
+                <p className="socio-educacion">{`${titulo} - ${institucion.nombre}`}</p>
                 <p className="socio-rol">{rol}</p>
                 <p className="socio-descripcion">{descripcion}</p>
               </div>

@@ -9,19 +9,11 @@ export default function ConectarConLoQueYaUsas({ ruta }) {
       </p>
 
       <h2>Tres tipos de conexión</h2>
-      <ul>
-        <li>
-          <strong>Leer:</strong> el sistema toma datos de otro, como un pedido que llega al correo o un cliente de la
-          planilla.
-        </li>
-        <li>
-          <strong>Escribir:</strong> el sistema deja un dato donde corresponde, como una factura en tu facturación o un
-          registro en la planilla.
-        </li>
-        <li>
-          <strong>Avisar:</strong> el sistema le escribe a alguien cuando algo cambia, como un stock bajo o una cita.
-        </li>
-      </ul>
+      <p>
+        Un sistema puede leer datos de otro, como un pedido que llega al correo o un cliente de la planilla. Puede
+        escribir un dato donde corresponde, como una factura en tu facturación o un registro en la planilla. Y puede
+        avisarle a alguien cuando algo cambia, como un stock bajo o una cita.
+      </p>
       <p>Cada una tiene distinto riesgo. Leer es lo más fácil de revertir; escribir en tu facturación exige más cuidado.</p>
 
       <h2>Antes de pedir una conexión</h2>

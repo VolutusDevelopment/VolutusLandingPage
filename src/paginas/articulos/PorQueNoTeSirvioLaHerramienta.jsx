@@ -9,26 +9,19 @@ export default function PorQueNoTeSirvioLaHerramienta({ ruta }) {
       </p>
 
       <h2>Las causas más comunes</h2>
-      <ul>
-        <li>
-          <strong>Resolvía otro problema.</strong> Sirve para facturar, pero tú necesitabas controlar el stock.
-        </li>
-        <li>
-          <strong>Te obligaba a cambiar tu forma de trabajar.</strong> Si tienes que hacer tres pasos más para lo mismo,
-          vuelves a la planilla.
-        </li>
-        <li>
-          <strong>No se conectaba con nada.</strong> Terminaste copiando datos a mano, que era justo lo que querías
-          evitar.
-        </li>
-        <li>
-          <strong>Cobraba por lo que no usabas.</strong> Pagabas por usuarios, módulos o funciones que nadie tocaba.
-        </li>
-        <li>
-          <strong>Nadie la usó.</strong> Si el equipo no la adoptó en la primera semana, la herramienta no falló: no tuvo
-          quién la sostuviera.
-        </li>
-      </ul>
+      <p>
+        Puede que resolviera otro problema: sirve para facturar, pero tú necesitabas controlar el stock. O que te
+        obligara a cambiar tu forma de trabajar; si tienes que hacer tres pasos más para lo mismo, vuelves a la
+        planilla.
+      </p>
+      <p>
+        También pasa que no se conectaba con nada, y terminaste copiando datos a mano, que era justo lo que querías
+        evitar. O que cobraba por lo que no usabas: usuarios, módulos o funciones que nadie tocaba.
+      </p>
+      <p>
+        Y a veces, simplemente, nadie la usó. Si el equipo no la adoptó en la primera semana, la herramienta no falló:
+        no tuvo quién la sostuviera.
+      </p>
 
       <h2>Cinco preguntas antes de la próxima</h2>
       <ol>

@@ -1,13 +1,20 @@
 import Pagina from './Pagina.jsx'
 import Contacto from './Contacto.jsx'
 import { ListaDeArticulos } from './Sugerencias.jsx'
+import { socioDe } from '../data/socios.js'
 import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
 import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 
 /**
- * El marco de un artículo (paginas/articulos/). El título, la entradilla y las
- * fechas salen de PAGINAS (lib/meta.js), así que el `<head>`, la página y el
- * índice de /articulos dicen lo mismo; el artículo solo escribe su cuerpo.
+ * El marco de un artículo (paginas/articulos/). El título, la entradilla, el
+ * autor y la fecha salen de PAGINAS (lib/meta.js), así que el `<head>`, la
+ * página y el índice de /articulos dicen lo mismo; el artículo solo escribe su
+ * cuerpo.
+ *
+ * Bajo la entradilla va la firma del socio que lo escribió (decisión 58 del
+ * brief): su cara, su nombre, que lleva a su tarjeta en /nosotros, y su rol.
+ * Debajo, solo la fecha de la última actualización; la de publicación queda
+ * en el grafo y en el índice.
  *
  * Abre en el cielo del día de las páginas internas y se lee en blanco, a la
  * medida de lectura. Al final sugiere los artículos relacionados y cierra con
@@ -15,8 +22,9 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
  * marcado. En S y M, bajo la fecha, el servicio queda a un toque.
  */
 export default function Articulo({ ruta, children }) {
-  const { titulo, descripcion, publicada, actualizada, servicios = [] } = PAGINAS[ruta]
+  const { titulo, descripcion, actualizada, autor, servicios = [] } = PAGINAS[ruta]
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
+  const firma = socioDe(autor)
 
   return (
     <Pagina
@@ -36,14 +44,15 @@ export default function Articulo({ ruta, children }) {
             </p>
             <h1 className="titular-largo">{tituloCorto(titulo)}</h1>
             <p className="entradilla articulo-entradilla">{descripcion}</p>
+            <p className="articulo-firma">
+              <img src={firma.avatar} alt="" width={48} height={48} decoding="async" />
+              <span>
+                <a href={`/nosotros#${firma.id}`}>{`${firma.nombre} ${firma.apellidos}`}</a>
+                <small>{firma.rol}</small>
+              </span>
+            </p>
             <p className="articulo-fecha dato">
-              <time dateTime={publicada}>{fechaDe(ruta, 'publicada')}</time>
-              {actualizada !== publicada && (
-                <>
-                  {' · actualizado el '}
-                  <time dateTime={actualizada}>{fechaDe(ruta)}</time>
-                </>
-              )}
+              Actualizado el <time dateTime={actualizada}>{fechaDe(ruta)}</time>
             </p>
             {servicio && (
               <p className="articulo-servicio">

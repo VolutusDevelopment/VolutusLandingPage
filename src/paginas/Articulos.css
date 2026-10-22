@@ -16,8 +16,40 @@
   color: inherit;
 }
 
-.articulo-fecha {
+/* La firma: la cara en un círculo con un filo blanco, que la despega del
+   cielo, y a su lado el nombre sobre el rol. Mide lo mismo antes y después de
+   cargar la foto. */
+.articulo-firma {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
   margin-top: var(--e-6);
+}
+
+.articulo-firma img {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.55);
+}
+
+.articulo-firma span {
+  display: flex;
+  flex-direction: column;
+}
+
+.articulo-firma a {
+  font-weight: 500;
+}
+
+.articulo-firma small {
+  font-size: var(--texto-sm);
+}
+
+.articulo-fecha {
+  margin-top: var(--e-4);
   font-size: var(--texto-sm);
 }
 
@@ -342,14 +374,28 @@
 }
 
 /* ---- el cuerpo ----
-   Texto corrido a la medida de lectura, con el ritmo de los demás bloques:
-   aire grande antes de cada subtítulo y chico entre párrafos. */
+   Texto corrido a la medida de lectura y centrado en la página, con el ritmo
+   de los demás bloques: aire grande antes de cada subtítulo y chico entre
+   párrafos. */
 .prosa {
   max-width: var(--medida-lectura);
+  margin-inline: auto;
+}
+
+/* Justificado y sin cortar palabras con guion. Los subtítulos no: una línea
+   estirada se lee como un error. */
+.prosa :is(p, li) {
+  text-align: justify;
 }
 
 .prosa > * + * {
   margin-top: var(--e-4);
+}
+
+/* Cada párrafo entra con una sangría de cuatro espacios: en Geist, un espacio
+   mide un cuarto de em. La idea destacada no, porque ya va en su caja. */
+.prosa > p:not(.destacado) {
+  text-indent: 1em;
 }
 
 .prosa h2 {

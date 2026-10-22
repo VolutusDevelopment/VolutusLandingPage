@@ -35,9 +35,17 @@ import {
   tituloCorto,
 } from '../src/lib/meta.js'
 import { CABECERAS } from '../src/lib/seguridad.js'
-import { CORREO_DE_CONTACTO, RAZON_SOCIAL, RUT } from '../src/lib/contacto.js'
+import {
+  CORREO_DE_CONTACTO,
+  FECHA_DE_CONSTITUCION,
+  RAZON_SOCIAL,
+  RUT,
+  WHATSAPP_DE_CONTACTO,
+} from '../src/lib/contacto.js'
 import { SERVICIOS } from '../src/lib/servicios.js'
 import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
+import { PROYECTOS } from '../src/data/proyectos.js'
+import { SOCIOS, socioDe } from '../src/data/socios.js'
 import { ESTIMADOS, desde } from '../src/lib/precios.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
@@ -55,6 +63,51 @@ for (const { id, ruta } of SERVICIOS) {
 
 /** El servicio como entidad: uno solo, que nombran la portada y su página. */
 const idDeServicio = (ruta) => `${canonicalDe(ruta)}#servicio`
+
+/**
+ * Cada socio es una `Person` con el ancla de su tarjeta en /nosotros: ese es
+ * su `@id` y su `url`. Allí se declara entera; la portada (sus fundadores) y
+ * los artículos (su autor) la nombran con `firmaDe`, que lleva el nombre
+ * porque un buscador no sigue un `@id` hasta otra página.
+ */
+const idDePersona = (id) => `${canonicalDe('/nosotros')}#${id}`
+
+function firmaDe({ id, nombre, apellidos }) {
+  return { '@type': 'Person', '@id': idDePersona(id), name: `${nombre} ${apellidos}`, url: idDePersona(id) }
+}
+
+/** El socio que firma una página, o ninguno: sin `autor`, firma Volutus. */
+function autorDe(ruta, { autor }) {
+  if (!autor) return null
+  const socio = socioDe(autor)
+  if (!socio) throw new Error(`prerender: ${ruta} la firma «${autor}», que no está en data/socios.js`)
+  return socio
+}
+
+/** Los premios de un socio, con el texto de su credencial (data/proyectos.js). */
+function premiosDe({ premios }) {
+  return premios.map((id) => {
+    const { titulo, evento } = PROYECTOS.find((proyecto) => proyecto.id === id).credencial
+    return `${titulo}, ${evento}`
+  })
+}
+
+function personaDe(socio) {
+  const { nombre, apellidos, institucion, rol, foto, perfiles } = socio
+  return {
+    ...firmaDe(socio),
+    givenName: nombre,
+    familyName: apellidos,
+    image: `${ORIGEN}${foto}`,
+    jobTitle: rol,
+    // Con su tipo: /nosotros no declara la Organization, y un `@id` solo se
+    // lee como `Thing`, que `worksFor` no acepta.
+    worksFor: { '@type': 'Organization', '@id': ORGANIZACION, name: 'Volutus' },
+    alumniOf: { '@type': 'CollegeOrUniversity', name: institucion.nombre, url: institucion.url },
+    award: premiosDe(socio),
+    sameAs: Object.values(perfiles),
+  }
+}
 
 /** Escapa lo que va dentro de un atributo HTML. */
 function atributo(texto) {
@@ -87,7 +140,8 @@ function ofertaDe(id) {
  * Una página de servicio es su FAQPage, porque sus preguntas van en el HTML,
  * y un artículo, su Article; los dos con la ruta para volver a su índice.
  */
-function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, publicada, actualizada }) {
+function datosEstructurados(ruta, canonical, datos) {
+  const { titulo, descripcion, archivo, publicada, actualizada } = datos
   const pagina = { name: titulo, url: canonical, inLanguage: 'es-CL' }
   const servicio = SERVICIOS.find((s) => s.ruta === ruta)
   if (servicio) {
@@ -122,6 +176,7 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
     ])
   }
   if (publicada) {
+    const autor = autorDe(ruta, datos)
     return ldJson([
       {
         '@type': 'Article',
@@ -133,7 +188,7 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         inLanguage: 'es-CL',
         datePublished: publicada,
         dateModified: actualizada,
-        author: { '@id': ORGANIZACION },
+        author: autor ? firmaDe(autor) : { '@id': ORGANIZACION },
         publisher: { '@id': ORGANIZACION },
       },
       migas([
@@ -177,7 +232,17 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         url: `${ORIGEN}/`,
         logo: `${ORIGEN}/apple-touch-icon.png`,
         description: 'Empresa de desarrollo de software en Chile.',
+        foundingDate: FECHA_DE_CONSTITUCION,
+        founder: SOCIOS.map(firmaDe),
         email: CORREO_DE_CONTACTO,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          email: CORREO_DE_CONTACTO,
+          ...(WHATSAPP_DE_CONTACTO && { telephone: `+${WHATSAPP_DE_CONTACTO}` }),
+          areaServed: 'CL',
+          availableLanguage: 'es',
+        },
         // La ciudad y no la calle: el domicilio legal es una casa particular.
         address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
         areaServed: 'CL',
@@ -197,7 +262,7 @@ function datosEstructurados(ruta, canonical, { titulo, descripcion, archivo, pub
         },
       },
     ],
-    '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }],
+    '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }, ...SOCIOS.map(personaDe)],
     '/servicios': [
       {
         '@type': 'CollectionPage',
@@ -239,7 +304,7 @@ function ldJson(grafo) {
 }
 
 function cabecera(ruta, pagina) {
-  const { archivo, titulo, descripcion, indexar = true, tarjetaAlt } = pagina
+  const { archivo, titulo, descripcion, publicada, actualizada, indexar = true, tarjetaAlt } = pagina
   const t = atributo(titulo)
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
@@ -252,10 +317,21 @@ function cabecera(ruta, pagina) {
   const canonical = canonicalDe(ruta)
   const imagen = `${ORIGEN}${tarjetaDe(archivo)}`
   const alt = atributo(tarjetaAlt ?? `El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
+  // Una página con `publicada` es un artículo también para quien la comparte:
+  // con sus fechas y, si la firma un socio, su autor.
+  const autor = publicada && autorDe(ruta, pagina)
+  const tipo = publicada
+    ? [
+        `<meta property="og:type" content="article" />`,
+        `<meta property="article:published_time" content="${publicada}" />`,
+        `<meta property="article:modified_time" content="${actualizada}" />`,
+        ...(autor ? [`<meta property="article:author" content="${idDePersona(autor.id)}" />`] : []),
+      ]
+    : [`<meta property="og:type" content="website" />`]
   return [
     ...basicas,
     `<link rel="canonical" href="${canonical}" />`,
-    `<meta property="og:type" content="website" />`,
+    ...tipo,
     `<meta property="og:site_name" content="Volutus" />`,
     `<meta property="og:title" content="${t}" />`,
     `<meta property="og:description" content="${d}" />`,
