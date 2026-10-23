@@ -95,6 +95,7 @@ pnpm build                      # build de producción + pre-render
 pnpm preview                    # vista previa del build de dist/
 pnpm og                         # generar tarjetas Open Graph
 pnpm iconos                     # generar iconos
+pnpm marca                      # generar el kit de marca en public/marca/ (después de pnpm build; usa la GPU)
 npx wrangler dev                # sitio construido con el Worker, en :8787
 pnpm verificar                  # medidas, enlaces, foco y WebMCP contra tests/referencia.json
 ```

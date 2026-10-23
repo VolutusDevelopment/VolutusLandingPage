@@ -114,9 +114,7 @@ qué reglas se decide.
   indicadores de éxito, sin confirmar: el código va por delante del documento
   que dice mandar sobre él. *2–3 h.* Comprobación: ninguna sección en `[~]` sin
   su pregunta abierta escrita.
-- [ ] 🟡 **Traer al repo lo esencial del vault** (`C:\VaultObsidianVolutus`).
-  CLAUDE.md lo da como fuente de verdad, pero las sesiones en la nube no lo
-  ven. *2–3 h.*
+
 
 ## Etapa 2 — Fundamentos de diseño
 
@@ -150,20 +148,13 @@ cada uno con una regla escrita.
   estados, tarjetas, glifos con su gesto, curvas y tiempos, y un «sí / no» por
   pieza. Como sale del mismo código, no se desincroniza. *8–12 h.*
   Comprobación: una página nueva se arma solo con piezas que están en `/diseno`.
-- [ ] 🟡 **Versión para compartir** del sistema (artefacto publicado o PDF) para
-  clientes y colaboradores. *2–3 h.*
-- [ ] 🟡 **Kit de marca**: logo en SVG y PNG claro y oscuro, avatar cuadrado
+- [x] 🟡 **Versión para compartir** del sistema (artefacto publicado o PDF) para
+  clientes y colaboradores. *2026-10-22 · el sistema de diseño «Volutus»
+  publicado y el manual de cinco hojas del lienzo «Volutus · Kit de marca»*
+- [x] 🟡 **Kit de marca**: logo en SVG y PNG claro y oscuro, avatar cuadrado
   para Google, Apple, LinkedIn y GitHub, portada de LinkedIn, firma de correo
-  y plantilla de la tarjeta OG. *3–4 h.*
-- [ ] 🟡 **Una sola voz visual.** En la portada conviven la nube en píxeles,
-  cards 3D, láminas oscuras, un podio de 8 bits con Press Start 2P, un
-  formulario estilo SaaS y la marca gigante del pie. Dejar el podio en pixel
-  art, pero con la tipografía, los radios y los colores del sistema, y el tono
-  de juego en `/patos`. *4–6 h.*
-- [ ] 🟡 **Presupuesto de movimiento**: una animación protagonista por pantalla,
-  escrito en DESIGN.md. Hoy se mueven a la vez el logotipo, la gota, la nube,
-  la rueda, la ola y el mar. *2–3 h.*
-- [ ] ⚪ **Titulares en mayúscula** con tope de tres líneas y
+  y plantilla de la tarjeta OG. *2026-10-22 · `pnpm marca` → public/marca/*
+- [x] ⚪ **Titulares en mayúscula** con tope de tres líneas y
   `text-wrap: balance` (Safari 17.5 en adelante; sin él solo cambia el corte).
   *1 h.*
 

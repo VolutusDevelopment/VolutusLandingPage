@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "og": "node scripts/tarjetas-og.mjs",
     "iconos": "node scripts/iconos.mjs",
+    "marca": "node scripts/marca.mjs",
     "verificar": "node scripts/verificar.mjs",
     "lint": "eslint ."
   },

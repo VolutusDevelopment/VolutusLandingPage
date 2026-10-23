@@ -117,3 +117,4 @@ El foco visible usa un contorno de 2 px; la navegación, el contenido semántico
 - Interacción y presentación: CSS de src/components/ y src/paginas/.
 - Estado funcional de páginas y rutas: src/lib/meta.js y src/paginas/rutas.js.
 - Generación de HTML y sitemap: scripts/prerender.mjs.
+- Kit de marca: scripts/marca.mjs, en public/marca/. El logo, el avatar y el símbolo de la firma salen de lib/logotipo.js; las portadas (LinkedIn, 16:9 y vertical), la nube y el logotipo animado salen del sitio construido: el pie de día fotografiado cuando los colores de la ola entran en la voluta. Necesita `pnpm build` antes y una GPU.
