@@ -1,9 +1,8 @@
 /* Los gestos de los glifos de servicio (Icono.jsx). Cada parte que se mueve
    es un `.gesto` con su dibujo adentro, y aquí se define qué hace: su
    animación en `--gesto` y, con `--n`, en qué orden entra. Cuándo lo hace lo
-   decide quien usa el icono: la card de la rueda al quedar al frente
-   (Servicios.css) y la fila de servicios al pasar el cursor (Sugerencias.css),
-   con estas dos líneas:
+   decide quien usa el icono, como la fila de servicios al pasar el cursor
+   (Sugerencias.css), con estas dos líneas:
 
      animation: var(--gesto);
      animation-delay: calc(var(--n, 0) * 90ms);

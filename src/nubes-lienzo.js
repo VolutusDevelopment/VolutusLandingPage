@@ -38,11 +38,14 @@
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
-import { FISICA, JUEGO, encuadrar, lapso, rollo } from './lib/volutus.js'
+import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
 const INTERVALO = 33
+// La cámara que se mueve, hasta ~60 fps (ver `paso`): no antes de 12 ms, con
+// margen para Safari, cuyo reloj marca 16 ms donde pasaron 16,7.
+const MOVIDA = 12
 // El instante que se congela con movimiento reducido: uno con nubes.
 const QUIETO_EN = 4000
 // El aire bajo la nube (ver `simular`). El paso de tiempo es fijo, el de un
@@ -89,7 +92,9 @@ const VERTICES = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 //     el cilindro elíptico que envuelve al rollo (`cilindro`) y lo recorre de
 //     adelante hacia atrás, con pasos según el largo del tramo. Al entrar en
 //     la nube busca su borde por bisección y sigue con pasos finos, así que
-//     el borde no deja escalones. Lo lejano se ve chico porque está lejos, no
+//     el borde no deja escalones. Son seis cortes: con tres, la cámara de la
+//     portada al llegar al pie del rollo veía anillos como curvas de nivel.
+//     Lo lejano se ve chico porque está lejos, no
 //     por una regla aparte: el eje fuga a su horizonte.
 //   - `rollo`, la densidad: `base` es 1 en el eje y 0 en la superficie de la
 //     sección, una elipse de 1,7 × 1,2 km, y encima va `borla`: ruido 3D con
@@ -351,7 +356,7 @@ void main() {
       if (!fino) {
         fino = true;
         float fuera = va - paso;
-        for (int k = 0; k < 3; k++) {
+        for (int k = 0; k < 6; k++) {
           float medio = 0.5 * (fuera + va);
           if (densidad(ojo + d * medio, ppm / medio, 5.0) * abre > 0.005) va = medio;
           else fuera = medio;
@@ -1042,11 +1047,12 @@ function simular(escena) {
   gl.bindTexture(gl.TEXTURE_2D, estado[0].textura)
 }
 
-function pintar(escena, ahora) {
+// Sin `conAire`, el aire no da su paso: solo se repinta la cámara (ver `paso`).
+function pintar(escena, ahora, conAire = true) {
   const { gl, programas: [campo, trama] } = escena
   const t = (ahora - inicio) / 1000
   const quieta = fija(escena)
-  if (escena.aire && !quieta) simular(escena)
+  if (escena.aire && !quieta && conAire) simular(escena)
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
   // El tiempo de la nube va en cámara rápida (`lapso`, lib/volutus.js) y se
@@ -1086,6 +1092,11 @@ function pintar(escena, ahora) {
 // píxel espera a que termine), y nunca bajo `INTERVALO`. Con una GPU rápida no
 // cambia nada; con una lenta, las nubes nunca ocupan más de la mitad de la GPU
 // y la página no se traba.
+//
+// La cámara que se mueve (al bajar por la portada, `seguir`) no espera a
+// `intervalo`: se repinta hasta a 60 fps, porque a 30 se la ve avanzar a
+// saltos. El aire sigue a su paso. Solo con una GPU que da abasto, la que deja
+// `intervalo` en `INTERVALO`.
 function paso(ahora) {
   marco = 0
   for (const escena of [...escenas.values()]) {
@@ -1108,16 +1119,53 @@ function paso(ahora) {
   const animadas = activas.filter((e) => !fija(e))
   if (todas.some((e) => e.pedidos && !e.perdida) || animadas.length) marco = cuadro(paso)
 
-  if (ahora - ultimo < intervalo) return
-  ultimo = ahora
   const vivas = animadas.filter((e) => !nuevas.includes(e))
+  if (ahora - ultimo < intervalo) {
+    if (intervalo === INTERVALO) {
+      for (const e of vivas) if (ahora - e.antes >= MOVIDA && seguir(e, ahora)) pintar(e, ahora, false)
+    }
+    return
+  }
+  ultimo = ahora
   const desde = performance.now()
-  vivas.forEach((e) => pintar(e, ahora))
+  vivas.forEach((e) => {
+    seguir(e, ahora)
+    pintar(e, ahora)
+  })
   if (!vivas.length || ahora - medido < MEDIR_CADA) return
   const pixel = new Uint8Array(4)
   vivas.forEach(({ gl }) => gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel))
   intervalo = Math.max(INTERVALO, 2 * (performance.now() - desde))
   medido = ahora
+}
+
+// La cámara de la portada da un paso tras el scroll (`arrastrar`, lib/volutus.js)
+// hasta `ahora`, y se vuelve a encuadrar. Devuelve si se movió: ya quieta en
+// su sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
+function seguir(escena, ahora) {
+  const { grua } = escena
+  if (!grua || (grua.x === grua.meta && grua.v === 0)) return false
+  const dt = Math.min((ahora - (grua.cuando ?? ahora)) / 1000, 0.1)
+  Object.assign(grua, arrastrar(grua, grua.meta, dt), { cuando: ahora })
+  if (Math.abs(grua.x - grua.meta) < 1e-5 && Math.abs(grua.v) < 1e-4) {
+    Object.assign(grua, { x: grua.meta, v: 0, cuando: undefined })
+  }
+  escena.vista = bajar(grua.x)
+  if (escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+  return true
+}
+
+// La cámara de la nube: la de su página o, en la portada al bajar, la de la
+// grúa en ese punto (`vista`, ver `bajar` en lib/volutus.js).
+function enfocar(escena, { ancho, alto, densidad }) {
+  const encuadre = encuadrar(escena.vista ?? escena.perspectiva, ancho, alto)
+  Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, densidad) })
+  fijar(escena, (gl, u) => {
+    for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
+    gl.uniform2fv(u.centro, encuadre.centro)
+    gl.uniform1f(u.focal, encuadre.focal)
+    gl.uniform1f(u.giro, encuadre.giro)
+  })
 }
 
 // Lo que la página fija en la GPU de cada escena: su medida, sus colores y, en
@@ -1137,11 +1185,8 @@ function aplicar(escena, data) {
     const vista = escena.mar && camara(data.ancho, data.alto)
     if (vista) Object.assign(escena, { camara: vista, celda: data.celda, escala: (vista.focal * OJOS) / data.celda })
     // La nube, con la cámara de su página (lib/volutus.js).
-    if (!escena.mar) {
-      const encuadre = encuadrar(escena.perspectiva, data.ancho, data.alto)
-      Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, data.densidad) })
-    }
-    const { aire, encuadre } = escena
+    if (!escena.mar) enfocar(escena, data)
+    const { aire } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
       const alto = Math.max(8, Math.round(escena.rejilla[1] / CELDAS_POR_AIRE))
@@ -1164,12 +1209,6 @@ function aplicar(escena, data) {
       gl.uniform1f(u.celda, data.celda)
       gl.uniform1f(u.lado, data.lado ?? 1)
       if (vista) gl.uniform1f(u.escala, escena.escala)
-      if (encuadre) {
-        for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
-        gl.uniform2fv(u.centro, encuadre.centro)
-        gl.uniform1f(u.focal, encuadre.focal)
-        gl.uniform1f(u.giro, encuadre.giro)
-      }
     })
     // Los cúmulos de la 404 están donde estaba el rollo, que acaba de moverse.
     if (escena.ultimos.forma) aplicar(escena, escena.ultimos.forma)
@@ -1224,7 +1263,23 @@ onmessage = ({ data }) => {
     if (escena.programas) aplicar(escena, data)
     else escena.ultimos[data.tipo] = data
   }
-  if (escena && data.tipo === 'activa') escena.activa = data.valor
+  if (escena && data.tipo === 'activa') {
+    escena.activa = data.valor
+    // Al volver a verse, la cámara sigue desde donde quedó, sin contar lo que
+    // estuvo parada (ver `seguir`).
+    if (escena.grua) escena.grua.cuando = undefined
+  }
+  // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js). La
+  // primera vez la cámara va ahí; después lo sigue (`seguir`).
+  if (escena && data.tipo === 'bajada') {
+    if (escena.grua) {
+      escena.grua.meta = data.t
+    } else {
+      escena.grua = { x: data.t, v: 0, meta: data.t }
+      escena.vista = bajar(data.t)
+      if (escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+    }
+  }
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
   // si calla), `callo` cuándo terminó y `dicho`, el que sigue.

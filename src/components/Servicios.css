@@ -1,479 +1,186 @@
-/* Servicios: la rueda, en todos los tamaños; el porqué, en Servicios.jsx. El
-   metal, los colores y el anillo blanco de la elegida vienen de los paneles
-   anteriores: cambió cómo se despliegan las cards, no cómo se ven. */
+/* Los servicios suben sobre la nube fija (Portada.css), sin fondo propio, de
+   a uno: cada scroll cae en uno, al centro de la pantalla, con la nube detrás.
+   La página encaja (`scroll-snap`): arriba, en la portada; luego, en cada
+   servicio, sin saltarse ninguno, y abajo, en Proyectos. Su margen de abajo
+   alarga su zona de encaje hasta el final de la página, así que de ahí en
+   adelante se baja libre: una zona más alta que la pantalla deja parar en
+   cualquier punto de ella (Safari 15). Con movimiento reducido no encaja: el
+   encaje mueve la página solo. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.servicios) {
+    scroll-snap-type: y mandatory;
+  }
+}
 
-/* La rueda se sale por los costados al girar, y en 3D asoma algún píxel de
-   más: se recorta aquí. `clip` y no `hidden`, que volvería la sección un
-   contenedor con scroll. */
+.portada:has(+ .servicios) {
+  scroll-snap-align: start;
+}
+
+.servicios + .seccion {
+  scroll-snap-align: start;
+  scroll-margin-bottom: 100000px;
+}
+
 .servicios {
-  overflow-x: clip;
-}
-
-.rueda {
-  margin-top: var(--e-8);
-  padding-inline: var(--margen-lateral);
-}
-
-.servicios-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* ---- la card ----
-   Metal cepillado, solo con degradados: una sombra en diagonal y líneas
-   verticales finísimas. No pesa nada ni se anima. */
-.servicio-cara {
-  --metal:
-    linear-gradient(115deg, transparent 55%, rgb(0 0 0 / 0.22)),
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
-  --anillo: rgb(255 255 255 / 0.8);
-  --filo: inset 0 -1px 0 rgb(255 255 255 / 0.08);
-  /* La card es un objeto apoyado en la página, y lo dice su sombra: la
-     excepción a la regla de cero sombras (DESIGN-BRIEF, decisión 31). */
-  --sombra: 0 14px 30px -16px rgb(10 26 42 / 0.4);
+  --bajo-barra: calc(var(--barra-alto) + var(--e-4));
+  --hueco: calc(100svh - var(--bajo-barra));
   position: relative;
-  /* Su propio apilamiento: lo que la oscurece (::before) queda sobre el fondo
-     y bajo el texto. */
-  isolation: isolate;
+  z-index: 1;
+}
+
+/* El título y el índice van al pie de la pantalla, donde llega el pulgar,
+   mientras pasan los ocho. La cabeza mide lo que se ve bajo la barra, se queda
+   pegada y se va con el último; la lista sube bajo ella. Lo de la cabeza no
+   tapa los enlaces de los servicios: solo el índice recibe el toque. */
+.servicios-cabeza {
+  position: sticky;
+  top: var(--bajo-barra);
+  height: var(--hueco);
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: var(--e-6);
-  border-radius: var(--radio-panel);
-  background: var(--metal), var(--panel);
-  color: var(--texto);
-  box-shadow: var(--filo), inset 0 0 0 2px var(--anillo), var(--sombra);
-}
-
-/* Lo que la oscurece cuando queda atrás en la rueda, según lo lejos que esté
-   del frente. El texto sigue blanco sobre un fondo más hondo, así que el
-   contraste solo sube. */
-.servicio-cara::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: #0a1a2a;
-  opacity: 0;
-}
-
-/* Cada card trae su color (`--panel`, de lib/servicios.js). Todas llevan
-   texto blanco, que da 4.6:1 o más; un blanco translúcido ya no llega, así
-   que el texto suave es blanco y se distingue por su tamaño. */
-.servicio.zona-plano {
-  --texto: #ffffff;
-  --texto-suave: #ffffff;
-  --accion: #ffffff;
-  --foco: #ffffff;
-  --linea: rgb(255 255 255 / 0.3);
-}
-
-.servicio-cabecera {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--e-3);
-}
-
-.servicio-icono {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-/* El glifo hace su gesto (Icono.css) cuando su card queda al frente, y lo
-   repite cada vez que el cursor entra en ella. */
-@media (prefers-reduced-motion: no-preference) {
-  .servicio.activo .gesto {
-    animation: var(--gesto);
-    animation-delay: calc(var(--n, 0) * 90ms);
-  }
-}
-
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .rueda:not(.arrastrando) .servicio.activo .servicio-cara:hover .gesto > path {
-    animation: var(--gesto);
-    animation-delay: calc(var(--n, 0) * 90ms);
-  }
-}
-
-/* El número es la firma de la card y habla como el logotipo: Archivo negra
-   itálica, la voz de los titulares. */
-.servicio-numero {
-  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
-  font-size: 3.5rem;
-  font-style: italic;
-  font-weight: 800;
-  line-height: 0.8;
-}
-
-.servicio-nombre {
-  margin-top: var(--e-4);
-}
-
-/* El nombre que lleva a su página: en el blanco de la card, con la flecha
-   que dice que sigue. */
-.servicio-nombre a {
-  color: inherit;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
-}
-
-.servicio-nombre a::after {
-  content: ' →' / '';
-}
-
-.servicio-texto {
-  margin-top: var(--e-3);
-  line-height: 1.5;
-}
-
-/* Los puntos, numerados en círculo. Van al pie de la card. */
-.servicio-puntos {
-  counter-reset: punto;
-  list-style: none;
-  display: grid;
-  gap: var(--e-2);
-  margin: auto 0 0;
-  padding: var(--e-6) 0 0;
-  font-size: var(--texto-sm);
-  line-height: 1.4;
-}
-
-.servicio-puntos li {
-  counter-increment: punto;
-  display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: var(--e-3);
+  padding-bottom: calc(var(--e-6) + env(safe-area-inset-bottom));
+  pointer-events: none;
 }
 
-.servicio-puntos li::before {
-  content: counter(punto);
+.servicios-cabeza .titular {
+  font-size: clamp(20px, 1rem + 1vw, 28px);
+}
+
+/* El índice: los ocho glifos en calcomanía, chicos. El de la pantalla
+   (servicios.js) va en su color y un poco más arriba, y los demás en gris;
+   tocar uno lleva a él. Las columnas se achican antes de que la fila se salga
+   de la pantalla. */
+.servicios-indice {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 44px);
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.servicios-indice a {
   display: grid;
   place-items: center;
-  flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  border: 1px solid var(--linea);
-  border-radius: 50%;
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
+  height: 44px;
 }
 
-/* ---- sin rueda: la lista ----
-   Sin JavaScript (o sin funciones trigonométricas en el CSS) la rueda no
-   puede girar, así que no se arma: las ocho quedan enteras, una bajo otra en
-   S y en rejilla desde M. Se separan con `gap`, que en la rueda no actúa: un
-   margen correría las cards de su lugar en el anillo. */
-
-.servicios-lista {
-  display: grid;
-  gap: var(--e-4);
+.servicios-indice-icono {
+  width: 28px;
+  height: 28px;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition:
+    opacity 200ms var(--ease-out),
+    filter 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
 }
 
-@media (min-width: 768px) {
-  .rueda {
-    margin-top: var(--e-12);
-  }
+.servicios-indice .actual .servicios-indice-icono {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-3px) scale(1.15);
+}
 
-  .servicios-lista {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: calc(var(--ancho-maximo) - 2 * var(--margen-lateral));
-    margin-inline: auto;
-  }
-
-  .servicio-cara {
-    padding: var(--e-8);
+@media (hover: hover) {
+  .servicios-indice a:hover .servicios-indice-icono {
+    opacity: 1;
+    filter: none;
   }
 }
 
 @media (min-width: 1024px) {
-  .servicios-lista {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* ---- la rueda ---- */
-
-@supports (rotate: calc(1deg * sin(1deg))) {
-  @media (scripting: enabled) {
-    .servicios .titular {
-      text-align: center;
-    }
-
-    /* El escenario. Cada tamaño de pantalla cambia solo estas medidas: la
-       card, el radio del anillo, cuánto sube hacia el fondo y a qué altura
-       queda la del frente. Las alturas se achican con la pantalla para que la
-       rueda quepa entera bajo la barra; la card no baja de lo que necesita
-       su texto. En S la card deja ver a sus vecinas a los lados, y su alto
-       es fijo: es el que pide su texto, con la letra de S (abajo). Las del
-       fondo suben lo justo para asomar sobre la del frente, así el titular
-       queda cerca de la rueda, y no más: si suben mucho, cada mitad del
-       anillo se curva en una C. */
-    .rueda {
-      --ancho: min(300px, 100vw - 64px);
-      --alto: 420px;
-      --radio: 100px;
-      --alzado: 132px;
-      --frente: 32px;
-      position: relative;
-      margin-top: var(--e-6);
-      height: calc(var(--frente) + var(--alto) + var(--e-6));
-      /* El gesto de lado es de la rueda (servicios.js); el vertical sigue
-         bajando por la página. */
-      touch-action: pan-y;
-      -webkit-user-select: none;
-      user-select: none;
-      cursor: grab;
-    }
-
-    .rueda.arrastrando,
-    .rueda.arrastrando .servicio {
-      cursor: grabbing;
-    }
-
-    /* El piso: una sombra suave bajo el anillo. Va antes que la lista para
-       quedar debajo de las cards. */
-    .rueda::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: calc(var(--radio) * 4);
-      height: var(--e-16);
-      translate: -50% 0;
-      border-radius: 50%;
-      background: radial-gradient(closest-side, rgb(10 26 42 / 0.12), transparent);
-      pointer-events: none;
-    }
-
-    /* La perspectiva va en la madre directa de las cards, que es a quien
-       alcanza, y del tamaño del escenario, para que el punto de fuga quede en
-       su centro. */
-    .servicios-lista {
-      position: absolute;
-      inset: 0;
-      max-width: none;
-      perspective: 1600px;
-    }
-
-    /* Cada card en su lugar del anillo, calculado de su ángulo: el suyo fijo
-       (i de n vueltas) menos el giro de la rueda. Hacia el fondo sube, se
-       achica, se oscurece y queda detrás; los costados de atrás se abren más
-       que los de adelante para que asomen todas. */
-    .servicio {
-      --angulo: calc((var(--i) * 360 / var(--n) - var(--giro, 0)) * 1deg);
-      /* 0 al frente, 1 al fondo. */
-      --fondo: calc((1 - cos(var(--angulo))) / 2);
-      /* -1 a la izquierda, 1 a la derecha. */
-      --lado: sin(var(--angulo));
-      position: absolute;
-      top: 0;
-      left: 50%;
-      z-index: calc(100 - 100 * var(--fondo));
-      width: var(--ancho);
-      height: var(--alto);
-      margin-left: calc(var(--ancho) / -2);
-      transform:
-        translate(
-          calc(var(--radio) * var(--lado) * (1 + var(--fondo))),
-          calc(var(--frente) - var(--alzado) * var(--fondo))
-        )
-        rotateY(calc(var(--lado) * -24deg))
-        scale(calc(1 - var(--fondo) / 2));
-      /* Las del fondo asomarían nítidas por encima de la del frente: desde
-         0.75 se desenfocan y se desvanecen, y la del fondo desaparece. Las de
-         los costados quedan intactas. */
-      opacity: clamp(0, (0.92 - var(--fondo)) * 6, 1);
-      filter: blur(calc(max(0, var(--fondo) - 0.75) * 15px));
-      cursor: pointer;
-    }
-
-    .servicio.activo {
-      cursor: inherit;
-    }
-
-    .servicio-cara {
-      padding: var(--e-6);
-      box-shadow: var(--filo), inset 0 0 0 2px transparent, var(--sombra);
-      transition:
-        box-shadow 300ms var(--ease-out),
-        translate var(--t-pulsar) var(--ease-out),
-        transform 250ms var(--ease-out);
-    }
-
-    .servicio-cara::before {
-      opacity: calc(var(--fondo) / 2);
-    }
-
-    /* La del frente: el anillo blanco y una sombra de su propio color, como un
-       objeto con luz. Se inclina hacia el cursor (servicios.js). */
-    .servicio.activo .servicio-cara {
-      box-shadow:
-        var(--filo),
-        inset 0 0 0 2px var(--anillo),
-        0 40px 80px -32px color-mix(in srgb, var(--panel) 75%, #0a1a2a);
-      transform: perspective(900px) rotateX(var(--inclina-x, 0deg)) rotateY(var(--inclina-y, 0deg));
-    }
-
-    .servicio-numero {
-      font-size: 3.25rem;
-    }
-
-    .servicio-texto {
-      font-size: var(--texto-sm);
-    }
-
-    .servicio-puntos {
-      padding-top: var(--e-4);
-    }
-
-    /* Al pasar por una que asoma, se levanta un poco: dice que se puede traer.
-       Sobre la del frente, un brillo sigue al cursor (servicios.js). */
-    @media (hover: hover) {
-      .rueda:not(.arrastrando) .servicio:not(.activo):hover .servicio-cara {
-        translate: 0 calc(-1 * var(--e-2));
-        box-shadow: var(--filo), inset 0 0 0 2px rgb(255 255 255 / 0.32), var(--sombra);
-      }
-
-      .servicio.activo .servicio-cara::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: radial-gradient(
-          28rem circle at var(--brillo-x, 50%) var(--brillo-y, 0%),
-          rgb(255 255 255 / 0.16),
-          transparent 60%
-        );
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 300ms var(--ease-out);
-      }
-
-      .rueda:not(.arrastrando) .servicio.activo .servicio-cara:hover::after {
-        opacity: 1;
-      }
-    }
+  .servicios-indice {
+    grid-auto-columns: 52px;
   }
 
-  /* En S la card es más compacta: el número más chico y menos relleno, para
-     que la rueda no ocupe la pantalla entera. */
-  @media (max-width: 639px) and (scripting: enabled) {
-    .servicio-cara {
-      padding: var(--e-6) var(--e-4) var(--e-4);
-    }
-
-    .servicio-numero {
-      font-size: 2.5rem;
-    }
-
-    .servicio-nombre {
-      margin-top: var(--e-3);
-    }
-
-    /* La card tiene alto fijo y la flecha partía en dos líneas el nombre
-       más largo («Prospección de clientes»): aquí basta el subrayado. */
-    .servicio-nombre a::after {
-      content: none;
-    }
-
-    .servicio-puntos {
-      padding-top: var(--e-3);
-    }
-
-    /* Las vecinas asoman a los lados con el texto cortado por la del
-       frente: su información se difumina, apenas en las de al lado y más en
-       las de atrás, y el ojo va a la del frente. Va atado a la posición: una
-       card queda nítida a mitad de camino hacia el frente (`--cruce`), justo
-       cuando pasa por encima de la que se va, así la que está encima nunca
-       está borrosa. Antes de eso su información se enfoca y sube a su lugar
-       en cascada: la cabecera primero y los puntos al final (`--antes`).
-       Solo blur y desplazamiento, sin opacidad: el texto no pierde
-       contraste. */
-    .servicio {
-      /* El `--fondo` de la mitad del paso entre dos cards. */
-      --cruce: calc((1 - cos(180deg / var(--n))) / 2);
-    }
-
-    .servicio-cara > * {
-      --borroso: clamp(0, (var(--fondo) - var(--cruce) * var(--antes, 1)) * 4.6, 1);
-      filter: blur(calc(var(--borroso) * 3px));
-      translate: 0 calc(var(--borroso) * var(--e-2));
-    }
-
-    .servicio-cabecera {
-      --antes: 2.4;
-    }
-
-    .servicio-nombre {
-      --antes: 1.9;
-    }
-
-    .servicio-texto {
-      --antes: 1.45;
-    }
-  }
-
-  /* En los teléfonos de 320 px la card es más angosta y su texto, más alto. */
-  @media (max-width: 359px) and (scripting: enabled) {
-    .rueda {
-      --alto: 440px;
-    }
-  }
-
-  @media (min-width: 640px) and (scripting: enabled) {
-    .rueda {
-      --ancho: 300px;
-      --alto: clamp(400px, 100svh - 140px - var(--frente), 450px);
-      --radio: 170px;
-      --alzado: min(206px, 25svh);
-      --frente: min(71px, 9svh);
-    }
-  }
-
-  @media (min-width: 1024px) and (scripting: enabled) {
-    .rueda {
-      --ancho: 360px;
-      --alto: clamp(400px, 100svh - 140px - var(--frente), 480px);
-      --radio: 243px;
-      --alzado: min(220px, 27svh);
-      --frente: min(79px, 10svh);
-    }
-
-    .servicio-numero {
-      font-size: 3.75rem;
-    }
-
-    .servicio-texto {
-      font-size: var(--texto-base);
-    }
-  }
-
-  @media (min-width: 1400px) and (scripting: enabled) {
-    .rueda {
-      --ancho: 400px;
-      --alto: clamp(400px, 100svh - 140px - var(--frente), 520px);
-      --radio: 360px;
-      --alzado: min(230px, 26svh);
-      --frente: min(89px, 10svh);
-    }
-
-    .servicio-cara {
-      padding: var(--e-8);
-    }
-
-    .servicio-numero {
-      font-size: 4rem;
-    }
+  .servicios-indice-icono {
+    width: 32px;
+    height: 32px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .servicio-cara,
-  .servicio-cara::after {
-    transition: none;
+  .servicios-indice-icono {
+    transition-property: opacity, filter;
   }
+}
+
+.servicios-lista {
+  list-style: none;
+  margin: calc(-1 * var(--hueco)) 0 0;
+  padding: 0;
+}
+
+/* Cada uno mide lo que se ve bajo la barra (el `scroll-padding-top` de html,
+   `--bajo-barra`), así que encaja justo y los vecinos quedan fuera. Lo suyo
+   sube ese mismo alto con el relleno de abajo: queda al centro de la pantalla
+   entera, no de lo que queda bajo la barra. */
+.servicio {
+  min-height: var(--hueco);
+  padding-bottom: var(--bajo-barra);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+/* El glifo va impreso sobre su silueta en papel blanco, con un margen, como
+   una calcomanía (`papel` en Icono.jsx): sobre el cielo, su color se perdía.
+   El margen une las piezas que van cerca y los huecos quedan blancos. El color
+   es el de su servicio, más claro y más vivo, porque el hondo se veía apagado
+   sobre la nube; sin color relativo, queda el hondo. Lo mismo en el índice. */
+.servicio-icono,
+.servicios-indice-icono {
+  overflow: visible;
+  color: var(--servicio);
+  color: oklch(from var(--servicio) calc(l + 0.1) calc(c * 1.35) h);
+}
+
+.servicio-icono {
+  width: 48px;
+  height: 48px;
+}
+
+:is(.servicio-icono, .servicios-indice-icono) .icono-papel {
+  fill: var(--superficie);
+  stroke: var(--superficie);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+}
+
+.servicio-nombre {
+  margin: var(--e-3) 0 var(--e-2);
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.servicio-nombre a {
+  color: var(--texto);
+  text-decoration: none;
+}
+
+/* La flecha dice que sigue, y el lector de pantalla no la lee. */
+.servicio-nombre a::after {
+  content: ' →' / '';
+}
+
+.servicio-nombre a:hover {
+  text-decoration: underline;
+}
+
+.servicio-texto {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--texto);
+  font-size: var(--texto-lg);
 }

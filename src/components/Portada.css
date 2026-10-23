@@ -381,3 +381,32 @@
     padding-block: var(--e-12);
   }
 }
+
+/* ---- la nube quieta ----
+   En la home la nube no se va con el scroll: queda fija detrás de la portada
+   y de los servicios, que suben sobre ella, y Proyectos la tapa al llegar. El
+   cielo va con ella, así que las dos secciones son transparentes. */
+.portada:not(.portada-costado) .portada-cielo {
+  position: fixed;
+  inset: 0;
+  height: 100svh;
+  z-index: -1;
+  background: linear-gradient(#1976cc, #3088d9 45%, #61abed);
+}
+
+:root .portada:not(.portada-costado),
+:root .portada:not(.portada-costado) + .seccion {
+  --fondo-hora: transparent;
+}
+
+.portada:not(.portada-costado) .portada-interior {
+  z-index: 1;
+}
+
+/* Proyectos tapa la nube: sube sobre ella como una hoja clara, fundida en su
+   borde de arriba. */
+:root .portada:not(.portada-costado) + .seccion + .seccion {
+  position: relative;
+  z-index: 1;
+  --fondo-hora: linear-gradient(rgb(246 249 252 / 0), var(--fondo) 12rem);
+}

@@ -1,6 +1,6 @@
 /* Las páginas de servicio. Ver paginas/Servicio.jsx, servicios/Bloques.jsx y
    components/Pieza.jsx; lo propio de cada servicio, en servicios/.
-   El color de cada una es `--tinte` (Pagina.jsx), el de su card en la rueda:
+   El color de cada una es `--tinte` (Pagina.jsx), el de su servicio:
    tiñe la cabecera y marca lo que es propio del servicio —las líneas, los
    vistos, los rótulos—, mientras los enlaces y botones siguen en la acción
    de siempre (decisión 7). */
@@ -10,8 +10,7 @@
    cabeceras (index.css). Desde L, el texto a la izquierda y la pieza a la
    derecha, los dos desde arriba. */
 /* Menos aire sobre el titular que en las demás cabeceras (index.css): la
-   pieza ya llena la pantalla. Va con `.cabecera-cielo` porque las cards de
-   la rueda (Servicios.css) también tienen un `.servicio-cabecera`. */
+   pieza ya llena la pantalla. */
 .cabecera-cielo.servicio-cabecera {
   padding-top: calc(var(--barra-alto) + var(--e-8));
 }
@@ -131,11 +130,10 @@
 }
 
 /* ---- la pieza ----
-   La card de la rueda en grande: su color, un poco más hondo, la trama de
+   Una card grande: el color del servicio, un poco más hondo, la trama de
    puntos de la marca, su anillo blanco y su sombra de objeto (la excepción de
    la decisión 31). La proporción es fija, así que no mueve nada al cargar.
-   Como la card del frente, se inclina hacia el cursor y un brillo lo sigue
-   (pieza.js). */
+   Se inclina hacia el cursor y un brillo lo sigue (pieza.js). */
 .pieza {
   position: relative;
   aspect-ratio: 4 / 3;

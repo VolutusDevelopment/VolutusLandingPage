@@ -1,15 +1,16 @@
+import { Children } from 'react'
+
 /**
  * Iconos en la misma rejilla de 24 que el símbolo.
  *
- * Los de los servicios (las cards de la rueda y la fila de servicios al pie de
- * cada página) son glifos macizos inclinados 10°, como el logotipo y el número
- * de la card: el dibujo se hace con el hueco y no con el trazo. Los de la guía
- * de la Ley 21.719 (/ley21719) son de trazo.
+ * Los de los servicios (la lista de la portada y la fila de servicios al pie
+ * de cada página) son glifos macizos inclinados 10°, como el logotipo: el
+ * dibujo se hace con el hueco y no con el trazo. Los de la guía de la Ley
+ * 21.719 (/ley21719) son de trazo.
  *
  * Cada glifo de servicio tiene un gesto corto (Icono.css): la marea sube en la
  * ventana, la etiqueta se mece, las carpetas se archivan… Lo hace cuando lo
- * pide quien lo usa: la card de la rueda al quedar al frente y la fila de
- * servicios al pasar el cursor.
+ * pide quien lo usa: la fila de servicios al pasar el cursor.
  *
  * Son decorativos siempre: el texto que acompañan ya dice lo mismo.
  */
@@ -127,10 +128,25 @@ const TRAZO = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLi
 // no se corra: tan(10°) × 12.
 const ITALICA = 'translate(2.12 0) skewX(-10)'
 
-export default function Icono({ id, className }) {
+// Los trazados de un glifo, de sus <path> y de sus gestos.
+const trazados = (nodo) => Children.toArray(nodo).flatMap((n) => (n.props.d ? [n.props.d] : trazados(n.props.children)))
+
+// El primer tramo de un trazado: su contorno, sin los huecos.
+const contorno = (d) => d.slice(0, d.indexOf('z') + 1)
+
+// Con `papel`, el glifo va sobre su silueta sin huecos, que el CSS de quien lo
+// usa pinta y agranda: el papel de una calcomanía (Servicios.css).
+export default function Icono({ id, className, papel = false }) {
   const glifo = GLIFOS[id]
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false" {...(glifo ? MACIZO : TRAZO)}>
+      {glifo && papel && (
+        <g transform={ITALICA} className="icono-papel">
+          {trazados(glifo).map((d) => (
+            <path key={d} d={contorno(d)} />
+          ))}
+        </g>
+      )}
       {glifo ? <g transform={ITALICA}>{glifo}</g> : TRAZOS[id]}
     </svg>
   )

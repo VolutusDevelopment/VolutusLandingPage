@@ -2,9 +2,8 @@ import { enderezar, inclinar } from './lib/inclinacion.js'
 import { quieto } from './lib/movimiento.js'
 
 /**
- * La pieza de un servicio (components/Pieza.jsx) se inclina hacia el cursor
- * como la card del frente de la rueda (servicios.js), y las capas de su escena
- * se corren según su hondura (Servicio.css). Solo con un ratón de verdad y
+ * La pieza de un servicio (components/Pieza.jsx) se inclina hacia el cursor,
+ * y las capas de su escena se corren según su hondura (Servicio.css). Solo con un ratón de verdad y
  * nunca con el movimiento reducido. En /servicios la pieza va bajo el enlace
  * que cubre su card, así que el cursor lo escucha la card.
  */

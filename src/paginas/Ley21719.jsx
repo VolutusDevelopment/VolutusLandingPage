@@ -270,7 +270,7 @@ function Cierre() {
           </p>
           <p className="ley-nota">
             Resumen informativo, no asesoría legal: manda el{' '}
-            <a href={FUENTE} rel="noopener">
+            <a href={FUENTE} target="_blank" rel="noopener">
               texto oficial de la Ley 21.719
             </a>{' '}
             y lo que dicte la Agencia. Los artículos son los de la Ley 19.628 tal como queda con la reforma.

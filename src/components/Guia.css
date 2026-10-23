@@ -54,11 +54,10 @@
     --vidrio-halo: transparent;
   }
 
+  /* Las partes empiezan donde el logo: a la orilla, como la barra. */
   .guia-carril {
     position: relative;
-    max-width: var(--ancho-maximo);
-    margin-inline: auto;
-    padding-inline: calc(var(--margen-lateral) - var(--e-3));
+    padding-inline: calc(var(--orilla) - var(--e-3));
   }
 
   .guia ul {

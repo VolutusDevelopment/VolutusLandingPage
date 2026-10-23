@@ -128,6 +128,9 @@
 
   --ancho-maximo: 1200px;
   --margen-lateral: 24px;
+  /* La barra va a la orilla de la pantalla y no al ancho del contenido: el
+     logo y la cápsula, a 16 px del borde en el teléfono y a 32 en XL. */
+  --orilla: clamp(var(--e-4), 2.2vw, var(--e-8));
   --medida-lectura: 68ch;
 
   /* Valores de respaldo para lo que vive FUERA de toda zona.

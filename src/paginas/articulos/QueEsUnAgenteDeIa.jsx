@@ -52,7 +52,7 @@ export default function QueEsUnAgenteDeIa({ ruta }) {
         También sirve puertas adentro. El agente con que obtuvimos el {HACKATHON.credencial.titulo.toLowerCase()} en
         el {HACKATHON.credencial.evento} atiende alertas de infraestructura: junta el contexto de varios sistemas y
         propone un diagnóstico con su evidencia. Su{' '}
-        <a href={HACKATHON.repositorio} rel="noopener">
+        <a href={HACKATHON.repositorio} target="_blank" rel="noopener">
           código es público
         </a>
         .

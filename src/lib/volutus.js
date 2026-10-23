@@ -31,10 +31,10 @@ export const ROLLO = { eje: 700, alto: 600, ancho: 850, nivel: -0.85, circula: 4
 // de verdad, de unos cientos de metros.
 export const JUEGO = 3000
 
-// El sol: alto y detrás de quien mira, el mismo en todas las páginas, para que
-// la luz sea pareja: las cimas claras y los vientres apenas más oscuros, sin
-// el contraste de un sol rasante. Su altura y su rumbo, en grados, desde hacia
-// donde mira la cámara.
+// El sol: alto y detrás de quien mira, el mismo en todas las páginas salvo la
+// portada (ver `aire`), para que la luz sea pareja: las cimas claras y los
+// vientres apenas más oscuros, sin el contraste de un sol rasante. Su altura y
+// su rumbo, en grados, desde hacia donde mira la cámara.
 const SOL = [60, 180]
 
 // La visibilidad del aire limpio de la mañana sobre el golfo, en m: más allá
@@ -61,8 +61,8 @@ const REFERENCIA = 1500
  * ancho que eso, la cámara lo mide por el ancho, como si el lienzo fuera más
  * alto. Sin eso, en una ventana baja el rollo se acababa a media pantalla y
  * dejaba el resto vacío. `apaisado`, si lo hay, es el rumbo en un lienzo más
- * ancho que alto, y `giro: -1` invierte el sentido en que circula la
- * superficie.
+ * ancho que alto, `giro: -1` invierte el sentido en que circula la superficie
+ * y `sol`, el sol de esa vista en vez de `SOL`.
  */
 export const VISTAS = {
   // La portada: desde el aire, detrás del rollo y a la altura de su cima,
@@ -72,8 +72,20 @@ export const VISTAS = {
   // apaisado mira el rollo más de frente: a 63° se perdía en una cuña hacia la
   // derecha, y en el borde medía la mitad de alto que en un iPad vertical.
   // Gira al revés: la espalda del rollo baja, y la nube se veía caer; así
-  // sube, como su frente en las otras páginas.
-  aire: { ojo: [0, 1170, -2300], rumbo: 63, apaisado: 80, cabeceo: 0, campo: 52, centro: [0.9, 0.28], cubre: 1.8, giro: -1 },
+  // sube, como su frente en las otras páginas. El sol va bajo, a ras del
+  // horizonte, delante a la izquierda: la luz rasante recorta cada torre de la
+  // nube y le marca el relieve, también al bajar con la grúa (`bajar`).
+  aire: {
+    ojo: [0, 1170, -2300],
+    rumbo: 63,
+    apaisado: 80,
+    cabeceo: 0,
+    campo: 52,
+    centro: [0.9, 0.28],
+    cubre: 1.8,
+    giro: -1,
+    sol: [8, 330],
+  },
   // /nosotros: de costado y a la altura del eje, frente a su frente, que
   // sube. Cruza el lienzo casi paralelo a él.
   costado: { ojo: [0, 700, 2500], rumbo: -96, cabeceo: 0, campo: 33, centro: [null, 0.5] },
@@ -92,6 +104,80 @@ export const VISTAS = {
   horizonte: { ojo: [0, 2, 7000], rumbo: -95, cabeceo: 2, campo: 50, centro: [null, 0.8] },
 }
 
+// Cuánto avanzó `t` entre `desde` y `hasta`, de 0 a 1, arrancando y frenando
+// despacio.
+const suave = (t, desde, hasta) => {
+  const k = Math.min(1, Math.max(0, (t - desde) / (hasta - desde)))
+  return k * k * (3 - 2 * k)
+}
+const entre = (a, b, k) => a + (b - a) * k
+
+// Los tres movimientos de la grúa de la portada (ver `bajar`) a `u`, de 0 a 1:
+// cuánto bajó, cuánto entró y cuánto centró la vista.
+const grua = (u) => [suave(u, 0, 0.5), suave(u, 0, 0.95), suave(u, 0, 0.3)]
+
+// El camino de la grúa en 100 tramos de `u`: cuánto lleva recorrido al final
+// de cada uno, de 0 a 1, midiendo lo que avanzan sus tres movimientos juntos.
+const CAMINO = (() => {
+  const puntos = Array.from({ length: 101 }, (_, i) => grua(i / 100))
+  const largos = [0]
+  for (let i = 1; i < puntos.length; i++) {
+    largos.push(largos[i - 1] + Math.hypot(...puntos[i].map((x, eje) => x - puntos[i - 1][eje])))
+  }
+  return largos.map((largo) => largo / largos.at(-1))
+})()
+
+// La `u` en que la grúa lleva recorrida la fracción `t` de su camino.
+function recorrido(t) {
+  const i = CAMINO.findIndex((largo) => largo >= Math.min(t, 1))
+  if (i <= 0) return 0
+  return (i - 1 + (t - CAMINO[i - 1]) / (CAMINO[i] - CAMINO[i - 1])) / 100
+}
+
+/**
+ * La cámara de la portada a `t` (de 0 a 1) del scroll hasta Proyectos, que la
+ * tapa (`recorrer` en nubes.js). Es una grúa: no gira, baja lenta de la altura de la cima al
+ * suelo mientras su brazo la acerca al pie del rollo y levanta la vista, hasta
+ * tenerlo encima. Nunca sube sobre la nube: se la mira siempre desde abajo. En
+ * 0 es `aire`. El punto al que mira pasa a la mitad del lienzo (`medio`) y el
+ * sol se queda donde estaba en la portada aunque la cámara gire (`fijo`). Va
+ * pareja con el scroll: cada píxel la lleva igual de lejos por su camino, del
+ * primero al último, cuando Proyectos la tapa (`recorrido`).
+ */
+export function bajar(t) {
+  const { aire } = VISTAS
+  const [baja, entra, centra] = grua(recorrido(t))
+  return {
+    ...aire,
+    ojo: [0, entre(aire.ojo[1], 2, baja), entre(aire.ojo[2], -1150, entra)],
+    apaisado: entre(aire.apaisado, 70, entra),
+    cabeceo: entre(aire.cabeceo, 45, entra),
+    campo: entre(aire.campo, 66, baja),
+    centro: [aire.centro[0], entre(aire.centro[1], 0.6, centra)],
+    medio: centra,
+    fijo: true,
+  }
+}
+
+// Lo que la cámara de la portada va detrás del scroll cuando este corre
+// parejo, en s (ver `arrastrar`).
+const ARRASTRE = 0.15
+
+/**
+ * Un paso de `dt` s de la cámara de la portada hacia donde está el scroll
+ * (`meta`), de 0 a 1 como `t` en `bajar`. Es un cuerpo con masa tirado por un
+ * resorte con amortiguación crítica: arranca y frena sin golpes, porque su
+ * velocidad `v` (1/s) nunca cambia de golpe, y no se pasa de largo. Es la
+ * solución exacta del resorte, estable con cualquier paso.
+ */
+export function arrastrar({ x, v }, meta, dt) {
+  const w = 2 / ARRASTRE
+  const lejos = x - meta
+  const empuje = v + w * lejos
+  const decae = Math.exp(-w * dt)
+  return { x: meta + (lejos + empuje * dt) * decae, v: (v - w * empuje * dt) * decae }
+}
+
 const grados = (g) => (g * Math.PI) / 180
 const punto = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 const unir = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k]
@@ -104,11 +190,14 @@ const normal = (a) => {
 /**
  * La cámara de `perspectiva` para un lienzo de `ancho` × `alto` px: su ojo,
  * sus ejes (`frente`, `derecha` y `arriba`), la focal y el centro en px del
- * lienzo, hacia dónde está el sol y el sentido del giro.
+ * lienzo, hacia dónde está el sol y el sentido del giro. `perspectiva` es el
+ * nombre de una de las `VISTAS` o, al bajar por la portada, la vista misma
+ * (`bajar`).
  */
 export function encuadrar(perspectiva, ancho, alto) {
-  const vista = VISTAS[perspectiva] ?? VISTAS.aire
-  const rumbo = grados(ancho > alto ? (vista.apaisado ?? vista.rumbo) : vista.rumbo)
+  const vista = typeof perspectiva === 'object' ? perspectiva : (VISTAS[perspectiva] ?? VISTAS.aire)
+  const rumboDe = (v) => (ancho > alto ? (v.apaisado ?? v.rumbo) : v.rumbo)
+  const rumbo = grados(rumboDe(vista))
   const cabeceo = grados(vista.cabeceo)
   const frente = [Math.cos(cabeceo) * Math.cos(rumbo), Math.sin(cabeceo), Math.cos(cabeceo) * Math.sin(rumbo)]
   const derecha = normal(cruz([0, 1, 0], frente))
@@ -117,10 +206,18 @@ export function encuadrar(perspectiva, ancho, alto) {
   // ancho. Entonces crece alrededor del horizonte, que no se mueve.
   const medida = Math.max(alto, ancho / (vista.cubre ?? Infinity))
   const focal = medida / 2 / Math.tan(grados(vista.campo) / 2)
+  // Con `medio` (0 a 1), el punto al que mira va de su `x` a la mitad del
+  // ancho.
   const [x, y] = vista.centro
-  const centro = [x === null ? ancho / 2 : x * medida, y * alto - focal * (1 - alto / medida) * Math.tan(cabeceo)]
-  // El sol: su rumbo desde el frente de la cámara, en el plano.
-  const [altura, giro] = SOL.map(grados)
+  const medio = vista.medio ?? 0
+  const centro = [
+    x === null ? ancho / 2 : entre(x * medida, ancho / 2, medio),
+    y * alto - focal * (1 - alto / medida) * Math.tan(cabeceo),
+  ]
+  // El sol: su rumbo desde el frente de la cámara, en el plano. Con `fijo`,
+  // desde el frente de la portada: no gira con la cámara.
+  const [altura, giroSol] = vista.sol ?? SOL
+  const giro = grados(giroSol + (vista.fijo ? rumboDe(vista) - rumboDe(VISTAS.aire) : 0))
   const plano = normal([frente[0], 0, frente[2]])
   const lado = normal([derecha[0], 0, derecha[2]])
   const sol = normal([

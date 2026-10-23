@@ -2,9 +2,9 @@ import { CARPETAS, ETIQUETA, OLA, PANTALLA, TELEFONO, VENTANA } from './Icono.js
 
 /**
  * La pieza de la cabecera de cada página de servicio: lo que hace el servicio,
- * dibujado. Es la card de la rueda en grande, en el color del servicio y con
- * su anillo blanco, y dentro, su escena, en el idioma de los iconos de las
- * cards: glifos macizos inclinados 10° (Icono.jsx), sin trazo, en blanco y
+ * dibujado. Es una card grande, en el color del servicio y con su anillo
+ * blanco, y dentro, su escena, en el idioma de los iconos de servicio:
+ * glifos macizos inclinados 10° (Icono.jsx), sin trazo, en blanco y
  * medio blanco, con un solo dato concreto en la letra de los titulares. Los
  * negocios y las cifras son de ejemplo, como el Café Luna de PonleNota: no son
  * clientes.
@@ -15,7 +15,7 @@ import { CARPETAS, ETIQUETA, OLA, PANTALLA, TELEFONO, VENTANA } from './Icono.js
  *
  * Se mueve en dos tiempos (Servicio.css). Al cargar cuenta su historia una
  * vez, cada parte con su retardo (`tras`), y se queda quieta. Con el cursor
- * encima se inclina como la card de la rueda (pieza.js), sus tres capas se
+ * encima se inclina hacia él (pieza.js), sus tres capas se
  * corren hacia él según su hondura y repite el gesto de su servicio: las
  * clases `pz-h-*`. Cada gesto va en un elemento distinto del que entra al
  * cargar, para que uno no corte ni repita al otro.

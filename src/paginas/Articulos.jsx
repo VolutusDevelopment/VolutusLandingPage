@@ -13,8 +13,8 @@ import { PAGINAS, PAGINAS_DEL_INDICE, POR_PAGINA, articulosDePagina, numeroDePag
  * Es un sumario: en la primera página, el más nuevo en una lámina oscura a
  * todo el ancho, y los demás en filas (components/FilaDeArticulo.jsx). Cada
  * uno lleva el glifo del servicio del que habla en una baldosa de su color, el
- * de su card en la rueda, con su nombre y la fecha: el índice se lee también
- * por servicio. Termina en el formulario de contacto.
+ * de su página, con su nombre y la fecha: el índice se lee también por
+ * servicio. Termina en el formulario de contacto.
  */
 export default function Articulos({ ruta }) {
   const { descripcion } = PAGINAS['/articulos']

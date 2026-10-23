@@ -14,8 +14,13 @@
  * zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la
  * trama, en px CSS, lo da `--nubes-celda` (ver `rejilla`).
  *
+ * En la portada el cielo queda fijo detrás de la página hasta que lo tapa la
+ * sección que dice `data-recorrido`, y al bajar hacia ella la cámara baja con
+ * el scroll (ver `recorrer`).
+ *
  * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
- * sobre su sección, y el pintor lo vuelve viento. Lo mismo con lo que la
+ * sobre su sección (en la portada, también sobre los servicios que suben por
+ * la nube fija), y el pintor lo vuelve viento. Lo mismo con lo que la
  * página haga pasar por la nube —los patos de la 404—, que lo avisa con un
  * evento `soplo` en el lienzo. Y el juego de la 404 cambia la forma de la nube
  * con un evento `forma`, que aquí solo se reenvía al pintor (ver patos.js).
@@ -39,8 +44,8 @@
  *     OffscreenCanvas o sin pintor, el lienzo queda transparente y se deja de
  *     escucharlo (`sin-gl`). En todos esos casos, si la escena está grabada,
  *     encima va su video (ver `grabado`), y la página sigue entera.
- *   - Nada fuera de pantalla. Se para al salir del viewport y con la pestaña
- *     oculta.
+ *   - Nada fuera de pantalla. Se para al salir del viewport, al quedar tapado
+ *     (la nube fija de la portada) y con la pestaña oculta.
  *   - Nada interactivo con movimiento reducido. Pinta un solo fotograma,
  *     quieto, el cursor no lo mueve y el pato no sale; donde la escena está
  *     grabada, encima va su video.
@@ -94,6 +99,11 @@ function alAsomar(lienzo, hacer) {
 // visibilidad, y nadie le vuelve a escribir.
 function montar(pintor, lienzo, id) {
   const mar = lienzo.dataset.vista === 'mar'
+  // La sección que tapa la nube fija de la portada.
+  const tapa = lienzo.dataset.recorrido && document.querySelector(lienzo.dataset.recorrido)
+  // Las secciones sobre las que se ve el cielo: la suya y, si queda fijo, las
+  // que lo dejan ver hasta que lo tapan.
+  const zonas = tapa ? dejanVer(lienzo.closest('section'), tapa) : [lienzo.closest('section')]
   const control = new AbortController()
   const { signal } = control
   const observadores = []
@@ -166,26 +176,50 @@ function montar(pintor, lienzo, id) {
   // llegando mientras la página se desplaza (`pointermove` se cancela en
   // cuanto empieza el scroll). Nada impide desplazar. Como mucho un aviso por
   // fotograma, y la caja del lienzo se lee en ese fotograma, no en cada evento.
-  // La zona es la sección del cielo: el lienzo no recibe el puntero.
+  // Se escucha en las `zonas`, no en el lienzo, que no recibe el puntero: así
+  // el cursor sigue soplando sobre los servicios que pasan por la nube fija.
+  // Pasar de una zona a la siguiente no corta el trazo.
   function seguirCursor() {
-    const zona = lienzo.closest('section')
     let cursor = null
     const apuntarCursor = () => {
-      if (!ajeno) apuntar(cursor.x, cursor.y)
+      if (cursor && !ajeno) apuntar(cursor.x, cursor.y)
       cursor = null
     }
     const seguir = ({ clientX, clientY }) => {
       if (!cursor) requestAnimationFrame(apuntarCursor)
       cursor = { x: clientX, y: clientY }
     }
+    // Al soltar se descarta el punto que esperaba su fotograma: llegaría
+    // después del aviso y el pintor lo uniría con el primero del gesto
+    // siguiente, en una ráfaga de uno al otro.
     const soltar = () => {
+      cursor = null
       if (!ajeno) pintor.postMessage({ tipo: 'cursor', id, fuera: true })
     }
+    const salir = ({ relatedTarget }) => {
+      if (!zonas.some((zona) => zona.contains(relatedTarget))) soltar()
+    }
     const pasivo = { passive: true, signal }
-    zona.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
-    zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
-    zona.addEventListener('pointerleave', soltar, { signal })
-    zona.addEventListener('touchend', soltar, pasivo)
+    for (const zona of zonas) {
+      zona.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
+      zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
+      zona.addEventListener('pointerleave', salir, { signal })
+      zona.addEventListener('touchend', soltar, pasivo)
+    }
+  }
+
+  // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
+  // con el scroll. Aquí solo se mide cuánto se bajó (de 0 a 1); la cámara la
+  // pone el pintor, que la lleva tras el scroll como un cuerpo con masa, sin
+  // frenazos (`bajar` y `arrastrar`, lib/volutus.js).
+  // El navegador da como mucho un `scroll` por fotograma. Con movimiento
+  // reducido se queda en la portada.
+  function recorrer() {
+    if (quieto()) return
+    const enviar = () =>
+      pintor.postMessage({ tipo: 'bajada', id, t: Math.min(1, Math.max(0, scrollY / tapa.offsetTop)) })
+    addEventListener('scroll', enviar, { passive: true, signal })
+    enviar()
   }
 
   const offscreen = lienzo.transferControlToOffscreen()
@@ -204,6 +238,7 @@ function montar(pintor, lienzo, id) {
     )
   } else {
     seguirCursor()
+    if (tapa) recorrer()
     lienzo.addEventListener(
       'soplo',
       ({ detail: { x, y, fuera } }) => {
@@ -221,11 +256,23 @@ function montar(pintor, lienzo, id) {
 
   const tamano = new ResizeObserver(medir)
   tamano.observe(lienzo)
-  const enPantalla = new IntersectionObserver(([entrada]) => {
-    visible = entrada.isIntersecting
-    activar()
-  })
-  enPantalla.observe(lienzo)
+  // Se pinta mientras se ve. La nube fija de la portada está siempre en
+  // pantalla: lo que dice si se ve son las secciones que la dejan ver, de la
+  // suya a la anterior a la que la tapa, con una pantalla de margen arriba para
+  // el borde fundido de esa (Portada.css).
+  const vistas = new Set()
+  const enPantalla = new IntersectionObserver(
+    (entradas) => {
+      for (const { target, isIntersecting } of entradas) {
+        if (isIntersecting) vistas.add(target)
+        else vistas.delete(target)
+      }
+      visible = vistas.size > 0
+      activar()
+    },
+    tapa ? { rootMargin: '100% 0px 0px 0px' } : {},
+  )
+  for (const visto of tapa ? zonas : [lienzo]) enPantalla.observe(visto)
   observadores.push(tamano, enPantalla)
   document.addEventListener('visibilitychange', activar, { signal })
 
@@ -233,6 +280,13 @@ function montar(pintor, lienzo, id) {
     control.abort()
     observadores.forEach((observador) => observador.disconnect())
   }
+}
+
+// Las secciones desde `desde` hasta la anterior a `tapa`.
+function dejanVer(desde, tapa) {
+  const secciones = []
+  for (let seccion = desde; seccion && seccion !== tapa; seccion = seccion.nextElementSibling) secciones.push(seccion)
+  return secciones
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su
