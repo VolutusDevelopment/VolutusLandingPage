@@ -38,7 +38,7 @@
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
-import { FISICA, JUEGO, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
+import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -1052,7 +1052,6 @@ function pintar(escena, ahora, conAire = true) {
   const { gl, programas: [campo, trama] } = escena
   const t = (ahora - inicio) / 1000
   const quieta = fija(escena)
-  escena.movida = false
   if (escena.aire && !quieta && conAire) simular(escena)
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
@@ -1094,10 +1093,10 @@ function pintar(escena, ahora, conAire = true) {
 // cambia nada; con una lenta, las nubes nunca ocupan más de la mitad de la GPU
 // y la página no se traba.
 //
-// La cámara que se movió (al bajar por la portada) no espera a `intervalo`: se
-// repinta hasta a 60 fps, porque a 30 se la ve avanzar a saltos. El aire sigue
-// a su paso. Solo con una GPU que da abasto, la que deja `intervalo` en
-// `INTERVALO`.
+// La cámara que se mueve (al bajar por la portada, `seguir`) no espera a
+// `intervalo`: se repinta hasta a 60 fps, porque a 30 se la ve avanzar a
+// saltos. El aire sigue a su paso. Solo con una GPU que da abasto, la que deja
+// `intervalo` en `INTERVALO`.
 function paso(ahora) {
   marco = 0
   for (const escena of [...escenas.values()]) {
@@ -1123,18 +1122,37 @@ function paso(ahora) {
   const vivas = animadas.filter((e) => !nuevas.includes(e))
   if (ahora - ultimo < intervalo) {
     if (intervalo === INTERVALO) {
-      for (const e of vivas) if (e.movida && ahora - e.antes >= MOVIDA) pintar(e, ahora, false)
+      for (const e of vivas) if (ahora - e.antes >= MOVIDA && seguir(e, ahora)) pintar(e, ahora, false)
     }
     return
   }
   ultimo = ahora
   const desde = performance.now()
-  vivas.forEach((e) => pintar(e, ahora))
+  vivas.forEach((e) => {
+    seguir(e, ahora)
+    pintar(e, ahora)
+  })
   if (!vivas.length || ahora - medido < MEDIR_CADA) return
   const pixel = new Uint8Array(4)
   vivas.forEach(({ gl }) => gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel))
   intervalo = Math.max(INTERVALO, 2 * (performance.now() - desde))
   medido = ahora
+}
+
+// La cámara de la portada da un paso tras el scroll (`arrastrar`, lib/volutus.js)
+// hasta `ahora`, y se vuelve a encuadrar. Devuelve si se movió: ya quieta en
+// su sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
+function seguir(escena, ahora) {
+  const { grua } = escena
+  if (!grua || (grua.x === grua.meta && grua.v === 0)) return false
+  const dt = Math.min((ahora - (grua.cuando ?? ahora)) / 1000, 0.1)
+  Object.assign(grua, arrastrar(grua, grua.meta, dt), { cuando: ahora })
+  if (Math.abs(grua.x - grua.meta) < 1e-5 && Math.abs(grua.v) < 1e-4) {
+    Object.assign(grua, { x: grua.meta, v: 0, cuando: undefined })
+  }
+  escena.vista = bajar(grua.x)
+  if (escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+  return true
 }
 
 // La cámara de la nube: la de su página o, en la portada al bajar, la de la
@@ -1245,12 +1263,22 @@ onmessage = ({ data }) => {
     if (escena.programas) aplicar(escena, data)
     else escena.ultimos[data.tipo] = data
   }
-  if (escena && data.tipo === 'activa') escena.activa = data.valor
-  // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js).
+  if (escena && data.tipo === 'activa') {
+    escena.activa = data.valor
+    // Al volver a verse, la cámara sigue desde donde quedó, sin contar lo que
+    // estuvo parada (ver `seguir`).
+    if (escena.grua) escena.grua.cuando = undefined
+  }
+  // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js). La
+  // primera vez la cámara va ahí; después lo sigue (`seguir`).
   if (escena && data.tipo === 'bajada') {
-    escena.vista = bajar(data.t)
-    escena.movida = true
-    if (escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+    if (escena.grua) {
+      escena.grua.meta = data.t
+    } else {
+      escena.grua = { x: data.t, v: 0, meta: data.t }
+      escena.vista = bajar(data.t)
+      if (escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+    }
   }
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`

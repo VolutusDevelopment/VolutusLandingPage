@@ -195,8 +195,9 @@ function montar(pintor, lienzo, id) {
   }
 
   // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
-  // con el scroll, a su mismo paso y sin demora. Aquí solo se mide cuánto se
-  // bajó (de 0 a 1); la cámara la pone el pintor (`bajar`, lib/volutus.js).
+  // con el scroll. Aquí solo se mide cuánto se bajó (de 0 a 1); la cámara la
+  // pone el pintor, que la lleva tras el scroll como un cuerpo con masa, sin
+  // frenazos (`bajar` y `arrastrar`, lib/volutus.js).
   // El navegador da como mucho un `scroll` por fotograma. Con movimiento
   // reducido se queda en la portada.
   function recorrer() {

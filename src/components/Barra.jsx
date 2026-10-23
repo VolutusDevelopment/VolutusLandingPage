@@ -117,7 +117,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
         <span />
         <span />
       </div>
-      <div className="contenedor barra-interior">
+      <div className="barra-interior">
         {/* En la portada la marca sube al principio; fuera de ella, vuelve a
             la portada. Es la única forma de salir del documento legal con el
             gesto que todo el mundo intenta primero. */}

@@ -22,28 +22,109 @@
 }
 
 .servicios {
+  --bajo-barra: calc(var(--barra-alto) + var(--e-4));
+  --hueco: calc(100svh - var(--bajo-barra));
   position: relative;
   z-index: 1;
 }
 
-/* El título va arriba de la pantalla del primero: así el primer scroll
-   también cae en un servicio. */
-.servicios .titular {
-  position: absolute;
-  inset-inline: 0;
-  text-align: center;
+/* El título y el índice van al pie de la pantalla, donde llega el pulgar,
+   mientras pasan los ocho. La cabeza mide lo que se ve bajo la barra, se queda
+   pegada y se va con el último; la lista sube bajo ella. Lo de la cabeza no
+   tapa los enlaces de los servicios: solo el índice recibe el toque. */
+.servicios-cabeza {
+  position: sticky;
+  top: var(--bajo-barra);
+  height: var(--hueco);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--e-3);
+  padding-bottom: calc(var(--e-6) + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.servicios-cabeza .titular {
+  font-size: clamp(20px, 1rem + 1vw, 28px);
+}
+
+/* El índice: los ocho glifos en calcomanía, chicos. El de la pantalla
+   (servicios.js) va en su color y un poco más arriba, y los demás en gris;
+   tocar uno lleva a él. Las columnas se achican antes de que la fila se salga
+   de la pantalla. */
+.servicios-indice {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 44px);
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.servicios-indice a {
+  display: grid;
+  place-items: center;
+  height: 44px;
+}
+
+.servicios-indice-icono {
+  width: 28px;
+  height: 28px;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition:
+    opacity 200ms var(--ease-out),
+    filter 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.servicios-indice .actual .servicios-indice-icono {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-3px) scale(1.15);
+}
+
+@media (hover: hover) {
+  .servicios-indice a:hover .servicios-indice-icono {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicios-indice {
+    grid-auto-columns: 52px;
+  }
+
+  .servicios-indice-icono {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .servicios-indice-icono {
+    transition-property: opacity, filter;
+  }
 }
 
 .servicios-lista {
   list-style: none;
-  margin: 0;
+  margin: calc(-1 * var(--hueco)) 0 0;
   padding: 0;
 }
 
-/* Cada uno mide lo que se ve bajo la barra (el `scroll-padding-top` de html),
-   así que encaja justo al centro y los vecinos quedan fuera. */
+/* Cada uno mide lo que se ve bajo la barra (el `scroll-padding-top` de html,
+   `--bajo-barra`), así que encaja justo y los vecinos quedan fuera. Lo suyo
+   sube ese mismo alto con el relleno de abajo: queda al centro de la pantalla
+   entera, no de lo que queda bajo la barra. */
 .servicio {
-  min-height: calc(100svh - var(--barra-alto) - var(--e-4));
+  min-height: var(--hueco);
+  padding-bottom: var(--bajo-barra);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,16 +138,20 @@
    una calcomanía (`papel` en Icono.jsx): sobre el cielo, su color se perdía.
    El margen une las piezas que van cerca y los huecos quedan blancos. El color
    es el de su servicio, más claro y más vivo, porque el hondo se veía apagado
-   sobre la nube; sin color relativo, queda el hondo. */
-.servicio-icono {
-  width: 48px;
-  height: 48px;
+   sobre la nube; sin color relativo, queda el hondo. Lo mismo en el índice. */
+.servicio-icono,
+.servicios-indice-icono {
   overflow: visible;
   color: var(--servicio);
   color: oklch(from var(--servicio) calc(l + 0.1) calc(c * 1.35) h);
 }
 
-.servicio-icono .icono-papel {
+.servicio-icono {
+  width: 48px;
+  height: 48px;
+}
+
+:is(.servicio-icono, .servicios-indice-icono) .icono-papel {
   fill: var(--superficie);
   stroke: var(--superficie);
   stroke-width: 3.5;

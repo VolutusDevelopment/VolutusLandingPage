@@ -129,7 +129,7 @@ const CAMINO = (() => {
 
 // La `u` en que la grúa lleva recorrida la fracción `t` de su camino.
 function recorrido(t) {
-  const i = CAMINO.findIndex((largo) => largo >= t)
+  const i = CAMINO.findIndex((largo) => largo >= Math.min(t, 1))
   if (i <= 0) return 0
   return (i - 1 + (t - CAMINO[i - 1]) / (CAMINO[i] - CAMINO[i - 1])) / 100
 }
@@ -157,6 +157,25 @@ export function bajar(t) {
     medio: centra,
     fijo: true,
   }
+}
+
+// Lo que la cámara de la portada va detrás del scroll cuando este corre
+// parejo, en s (ver `arrastrar`).
+const ARRASTRE = 0.15
+
+/**
+ * Un paso de `dt` s de la cámara de la portada hacia donde está el scroll
+ * (`meta`), de 0 a 1 como `t` en `bajar`. Es un cuerpo con masa tirado por un
+ * resorte con amortiguación crítica: arranca y frena sin golpes, porque su
+ * velocidad `v` (1/s) nunca cambia de golpe, y no se pasa de largo. Es la
+ * solución exacta del resorte, estable con cualquier paso.
+ */
+export function arrastrar({ x, v }, meta, dt) {
+  const w = 2 / ARRASTRE
+  const lejos = x - meta
+  const empuje = v + w * lejos
+  const decae = Math.exp(-w * dt)
+  return { x: meta + (lejos + empuje * dt) * decae, v: (v - w * empuje * dt) * decae }
 }
 
 const grados = (g) => (g * Math.PI) / 180

@@ -80,6 +80,7 @@
 
 .barra-interior {
   height: var(--barra-alto);
+  padding-inline: var(--orilla);
   display: flex;
   align-items: center;
   justify-content: space-between;
