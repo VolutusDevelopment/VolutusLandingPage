@@ -2,9 +2,11 @@ import { SERVICIOS } from '../lib/servicios.js'
 import Icono from './Icono.jsx'
 
 /**
- * Servicios: los ocho a la vista, en una retícula a todo el ancho y sin
- * tarjetas, para que la nube de la portada se vea detrás. Cada uno lleva una
- * raya del color de su servicio (lib/servicios.js), el mismo de su página.
+ * Servicios: los ocho, de a uno, sobre la nube fija de la portada, que se ve
+ * detrás y entre uno y otro mientras la cámara baja (nubes.js). Sin tarjetas:
+ * su glifo, en el color de su servicio (lib/servicios.js), el mismo de su
+ * página, va como una calcomanía (Servicios.css), su nombre lleva a su página
+ * y su frase dice qué es.
  */
 export default function Servicios() {
   return (

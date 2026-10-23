@@ -12,7 +12,6 @@
 }
 
 .servicio {
-  --nombre: clamp(2.2rem, 1.4rem + 4vw, 4.5rem);
   min-height: 75svh;
   max-width: 40rem;
   display: flex;
@@ -20,113 +19,29 @@
   justify-content: center;
 }
 
-/* El glifo, con el color de su servicio más claro y más vivo: el hondo de las
-   cards se veía apagado. Sin color relativo, queda el de la card. Sobre el
-   cielo se perdía, así que lleva un fondo blanco, que se elige con ?icono=
-   (prototipo, index.html). */
+/* El glifo va impreso sobre su silueta en papel blanco, con un margen, como
+   una calcomanía (`papel` en Icono.jsx): sobre el cielo, su color se perdía.
+   El margen une las piezas que van cerca y los huecos quedan blancos. El color
+   es el de su servicio, más claro y más vivo, porque el hondo se veía apagado
+   sobre la nube; sin color relativo, queda el hondo. */
 .servicio-icono {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
+  overflow: visible;
   color: var(--servicio);
   color: oklch(from var(--servicio) calc(l + 0.1) calc(c * 1.35) h);
 }
 
-/* Etiqueta: un rótulo blanco inclinado 10°, como el logotipo y el glifo. */
-:root[data-icono='etiqueta'] .servicio-icono {
-  width: 64px;
-  height: 44px;
-  padding: 7px 17px;
-  background: var(--superficie);
-  clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
-}
-
-/* Baldosa: un cuadro blanco con la esquina de 4 px del sitio. */
-:root[data-icono='baldosa'] .servicio-icono {
-  width: 52px;
-  height: 52px;
-  padding: 10px;
-  border-radius: var(--radio);
-  background: var(--superficie);
-}
-
-/* En línea: el cuadro blanco va en la primera línea del nombre, a su alto. El
-   ancho que ocupa se le suma al servicio, para que el nombre no se parta. */
-:root[data-icono='linea'] .servicio {
-  max-width: calc(40rem + var(--nombre) * 0.9 + var(--e-3));
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-content: center;
-  column-gap: var(--e-3);
-}
-
-:root[data-icono='linea'] .servicio-icono {
-  --lado: calc(var(--nombre) * 0.9);
-  align-self: start;
-  width: var(--lado);
-  height: var(--lado);
-  margin-top: calc(var(--nombre) * 0.075);
-  padding: calc(var(--lado) * 0.18);
-  border-radius: var(--radio);
-  background: var(--superficie);
-}
-
-:root[data-icono='linea'] .servicio-nombre {
-  margin-top: 0;
-}
-
-:root[data-icono='linea'] .servicio-texto {
-  grid-column: 2;
-}
-
-/* Calcomanía: sin caja; el glifo va impreso sobre su silueta en papel blanco,
-   con un margen, como un sticker recortado (Icono.jsx, `papel`). El margen
-   une las piezas que van cerca, y los huecos quedan blancos. */
-.icono-papel {
-  display: none;
-}
-
-:root[data-icono='calcomania'] .servicio-icono {
-  width: 48px;
-  height: 48px;
-  overflow: visible;
-}
-
-:root[data-icono='calcomania'] .icono-papel {
-  display: inline;
+.servicio-icono .icono-papel {
   fill: var(--superficie);
   stroke: var(--superficie);
   stroke-width: 3.5;
   stroke-linejoin: round;
 }
 
-/* Trama: un parche de la trama de puntos de la nube, que se deshace en el
-   borde. */
-:root[data-icono='trama'] .servicio-icono {
-  width: 76px;
-  height: 76px;
-  margin-left: calc(-1 * var(--e-3));
-  padding: 20px;
-  background: radial-gradient(circle, var(--superficie) 0 1.5px, transparent 1.9px) 0 0 / 4px 4px;
-  mask-image: radial-gradient(closest-side, #000 65%, transparent);
-}
-
-/* Resplandor: una luz blanca y suave detrás del glifo, sin borde. */
-:root[data-icono='resplandor'] .servicio-icono {
-  width: 72px;
-  height: 72px;
-  margin-left: calc(-1 * var(--e-3));
-  padding: 18px;
-  background: radial-gradient(
-    closest-side,
-    var(--superficie) 50%,
-    color-mix(in srgb, var(--superficie) 55%, transparent) 72%,
-    transparent
-  );
-}
-
 .servicio-nombre {
   margin: var(--e-3) 0 var(--e-2);
-  font-size: var(--nombre);
+  font-size: clamp(2.2rem, 1.4rem + 4vw, 4.5rem);
   line-height: 1.05;
 }
 
@@ -135,8 +50,9 @@
   text-decoration: none;
 }
 
+/* La flecha dice que sigue, y el lector de pantalla no la lee. */
 .servicio-nombre a::after {
-  content: ' →';
+  content: ' →' / '';
 }
 
 .servicio-nombre a:hover {

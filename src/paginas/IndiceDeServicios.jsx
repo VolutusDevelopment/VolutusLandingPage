@@ -11,7 +11,7 @@ import { PAGINAS_DE_SERVICIO } from '../data/paginas-de-servicio.js'
  * (`abajo`, lib/volutus.js), con la entradilla y el botón al formulario,
  * para quien ya sabe lo que quiere.
  *
- * La rueda de la portada ya explica cada servicio y su página lo cuenta
+ * La portada ya dice qué es cada servicio y su página lo cuenta
  * entero, así que aquí no se explica: cada servicio es la portada de su
  * página en chico, el cielo en su color con su pieza (Pieza.jsx), su nombre
  * en grande, que es lo que se busca aquí, y el titular de su página

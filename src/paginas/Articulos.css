@@ -141,7 +141,7 @@
 }
 
 /* La baldosa: el glifo del servicio sobre su color, con la trama de la
-   marca, como una card de la rueda en chico. */
+   marca, como la pieza de su página en chico. */
 .articulos-tapa {
   grid-area: tapa;
   display: grid;
@@ -220,7 +220,7 @@
 }
 
 /* Al pasar el cursor, el título toma el color de la acción y el glifo hace
-   el gesto de su servicio, como en la rueda (Icono.css). */
+   el gesto de su servicio (Icono.css). */
 @media (hover: hover) {
   .articulos > li:hover :is(h2, h3) a {
     color: var(--accion);

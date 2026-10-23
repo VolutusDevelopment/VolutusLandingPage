@@ -14,6 +14,10 @@
  * zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la
  * trama, en px CSS, lo da `--nubes-celda` (ver `rejilla`).
  *
+ * En la portada el cielo queda fijo detrás de la página hasta que lo tapa la
+ * sección que dice `data-recorrido`, y al bajar hacia ella la cámara baja con
+ * el scroll (ver `recorrer`).
+ *
  * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
  * sobre su sección, y el pintor lo vuelve viento. Lo mismo con lo que la
  * página haga pasar por la nube —los patos de la 404—, que lo avisa con un
@@ -39,15 +43,14 @@
  *     OffscreenCanvas o sin pintor, el lienzo queda transparente y se deja de
  *     escucharlo (`sin-gl`). En todos esos casos, si la escena está grabada,
  *     encima va su video (ver `grabado`), y la página sigue entera.
- *   - Nada fuera de pantalla. Se para al salir del viewport y con la pestaña
- *     oculta.
+ *   - Nada fuera de pantalla. Se para al salir del viewport, al quedar tapado
+ *     (la nube fija de la portada) y con la pestaña oculta.
  *   - Nada interactivo con movimiento reducido. Pinta un solo fotograma,
  *     quieto, el cursor no lo mueve y el pato no sale; donde la escena está
  *     grabada, encima va su video.
  */
 
 import { quieto } from './lib/movimiento.js'
-import { LUCES, RECORRIDOS, recorrer as viajar } from './lib/volutus.js'
 
 // Tope de densidad de píxeles del mar: por encima de 1.5 sus puntos no se ven
 // mejor y el costo sigue creciendo.
@@ -99,6 +102,8 @@ function alAsomar(lienzo, hacer) {
 // visibilidad, y nadie le vuelve a escribir.
 function montar(pintor, lienzo, id) {
   const mar = lienzo.dataset.vista === 'mar'
+  // La sección que tapa la nube fija de la portada.
+  const tapa = lienzo.dataset.recorrido && document.querySelector(lienzo.dataset.recorrido)
   const control = new AbortController()
   const { signal } = control
   const observadores = []
@@ -193,32 +198,20 @@ function montar(pintor, lienzo, id) {
     zona.addEventListener('touchend', soltar, pasivo)
   }
 
-  // La portada: al bajar hasta Proyectos, la cámara hace uno de los
-  // `RECORRIDOS` (lib/volutus.js). No salta con el scroll: lo sigue con
-  // inercia, como una grúa pesada. Con movimiento reducido se queda quieta.
+  // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
+  // con el scroll. Aquí solo se mide cuánto se bajó (de 0 a 1); la cámara la
+  // pone el pintor (`bajar`, lib/volutus.js). No salta con el scroll: lo sigue
+  // con inercia, como el brazo pesado de una grúa. Con movimiento reducido se
+  // queda en la portada.
   function recorrer() {
     if (quieto()) return
-    const hasta = document.querySelector(lienzo.dataset.recorrido)
-    const pide = new URLSearchParams(location.search)
-    const propia = pide.get('vista')
-    const paradas = propia ? () => JSON.parse(propia) : (RECORRIDOS[pide.get('camara')] ?? RECORRIDOS.grua)
-    const luz = LUCES[pide.get('luz') ?? 'lateral']
-    const objetivo = () => Math.min(1, Math.max(0, scrollY / hasta.offsetTop))
+    const objetivo = () => Math.min(1, Math.max(0, scrollY / tapa.offsetTop))
     let actual = objetivo()
     let antes = 0
     let andando = false
-    // Lo que la nube rodó con el scroll, en radianes: suma cada tramo, baje o
-    // suba la página, así nunca rueda hacia atrás.
-    let rodado = 0
-    const enviar = (paso = 0) => {
-      const vista = viajar(paradas, actual)
-      if (luz) Object.assign(vista, { sol: typeof luz === 'function' ? luz(actual) : luz, fijo: true })
-      rodado += (vista.rueda ?? 0) * Math.abs(paso)
-      pintor.postMessage({ tipo: 'vista', id, vista: { ...vista, rueda: rodado } })
-    }
+    const enviar = () => pintor.postMessage({ tipo: 'bajada', id, t: actual })
     const mover = (ahora) => {
       const meta = objetivo()
-      const previo = actual
       actual += (meta - actual) * (1 - Math.exp(-(ahora - (antes || ahora)) / INERCIA))
       antes = ahora
       if (Math.abs(meta - actual) < 1e-4) {
@@ -228,7 +221,7 @@ function montar(pintor, lienzo, id) {
       } else {
         requestAnimationFrame(mover)
       }
-      enviar(actual - previo)
+      enviar()
     }
     addEventListener(
       'scroll',
@@ -257,7 +250,7 @@ function montar(pintor, lienzo, id) {
     )
   } else {
     seguirCursor()
-    if ('recorrido' in lienzo.dataset) recorrer()
+    if (tapa) recorrer()
     lienzo.addEventListener(
       'soplo',
       ({ detail: { x, y, fuera } }) => {
@@ -275,11 +268,23 @@ function montar(pintor, lienzo, id) {
 
   const tamano = new ResizeObserver(medir)
   tamano.observe(lienzo)
-  const enPantalla = new IntersectionObserver(([entrada]) => {
-    visible = entrada.isIntersecting
-    activar()
-  })
-  enPantalla.observe(lienzo)
+  // Se pinta mientras se ve. La nube fija de la portada está siempre en
+  // pantalla: lo que dice si se ve son las secciones que la dejan ver, de la
+  // suya a la anterior a la que la tapa, con una pantalla de margen arriba para
+  // el borde fundido de esa (Portada.css).
+  const vistas = new Set()
+  const enPantalla = new IntersectionObserver(
+    (entradas) => {
+      for (const { target, isIntersecting } of entradas) {
+        if (isIntersecting) vistas.add(target)
+        else vistas.delete(target)
+      }
+      visible = vistas.size > 0
+      activar()
+    },
+    tapa ? { rootMargin: '100% 0px 0px 0px' } : {},
+  )
+  for (const visto of tapa ? dejanVer(lienzo.closest('section'), tapa) : [lienzo]) enPantalla.observe(visto)
   observadores.push(tamano, enPantalla)
   document.addEventListener('visibilitychange', activar, { signal })
 
@@ -287,6 +292,13 @@ function montar(pintor, lienzo, id) {
     control.abort()
     observadores.forEach((observador) => observador.disconnect())
   }
+}
+
+// Las secciones desde `desde` hasta la anterior a `tapa`.
+function dejanVer(desde, tapa) {
+  const secciones = []
+  for (let seccion = desde; seccion && seccion !== tapa; seccion = seccion.nextElementSibling) secciones.push(seccion)
+  return secciones
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su

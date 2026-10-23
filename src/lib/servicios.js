@@ -1,5 +1,5 @@
 /**
- * La paleta de las cards, en orden: la costa —mar hondo, roca, coral,
+ * La paleta de los servicios, en orden: la costa —mar hondo, roca, coral,
  * atardecer, arena quemada, alga, huiro y ola—, colores hondos para contrastar
  * con el cielo y sin morado (DESIGN-BRIEF, A.2). El blanco encima da 5.5:1 o
  * más. El color va con el lugar y no con el servicio: el primero lleva siempre
@@ -19,8 +19,8 @@ const PALETA = ['#007192', '#405f74', '#b8342c', '#af4000', '#905500', '#005d37'
  * sin necesitar contratar otra previamente. Los puntos describen capacidades
  * concretas de la solución, no dependencias entre servicios.
  *
- * `color` es el de su card en la rueda y el de su página, y sale de su lugar
- * en la lista (`PALETA`).
+ * `color` es el de su página y el de su glifo en la portada, y sale de su
+ * lugar en la lista (`PALETA`).
  *
  * `ruta` es la de su página propia (paginas/Servicio.jsx), bajo /servicios,
  * el índice de todos, y tiene que estar declarada en PAGINAS (lib/meta.js). La ley de datos no tiene página

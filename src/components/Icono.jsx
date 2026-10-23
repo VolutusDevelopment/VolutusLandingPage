@@ -3,15 +3,14 @@ import { Children } from 'react'
 /**
  * Iconos en la misma rejilla de 24 que el símbolo.
  *
- * Los de los servicios (las cards de la rueda y la fila de servicios al pie de
- * cada página) son glifos macizos inclinados 10°, como el logotipo y el número
- * de la card: el dibujo se hace con el hueco y no con el trazo. Los de la guía
- * de la Ley 21.719 (/ley21719) son de trazo.
+ * Los de los servicios (la lista de la portada y la fila de servicios al pie
+ * de cada página) son glifos macizos inclinados 10°, como el logotipo: el
+ * dibujo se hace con el hueco y no con el trazo. Los de la guía de la Ley
+ * 21.719 (/ley21719) son de trazo.
  *
  * Cada glifo de servicio tiene un gesto corto (Icono.css): la marea sube en la
  * ventana, la etiqueta se mece, las carpetas se archivan… Lo hace cuando lo
- * pide quien lo usa: la card de la rueda al quedar al frente y la fila de
- * servicios al pasar el cursor.
+ * pide quien lo usa: la fila de servicios al pasar el cursor.
  *
  * Son decorativos siempre: el texto que acompañan ya dice lo mismo.
  */
