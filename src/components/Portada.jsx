@@ -42,9 +42,10 @@ const ROTATIVO = [
  * lib/volutus.js. Sin ella, la de la portada, desde el aire: el rollo entra
  * enorme por la izquierda y se aleja en diagonal. `costado` lo pone casi
  * paralelo a la pantalla, cruzando la cabecera, donde se ve subir su frente,
- * y le da a la escena su variante de layout (Portada.css).
+ * y le da a la escena su variante de layout (Portada.css). `delante`, si lo
+ * hay, va delante de la nube; el resto del texto, debajo.
  */
-export function Escena({ id, perspectiva, children }) {
+export function Escena({ id, perspectiva, delante, children }) {
   return (
     <section
       id={id}
@@ -61,6 +62,7 @@ export function Escena({ id, perspectiva, children }) {
             data-recorrido={perspectiva ? undefined : '#proyectos'}
             aria-hidden="true"
           />
+          {delante && <div className="contenedor portada-delante">{delante}</div>}
         </div>
 
         <div className="contenedor portada-interior">

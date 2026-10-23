@@ -3,7 +3,9 @@
 // Aparece cuando la cabecera ya no llega a la raya de un tercio de pantalla, y
 // se va cuando vuelve. La parte actual es la que cruza esa misma raya, como en
 // la barra (barra.js); entre una parte y otra —«Te sirve si…», el estimado— la
-// marca se queda en la última que pasó. La pastilla va hasta el enlace marcado.
+// marca se queda en la última que pasó. La pastilla va hasta el enlace marcado
+// como la gota de la barra (barra.js): aquí solo se miden sus bordes y hacia
+// dónde viaja, y el CSS hace el resto (Guia.css).
 
 export default function initGuia() {
   const guia = document.querySelector('.guia')
@@ -20,16 +22,15 @@ export default function initGuia() {
   ).observe(cabecera)
 
   const pastilla = guia.querySelector('.guia-pastilla')
-  const partes = new Map(
-    [...guia.querySelectorAll('a')].map((enlace) => [document.getElementById(enlace.hash.slice(1))?.closest('section'), enlace])
-  )
+  const enlaces = [...guia.querySelectorAll('a')]
+  const partes = new Map(enlaces.map((enlace) => [document.getElementById(enlace.hash.slice(1))?.closest('section'), enlace]))
   partes.delete(undefined)
   let actual
 
   const llevar = () => {
     if (!actual) return
-    pastilla.style.width = `${actual.offsetWidth}px`
-    pastilla.style.transform = `translateX(${actual.offsetLeft}px)`
+    pastilla.style.setProperty('--gota-izq', `${actual.offsetLeft}px`)
+    pastilla.style.setProperty('--gota-der', `${pastilla.parentElement.clientWidth - actual.offsetLeft - actual.offsetWidth}px`)
   }
 
   const observador = new IntersectionObserver(
@@ -37,6 +38,7 @@ export default function initGuia() {
       const parte = entradas.findLast(({ isIntersecting }) => isIntersecting)?.target
       const enlace = parte && partes.get(parte)
       if (!enlace || enlace === actual) return
+      if (actual) pastilla.dataset.hacia = enlaces.indexOf(enlace) > enlaces.indexOf(actual) ? 'derecha' : 'izquierda'
       actual?.removeAttribute('aria-current')
       enlace.setAttribute('aria-current', 'location')
       actual = enlace

@@ -20,7 +20,7 @@ export const SOCIOS = [
   {
     id: 'diego',
     nombre: 'Diego',
-    apellidos: 'Peña y Lillo Luhrs',
+    apellidos: 'Peña y Lillo Lührs',
     titulo: 'Ingeniero Informático con Especialidad en Inteligencia Artificial',
     institucion: DUOC_UC,
     rol: 'Socio co-fundador',

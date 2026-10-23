@@ -54,8 +54,8 @@
 
 /* ---- la escena ----
    Una sola pieza y un mensaje. De costado (/nosotros, ver `Escena`), la nube
-   arriba y el texto debajo: la nube se queda con lo que el texto no usa, así
-   que nadie calcula dónde va el titular. El `::after` guarda el aire mínimo
+   arriba con el titular delante y el resto del texto debajo: la nube se queda
+   con lo que el texto no usa. El `::after` guarda el aire mínimo
    bajo el texto. `svh` y no `vh`: en móvil es el alto con la barra del
    navegador visible. */
 .portada-escena {
@@ -101,11 +101,22 @@
 }
 
 /* De costado (/nosotros, ver `Escena`) la nube tiene que imponerse, como la
-   Morning Glory de la foto de esa página: el lienzo no baja de 45svh, aunque
+   Morning Glory de la foto de esa página: el lienzo no baja de 60svh, aunque
    en una pantalla baja empuje la entradilla bajo el borde. */
 .portada-costado .portada-cielo {
-  min-height: 45svh;
-  max-height: 60svh;
+  display: grid;
+  align-content: center;
+  min-height: 60svh;
+  max-height: 70svh;
+}
+
+/* El titular y la entradilla delante de la nube, al medio de su alto, que es
+   donde la cámara pone el rollo (`costado`, lib/volutus.js). Van sobre el
+   lienzo, que va posicionado, y se miden en su propio ancho, como
+   `.portada-texto`. */
+.portada-delante {
+  position: relative;
+  container-type: inline-size;
 }
 
 /* ---- la escena de la portada ----
@@ -215,25 +226,29 @@
   max-width: none;
 }
 
-/* El titular y la entradilla van en blanco, como en las cabeceras internas
-   (`.cabecera-cielo`), y sobre su mismo azul hondo, donde el blanco da 4.7:1.
-   El azul se difumina al blanco de la página detrás de las tarjetas de los
-   socios, que lo pintan (Nosotros.css). */
+/* El titular y la entradilla, delante de la nube, van en tinta, como los de
+   /servicios: sobre los puntos blancos el blanco no se leería. Mientras la
+   nube no aparece, la tinta da 3.8:1 sobre el azul hondo de la cabecera, que
+   basta para texto grande: el titular lo es, y la entradilla también, porque
+   va en negrita. El azul se difumina al blanco de la página detrás de las
+   tarjetas de los socios, que lo pintan (Nosotros.css). */
 :root .portada-costado {
   --fondo-hora: #1976cc;
 }
 
 .portada-costado :is(h1, .portada-entradilla) {
-  color: #ffffff;
+  color: #0a1a2a;
 }
 
-.portada-entradilla {
-  margin-top: var(--e-6);
+.portada-costado .portada-entradilla {
+  margin-top: var(--e-4);
+  font-weight: 700;
+  text-wrap: balance;
 }
 
 /* En L y XL el texto se centra. */
 @media (min-width: 1024px) {
-  .portada-costado .portada-texto {
+  .portada-costado :is(.portada-delante, .portada-texto) {
     text-align: center;
   }
 

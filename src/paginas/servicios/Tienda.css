@@ -1,24 +1,27 @@
 /* Tiendas online. Ver paginas/servicios/Tienda.jsx.
 
-   Las fases de una compra, una bajo otra, y al lado su índice, que se queda a
-   la vista mientras pasan: desde L con sus nombres; en S y M, la columna de
-   puntos, con el nombre para el lector de pantalla. */
+   Las fases de una compra, una por pantalla. Desde L, al lado, su índice, que
+   se queda a la vista mientras pasan y mide casi lo mismo que la pantalla. En
+   S y M no hay índice: cada fase lleva su número. */
 
+/* `--tienda-tapa` es lo que tapa la barra arriba (y en S y M, también la
+   guía): el `scroll-padding-top` de la página. `--tienda-alto` es el de una
+   fase y el del índice: lo que se ve debajo, con un respiro arriba y abajo. */
 .tienda-recorrido {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: var(--e-3);
+  --tienda-tapa: calc(var(--barra-alto) + var(--e-4));
+  --tienda-alto: calc(100svh - var(--tienda-tapa) - var(--e-4));
   margin-top: var(--e-12);
 }
 
 @media (min-width: 1024px) {
   .tienda-recorrido {
+    display: grid;
     grid-template-columns: 12rem minmax(0, 1fr);
     gap: var(--e-16);
   }
 }
 
-/* ---- el índice ---- */
+/* ---- el índice, desde L ---- */
 
 .tienda-indice {
   position: sticky;
@@ -29,7 +32,9 @@
 .tienda-indice ol {
   position: relative;
   display: grid;
+  align-content: space-between;
   gap: var(--e-2);
+  min-height: var(--tienda-alto);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -76,23 +81,17 @@
 }
 
 @media (max-width: 1023px) {
-  .tienda-paso-nombre {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .tienda-indice {
+    display: none;
   }
 }
 
 /* ---- las fases ----
-   Desde L, el texto a un lado y la escena al otro, con alto de sobra para que
-   el índice alcance a marcar cada una. */
+   Cada una mide `--tienda-alto`, casi una pantalla, así que encajada no asoman
+   sus vecinas. Desde L, el texto a un lado y la escena al otro. */
 
 .tienda-fases {
   display: grid;
-  gap: var(--e-12);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -100,7 +99,9 @@
 
 .tienda-fase {
   display: grid;
+  align-content: center;
   gap: var(--e-6);
+  min-height: var(--tienda-alto);
 }
 
 @media (min-width: 1024px) {
@@ -108,8 +109,38 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
     align-items: center;
     gap: var(--e-12);
-    min-height: 400px;
   }
+}
+
+/* ---- el encaje ----
+   Como los servicios de la portada (Servicios.css): cada scroll cae en una
+   fase, sin saltarse ninguna, al centro de la pantalla entera y no de lo que
+   se ve bajo la barra. Por eso su zona de encaje se alarga abajo lo que la
+   barra tapa arriba. Antes y después se baja libre: el título de la sección
+   alarga su zona de encaje hasta arriba de la página y la sección que sigue,
+   hasta abajo, y una zona más alta que la pantalla deja parar en cualquier
+   punto de ella. Con movimiento reducido no encaja: el encaje mueve la página
+   solo. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.tienda-recorrido) {
+    scroll-snap-type: y mandatory;
+  }
+}
+
+.tienda-fase {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  scroll-margin-bottom: var(--tienda-tapa);
+}
+
+.tienda-incluye .titular {
+  scroll-snap-align: end;
+  scroll-margin-top: 100000px;
+}
+
+.tienda-incluye + .seccion {
+  scroll-snap-align: start;
+  scroll-margin-bottom: 100000px;
 }
 
 .tienda-fase h3 {
@@ -391,8 +422,10 @@
    Cada fase es una línea de tiempo y su escena se arma mientras cruza la
    pantalla. El índice las lee todas (`timeline-scope`): su vía se llena con
    el recorrido entero y cada punto crece mientras su fase pasa por el
-   centro; las que ya pasaron quedan llenas. Sin estas animaciones, al
-   imprimir o con movimiento reducido, todo está completo y quieto. */
+   centro; las que ya pasaron quedan llenas. Las escenas terminan de armarse
+   antes del 42 % de su paso: la fase encaja al 50 %, al centro, y ahí el
+   scroll se detiene. Sin estas animaciones, al imprimir o con movimiento
+   reducido, todo está completo y quieto. */
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
     .tienda-fase-catalogo {
@@ -445,13 +478,13 @@
     .tienda-estados span {
       animation: tienda-estado linear both;
       animation-timeline: --tienda-pedido;
-      animation-range: cover calc(18% + var(--i) * 10%) cover calc(22% + var(--i) * 10%);
+      animation-range: cover calc(14% + var(--i) * 7%) cover calc(20% + var(--i) * 7%);
     }
 
     .tienda-barras span {
       animation: tienda-llenar-y linear both;
       animation-timeline: --tienda-panel;
-      animation-range: cover calc(12% + var(--i) * 4%) cover calc(30% + var(--i) * 4%);
+      animation-range: cover calc(12% + var(--i) * 3%) cover calc(26% + var(--i) * 3%);
     }
 
     .tienda-interruptor::after {
@@ -577,109 +610,46 @@
   }
 }
 
-/* ---- en S y M: una fase por pantalla ----
-   Cada fase ocupa el alto que deja la barra con la guía y lleva su número. Con
-   tienda.js (`.tienda-guiada`), la vía del índice ocupa ese mismo alto con los
-   puntos repartidos, se llena hasta la fase del centro y las demás se apagan.
-   Sin él, todas se ven enteras. */
+/* ---- en S y M ----
+   Cada fase deja sitio también para la guía y lleva su número. Con tienda.js
+   (`.tienda-guiada`), las que no están al centro se apagan. Sin él, todas se
+   ven enteras. */
 .tienda-numero {
   display: none;
 }
 
 @media (max-width: 1023px) {
   .tienda-recorrido {
-    grid-template-columns: 28px minmax(0, 1fr);
-    gap: var(--e-4);
+    --tienda-tapa: calc(var(--barra-alto) + 46px + var(--e-4));
   }
 
   .tienda-numero {
     display: block;
     margin-bottom: var(--e-2);
   }
-
-  .tienda-fases {
-    gap: 0;
-  }
-
-  .tienda-fase {
-    align-content: center;
-    min-height: calc(100svh - var(--barra-alto) - 46px - var(--e-8));
-  }
-
-  .tienda-indice ol::before,
-  .tienda-indice ol::after {
-    left: 13px;
-    width: 3px;
-    border-radius: 2px;
-  }
-
-  .tienda-punto {
-    margin-left: 7px;
-  }
-
-  .tienda-guiada .tienda-indice {
-    top: calc(var(--barra-alto) + 46px + var(--e-4));
-    height: calc(100svh - var(--barra-alto) - 46px - var(--e-8));
-  }
-
-  .tienda-guiada .tienda-indice ol {
-    height: 100%;
-    align-content: space-between;
-  }
-
-  .tienda-guiada .tienda-indice a {
-    min-height: 28px;
-  }
-
-  .tienda-guiada .tienda-indice li,
-  .tienda-guiada .tienda-indice .tienda-punto {
-    animation: none;
-  }
-
-  .tienda-guiada .tienda-indice ol::after {
-    animation: none;
-    transform: scaleY(var(--avance, 0));
-    transition: transform 400ms var(--ease-out);
-  }
-
-  .tienda-guiada .tienda-punto {
-    background: var(--superficie);
-    transition:
-      background-color 300ms var(--ease-out),
-      transform 300ms var(--ease-out),
-      box-shadow 300ms var(--ease-out);
-  }
-
-  .tienda-guiada :is(.tienda-paso-hecho, .tienda-paso-actual) .tienda-punto {
-    background: var(--tinte);
-  }
-
-  .tienda-guiada .tienda-paso-actual .tienda-punto {
-    transform: scale(1.4);
-    box-shadow: 0 0 0 5px color-mix(in oklab, var(--tinte) 18%, transparent);
-  }
 }
 
 /* Las fases que no son la actual esperan ocultas, no atenuadas: a medias, su
-   texto quedaba a la vista sin contraste para leerse (1.2:1). */
+   texto quedaba a la vista sin contraste para leerse (1.2:1). Sube lo de
+   adentro y no la fase, porque Safari encaja la fase con su caja desplazada y
+   la dejaba 24 px corrida. Con `translate`, que no pisa la animación de
+   `.entra`. */
 @media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
   .tienda-guiada .tienda-fase {
     opacity: 0;
-    transform: translateY(24px);
-    transition:
-      opacity 500ms var(--ease-out),
-      transform 500ms var(--ease-out);
+    transition: opacity 500ms var(--ease-out);
+  }
+
+  .tienda-guiada .tienda-fase > * {
+    translate: 0 24px;
+    transition: translate 500ms var(--ease-out);
   }
 
   .tienda-guiada .tienda-actual {
     opacity: 1;
-    transform: none;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .tienda-guiada .tienda-indice ol::after,
-  .tienda-guiada .tienda-punto {
-    transition: none;
+  .tienda-guiada .tienda-actual > * {
+    translate: none;
   }
 }

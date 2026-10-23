@@ -150,7 +150,6 @@
   --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
   --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
   --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
-  --ease-masa: cubic-bezier(0.34, 1.2, 0.64, 1);
   display: flex;
   align-items: center;
   gap: var(--e-2);

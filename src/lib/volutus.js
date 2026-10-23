@@ -31,11 +31,15 @@ export const ROLLO = { eje: 700, alto: 600, ancho: 850, nivel: -0.85, circula: 4
 // de verdad, de unos cientos de metros.
 export const JUEGO = 3000
 
-// El sol: alto y detrás de quien mira, el mismo en todas las páginas salvo la
-// portada (ver `aire`), para que la luz sea pareja: las cimas claras y los
-// vientres apenas más oscuros, sin el contraste de un sol rasante. Su altura y
-// su rumbo, en grados, desde hacia donde mira la cámara.
+// El sol: alto y detrás de quien mira, para que la luz sea pareja: las cimas
+// claras y los vientres apenas más oscuros, sin el contraste de un sol
+// rasante. Su altura y su rumbo, en grados, desde hacia donde mira la cámara.
 const SOL = [60, 180]
+
+// El sol de la portada, /nosotros y /servicios: bajo, a ras del horizonte,
+// delante a la izquierda. La luz rasante recorta cada torre de la nube y le
+// marca el relieve.
+const RASANTE = [8, 330]
 
 // La visibilidad del aire limpio de la mañana sobre el golfo, en m: más allá
 // la nube se funde con el cielo (Koschmieder: el contraste cae al 2 %). Con
@@ -72,9 +76,8 @@ export const VISTAS = {
   // apaisado mira el rollo más de frente: a 63° se perdía en una cuña hacia la
   // derecha, y en el borde medía la mitad de alto que en un iPad vertical.
   // Gira al revés: la espalda del rollo baja, y la nube se veía caer; así
-  // sube, como su frente en las otras páginas. El sol va bajo, a ras del
-  // horizonte, delante a la izquierda: la luz rasante recorta cada torre de la
-  // nube y le marca el relieve, también al bajar con la grúa (`bajar`).
+  // sube, como su frente en las otras páginas. Su sol rasante se queda
+  // también al bajar con la grúa (`bajar`).
   aire: {
     ojo: [0, 1170, -2300],
     rumbo: 63,
@@ -84,15 +87,18 @@ export const VISTAS = {
     centro: [0.9, 0.28],
     cubre: 1.8,
     giro: -1,
-    sol: [8, 330],
+    sol: RASANTE,
   },
-  // /nosotros: de costado y a la altura del eje, frente a su frente, que
-  // sube. Cruza el lienzo casi paralelo a él.
-  costado: { ojo: [0, 700, 2500], rumbo: -96, cabeceo: 0, campo: 33, centro: [null, 0.5] },
+  // /nosotros: de costado, desde el suelo a 5 km de su espalda y con zoom: el
+  // rollo entero cruza el lienzo casi paralelo a él, centrado en su alto, y
+  // el título va delante. Mira la espalda, como la portada, por sus bultos
+  // revueltos: el frente, en vetas lisas, se veía plano. Por eso gira al
+  // revés, y sube.
+  costado: { ojo: [0, 2, -6000], rumbo: 88, cabeceo: 7.4, campo: 14, centro: [null, 0.5], giro: -1, sol: RASANTE },
   // /servicios: desde el suelo, a 2,1 km de su frente, mirando hacia arriba.
   // Cruza el lienzo casi paralelo a él, con su frente y su base plana, y el
   // título va dentro.
-  abajo: { ojo: [0, 2, 2100], rumbo: -87, cabeceo: 18, campo: 42, centro: [null, 0.62] },
+  abajo: { ojo: [0, 2, 2100], rumbo: -87, cabeceo: 18, campo: 42, centro: [null, 0.62], sol: RASANTE },
   // La 404: desde el suelo, viéndola llegar. Pasa alta por la izquierda y se
   // pierde en el horizonte de la derecha, abajo, donde el cielo es blanco.
   suelo: { ojo: [0, 2, 2000], rumbo: -120, cabeceo: 20, campo: 60, centro: [null, 0.5], cubre: 2.5 },

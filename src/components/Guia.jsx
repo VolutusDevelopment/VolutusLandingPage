@@ -1,8 +1,9 @@
 /**
  * La guía de una página de servicio: en S y M, al dejar atrás la cabecera,
  * aparece bajo la barra con las partes de la página, `destinos` como
- * `[id, nombre]`. guia.js marca la que se está leyendo y le lleva la pastilla;
- * la línea de abajo dice cuánto se lleva leído (Guia.css). Desde L no se ve.
+ * `[id, nombre]`. guia.js marca la que se está leyendo y le lleva la pastilla,
+ * que viaja como la gota de la barra; la línea de abajo dice cuánto se lleva
+ * leído (Guia.css). Desde L no se ve.
  *
  * Son anclas a secciones que ya están en el HTML: sin JavaScript, la guía
  * no aparece y nada se pierde.

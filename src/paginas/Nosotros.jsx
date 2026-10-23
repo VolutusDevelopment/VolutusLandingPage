@@ -193,16 +193,21 @@ function Cierre() {
 export default function Nosotros() {
   return (
     <Pagina ruta="/nosotros" className="nosotros" hora="dia" cierre={<Cierre />}>
-      {/* Los socios van en la escena, bajo el titular: el mismo cielo los
-          lleva hasta el blanco de la sección siguiente, sin corte. */}
-      <Escena perspectiva="costado">
-        <h1>Quiénes somos</h1>
-
-        <p className="entradilla portada-entradilla">
-          Hacemos software en Chile: páginas web, tiendas online, apps, agentes de IA y automatizaciones. Antes
-          de hacerlo para otros, lo hicimos para nosotros.
-        </p>
-
+      {/* El titular y la entradilla van delante de la nube, y los socios en
+          la escena, bajo ella: el mismo cielo los lleva hasta el blanco de la
+          sección siguiente, sin corte. */}
+      <Escena
+        perspectiva="costado"
+        delante={
+          <>
+            <h1>¿Quiénes somos?</h1>
+            <p className="entradilla portada-entradilla">
+              Hacemos software en Chile: páginas web, tiendas online, apps, agentes de IA y automatizaciones.
+              Antes de hacerlo para otros, lo hicimos para nosotros.
+            </p>
+          </>
+        }
+      >
         {/* Una tarjeta por socio, con la foto encima y en lados alternos,
             como el formulario de contacto sobre su tarjeta. */}
         <ul className="socios">

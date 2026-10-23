@@ -1,17 +1,16 @@
 import { Incluye, ParaEmpezar, Preguntas } from './Bloques.jsx'
 
 /**
- * Tiendas online: lo que incluye son las fases de una compra, una bajo otra,
- * y al lado un índice que se queda a la vista y marca la que se está leyendo
- * (Tienda.css). Cada fase tiene su escena: la tienda funcionando, con los
- * tokens del sitio.
+ * Tiendas online: lo que incluye son las fases de una compra, una por
+ * pantalla, y cada scroll cae en una (Tienda.css). Desde L, al lado, un índice
+ * del alto de la pantalla se queda a la vista y marca la que se está leyendo.
+ * Cada fase tiene su escena: la tienda funcionando, con los tokens del sitio.
  *
  * Las escenas son de ejemplo y no dicen nada que el texto no diga, así que se
  * esconden del lector de pantalla.
  *
- * En S y M va una fase por pantalla, con su número, y la vía del índice
- * ocupa todo el alto: tienda.js marca la fase que está en el centro y llena la
- * vía hasta ella. El número lo dice ya la lista ordenada al lector de
+ * En S y M no hay índice: cada fase lleva su número, y tienda.js apaga las que
+ * no están al centro. El número lo dice ya la lista ordenada al lector de
  * pantalla, así que va escondido de él.
  */
 
@@ -112,7 +111,7 @@ export default function Tienda({ pagina, estimado }) {
                 <li key={id} className={`tienda-paso-${id}`}>
                   <a href={`#fase-${id}`}>
                     <span className="tienda-punto" aria-hidden="true" />
-                    <span className="tienda-paso-nombre">{titulo}</span>
+                    {titulo}
                   </a>
                 </li>
               ))}

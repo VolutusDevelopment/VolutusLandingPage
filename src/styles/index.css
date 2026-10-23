@@ -180,9 +180,13 @@
      ENTRA o SALE va en ease-out, porque arranca rápido y por eso se siente
      responsivo; algo que se MUEVE de un punto a otro ya en pantalla va en
      ease-in-out. `ease-in` no se usa nunca en interfaz — empieza lento y
-     retrasa justo el instante que la persona está mirando. */
+     retrasa justo el instante que la persona está mirando.
+
+     Y una tercera, solo para la gota (Barra.css, Guia.css): el borde de atrás
+     de la píldora llega con algo de masa y se pasa un poco antes de asentarse. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-masa: cubic-bezier(0.34, 1.2, 0.64, 1);
 
   /* Presupuesto de duración. La interfaz se queda por debajo de 300 ms: un
      desplegable de 180 ms se siente más rápido que uno de 400. Lo que puede

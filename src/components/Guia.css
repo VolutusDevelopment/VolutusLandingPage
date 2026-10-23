@@ -86,19 +86,22 @@
     color: var(--texto);
   }
 
+  /* La pastilla va entre los bordes del enlace marcado (`--gota-izq`,
+     `--gota-der`, de guia.js) y viaja como la gota de la barra (Barra.css):
+     el borde de adelante sale primero y el de atrás lo alcanza después y con
+     algo de masa. `data-hacia` dice cuál es cada borde. La primera vez
+     aparece en su sitio, sin venir de ninguna parte, y con movimiento
+     reducido cambia de enlace sin viajar. */
   .guia-pastilla {
     position: absolute;
     top: 7px;
-    left: 0;
-    width: 0;
+    left: var(--gota-izq, 0);
+    right: var(--gota-der, 100%);
     height: 30px;
     border-radius: 999px;
     background: color-mix(in oklab, var(--tinte) 16%, var(--superficie));
     opacity: 0;
-    transition:
-      transform 300ms var(--ease-out),
-      width 300ms var(--ease-out),
-      opacity 200ms var(--ease-out);
+    transition: opacity 200ms var(--ease-out);
   }
 
   .guia-marcada .guia-pastilla {
@@ -127,6 +130,22 @@
   .guia ul {
     justify-content: flex-start;
     gap: var(--e-2);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guia-pastilla[data-hacia] {
+    transition-duration: 260ms, 360ms, 200ms;
+    transition-delay: 0s, 40ms, 0s;
+    transition-timing-function: var(--ease-out), var(--ease-masa), var(--ease-out);
+  }
+
+  .guia-pastilla[data-hacia='derecha'] {
+    transition-property: right, left, opacity;
+  }
+
+  .guia-pastilla[data-hacia='izquierda'] {
+    transition-property: left, right, opacity;
   }
 }
 
