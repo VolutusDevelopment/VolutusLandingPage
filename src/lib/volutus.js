@@ -112,19 +112,41 @@ const suave = (t, desde, hasta) => {
 }
 const entre = (a, b, k) => a + (b - a) * k
 
+// Los tres movimientos de la grúa de la portada (ver `bajar`) a `u`, de 0 a 1:
+// cuánto bajó, cuánto entró y cuánto centró la vista.
+const grua = (u) => [suave(u, 0, 0.5), suave(u, 0, 0.95), suave(u, 0, 0.3)]
+
+// El camino de la grúa en 100 tramos de `u`: cuánto lleva recorrido al final
+// de cada uno, de 0 a 1, midiendo lo que avanzan sus tres movimientos juntos.
+const CAMINO = (() => {
+  const puntos = Array.from({ length: 101 }, (_, i) => grua(i / 100))
+  const largos = [0]
+  for (let i = 1; i < puntos.length; i++) {
+    largos.push(largos[i - 1] + Math.hypot(...puntos[i].map((x, eje) => x - puntos[i - 1][eje])))
+  }
+  return largos.map((largo) => largo / largos.at(-1))
+})()
+
+// La `u` en que la grúa lleva recorrida la fracción `t` de su camino.
+function recorrido(t) {
+  const i = CAMINO.findIndex((largo) => largo >= t)
+  if (i <= 0) return 0
+  return (i - 1 + (t - CAMINO[i - 1]) / (CAMINO[i] - CAMINO[i - 1])) / 100
+}
+
 /**
  * La cámara de la portada a `t` (de 0 a 1) del scroll hasta Proyectos, que la
  * tapa (`recorrer` en nubes.js). Es una grúa: no gira, baja lenta de la altura de la cima al
  * suelo mientras su brazo la acerca al pie del rollo y levanta la vista, hasta
  * tenerlo encima. Nunca sube sobre la nube: se la mira siempre desde abajo. En
  * 0 es `aire`. El punto al que mira pasa a la mitad del lienzo (`medio`) y el
- * sol se queda donde estaba en la portada aunque la cámara gire (`fijo`).
+ * sol se queda donde estaba en la portada aunque la cámara gire (`fijo`). Va
+ * pareja con el scroll: cada píxel la lleva igual de lejos por su camino, del
+ * primero al último, cuando Proyectos la tapa (`recorrido`).
  */
 export function bajar(t) {
   const { aire } = VISTAS
-  const baja = suave(t, 0, 0.5)
-  const entra = suave(t, 0, 0.95)
-  const centra = suave(t, 0, 0.3)
+  const [baja, entra, centra] = grua(recorrido(t))
   return {
     ...aire,
     ojo: [0, entre(aire.ojo[1], 2, baja), entre(aire.ojo[2], -1150, entra)],

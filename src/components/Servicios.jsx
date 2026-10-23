@@ -3,7 +3,8 @@ import Icono from './Icono.jsx'
 
 /**
  * Servicios: los ocho, de a uno, sobre la nube fija de la portada, que se ve
- * detrás y entre uno y otro mientras la cámara baja (nubes.js). Sin tarjetas:
+ * detrás y entre uno y otro mientras la cámara baja (nubes.js). Cada scroll
+ * cae en uno, al centro de la pantalla (Servicios.css). Sin tarjetas:
  * su glifo, en el color de su servicio (lib/servicios.js), el mismo de su
  * página, va como una calcomanía (Servicios.css), su nombre lleva a su página
  * y su frase dice qué es.

@@ -71,10 +71,6 @@ export function rejilla(lienzo) {
   return { lado, celda: Math.max(3, Math.round(lado * densidad)), densidad }
 }
 
-// Cuánto tarda la cámara de la portada en alcanzar al scroll, en ms (ver
-// `recorrer`).
-const INERCIA = 600
-
 // El enlace de cada pato del mar, por lienzo.
 const patos = new Map()
 
@@ -199,38 +195,15 @@ function montar(pintor, lienzo, id) {
   }
 
   // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
-  // con el scroll. Aquí solo se mide cuánto se bajó (de 0 a 1); la cámara la
-  // pone el pintor (`bajar`, lib/volutus.js). No salta con el scroll: lo sigue
-  // con inercia, como el brazo pesado de una grúa. Con movimiento reducido se
-  // queda en la portada.
+  // con el scroll, a su mismo paso y sin demora. Aquí solo se mide cuánto se
+  // bajó (de 0 a 1); la cámara la pone el pintor (`bajar`, lib/volutus.js).
+  // El navegador da como mucho un `scroll` por fotograma. Con movimiento
+  // reducido se queda en la portada.
   function recorrer() {
     if (quieto()) return
-    const objetivo = () => Math.min(1, Math.max(0, scrollY / tapa.offsetTop))
-    let actual = objetivo()
-    let antes = 0
-    let andando = false
-    const enviar = () => pintor.postMessage({ tipo: 'bajada', id, t: actual })
-    const mover = (ahora) => {
-      const meta = objetivo()
-      actual += (meta - actual) * (1 - Math.exp(-(ahora - (antes || ahora)) / INERCIA))
-      antes = ahora
-      if (Math.abs(meta - actual) < 1e-4) {
-        actual = meta
-        andando = false
-        antes = 0
-      } else {
-        requestAnimationFrame(mover)
-      }
-      enviar()
-    }
-    addEventListener(
-      'scroll',
-      () => {
-        if (!andando) requestAnimationFrame(mover)
-        andando = true
-      },
-      { passive: true, signal },
-    )
+    const enviar = () =>
+      pintor.postMessage({ tipo: 'bajada', id, t: Math.min(1, Math.max(0, scrollY / tapa.offsetTop)) })
+    addEventListener('scroll', enviar, { passive: true, signal })
     enviar()
   }
 

@@ -1,8 +1,37 @@
 /* Los servicios suben sobre la nube fija (Portada.css), sin fondo propio, de
-   a uno: cada uno ocupa casi una pantalla y entre uno y otro se ve la nube. */
+   a uno: cada scroll cae en uno, al centro de la pantalla, con la nube detrás.
+   La página encaja (`scroll-snap`): arriba, en la portada; luego, en cada
+   servicio, sin saltarse ninguno, y abajo, en Proyectos. Su margen de abajo
+   alarga su zona de encaje hasta el final de la página, así que de ahí en
+   adelante se baja libre: una zona más alta que la pantalla deja parar en
+   cualquier punto de ella (Safari 15). Con movimiento reducido no encaja: el
+   encaje mueve la página solo. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.servicios) {
+    scroll-snap-type: y mandatory;
+  }
+}
+
+.portada:has(+ .servicios) {
+  scroll-snap-align: start;
+}
+
+.servicios + .seccion {
+  scroll-snap-align: start;
+  scroll-margin-bottom: 100000px;
+}
+
 .servicios {
   position: relative;
   z-index: 1;
+}
+
+/* El título va arriba de la pantalla del primero: así el primer scroll
+   también cae en un servicio. */
+.servicios .titular {
+  position: absolute;
+  inset-inline: 0;
+  text-align: center;
 }
 
 .servicios-lista {
@@ -11,12 +40,17 @@
   padding: 0;
 }
 
+/* Cada uno mide lo que se ve bajo la barra (el `scroll-padding-top` de html),
+   así que encaja justo al centro y los vecinos quedan fuera. */
 .servicio {
-  min-height: 75svh;
-  max-width: 40rem;
+  min-height: calc(100svh - var(--barra-alto) - var(--e-4));
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
+  text-align: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
 /* El glifo va impreso sobre su silueta en papel blanco, con un margen, como
