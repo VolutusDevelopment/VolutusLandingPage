@@ -233,7 +233,7 @@ export default function Nosotros() {
                   <ul className="socio-perfiles">
                     {REDES.map((red) => (
                       <li key={red.id}>
-                        <a href={perfiles[red.id]} rel="noopener" style={{ '--color-red': red.color }}>
+                        <a href={perfiles[red.id]} target="_blank" rel="noopener" style={{ '--color-red': red.color }}>
                           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                             <path d={red.logo} />
                           </svg>
@@ -365,7 +365,7 @@ export default function Nosotros() {
               {FUENTES.map(({ id, autor, titulo, idioma, medio, url }) => (
                 <li key={id} id={`fuente-${id}`}>
                   {autor}.{' '}
-                  <a href={url} rel="noopener">
+                  <a href={url} target="_blank" rel="noopener">
                     <cite lang={idioma}>{titulo}</cite>
                   </a>
                   . {medio}.

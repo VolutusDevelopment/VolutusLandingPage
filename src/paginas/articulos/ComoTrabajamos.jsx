@@ -22,7 +22,7 @@ export default function ComoTrabajamos({ ruta }) {
         inicio de actividades en el SII.
         Emitimos factura electrónica afecta a IVA, así que si compras a nombre de tu empresa puedes justificar el gasto.
         Los estimados de cada servicio van en UF y sin IVA: el IVA se suma en la factura. El RUT se puede comprobar en la{' '}
-        <a href="https://www.sii.cl/como_se_hace_para/situacion_trib_terceros.html" rel="noopener">
+        <a href="https://www.sii.cl/como_se_hace_para/situacion_trib_terceros.html" target="_blank" rel="noopener">
           consulta de situación tributaria del SII
         </a>
         .

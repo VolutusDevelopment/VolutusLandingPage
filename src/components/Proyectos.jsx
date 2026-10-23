@@ -28,19 +28,19 @@ function Enlaces({ sitio, repositorio, publicacion, nombre }) {
   return (
     <p className="ficha-enlaces">
       {sitio && (
-        <a href={sitio} rel="noopener" className={clase(true)}>
+        <a href={sitio} target="_blank" rel="noopener" className={clase(true)}>
           Abrir el sitio
           <span className="solo-lectores"> de {nombre}</span>
         </a>
       )}
       {repositorio && (
-        <a href={repositorio} rel="noopener" className={clase(!sitio)}>
+        <a href={repositorio} target="_blank" rel="noopener" className={clase(!sitio)}>
           Ver el código fuente
           <span className="solo-lectores"> de {nombre}</span>
         </a>
       )}
       {publicacion && (
-        <a href={publicacion} rel="noopener" className={clase(false)}>
+        <a href={publicacion} target="_blank" rel="noopener" className={clase(false)}>
           Ver la publicación del resultado
           <span className="solo-lectores"> de {nombre}</span>
         </a>
@@ -120,7 +120,7 @@ function Pruebas({ proyecto }) {
         <div key={clave}>
           <dt>{etiqueta}</dt>
           <dd>
-            <a href={proyecto[clave]} rel="noopener" className="obra-direccion">
+            <a href={proyecto[clave]} target="_blank" rel="noopener" className="obra-direccion">
               <Direccion url={proyecto[clave]} />
             </a>
           </dd>
