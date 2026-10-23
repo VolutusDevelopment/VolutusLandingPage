@@ -9,7 +9,6 @@
 // (sin su token el Worker rechaza el envío) y evita la recarga.
 
 import initTitularRotativo from './titular-rotativo.js'
-import initServicios from './servicios.js'
 import initPieza from './pieza.js'
 import initFichas from './fichas.js'
 import initPodio from './podio.js'
@@ -320,7 +319,6 @@ export default function init() {
     initFormulario,
     initPatos,
     initTitularRotativo,
-    initServicios,
     initPieza,
     initFichas,
     initPodio,

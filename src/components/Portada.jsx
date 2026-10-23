@@ -46,11 +46,21 @@ const ROTATIVO = [
  */
 export function Escena({ id, perspectiva, children }) {
   return (
-    <section id={id} className={`seccion zona-cielo hora-manana portada${perspectiva ? ` portada-${perspectiva}` : ''}`}>
+    <section
+      id={id}
+      className={`seccion zona-cielo hora-manana portada${perspectiva ? ` portada-${perspectiva}` : ''}`}
+      data-barra={perspectiva ? undefined : 'hora-dia'}
+    >
       <div className="alba hora-dia" aria-hidden="true" />
       <div className="portada-escena">
         <div className="portada-cielo">
-          <canvas className="nubes" data-vista="cielo" data-perspectiva={perspectiva} aria-hidden="true" />
+          <canvas
+            className="nubes"
+            data-vista="cielo"
+            data-perspectiva={perspectiva}
+            data-recorrido={perspectiva ? undefined : '#proyectos'}
+            aria-hidden="true"
+          />
         </div>
 
         <div className="contenedor portada-interior">

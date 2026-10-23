@@ -68,7 +68,11 @@ function tomarZona(destino, debajo) {
   destino.classList.toggle('zona-cielo', !plano)
   const esHora = (clase) => clase.startsWith('hora-')
   destino.classList.remove(...[...destino.classList].filter(esHora))
-  const hora = [...(debajo.closest('.hora-dia, .cabecera-fundido, .seccion, .pie')?.classList ?? [])].find(esHora)
+  // Sobre la nube fija de la home (Portada.css) el cielo detrás de la barra es
+  // siempre el azul hondo: lo dice la sección con `data-barra`.
+  const hora =
+    debajo.closest('[data-barra]')?.dataset.barra ??
+    [...(debajo.closest('.hora-dia, .cabecera-fundido, .seccion, .pie')?.classList ?? [])].find(esHora)
   if (hora) destino.classList.add(hora)
 }
 

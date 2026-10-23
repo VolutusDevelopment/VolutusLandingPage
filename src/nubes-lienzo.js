@@ -38,7 +38,7 @@
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
-import { FISICA, JUEGO, encuadrar, lapso, rollo } from './lib/volutus.js'
+import { FISICA, JUEGO, ROLLO, encuadrar, lapso, rollo } from './lib/volutus.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -52,6 +52,8 @@ const QUIETO_EN = 4000
 // vista. La viscosidad es una pasada de `DIFUSION` por ley: apaga los
 // remolinos de una o dos celdas, que la rejilla no resuelve.
 const DT = INTERVALO / 1000
+// Cuánto gira la superficie del rollo por segundo de su tiempo, en radianes.
+const VUELTA = ROLLO.circula / ROLLO.alto
 const CELDAS_POR_AIRE = 3
 const VUELTAS_DE_PRESION = 20
 const VUELTAS_DE_VISCOSIDAD = 1
@@ -213,7 +215,7 @@ float ruido3(vec3 x) {
 
 const CAMPO = `precision highp float;
 uniform vec2 res, centro;
-uniform float t, tiempo, celda, forma, lado, focal, giro;
+uniform float t, tiempo, celda, forma, lado, focal, giro, curva;
 uniform vec3 luz, sombra, ojo, frente, derecha, arriba, sol;
 #ifdef JUEGO
 uniform vec4 cumulos[10];
@@ -248,7 +250,7 @@ float rollo(vec3 p, float ppm, float tope) {
   float arriba = smoothstep(0.1, 0.9, s.x);
   float delante = smoothstep(-0.6, 0.6, s.y);
   float lisa = delante * (1.0 - arriba);
-  float a = giro * VUELTA * tiempo;
+  float a = giro;
   vec2 q = vec2(cos(a) * s.y + sin(a) * s.x, cos(a) * s.x - sin(a) * s.y);
   float ks = mix(3.0, 4.5, lisa);
   vec3 n = vec3(p.x / RY * mix(3.0, 1.2, lisa) + DERIVA * tiempo, q * ks);
@@ -319,7 +321,10 @@ void main() {
   vec3 aire = texture2D(estado, px / res).xyz;
   px -= aire.xy * ${CELDAS_POR_AIRE}.0 * celda;
   float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(px / celda * lado / SECO, t * 0.5))));
-  vec3 d = normalize(frente * focal + derecha * (px.x - centro.x) - arriba * (px.y - centro.y));
+  vec2 q = vec2(px.x - centro.x, centro.y - px.y) / focal;
+  vec3 hacia = derecha * q.x + arriba * q.y;
+  float r = length(q);
+  vec3 d = normalize(mix(normalize(frente + hacia), cos(min(r, 3.1)) * frente + sin(min(r, 3.1)) * hacia / max(r, 1e-6), curva));
   vec2 tramo = forma < 1.0 ? cilindro(d) : vec2(1e9, -1e9);
 #ifdef JUEGO
   if (forma > 0.0) {
@@ -351,7 +356,7 @@ void main() {
       if (!fino) {
         fino = true;
         float fuera = va - paso;
-        for (int k = 0; k < 3; k++) {
+        for (int k = 0; k < 6; k++) {
           float medio = 0.5 * (fuera + va);
           if (densidad(ojo + d * medio, ppm / medio, 5.0) * abre > 0.005) va = medio;
           else fuera = medio;
@@ -559,7 +564,7 @@ const fija = (escena) => quieto || escena.software
 const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
-  'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
+  'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro', 'curva',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -1056,9 +1061,20 @@ function pintar(escena, ahora) {
   // nube, y una pestaña que vuelve no la hace saltar.
   if (escena.encuadre) {
     const tope = Math.max(0.1, (1.5 * intervalo) / 1000)
-    if (!quieta) escena.tiempo += Math.min((ahora - (escena.antes ?? ahora)) / 1000, tope) * escena.lapso
+    const avance = quieta ? 0 : Math.min((ahora - (escena.antes ?? ahora)) / 1000, tope) * escena.lapso
+    escena.tiempo += avance
+    // El giro de la superficie se acumula: si la cámara cambia de sentido
+    // (`giro`), la nube frena y vuelve a andar, sin saltar.
+    escena.vuelta = (escena.vuelta ?? 0) + avance * escena.encuadre.giro * VUELTA
     escena.antes = ahora
-    gl.uniform1f(campo.tiempo, quieta ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo)
+    const tiempo = quieta ? (QUIETO_EN / 1000) * escena.lapso : escena.tiempo
+    gl.uniform1f(campo.tiempo, tiempo)
+    // Lo que el scroll hizo rodar la nube (`rueda`, lib/volutus.js), en su
+    // mismo sentido.
+    gl.uniform1f(
+      campo.giro,
+      (quieta ? escena.encuadre.giro * VUELTA * tiempo : escena.vuelta) + escena.encuadre.giro * escena.encuadre.rueda,
+    )
   }
   if (escena.mar) {
     // Quien mira va en un bote que sube y baja con la marejada (lib/mar.js).
@@ -1123,6 +1139,19 @@ function paso(ahora) {
 // Lo que la página fija en la GPU de cada escena: su medida, sus colores y, en
 // el juego de la 404, la forma del cielo. Se guarda el último de cada uno para
 // repetirlo cuando vuelve un contexto perdido.
+// La cámara de la nube: la de su página o, si la página la mueve, la última
+// que mandó (`vista`).
+function enfocar(escena, { ancho, alto, densidad }) {
+  const encuadre = encuadrar(escena.vista ?? escena.perspectiva, ancho, alto)
+  Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, densidad) })
+  fijar(escena, (gl, u) => {
+    for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
+    gl.uniform2fv(u.centro, encuadre.centro)
+    gl.uniform1f(u.focal, encuadre.focal)
+    gl.uniform1f(u.curva, encuadre.curva)
+  })
+}
+
 function aplicar(escena, data) {
   escena.ultimos[data.tipo] = data
   const { gl } = escena
@@ -1137,11 +1166,8 @@ function aplicar(escena, data) {
     const vista = escena.mar && camara(data.ancho, data.alto)
     if (vista) Object.assign(escena, { camara: vista, celda: data.celda, escala: (vista.focal * OJOS) / data.celda })
     // La nube, con la cámara de su página (lib/volutus.js).
-    if (!escena.mar) {
-      const encuadre = encuadrar(escena.perspectiva, data.ancho, data.alto)
-      Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, data.densidad) })
-    }
-    const { aire, encuadre } = escena
+    if (!escena.mar) enfocar(escena, data)
+    const { aire } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
       const alto = Math.max(8, Math.round(escena.rejilla[1] / CELDAS_POR_AIRE))
@@ -1164,12 +1190,6 @@ function aplicar(escena, data) {
       gl.uniform1f(u.celda, data.celda)
       gl.uniform1f(u.lado, data.lado ?? 1)
       if (vista) gl.uniform1f(u.escala, escena.escala)
-      if (encuadre) {
-        for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
-        gl.uniform2fv(u.centro, encuadre.centro)
-        gl.uniform1f(u.focal, encuadre.focal)
-        gl.uniform1f(u.giro, encuadre.giro)
-      }
     })
     // Los cúmulos de la 404 están donde estaba el rollo, que acaba de moverse.
     if (escena.ultimos.forma) aplicar(escena, escena.ultimos.forma)
@@ -1225,6 +1245,10 @@ onmessage = ({ data }) => {
     else escena.ultimos[data.tipo] = data
   }
   if (escena && data.tipo === 'activa') escena.activa = data.valor
+  if (escena && data.tipo === 'vista') {
+    escena.vista = data.vista
+    if (escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+  }
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
   // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
   // si calla), `callo` cuándo terminó y `dicho`, el que sigue.

@@ -47,6 +47,7 @@
  */
 
 import { quieto } from './lib/movimiento.js'
+import { LUCES, RECORRIDOS, recorrer as viajar } from './lib/volutus.js'
 
 // Tope de densidad de píxeles del mar: por encima de 1.5 sus puntos no se ven
 // mejor y el costo sigue creciendo.
@@ -66,6 +67,10 @@ export function rejilla(lienzo) {
   const densidad = Math.min(devicePixelRatio, 3)
   return { lado, celda: Math.max(3, Math.round(lado * densidad)), densidad }
 }
+
+// Cuánto tarda la cámara de la portada en alcanzar al scroll, en ms (ver
+// `recorrer`).
+const INERCIA = 600
 
 // El enlace de cada pato del mar, por lienzo.
 const patos = new Map()
@@ -188,6 +193,54 @@ function montar(pintor, lienzo, id) {
     zona.addEventListener('touchend', soltar, pasivo)
   }
 
+  // La portada: al bajar hasta Proyectos, la cámara hace uno de los
+  // `RECORRIDOS` (lib/volutus.js). No salta con el scroll: lo sigue con
+  // inercia, como una grúa pesada. Con movimiento reducido se queda quieta.
+  function recorrer() {
+    if (quieto()) return
+    const hasta = document.querySelector(lienzo.dataset.recorrido)
+    const pide = new URLSearchParams(location.search)
+    const propia = pide.get('vista')
+    const paradas = propia ? () => JSON.parse(propia) : (RECORRIDOS[pide.get('camara')] ?? RECORRIDOS.grua)
+    const luz = LUCES[pide.get('luz') ?? 'lateral']
+    const objetivo = () => Math.min(1, Math.max(0, scrollY / hasta.offsetTop))
+    let actual = objetivo()
+    let antes = 0
+    let andando = false
+    // Lo que la nube rodó con el scroll, en radianes: suma cada tramo, baje o
+    // suba la página, así nunca rueda hacia atrás.
+    let rodado = 0
+    const enviar = (paso = 0) => {
+      const vista = viajar(paradas, actual)
+      if (luz) Object.assign(vista, { sol: typeof luz === 'function' ? luz(actual) : luz, fijo: true })
+      rodado += (vista.rueda ?? 0) * Math.abs(paso)
+      pintor.postMessage({ tipo: 'vista', id, vista: { ...vista, rueda: rodado } })
+    }
+    const mover = (ahora) => {
+      const meta = objetivo()
+      const previo = actual
+      actual += (meta - actual) * (1 - Math.exp(-(ahora - (antes || ahora)) / INERCIA))
+      antes = ahora
+      if (Math.abs(meta - actual) < 1e-4) {
+        actual = meta
+        andando = false
+        antes = 0
+      } else {
+        requestAnimationFrame(mover)
+      }
+      enviar(actual - previo)
+    }
+    addEventListener(
+      'scroll',
+      () => {
+        if (!andando) requestAnimationFrame(mover)
+        andando = true
+      },
+      { passive: true, signal },
+    )
+    enviar()
+  }
+
   const offscreen = lienzo.transferControlToOffscreen()
   const { perspectiva } = lienzo.dataset
   // `juego`: los cúmulos del juego de la 404 solo se compilan donde se juega.
@@ -204,6 +257,7 @@ function montar(pintor, lienzo, id) {
     )
   } else {
     seguirCursor()
+    if ('recorrido' in lienzo.dataset) recorrer()
     lienzo.addEventListener(
       'soplo',
       ({ detail: { x, y, fuera } }) => {

@@ -90,6 +90,220 @@ export const VISTAS = {
   encima: { ojo: [0, 2, 1500], rumbo: -90, cabeceo: 35, campo: 70, centro: [null, 0.5] },
   // /patos: lejos, una franja sobre el horizonte; el cielo queda para jugar.
   horizonte: { ojo: [0, 2, 7000], rumbo: -95, cabeceo: 2, campo: 50, centro: [null, 0.8] },
+  // El final de `techo` (ver `RECORRIDOS`): bajo el rollo, mirando arriba.
+  techo: { ojo: [0, 40, -1100], rumbo: 88, apaisado: 90, cabeceo: 38, campo: 70, centro: [0.9, 0.62], cubre: 1.8, giro: -1 },
+}
+
+// Los recorridos de la cámara de la portada al bajar hasta Proyectos
+// (prototipo, se elige con ?camara=). La nube se mira siempre desde abajo y
+// nunca se sube sobre ella. `techo` va por paradas (`en`, de 0 a 1, ver
+// `recorrer`); los demás son una función de `t` que dice la cámara entera, con
+// cada medida en una curva suave: nada salta ni vuelve atrás. `medio` lleva el
+// punto al que mira de su lugar en `aire` (0) al centro del lienzo (1).
+const AIRE = { ...VISTAS.aire, medio: 0, curva: 0, en: 0 }
+const parada = (en, ojo, rumbo, cabeceo, campo, alto, extra) => ({
+  en, ojo, rumbo, apaisado: rumbo, cabeceo, campo, centro: [0.9, alto], cubre: 1.8, giro: -1, medio: 1, curva: 0, ...extra,
+})
+
+// Cuánto avanzó `t` entre `desde` y `hasta`, de 0 a 1, arrancando y frenando
+// despacio.
+const suave = (t, desde, hasta) => {
+  const k = Math.min(1, Math.max(0, (t - desde) / (hasta - desde)))
+  return k * k * (3 - 2 * k)
+}
+const entre = (a, b, k) => a + (b - a) * k
+
+// Lo que comparten: la portada se va mientras el punto al que mira pasa al
+// centro del lienzo (en `hasta`), la nube gira como en la portada y el sol se
+// queda donde estaba en ella aunque la cámara gire (`fijo`).
+const dejarPortada = (t, hasta, alto) => {
+  const k = suave(t, 0, hasta)
+  return { centro: [0.9, entre(AIRE.centro[1], alto, k)], medio: k, cubre: 1.8, giro: -1, curva: 0, fijo: true }
+}
+
+// Órbita: el punto bajo el borde de atrás que rodea, y a qué distancia.
+const EJE_ORBITA = -900
+const RADIO_ORBITA = 650
+
+// Planeador: su rapidez, en m por recorrido entero (`t` de 0 a 1), y su
+// rumbo a cada `t`: vira a la izquierda de 63° a 180° y sigue a lo largo.
+const RAPIDEZ_PLANEO = 4440
+const rumboPlaneo = (t) => entre(63, 180, suave(t, 0.02, 0.45))
+
+// Dónde va el planeador: lo que avanzó por su rumbo desde la portada, sumado
+// una vez en `PASOS_VUELO` tramos de `t`. A cada `t` se interpola entre dos.
+const PASOS_VUELO = 1000
+const VUELO = [[AIRE.ojo[0], AIRE.ojo[2]]]
+for (let i = 0; i < PASOS_VUELO; i++) {
+  const rumbo = (rumboPlaneo((i + 0.5) / PASOS_VUELO) * Math.PI) / 180
+  const [x, z] = VUELO[i]
+  VUELO.push([x + (RAPIDEZ_PLANEO * Math.cos(rumbo)) / PASOS_VUELO, z + (RAPIDEZ_PLANEO * Math.sin(rumbo)) / PASOS_VUELO])
+}
+function vuelo(t) {
+  const i = Math.min(PASOS_VUELO - 1, Math.floor(t * PASOS_VUELO))
+  const k = t * PASOS_VUELO - i
+  return [0, 1].map((e) => entre(VUELO[i][e], VUELO[i + 1][e], k))
+}
+
+// Costanera: los m que recorre el auto, a velocidad pareja después de
+// arrancar.
+const RECORRIDO_COSTANERA = 2600
+// De 0 a 1 en `t`, a ritmo parejo, salvo al arrancar: hasta `a` acelera.
+const arrancar = (t, a) => (t < a ? (t * t) / (2 * a) : t - a / 2) / (1 - a / 2)
+
+export const RECORRIDOS = {
+  // Techo: baja al suelo y se acerca hasta quedar bajo su borde, mirando
+  // arriba.
+  techo: [
+    AIRE,
+    parada(0.12, [0, 2, -2000], 89, 18, 64, 0.6),
+    { ...VISTAS.techo, ojo: [0, 2, -1100], medio: 1, curva: 0, en: 1 },
+  ],
+  // Planeador (su largo): un velero que deja la portada bajando en espiral,
+  // vira a la izquierda inclinando las alas y planea a lo largo de su espalda,
+  // a 200 m, con la nube a la derecha y su punto de fuga adelante.
+  planeador: (t) => {
+    const rumbo = rumboPlaneo(t)
+    const giro = (t - 0.02) / 0.43
+    const [x, z] = vuelo(t)
+    // Mientras vira, la vista se va quedando hacia la nube, a su derecha:
+    // menos en un lienzo vertical, donde la pared lo taparía entero.
+    const vira = suave(t, 0.02, 0.45)
+    return {
+      ...dejarPortada(t, 0.2, 0.55),
+      ojo: [x, entre(entre(1170, 220, suave(t, 0, 0.3)), 160, suave(t, 0.3, 1)), z],
+      rumbo: rumbo - 12 * vira,
+      apaisado: rumbo - 25 * vira + (AIRE.apaisado - AIRE.rumbo) * (1 - vira),
+      cabeceo: entre(0, 20, suave(t, 0, 0.3)),
+      campo: entre(52, 66, suave(t, 0, 0.3)),
+      // La inclinación de las alas sigue al viraje: nada al entrar y al salir.
+      alabeo: giro > 0 && giro < 1 ? 8 * Math.sin(Math.PI * giro) ** 2 : 0,
+    }
+  },
+  // Órbita (su volumen): un dron baja a 30 m y rodea despacio un punto bajo
+  // su borde de atrás, siempre mirándolo. La nube pasa de perderse a la
+  // derecha a perderse a la izquierda.
+  orbita: (t) => {
+    const k = suave(t, 0, 0.16)
+    const vuelta = suave(t, 0.02, 1)
+    const rumbo = entre(63, 120, vuelta)
+    const r = grados(rumbo)
+    const [x, z] = [-RADIO_ORBITA * Math.cos(r), EJE_ORBITA - RADIO_ORBITA * Math.sin(r)]
+    return {
+      ...dejarPortada(t, 0.16, 0.6),
+      ojo: [entre(AIRE.ojo[0], x, k), entre(1170, 30, k), entre(AIRE.ojo[2], z, k)],
+      rumbo,
+      apaisado: entre(AIRE.apaisado, 120, vuelta),
+      cabeceo: entre(0, 36, k),
+      campo: entre(52, 64, k),
+    }
+  },
+  // Grúa (su altura): la cámara no gira; baja lenta desde la altura de la
+  // portada hasta el suelo y su brazo la acerca al pie de la nube, que
+  // levanta la vista. La nube crece hasta quedar encima.
+  grua: (t) => {
+    const baja = suave(t, 0, 0.5)
+    const entra = suave(t, 0, 0.95)
+    return {
+      ...dejarPortada(t, 0.3, 0.6),
+      ojo: [0, entre(1170, 2, baja), entre(-2300, -1150, entra)],
+      rumbo: 63,
+      apaisado: entre(AIRE.apaisado, 70, entra),
+      cabeceo: entre(0, 45, entra),
+      campo: entre(52, 66, baja),
+    }
+  },
+  // Rueda (su giro): baja a pie hasta cerca de su espalda, se vuelve a
+  // mirarla a lo largo y se queda quieta. Desde ahí el scroll la hace rodar:
+  // cada pantalla que bajas o subes, la nube da un poco más de vuelta, y
+  // siempre hacia arriba (`rueda`, en radianes por recorrido entero).
+  rueda: (t) => {
+    const k = suave(t, 0, 0.2)
+    return {
+      ...dejarPortada(t, 0.2, 0.6),
+      ojo: [0, entre(1170, 2, suave(t, 0, 0.14)), entre(-2300, -1000, k)],
+      rumbo: entre(63, 15, k),
+      apaisado: entre(AIRE.apaisado, 20, k),
+      cabeceo: entre(0, 40, k),
+      campo: entre(52, 70, k),
+      rueda: 1.4 * suave(t, 0.1, 0.22),
+    }
+  },
+  // Costanera (su paso): baja a la ruta de la costa y va en auto, a
+  // velocidad pareja, mirando por la ventana. Las torres de la nube desfilan:
+  // las cercanas más rápido que las lejanas.
+  costanera: (t) => {
+    const k = suave(t, 0, 0.16)
+    return {
+      ...dejarPortada(t, 0.16, 0.6),
+      ojo: [RECORRIDO_COSTANERA * arrancar(t, 0.16), entre(1170, 2, k), entre(-2300, -1500, k)],
+      rumbo: entre(63, 84, k),
+      apaisado: entre(AIRE.apaisado, 86, k),
+      cabeceo: entre(0, 26, k),
+      campo: entre(52, 66, k),
+    }
+  },
+  // Alba (su luz): baja a la playa, lejos, y mira el rollo entero mientras
+  // camina muy despacio hacia él. El sol, que en la portada está alto
+  // detrás tuyo, baja hasta rozar el horizonte: la luz se vuelve rasante y
+  // cada torre de la nube gana su sombra.
+  alba: (t) => {
+    const k = suave(t, 0, 0.16)
+    const sol = suave(t, 0.08, 1)
+    return {
+      ...dejarPortada(t, 0.16, 0.62),
+      ojo: [0, entre(1170, 2, k), entre(-2300, -1700, suave(t, 0, 1))],
+      rumbo: entre(63, 76, k),
+      apaisado: entre(AIRE.apaisado, 82, k),
+      cabeceo: entre(0, 24, k),
+      campo: entre(52, 56, k),
+      sol: [entre(60, 4, sol), entre(180, 160, sol)],
+    }
+  },
+}
+
+// Las luces de la portada al bajar (prototipo, se eligen con ?luz=): dónde
+// está el sol, como `SOL`, en grados desde el frente de la portada. Queda fijo
+// en el cielo aunque la cámara gire. Todas valen también para la portada,
+// salvo `atardecer`, que parte con la luz de hoy y baja el sol con el scroll.
+// La dorada además entibia la luz de la nube (index.html).
+export const LUCES = {
+  // Bajo, detrás de quien mira: la cara de la nube se enciende entera.
+  rasante: [6, 170],
+  // Bajo, a la derecha: cada torre tiene su lado de luz y su lado de sombra.
+  costado: [12, 110],
+  // Bajo, delante a la izquierda: las torres se recortan con luz rasante y el
+  // relieve se marca.
+  lateral: [8, 330],
+  // A media altura, delante a la derecha: la cresta se enciende en el borde
+  // y el cuerpo queda en sombra.
+  tresCuartos: [20, 60],
+  // Como `costado`, con la luz tibia de la primera hora.
+  dorada: [8, 120],
+  atardecer: (t) => [entre(SOL[0], 6, suave(t, 0, 1)), entre(SOL[1], 170, suave(t, 0, 1))],
+}
+
+// La cámara a `t` (0 a 1) de un recorrido, con una curva Catmull-Rom en cada
+// medida: pasa por todas las paradas sin detenerse en ninguna.
+export function recorrer(paradas, t) {
+  if (typeof paradas === 'function') return paradas(t)
+  const ultima = paradas.length - 1
+  const i = Math.max(0, Math.min(ultima - 1, paradas.findLastIndex((p) => p.en <= t)))
+  const u = Math.min(1, Math.max(0, (t - paradas[i].en) / (paradas[i + 1].en - paradas[i].en)))
+  const [a, b, c, d] = [i - 1, i, i + 1, i + 2].map((j) => paradas[Math.min(ultima, Math.max(0, j))])
+  const curva = (p0, p1, p2, p3) =>
+    0.5 * (2 * p1 + (p2 - p0) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (3 * p1 - p0 - 3 * p2 + p3) * u * u * u)
+  const vista = {}
+  for (const clave of ['rumbo', 'apaisado', 'cabeceo', 'campo', 'cubre', 'giro', 'medio', 'curva']) {
+    vista[clave] = curva(...[a, b, c, d].map((p) => p[clave]))
+  }
+  vista.ojo = [0, 1, 2].map((e) => curva(a.ojo[e], b.ojo[e], c.ojo[e], d.ojo[e]))
+  // La curva no baja del suelo al llegar a él desde lo alto.
+  vista.ojo[1] = Math.max(2, vista.ojo[1])
+  vista.centro = [0, 1].map((e) => curva(a.centro[e], b.centro[e], c.centro[e], d.centro[e]))
+  const sol = [a, b, c, d].map((p) => p.sol ?? SOL)
+  vista.sol = [0, 1].map((e) => curva(sol[0][e], sol[1][e], sol[2][e], sol[3][e]))
+  return vista
 }
 
 const grados = (g) => (g * Math.PI) / 180
@@ -107,28 +321,41 @@ const normal = (a) => {
  * lienzo, hacia dónde está el sol y el sentido del giro.
  */
 export function encuadrar(perspectiva, ancho, alto) {
-  const vista = VISTAS[perspectiva] ?? VISTAS.aire
-  const rumbo = grados(ancho > alto ? (vista.apaisado ?? vista.rumbo) : vista.rumbo)
+  const vista = typeof perspectiva === 'object' ? perspectiva : (VISTAS[perspectiva] ?? VISTAS.aire)
+  const rumboDe = (v) => (ancho > alto ? (v.apaisado ?? v.rumbo) : v.rumbo)
+  const rumbo = grados(rumboDe(vista))
   const cabeceo = grados(vista.cabeceo)
   const frente = [Math.cos(cabeceo) * Math.cos(rumbo), Math.sin(cabeceo), Math.cos(cabeceo) * Math.sin(rumbo)]
-  const derecha = normal(cruz([0, 1, 0], frente))
-  const arriba = cruz(frente, derecha)
+  const recta = normal(cruz([0, 1, 0], frente))
+  const alzada = cruz(frente, recta)
+  // `alabeo`, en grados: el ala izquierda baja, como al virar a la izquierda.
+  const alabeo = grados(vista.alabeo ?? 0)
+  const derecha = recta.map((e, i) => e * Math.cos(alabeo) + alzada[i] * Math.sin(alabeo))
+  const arriba = alzada.map((e, i) => e * Math.cos(alabeo) - recta[i] * Math.sin(alabeo))
   // El alto con que se mide el rollo: el del lienzo, o más si no cubre el
   // ancho. Entonces crece alrededor del horizonte, que no se mueve.
   const medida = Math.max(alto, ancho / (vista.cubre ?? Infinity))
-  const focal = medida / 2 / Math.tan(grados(vista.campo) / 2)
+  // Con `curva` (0 a 1) la lente pasa de recta a ojo de pez (equidistante):
+  // ahí `campo` es el ángulo que cabe a lo largo del lado mayor del lienzo.
+  const curva = vista.curva ?? 0
+  const plana = medida / 2 / Math.tan(grados(vista.campo) / 2)
+  const pez = Math.max(ancho, alto) / 2 / (grados(vista.campo) / 2)
+  const focal = plana + (pez - plana) * curva
   const [x, y] = vista.centro
-  const centro = [x === null ? ancho / 2 : x * medida, y * alto - focal * (1 - alto / medida) * Math.tan(cabeceo)]
-  // El sol: su rumbo desde el frente de la cámara, en el plano.
-  const [altura, giro] = SOL.map(grados)
+  const medio = vista.medio ?? 0
+  const centro = [x === null ? ancho / 2 : x * medida * (1 - medio) + (ancho / 2) * medio, y * alto - focal * (1 - alto / medida) * Math.tan(cabeceo)]
+  // El sol: su rumbo desde el frente de la cámara, en el plano. Con `fijo`
+  // es el rumbo desde el frente de la portada: el sol no gira con la cámara.
+  const [altura, giroSol] = vista.sol ?? SOL
+  const giro = grados(giroSol + (vista.fijo ? rumboDe(vista) - rumboDe(VISTAS.aire) : 0))
   const plano = normal([frente[0], 0, frente[2]])
-  const lado = normal([derecha[0], 0, derecha[2]])
+  const lado = normal([recta[0], 0, recta[2]])
   const sol = normal([
     Math.cos(altura) * (Math.cos(giro) * plano[0] + Math.sin(giro) * lado[0]),
     Math.sin(altura),
     Math.cos(altura) * (Math.cos(giro) * plano[2] + Math.sin(giro) * lado[2]),
   ])
-  return { ojo: vista.ojo, frente, derecha, arriba, focal, centro, sol, giro: vista.giro ?? 1 }
+  return { ojo: vista.ojo, frente, derecha, arriba, focal, centro, sol, giro: vista.giro ?? 1, curva, rueda: vista.rueda ?? 0 }
 }
 
 // Dónde se ve un punto del mundo, en px del lienzo, y a qué hondura (la

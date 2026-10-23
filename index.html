@@ -39,9 +39,12 @@
       type="font/woff2"
       crossorigin
     />
-  </head>
+  <style>.prototipo{position:fixed;z-index:99;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px;max-width:calc(100% - 16px);font:600 13px/1 system-ui;background:#fff;padding:6px;border-radius:10px;box-shadow:0 4px 16px #0004}.prototipo a{padding:8px 10px;border-radius:6px;color:#10233b;text-decoration:none;background:#e8eef5}.prototipo a[aria-current]{background:#10233b;color:#fff}</style>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.js"></script>
-  </body>
+  <nav class="prototipo" aria-label="Prototipo"></nav>
+<script>(()=>{const q=new URLSearchParams(location.search),v=q.get('icono')||'calcomania',n=document.querySelector('.prototipo');document.documentElement.dataset.icono=v;if(q.get('luz')==='dorada'){const e=document.createElement('style');e.textContent='.portada-cielo{--nubes-luz:#ffe7c9!important}';document.head.append(e)}[['etiqueta','Etiqueta'],['baldosa','Baldosa'],['linea','En línea'],['calcomania','Calcomanía'],['trama','Trama'],['resplandor','Resplandor']].forEach(([k,t])=>{const a=document.createElement('a'),u=new URLSearchParams(q);u.set('icono',k);a.href='?'+u;a.textContent=t;if(k===v)a.setAttribute('aria-current','true');n.append(a)})})()</script>
+</body>
 </html>
