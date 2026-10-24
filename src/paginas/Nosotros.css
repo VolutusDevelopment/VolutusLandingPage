@@ -281,6 +281,25 @@
   scroll-snap-stop: always;
 }
 
+/* Como son paradas del encaje, entran solo con la opacidad, sin subir
+   (`entrar` en index.css): Chrome mide la parada con el desplazamiento que la
+   tarjeta tiene en ese momento, y no la vuelve a medir cuando termina de
+   entrar. Con los 12 px de la subida, encajaba corrida y, con el trackpad, la
+   primera tarjeta no dejaba seguir bajando. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .socio.entra {
+      animation-name: asomar;
+    }
+  }
+}
+
+@keyframes asomar {
+  from {
+    opacity: 0;
+  }
+}
+
 /* La proporción va escrita, para que el hueco exista antes que la foto, y
    con fondo, para que se vea mientras llega. Va por encima de la tarjeta,
    que la sigue en el HTML. */
