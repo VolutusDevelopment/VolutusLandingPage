@@ -344,8 +344,12 @@
   height: 100%;
 }
 
+/* El reflejo de arriba cubre solo la franja de la hora (hasta 62 px en un
+   iPhone) y se funde: entero era la nube al revés, y al rebotar el scroll en la
+   cima asomaba una segunda nube sobre la página. Más arriba queda el azul del
+   documento (`html`, index.css). */
 .portada-cielo .nubes {
-  -webkit-box-reflect: above;
+  -webkit-box-reflect: above 0 linear-gradient(#000 4rem, transparent 8rem);
 }
 
 /* Al terminar `main` el cielo queda detrás del contacto, y su reflejo de abajo
