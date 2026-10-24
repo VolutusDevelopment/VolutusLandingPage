@@ -5,19 +5,20 @@
    La cabecera y los socios van sobre el atardecer (lib/atardecer.js), que
    pinta su telón: fijo arriba mientras dura la sección, debajo de todo y del
    alto de la pantalla. La sección sube detrás de la barra, como la portada.
-   Su relleno de abajo es el tramo en que la escena se funde en el blanco de
-   la sección siguiente (`ponerSol` en nubes.js), que siempre está en
-   pantalla cuando el telón se va: no queda borde. */
+   Su relleno de abajo es el mar abierto donde el sol se hunde tras el último
+   socio y, en su última pantalla, el tramo en que la escena se funde en el
+   blanco de la sección siguiente (`ponerSol` en nubes.js), que siempre está
+   en pantalla cuando el telón se va: no queda borde. */
 .atardecer {
   position: relative;
   isolation: isolate;
   margin-top: calc(-1 * var(--barra-alto));
-  padding-block: 0 80svh;
+  padding-block: 0 125svh;
 }
 
-/* Mientras el lienzo no pinta, o si no puede, el telón lleva el mismo
-   atardecer en un degradado: el cielo hasta el horizonte, al 62 % del alto, y
-   el mar bajo él. */
+/* Mientras el lienzo no pinta, o si no puede, el telón lleva la escena como
+   abre, de día, en un degradado: el cielo hasta el horizonte, al 62 % del
+   alto, y el mar bajo él. */
 .atardecer-telon {
   position: sticky;
   top: 0;
@@ -25,16 +26,14 @@
   height: 100svh;
   margin-bottom: -100svh;
   background: linear-gradient(
-    #6f93d5,
-    #9d9ed3 27%,
-    #cf9aa6 45%,
-    #f2967e 52%,
-    #f9a26b 58%,
-    #ffad5c 62%,
-    #f0b48a 62%,
-    #9aa3b5 70%,
-    #6d819c 82%,
-    #556e8f
+    #6fa8e6,
+    #a3c9ef 30%,
+    #cfe2f3 50%,
+    #e7eef4 62%,
+    #cdd9e4 62%,
+    #93a9c2 70%,
+    #6a87a6 82%,
+    #557596
   );
 }
 
@@ -46,6 +45,121 @@
 @media (max-width: 639px) {
   .atardecer-telon .nubes {
     --nubes-celda: 4;
+  }
+}
+
+/* ---- la parvada ----
+   Quince patos en V cruzan una vez, lejos, justo sobre el horizonte
+   (Nosotros.jsx). Van en una capa del alto del cielo, fija como el telón,
+   que se recorta en el horizonte: el que cae, cae al mar. Por estar
+   posicionada se pinta delante del titular y la entradilla, que en una
+   pantalla baja llegan hasta el horizonte; las tarjetas de los socios,
+   posicionadas después, pasan delante de ella. Cada pato es una ventana de
+   su ancho sobre la tira de sus cuadros, que se corre de uno a otro: aletea a
+   ocho cuadros por segundo, como en el juego, y cada pato a destiempo.
+
+   La altura del vuelo (`--vuelo`) la elige src/parvada.js en el cielo libre;
+   sin JavaScript va sobre el horizonte. El cazado se pasma 0.35 s y cae con
+   la gravedad: la curva es la parábola y = x², y baja el alto entero del
+   cielo, así que llega al mar desde cualquier altura y siempre con la misma
+   aceleración. Sigue avanzando con la parvada mientras cae, volteándose como
+   en el Duck Hunt. Todo es `translate` y `scale`, que van
+   por el compositor. */
+.parvada {
+  --px: 0.75px;
+  --ancho: calc(16 * var(--px));
+  position: sticky;
+  top: 0;
+  height: 62svh;
+  margin-bottom: -62svh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .parvada {
+    --px: 1px;
+  }
+}
+
+.parvada > svg {
+  position: absolute;
+}
+
+.parvada-v {
+  position: absolute;
+  top: var(--vuelo, 88%);
+  left: 0;
+  width: 100%;
+  animation: cruzar 30s linear 1s both;
+}
+
+.pato {
+  position: absolute;
+  left: calc(var(--fila) * -1.3 * var(--ancho));
+  top: calc(var(--fila) * var(--lado) * 0.25 * var(--ancho));
+  width: var(--ancho);
+  height: var(--ancho);
+  overflow: hidden;
+}
+
+.pato svg {
+  width: 400%;
+  max-width: none;
+  animation: aletear 0.25s steps(2) calc(var(--i) * -0.09s) infinite;
+}
+
+.pato.cazado {
+  animation:
+    caer 2.2s cubic-bezier(0.33, 0, 0.67, 0.33) 0.35s forwards,
+    voltear 0.24s steps(1, end) 0.35s 9;
+}
+
+.cazado svg {
+  animation: pasmo 0.35s steps(1, end) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parvada {
+    display: none;
+  }
+}
+
+@keyframes cruzar {
+  from {
+    translate: calc(-1 * var(--ancho));
+  }
+
+  to {
+    translate: calc(100% + 10 * var(--ancho));
+  }
+}
+
+@keyframes aletear {
+  to {
+    translate: -50%;
+  }
+}
+
+@keyframes pasmo {
+  from {
+    translate: -50%;
+  }
+
+  to {
+    translate: -75%;
+  }
+}
+
+@keyframes caer {
+  to {
+    translate: 0 62svh;
+  }
+}
+
+@keyframes voltear {
+  50% {
+    scale: -1 1;
   }
 }
 
@@ -76,8 +190,10 @@
    proyectos, y la foto se monta encima y sobresale. En S la foto va arriba,
    algo más angosta, y pisa el borde superior de la tarjeta; desde M va al
    lado, al ras del borde exterior, sobresale por arriba y por abajo y cambia
-   de lado de una tarjeta a la otra. Pasan sobre el mar del atardecer. */
+   de lado de una tarjeta a la otra. Pasan sobre el mar del atardecer, y
+   delante de la parvada: van posicionadas, después de ella. */
 .socios {
+  position: relative;
   list-style: none;
   display: grid;
   gap: var(--e-6);

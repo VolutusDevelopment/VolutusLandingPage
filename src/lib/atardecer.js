@@ -9,6 +9,13 @@
  * agua, lo oscuro del agua y el brillo del sol en ella— y `TRAMA` dibuja los
  * puntos a resolución completa y, entre ellos, el cielo.
  *
+ * Al abrir la página es de día: el sol está alto, el cielo es celeste y su
+ * reflejo es un puñado de destellos dorados cerca de quien mira. Mientras
+ * pasan los socios baja parejo, y con él el reflejo, que sube hacia el
+ * horizonte y se angosta en estela; el cielo se enciende en la puesta. El sol
+ * toca el mar recién con el último socio, y se hunde antes del fundido (ver
+ * `sol`).
+ *
  * La física, en metros y segundos:
  *
  *   - Doce trenes de olas de gravedad (`OLAS`), del largo al corto, con la
@@ -52,14 +59,16 @@ const OJOS = 2
 // Dónde va el horizonte, en altos del lienzo desde arriba.
 const HORIZONTE = 0.62
 
-// El sol, 11° a la derecha de quien mira. Arriba de todo, su borde de abajo
-// roza el horizonte (`ARRIBA`, en radianes); al terminar los socios queda solo
-// la tapa del disco (`ABAJO`). El disco mide `RADIO` rad: más que el de
-// verdad (0.0047), para que se lea en la trama.
+// El sol, 11° a la derecha de quien mira, y su altura, en radianes: de día
+// (`DIA`), cuando su borde de abajo toca el mar (`TOCA`: cerca del horizonte
+// el aire achata el disco, así que el borde queda bajo un radio) y ya puesto
+// (`PUESTO`). El disco mide `RADIO` rad: más que el de verdad (0.0047), para
+// que se lea en la trama.
 const RUMBO_DEL_SOL = 0.2
-const ARRIBA = 0.032
-const ABAJO = -0.022
 const RADIO = 0.026
+const DIA = 0.18
+const TOCA = RADIO
+const PUESTO = -RADIO
 
 // Cuántas ráfagas del cursor recuerda el agua a la vez, y en cuántos
 // segundos se apaga cada una.
@@ -94,9 +103,12 @@ export function camara(ancho, alto, densidad) {
   return { ancho, alto, densidad, focal, mira: Math.atan(((HORIZONTE - 0.5) * alto) / focal) }
 }
 
-/** La dirección del sol cuando ya pasó `t` de los socios, de 0 a 1. */
+/**
+ * La dirección del sol en `t`: de 0 a 1 mientras pasan los socios, del día
+ * hasta tocar el mar, y de 1 a 2 hasta el fundido, en que se hunde.
+ */
 export function sol(t) {
-  const elevacion = ARRIBA + (ABAJO - ARRIBA) * Math.min(1, Math.max(0, t))
+  const elevacion = t < 1 ? DIA + (TOCA - DIA) * Math.max(0, t) : TOCA + (PUESTO - TOCA) * Math.min(1, t - 1)
   const c = Math.cos(elevacion)
   return [Math.sin(RUMBO_DEL_SOL) * c, Math.sin(elevacion), Math.cos(RUMBO_DEL_SOL) * c]
 }
@@ -233,33 +245,51 @@ void main() {
 
 /**
  * La trama: en cada celda de agua, un punto. Su área es lo oscuro del agua,
- * en azul hondo, salvo donde brilla el sol: ahí el punto es naranjo y su
- * área, el brillo. Entre los puntos, el reflejo del horizonte que se aclara
- * hacia quien mira. Sobre el horizonte, el cielo de cada px, con el sol.
- * `blanco` funde todo en el blanco de la página.
+ * en azul hondo, salvo donde brilla el sol: ahí el punto es del color del
+ * reflejo y su área, el brillo. Entre los puntos, el reflejo del horizonte
+ * que se aclara hacia quien mira. Sobre el horizonte, el cielo de cada px,
+ * con el sol. `blanco` funde todo en el blanco de la página.
+ *
+ * Cada color tiene dos horas, el día y la puesta, y `tarde` va de una a la
+ * otra según la altura del sol: el cielo sigue celeste mientras el sol está
+ * alto y se enciende en los últimos grados. De día el sol lleva una corona
+ * blanca y ceñida, y su reflejo es dorado; al bajar, la corona se abre en el
+ * resplandor que tiñe el cielo bajo, y el reflejo se vuelve naranjo. Cerca
+ * del horizonte el aire achata el disco.
  */
 export const TRAMA = `${RAYO}
 uniform sampler2D campo;
 uniform float blanco;
 const vec3 CENIT = ${color('#5b8fd6')}, MEDIO = ${color('#a79fd2')}, BAJO = ${color('#f2967e')};
 const vec3 HORIZONTE = ${color('#ffad5c')}, AGUA = ${color('#123f6b')}, ESTELA = ${color('#ff8f3a')};
+const vec3 CENIT_DE_DIA = ${color('#6fa8e6')}, MEDIO_DE_DIA = ${color('#a3c9ef')}, BAJO_DE_DIA = ${color('#cfe2f3')};
+const vec3 HORIZONTE_DE_DIA = ${color('#e7eef4')}, AGUA_DE_DIA = ${color('#1b5a92')}, ESTELA_DE_DIA = ${color('#ffc642')};
 const vec3 FONDO = ${color('#edeef0')}, PAPEL = ${color('#f6f9fc')};
-const vec3 RESPLANDOR = ${color('#ffb86b')}, DISCO = ${color('#fff5dc')}, DISCO_BAJO = ${color('#ffbd73')};
+const vec3 CORONA = ${color('#fffbea')}, RESPLANDOR = ${color('#ffb86b')}, DISCO = ${color('#fff5dc')}, DISCO_BAJO = ${color('#ffbd73')};
+
+float tarde;
+vec3 hora(vec3 dia, vec3 puesta) {
+  return mix(dia, puesta, tarde);
+}
 
 vec3 cielo(vec3 d) {
-  vec3 c = mix(HORIZONTE, BAJO, smoothstep(0.0, 0.07, d.y));
-  c = mix(c, MEDIO, smoothstep(0.04, 0.24, d.y));
-  c = mix(c, CENIT, smoothstep(0.16, 0.62, d.y));
+  vec3 c = mix(hora(HORIZONTE_DE_DIA, HORIZONTE), hora(BAJO_DE_DIA, BAJO), smoothstep(0.0, 0.07, d.y));
+  c = mix(c, hora(MEDIO_DE_DIA, MEDIO), smoothstep(0.04, 0.24, d.y));
+  c = mix(c, hora(CENIT_DE_DIA, CENIT), smoothstep(0.16, 0.62, d.y));
   float a = acos(clamp(dot(d, sol), -1.0, 1.0));
   float bajo = 1.0 - smoothstep(-0.03, 0.4, sol.y);
-  c = mix(c, RESPLANDOR, (0.5 * exp(-a / 0.3) + 0.35 * exp(-a / 0.07)) * bajo * (1.0 - smoothstep(0.0, 0.5, d.y)));
+  float resplandor = (0.5 * exp(-a / 0.3) + 0.35 * exp(-a / 0.07)) * bajo * (1.0 - smoothstep(0.0, 0.5, d.y));
+  float corona = 0.45 * exp(-a / 0.05) + 0.2 * exp(-a / 0.25);
+  c = mix(c, hora(CORONA, RESPLANDOR), mix(corona, resplandor, tarde));
   float elevacion = asin(sol.y);
-  vec2 lejos = vec2((atan(d.x, d.z) - atan(sol.x, sol.z)) * cos(elevacion), (asin(d.y) - elevacion) * 1.22);
+  float achatado = 1.0 + 0.22 * (1.0 - smoothstep(0.0, 0.1, sol.y));
+  vec2 lejos = vec2((atan(d.x, d.z) - atan(sol.x, sol.z)) * cos(elevacion), (asin(d.y) - elevacion) * achatado);
   vec3 disco = mix(DISCO, DISCO_BAJO, smoothstep(0.06, -0.02, sol.y));
   return mix(c, disco, smoothstep(${num(RADIO + 0.004)}, ${num(RADIO - 0.002)}, length(lejos)));
 }
 
 void main() {
+  tarde = 1.0 - smoothstep(0.03, ${num(DIA)}, sol.y);
   vec2 px = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y);
   vec2 xy = floor(px / celda);
   vec4 m = texture2D(campo, (xy + 0.5) / rejilla);
@@ -269,13 +299,13 @@ void main() {
     c = cielo(d);
   } else {
     float b = -d.y / length(d.xz);
-    vec3 fondo = mix(HORIZONTE * 0.97 + 0.03, FONDO, smoothstep(-0.02, 0.22, b));
+    vec3 fondo = mix(hora(HORIZONTE_DE_DIA, HORIZONTE) * 0.97 + 0.03, FONDO, smoothstep(-0.02, 0.22, b));
     float lado = 0.62 * celda;
     float oscuro = lado * sqrt(m.r * (1.0 - m.g));
     float brillo = lado * sqrt(m.g);
     float radio = max(oscuro, brillo);
     float punto = smoothstep(radio + 0.8, radio - 0.8, length(px - (xy + 0.5) * celda));
-    c = mix(fondo, brillo > oscuro ? ESTELA : AGUA, punto);
+    c = mix(fondo, brillo > oscuro ? hora(ESTELA_DE_DIA, ESTELA) : hora(AGUA_DE_DIA, AGUA), punto);
   }
   gl_FragColor = vec4(mix(c, PAPEL, blanco), 1.0);
 }`

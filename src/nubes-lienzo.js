@@ -23,8 +23,9 @@
  *     mira, en un globo: «¿A QUE NO ME CAZAS?». La física y su shader viven
  *     en lib/mar.js.
  *   - `atardecer`: el sol que se pone en el mar, detrás de la cabecera y de
- *     los socios de /nosotros. Con el scroll el sol se hunde y, al final, la
- *     escena se funde en el blanco de la página (`ocaso`); el cursor sopla
+ *     los socios de /nosotros. Con el scroll el sol baja del día hasta
+ *     hundirse y, al final, la escena se funde en el blanco de la página
+ *     (`ocaso`); el cursor sopla
  *     ráfagas en el agua. Su física, su paleta y sus shaders viven en
  *     lib/atardecer.js.
  *
@@ -41,7 +42,7 @@
  */
 
 import {
-  GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
+  GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, RONDA, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
 import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import * as ATARDECER from './lib/atardecer.js'
@@ -973,7 +974,7 @@ function nadar(escena, t) {
   if (pato.desde !== null && t - pato.desde >= HABLA) {
     pato.desde = null
     pato.callo = t
-    pato.dicho = (pato.dicho + 1) % GLOBO[2]
+    pato.dicho = (pato.dicho + 1) % RONDA
   }
   const reposo = vista.ancho / 2 + pato.lado * (vista.ancho / 2 - 12 * celda)
   const globo = (NADA[0].length - FLOTACION[0] + 1 + GLOBO[0]) * celda + (VAIVEN * vista.focal) / profundidad
@@ -1336,8 +1337,8 @@ onmessage = ({ data }) => {
     if (escena.grua) escena.grua.cuando = undefined
     if (escena.ocaso) escena.ocaso.cuando = undefined
   }
-  // El atardecer: cuánto pasó de los socios (`sol`) y del fundido del final
-  // (`fin`), de 0 a 1 (ver `ponerSol` en nubes.js). La primera vez, y en una
+  // El atardecer: dónde va el sol (`sol`, de 0 a 2) y cuánto pasó del fundido
+  // del final (`fin`, de 0 a 1) (ver `ponerSol` en nubes.js). La primera vez, y en una
   // escena fija, van ahí de una; después, tras el scroll (`ponerse`).
   if (escena?.ocaso && data.tipo === 'ocaso') {
     const { ocaso } = escena
@@ -1360,8 +1361,9 @@ onmessage = ({ data }) => {
     }
   }
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
-  // y lo dice apenas sale a flote. `desde` es cuándo empezó a hablar (`null`
-  // si calla), `callo` cuándo terminó y `dicho`, el que sigue.
+  // y lo dice apenas sale a flote: el primero de la ronda o, si en /nosotros
+  // se cazó toda la parvada, `FETICHE`. `desde` es cuándo empezó a hablar
+  // (`null` si calla), `callo` cuándo terminó y `dicho`, el que sigue.
   if (escena?.mar && data.tipo === 'pato') {
     escena.pato = {
       lado: -0.2 - 0.4 * Math.random(),
@@ -1370,7 +1372,7 @@ onmessage = ({ data }) => {
       nace: null,
       desde: null,
       callo: -Infinity,
-      dicho: 0,
+      dicho: data.fetiche ? RONDA : 0,
     }
   }
   // El cursor es viento en el cielo.

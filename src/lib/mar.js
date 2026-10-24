@@ -71,7 +71,7 @@
  */
 
 import { filasDelGlobo } from './globo.js'
-import { DICHOS_FOOTER } from './chistes.js'
+import { DICHOS_FOOTER, FETICHE } from './chistes.js'
 import { NADA } from './pato.js'
 
 // Gravedad, en m/s².
@@ -173,8 +173,10 @@ export const TRAMO_RASTRO = 0.11
 const SOL = [0.3, 0.34, 1].map((v, _, sol) => v / Math.hypot(...sol))
 
 // Los textos editables están en `chistes.js`; aquí se convierten a
-// puntos y se guardan en un atlas del tamaño del dicho más ancho.
-const DICHOS = DICHOS_FOOTER.map((lineas) => filasDelGlobo(lineas, 1))
+// puntos y se guardan en un atlas del tamaño del dicho más ancho. Los de la
+// ronda van primero (`RONDA`), y al final, `FETICHE`.
+export const RONDA = DICHOS_FOOTER.length
+const DICHOS = [...DICHOS_FOOTER, FETICHE].map((lineas) => filasDelGlobo(lineas, 1))
 export const GLOBO = [
   Math.max(...DICHOS.map((filas) => filas[0].length)),
   Math.max(...DICHOS.map((filas) => filas.length)),

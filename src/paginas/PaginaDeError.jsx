@@ -1,6 +1,7 @@
 import Pagina from '../components/Pagina.jsx'
 import { PAGINAS } from '../lib/meta.js'
-import { ARRIBA, CASCO, COLORES } from '../lib/pato.js'
+import Celdas from '../components/Celdas.jsx'
+import { ARRIBA, CASCO } from '../lib/pato.js'
 
 /**
  * Las páginas de error —la 404 y la de los 5xx— y /patos. Son la misma
@@ -109,14 +110,4 @@ function Pato({ casco = false }) {
       )}
     </svg>
   )
-}
-
-function Celdas({ filas }) {
-  const formas = {}
-  filas.forEach((fila, y) =>
-    [...fila].forEach((letra, x) => {
-      if (COLORES[letra]) formas[letra] = `${formas[letra] ?? ''}M${x} ${y}h1v1h-1z`
-    }),
-  )
-  return Object.entries(formas).map(([letra, d]) => <path key={letra} fill={COLORES[letra]} d={d} />)
 }

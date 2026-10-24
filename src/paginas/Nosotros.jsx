@@ -1,12 +1,15 @@
+import Celdas from '../components/Celdas.jsx'
 import Pagina from '../components/Pagina.jsx'
 import { SOCIOS } from '../data/socios.js'
+import { ABAJO, ARRIBA, CAE, HERIDO } from '../lib/pato.js'
 import { OLA, trazoDe } from '../lib/logotipo.js'
 
 /**
- * Quiénes somos. Abre en la costa, al atardecer: el sol se pone en el mar,
- * como en Chile, y queda fijo detrás del titular y de las tarjetas de los
- * socios, que pasan por delante mientras el sol se hunde (`data-vista=
- * "atardecer"`, ver lib/atardecer.js). Después baja por el blanco y termina en
+ * Quiénes somos. Abre en la costa, de día, en una escena fija detrás del
+ * titular y de las tarjetas de los socios, que pasan por delante mientras el
+ * sol baja hasta ponerse en el mar, como en Chile (`data-vista="atardecer"`,
+ * ver lib/atardecer.js). Lejos, sobre el horizonte, cruza una parvada que se
+ * puede cazar con el cursor (`Parvada`). Después baja por el blanco y termina en
  * la caída, con el cierre y el pie de día (ver `cierre` en Pagina.jsx). La
  * nube es el tema del resto de la página, porque Volutus es su nombre.
  *
@@ -129,6 +132,55 @@ const RASGOS = [
   },
 ]
 
+// La parvada: quince patos en V, el primero adelante y los demás en dos
+// brazos abiertos hacia atrás, como la que se va al cielo siguiente en el
+// juego de la 404 (src/patos.js). `fila` es su fila en la V, y `lado`, su
+// brazo.
+const PARVADA = Array.from({ length: 15 }, (_, i) => ({ fila: Math.ceil(i / 2), lado: i % 2 ? -1 : 1 }))
+
+// Los cuadros del pato (lib/pato.js) en tira, uno cada 16 celdas: con el ala
+// arriba, con el ala abajo, cazado y cayendo, que es más alto que ancho.
+const CUADROS = [
+  { filas: ARRIBA, x: 0, y: 2 },
+  { filas: ABAJO, x: 16, y: 2 },
+  { filas: HERIDO, x: 32, y: 2 },
+  { filas: CAE, x: 49, y: 0 },
+]
+
+/**
+ * La parvada que cruza lejos sobre el mar del atardecer. Va en su propia capa,
+ * delante del titular, que nunca la tapa, y detrás de las tarjetas. La
+ * tira de cuadros se define una vez y cada pato la usa entera y muestra el
+ * suyo; el vuelo y la caída los lleva el CSS (Nosotros.css), y quién cae, el
+ * puntero (src/parvada.js).
+ */
+function Parvada() {
+  return (
+    <div className="parvada" aria-hidden="true">
+      <svg width="0" height="0" focusable="false">
+        <defs>
+          <g id="pato">
+            {CUADROS.map(({ filas, x, y }) => (
+              <g key={x} transform={`translate(${x} ${y})`}>
+                <Celdas filas={filas} />
+              </g>
+            ))}
+          </g>
+        </defs>
+      </svg>
+      <div className="parvada-v">
+        {PARVADA.map(({ fila, lado }, i) => (
+          <span key={i} className="pato" style={{ '--fila': fila, '--lado': lado, '--i': i }}>
+            <svg viewBox="0 0 64 16" shapeRendering="crispEdges" focusable="false">
+              <use href="#pato" />
+            </svg>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 /** La llamada a una fuente: su número, que lleva a la lista de fuentes. */
 function Cita({ fuente }) {
   const numero = FUENTES.indexOf(fuente) + 1
@@ -195,13 +247,15 @@ export default function Nosotros() {
   return (
     <Pagina ruta="/nosotros" className="nosotros" cierre={<Cierre />}>
       {/* El atardecer va en su telón, fijo mientras dura la sección: arriba el
-          titular, en el cielo, y después las tarjetas, sobre el mar. El sol se
-          pone mientras pasan los socios (`data-ocaso`), y el relleno de abajo
-          funde la escena en el blanco de la sección siguiente. */}
+          titular, en el cielo, y después las tarjetas, sobre el mar. El sol
+          baja del día mientras pasan los socios (`data-ocaso`) y toca el mar
+          tras el último; el relleno de abajo es el mar abierto donde se hunde
+          y, al final, el fundido al blanco de la sección siguiente. */}
       <section className="seccion zona-cielo atardecer">
         <div className="atardecer-telon">
           <canvas className="nubes" data-vista="atardecer" data-ocaso=".socios" aria-hidden="true" />
         </div>
+        <Parvada />
         <div className="contenedor atardecer-cabecera">
           <h1>¿Quiénes somos?</h1>
           <p className="entradilla">

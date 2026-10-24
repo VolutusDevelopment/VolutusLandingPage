@@ -150,12 +150,14 @@ function montar(pintor, lienzo, id) {
     })
   }
 
-  // /nosotros: el sol se pone mientras pasa lo que dice `data-ocaso` (las
-  // tarjetas de los socios), y en el relleno de abajo de su sección la escena
-  // se funde en el blanco de la página. Aquí solo se mide cuánto pasó de cada
-  // uno, de 0 a 1; el pintor los lleva tras el scroll con su resorte. Con
-  // movimiento reducido el sol no se mueve, pero el fundido sí: no desplaza
-  // nada.
+  // /nosotros: el sol baja del día mientras pasa lo que dice `data-ocaso` (las
+  // tarjetas de los socios), toca el mar cuando la última deja ver el
+  // horizonte, y se hunde en el mar abierto que queda. En el último 35 % de
+  // pantalla de la sección la escena se funde en el blanco de la página. Aquí
+  // solo se mide cuánto pasó: el sol, de 0 a 1 hasta la última tarjeta y de 1
+  // a 2 hasta el fundido, y el fundido, de 0 a 1; el pintor los lleva tras el
+  // scroll con su resorte. Con movimiento reducido el sol no se mueve, tocando
+  // el mar, pero el fundido sí: no desplaza nada.
   function ponerSol() {
     const seccion = lienzo.closest('section')
     const pasa = seccion.querySelector(lienzo.dataset.ocaso)
@@ -163,9 +165,11 @@ function montar(pintor, lienzo, id) {
     const enviar = () => {
       const alto = innerHeight
       const caja = seccion.getBoundingClientRect()
-      const fundido = parseFloat(getComputedStyle(seccion).paddingBottom)
-      const sol = quieto() ? 0 : entre(-caja.top / (pasa.getBoundingClientRect().bottom - caja.top - alto))
-      const fin = entre((0.55 * alto - caja.bottom + fundido) / (fundido - 0.45 * alto))
+      const bajado = -caja.top
+      const vistos = pasa.getBoundingClientRect().bottom - caja.top - alto / 2
+      const hundido = caja.height - 1.35 * alto
+      const sol = quieto() ? 1 : bajado < vistos ? entre(bajado / vistos) : 1 + entre((bajado - vistos) / (hundido - vistos))
+      const fin = entre((1.35 * alto - caja.bottom) / (0.35 * alto))
       pintor.postMessage({ tipo: 'ocaso', id, sol, fin })
     }
     addEventListener('scroll', enviar, { passive: true, signal })
@@ -319,7 +323,9 @@ function dejanVer(desde, tapa) {
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su
-// enlace a /patos, que llega oculto y lo sigue (`seguirPato`).
+// enlace a /patos, que llega oculto y lo sigue (`seguirPato`). Si en /nosotros
+// se cazó toda la parvada, el lienzo dice `data-fetiche` (src/parvada.js), y
+// el pato sale comentándolo.
 function soltarPato(pintor, lienzo, id) {
   const enlace = document.createElement('a')
   enlace.className = 'pato-del-mar'
@@ -328,7 +334,7 @@ function soltarPato(pintor, lienzo, id) {
   enlace.hidden = true
   lienzo.after(enlace)
   patos.set(id, enlace)
-  pintor.postMessage({ tipo: 'pato', id })
+  pintor.postMessage({ tipo: 'pato', id, fetiche: 'fetiche' in lienzo.dataset })
 }
 
 // El pintor avisa dónde pintó al pato, en px de su lienzo, y si ya salió a

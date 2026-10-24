@@ -60,7 +60,7 @@
     },
     "/nosotros": {
       "S": {
-        "alto": 9136,
+        "alto": 9516,
         "desborda": false,
         "h1": 86.375,
         "bloquesQueEntran": 20,
@@ -68,7 +68,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 9136,
+        "alto": 9516,
         "desborda": false,
         "h1": 86.375,
         "bloquesQueEntran": 20,
@@ -76,7 +76,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 7496,
+        "alto": 8027,
         "desborda": false,
         "h1": 61.984375,
         "bloquesQueEntran": 20,
@@ -84,7 +84,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 7496,
+        "alto": 8027,
         "desborda": false,
         "h1": 61.96875,
         "bloquesQueEntran": 20,
@@ -92,7 +92,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 6411,
+        "alto": 6780,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,
@@ -100,7 +100,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 6411,
+        "alto": 6780,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,
@@ -108,7 +108,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 6639,
+        "alto": 7044,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,
