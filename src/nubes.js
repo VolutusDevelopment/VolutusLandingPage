@@ -19,7 +19,7 @@
  * En la portada el cielo queda fijo detrás de la página hasta que lo tapa la
  * sección que dice `data-recorrido`, y al bajar hacia ella la cámara baja con
  * el scroll (ver `recorrer`). En /nosotros el atardecer queda fijo detrás de
- * su sección y el sol se pone con el scroll (ver `ponerSol`).
+ * su sección y el sol se pone con el scroll hasta la mitad (ver `ponerSol`).
  *
  * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
  * sobre su sección (en la portada, también sobre los servicios que suben por
@@ -156,26 +156,33 @@ function montar(pintor, lienzo, id) {
 
   // /nosotros: el sol baja del día mientras pasan los socios y toca el mar
   // cuando lo que dice `data-ocaso` (la pausa tras el último) llega arriba,
-  // con la escena sola. Después se hunde mientras sube la sección siguiente,
-  // y la escena se recorta en la lámina que queda sobre su título
-  // (`recortar`). Aquí solo se mide cuánto pasó, de 0 a 2 (ver `sol` en
-  // lib/atardecer.js); el pintor lo lleva tras el scroll con su resorte. Con
-  // movimiento reducido el sol no se mueve, tocando el mar; el recorte sí,
-  // porque va con el scroll, como la sección que sube.
+  // con la escena sola. Después, mientras la sección siguiente empieza a
+  // subir, se pone hasta la mitad, y ahí se queda: no baja mientras la escena
+  // se recorta en la lámina que queda sobre su título (`recortar`), ni cuando
+  // la lámina se va con el texto. Al volver, sale con la escena mientras deja
+  // de recortarse: si esperara a que quede sola, subiría cuando el scroll ya
+  // frena y llegaría tarde. Aquí solo se mide cuánto pasó, de 0 a 2 (ver
+  // `sol` en lib/atardecer.js); el pintor lo lleva tras el scroll con su
+  // resorte. Con movimiento reducido el sol no se mueve, tocando el mar; el
+  // recorte sí, porque va con el scroll, como la sección que sube.
   function ponerSol() {
     const seccion = lienzo.closest('section')
     const pausa = seccion.querySelector(lienzo.dataset.ocaso)
     const hoja = seccion.nextElementSibling
     const entre = (valor) => Math.min(1, Math.max(0, valor))
+    let antes = 0
+    let subiendo = false
     const enviar = () => {
       const arriba = seccion.getBoundingClientRect().top
       const bajado = -arriba
       const sola = pausa.getBoundingClientRect().top - arriba
-      const toca = hoja.getBoundingClientRect().top - arriba
-      const sol = quieto() ? 1 : bajado < sola ? entre(bajado / sola) : 1 + entre((bajado - sola) / (toca - sola))
-      pintor.postMessage({ tipo: 'ocaso', id, sol })
       const desde = sola + 0.3 * innerHeight
-      recortar(hoja, entre((bajado - desde) / (toca - desde)))
+      const toca = hoja.getBoundingClientRect().top - arriba
+      const lamina = entre((bajado - desde) / (toca - desde))
+      if (bajado !== antes) [subiendo, antes] = [bajado < antes, bajado]
+      const puesta = subiendo ? lamina : entre((bajado - sola) / (desde - sola))
+      pintor.postMessage({ tipo: 'ocaso', id, sol: quieto() ? 1 : bajado < sola ? entre(bajado / sola) : 1 + puesta })
+      recortar(hoja, lamina)
     }
     addEventListener('scroll', enviar, { passive: true, signal })
     addEventListener('resize', enviar, { signal })

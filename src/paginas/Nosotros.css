@@ -5,9 +5,10 @@
    La cabecera y los socios van sobre el atardecer (lib/atardecer.js), que
    pinta su telón: fijo arriba mientras dura la sección, debajo de todo y del
    alto de la pantalla. La sección sube detrás de la barra, como la portada.
-   Su relleno de abajo es el mar abierto donde el sol se hunde tras el último
-   socio (`ponerSol` en nubes.js), y donde la escena se recorta en la lámina
-   que queda sobre el título de la sección siguiente (ver la lámina, abajo).
+   Su relleno de abajo es el mar abierto donde el sol se pone hasta la mitad
+   tras el último socio (`ponerSol` en nubes.js), y donde la escena se recorta
+   en la lámina que queda sobre el título de la sección siguiente (ver la
+   lámina, abajo).
 
    Safari en iOS pinta la franja de la hora de un color propio si en el centro
    del borde encuentra algo pegado de todo el ancho, como el telón (ver Barra.css).
@@ -27,10 +28,11 @@
    Es una parada del encaje (ver los socios), con la pausa arriba de todo y
    no bajo la barra, para que la última tarjeta no asome. De ahí a la lámina
    hay un salto de una pantalla, como del último socio hasta aquí: en él el
-   sol se pone y la escena se recorta mientras sube la sección siguiente, que
-   se monta sobre su final el alto del telón (ver la lámina). Ese final tapado
-   no cuenta para el encaje: así la pausa no es más alta que la pantalla,
-   encaja en un solo punto y no hay dónde quedarse a medio recortar. */
+   sol se pone hasta la mitad y la escena se recorta mientras sube la sección
+   siguiente, que se monta sobre su final el alto del telón (ver la lámina).
+   Ese final tapado no cuenta para el encaje: así la pausa no es más alta que
+   la pantalla, encaja en un solo punto y no hay dónde quedarse a medio
+   recortar. */
 .atardecer-pausa {
   height: calc(100svh + 100lvh);
   scroll-snap-align: start;
@@ -469,7 +471,7 @@
    alrededor del horizonte en una lámina del ancho del texto, que va a dar a
    su hueco (`.lamina`), arriba del título. Llegan juntos cuando la sección
    toca arriba, y desde ahí la lámina se va con el texto, como la foto de la
-   Morning Glory, con el sol recién puesto adentro. El recorte lo hace
+   Morning Glory, con el sol a medio poner adentro. El recorte lo hace
    `ponerSol` (nubes.js) con la medida y el radio del hueco; aquí va el hueco,
    y la sección, transparente hasta el final de él y blanca después. Se monta
    sobre el final del atardecer el alto del telón, que se suelta justo cuando

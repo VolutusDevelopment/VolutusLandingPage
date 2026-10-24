@@ -24,9 +24,8 @@
  *     en lib/mar.js.
  *   - `atardecer`: el sol que se pone en el mar, detrás de la cabecera y de
  *     los socios de /nosotros. Con el scroll el sol baja del día hasta
- *     hundirse, y el cielo pasa a la hora azul (`ocaso`); el cursor sopla
- *     ráfagas en el agua. Su física, su paleta y sus shaders viven en
- *     lib/atardecer.js.
+ *     quedar a mitad de ponerse (`ocaso`); el cursor sopla ráfagas en el
+ *     agua. Su física, su paleta y sus shaders viven en lib/atardecer.js.
  *
  * Los colores son `luz` y `sombra`, y el mar suma `borde` (la espuma y los
  * destellos del agua).
