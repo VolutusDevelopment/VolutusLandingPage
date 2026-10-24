@@ -36,7 +36,7 @@ export const JUEGO = 3000
 // rasante. Su altura y su rumbo, en grados, desde hacia donde mira la cámara.
 const SOL = [60, 180]
 
-// El sol de la portada, /nosotros y /servicios: bajo, a ras del horizonte,
+// El sol de la portada y /servicios: bajo, a ras del horizonte,
 // delante a la izquierda. La luz rasante recorta cada torre de la nube y le
 // marca el relieve.
 const RASANTE = [8, 330]
@@ -89,12 +89,6 @@ export const VISTAS = {
     giro: -1,
     sol: RASANTE,
   },
-  // /nosotros: de costado, desde el suelo a 5 km de su espalda y con zoom: el
-  // rollo entero cruza el lienzo casi paralelo a él, centrado en su alto, y
-  // el título va delante. Mira la espalda, como la portada, por sus bultos
-  // revueltos: el frente, en vetas lisas, se veía plano. Por eso gira al
-  // revés, y sube.
-  costado: { ojo: [0, 2, -6000], rumbo: 88, cabeceo: 7.4, campo: 14, centro: [null, 0.5], giro: -1, sol: RASANTE },
   // /servicios: desde el suelo, a 2,1 km de su frente, mirando hacia arriba.
   // Cruza el lienzo casi paralelo a él, con su frente y su base plana, y el
   // título va dentro.

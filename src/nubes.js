@@ -6,17 +6,20 @@
  * OffscreenCanvas, así que el hilo principal nunca espera a la GPU. Aquí solo
  * se mide, se leen los colores y se avisa de lo que cambia.
  *
- * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes) o
- * `mar` (el agua bajo ellas). El cielo dice además desde dónde se mira la
- * nube, con `data-perspectiva`: la cámara de su página en lib/volutus.js
- * (`aire` si no lo dice). El color lo toma de `--nubes-luz`, `--nubes-sombra`,
+ * Cada `canvas.nubes` dice qué mira con `data-vista`: `cielo` (las nubes),
+ * `mar` (el agua bajo ellas) o `atardecer` (el sol que se pone en el mar, en
+ * /nosotros). El cielo dice además desde dónde se mira la nube, con
+ * `data-perspectiva`: la cámara de su página en lib/volutus.js (`aire` si no
+ * lo dice). El color lo toma de `--nubes-luz`, `--nubes-sombra`,
  * `--nubes-alfa` y, en el mar, `--nubes-borde`, que el CSS resuelve según la
- * zona. Tienen que ser hex: aquí se leen tal cual. El lado de la celda de la
- * trama, en px CSS, lo da `--nubes-celda` (ver `rejilla`).
+ * zona. Tienen que ser hex: aquí se leen tal cual. El atardecer lleva su
+ * paleta en su shader (lib/atardecer.js). El lado de la celda de la trama, en
+ * px CSS, lo da `--nubes-celda` (ver `rejilla`).
  *
  * En la portada el cielo queda fijo detrás de la página hasta que lo tapa la
  * sección que dice `data-recorrido`, y al bajar hacia ella la cámara baja con
- * el scroll (ver `recorrer`).
+ * el scroll (ver `recorrer`). En /nosotros el atardecer queda fijo detrás de
+ * su sección y el sol se pone con el scroll (ver `ponerSol`).
  *
  * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
  * sobre su sección (en la portada, también sobre los servicios que suben por
@@ -99,6 +102,7 @@ function alAsomar(lienzo, hacer) {
 // visibilidad, y nadie le vuelve a escribir.
 function montar(pintor, lienzo, id) {
   const mar = lienzo.dataset.vista === 'mar'
+  const atardecer = lienzo.dataset.vista === 'atardecer'
   // La sección que tapa la nube fija de la portada.
   const tapa = lienzo.dataset.recorrido && document.querySelector(lienzo.dataset.recorrido)
   // Las secciones sobre las que se ve el cielo: la suya y, si queda fijo, las
@@ -111,11 +115,12 @@ function montar(pintor, lienzo, id) {
   // Píxeles del pintor por píxel CSS (ver `medir`).
   let escala = 1
 
-  // El cielo va con su `rejilla`, y el mar, a la densidad de siempre.
+  // El cielo va con su `rejilla`, y el mar y el atardecer, a la densidad de
+  // siempre.
   function medir() {
     const dpr = Math.min(devicePixelRatio, DPR_MAXIMO)
     let { lado, celda, densidad } = rejilla(lienzo)
-    if (mar) {
+    if (mar || atardecer) {
       celda = Math.round(lado * dpr)
       densidad = dpr
     }
@@ -143,6 +148,29 @@ function montar(pintor, lienzo, id) {
       borde: valor('--nubes-borde') && rgb(valor('--nubes-borde')),
       alfa: parseFloat(valor('--nubes-alfa')),
     })
+  }
+
+  // /nosotros: el sol se pone mientras pasa lo que dice `data-ocaso` (las
+  // tarjetas de los socios), y en el relleno de abajo de su sección la escena
+  // se funde en el blanco de la página. Aquí solo se mide cuánto pasó de cada
+  // uno, de 0 a 1; el pintor los lleva tras el scroll con su resorte. Con
+  // movimiento reducido el sol no se mueve, pero el fundido sí: no desplaza
+  // nada.
+  function ponerSol() {
+    const seccion = lienzo.closest('section')
+    const pasa = seccion.querySelector(lienzo.dataset.ocaso)
+    const entre = (valor) => Math.min(1, Math.max(0, valor))
+    const enviar = () => {
+      const alto = innerHeight
+      const caja = seccion.getBoundingClientRect()
+      const fundido = parseFloat(getComputedStyle(seccion).paddingBottom)
+      const sol = quieto() ? 0 : entre(-caja.top / (pasa.getBoundingClientRect().bottom - caja.top - alto))
+      const fin = entre((0.55 * alto - caja.bottom + fundido) / (fundido - 0.45 * alto))
+      pintor.postMessage({ tipo: 'ocaso', id, sol, fin })
+    }
+    addEventListener('scroll', enviar, { passive: true, signal })
+    addEventListener('resize', enviar, { signal })
+    enviar()
   }
 
   function activar() {
@@ -226,8 +254,8 @@ function montar(pintor, lienzo, id) {
   const { perspectiva } = lienzo.dataset
   // `juego`: los cúmulos del juego de la 404 solo se compilan donde se juega.
   const juego = 'juego' in lienzo.dataset
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, perspectiva, juego }, [offscreen])
-  colorear()
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, atardecer, perspectiva, juego }, [offscreen])
+  if (!atardecer) colorear()
   medir()
   if (mar) {
     // El pato sale a flote cuando el mar asoma: así se le ve salir.
@@ -239,6 +267,7 @@ function montar(pintor, lienzo, id) {
   } else {
     seguirCursor()
     if (tapa) recorrer()
+    if (atardecer) ponerSol()
     lienzo.addEventListener(
       'soplo',
       ({ detail: { x, y, fuera } }) => {

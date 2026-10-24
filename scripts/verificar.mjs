@@ -290,6 +290,7 @@ async function revisarMarcado(ruta) {
 // software, y el sitio no le pinta nubes.
 
 const CIELO = 'canvas.nubes[data-vista="cielo"]'
+const ATARDECER = 'canvas.nubes[data-vista="atardecer"]'
 const GRABACION = '.portada-cielo video.grabado'
 const EN_FRIO = ['--disable-gpu-program-cache', '--disable-gpu-shader-disk-cache']
 const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
@@ -315,19 +316,20 @@ async function parcharPintor(pagina, cambios) {
   })
 }
 
-// La nube quieta (movimiento reducido), sin el texto, la barra ni la grabación
-// encima.
-async function fotoDeLaNube(navegador, ruta, software) {
+// La escena quieta (movimiento reducido) del `lienzo` de la página, sin el
+// texto, la barra ni la grabación encima.
+async function fotoDeLaNube(navegador, ruta, software, lienzo) {
   const ctx = await navegador.newContext({ viewport: { width: 480, height: 320 }, reducedMotion: 'reduce' })
   const pagina = await ctx.newPage()
   if (software) await parcharPintor(pagina, [SIN_FILTRO, SIN_NOMBRE])
   await pagina.goto(BASE + ruta, { waitUntil: 'load' })
   await pagina.addStyleTag({
-    content: '.portada-texto,.pagina-error-texto,.indice-titulo,.barra,video.grabado{visibility:hidden!important}',
+    content:
+      '.portada-texto,.pagina-error-texto,.indice-titulo,.atardecer-cabecera,.barra,video.grabado{visibility:hidden!important}',
   })
-  const pintada = await viva(pagina)
+  const pintada = await viva(pagina, lienzo)
   await pagina.waitForTimeout(1600)
-  const caja = await pagina.locator(CIELO).boundingBox()
+  const caja = await pagina.locator(lienzo).boundingBox()
   const foto = pintada && (await pagina.screenshot({ clip: { x: 0, y: 0, width: 480, height: Math.min(caja.y + caja.height, 320) } }))
   await ctx.close()
   return foto
@@ -359,12 +361,18 @@ async function diferencia(navegador, a, b) {
 async function revisarNubes() {
   const problemas = []
 
-  // La nube de la GPU de la máquina, igual a la de software, en cada cámara.
+  // La nube de la GPU de la máquina, igual a la de software, en cada cámara, y
+  // el atardecer de /nosotros.
   const gpu = await chromium.launch({ channel: 'chromium' })
   const software = await chromium.launch({ args: SWIFTSHADER })
-  for (const ruta of ['/', '/nosotros', '/servicios', '/no-existe']) {
-    const deGpu = await fotoDeLaNube(gpu, ruta, false)
-    const deSoftware = await fotoDeLaNube(software, ruta, true)
+  for (const [ruta, lienzo] of [
+    ['/', CIELO],
+    ['/nosotros', ATARDECER],
+    ['/servicios', CIELO],
+    ['/no-existe', CIELO],
+  ]) {
+    const deGpu = await fotoDeLaNube(gpu, ruta, false, lienzo)
+    const deSoftware = await fotoDeLaNube(software, ruta, true, lienzo)
     if (!deGpu || !deSoftware) {
       problemas.push(`${ruta}: la nube no se pintó ${deGpu ? 'por software' : 'con la GPU'}`)
       continue

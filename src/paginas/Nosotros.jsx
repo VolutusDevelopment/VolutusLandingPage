@@ -1,13 +1,14 @@
 import Pagina from '../components/Pagina.jsx'
-import { Escena } from '../components/Portada.jsx'
 import { SOCIOS } from '../data/socios.js'
 import { OLA, trazoDe } from '../lib/logotipo.js'
 
 /**
- * Quiénes somos. Hace el recorrido de la portada: abre bajo la misma nube, en
- * el mismo cielo (`Escena`), baja por el blanco y termina en la caída, con el
- * cierre y el pie de día (ver `cierre` en Pagina.jsx). Aquí la nube no es solo
- * el fondo: es el tema, porque Volutus es su nombre.
+ * Quiénes somos. Abre en la costa, al atardecer: el sol se pone en el mar,
+ * como en Chile, y queda fijo detrás del titular y de las tarjetas de los
+ * socios, que pasan por delante mientras el sol se hunde (`data-vista=
+ * "atardecer"`, ver lib/atardecer.js). Después baja por el blanco y termina en
+ * la caída, con el cierre y el pie de día (ver `cierre` en Pagina.jsx). La
+ * nube es el tema del resto de la página, porque Volutus es su nombre.
  *
  * Todo lo que dice se puede comprobar (DESIGN-BRIEF §3). Lo que viene de
  * afuera —la definición de la nube y los datos de la Morning Glory— lleva su
@@ -192,72 +193,75 @@ function Cierre() {
 
 export default function Nosotros() {
   return (
-    <Pagina ruta="/nosotros" className="nosotros" hora="dia" cierre={<Cierre />}>
-      {/* El titular y la entradilla van delante de la nube, y los socios en
-          la escena, bajo ella: el mismo cielo los lleva hasta el blanco de la
-          sección siguiente, sin corte. */}
-      <Escena
-        perspectiva="costado"
-        delante={
-          <>
-            <h1>¿Quiénes somos?</h1>
-            <p className="entradilla portada-entradilla">
-              Hacemos software en Chile: páginas web, tiendas online, apps, agentes de IA y automatizaciones.
-              Antes de hacerlo para otros, lo hicimos para nosotros.
-            </p>
-          </>
-        }
-      >
+    <Pagina ruta="/nosotros" className="nosotros" cierre={<Cierre />}>
+      {/* El atardecer va en su telón, fijo mientras dura la sección: arriba el
+          titular, en el cielo, y después las tarjetas, sobre el mar. El sol se
+          pone mientras pasan los socios (`data-ocaso`), y el relleno de abajo
+          funde la escena en el blanco de la sección siguiente. */}
+      <section className="seccion zona-cielo atardecer">
+        <div className="atardecer-telon">
+          <canvas className="nubes" data-vista="atardecer" data-ocaso=".socios" aria-hidden="true" />
+        </div>
+        <div className="contenedor atardecer-cabecera">
+          <h1>¿Quiénes somos?</h1>
+          <p className="entradilla">
+            Hacemos software en Chile: páginas web, tiendas online, apps, agentes de IA y automatizaciones. Antes
+            de hacerlo para otros, lo hicimos para nosotros.
+          </p>
+        </div>
+
         {/* Una tarjeta por socio, con la foto encima y en lados alternos,
             como el formulario de contacto sobre su tarjeta. */}
-        <ul className="socios">
-          {/* `sizes` es el ancho al que se pinta la foto, no el de su hueco:
-              con `object-fit: cover` se agranda hasta llenarlo, y en la
-              tarjeta angosta y alta desde 640 px llega a unos 580 px.
-              `fetchPriority` baja: en el teléfono la primera foto asoma al
-              pie de la pantalla, y con prioridad alta le quitaba la red al
-              texto de la cabecera, que es el LCP (2.3 s en vez de 1.6 s). */}
-          {SOCIOS.map(({ id, nombre, apellidos, titulo, institucion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
-            <li key={id} id={id} className="socio entra">
-              <img
-                src={foto}
-                srcSet={fotoSrcSet}
-                sizes={fotoSrcSet && '(max-width: 639px) calc(100vw - 72px), 580px'}
-                alt=""
-                width={800}
-                height={1000}
-                loading="lazy"
-                fetchPriority="low"
-                decoding="async"
-              />
-              <div className="socio-cuerpo">
-                <div className="socio-nombre">
-                  <h2>
-                    {nombre} <span className="apellidos">{apellidos}</span>
-                  </h2>
-                  <ul className="socio-perfiles">
-                    {REDES.map((red) => (
-                      <li key={red.id}>
-                        <a href={perfiles[red.id]} target="_blank" rel="noopener" style={{ '--color-red': red.color }}>
-                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d={red.logo} />
-                          </svg>
-                          <span className="solo-lectores">
-                            {red.nombre} de {nombre} {apellidos}
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+        <div className="contenedor">
+          <ul className="socios">
+            {/* `sizes` es el ancho al que se pinta la foto, no el de su hueco:
+                con `object-fit: cover` se agranda hasta llenarlo, y en la
+                tarjeta angosta y alta desde 640 px llega a unos 580 px.
+                `fetchPriority` baja: la primera foto queda bajo la primera
+                pantalla, y con prioridad alta le quitaba la red al texto de
+                la cabecera, que es el LCP (2.3 s en vez de 1.6 s). */}
+            {SOCIOS.map(({ id, nombre, apellidos, titulo, institucion, rol, foto, fotoSrcSet, perfiles, descripcion }) => (
+              <li key={id} id={id} className="socio entra">
+                <img
+                  src={foto}
+                  srcSet={fotoSrcSet}
+                  sizes={fotoSrcSet && '(max-width: 639px) calc(100vw - 72px), 580px'}
+                  alt=""
+                  width={800}
+                  height={1000}
+                  loading="lazy"
+                  fetchPriority="low"
+                  decoding="async"
+                />
+                <div className="socio-cuerpo">
+                  <div className="socio-nombre">
+                    <h2>
+                      {nombre} <span className="apellidos">{apellidos}</span>
+                    </h2>
+                    <ul className="socio-perfiles">
+                      {REDES.map((red) => (
+                        <li key={red.id}>
+                          <a href={perfiles[red.id]} target="_blank" rel="noopener" style={{ '--color-red': red.color }}>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                              <path d={red.logo} />
+                            </svg>
+                            <span className="solo-lectores">
+                              {red.nombre} de {nombre} {apellidos}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <p className="socio-educacion">{`${titulo} - ${institucion.nombre}`}</p>
+                  <p className="socio-rol">{rol}</p>
+                  <p className="socio-descripcion">{descripcion}</p>
                 </div>
-                <p className="socio-educacion">{`${titulo} - ${institucion.nombre}`}</p>
-                <p className="socio-rol">{rol}</p>
-                <p className="socio-descripcion">{descripcion}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </Escena>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       {/* Primero lo que es la nube: su definición, como en un diccionario, y
           la más conocida, con su foto. Después, lo que es para nosotros. */}

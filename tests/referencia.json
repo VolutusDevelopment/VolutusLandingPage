@@ -60,23 +60,23 @@
     },
     "/nosotros": {
       "S": {
-        "alto": 8439,
+        "alto": 9136,
         "desborda": false,
-        "h1": 34.84375,
+        "h1": 86.375,
         "bloquesQueEntran": 20,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 8439,
+        "alto": 9136,
         "desborda": false,
-        "h1": 34.828125,
+        "h1": 86.375,
         "bloquesQueEntran": 20,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 6296,
+        "alto": 7496,
         "desborda": false,
         "h1": 61.984375,
         "bloquesQueEntran": 20,
@@ -84,7 +84,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6296,
+        "alto": 7496,
         "desborda": false,
         "h1": 61.96875,
         "bloquesQueEntran": 20,
@@ -92,7 +92,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 5718,
+        "alto": 6411,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,
@@ -100,7 +100,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 5718,
+        "alto": 6411,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,
@@ -108,7 +108,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 5838,
+        "alto": 6639,
         "desborda": false,
         "h1": 82.078125,
         "bloquesQueEntran": 20,

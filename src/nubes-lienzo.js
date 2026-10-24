@@ -22,6 +22,11 @@
  *     pato, que deja estela y de rato en rato se detiene a provocar a quien
  *     mira, en un globo: «¿A QUE NO ME CAZAS?». La física y su shader viven
  *     en lib/mar.js.
+ *   - `atardecer`: el sol que se pone en el mar, detrás de la cabecera y de
+ *     los socios de /nosotros. Con el scroll el sol se hunde y, al final, la
+ *     escena se funde en el blanco de la página (`ocaso`); el cursor sopla
+ *     ráfagas en el agua. Su física, su paleta y sus shaders viven en
+ *     lib/atardecer.js.
  *
  * Los colores son `luz` y `sombra`, y el mar suma `borde` (la espuma y los
  * destellos del agua).
@@ -39,6 +44,7 @@ import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
 import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
+import * as ATARDECER from './lib/atardecer.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -565,6 +571,7 @@ const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
   'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
+  'mira', 'olas', 'fases', 'rafagas', 'blanco',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -730,15 +737,19 @@ function texturaDeCuadro(gl, filas) {
 // programas terminan de enlazarse (`armar`, desde `paso`). Si un programa no
 // enlaza, no hay escena.
 function encargar(escena) {
-  const { gl, mar, juego } = escena
+  const { gl, mar, juego, atardecer } = escena
   // Las extensiones se piden en cada encargo: un contexto recuperado no
   // conserva las de antes, y preguntar con la vieja no respondía nunca.
   escena.paralelo = gl.getExtension('KHR_parallel_shader_compile')
+  escena.programas = null
+  if (atardecer) {
+    escena.pedidos = { principales: [pedir(gl, ATARDECER.CAMPO), pedir(gl, ATARDECER.TRAMA)], aire: null }
+    return
+  }
   const lectura = gl.getExtension('EXT_shader_texture_lod') ? LEER_SIN_DERIVADAS : LEER_COMO_SIEMPRE
   // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar,
   // el círculo de siempre. Por software la escena no se mueve, y su aire no se
   // compila.
-  escena.programas = null
   escena.pedidos = {
     principales: [
       pedir(gl, lectura + (mar ? MAR : (juego ? '#define JUEGO\n' : '') + CAMPO)),
@@ -755,7 +766,7 @@ const listos = (escena) =>
   [...escena.pedidos.principales, ...Object.values(escena.pedidos.aire ?? {})].every((programa) => listo(escena, programa))
 
 function armar(escena) {
-  const { gl, mar, pedidos } = escena
+  const { gl, mar, atardecer, pedidos } = escena
   escena.pedidos = null
   const programas = pedidos.principales.map((programa) => terminar(gl, programa))
   if (programas.includes(null)) return false
@@ -768,14 +779,17 @@ function armar(escena) {
 
   const [campo, trama] = programas
   escena.programas = programas
-  texturaDeRuido(gl)
+  if (!atardecer) texturaDeRuido(gl)
   gl.activeTexture(gl.TEXTURE1)
   escena.campo = lamina(gl, gl.UNSIGNED_BYTE, gl.NEAREST)
   gl.useProgram(trama.programa)
   gl.uniform1i(trama.campo, 1)
   gl.uniform1f(trama.relleno, mar ? 1 : 0)
   gl.useProgram(campo.programa)
-  if (mar) {
+  if (atardecer) {
+    gl.uniform4fv(campo.olas, ATARDECER.OLAS)
+    gl.uniform1fv(campo.fases, ATARDECER.FASES)
+  } else if (mar) {
     gl.activeTexture(gl.TEXTURE2)
     texturaDeCuadro(gl, NADA)
     gl.activeTexture(gl.TEXTURE3)
@@ -792,11 +806,12 @@ function armar(escena) {
 // La escena existe desde que la página la monta, aunque su contexto tarde: lo
 // que la página le diga mientras tanto (tamaño, colores, si se ve) se guarda y
 // se aplica al armarla.
-function montar(id, lienzo, { mar, perspectiva, juego }) {
+function montar(id, lienzo, { mar, atardecer, perspectiva, juego }) {
   const escena = {
     id,
     gl: null,
     mar,
+    atardecer,
     perspectiva,
     juego,
     tiempo: 0,
@@ -810,6 +825,10 @@ function montar(id, lienzo, { mar, perspectiva, juego }) {
   if (mar) {
     escena.rastro = new Float32Array(4 * RASTRO)
     escena.pato = null
+  } else if (atardecer) {
+    escena.previo = null
+    escena.rafagas = []
+    escena.ocaso = { sol: { x: 0, v: 0, meta: 0 }, fin: { x: 0, v: 0, meta: 0 }, visto: false }
   } else {
     escena.previo = null
     escena.tramo = null
@@ -915,15 +934,21 @@ function fijar(escena, poner) {
 }
 
 // Junta lo que el cursor recorrió desde el último fotograma: `simular` lo
-// sopla de una vez, como un tramo.
+// sopla de una vez, como un tramo. En el atardecer, cada paso del cursor es
+// una ráfaga en el agua, y se recuerdan las últimas.
 function soplar(escena, { x, y, fuera }) {
   if (fuera || fija(escena)) {
     escena.previo = null
     return
   }
   const punto = { x, y, t: performance.now() }
-  if (escena.previo && !escena.tramo) escena.tramo = { desde: escena.previo }
-  if (escena.tramo) escena.tramo.hasta = punto
+  if (escena.atardecer) {
+    const nueva = escena.previo && escena.camara && ATARDECER.rafaga(escena.camara, escena.previo, punto)
+    if (nueva) escena.rafagas = [nueva, ...escena.rafagas].slice(0, ATARDECER.RAFAGAS)
+  } else {
+    if (escena.previo && !escena.tramo) escena.tramo = { desde: escena.previo }
+    if (escena.tramo) escena.tramo.hasta = punto
+  }
   escena.previo = punto
 }
 
@@ -1074,12 +1099,25 @@ function pintar(escena, ahora, conAire = true) {
     if (escena.pato && !quieta) nadar(escena, t)
     gl.uniform4fv(campo.rastro, escena.rastro)
   }
+  // El atardecer: el sol donde lo dejó el scroll y las ráfagas que siguen
+  // soplando (ver `ponerse`).
+  const sol = escena.atardecer && ATARDECER.sol(escena.ocaso.sol.x)
+  if (sol) {
+    escena.rafagas = escena.rafagas.filter((rafaga) => ahora - rafaga.t < 6000)
+    gl.uniform3fv(campo.sol, sol)
+    gl.uniform4fv(campo.rafagas, ATARDECER.soplos(escena.rafagas, ahora))
+    escena.antes = ahora
+  }
   gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
   gl.viewport(0, 0, ...escena.rejilla)
   gl.drawArrays(gl.TRIANGLES, 0, 3)
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
   gl.useProgram(trama.programa)
+  if (sol) {
+    gl.uniform3fv(trama.sol, sol)
+    gl.uniform1f(trama.blanco, escena.ocaso.fin.x)
+  }
   gl.drawArrays(gl.TRIANGLES, 0, 3)
 }
 
@@ -1143,6 +1181,7 @@ function paso(ahora) {
 // hasta `ahora`, y se vuelve a encuadrar. Devuelve si se movió: ya quieta en
 // su sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
 function seguir(escena, ahora) {
+  if (escena.ocaso) return ponerse(escena, ahora)
   const { grua } = escena
   if (!grua || (grua.x === grua.meta && grua.v === 0)) return false
   const dt = Math.min((ahora - (grua.cuando ?? ahora)) / 1000, 0.1)
@@ -1152,6 +1191,25 @@ function seguir(escena, ahora) {
   }
   escena.vista = bajar(grua.x)
   if (escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+  return true
+}
+
+// El sol del atardecer y el fundido del final dan un paso tras el scroll, con
+// el mismo resorte que la cámara de la portada (`arrastrar`). Devuelve si
+// algo se movió.
+function ponerse(escena, ahora) {
+  const { ocaso } = escena
+  const tramos = [ocaso.sol, ocaso.fin]
+  if (tramos.every((tramo) => tramo.x === tramo.meta && tramo.v === 0)) {
+    ocaso.cuando = undefined
+    return false
+  }
+  const dt = Math.min((ahora - (ocaso.cuando ?? ahora)) / 1000, 0.1)
+  ocaso.cuando = ahora
+  for (const tramo of tramos) {
+    Object.assign(tramo, arrastrar(tramo, tramo.meta, dt))
+    if (Math.abs(tramo.x - tramo.meta) < 1e-5 && Math.abs(tramo.v) < 1e-4) Object.assign(tramo, { x: tramo.meta, v: 0 })
+  }
   return true
 }
 
@@ -1184,8 +1242,16 @@ function aplicar(escena, data) {
     // fija en cada fotograma. `escala` es la del detalle de las olas.
     const vista = escena.mar && camara(data.ancho, data.alto)
     if (vista) Object.assign(escena, { camara: vista, celda: data.celda, escala: (vista.focal * OJOS) / data.celda })
+    // El atardecer, con su cámara en la orilla (lib/atardecer.js).
+    if (escena.atardecer) {
+      const { focal, mira } = (escena.camara = ATARDECER.camara(data.ancho, data.alto, data.densidad))
+      fijar(escena, (gl, u) => {
+        gl.uniform1f(u.focal, focal)
+        gl.uniform1f(u.mira, mira)
+      })
+    }
     // La nube, con la cámara de su página (lib/volutus.js).
-    if (!escena.mar) enfocar(escena, data)
+    if (!escena.mar && !escena.atardecer) enfocar(escena, data)
     const { aire } = escena
     if (aire) {
       // Celdas cuadradas: el ancho en celdas es el alto por la proporción.
@@ -1266,8 +1332,21 @@ onmessage = ({ data }) => {
   if (escena && data.tipo === 'activa') {
     escena.activa = data.valor
     // Al volver a verse, la cámara sigue desde donde quedó, sin contar lo que
-    // estuvo parada (ver `seguir`).
+    // estuvo parada (ver `seguir`). Igual el sol del atardecer.
     if (escena.grua) escena.grua.cuando = undefined
+    if (escena.ocaso) escena.ocaso.cuando = undefined
+  }
+  // El atardecer: cuánto pasó de los socios (`sol`) y del fundido del final
+  // (`fin`), de 0 a 1 (ver `ponerSol` en nubes.js). La primera vez, y en una
+  // escena fija, van ahí de una; después, tras el scroll (`ponerse`).
+  if (escena?.ocaso && data.tipo === 'ocaso') {
+    const { ocaso } = escena
+    const deUna = !ocaso.visto || fija(escena)
+    for (const tramo of ['sol', 'fin']) {
+      ocaso[tramo].meta = data[tramo]
+      if (deUna) Object.assign(ocaso[tramo], { x: data[tramo], v: 0 })
+    }
+    ocaso.visto = true
   }
   // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js). La
   // primera vez la cámara va ahí; después lo sigue (`seguir`).

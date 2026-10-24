@@ -35,91 +35,69 @@ const ROTATIVO = [
 ].map(([palabra, id]) => ({ palabra, color: SERVICIOS.find((servicio) => servicio.id === id).color }))
 
 /**
- * El cielo de la mañana con la volutus y el texto encima. Lo comparten la
- * portada y /nosotros, que abre bajo la misma nube.
- *
- * `perspectiva` cambia desde dónde se mira la nube: es una de las cámaras de
- * lib/volutus.js. Sin ella, la de la portada, desde el aire: el rollo entra
- * enorme por la izquierda y se aleja en diagonal. `costado` lo pone casi
- * paralelo a la pantalla, cruzando la cabecera, donde se ve subir su frente,
- * y le da a la escena su variante de layout (Portada.css). `delante`, si lo
- * hay, va delante de la nube; el resto del texto, debajo.
+ * El cielo de la mañana con la volutus y el texto encima. La nube se mira
+ * desde el aire (lib/volutus.js): el rollo entra enorme por la izquierda y se
+ * aleja en diagonal, y queda fija detrás de la página hasta que la tapa
+ * Proyectos (`data-recorrido`, ver nubes.js).
  */
-export function Escena({ id, perspectiva, delante, children }) {
+export default function Portada() {
   return (
-    <section
-      id={id}
-      className={`seccion zona-cielo hora-manana portada${perspectiva ? ` portada-${perspectiva}` : ''}`}
-      data-barra={perspectiva ? undefined : 'hora-dia'}
-    >
+    <section id="portada" className="seccion zona-cielo hora-manana portada" data-barra="hora-dia">
       <div className="alba hora-dia" aria-hidden="true" />
       <div className="portada-escena">
         <div className="portada-cielo">
-          <canvas
-            className="nubes"
-            data-vista="cielo"
-            data-perspectiva={perspectiva}
-            data-recorrido={perspectiva ? undefined : '#proyectos'}
-            aria-hidden="true"
-          />
-          {delante && <div className="contenedor portada-delante">{delante}</div>}
+          <canvas className="nubes" data-vista="cielo" data-recorrido="#proyectos" aria-hidden="true" />
         </div>
 
         <div className="contenedor portada-interior">
-          <div className="portada-texto">{children}</div>
+          <div className="portada-texto">
+            {/* El gancho va de antetítulo y el titular dice lo que hacemos,
+                sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
+                de `lib/servicios.js` (`ROTATIVO`, menos la prospección y la ley
+                de datos, que no son algo que se cree).
+
+                Buscadores y lectores de pantalla leen la lista entera y fija,
+                con los nombres que la gente busca («aplicaciones», «agentes de
+                inteligencia artificial»); el rotativo es solo para la vista.
+                Ocupa siempre una línea, así que el titular no salta al cambiar. */}
+            <p className="antetitulo">
+              ¿Qué estás <span>resolviendo a mano?</span>
+            </p>
+            <h1>
+              Creamos{' '}
+              <span className="solo-lectores">
+                páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
+                automatizaciones{' '}
+              </span>
+              <span
+                className="rotativo"
+                aria-hidden="true"
+                data-palabras={ROTATIVO.map(({ palabra }) => palabra).join('|')}
+                data-colores={ROTATIVO.map(({ color }) => color).join('|')}
+              >
+                <span className="rotativo-palabra" style={{ '--servicio': ROTATIVO[0].color }}>
+                  {ROTATIVO[0].palabra}
+                </span>
+              </span>{' '}
+              para tu negocio
+            </h1>
+
+            {/* El reparto del trabajo, sin prometer ventas ni horas que no podemos
+                mostrar (§3), y la respuesta corta a «¿qué tengo que entregar yo?»
+                (§2). «Lo resolvemos» y no «la solución», que el glosario descarta
+                (§5). La segunda frase no se parte: en S, la línea cae en el punto. */}
+            <p className="entradilla portada-entradilla">
+              Tú pones el problema. <span>Nosotros lo resolvemos.</span>
+            </p>
+
+            <div className="portada-acciones">
+              <a className="boton boton-primario" href="#contacto">
+                Cuéntanos tu proyecto
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  )
-}
-
-export default function Portada() {
-  return (
-    <Escena id="portada">
-      {/* El gancho va de antetítulo y el titular dice lo que hacemos,
-          sin que haya que pensarlo: «Creamos» y el servicio. Rotan los
-          de `lib/servicios.js` (`ROTATIVO`, menos la prospección y la ley
-          de datos, que no son algo que se cree).
-
-          Buscadores y lectores de pantalla leen la lista entera y fija,
-          con los nombres que la gente busca («aplicaciones», «agentes de
-          inteligencia artificial»); el rotativo es solo para la vista.
-          Ocupa siempre una línea, así que el titular no salta al cambiar. */}
-      <p className="antetitulo">
-        ¿Qué estás <span>resolviendo a mano?</span>
-      </p>
-      <h1>
-        Creamos{' '}
-        <span className="solo-lectores">
-          páginas web, tiendas online, aplicaciones, sistemas de gestión, agentes de inteligencia artificial y
-          automatizaciones{' '}
-        </span>
-        <span
-          className="rotativo"
-          aria-hidden="true"
-          data-palabras={ROTATIVO.map(({ palabra }) => palabra).join('|')}
-          data-colores={ROTATIVO.map(({ color }) => color).join('|')}
-        >
-          <span className="rotativo-palabra" style={{ '--servicio': ROTATIVO[0].color }}>
-            {ROTATIVO[0].palabra}
-          </span>
-        </span>{' '}
-        para tu negocio
-      </h1>
-
-      {/* El reparto del trabajo, sin prometer ventas ni horas que no podemos
-          mostrar (§3), y la respuesta corta a «¿qué tengo que entregar yo?»
-          (§2). «Lo resolvemos» y no «la solución», que el glosario descarta
-          (§5). La segunda frase no se parte: en S, la línea cae en el punto. */}
-      <p className="entradilla portada-entradilla">
-        Tú pones el problema. <span>Nosotros lo resolvemos.</span>
-      </p>
-
-      <div className="portada-acciones">
-        <a className="boton boton-primario" href="#contacto">
-          Cuéntanos tu proyecto
-        </a>
-      </div>
-    </Escena>
   )
 }

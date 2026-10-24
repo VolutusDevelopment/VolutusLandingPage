@@ -1,6 +1,73 @@
-/* Quiénes somos. Ver Nosotros.jsx. La cabecera es la escena de la portada
-   (Portada.css) y las listas numeradas y el cierre son los de index.css; aquí
-   va solo lo que esta página agrega. */
+/* Quiénes somos. Ver Nosotros.jsx. Las listas numeradas y el cierre son los
+   de index.css; aquí va solo lo que esta página agrega. */
+
+/* ---- el atardecer ----
+   La cabecera y los socios van sobre el atardecer (lib/atardecer.js), que
+   pinta su telón: fijo arriba mientras dura la sección, debajo de todo y del
+   alto de la pantalla. La sección sube detrás de la barra, como la portada.
+   Su relleno de abajo es el tramo en que la escena se funde en el blanco de
+   la sección siguiente (`ponerSol` en nubes.js), que siempre está en
+   pantalla cuando el telón se va: no queda borde. */
+.atardecer {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--barra-alto));
+  padding-block: 0 80svh;
+}
+
+/* Mientras el lienzo no pinta, o si no puede, el telón lleva el mismo
+   atardecer en un degradado: el cielo hasta el horizonte, al 62 % del alto, y
+   el mar bajo él. */
+.atardecer-telon {
+  position: sticky;
+  top: 0;
+  z-index: -1;
+  height: 100svh;
+  margin-bottom: -100svh;
+  background: linear-gradient(
+    #6f93d5,
+    #9d9ed3 27%,
+    #cf9aa6 45%,
+    #f2967e 52%,
+    #f9a26b 58%,
+    #ffad5c 62%,
+    #f0b48a 62%,
+    #9aa3b5 70%,
+    #6d819c 82%,
+    #556e8f
+  );
+}
+
+/* El punto del mar, en px CSS (ver `rejilla` en nubes.js). */
+.atardecer-telon .nubes {
+  --nubes-celda: 5;
+}
+
+@media (max-width: 639px) {
+  .atardecer-telon .nubes {
+    --nubes-celda: 4;
+  }
+}
+
+/* El titular y la entradilla, en el cielo, sobre el horizonte, y en la
+   tinta: sobre el atardecer da 5.8:1 o más. Ocupan la primera pantalla, y
+   las tarjetas empiezan bajo ella. */
+.atardecer-cabecera {
+  min-height: 100svh;
+  padding-top: calc(var(--barra-alto) + var(--e-16));
+}
+
+@media (min-width: 1024px) {
+  .atardecer-cabecera {
+    padding-top: calc(var(--barra-alto) + var(--e-24) + var(--e-8));
+  }
+}
+
+.atardecer-cabecera .entradilla {
+  max-width: 32rem;
+  margin-top: var(--e-6);
+  color: var(--texto);
+}
 
 /* ---- quiénes somos ---- */
 
@@ -9,53 +76,13 @@
    proyectos, y la foto se monta encima y sobresale. En S la foto va arriba,
    algo más angosta, y pisa el borde superior de la tarjeta; desde M va al
    lado, al ras del borde exterior, sobresale por arriba y por abajo y cambia
-   de lado de una tarjeta a la otra. Van en la escena, bajo el titular
-   (Nosotros.jsx), que desde L va centrado: las tarjetas no. */
+   de lado de una tarjeta a la otra. Pasan sobre el mar del atardecer. */
 .socios {
-  position: relative;
-  isolation: isolate;
   list-style: none;
   display: grid;
   gap: var(--e-6);
   margin: var(--e-16) 0 0;
   padding: 0;
-  text-align: start;
-}
-
-/* El azul de la escena se difumina detrás de las tarjetas, de borde a borde
-   de la pantalla: empieza en la primera y llega al blanco de la página un poco
-   bajo la segunda (`--fundido-fin`), dentro de los 96 px que quedan hasta el
-   final de la escena. El blanco sigue hasta ese final, que recorta lo que
-   sobra (`overflow: clip`, Portada.css). Pasa por el celeste en una curva
-   suave, plana donde sale del azul y donde llega al blanco: en tramos
-   rectos, esos quiebres se veían como rayas. */
-.socios::before,
-.socios::after {
-  --fundido-fin: calc(100% + var(--e-16));
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset-inline: -100vw;
-}
-
-.socios::before {
-  inset-block: 0 calc(100% - var(--fundido-fin));
-  background: linear-gradient(
-    #1976cc,
-    #247ed0 12.5%,
-    #3e90da 25%,
-    #5ea7e6 37.5%,
-    #7cbcf1 50%,
-    #a0cef4 62.5%,
-    #c8e2f8 75%,
-    #e8f2fb 87.5%,
-    #f6f9fc
-  );
-}
-
-.socios::after {
-  inset-block: var(--fundido-fin) -100svh;
-  background: #f6f9fc;
 }
 
 .socio {
