@@ -6,16 +6,15 @@
    pinta su telón: fijo arriba mientras dura la sección, debajo de todo y del
    alto de la pantalla. La sección sube detrás de la barra, como la portada.
    Su relleno de abajo es el mar abierto donde el sol se hunde tras el último
-   socio (`ponerSol` en nubes.js): 85svh de mar, más lo que la sección
-   siguiente se monta encima para taparlo (ver la hoja, abajo). Cuando el
-   telón se va, ya está tapado.
+   socio (`ponerSol` en nubes.js), y donde la escena se recorta en la lámina
+   que queda sobre el título de la sección siguiente (ver la lámina, abajo).
 
    Safari en iOS pinta la franja de la hora de un color propio si en el centro
    del borde encuentra algo pegado de todo el ancho, como el telón (ver Barra.css).
-   Por eso el relleno de abajo va en un bloque (`::after`) y no en la sección:
-   así ahí también hay contenido delante del telón, y Safari deja ver la página.
-   Y la sección recorta lo suyo: el telón y la parvada, al final, no asoman
-   sobre la sección siguiente. */
+   Por eso el relleno de abajo va en un bloque (`.atardecer-pausa`) y no en la
+   sección: así ahí también hay contenido delante del telón, y Safari deja ver
+   la página. Y la sección recorta lo suyo: el telón y la parvada, al final,
+   no asoman sobre la sección siguiente. */
 .atardecer {
   position: relative;
   isolation: isolate;
@@ -24,10 +23,17 @@
   padding-block: 0;
 }
 
-.atardecer::after {
-  content: '';
-  display: block;
-  height: calc(85svh + var(--hoja-encima));
+/* La pausa: tras el último socio, la escena sola, con el sol tocando el mar.
+   Es una parada del encaje (ver los socios), con la pausa arriba de todo y
+   no bajo la barra, para que la última tarjeta no asome. Mide más que la
+   pantalla, así que en ella se baja libre: el sol se pone y la escena se
+   recorta mientras sube la sección siguiente, que se monta sobre su final el
+   alto del telón (ver la lámina). */
+.atardecer-pausa {
+  height: calc(160svh + 100lvh);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-top: calc(-1 * var(--bajo-barra));
 }
 
 /* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
@@ -45,13 +51,18 @@
    Bajo la hora y bajo la barra de Safari asoma lo que queda fuera de la
    pantalla, adonde el telón no llega. Su reflejo lo sigue ahí sin corte: el
    telón entero hacia abajo, el mar, y el lienzo, que lo cubre, hacia arriba,
-   el cielo. La sección recorta lo que se pasa de ella. */
+   el cielo. La sección recorta lo que se pasa de ella.
+
+   No se monta sobre lo que sigue con un margen propio: un `sticky` se suelta
+   cuando su margen llega al final de la sección, y con -100lvh el telón
+   seguía fijo hasta que la sección siguiente lo tapaba entero. Así se suelta
+   cuando ella toca arriba, y la lámina se va con su título. El alto que
+   ocupa lo devuelve la cabecera, que sube sobre él. */
 .atardecer-telon {
   position: sticky;
   top: 0;
   z-index: -1;
   height: 100lvh;
-  margin-bottom: -100lvh;
   -webkit-box-reflect: below;
   background: linear-gradient(
     #6fa8e6,
@@ -65,8 +76,7 @@
   );
 }
 
-/* El punto del mar, en px CSS (ver `rejilla` en nubes.js). Lo repite la
-   trama de la hoja (abajo). */
+/* El punto del mar, en px CSS (ver `rejilla` en nubes.js). */
 .nosotros {
   --celda-del-mar: 5;
 }
@@ -84,32 +94,25 @@
 
 /* ---- la parvada ----
    Quince patos en V cruzan una vez, lejos, justo sobre el horizonte
-   (Nosotros.jsx). Van en una capa del alto del cielo, fija como el telón,
-   que se recorta en el horizonte: el que cae, cae al mar. No salen de la
-   escena: la hoja que la tapa (abajo) los tapa con ella. Por estar
-   posicionada se pinta delante del titular y la entradilla, que en una
-   pantalla baja llegan hasta el horizonte; las tarjetas de los socios,
-   posicionadas después, pasan delante de ella. Cada pato es una ventana de
-   su ancho sobre la tira de sus cuadros, que se corre de uno a otro: aletea a
-   ocho cuadros por segundo, como en el juego, y cada pato a destiempo.
+   (Nosotros.jsx), apenas se deja el último socio (src/parvada.js les da la
+   salida con `.vuela`). Van en el telón, en el
+   cielo que queda en la lámina (`--cielo-de-la-lamina`, ver la lámina), que
+   se recorta en el horizonte: el que cae, cae al mar. Así, si la escena se
+   recorta mientras cruzan, siguen adentro y se van con ella. Cada pato es
+   una ventana de su ancho sobre la tira de sus cuadros, que se corre de uno
+   a otro: aletea a ocho cuadros por segundo, como en el juego, y cada pato a
+   destiempo.
 
-   La altura del vuelo (`--vuelo`) la elige src/parvada.js en el cielo libre;
-   sin JavaScript va sobre el horizonte. El cazado se pasma 0.35 s y cae con
-   la gravedad: la curva es la parábola y = x², y baja el alto entero del
-   cielo, así que llega al mar desde cualquier altura y siempre con la misma
-   aceleración. Sigue avanzando con la parvada mientras cae, volteándose como
-   en el Duck Hunt. Todo es `translate` y `scale`, que van
-   por el compositor. */
-/* Empieza 8 px bajo el borde de arriba y termina en el horizonte: pegada al
-   borde, Safari la tomaría por una cabecera y pintaría la franja de la hora
-   (ver Barra.css). Los patos nunca vuelan tan arriba. */
+   El cazado se pasma 0.35 s y cae con la gravedad: la curva es la parábola
+   y = x², y baja el alto entero del cielo, así que llega al mar desde
+   cualquier altura y siempre con la misma aceleración. Sigue avanzando con
+   la parvada mientras cae, volteándose como en el Duck Hunt. Todo es
+   `translate` y `scale`, que van por el compositor. */
 .parvada {
   --px: 0.75px;
   --ancho: calc(16 * var(--px));
-  position: sticky;
-  top: 8px;
-  height: calc(62svh - 8px);
-  margin: 8px 0 -62svh;
+  position: absolute;
+  inset: calc(62% - var(--cielo-de-la-lamina)) 0 38%;
   overflow: hidden;
   pointer-events: none;
 }
@@ -126,10 +129,14 @@
 
 .parvada-v {
   position: absolute;
-  top: var(--vuelo, 88%);
+  top: 55%;
   left: 0;
   width: 100%;
-  animation: cruzar 30s linear 1s both;
+  animation: cruzar 30s linear both paused;
+}
+
+.vuela .parvada-v {
+  animation-play-state: running;
 }
 
 .pato {
@@ -191,7 +198,7 @@
 
 @keyframes caer {
   to {
-    translate: 0 62svh;
+    translate: 0 var(--cielo-de-la-lamina);
   }
 }
 
@@ -207,6 +214,7 @@
    socios). */
 .atardecer-cabecera {
   min-height: 100svh;
+  margin-top: -100lvh;
   padding-top: calc(var(--barra-alto) + var(--e-16));
   scroll-snap-align: start;
 }
@@ -245,9 +253,8 @@
 
 /* Los socios encajan de a uno, como los servicios de la portada
    (Servicios.css): cada scroll cae en uno y ninguno se salta. Arriba encaja
-   la cabecera, y después del último, el inicio de la sección siguiente (ver
-   la hoja, abajo). En S
-   la tarjeta es más alta que la pantalla: encaja a su inicio y otra vez al
+   la cabecera, y después del último, la pausa con la escena sola (ver el
+   atardecer, arriba). En S la tarjeta es más alta que la pantalla: encaja a su inicio y otra vez al
    final de su texto, y entre los dos se lee libre, así que nadie queda leído
    a medias. Desde M encaja al centro (abajo). Con movimiento reducido no
    encaja: el encaje mueve la página solo. */
@@ -430,35 +437,45 @@
   }
 }
 
-/* ---- la hoja ----
-   La sección siguiente sube sobre el atardecer, como Proyectos sobre la nube
-   de la portada (Portada.css), y lo tapa entero con la parvada. Su borde es
-   una trama de puntos del paso del mar que crecen hasta juntarse: el mar de
-   puntos se vuelve la página. Son 160 filas (image/trama.svg, en el `--fondo`
-   de la zona cielo), así que el borde mide 160 puntos. La hoja se monta sobre
-   el final del atardecer lo que mide la trama más el telón
-   (`--hoja-encima`): el telón sigue fijo hasta que la trama lo pasó entera.
-   La trama y el blanco de debajo se pisan 2 px, para que al redondear no
-   quede una raya entre ellos. El título va bajo la trama, en el blanco.
+/* ---- la lámina ----
+   La escena no se tapa: mientras la sección siguiente sube, se recorta
+   alrededor del horizonte en una lámina del ancho del texto, que va a dar a
+   su hueco (`.lamina`), arriba del título. Llegan juntos cuando la sección
+   toca arriba, y desde ahí la lámina se va con el texto, como la foto de la
+   Morning Glory, con el sol recién puesto adentro. El recorte lo hace
+   `ponerSol` (nubes.js) con la medida y el radio del hueco; aquí va el hueco,
+   y la sección, transparente hasta el final de él y blanca después. Se monta
+   sobre el final del atardecer el alto del telón, que se suelta justo cuando
+   ella toca arriba (ver el telón). Ya recortado, el telón deja de reflejarse,
+   porque el reflejo asomaría bajo la lámina.
 
-   El inicio de la sección encaja como un socio: un scroll desde el último
-   lleva a su título, arriba, como a Proyectos en la portada, y en ese
-   recorrido el sol se pone y la hoja tapa la escena. Su zona de encaje llega
-   al final de la página, y una zona más alta que la pantalla deja parar en
-   cualquier punto: de ahí se baja libre, como tras los servicios. */
+   El inicio de la sección encaja como un socio, con la lámina y el título a
+   la vista. Su zona de encaje llega al final de la página, y una zona más
+   alta que la pantalla deja parar en cualquier punto: de ahí se baja libre,
+   como tras los servicios. */
+/* La lámina es 55 % cielo y 45 % mar (ver `recortar` en nubes.js). */
 .nosotros {
-  --hoja-fundido: calc(160px * var(--celda-del-mar));
-  --hoja-encima: calc(100lvh + var(--hoja-fundido));
+  --lamina-alto: min(46svh, 100vw - 2 * var(--margen-lateral));
+  --cielo-de-la-lamina: calc(0.55 * var(--lamina-alto));
 }
 
 .atardecer + .seccion {
-  --fondo-hora:
-    url('/image/trama.svg') top left / calc(1px * var(--celda-del-mar)) var(--hoja-fundido) repeat-x,
-    linear-gradient(transparent calc(var(--hoja-fundido) - 2px), var(--fondo) 0);
+  --fondo-hora: linear-gradient(transparent calc(var(--bajo-barra) + var(--lamina-alto)), var(--fondo) 0);
   position: relative;
   z-index: 1;
-  margin-top: calc(-1 * var(--hoja-encima));
-  padding-top: calc(var(--hoja-fundido) + var(--e-16));
+  margin-top: -100lvh;
+  padding-top: var(--bajo-barra);
+}
+
+.lamina {
+  height: var(--lamina-alto);
+  margin-bottom: var(--e-12);
+  border-radius: var(--radio-panel);
+}
+
+.recortado,
+.recortado .nubes {
+  -webkit-box-reflect: none;
 }
 
 .atardecer + .seccion > .contenedor {

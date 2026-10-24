@@ -8,12 +8,14 @@ import { OLA, trazoDe } from '../lib/logotipo.js'
  * Quiénes somos. Abre en la costa, de día, en una escena fija detrás del
  * titular y de las tarjetas de los socios, que pasan por delante mientras el
  * sol baja hasta ponerse en el mar, como en Chile (`data-vista="atardecer"`,
- * ver lib/atardecer.js). Lejos, sobre el horizonte, cruza una parvada que se
- * puede cazar con el cursor (`Parvada`). Ya puesto el sol, la sección siguiente
- * sube encima como una hoja, con el borde en trama de puntos, y tapa la escena.
- * Después baja por el blanco y termina en la caída, con el cierre y el pie de
- * día (ver `cierre` en Pagina.jsx). La
- * nube es el tema del resto de la página, porque Volutus es su nombre.
+ * ver lib/atardecer.js). Apenas se deja el último socio, lejos, sobre el
+ * horizonte, cruza una parvada que se puede cazar con el cursor o el dedo
+ * (`Parvada`), y la escena queda sola. Mientras el sol se pone, la escena se recorta en una
+ * lámina que queda sobre el título de la sección siguiente y se va con el
+ * texto, con la parvada adentro. Después baja por el
+ * blanco y termina en la caída, con el cierre y el pie de día (ver `cierre`
+ * en Pagina.jsx). La nube es el tema del resto de la página, porque Volutus
+ * es su nombre.
  *
  * Todo lo que dice se puede comprobar (DESIGN-BRIEF §3). Lo que viene de
  * afuera —la definición de la nube y los datos de la Morning Glory— lleva su
@@ -150,11 +152,12 @@ const CUADROS = [
 ]
 
 /**
- * La parvada que cruza lejos sobre el mar del atardecer. Va en su propia capa,
- * delante del titular, que nunca la tapa, y detrás de las tarjetas. La
- * tira de cuadros se define una vez y cada pato la usa entera y muestra el
- * suyo; el vuelo y la caída los lleva el CSS (Nosotros.css), y quién cae, el
- * puntero (src/parvada.js).
+ * La parvada que cruza lejos sobre el mar del atardecer. Va en el telón, en el
+ * cielo que queda en la lámina: sale apenas se deja el último socio, y si la
+ * escena se recorta mientras cruza, sigue adentro y se va con ella. La tira de
+ * cuadros se define una vez y cada pato la usa entera y muestra el suyo; el
+ * vuelo y la caída los lleva el CSS (Nosotros.css), y cuándo sale y quién cae,
+ * src/parvada.js.
  */
 function Parvada() {
   return (
@@ -250,14 +253,14 @@ export default function Nosotros() {
     <Pagina ruta="/nosotros" className="nosotros" cierre={<Cierre />}>
       {/* El atardecer va en su telón, fijo mientras dura la sección: arriba el
           titular, en el cielo, y después las tarjetas, sobre el mar. El sol
-          baja del día mientras pasan los socios (`data-ocaso`) y toca el mar
-          tras el último; el relleno de abajo es el mar abierto donde se hunde
-          mientras la sección siguiente sube encima y lo tapa (Nosotros.css). */}
+          baja del día mientras pasan los socios y toca el mar con la escena
+          sola, en la pausa (`data-ocaso`), el mar abierto donde se hunde
+          mientras la escena se recorta en la lámina (Nosotros.css). */}
       <section className="seccion zona-cielo atardecer">
         <div className="atardecer-telon">
-          <canvas className="nubes" data-vista="atardecer" data-ocaso=".socios" aria-hidden="true" />
+          <canvas className="nubes" data-vista="atardecer" data-ocaso=".atardecer-pausa" aria-hidden="true" />
+          <Parvada />
         </div>
-        <Parvada />
         <div className="contenedor atardecer-cabecera">
           <h1>¿Quiénes somos?</h1>
           <p className="entradilla">
@@ -317,12 +320,16 @@ export default function Nosotros() {
             ))}
           </ul>
         </div>
+        <div className="atardecer-pausa" />
       </section>
 
       {/* Primero lo que es la nube: su definición, como en un diccionario, y
           la más conocida, con su foto. Después, lo que es para nosotros. */}
       <section id="nombre" className="seccion zona-cielo" aria-labelledby="nombre-titulo">
         <div className="contenedor">
+          {/* El hueco de la lámina: ahí queda el atardecer, recortado (ver
+              `ponerSol` en nubes.js). */}
+          <div className="lamina" />
           <h2 id="nombre-titulo" className="titular entra">
             ¿De dónde viene <dfn>Volutus</dfn>?
           </h2>

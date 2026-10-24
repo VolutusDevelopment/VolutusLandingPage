@@ -60,6 +60,10 @@ import { quieto } from './lib/movimiento.js'
 // mejor y el costo sigue creciendo.
 const DPR_MAXIMO = 1.5
 
+// Dónde va el horizonte del atardecer, en altos del telón: el `HORIZONTE` de
+// lib/atardecer.js, que no se importa aquí para no traer sus shaders.
+const HORIZONTE = 0.62
+
 // La rejilla del cielo: el lado del punto en px CSS (`lado`, de
 // `--nubes-celda`), cuántos px del lienzo mide (`celda`) y cuántos px del
 // lienzo hay por px CSS (`densidad`). El lienzo se pinta a la densidad real de
@@ -150,39 +154,61 @@ function montar(pintor, lienzo, id) {
     })
   }
 
-  // /nosotros: el sol baja del día mientras pasa lo que dice `data-ocaso` (las
-  // tarjetas de los socios) y toca el mar cuando la última deja ver el
-  // horizonte. Después sube la sección siguiente, que tapa la escena
-  // (Nosotros.css): el sol se hunde hasta que ella asoma a un cuarto de la
-  // pantalla, y el crepúsculo dura hasta que su borde pasa el 15 % de arriba.
-  // Aquí solo se mide cuánto pasó, de 0 a 3 (ver `sol` en lib/atardecer.js);
-  // el pintor lo lleva tras el scroll con su resorte. Con movimiento reducido
-  // el sol no se mueve, tocando el mar.
+  // /nosotros: el sol baja del día mientras pasan los socios y toca el mar
+  // cuando lo que dice `data-ocaso` (la pausa tras el último) llega arriba,
+  // con la escena sola. Después se hunde mientras sube la sección siguiente,
+  // y la escena se recorta en la lámina que queda sobre su título
+  // (`recortar`). Aquí solo se mide cuánto pasó, de 0 a 2 (ver `sol` en
+  // lib/atardecer.js); el pintor lo lleva tras el scroll con su resorte. Con
+  // movimiento reducido el sol no se mueve, tocando el mar; el recorte sí,
+  // porque va con el scroll, como la sección que sube.
   function ponerSol() {
     const seccion = lienzo.closest('section')
-    const pasa = seccion.querySelector(lienzo.dataset.ocaso)
+    const pausa = seccion.querySelector(lienzo.dataset.ocaso)
     const hoja = seccion.nextElementSibling
     const entre = (valor) => Math.min(1, Math.max(0, valor))
     const enviar = () => {
-      const alto = innerHeight
       const arriba = seccion.getBoundingClientRect().top
       const bajado = -arriba
-      const vistos = pasa.getBoundingClientRect().bottom - arriba - alto / 2
-      const asoma = hoja.getBoundingClientRect().top - arriba
-      const hundido = asoma - 0.75 * alto
-      const oscuro = asoma - 0.15 * alto
-      const sol = quieto()
-        ? 1
-        : bajado < vistos
-          ? entre(bajado / vistos)
-          : bajado < hundido
-            ? 1 + (bajado - vistos) / (hundido - vistos)
-            : 2 + entre((bajado - hundido) / (oscuro - hundido))
+      const sola = pausa.getBoundingClientRect().top - arriba
+      const toca = hoja.getBoundingClientRect().top - arriba
+      const sol = quieto() ? 1 : bajado < sola ? entre(bajado / sola) : 1 + entre((bajado - sola) / (toca - sola))
       pintor.postMessage({ tipo: 'ocaso', id, sol })
+      const desde = sola + 0.3 * innerHeight
+      recortar(hoja, entre((bajado - desde) / (toca - desde)))
     }
     addEventListener('scroll', enviar, { passive: true, signal })
     addEventListener('resize', enviar, { signal })
     enviar()
+  }
+
+  // La lámina: el telón se recorta a una franja del alto del hueco que la
+  // espera en la sección siguiente (`.lamina`), 55 % cielo y 45 % mar, como
+  // la parvada (`--cielo-de-la-lamina` en Nosotros.css), y sube hasta él. Con
+  // `k` en 1 la sección toca arriba y la franja está en el hueco, con su ancho
+  // y su radio: desde ahí el telón se suelta y se va con ella. Sin escalar,
+  // para que los puntos sigan nítidos.
+  let recorte
+  function recortar(hoja, k) {
+    const telon = lienzo.parentElement
+    const hueco = hoja.querySelector('.lamina')
+    const caja = telon.getBoundingClientRect()
+    const lugar = hueco.getBoundingClientRect()
+    const alto = telon.offsetHeight
+    const medida = `${k} ${caja.width} ${alto} ${lugar.left} ${lugar.width} ${lugar.height}`
+    if (medida === recorte) return
+    recorte = medida
+    telon.classList.toggle('recortado', k > 0)
+    if (!k) {
+      telon.style.transform = telon.style.clipPath = ''
+      return
+    }
+    const franja = Math.round(HORIZONTE * alto - 0.55 * lugar.height)
+    const destino = lugar.top - hoja.getBoundingClientRect().top
+    const radio = parseFloat(getComputedStyle(hueco).borderTopLeftRadius)
+    const lados = [franja, caja.right - lugar.right, alto - franja - lugar.height, lugar.left - caja.left]
+    telon.style.transform = `translateY(${Math.round((destino - franja) * k)}px)`
+    telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radio * k}px)`
   }
 
   function activar() {

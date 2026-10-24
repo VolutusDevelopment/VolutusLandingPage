@@ -13,9 +13,10 @@
  * reflejo es un puñado de destellos dorados cerca de quien mira. Mientras
  * pasan los socios baja parejo, y con él el reflejo, que sube hacia el
  * horizonte y se angosta en estela; el cielo se enciende en la puesta. El sol
- * toca el mar recién con el último socio y se hunde mientras sube la sección
- * siguiente. Ya puesto, el color se va con él: el resplandor se ciñe al
- * horizonte y se apaga, y el cielo pasa a la hora azul (ver `sol`).
+ * toca el mar recién con la escena sola, tras el último socio, y se hunde
+ * mientras la escena se recorta en la lámina que queda sobre la sección
+ * siguiente. Al hundirse, el color empieza a irse con él: el resplandor se
+ * ciñe al horizonte y el cielo se acerca a la hora azul (ver `sol`).
  *
  * La física, en metros y segundos:
  *
@@ -48,8 +49,8 @@
  *
  * La paleta es una sola y va en el shader: no cambia por zona ni por página.
  * El cielo va en `CIELO`, porque el documento toma el de arriba
- * (`cieloDeArriba`). La escena no se funde al final: la tapa la sección
- * siguiente, que sube encima (Nosotros.css).
+ * (`cieloDeArriba`). La escena no se funde ni se tapa al final: queda en la
+ * lámina (Nosotros.css).
  */
 
 import { suave } from './volutus.js'
@@ -65,10 +66,11 @@ const HORIZONTE = 0.62
 
 // El sol, 11° a la derecha de quien mira, y su altura, en radianes: de día
 // (`DIA`), cuando su borde de abajo toca el mar (`TOCA`: cerca del horizonte
-// el aire achata el disco, así que el borde queda bajo un radio), ya puesto
-// (`PUESTO`) y 6° bajo el horizonte (`HONDO`), donde termina el crepúsculo
-// civil y no queda color del atardecer. El disco mide `RADIO` rad: más que
-// el de verdad (0.0047), para que se lea en la trama.
+// el aire achata el disco, así que el borde queda bajo un radio) y ya puesto
+// (`PUESTO`). `HONDO`, 6° bajo el horizonte, es donde termina el crepúsculo
+// civil y no queda color del atardecer: hacia ahí va la hora azul. El disco
+// mide `RADIO` rad: más que el de verdad (0.0047), para que se lea en la
+// trama.
 const RUMBO_DEL_SOL = 0.2
 const RADIO = 0.026
 const DIA = 0.18
@@ -111,12 +113,10 @@ export function camara(ancho, alto, densidad) {
 
 /**
  * La dirección del sol en `t`: de 0 a 1 mientras pasan los socios, del día
- * hasta tocar el mar; de 1 a 2 se hunde, y de 2 a 3 sigue bajando hasta el
- * fin del crepúsculo.
+ * hasta tocar el mar, y de 1 a 2 se hunde.
  */
 export function sol(t) {
-  const [desde, hasta, k] =
-    t < 1 ? [DIA, TOCA, Math.max(0, t)] : t < 2 ? [TOCA, PUESTO, t - 1] : [PUESTO, HONDO, Math.min(1, t - 2)]
+  const [desde, hasta, k] = t < 1 ? [DIA, TOCA, Math.max(0, t)] : [TOCA, PUESTO, Math.min(1, t - 1)]
   const elevacion = desde + (hasta - desde) * k
   const c = Math.cos(elevacion)
   return [Math.sin(RUMBO_DEL_SOL) * c, Math.sin(elevacion), Math.cos(RUMBO_DEL_SOL) * c]
