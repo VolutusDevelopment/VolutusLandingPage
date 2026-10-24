@@ -4,7 +4,7 @@
 
 ## Modelo visual
 
-La interfaz organiza el color por zonas de contenido, no mediante un selector de tema. zona-cielo define las superficies claras de la portada y otras secciones; zona-plano define las secciones oscuras donde se muestra la obra. El recorrido de la portada llega gradualmente al mar del pie. /nosotros hace el mismo recorrido: abre bajo la misma nube, vista de costado, sigue en blanco con un plano oscuro para la marca y baja por la caída hasta el mar de día. La barra acompaña al bajar, a 8 px del borde de arriba, y adapta su lectura al fondo que tiene debajo.
+La interfaz organiza el color por zonas de contenido, no mediante un selector de tema. zona-cielo define las superficies claras de la portada y otras secciones; zona-plano define las secciones oscuras donde se muestra la obra. El recorrido de la portada llega gradualmente al mar del pie. /nosotros hace el mismo recorrido: abre bajo la misma nube, vista de costado, sigue en blanco con un plano oscuro para la marca y baja por la caída hasta el mar de día. La barra acompaña al bajar, con la marca y la cápsula fijas cada una por su lado, y adapta su lectura al fondo que tiene debajo.
 
 La propuesta «Recorrido del día» conserva valor como exploración histórica, pero sus tonos cálidos no forman parte de la página actual. Ver DESIGN-BRIEF.md y la nota correspondiente del vault antes de reutilizarla.
 

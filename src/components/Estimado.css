@@ -190,13 +190,14 @@
 }
 
 /* ---- la barra de S y M ----
-   Flota abajo mientras se recorren las opciones, a 8 px del borde y de los
-   lados. Al terminarlas se queda en su sitio, encima de la boleta. Desde L no
-   hace falta: la boleta va al lado.
+   Flota abajo mientras se recorren las opciones, a 8 px del borde y a lo
+   ancho de la columna. Al terminarlas se queda en su sitio, encima de la
+   boleta. Desde L no hace falta: la boleta va al lado.
 
-   No toca el borde de abajo: pegada a él, Safari en iOS pintaba la franja de
-   su barra del color de esta, en vez de dejar ver la página (ver Barra.css).
-   El relleno devuelve los 8 px, así que el texto sigue a ras de la columna. */
+   Ni toca el borde ni pasa de 22rem: Safari en iOS toma lo pegado de casi
+   todo el ancho de la pantalla (el 90 %) por una barra y pinta la franja de
+   la suya de su color, en vez de dejar ver la página (ver Barra.css). En el
+   teléfono la columna ya es más angosta; en la tableta va al centro. */
 .estimado-barra {
   position: sticky;
   bottom: calc(8px + env(safe-area-inset-bottom));
@@ -205,8 +206,10 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--e-3);
-  margin-inline: calc(8px - var(--margen-lateral));
-  padding: var(--e-3) calc(var(--margen-lateral) - 8px);
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
+  padding: var(--e-3) var(--e-4);
   background: var(--superficie);
   border: 1px solid var(--linea);
   border-radius: var(--radio-panel);

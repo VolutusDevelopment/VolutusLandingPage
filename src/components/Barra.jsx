@@ -71,10 +71,11 @@ function Lente() {
  * cápsula flotante con los enlaces a /nosotros, /servicios y /articulos y la
  * acción principal.
  *
- * La barra en sí no tiene fondo y acompaña al bajar, a 8 px del borde
- * (Barra.css): lo único que tapa el contenido son las dos piezas, cada una con
- * su vidrio translúcido. Así la portada respira hasta arriba y la navegación
- * se lee como un objeto encima de la página, no como una franja que la corta.
+ * La barra en sí no tiene fondo, y al bajar la acompañan las dos piezas, fijas
+ * cada una por su lado (Barra.css): son lo único que tapa el contenido, cada
+ * una con su vidrio translúcido. Así la portada respira hasta arriba y la
+ * navegación se lee como un objeto encima de la página, no como una franja que
+ * la corta.
  * `barra.js` da a cada pieza la zona de lo que tiene justo detrás: el vidrio
  * de la cápsula no cambia, solo el color del logo y el de cada enlace, por
  * separado.
@@ -108,43 +109,41 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
 
   return (
     <header className={`barra zona-cielo hora-${hora}`} style={estilo}>
-      <div className="barra-interior">
-        {/* En la portada la marca sube al principio; fuera de ella, vuelve a
-            la portada. Es la única forma de salir del documento legal con el
-            gesto que todo el mundo intenta primero. */}
-        <a
-          className="barra-marca"
-          href={enHome ? '#portada' : '/'}
-          aria-label={enHome ? 'Volutus, volver arriba' : 'Volutus, ir a la portada'}
-        >
-          <Marca />
-        </a>
+      {/* En la portada la marca sube al principio; fuera de ella, vuelve a
+          la portada. Es la única forma de salir del documento legal con el
+          gesto que todo el mundo intenta primero. */}
+      <a
+        className="barra-marca"
+        href={enHome ? '#portada' : '/'}
+        aria-label={enHome ? 'Volutus, volver arriba' : 'Volutus, ir a la portada'}
+      >
+        <Marca />
+      </a>
 
-        <nav className="barra-capsula" aria-label="Secciones">
-          <ul className="barra-enlaces">
-            <li>
-              {/* Páginas y no secciones: en ellas el indicador descansa
-                  desde el HTML, sin esperar a barra.js. */}
-              <a href="/nosotros" aria-current={actual('/nosotros')}>
-                Nosotros
-              </a>
-            </li>
-            <li>
-              <a href="/servicios" aria-current={actual('/servicios')}>
-                Servicios
-              </a>
-            </li>
-            <li className="barra-articulos">
-              <a href="/articulos" aria-current={actual('/articulos')}>
-                Artículos
-              </a>
-            </li>
-            <li className="barra-contacto">
-              <a href={contactoAqui ? '#contacto' : ancla('contacto')}>Cuéntanos tu proyecto</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <nav className="barra-capsula" aria-label="Secciones">
+        <ul className="barra-enlaces">
+          <li>
+            {/* Páginas y no secciones: en ellas el indicador descansa
+                desde el HTML, sin esperar a barra.js. */}
+            <a href="/nosotros" aria-current={actual('/nosotros')}>
+              Nosotros
+            </a>
+          </li>
+          <li>
+            <a href="/servicios" aria-current={actual('/servicios')}>
+              Servicios
+            </a>
+          </li>
+          <li className="barra-articulos">
+            <a href="/articulos" aria-current={actual('/articulos')}>
+              Artículos
+            </a>
+          </li>
+          <li className="barra-contacto">
+            <a href={contactoAqui ? '#contacto' : ancla('contacto')}>Cuéntanos tu proyecto</a>
+          </li>
+        </ul>
+      </nav>
       <div id="menu-servicios" className="menu-servicios zona-cielo" hidden>
         <p className="menu-servicios-titulo">Servicios</p>
         <ul>

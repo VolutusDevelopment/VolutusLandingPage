@@ -1,17 +1,17 @@
-/* La barra acompaña al bajar, pero pegada a 8 px del borde de arriba y no a
-   él: Safari en iOS toma lo que va pegado al borde, de todo el ancho, por una
-   cabecera y pinta la franja de la hora de su color. Así la deja ver la página
-   pasar por debajo. El aire sale de su propio alto (`--barra-aire`): la marca
-   y la cápsula quedan donde iban. La página sube detrás de ella (`margin-top`
-   negativo en cada cabecera), así que el `z-index` la deja encima. */
+/* La barra acompaña al bajar, pero no entera: la marca y la cápsula van fijas
+   cada una por su lado. Safari en iOS busca junto a los bordes algo fijo o
+   pegado de casi todo el ancho de la pantalla (el 90 %) y, si lo encuentra,
+   pinta la franja de la hora de su color, o de uno que muestrea debajo y
+   conserva al bajar. Dos piezas angostas no cuentan, y la página se ve pasar
+   por debajo. La barra se queda arriba con su alto: las cabeceras suben
+   detrás de ella con un margen negativo de ese alto, y el `z-index` deja las
+   piezas encima. */
 .barra {
-  --barra-aire: 8px;
   /* El cambio de tono al pasar de un fondo a otro: el logo, las letras de la
      cápsula y el halo de la marca lo hacen con la misma duración y la misma
      curva, así que cambian juntos. */
   --t-tono: 280ms;
-  position: sticky;
-  top: var(--barra-aire);
+  position: relative;
   z-index: 50;
   height: var(--barra-alto);
   /* Sin fondo propio: lo que tapa el contenido son la marca y la cápsula, cada
@@ -19,18 +19,12 @@
   pointer-events: none;
 }
 
-.barra-interior {
-  height: calc(var(--barra-alto) - 2 * var(--barra-aire));
-  padding-inline: var(--orilla);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--e-4);
-}
-
+/* Centradas en el alto de la barra y a la orilla. */
 .barra-marca,
 .barra-capsula {
-  position: relative;
+  position: fixed;
+  top: calc(var(--barra-alto) / 2);
+  translate: 0 -50%;
   isolation: isolate;
   pointer-events: auto;
 }
@@ -49,8 +43,8 @@
    que se apaga hacia los lados, así el nombre se lee sobre cualquier cosa sin
    parecer un botón. */
 .barra-marca {
+  left: var(--orilla);
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   /* El lockup queda por debajo de los 44 px; el área táctil se estira sin
      mover el dibujo. */
@@ -89,6 +83,7 @@
   --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
   --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
   --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
+  right: var(--orilla);
   display: flex;
   align-items: center;
   gap: var(--e-2);
@@ -481,8 +476,8 @@
 
 @media (max-width: 1023px) {
   .menu-servicios:not([hidden]) {
-    position: absolute;
-    top: calc(var(--barra-alto) - var(--barra-aire) - var(--e-1));
+    position: fixed;
+    top: calc(var(--barra-alto) - var(--e-1));
     left: var(--e-3);
     right: var(--e-3);
     display: block;
