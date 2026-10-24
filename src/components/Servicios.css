@@ -22,8 +22,6 @@
 }
 
 .servicios {
-  --bajo-barra: calc(var(--barra-alto) + var(--e-4));
-  --hueco: calc(100svh - var(--bajo-barra));
   position: relative;
   z-index: 1;
 }

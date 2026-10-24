@@ -9,8 +9,10 @@ import { OLA, trazoDe } from '../lib/logotipo.js'
  * titular y de las tarjetas de los socios, que pasan por delante mientras el
  * sol baja hasta ponerse en el mar, como en Chile (`data-vista="atardecer"`,
  * ver lib/atardecer.js). Lejos, sobre el horizonte, cruza una parvada que se
- * puede cazar con el cursor (`Parvada`). Después baja por el blanco y termina en
- * la caída, con el cierre y el pie de día (ver `cierre` en Pagina.jsx). La
+ * puede cazar con el cursor (`Parvada`). Ya puesto el sol, la sección siguiente
+ * sube encima como una hoja, con el borde en trama de puntos, y tapa la escena.
+ * Después baja por el blanco y termina en la caída, con el cierre y el pie de
+ * día (ver `cierre` en Pagina.jsx). La
  * nube es el tema del resto de la página, porque Volutus es su nombre.
  *
  * Todo lo que dice se puede comprobar (DESIGN-BRIEF §3). Lo que viene de
@@ -250,7 +252,7 @@ export default function Nosotros() {
           titular, en el cielo, y después las tarjetas, sobre el mar. El sol
           baja del día mientras pasan los socios (`data-ocaso`) y toca el mar
           tras el último; el relleno de abajo es el mar abierto donde se hunde
-          y, al final, el fundido al blanco de la sección siguiente. */}
+          mientras la sección siguiente sube encima y lo tapa (Nosotros.css). */}
       <section className="seccion zona-cielo atardecer">
         <div className="atardecer-telon">
           <canvas className="nubes" data-vista="atardecer" data-ocaso=".socios" aria-hidden="true" />

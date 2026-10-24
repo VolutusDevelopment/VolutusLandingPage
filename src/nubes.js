@@ -151,26 +151,34 @@ function montar(pintor, lienzo, id) {
   }
 
   // /nosotros: el sol baja del día mientras pasa lo que dice `data-ocaso` (las
-  // tarjetas de los socios), toca el mar cuando la última deja ver el
-  // horizonte, y se hunde en el mar abierto que queda. En el último 35 % de
-  // pantalla de la sección la escena se funde en el blanco de la página. Aquí
-  // solo se mide cuánto pasó: el sol, de 0 a 1 hasta la última tarjeta y de 1
-  // a 2 hasta el fundido, y el fundido, de 0 a 1; el pintor los lleva tras el
-  // scroll con su resorte. Con movimiento reducido el sol no se mueve, tocando
-  // el mar, pero el fundido sí: no desplaza nada.
+  // tarjetas de los socios) y toca el mar cuando la última deja ver el
+  // horizonte. Después sube la sección siguiente, que tapa la escena
+  // (Nosotros.css): el sol se hunde hasta que ella asoma a un cuarto de la
+  // pantalla, y el crepúsculo dura hasta que su borde pasa el 15 % de arriba.
+  // Aquí solo se mide cuánto pasó, de 0 a 3 (ver `sol` en lib/atardecer.js);
+  // el pintor lo lleva tras el scroll con su resorte. Con movimiento reducido
+  // el sol no se mueve, tocando el mar.
   function ponerSol() {
     const seccion = lienzo.closest('section')
     const pasa = seccion.querySelector(lienzo.dataset.ocaso)
+    const hoja = seccion.nextElementSibling
     const entre = (valor) => Math.min(1, Math.max(0, valor))
     const enviar = () => {
       const alto = innerHeight
-      const caja = seccion.getBoundingClientRect()
-      const bajado = -caja.top
-      const vistos = pasa.getBoundingClientRect().bottom - caja.top - alto / 2
-      const hundido = caja.height - 1.35 * alto
-      const sol = quieto() ? 1 : bajado < vistos ? entre(bajado / vistos) : 1 + entre((bajado - vistos) / (hundido - vistos))
-      const fin = entre((1.35 * alto - caja.bottom) / (0.35 * alto))
-      pintor.postMessage({ tipo: 'ocaso', id, sol, fin })
+      const arriba = seccion.getBoundingClientRect().top
+      const bajado = -arriba
+      const vistos = pasa.getBoundingClientRect().bottom - arriba - alto / 2
+      const asoma = hoja.getBoundingClientRect().top - arriba
+      const hundido = asoma - 0.75 * alto
+      const oscuro = asoma - 0.15 * alto
+      const sol = quieto()
+        ? 1
+        : bajado < vistos
+          ? entre(bajado / vistos)
+          : bajado < hundido
+            ? 1 + (bajado - vistos) / (hundido - vistos)
+            : 2 + entre((bajado - hundido) / (oscuro - hundido))
+      pintor.postMessage({ tipo: 'ocaso', id, sol })
     }
     addEventListener('scroll', enviar, { passive: true, signal })
     addEventListener('resize', enviar, { signal })

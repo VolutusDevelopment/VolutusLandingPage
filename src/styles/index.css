@@ -173,6 +173,11 @@
      anclas y lo que se pega arriba al desplazar, para quedar por debajo. */
   --barra-alto: 64px;
 
+  /* Lo que tapa la barra, con aire: ahí cae un ancla (`scroll-padding-top`) y
+     lo que encaja al desplazar. `--hueco` es la pantalla que queda debajo. */
+  --bajo-barra: calc(var(--barra-alto) + var(--e-4));
+  --hueco: calc(100svh - var(--bajo-barra));
+
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
      `ease-out` a secas apenas se distingue de lineal.
 
@@ -367,7 +372,7 @@
 html {
   scroll-behavior: smooth;
   /* El ancla cae por debajo de la barra, que mide distinto según la pantalla. */
-  scroll-padding-top: calc(var(--barra-alto) + var(--e-4));
+  scroll-padding-top: var(--bajo-barra);
   /* El fondo del documento es el azul del cielo, el mismo de `theme-color`:
      lo que se ve al rebotar el scroll y lo que Safari pinta bajo la hora o
      bajo su barra cuando no tiene la página detrás. Así nunca es una franja

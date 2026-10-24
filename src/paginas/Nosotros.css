@@ -6,9 +6,9 @@
    pinta su telón: fijo arriba mientras dura la sección, debajo de todo y del
    alto de la pantalla. La sección sube detrás de la barra, como la portada.
    Su relleno de abajo es el mar abierto donde el sol se hunde tras el último
-   socio y, en su última pantalla, el tramo en que la escena se funde en el
-   blanco de la sección siguiente (`ponerSol` en nubes.js), que siempre está
-   en pantalla cuando el telón se va: no queda borde.
+   socio (`ponerSol` en nubes.js): 85svh de mar, más lo que la sección
+   siguiente se monta encima para taparlo (ver la hoja, abajo). Cuando el
+   telón se va, ya está tapado.
 
    Safari en iOS pinta la franja de la hora de un color propio si en el centro
    del borde encuentra algo pegado de todo el ancho, como el telón (ver Barra.css).
@@ -27,7 +27,7 @@
 .atardecer::after {
   content: '';
   display: block;
-  height: 125svh;
+  height: calc(85svh + var(--hoja-encima));
 }
 
 /* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
@@ -65,22 +65,28 @@
   );
 }
 
-/* El punto del mar, en px CSS (ver `rejilla` en nubes.js). */
-.atardecer-telon .nubes {
-  --nubes-celda: 5;
-  -webkit-box-reflect: above;
+/* El punto del mar, en px CSS (ver `rejilla` en nubes.js). Lo repite la
+   trama de la hoja (abajo). */
+.nosotros {
+  --celda-del-mar: 5;
 }
 
 @media (max-width: 639px) {
-  .atardecer-telon .nubes {
-    --nubes-celda: 4;
+  .nosotros {
+    --celda-del-mar: 4;
   }
+}
+
+.atardecer-telon .nubes {
+  --nubes-celda: var(--celda-del-mar);
+  -webkit-box-reflect: above;
 }
 
 /* ---- la parvada ----
    Quince patos en V cruzan una vez, lejos, justo sobre el horizonte
    (Nosotros.jsx). Van en una capa del alto del cielo, fija como el telón,
-   que se recorta en el horizonte: el que cae, cae al mar. Por estar
+   que se recorta en el horizonte: el que cae, cae al mar. No salen de la
+   escena: la hoja que la tapa (abajo) los tapa con ella. Por estar
    posicionada se pinta delante del titular y la entradilla, que en una
    pantalla baja llegan hasta el horizonte; las tarjetas de los socios,
    posicionadas después, pasan delante de ella. Cada pato es una ventana de
@@ -197,10 +203,12 @@
 
 /* El titular y la entradilla, en el cielo, sobre el horizonte, y en la
    tinta: sobre el atardecer da 5.8:1 o más. Ocupan la primera pantalla, y
-   las tarjetas empiezan bajo ella. */
+   las tarjetas empiezan bajo ella. Es la primera parada del encaje (ver los
+   socios). */
 .atardecer-cabecera {
   min-height: 100svh;
   padding-top: calc(var(--barra-alto) + var(--e-16));
+  scroll-snap-align: start;
 }
 
 @media (min-width: 1024px) {
@@ -230,9 +238,23 @@
   position: relative;
   list-style: none;
   display: grid;
-  gap: var(--e-6);
+  gap: var(--e-16);
   margin: 0;
   padding: var(--e-16) 0 0;
+}
+
+/* Los socios encajan de a uno, como los servicios de la portada
+   (Servicios.css): cada scroll cae en uno y ninguno se salta. Arriba encaja
+   la cabecera, y después del último, el inicio de la sección siguiente (ver
+   la hoja, abajo). En S
+   la tarjeta es más alta que la pantalla: encaja a su inicio y otra vez al
+   final de su texto, y entre los dos se lee libre, así que nadie queda leído
+   a medias. Desde M encaja al centro (abajo). Con movimiento reducido no
+   encaja: el encaje mueve la página solo. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.socios) {
+    scroll-snap-type: y mandatory;
+  }
 }
 
 .socio {
@@ -240,6 +262,8 @@
   grid-template-areas:
     'foto'
     'cuerpo';
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* La proporción va escrita, para que el hueco exista antes que la foto, y
@@ -258,13 +282,17 @@
   background: var(--linea);
 }
 
-/* Arriba deja sitio para la foto, que se monta sobre su borde. */
+/* Arriba deja sitio para la foto, que se monta sobre su borde. En S su final
+   es la segunda parada del socio, con aire bajo la tarjeta. */
 .socio-cuerpo {
   grid-area: cuerpo;
   padding: calc(var(--e-16) + var(--e-6)) var(--e-6) var(--e-6);
   border: 1px solid var(--linea);
   border-radius: var(--radio-panel);
   background: var(--superficie);
+  scroll-snap-align: end;
+  scroll-snap-stop: always;
+  scroll-margin-bottom: var(--e-6);
 }
 
 /* Es un h2, porque cuelga del titular de la página, con el tamaño de un h3:
@@ -344,16 +372,24 @@
 /* La foto mide lo que la tarjeta más los 64 px que sobresale; con un texto
    largo se estira y se recorta, nunca baja de 4:5. El alto va en porcentaje
    de la fila y no con `align-self: stretch`, que Safari no aplica a una
-   imagen. La tarjeta pierde el borde y las esquinas del lado de la foto, y
-   entre una tarjeta y otra queda sitio para lo que sobresalen las dos fotos. */
+   imagen. La tarjeta pierde el borde y las esquinas del lado de la foto.
+
+   Cada socio mide lo que se ve bajo la barra (`--hueco`) y encaja al centro,
+   como un servicio de la portada: con el relleno de abajo, la tarjeta queda
+   al centro de la pantalla entera, sola, y sobra sitio para lo que
+   sobresalen las fotos. */
 @media (min-width: 640px) {
   .socios {
-    gap: var(--e-24);
+    gap: 0;
   }
 
   .socio {
     grid-template-columns: 15rem minmax(0, 1fr);
     grid-template-areas: 'foto cuerpo';
+    align-content: center;
+    min-height: var(--hueco);
+    padding-bottom: var(--bajo-barra);
+    scroll-snap-align: center;
   }
 
   .socio img {
@@ -366,6 +402,7 @@
     padding: var(--e-8);
     border-left-width: 0;
     border-radius: 0 var(--radio-panel) var(--radio-panel) 0;
+    scroll-snap-align: none;
   }
 
   .socio:nth-child(even) {
@@ -391,6 +428,43 @@
   .socio-cuerpo {
     padding: var(--e-12);
   }
+}
+
+/* ---- la hoja ----
+   La sección siguiente sube sobre el atardecer, como Proyectos sobre la nube
+   de la portada (Portada.css), y lo tapa entero con la parvada. Su borde es
+   una trama de puntos del paso del mar que crecen hasta juntarse: el mar de
+   puntos se vuelve la página. Son 160 filas (image/trama.svg, en el `--fondo`
+   de la zona cielo), así que el borde mide 160 puntos. La hoja se monta sobre
+   el final del atardecer lo que mide la trama más el telón
+   (`--hoja-encima`): el telón sigue fijo hasta que la trama lo pasó entera.
+   La trama y el blanco de debajo se pisan 2 px, para que al redondear no
+   quede una raya entre ellos. El título va bajo la trama, en el blanco.
+
+   El inicio de la sección encaja como un socio: un scroll desde el último
+   lleva a su título, arriba, como a Proyectos en la portada, y en ese
+   recorrido el sol se pone y la hoja tapa la escena. Su zona de encaje llega
+   al final de la página, y una zona más alta que la pantalla deja parar en
+   cualquier punto: de ahí se baja libre, como tras los servicios. */
+.nosotros {
+  --hoja-fundido: calc(160px * var(--celda-del-mar));
+  --hoja-encima: calc(100lvh + var(--hoja-fundido));
+}
+
+.atardecer + .seccion {
+  --fondo-hora:
+    url('/image/trama.svg') top left / calc(1px * var(--celda-del-mar)) var(--hoja-fundido) repeat-x,
+    linear-gradient(transparent calc(var(--hoja-fundido) - 2px), var(--fondo) 0);
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * var(--hoja-encima));
+  padding-top: calc(var(--hoja-fundido) + var(--e-16));
+}
+
+.atardecer + .seccion > .contenedor {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-bottom: 100000px;
 }
 
 /* ---- el nombre ---- */

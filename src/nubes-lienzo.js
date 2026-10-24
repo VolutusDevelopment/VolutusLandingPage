@@ -24,8 +24,7 @@
  *     en lib/mar.js.
  *   - `atardecer`: el sol que se pone en el mar, detrás de la cabecera y de
  *     los socios de /nosotros. Con el scroll el sol baja del día hasta
- *     hundirse y, al final, la escena se funde en el blanco de la página
- *     (`ocaso`); el cursor sopla
+ *     hundirse, y el cielo pasa a la hora azul (`ocaso`); el cursor sopla
  *     ráfagas en el agua. Su física, su paleta y sus shaders viven en
  *     lib/atardecer.js.
  *
@@ -572,7 +571,7 @@ const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
   'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
-  'mira', 'olas', 'fases', 'rafagas', 'blanco',
+  'mira', 'olas', 'fases', 'rafagas',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -829,7 +828,7 @@ function montar(id, lienzo, { mar, atardecer, perspectiva, juego }) {
   } else if (atardecer) {
     escena.previo = null
     escena.rafagas = []
-    escena.ocaso = { sol: { x: 0, v: 0, meta: 0 }, fin: { x: 0, v: 0, meta: 0 }, visto: false }
+    escena.ocaso = { x: 0, v: 0, meta: 0, visto: false }
   } else {
     escena.previo = null
     escena.tramo = null
@@ -1102,7 +1101,7 @@ function pintar(escena, ahora, conAire = true) {
   }
   // El atardecer: el sol donde lo dejó el scroll y las ráfagas que siguen
   // soplando (ver `ponerse`).
-  const sol = escena.atardecer && ATARDECER.sol(escena.ocaso.sol.x)
+  const sol = escena.atardecer && ATARDECER.sol(escena.ocaso.x)
   if (sol) {
     escena.rafagas = escena.rafagas.filter((rafaga) => ahora - rafaga.t < 6000)
     gl.uniform3fv(campo.sol, sol)
@@ -1115,10 +1114,7 @@ function pintar(escena, ahora, conAire = true) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
   gl.useProgram(trama.programa)
-  if (sol) {
-    gl.uniform3fv(trama.sol, sol)
-    gl.uniform1f(trama.blanco, escena.ocaso.fin.x)
-  }
+  if (sol) gl.uniform3fv(trama.sol, sol)
   gl.drawArrays(gl.TRIANGLES, 0, 3)
 }
 
@@ -1195,22 +1191,17 @@ function seguir(escena, ahora) {
   return true
 }
 
-// El sol del atardecer y el fundido del final dan un paso tras el scroll, con
-// el mismo resorte que la cámara de la portada (`arrastrar`). Devuelve si
-// algo se movió.
+// El sol del atardecer da un paso tras el scroll, con el mismo resorte que la
+// cámara de la portada (`arrastrar`). Devuelve si se movió.
 function ponerse(escena, ahora) {
   const { ocaso } = escena
-  const tramos = [ocaso.sol, ocaso.fin]
-  if (tramos.every((tramo) => tramo.x === tramo.meta && tramo.v === 0)) {
+  if (ocaso.x === ocaso.meta && ocaso.v === 0) {
     ocaso.cuando = undefined
     return false
   }
   const dt = Math.min((ahora - (ocaso.cuando ?? ahora)) / 1000, 0.1)
-  ocaso.cuando = ahora
-  for (const tramo of tramos) {
-    Object.assign(tramo, arrastrar(tramo, tramo.meta, dt))
-    if (Math.abs(tramo.x - tramo.meta) < 1e-5 && Math.abs(tramo.v) < 1e-4) Object.assign(tramo, { x: tramo.meta, v: 0 })
-  }
+  Object.assign(ocaso, arrastrar(ocaso, ocaso.meta, dt), { cuando: ahora })
+  if (Math.abs(ocaso.x - ocaso.meta) < 1e-5 && Math.abs(ocaso.v) < 1e-4) Object.assign(ocaso, { x: ocaso.meta, v: 0 })
   return true
 }
 
@@ -1349,16 +1340,13 @@ onmessage = ({ data }) => {
     if (escena.grua) escena.grua.cuando = undefined
     if (escena.ocaso) escena.ocaso.cuando = undefined
   }
-  // El atardecer: dónde va el sol (`sol`, de 0 a 2) y cuánto pasó del fundido
-  // del final (`fin`, de 0 a 1) (ver `ponerSol` en nubes.js). La primera vez, y en una
-  // escena fija, van ahí de una; después, tras el scroll (`ponerse`).
+  // El atardecer: dónde va el sol (`sol`, de 0 a 3, ver `ponerSol` en
+  // nubes.js). La primera vez, y en una escena fija, va ahí de una; después,
+  // tras el scroll (`ponerse`).
   if (escena?.ocaso && data.tipo === 'ocaso') {
     const { ocaso } = escena
-    const deUna = !ocaso.visto || fija(escena)
-    for (const tramo of ['sol', 'fin']) {
-      ocaso[tramo].meta = data[tramo]
-      if (deUna) Object.assign(ocaso[tramo], { x: data[tramo], v: 0 })
-    }
+    ocaso.meta = data.sol
+    if (!ocaso.visto || fija(escena)) Object.assign(ocaso, { x: data.sol, v: 0 })
     ocaso.visto = true
   }
   // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js). La
