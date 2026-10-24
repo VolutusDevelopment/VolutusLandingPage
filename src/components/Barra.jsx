@@ -1,5 +1,9 @@
+import Icono from './Icono.jsx'
 import Marca from './Marca.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
+
+// Los que tienen página propia: los de la lista de servicios de la barra.
+const CON_PAGINA = SERVICIOS.filter(({ ruta }) => ruta)
 
 /**
  * La lente de la cápsula: el bisel del vidrio desvía lo que hay detrás.
@@ -145,21 +149,22 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
         </ul>
       </nav>
       <div id="menu-servicios" className="menu-servicios zona-cielo" hidden>
-        <p className="menu-servicios-titulo">Servicios</p>
         <ul>
-          {SERVICIOS.filter(({ ruta: destino }) => destino).map(({ id, ruta: destino, nombre, color }) => (
-            <li key={id}>
-              <a href={destino} aria-current={destino === ruta ? 'page' : undefined} style={{ '--punto': color }}>
-                <span className="menu-servicios-punto" aria-hidden="true" />
+          {CON_PAGINA.map(({ id, ruta: destino, nombre, color }, fila) => (
+            <li key={id} style={{ '--fila': fila }}>
+              <a href={destino} aria-current={destino === ruta ? 'page' : undefined} style={{ '--servicio': color }}>
+                <Icono id={id} className="menu-servicios-icono" papel />
                 {nombre}
                 {destino === ruta && <small>Estás aquí</small>}
               </a>
             </li>
           ))}
+          <li className="menu-servicios-todos" style={{ '--fila': CON_PAGINA.length }}>
+            <a href="/servicios">
+              Todos los servicios <span aria-hidden="true">→</span>
+            </a>
+          </li>
         </ul>
-        <a className="menu-servicios-todos" href="/servicios">
-          Ver todos los servicios <span aria-hidden="true">→</span>
-        </a>
       </div>
       <Lente />
     </header>

@@ -142,9 +142,11 @@
    una calcomanía (`papel` en Icono.jsx): sobre el cielo, su color se perdía.
    El margen une las piezas que van cerca y los huecos quedan blancos. El color
    es el de su servicio, más claro y más vivo, porque el hondo se veía apagado
-   sobre la nube; sin color relativo, queda el hondo. Lo mismo en el índice. */
+   sobre la nube; sin color relativo, queda el hondo. Lo mismo en el índice y
+   en la lista de servicios de la barra (Barra.css). */
 .servicio-icono,
-.servicios-indice-icono {
+.servicios-indice-icono,
+.menu-servicios-icono {
   overflow: visible;
   color: var(--servicio);
   color: oklch(from var(--servicio) calc(l + 0.1) calc(c * 1.35) h);
@@ -155,7 +157,7 @@
   height: 48px;
 }
 
-:is(.servicio-icono, .servicios-indice-icono) .icono-papel {
+:is(.servicio-icono, .servicios-indice-icono, .menu-servicios-icono) .icono-papel {
   fill: var(--superficie);
   stroke: var(--superficie);
   stroke-width: 3.5;

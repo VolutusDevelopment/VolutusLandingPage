@@ -31,7 +31,8 @@
 
 /* El vidrio va en pseudoelementos detrás del contenido. */
 .barra-marca::before,
-.barra-capsula::before {
+.barra-capsula::before,
+.menu-servicios::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -75,14 +76,18 @@
    cristal casi incoloro que deja ver la zona que pasa por detrás, y lo único
    que cambia al pasar de un fondo a otro es el color de las letras: cada
    enlace toma la zona de lo que tiene justo detrás (barra.js), igual que el
-   logo toma la del suyo. */
-.barra-capsula {
+   logo toma la del suyo. La lista de servicios es del mismo vidrio. */
+.barra-capsula,
+.menu-servicios {
   --cristal: rgb(255 255 255 / 0.22);
   --cristal-reflejo: #fff;
   --cristal-interior: rgb(0 0 0 / 0.12);
   --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
   --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
   --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
+}
+
+.barra-capsula {
   right: var(--orilla);
   display: flex;
   align-items: center;
@@ -130,7 +135,8 @@
    en sus 12 px y deja ver el fondo que refracta (la lente de Barra.jsx). El
    texto nunca entra en esa franja, así que su contraste lo sigue sosteniendo
    el esmerilado de la cara. */
-.barra-capsula::before {
+.barra-capsula::before,
+.menu-servicios::before {
   inset: 0;
   border-radius: inherit;
   background-image:
@@ -199,7 +205,8 @@
   }
 
   .barra-capsula::before,
-  .barra-refracta .barra-capsula::before {
+  .barra-refracta .barra-capsula::before,
+  .menu-servicios::before {
     background-color: var(--fondo);
     backdrop-filter: none;
     animation: none;
@@ -467,25 +474,33 @@
 }
 
 /* ---- la lista de servicios (S y M) ----
-   «Servicios» la abre bajo la barra (menu-servicios.js): los siete, cada uno
-   con el punto de su color y el actual marcado, y el enlace al índice. Va en
-   su propia zona de cielo, clara aunque la barra pase sobre un fondo oscuro. */
+   «Servicios» la abre (menu-servicios.js): los siete, cada uno con su glifo en
+   calcomanía como en la portada, el actual con el fondo de la gota, y al final
+   el enlace al índice. Es del vidrio de la cápsula y cuelga de ella, alineada
+   a su derecha, pero más cuajado: una lista se lee encima de cualquier cosa.
+   Sin el bisel claro de la cápsula, que en un panel alto se veía como una
+   mancha del color de atrás en los cantos. Va en su propia zona de cielo,
+   clara aunque la barra pase sobre un fondo oscuro. */
 .menu-servicios {
+  --cristal: rgb(255 255 255 / 0.74);
+  --cristal-bisel: var(--cristal);
+  --cristal-interior: rgb(0 0 0 / 0.05);
+  --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 24px 48px -20px rgb(10 26 42 / 0.45);
   display: none;
 }
 
 @media (max-width: 1023px) {
+  /* A 8 px del canto de la cápsula, de 52 px y centrada en la barra. Las
+     filas, de 20 px de radio a 6 px del canto de 26: curvas concéntricas. */
   .menu-servicios:not([hidden]) {
     position: fixed;
-    top: calc(var(--barra-alto) - var(--e-1));
-    left: var(--e-3);
-    right: var(--e-3);
+    top: calc(var(--barra-alto) / 2 + 26px + var(--e-2));
+    left: var(--orilla);
+    right: var(--orilla);
     display: block;
-    padding: var(--e-2);
-    border: 1px solid var(--linea);
-    border-radius: 20px;
-    background: var(--superficie);
-    box-shadow: 0 18px 40px -18px rgb(10 26 42 / 0.35);
+    padding: 6px;
+    border-radius: 26px;
+    isolation: isolate;
     pointer-events: auto;
     transform-origin: top right;
   }
@@ -496,29 +511,20 @@
     list-style: none;
   }
 
-  .menu-servicios-titulo {
-    padding: var(--e-2) var(--e-3) var(--e-1);
-    font-family: var(--fuente-datos);
-    font-size: var(--texto-xs);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--texto-suave);
-  }
-
   .menu-servicios a {
     display: flex;
     align-items: center;
-    gap: var(--e-3);
-    min-height: 48px;
-    padding-inline: var(--e-3);
-    border-radius: var(--radio-tarjeta);
+    gap: 14px;
+    min-height: 52px;
+    padding-inline: 12px 16px;
+    border-radius: 20px;
     color: var(--texto);
     font-weight: 600;
     text-decoration: none;
   }
 
   .menu-servicios a[aria-current] {
-    background: color-mix(in oklab, var(--punto) 10%, var(--superficie));
+    background-color: var(--indicador);
   }
 
   .menu-servicios small {
@@ -529,18 +535,21 @@
     color: var(--texto-suave);
   }
 
-  .menu-servicios-punto {
+  .menu-servicios-icono {
     flex: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--punto);
+    width: 28px;
+    height: 28px;
   }
 
-  .menu-servicios .menu-servicios-todos {
+  .menu-servicios-todos {
     margin-top: var(--e-1);
-    border-top: 1px solid var(--linea);
-    border-radius: 0 0 var(--radio-tarjeta) var(--radio-tarjeta);
+    padding-top: var(--e-1);
+    border-top: 1px solid rgb(10 26 42 / 0.08);
+  }
+
+  /* Alineado con los nombres de arriba: 12 + 28 + 14 px. */
+  .menu-servicios .menu-servicios-todos a {
+    padding-left: 54px;
     color: var(--accion);
   }
 }
@@ -552,15 +561,51 @@
   }
 }
 
-@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
-  .menu-servicios:not([hidden]) {
-    animation: menu-servicios-abre 220ms var(--ease-out);
+@media (max-width: 1023px) and (hover: hover) {
+  .menu-servicios a:not([aria-current]):hover {
+    background-color: color-mix(in srgb, var(--texto) 5%, transparent);
   }
 }
 
-@keyframes menu-servicios-abre {
+/* Al abrir, la lista baja desde la cápsula, las filas entran una tras otra y
+   cada glifo hace su gesto (Icono.css). El vidrio aparece con su propia
+   opacidad y no con la de la lista: con un padre transparente, el desenfoque
+   no ve la página hasta que termina, y el cristal se esmerilaba de golpe. */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .menu-servicios:not([hidden]) {
+    animation: menu-servicios-cuelga 240ms var(--ease-out);
+  }
+
+  .menu-servicios:not([hidden])::before {
+    animation: menu-servicios-aparece 240ms var(--ease-out);
+  }
+
+  .menu-servicios:not([hidden]) li {
+    animation: menu-servicios-fila 260ms var(--ease-out) both;
+    animation-delay: calc(40ms + var(--fila) * 25ms);
+  }
+
+  .menu-servicios:not([hidden]) .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(140ms + var(--fila) * 45ms + var(--n, 0) * 90ms);
+  }
+}
+
+@keyframes menu-servicios-cuelga {
+  from {
+    transform: translateY(-8px) scale(0.96);
+  }
+}
+
+@keyframes menu-servicios-aparece {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.97);
+  }
+}
+
+@keyframes menu-servicios-fila {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 }
