@@ -348,6 +348,15 @@
   -webkit-box-reflect: above;
 }
 
+/* Al terminar `main` el cielo queda detrás del contacto, y su reflejo de abajo
+   se pasaba del final de la página: al rebotar, bajo el mar asomaba un cuadro
+   de cielo. `main` no pinta más abajo de su final, como el telón de /nosotros
+   (Nosotros.css); arriba deja una pantalla para el reflejo de la nube bajo la
+   hora. */
+main:has(> .portada-cielo) {
+  clip-path: inset(-100lvh 0 0);
+}
+
 :root .portada,
 :root .portada + .seccion {
   --fondo-hora: transparent;

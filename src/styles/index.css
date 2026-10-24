@@ -372,8 +372,16 @@ html {
      lo que se ve al rebotar el scroll y lo que Safari pinta bajo la hora o
      bajo su barra cuando no tiene la página detrás. Así nunca es una franja
      blanca. Va en literal y no en token porque <html> está por encima de
-     cualquier zona y no hereda ninguna. */
-  background: #1976cc;
+     cualquier zona y no hereda ninguna. Una página con otro color arriba lo
+     cambia en `--fondo-de-arriba` (scripts/prerender.mjs, Nosotros.css). */
+  background: var(--fondo-de-arriba, #1976cc);
+}
+
+/* Abajo, el mar: mientras el del pie está en pantalla (fondo-del-mar.js), el
+   documento toma su agua honda, el `--mar-hondo` del pie (Contacto.css), y al
+   rebotar al final de la página el mar sigue. */
+html.en-el-mar {
+  background: #06305f;
 }
 
 body {

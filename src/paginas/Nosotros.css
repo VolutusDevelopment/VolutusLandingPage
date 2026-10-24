@@ -33,7 +33,7 @@
 /* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
    el scroll (ver `html` en index.css). */
 :root:has(.atardecer) {
-  background: #6fa8e6;
+  --fondo-de-arriba: #6fa8e6;
 }
 
 /* Mientras el lienzo no pinta, o si no puede, el telón lleva la escena como

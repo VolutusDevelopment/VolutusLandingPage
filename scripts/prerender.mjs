@@ -386,7 +386,7 @@ if (!plantilla.includes(RAIZ) || !plantilla.includes(CIELO)) throw new Error('pr
 
 function raiz(ruta) {
   const servicio = servicioDeRuta.get(ruta)
-  return servicio ? `<html lang="es-CL" style="background: ${servicio.color}">` : RAIZ
+  return servicio ? `<html lang="es-CL" style="--fondo-de-arriba: ${servicio.color}">` : RAIZ
 }
 
 function cielo(ruta) {
