@@ -1,17 +1,21 @@
 // La parvada de /nosotros (Nosotros.jsx): quince patos que cruzan una vez,
 // lejos, sobre el mar del atardecer. Al que el cursor le pasa encima queda
-// cazado, como en el Duck Hunt: se pasma y cae al mar. Solo el cursor: el dedo
-// no caza, ni al tocar ni al arrastrar. Caen uno a uno, con `PAUSA` entre uno
-// y otro aunque el cursor barra la V entera, y pueden caer todos: entonces el
-// pato del mar del footer sale comentándolo (`data-fetiche`, ver nubes.js). El
-// vuelo y la caída los lleva el CSS (Nosotros.css); aquí solo se elige a qué
-// altura vuela (`volar`) y se mira si el cursor da en un pato. Detrás de las
+// cazado, como en el Duck Hunt: se pasma y cae al mar. Con el dedo se caza
+// tocando, no arrastrando: arrastrar es desplazarse, y el navegador lo cancela
+// (`pointercancel`) antes de soltar. El pato mide 12 px en el teléfono, así que
+// el toque vale hasta `DEDO` px fuera de él, y cae el más cercano. El cursor
+// los bota uno a uno, con `PAUSA` entre uno y otro aunque barra la V entera;
+// cada toque es un tiro y no espera. Pueden caer todos: entonces el pato del
+// mar del footer sale comentándolo (`data-fetiche`, ver nubes.js). El vuelo y
+// la caída los lleva el CSS (Nosotros.css); aquí solo se elige a qué altura
+// vuela (`volar`) y se mira si el puntero da en un pato. Detrás de las
 // tarjetas de los socios no se ven, y ahí no se cazan. Cuando la parvada sale
 // de la pantalla, se quita. Con movimiento reducido no está.
 
 import { quieto } from './lib/movimiento.js'
 
 const PAUSA = 600
+const DEDO = 16
 
 /**
  * La altura de la parvada, en cielo libre y nunca detrás del texto: bajo la
@@ -48,12 +52,14 @@ export default function initParvada() {
   volar(parvada)
   addEventListener('resize', () => volar(parvada), { passive: true, signal: vuelo.signal })
 
-  const cazar = ({ clientX: x, clientY: y, pointerType, target, timeStamp }) => {
-    if (pointerType !== 'mouse' || timeStamp - ultimo < PAUSA || target.closest('.socio')) return
-    const pato = patos.find((pato) => {
-      const caja = pato.getBoundingClientRect()
-      return x >= caja.left && x <= caja.right && y >= caja.top && y <= caja.bottom
-    })
+  const cazar = ({ clientX: x, clientY: y, target, timeStamp }, holgura) => {
+    if (target.closest('.socio')) return
+    let pato
+    for (const candidato of patos) {
+      const caja = candidato.getBoundingClientRect()
+      const distancia = Math.hypot(Math.max(caja.left - x, 0, x - caja.right), Math.max(caja.top - y, 0, y - caja.bottom))
+      if (distancia <= holgura) [pato, holgura] = [candidato, distancia]
+    }
     if (!pato) return
     pato.classList.add('cazado')
     patos.splice(patos.indexOf(pato), 1)
@@ -63,7 +69,13 @@ export default function initParvada() {
     const mar = document.querySelector('.nubes[data-vista="mar"]')
     if (mar) mar.dataset.fetiche = ''
   }
-  seccion.addEventListener('pointermove', cazar, { passive: true, signal: caza.signal })
+  const opciones = { passive: true, signal: caza.signal }
+  seccion.addEventListener(
+    'pointermove',
+    (evento) => evento.pointerType === 'mouse' && evento.timeStamp - ultimo >= PAUSA && cazar(evento, 0),
+    opciones,
+  )
+  seccion.addEventListener('pointerup', (evento) => evento.pointerType !== 'mouse' && cazar(evento, DEDO), opciones)
 
   parvada.addEventListener('animationend', ({ animationName }) => {
     if (animationName !== 'cruzar') return
