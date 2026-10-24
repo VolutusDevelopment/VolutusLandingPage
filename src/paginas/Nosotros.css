@@ -25,15 +25,17 @@
 
 /* La pausa: tras el último socio, la escena sola, con el sol tocando el mar.
    Es una parada del encaje (ver los socios), con la pausa arriba de todo y
-   no bajo la barra, para que la última tarjeta no asome. Mide más que la
-   pantalla, así que en ella se baja libre: el sol se pone y la escena se
-   recorta mientras sube la sección siguiente, que se monta sobre su final el
-   alto del telón (ver la lámina). */
+   no bajo la barra, para que la última tarjeta no asome. De ahí a la lámina
+   hay un salto de una pantalla, como del último socio hasta aquí: en él el
+   sol se pone y la escena se recorta mientras sube la sección siguiente, que
+   se monta sobre su final el alto del telón (ver la lámina). Ese final tapado
+   no cuenta para el encaje: así la pausa no es más alta que la pantalla,
+   encaja en un solo punto y no hay dónde quedarse a medio recortar. */
 .atardecer-pausa {
-  height: calc(160svh + 100lvh);
+  height: calc(100svh + 100lvh);
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  scroll-margin-top: calc(-1 * var(--bajo-barra));
+  scroll-margin: calc(-1 * var(--bajo-barra)) 0 -100lvh;
 }
 
 /* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
@@ -98,7 +100,11 @@
    salida con `.vuela`). Van en el telón, en el
    cielo que queda en la lámina (`--cielo-de-la-lamina`, ver la lámina), que
    se recorta en el horizonte: el que cae, cae al mar. Así, si la escena se
-   recorta mientras cruzan, siguen adentro y se van con ella. Cada pato es
+   recorta mientras cruzan, siguen adentro y se van con ella. Salen ya en el
+   cielo, con el último en el borde de la lámina, mientras la última tarjeta
+   todavía los tapa: así se ven apenas la escena queda sola, aunque se siga
+   bajando. Entrando desde el borde de la pantalla tardaban segundos en
+   asomar, y quien bajaba seguido no los veía. Cada pato es
    una ventana de su ancho sobre la tira de sus cuadros, que se corre de uno
    a otro: aletea a ocho cuadros por segundo, como en el juego, y cada pato a
    destiempo.
@@ -132,10 +138,12 @@
   top: 55%;
   left: 0;
   width: 100%;
-  animation: cruzar 30s linear both paused;
+  visibility: hidden;
+  animation: cruzar 24s linear both paused;
 }
 
 .vuela .parvada-v {
+  visibility: visible;
   animation-play-state: running;
 }
 
@@ -172,7 +180,7 @@
 
 @keyframes cruzar {
   from {
-    translate: calc(-1 * var(--ancho));
+    translate: calc(max(0px, (100% - var(--ancho-maximo)) / 2) + var(--margen-lateral) + 7 * 1.3 * var(--ancho));
   }
 
   to {
