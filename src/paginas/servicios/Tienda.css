@@ -4,9 +4,9 @@
    se queda a la vista mientras pasan y mide casi lo mismo que la pantalla. En
    S y M no hay índice: cada fase lleva su número. */
 
-/* `--tienda-tapa` es lo que tapa la barra arriba (y en S y M, también la
-   guía): el `scroll-padding-top` de la página. `--tienda-alto` es el de una
-   fase y el del índice: lo que se ve debajo, con un respiro arriba y abajo. */
+/* `--tienda-tapa` es lo que tapa la barra arriba: el `scroll-padding-top` de
+   la página. `--tienda-alto` es el de una fase y el del índice: lo que se ve
+   debajo, con un respiro arriba y abajo. */
 .tienda-recorrido {
   --tienda-tapa: calc(var(--barra-alto) + var(--e-4));
   --tienda-alto: calc(100svh - var(--tienda-tapa) - var(--e-4));
@@ -115,8 +115,8 @@
 /* ---- el encaje ----
    Como los servicios de la portada (Servicios.css): cada scroll cae en una
    fase, sin saltarse ninguna, al centro de la pantalla entera y no de lo que
-   se ve bajo la barra. Por eso su zona de encaje se alarga abajo lo que la
-   barra tapa arriba. Antes y después se baja libre: el título de la sección
+   queda bajo `--tienda-tapa`. Por eso su zona de encaje se alarga abajo lo que
+   la tapa ocupa arriba. Antes y después se baja libre: el título de la sección
    alarga su zona de encaje hasta arriba de la página y la sección que sigue,
    hasta abajo, y una zona más alta que la pantalla deja parar en cualquier
    punto de ella. Con movimiento reducido no encaja: el encaje mueve la página
@@ -611,7 +611,7 @@
 }
 
 /* ---- en S y M ----
-   Cada fase deja sitio también para la guía y lleva su número. Con tienda.js
+   Cada fase lleva su número. Con tienda.js
    (`.tienda-guiada`), las que no están al centro se apagan. Sin él, todas se
    ven enteras. */
 .tienda-numero {
@@ -619,10 +619,6 @@
 }
 
 @media (max-width: 1023px) {
-  .tienda-recorrido {
-    --tienda-tapa: calc(var(--barra-alto) + 46px + var(--e-4));
-  }
-
   .tienda-numero {
     display: block;
     margin-bottom: var(--e-2);

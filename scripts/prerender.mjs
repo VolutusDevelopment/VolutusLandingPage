@@ -377,12 +377,31 @@ function favicon(ruta) {
   return servicio ? `<link rel="icon" href="/iconos/${servicio.id}.svg" type="image/svg+xml" />` : FAVICON
 }
 
+// Y el fondo del documento y `theme-color` en su color, el de su cabecera: es
+// lo que se ve al rebotar el scroll arriba y lo que Safari pinta bajo la hora
+// cuando no tiene la página detrás (ver `html` en index.css).
+const RAIZ = '<html lang="es-CL">'
+const CIELO = '<meta name="theme-color" content="#1976cc" />'
+if (!plantilla.includes(RAIZ) || !plantilla.includes(CIELO)) throw new Error('prerender: falta <html> o theme-color en index.html')
+
+function raiz(ruta) {
+  const servicio = servicioDeRuta.get(ruta)
+  return servicio ? `<html lang="es-CL" style="background: ${servicio.color}">` : RAIZ
+}
+
+function cielo(ruta) {
+  const servicio = servicioDeRuta.get(ruta)
+  return servicio ? `<meta name="theme-color" content="${servicio.color}" />` : CIELO
+}
+
 // Los reemplazos van como función para que el texto entre literal: como cadena,
 // un `$&` o un `$'` dentro del CSS o del HTML se interpretaría como patrón.
 for (const [ruta, pagina] of Object.entries(PAGINAS)) {
   const html = plantilla
     .replace('<!--meta-->', () => cabecera(ruta, pagina))
     .replace(FAVICON, () => favicon(ruta))
+    .replace(RAIZ, () => raiz(ruta))
+    .replace(CIELO, () => cielo(ruta))
     .replace('<div id="root"></div>', () => `<div id="root">${render(ruta)}</div>`)
     .replace(enlace[0], () => `<style>${css}</style>`)
 

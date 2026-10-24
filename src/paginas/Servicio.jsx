@@ -31,9 +31,9 @@ import Prospeccion from './servicios/Prospeccion.jsx'
  * «Qué incluye», y la cabecera lleva a él con el precio de partida a la vista
  * (decisión 49 del brief).
  *
- * En S y M, la guía (Guia.jsx) lleva a cada parte. Va al final del `main`
- * porque es fija: así no se mete entre la cabecera y la sección que continúa
- * su degradado.
+ * En S y M, la guía (Guia.jsx) lleva a cada parte. Va al pie de la
+ * cabecera, sobre su color, y no entre ella y la sección que continúa su
+ * degradado.
  */
 const INCLUYE = ['incluye', 'Incluye']
 const PRECIO = ['estimado', 'Precio']
@@ -91,6 +91,7 @@ export default function Servicio({ ruta }) {
           </div>
           <Pieza id={servicio.id} />
         </div>
+        <Guia destinos={destinosDe(servicio.id)} />
       </section>
 
       <Cuerpo pagina={pagina} estimado={<Estimado servicio={servicio.id} />} />
@@ -103,8 +104,6 @@ export default function Servicio({ ruta }) {
           <ListaDeArticulos articulos={articulosDe(servicio.id)} />
         </div>
       </section>
-
-      <Guia destinos={destinosDe(servicio.id)} />
     </Pagina>
   )
 }

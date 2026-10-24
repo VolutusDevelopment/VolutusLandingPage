@@ -31,17 +31,21 @@
 /* El título y el índice van al pie de la pantalla, donde llega el pulgar,
    mientras pasan los ocho. La cabeza mide lo que se ve bajo la barra, se queda
    pegada y se va con el último; la lista sube bajo ella. Lo de la cabeza no
-   tapa los enlaces de los servicios: solo el índice recibe el toque. */
+   tapa los enlaces de los servicios: solo el índice recibe el toque.
+
+   Termina 8 px antes del borde de abajo, con ese alto menos de relleno: el
+   índice queda donde iba, pero nada pegado toca el borde, donde Safari en iOS
+   pintaría su barra de un color propio (ver Barra.css). */
 .servicios-cabeza {
   position: sticky;
   top: var(--bajo-barra);
-  height: var(--hueco);
+  height: calc(var(--hueco) - 8px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   gap: var(--e-3);
-  padding-bottom: calc(var(--e-6) + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--e-6) - 8px + env(safe-area-inset-bottom));
   pointer-events: none;
 }
 
@@ -114,7 +118,7 @@
 
 .servicios-lista {
   list-style: none;
-  margin: calc(-1 * var(--hueco)) 0 0;
+  margin: calc(8px - var(--hueco)) 0 0;
   padding: 0;
 }
 

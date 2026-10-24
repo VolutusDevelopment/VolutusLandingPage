@@ -8,23 +8,49 @@
    Su relleno de abajo es el mar abierto donde el sol se hunde tras el último
    socio y, en su última pantalla, el tramo en que la escena se funde en el
    blanco de la sección siguiente (`ponerSol` en nubes.js), que siempre está
-   en pantalla cuando el telón se va: no queda borde. */
+   en pantalla cuando el telón se va: no queda borde.
+
+   Safari en iOS pinta la franja de la hora de un color propio si en el centro
+   del borde encuentra algo pegado de todo el ancho, como el telón (ver Barra.css).
+   Por eso el relleno de abajo va en un bloque (`::after`) y no en la sección:
+   así ahí también hay contenido delante del telón, y Safari deja ver la página.
+   Y la sección recorta lo suyo: el telón y la parvada, al final, no asoman
+   sobre la sección siguiente. */
 .atardecer {
   position: relative;
   isolation: isolate;
+  overflow: clip;
   margin-top: calc(-1 * var(--barra-alto));
-  padding-block: 0 125svh;
+  padding-block: 0;
+}
+
+.atardecer::after {
+  content: '';
+  display: block;
+  height: 125svh;
+}
+
+/* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
+   el scroll (ver `html` en index.css). */
+:root:has(.atardecer) {
+  background: #6fa8e6;
 }
 
 /* Mientras el lienzo no pinta, o si no puede, el telón lleva la escena como
    abre, de día, en un degradado: el cielo hasta el horizonte, al 62 % del
-   alto, y el mar bajo él. */
+   alto, y el mar bajo él.
+
+   Bajo la hora y bajo la barra de Safari asoma lo que queda fuera de la
+   pantalla, adonde el telón no llega. Su reflejo lo sigue ahí sin corte: el
+   telón entero hacia abajo, el mar, y el lienzo, que lo cubre, hacia arriba,
+   el cielo. La sección recorta lo que se pasa de ella. */
 .atardecer-telon {
   position: sticky;
   top: 0;
   z-index: -1;
-  height: 100svh;
-  margin-bottom: -100svh;
+  height: 100lvh;
+  margin-bottom: -100lvh;
+  -webkit-box-reflect: below;
   background: linear-gradient(
     #6fa8e6,
     #a3c9ef 30%,
@@ -40,6 +66,7 @@
 /* El punto del mar, en px CSS (ver `rejilla` en nubes.js). */
 .atardecer-telon .nubes {
   --nubes-celda: 5;
+  -webkit-box-reflect: above;
 }
 
 @media (max-width: 639px) {
@@ -65,13 +92,16 @@
    aceleración. Sigue avanzando con la parvada mientras cae, volteándose como
    en el Duck Hunt. Todo es `translate` y `scale`, que van
    por el compositor. */
+/* Empieza 8 px bajo el borde de arriba y termina en el horizonte: pegada al
+   borde, Safari la tomaría por una cabecera y pintaría la franja de la hora
+   (ver Barra.css). Los patos nunca vuelan tan arriba. */
 .parvada {
   --px: 0.75px;
   --ancho: calc(16 * var(--px));
   position: sticky;
-  top: 0;
-  height: 62svh;
-  margin-bottom: -62svh;
+  top: 8px;
+  height: calc(62svh - 8px);
+  margin: 8px 0 -62svh;
   overflow: hidden;
   pointer-events: none;
 }
@@ -191,14 +221,16 @@
    algo más angosta, y pisa el borde superior de la tarjeta; desde M va al
    lado, al ras del borde exterior, sobresale por arriba y por abajo y cambia
    de lado de una tarjeta a la otra. Pasan sobre el mar del atardecer, y
-   delante de la parvada: van posicionadas, después de ella. */
+   delante de la parvada: van posicionadas, después de ella. El aire de arriba
+   es relleno y no margen, para que no quede un hueco sin contenido delante
+   del telón (ver `.atardecer`). */
 .socios {
   position: relative;
   list-style: none;
   display: grid;
   gap: var(--e-6);
-  margin: var(--e-16) 0 0;
-  padding: 0;
+  margin: 0;
+  padding: var(--e-16) 0 0;
 }
 
 .socio {

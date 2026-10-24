@@ -17,21 +17,23 @@ const PAUSA = 600
  * La altura de la parvada, en cielo libre y nunca detrás del texto: bajo la
  * entradilla, lejos sobre el horizonte, o, si en una pantalla baja ahí no cabe
  * holgada, entre la barra y el titular, donde el CSS siempre deja aire. Se
- * mide desde arriba de la sección, que es arriba del telón. La V mide 4.5
- * patos de alto y su centro va medio pato bajo el que guía (Nosotros.css).
+ * mide desde arriba de la sección, que es arriba del telón, y la parvada
+ * empieza `borde` más abajo. La V mide 4.5 patos de alto y su centro va medio
+ * pato bajo el que guía (Nosotros.css).
  */
 function volar(parvada) {
   const seccion = parvada.closest('section')
   const cabecera = seccion.querySelector('.atardecer-cabecera')
   const arriba = seccion.getBoundingClientRect().top
   const pato = parvada.querySelector('.pato').offsetWidth
+  const borde = parseFloat(getComputedStyle(parvada).marginTop)
   const texto = cabecera.lastElementChild.getBoundingClientRect().bottom - arriba
-  const horizonte = parvada.offsetHeight
+  const horizonte = borde + parvada.offsetHeight
   const [desde, hasta] =
     horizonte - texto > 1.5 * 4.5 * pato
       ? [texto, horizonte]
       : [parseFloat(getComputedStyle(seccion).getPropertyValue('--barra-alto')), cabecera.firstElementChild.getBoundingClientRect().top - arriba]
-  parvada.style.setProperty('--vuelo', `${(desde + hasta) / 2 - pato / 2}px`)
+  parvada.style.setProperty('--vuelo', `${(desde + hasta) / 2 - pato / 2 - borde}px`)
 }
 
 export default function initParvada() {

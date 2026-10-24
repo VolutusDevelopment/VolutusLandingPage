@@ -1,165 +1,44 @@
-/* La guía de las páginas de servicio. Ver Guia.jsx y guia.js.
+/* La guía de las páginas de servicio. Ver Guia.jsx.
 
-   En S y M, al dejar atrás la cabecera, aparece bajo la barra. Su fondo
-   empieza arriba del todo, detrás de la barra: con la guía a la vista, marca,
-   menú y partes de la página son un solo encabezado claro de dos pisos, sin
-   una franja de la página asomando entre ellos. Una pastilla suave marca la
-   parte que se lee y se desliza a la siguiente. Desde L no está. */
+   En S y M va al pie de la cabecera y se va con ella al bajar: fija arriba,
+   Safari en iOS pintaba la franja de la hora de su color en vez de dejar ver
+   la página (ver Barra.css). Desde L no está. */
 
 .guia {
   display: none;
 }
 
 @media (max-width: 1023px) {
-  /* El ancla queda bajo la barra y la guía. */
-  html:has(.guia) {
-    scroll-padding-top: calc(var(--barra-alto) + 46px + var(--e-4));
-  }
-
   .guia {
-    position: fixed;
-    inset: 0 0 auto;
-    z-index: 49;
     display: block;
-    padding-top: var(--barra-alto);
-    border-bottom: 1px solid var(--linea);
-    background: var(--superficie);
-    opacity: 0;
-    transform: translateY(-6px);
-    visibility: hidden;
-    transition:
-      opacity 200ms var(--ease-out),
-      transform 200ms var(--ease-out),
-      visibility 0s 200ms;
+    margin-top: var(--e-8);
   }
 
-  .guia-visible {
-    opacity: 1;
-    transform: none;
-    visibility: visible;
-    transition:
-      opacity 200ms var(--ease-out),
-      transform 200ms var(--ease-out);
-  }
-
-  /* Sobre el fondo claro de la guía el velo de la barra sobra, y la marca y
-     el menú van en tinta —la de la zona de cielo— aunque la sección que pasa
-     por debajo sea oscura y barra.js los haya puesto en blanco. */
-  html:has(.guia-visible) .barra-velo {
-    visibility: hidden;
-  }
-
-  html:has(.guia-visible) .barra :is(.barra-marca, .barra-capsula, .barra-enlaces a) {
-    --texto: #0a1a2a;
-    --vidrio-halo: transparent;
-  }
-
-  /* Las partes empiezan donde el logo: a la orilla, como la barra. */
-  .guia-carril {
-    position: relative;
-    padding-inline: calc(var(--orilla) - var(--e-3));
-  }
-
+  /* Los enlaces no llevan relleno a los lados: así caben los cuatro a 320 px,
+     y las líneas y el texto van a ras de la columna. */
   .guia ul {
     display: flex;
     justify-content: space-between;
     margin: 0;
     padding: 0;
     list-style: none;
+    border-block: 1px solid var(--linea);
   }
 
   .guia a {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
     min-height: 44px;
-    padding-inline: var(--e-3);
     font-size: var(--texto-sm);
     font-weight: 600;
     color: var(--texto-suave);
     text-decoration: none;
-    transition: color 200ms var(--ease-out);
-  }
-
-  .guia a[aria-current] {
-    color: var(--texto);
-  }
-
-  /* La pastilla va entre los bordes del enlace marcado (`--gota-izq`,
-     `--gota-der`, de guia.js) y viaja como la gota de la barra (Barra.css):
-     el borde de adelante sale primero y el de atrás lo alcanza después y con
-     algo de masa. `data-hacia` dice cuál es cada borde. La primera vez
-     aparece en su sitio, sin venir de ninguna parte, y con movimiento
-     reducido cambia de enlace sin viajar. */
-  .guia-pastilla {
-    position: absolute;
-    top: 7px;
-    left: var(--gota-izq, 0);
-    right: var(--gota-der, 100%);
-    height: 30px;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--tinte) 16%, var(--superficie));
-    opacity: 0;
-    transition: opacity 200ms var(--ease-out);
-  }
-
-  .guia-marcada .guia-pastilla {
-    opacity: 1;
-  }
-
-  /* Lo leído: avanza con el scroll de la página donde el navegador sabe
-     hacerlo sin JavaScript. Donde no (Safari 18), no está. */
-  .guia-avance {
-    display: none;
-    height: 2px;
-    background: var(--tinte);
-    transform-origin: 0 50%;
-  }
-
-  @supports (animation-timeline: scroll()) {
-    .guia-avance {
-      display: block;
-      animation: guia-avance linear both;
-      animation-timeline: scroll(root);
-    }
   }
 }
 
 @media (min-width: 640px) and (max-width: 1023px) {
   .guia ul {
     justify-content: flex-start;
-    gap: var(--e-2);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .guia-pastilla[data-hacia] {
-    transition-duration: 260ms, 360ms, 200ms;
-    transition-delay: 0s, 40ms, 0s;
-    transition-timing-function: var(--ease-out), var(--ease-masa), var(--ease-out);
-  }
-
-  .guia-pastilla[data-hacia='derecha'] {
-    transition-property: right, left, opacity;
-  }
-
-  .guia-pastilla[data-hacia='izquierda'] {
-    transition-property: left, right, opacity;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .guia,
-  .guia-visible,
-  .guia a,
-  .guia-pastilla {
-    transition: none;
-  }
-}
-
-@keyframes guia-avance {
-  from {
-    transform: scaleX(0);
+    gap: var(--e-8);
   }
 }

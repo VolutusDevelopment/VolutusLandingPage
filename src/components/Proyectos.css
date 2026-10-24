@@ -350,8 +350,12 @@
   background: rgb(6 16 26 / 0.66);
 }
 
+/* El documento toma el fondo de la ficha (el `--fondo` de `.zona-plano`):
+   Safari en iOS lo pinta bajo su barra mientras está abierta, y en el teléfono
+   la ficha es la pantalla entera. */
 html:has(.ficha[open]) {
   overflow: hidden;
+  background: #0a1a2a;
 }
 
 /* La cabecera se queda arriba mientras se baja por la ficha: cerrar está

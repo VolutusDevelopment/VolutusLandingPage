@@ -1,85 +1,26 @@
+/* La barra acompaña al bajar, pero pegada a 8 px del borde de arriba y no a
+   él: Safari en iOS toma lo que va pegado al borde, de todo el ancho, por una
+   cabecera y pinta la franja de la hora de su color. Así la deja ver la página
+   pasar por debajo. El aire sale de su propio alto (`--barra-aire`): la marca
+   y la cápsula quedan donde iban. La página sube detrás de ella (`margin-top`
+   negativo en cada cabecera), así que el `z-index` la deja encima. */
 .barra {
+  --barra-aire: 8px;
   /* El cambio de tono al pasar de un fondo a otro: el logo, las letras de la
      cápsula y el halo de la marca lo hacen con la misma duración y la misma
-     curva, así que cambian juntos. Entra y sale suave: acompaña al scroll sin
-     parpadear. */
+     curva, así que cambian juntos. */
   --t-tono: 280ms;
   position: sticky;
-  top: 0;
+  top: var(--barra-aire);
   z-index: 50;
+  height: var(--barra-alto);
   /* Sin fondo propio: lo que tapa el contenido son la marca y la cápsula, cada
      una con su vidrio. */
   pointer-events: none;
 }
 
-/* ---- el velo ----
-   Cuatro capas, de 2 a 20 px de desenfoque. Cada una se apaga antes que la
-   anterior, así que el desenfoque crece de forma continua hacia el borde de
-   arriba en lugar de empezar de golpe: no hay línea donde el contenido pasa de
-   nítido a borroso.
-
-   Solo aparece cuando hay algo debajo. Arriba del todo no tapa nada y apagaría
-   la portada; la opacidad la lleva el propio scroll, sin JavaScript. Va en
-   cada capa y no en el contenedor: un padre con opacidad se vuelve la raíz del
-   desenfoque, y las capas no verían la página que tienen detrás. */
-.barra-velo {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: -1;
-  height: calc(var(--barra-alto) + 48px);
-}
-
-.barra-velo span {
-  position: absolute;
-  inset: 0;
-}
-
-.barra-velo span:nth-child(1) {
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  mask-image: linear-gradient(#000 0, #000 60%, transparent);
-}
-
-.barra-velo span:nth-child(2) {
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  mask-image: linear-gradient(#000 0, #000 38%, transparent 72%);
-}
-
-.barra-velo span:nth-child(3) {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  mask-image: linear-gradient(#000 0, #000 20%, transparent 48%);
-}
-
-.barra-velo span:nth-child(4) {
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  mask-image: linear-gradient(#000 0, #000 6%, transparent 28%);
-}
-
-@keyframes velo-aparecer {
-  from {
-    opacity: 0;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  .barra-velo span {
-    animation: velo-aparecer linear both;
-    animation-timeline: scroll();
-    animation-range: 0 48px;
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .barra-velo {
-    display: none;
-  }
-}
-
 .barra-interior {
-  height: var(--barra-alto);
+  height: calc(var(--barra-alto) - 2 * var(--barra-aire));
   padding-inline: var(--orilla);
   display: flex;
   align-items: center;
@@ -94,9 +35,7 @@
   pointer-events: auto;
 }
 
-/* El vidrio va en pseudoelementos detrás del contenido: si lo llevara la
-   propia pieza, su `backdrop-filter` desenfocaría también el velo y el vidrio
-   se vería doble. */
+/* El vidrio va en pseudoelementos detrás del contenido. */
 .barra-marca::before,
 .barra-capsula::before {
   content: '';
@@ -244,7 +183,7 @@
 /* El vidrio se condensa con el scroll. Arriba del todo, sobre la portada, la
    cápsula casi se funde con el cielo y el titular manda; en los primeros
    48 px recupera el cuerpo que necesita para leerse sobre contenido. Lo lleva
-   el propio scroll, como el velo: sin JavaScript. */
+   el propio scroll, sin JavaScript. */
 @keyframes vidrio-condensar {
   from {
     opacity: 0.65;
@@ -543,7 +482,7 @@
 @media (max-width: 1023px) {
   .menu-servicios:not([hidden]) {
     position: absolute;
-    top: calc(var(--barra-alto) - var(--e-1));
+    top: calc(var(--barra-alto) - var(--barra-aire) - var(--e-1));
     left: var(--e-3);
     right: var(--e-3);
     display: block;

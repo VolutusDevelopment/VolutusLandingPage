@@ -105,9 +105,9 @@ function montar(pintor, lienzo, id) {
   const atardecer = lienzo.dataset.vista === 'atardecer'
   // La sección que tapa la nube fija de la portada.
   const tapa = lienzo.dataset.recorrido && document.querySelector(lienzo.dataset.recorrido)
-  // Las secciones sobre las que se ve el cielo: la suya y, si queda fijo, las
-  // que lo dejan ver hasta que lo tapan.
-  const zonas = tapa ? dejanVer(lienzo.closest('section'), tapa) : [lienzo.closest('section')]
+  // Las secciones sobre las que se ve el cielo: la suya y, si queda pegado, las
+  // que lo dejan ver hasta que lo tapan, desde la que le sigue (Portada.jsx).
+  const zonas = tapa ? dejanVer(lienzo.parentElement.nextElementSibling, tapa) : [lienzo.closest('section')]
   const control = new AbortController()
   const { signal } = control
   const observadores = []
@@ -289,7 +289,7 @@ function montar(pintor, lienzo, id) {
 
   const tamano = new ResizeObserver(medir)
   tamano.observe(lienzo)
-  // Se pinta mientras se ve. La nube fija de la portada está siempre en
+  // Se pinta mientras se ve. La nube pegada de la portada está siempre en
   // pantalla: lo que dice si se ve son las secciones que la dejan ver, de la
   // suya a la anterior a la que la tapa, con una pantalla de margen arriba para
   // el borde fundido de esa (Portada.css).

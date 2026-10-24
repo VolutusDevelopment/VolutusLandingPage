@@ -168,9 +168,9 @@
      grandes, y a su escala 12 px se lee como esquina recta. */
   --radio-panel: 28px;
 
-  /* Lo que ocupa la barra fija (la de la rama de Diego). Lo leen el scroll a
-     anclas y lo que se pega arriba al desplazar —las cards de servicios—,
-     para quedar siempre por debajo de ella. */
+  /* Lo que ocupa la barra arriba, que acompaña al bajar. Las cabeceras suben
+     detrás de ella con un margen negativo de este alto, y lo leen el scroll a
+     anclas y lo que se pega arriba al desplazar, para quedar por debajo. */
   --barra-alto: 64px;
 
   /* Dos curvas, y solo dos. Las de serie del navegador son demasiado flojas:
@@ -368,11 +368,12 @@ html {
   scroll-behavior: smooth;
   /* El ancla cae por debajo de la barra, que mide distinto según la pantalla. */
   scroll-padding-top: calc(var(--barra-alto) + var(--e-4));
-  /* El fondo del documento es el de la portada: lo que se ve al rebotar el
-     scroll arriba del todo, y detrás de la barra translúcida. Va en literal y
-     no en token porque <html> está por encima de cualquier zona y no hereda
-     ninguna. */
-  background: #f6f9fc;
+  /* El fondo del documento es el azul del cielo, el mismo de `theme-color`:
+     lo que se ve al rebotar el scroll y lo que Safari pinta bajo la hora o
+     bajo su barra cuando no tiene la página detrás. Así nunca es una franja
+     blanca. Va en literal y no en token porque <html> está por encima de
+     cualquier zona y no hereda ninguna. */
+  background: #1976cc;
 }
 
 body {

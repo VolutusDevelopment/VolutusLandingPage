@@ -71,16 +71,13 @@ function Lente() {
  * cápsula flotante con los enlaces a /nosotros, /servicios y /articulos y la
  * acción principal.
  *
- * La barra en sí no tiene fondo: lo único que tapa el contenido al desplazar
- * son las dos piezas, cada una con su vidrio translúcido. Así la portada
- * respira hasta arriba y la navegación se lee como un objeto encima de la
- * página, no como una franja que la corta.
- *
- * Detrás va el velo: cuatro capas de desenfoque creciente, cada una con su
- * máscara, que funden lo que pasa por debajo sin un borde donde cortarse. Al
- * pasar sobre un fondo oscuro, `barra.js` cambia la zona de cada pieza según
- * lo que tiene justo detrás: el vidrio de la cápsula no cambia, solo el color
- * del logo y el de cada enlace, por separado.
+ * La barra en sí no tiene fondo y acompaña al bajar, a 8 px del borde
+ * (Barra.css): lo único que tapa el contenido son las dos piezas, cada una con
+ * su vidrio translúcido. Así la portada respira hasta arriba y la navegación
+ * se lee como un objeto encima de la página, no como una franja que la corta.
+ * `barra.js` da a cada pieza la zona de lo que tiene justo detrás: el vidrio
+ * de la cápsula no cambia, solo el color del logo y el de cada enlace, por
+ * separado.
  *
  * La cápsula se nota por cómo se comporta, no por su adorno: el vidrio se
  * condensa con el scroll, y una gota viaja entre los enlaces y descansa en el
@@ -111,12 +108,6 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
 
   return (
     <header className={`barra zona-cielo hora-${hora}`} style={estilo}>
-      <div className="barra-velo" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
       <div className="barra-interior">
         {/* En la portada la marca sube al principio; fuera de ella, vuelve a
             la portada. Es la única forma de salir del documento legal con el
