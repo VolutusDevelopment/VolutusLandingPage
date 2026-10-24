@@ -105,8 +105,8 @@ export const VISTAS = {
 }
 
 // Cuánto avanzó `t` entre `desde` y `hasta`, de 0 a 1, arrancando y frenando
-// despacio.
-const suave = (t, desde, hasta) => {
+// despacio: el `smoothstep` de los shaders.
+export const suave = (t, desde, hasta) => {
   const k = Math.min(1, Math.max(0, (t - desde) / (hasta - desde)))
   return k * k * (3 - 2 * k)
 }

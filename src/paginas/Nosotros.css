@@ -31,7 +31,9 @@
 }
 
 /* El documento toma el cielo de arriba del telón: es lo que se ve al rebotar
-   el scroll (ver `html` en index.css). */
+   el scroll (ver `html` en index.css). Este es el del degradado; cuando el
+   lienzo pinta, el pintor lo cambia por el de su borde de arriba, que depende
+   de la proporción de la pantalla (`cieloDeArriba` en lib/atardecer.js). */
 :root:has(.atardecer) {
   --fondo-de-arriba: #6fa8e6;
 }

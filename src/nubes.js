@@ -449,6 +449,7 @@ export default function initNubes() {
         const enlace = patos.get(data.id)
         return enlace && seguirPato(enlace, data)
       }
+      if (data.tipo === 'arriba') return document.documentElement.style.setProperty('--fondo-de-arriba', data.color)
       lienzos[data.id].classList.add('vivo')
       lienzos[data.id].dispatchEvent(new Event('vivo'))
     }

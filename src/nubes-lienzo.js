@@ -1214,6 +1214,14 @@ function ponerse(escena, ahora) {
   return true
 }
 
+// La página toma el cielo del borde de arriba del atardecer para el fondo del
+// documento, que es lo que se ve al rebotar el scroll arriba (`arriba`). Ahí
+// el sol está donde lo deja la página al abrir (`ponerSol` en nubes.js): de
+// día o, con movimiento reducido, tocando el mar.
+function avisarArriba(escena) {
+  postMessage({ tipo: 'arriba', color: ATARDECER.cieloDeArriba(escena.camara, quieto ? 1 : 0) })
+}
+
 // La cámara de la nube: la de su página o, en la portada al bajar, la de la
 // grúa en ese punto (`vista`, ver `bajar` en lib/volutus.js).
 function enfocar(escena, { ancho, alto, densidad }) {
@@ -1250,6 +1258,7 @@ function aplicar(escena, data) {
         gl.uniform1f(u.focal, focal)
         gl.uniform1f(u.mira, mira)
       })
+      avisarArriba(escena)
     }
     // La nube, con la cámara de su página (lib/volutus.js).
     if (!escena.mar && !escena.atardecer) enfocar(escena, data)
@@ -1321,7 +1330,10 @@ onmessage = ({ data }) => {
   if (data.tipo === 'montar') montar(data.id, data.lienzo, data)
   if (data.tipo === 'quieto') {
     quieto = data.valor
-    escenas.forEach((e) => (e.sucia = true))
+    escenas.forEach((e) => {
+      e.sucia = true
+      if (e.atardecer && e.camara) avisarArriba(e)
+    })
   }
 
   const escena = escenas.get(data.id)

@@ -47,8 +47,11 @@
  *
  * La paleta es una sola y va en el shader: no cambia por zona ni por página.
  * Cuando la escena se funde al final de su sección, va al blanco de la
- * página (`PAPEL`, el fondo de la zona cielo).
+ * página (`PAPEL`, el fondo de la zona cielo). El cielo va en `CIELO`, porque
+ * el documento toma el de arriba (`cieloDeArriba`).
  */
+
+import { suave } from './volutus.js'
 
 // Gravedad, en m/s².
 const G = 9.81
@@ -113,13 +116,18 @@ export function sol(t) {
   return [Math.sin(RUMBO_DEL_SOL) * c, Math.sin(elevacion), Math.cos(RUMBO_DEL_SOL) * c]
 }
 
+// El rayo del px `x`, `y` del lienzo, sin normalizar: el `rayo` de los shaders.
+function rayo({ ancho, alto, focal, mira }, x, y) {
+  const u = (alto / 2 - y) / focal
+  return [(x - ancho / 2) / focal, Math.cos(mira) * u + Math.sin(mira), Math.cos(mira) - Math.sin(mira) * u]
+}
+
 /**
  * El punto del agua, en m, bajo el px `x`, `y` del lienzo, y a qué distancia
  * del ojo está. Sobre el horizonte no hay agua.
  */
-function agua({ ancho, alto, focal, mira }, x, y) {
-  const u = (alto / 2 - y) / focal
-  const d = [(x - ancho / 2) / focal, Math.cos(mira) * u + Math.sin(mira), Math.cos(mira) - Math.sin(mira) * u]
+function agua(vista, x, y) {
+  const d = rayo(vista, x, y)
   if (d[1] >= -0.001) return null
   const s = OJOS / -d[1]
   return { x: d[0] * s, z: d[2] * s, distancia: s }
@@ -161,8 +169,47 @@ export function soplos(rafagas, ahora) {
   return datos
 }
 
+// El cielo, del horizonte al cénit, y la luz alrededor del sol: cada uno de
+// día y en la puesta (ver `TRAMA`).
+const CIELO = {
+  horizonte: ['#e7eef4', '#ffad5c'],
+  bajo: ['#cfe2f3', '#f2967e'],
+  medio: ['#a3c9ef', '#a79fd2'],
+  cenit: ['#6fa8e6', '#5b8fd6'],
+  luz: ['#fffbea', '#ffb86b'],
+}
+
+const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+const mezclar = (a, b, k) => a.map((n, i) => n + (b[i] - n) * k)
+
+/**
+ * El color del cielo al centro del borde de arriba del lienzo, con el sol en
+ * `t` (ver `sol`), en `rgb()` de CSS. Es lo que el documento muestra al
+ * rebotar el scroll (ver Nosotros.css). La cámara se ajusta a la pantalla, así
+ * que depende de su proporción: en una ancha, el borde mira más bajo y el
+ * cielo es más claro. Repite `cielo` de `TRAMA` en ese punto, adonde el disco
+ * no llega: si cambia uno, cambia el otro.
+ */
+export function cieloDeArriba(vista, t) {
+  const d = rayo(vista, vista.ancho / 2, 0)
+  const largo = Math.hypot(...d)
+  const [y, z] = [d[1] / largo, d[2] / largo]
+  const [, sy, sz] = sol(t)
+  const tarde = 1 - suave(sy, 0.03, DIA)
+  const hora = ([dia, puesta]) => mezclar(rgb(dia), rgb(puesta), tarde)
+  let c = mezclar(hora(CIELO.horizonte), hora(CIELO.bajo), suave(y, 0, 0.07))
+  c = mezclar(c, hora(CIELO.medio), suave(y, 0.04, 0.24))
+  c = mezclar(c, hora(CIELO.cenit), suave(y, 0.16, 0.62))
+  const a = Math.acos(y * sy + z * sz)
+  const bajo = 1 - suave(sy, -0.03, 0.4)
+  const resplandor = (0.5 * Math.exp(-a / 0.3) + 0.35 * Math.exp(-a / 0.07)) * bajo * (1 - suave(y, 0, 0.5))
+  const corona = 0.45 * Math.exp(-a / 0.05) + 0.2 * Math.exp(-a / 0.25)
+  c = mezclar(c, hora(CIELO.luz), corona + (resplandor - corona) * tarde)
+  return `rgb(${c.map(Math.round).join(' ')})`
+}
+
 const num = (n) => (Number.isInteger(n) ? `${n}.0` : `${n}`)
-const color = (hex) => `vec3(${[1, 3, 5].map((i) => num(+(parseInt(hex.slice(i, i + 2), 16) / 255).toFixed(4))).join(', ')})`
+const color = (hex) => `vec3(${rgb(hex).map((n) => num(+(n / 255).toFixed(4))).join(', ')})`
 
 // Lo que comparten las dos pasadas: el rayo de cada px del lienzo.
 const RAYO = `precision highp float;
@@ -260,12 +307,12 @@ void main() {
 export const TRAMA = `${RAYO}
 uniform sampler2D campo;
 uniform float blanco;
-const vec3 CENIT = ${color('#5b8fd6')}, MEDIO = ${color('#a79fd2')}, BAJO = ${color('#f2967e')};
-const vec3 HORIZONTE = ${color('#ffad5c')}, AGUA = ${color('#123f6b')}, ESTELA = ${color('#ff8f3a')};
-const vec3 CENIT_DE_DIA = ${color('#6fa8e6')}, MEDIO_DE_DIA = ${color('#a3c9ef')}, BAJO_DE_DIA = ${color('#cfe2f3')};
-const vec3 HORIZONTE_DE_DIA = ${color('#e7eef4')}, AGUA_DE_DIA = ${color('#1b5a92')}, ESTELA_DE_DIA = ${color('#ffc642')};
+const vec3 CENIT = ${color(CIELO.cenit[1])}, MEDIO = ${color(CIELO.medio[1])}, BAJO = ${color(CIELO.bajo[1])};
+const vec3 HORIZONTE = ${color(CIELO.horizonte[1])}, AGUA = ${color('#123f6b')}, ESTELA = ${color('#ff8f3a')};
+const vec3 CENIT_DE_DIA = ${color(CIELO.cenit[0])}, MEDIO_DE_DIA = ${color(CIELO.medio[0])}, BAJO_DE_DIA = ${color(CIELO.bajo[0])};
+const vec3 HORIZONTE_DE_DIA = ${color(CIELO.horizonte[0])}, AGUA_DE_DIA = ${color('#1b5a92')}, ESTELA_DE_DIA = ${color('#ffc642')};
 const vec3 FONDO = ${color('#edeef0')}, PAPEL = ${color('#f6f9fc')};
-const vec3 CORONA = ${color('#fffbea')}, RESPLANDOR = ${color('#ffb86b')}, DISCO = ${color('#fff5dc')}, DISCO_BAJO = ${color('#ffbd73')};
+const vec3 CORONA = ${color(CIELO.luz[0])}, RESPLANDOR = ${color(CIELO.luz[1])}, DISCO = ${color('#fff5dc')}, DISCO_BAJO = ${color('#ffbd73')};
 
 float tarde;
 vec3 hora(vec3 dia, vec3 puesta) {
