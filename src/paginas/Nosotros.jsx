@@ -52,10 +52,10 @@ const VOLUMEN = {
 
 const ALEJANDRIA = {
   id: 'alejandria',
-  autor: 'Wikipedia',
-  titulo: 'Biblioteca de Alejandría',
-  medio: 'Wikipedia en español',
-  url: 'https://es.wikipedia.org/wiki/Biblioteca_de_Alejandr%C3%ADa',
+  autor: 'World History Encyclopedia',
+  titulo: 'Library of Alexandria',
+  idioma: 'en',
+  url: 'https://www.worldhistory.org/Library_of_Alexandria/',
 }
 
 // La foto de la sección es de este artículo, y su crédito también.
@@ -265,8 +265,7 @@ export default function Nosotros() {
         <div className="contenedor atardecer-cabecera">
           <h1>¿Quiénes somos?</h1>
           <p className="entradilla">
-            Hacemos software en Chile: páginas web, tiendas online, apps, agentes de IA y automatizaciones. Antes
-            de hacerlo para otros, lo hicimos para nosotros.
+            Somos un par de amigos que compartimos la misma pasión por el desarrollo, el enfrentamiento de nuevos desafíos y la ambición de hacer cosas por nuestra propia cuenta. Creemos que la calidad se encuentra en la simpleza y detalle de las cosas.
           </p>
         </div>
 
@@ -335,37 +334,21 @@ export default function Nosotros() {
             ¿De dónde viene <dfn>Volutus</dfn>?
           </h2>
           <p className="nosotros-etimologia entra">
-            <span className="dato">vo·lu·tus</span> Del latín, «enrollado»: de <i lang="la">volvere</i>, «dar
-            vuelta».
-            <Cita fuente={VOLVO} />
+            <span className="dato">vo·lu·tus</span> Del latín, «enrollado»: de <i lang="la">volvere</i>, «dar vuelta».
+            <Cita fuente={VOLVO} /> Del mismo verbo viene <i lang="la">volumen</i>, el rollo de papiro
+            <Cita fuente={VOLUMEN} /> en que la Biblioteca de Alejandría guardaba el saber de su época.
+            <Cita fuente={ALEJANDRIA} />
           </p>
-
-          {/* Por qué el nombre: lo que hace el verbo y lo que salió de él. */}
-          <div className="nosotros-porque entra">
-            <p>Eso queremos hacer con la forma en que hoy se hace software: darla vuelta.</p>
-            <p>
-              Del mismo verbo viene <i lang="la">volumen</i>, el rollo de papiro
-              <Cita fuente={VOLUMEN} /> en que la Biblioteca de Alejandría guardaba el saber de su época.
-              <Cita fuente={ALEJANDRIA} /> Ese conocimiento lleva siglos reunido, y hoy está a un prompt de
-              distancia. Lo que falta no es información: es saber usarla.
-            </p>
-            <p>
-              Mientras otros se apuran por llegar, nosotros cuidamos el camino. No para entregar más tarde, sino
-              para no saltarnos los pasos que hacen que algo funcione.
-            </p>
-          </div>
 
           <figure className="nosotros-definicion entra">
             <blockquote cite={ATLAS.url}>
               <p>
-                «Masa de nubes larga, habitualmente baja, horizontal, aislada y con forma de tubo que con frecuencia
-                parece girar lentamente sobre un eje horizontal.»
+                «Masa de nubes larga, habitualmente baja, horizontal, aislada y con forma de tubo que con frecuencia parece girar lentamente sobre un eje horizontal.»
                 <Cita fuente={ATLAS} />
               </p>
             </blockquote>
             <figcaption>
-              Así la define el Atlas Internacional de Nubes de la Organización Meteorológica Mundial, en su edición
-              de 2017.
+              Así la define el Atlas Internacional de Nubes de la Organización Meteorológica Mundial, en su edición de 2017.
             </figcaption>
           </figure>
 
@@ -388,8 +371,7 @@ export default function Nosotros() {
                 decoding="async"
               />
               <figcaption>
-                Un ala delta junto a la Morning Glory, en el norte de Australia. Foto: Mark Watson / Red Bull
-                Content Pool.
+                Un ala delta junto a la Morning Glory, en el norte de Australia. Foto: Mark Watson / Red Bull Content Pool.
                 <Cita fuente={XCMAG} />
               </figcaption>
             </figure>
@@ -405,17 +387,16 @@ export default function Nosotros() {
             </ul>
 
             <p className="nosotros-relato entra">
-              En ciertas condiciones, de julio a noviembre, se forma sobre el golfo de Carpentaria y rueda por el
-              cielo del norte de Queensland. De noche, el aire que baja de la península del Cabo York pasa bajo
-              una capa de aire más tibio y levanta una onda que cruza el golfo: en su frente el aire sube y forma
-              la nube, que por detrás se evapora. Dura hasta que el calor del día deshace esa capa.
+              En ciertas condiciones, de julio a noviembre, se forma sobre el golfo de Carpentaria y rueda por el cielo del norte de Queensland. De noche, el aire que baja de la península del Cabo York pasa bajo una capa de aire más tibio y levanta una onda que cruza el golfo: en su frente el aire sube y forma la nube, que por detrás se evapora. Dura hasta que el calor del día deshace esa capa.
               <Cita fuente={XCMAG} />
             </p>
           </div>
 
           <div className="nosotros-bloque">
             <h3 className="subtitulo entra">Para nosotros</h3>
-            <p className="entradilla entra">Cuatro palabras de su definición dicen lo que queremos ser.</p>
+            <p className="entradilla entra">
+              No queremos reinventar el software, sino cuidar cómo se hace. El conocimiento está a un prompt de distancia; lo que falta es saber usarlo, y eso se logra sin saltarse los pasos que hacen que algo funcione. Cuatro palabras de la definición dicen cómo:
+            </p>
 
             <ol className="numerada">
               {RASGOS.map(({ titulo, nube, fuente, nosotros }) => (
@@ -441,7 +422,7 @@ export default function Nosotros() {
                   <a href={url} target="_blank" rel="noopener">
                     <cite lang={idioma}>{titulo}</cite>
                   </a>
-                  . {medio}.
+                  {medio && `. ${medio}`}.
                 </li>
               ))}
             </ol>
