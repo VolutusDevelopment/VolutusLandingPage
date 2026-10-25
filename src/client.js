@@ -17,6 +17,7 @@ import initNubes from './nubes.js'
 import initCopiar from './copiar.js'
 import initSocios from './socios.js'
 import initOla from './ola.js'
+import initFlota from './flota.js'
 import initParvada from './parvada.js'
 import initChat from './chat.js'
 import initEstimado from './estimado.js'
@@ -330,6 +331,7 @@ export default function init() {
     initSocios,
     initOla,
     initParvada,
+    initFlota,
     initChat,
     initEstimado,
     initMapa,

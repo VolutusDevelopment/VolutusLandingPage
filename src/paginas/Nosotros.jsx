@@ -2,6 +2,7 @@ import Celdas from '../components/Celdas.jsx'
 import Pagina from '../components/Pagina.jsx'
 import { SOCIOS } from '../data/socios.js'
 import { ABAJO, ARRIBA, CAE, HERIDO } from '../lib/pato.js'
+import { BARCO, COLORES_BARCO, COLORES_ESCOLTA, ESCOLTA } from '../lib/portaaviones.js'
 import { OLA, trazoDe } from '../lib/logotipo.js'
 
 /**
@@ -10,7 +11,8 @@ import { OLA, trazoDe } from '../lib/logotipo.js'
  * sol baja hasta ponerse en el mar, como en Chile (`data-vista="atardecer"`,
  * ver lib/atardecer.js). Apenas se deja el último socio, lejos, sobre el
  * horizonte, cruza una parvada que se puede cazar con el cursor o el dedo
- * (`Parvada`), y la escena queda sola. El sol se pone hasta la mitad y la
+ * (`Parvada`), y la escena queda sola. Si cae toda, del fondo llega despacio un
+ * portaaviones, el enlace al juego (`Flota`). El sol se pone hasta la mitad y la
  * escena se recorta en una lámina que queda sobre el título de la sección
  * siguiente y se va con el texto, con el sol quieto y la parvada adentro. Después baja por el
  * blanco y termina en la caída, con el cierre y el pie de día (ver `cierre`
@@ -186,6 +188,57 @@ function Parvada() {
   )
 }
 
+// La escolta que navega lejos, sobre el horizonte, detrás del portaaviones:
+// `x` es dónde está, `w` su ancho (los dos en vw) y `dur`, lo que tarda en
+// recorrer su trecho. Los más chicos están más lejos y avanzan más lento.
+const BUQUES = [
+  { x: 4, w: 4.9, dur: 90 },
+  { x: 14, w: 3.4, dur: 120 },
+  { x: 25, w: 2.1, dur: 170 },
+  { x: 33, w: 1.5, dur: 210 },
+  { x: 49, w: 1.1, dur: 240 },
+  { x: 70, w: 1.7, dur: 190 },
+  { x: 76, w: 3.9, dur: 110 },
+  { x: 86, w: 2.5, dur: 150 },
+  { x: 92, w: 5.5, dur: 80 },
+]
+
+/**
+ * El portaaviones «Sitting Ducks» y su escolta. Llegan cuando cae el último
+ * pato (src/parvada.js): la escolta ya navega lejos y el portaaviones sale de
+ * la lejanía y se acerca despacio (`.llega`, ver Nosotros.css). Es el enlace al
+ * juego, y la página lo pulsa por él cuando algo se lo tapa (src/flota.js).
+ */
+function Flota() {
+  return (
+    <div className="flota">
+      {BUQUES.map(({ x, w, dur }) => (
+        <svg
+          key={x}
+          className="escolta"
+          viewBox="0 0 30 8"
+          shapeRendering="crispEdges"
+          focusable="false"
+          aria-hidden="true"
+          style={{ '--x': `${x}vw`, '--w': `${w}vw`, '--dur': `${dur}s` }}
+        >
+          <Celdas filas={ESCOLTA} colores={COLORES_ESCOLTA} />
+        </svg>
+      ))}
+      <a className="barco" href="/operacion-venganza" aria-label="Sitting Ducks: empezar Operación Venganza">
+        <svg viewBox="0 0 100 20" shapeRendering="crispEdges" focusable="false" aria-hidden="true">
+          <Celdas filas={BARCO} colores={COLORES_BARCO} />
+        </svg>
+        <span className="reflejo" aria-hidden="true">
+          <svg viewBox="0 0 100 20" shapeRendering="crispEdges" focusable="false">
+            <Celdas filas={BARCO} colores={COLORES_BARCO} />
+          </svg>
+        </span>
+      </a>
+    </div>
+  )
+}
+
 /** La llamada a una fuente: su número, que lleva a la lista de fuentes. */
 function Cita({ fuente }) {
   const numero = FUENTES.indexOf(fuente) + 1
@@ -261,11 +314,12 @@ export default function Nosotros() {
         <div className="atardecer-telon">
           <canvas className="nubes" data-vista="atardecer" data-ocaso=".atardecer-pausa" aria-hidden="true" />
           <Parvada />
+          <Flota />
         </div>
         <div className="contenedor atardecer-cabecera">
           <h1>¿Quiénes somos?</h1>
           <p className="entradilla">
-            Somos un par de amigos que compartimos la misma pasión por el desarrollo, el enfrentamiento de nuevos desafíos y la ambición de hacer cosas por nuestra propia cuenta. Creemos que la calidad se encuentra en la simpleza y detalle de las cosas.
+            Somos un par de amigos que compartimos la misma pasión por el desarrollo, el enfrentamiento de nuevos desafíos y la ambición de hacer cosas por nuestra propia cuenta. 
           </p>
         </div>
 

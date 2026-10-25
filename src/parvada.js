@@ -9,8 +9,8 @@
 // (`pointercancel`) antes de soltar. El pato mide 12 px en el teléfono, así que
 // el toque vale hasta `DEDO` px fuera de él, y cae el más cercano. El cursor
 // los bota uno a uno, con `PAUSA` entre uno y otro aunque barra la V entera;
-// cada toque es un tiro y no espera. Pueden caer todos: entonces el pato del
-// mar del footer sale comentándolo (`data-fetiche`, ver nubes.js). El vuelo y
+// cada toque es un tiro y no espera. Pueden caer todos: entonces llega el
+// portaaviones (`.flota`, ver flota.js). El vuelo y
 // la caída los lleva el CSS (Nosotros.css); aquí se les da la salida y se mira
 // si el puntero da en un pato que se vea: fuera de la lámina, recortado, o
 // detrás de las tarjetas de los socios, no se caza. La sección siguiente se
@@ -45,8 +45,7 @@ export default function initParvada() {
     ultimo = timeStamp
     if (patos.length) return
     caza.abort()
-    const mar = document.querySelector('.nubes[data-vista="mar"]')
-    if (mar) mar.dataset.fetiche = ''
+    document.querySelector('.flota')?.classList.add('llega')
   }
 
   const salida = new IntersectionObserver(

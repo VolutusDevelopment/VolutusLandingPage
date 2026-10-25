@@ -364,9 +364,7 @@ function dejanVer(desde, tapa) {
 }
 
 // El pato del mar es del pintor, que lo hace nadar y salir a flote; aquí va su
-// enlace a /patos, que llega oculto y lo sigue (`seguirPato`). Si en /nosotros
-// se cazó toda la parvada, el lienzo dice `data-fetiche` (src/parvada.js), y
-// el pato sale comentándolo.
+// enlace a /patos, que llega oculto y lo sigue (`seguirPato`).
 function soltarPato(pintor, lienzo, id) {
   const enlace = document.createElement('a')
   enlace.className = 'pato-del-mar'
@@ -375,7 +373,7 @@ function soltarPato(pintor, lienzo, id) {
   enlace.hidden = true
   lienzo.after(enlace)
   patos.set(id, enlace)
-  pintor.postMessage({ tipo: 'pato', id, fetiche: 'fetiche' in lienzo.dataset })
+  pintor.postMessage({ tipo: 'pato', id })
 }
 
 // El pintor avisa dónde pintó al pato, en px de su lienzo, y si ya salió a
