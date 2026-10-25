@@ -1,7 +1,8 @@
 // La parvada de /nosotros (Nosotros.jsx): quince patos que cruzan una vez,
 // lejos, sobre el mar del atardecer, apenas se deja el último socio: salen
 // cuando la pausa que lo sigue (`.atardecer-pausa`) asoma un poco desde
-// abajo, a un 15 % de la pantalla. Vuelan en el telón, así que si la escena se recorta en la lámina
+// abajo, a un 15 % de la pantalla, o ya quedó atrás (un salto, una recarga con
+// la página a medio camino): basta con que su borde de arriba esté sobre esa línea. Vuelan en el telón, así que si la escena se recorta en la lámina
 // mientras cruzan, siguen adentro. Al que el cursor le pasa encima queda
 // cazado, como en el Duck Hunt: se pasma y cae al mar. Con el dedo se caza
 // tocando, no arrastrando: arrastrar es desplazarse, y el navegador lo cancela
@@ -49,8 +50,8 @@ export default function initParvada() {
   }
 
   const salida = new IntersectionObserver(
-    ([{ isIntersecting }]) => {
-      if (!isIntersecting) return
+    ([{ boundingClientRect, rootBounds }]) => {
+      if (boundingClientRect.top > rootBounds.bottom) return
       salida.disconnect()
       parvada.classList.add('vuela')
       const opciones = { passive: true, signal: caza.signal }

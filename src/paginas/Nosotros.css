@@ -103,10 +103,8 @@
    cielo que queda en la lámina (`--cielo-de-la-lamina`, ver la lámina), que
    se recorta en el horizonte: el que cae, cae al mar. Así, si la escena se
    recorta mientras cruzan, siguen adentro y se van con ella. Salen ya en el
-   cielo, con el último en el borde de la lámina, mientras la última tarjeta
-   todavía los tapa: así se ven apenas la escena queda sola, aunque se siga
-   bajando. Entrando desde el borde de la pantalla tardaban segundos en
-   asomar, y quien bajaba seguido no los veía. Cada pato es
+   cielo, con el primero en el borde izquierdo de la pantalla y los demás
+   entrando tras él. Cada pato es
    una ventana de su ancho sobre la tira de sus cuadros, que se corre de uno
    a otro: aletea a ocho cuadros por segundo, como en el juego, y cada pato a
    destiempo.
@@ -182,7 +180,7 @@
 
 @keyframes cruzar {
   from {
-    translate: calc(max(0px, (100% - var(--ancho-maximo)) / 2) + var(--margen-lateral) + 7 * 1.3 * var(--ancho));
+    translate: 0;
   }
 
   to {
