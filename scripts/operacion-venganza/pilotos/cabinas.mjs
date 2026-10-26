@@ -4,7 +4,7 @@
 // en perspectiva, como la cámara de cabina de Top Gun: detrás se ven el lomo,
 // las alas, el mar y el resto del escuadrón en formación.
 //
-//   node scripts/pilotos/cabinas.mjs <carpeta> <hoja.html>
+//   node scripts/operacion-venganza/pilotos/cabinas.mjs <carpeta> <hoja.html>
 //
 // Escribe <carpeta>/project/V15-<piloto>-cabina.dc.html. Con PRUEBA=1 solo
 // arma la hoja, con un cuadro por toma.
@@ -13,11 +13,13 @@ import { el, placa, tubo, pixel3d } from './tres.mjs'
 import * as M from './modelos.mjs'
 import { RAMPAS as C, hueso, disco, ambos } from './modelos.mjs'
 import { PERSONAJES, cabina } from './cuerpos.mjs'
+import { celda, fila, pagina } from './tablero.mjs'
 import { writeFileSync, mkdirSync } from 'node:fs'
 
 const [RAIZ, HOJA] = process.argv.slice(2)
 const N = 72
 const TAM = Number(process.env.TAM ?? 3)
+const LADO = N * TAM
 const CUADROS_QUIETO = 8
 const CUADROS_GESTO = 12
 
@@ -239,21 +241,7 @@ const tomasDe = (cfg) => {
 const tomasGesto = (cfg, lado) => [tomasDe(cfg)[0], ['tres cuartos', toma(aCaza(cfg, [2.8, 0.8, lado * 1.2]), aCaza(cfg, [0, 0.1, -lado * 0.1]))]]
 const encuadreDe = (cfg) => ({ c: aCaza(cfg, [0.45, 0.1, 0]), radio: 2.2 * cfg.k })
 
-const mono = "font-family: 'Geist Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase"
-
 const escena = (cfg, pilote, palanca = PALANCA, acelerador = ACELERADOR) => [mar, ...nubes, ...cfg.escuadron, ...cfg.avion, ...escalar(cfg, [...interior(cfg), ...pilote.filter((f) => !f.pata), ...mandos(palanca, acelerador)])]
-
-const animacion = (cuadros, clase, duracion, quieto) =>
-  cuadros.map((svg, k) => svg.replace('<svg style="display: block"', `<svg class="f ${clase}${k === quieto ? ' quieto' : ''}" style="position: absolute; left: 0; top: 0; animation-delay: -${(((cuadros.length - k) % cuadros.length) * duracion / cuadros.length).toFixed(3)}s"`)).join('')
-
-const celda = (titulo, cuadros, clase, duracion, quieto) => `<div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 232px; display: flex; align-items: center; justify-content: center; background: #5c94fc; border-radius: 12px"><div style="position: relative; width: ${N * TAM}px; height: ${N * TAM}px">${animacion(cuadros, clase, duracion, quieto)}</div></div><span style="${mono}; color: #47607a">${titulo}</span></div>`
-
-const fila = (titulo, celdas) => `<div style="display: flex; flex-direction: column; gap: 12px">
-<h2 style="margin: 0; font-size: 18px; font-weight: 800">${titulo}</h2>
-<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px">
-${celdas.join('\n')}
-</div>
-</div>`
 
 const TEXTOS = {
   'duck-one': ['Boeing F-15EX Eagle II, gris tradicional', 'Desde dentro de su F-15EX, con la cámara sobre el tablero: pantalla panorámica, dos retrovisores en el arco del parabrisas, de uno de los cuales cuelga una medalla, y detrás el escuadrón en formación sobre el mar.'],
@@ -279,55 +267,23 @@ const lamina = (p) => {
   const gestos = p.gestos.map((g) => ({ ...g, cuadros: Array.from({ length: CUADROS_GESTO }, (_, k) => escena(cfg, g.pose(k / CUADROS_GESTO))) }))
   cabina.reposo = null
   const pinta = (cuadros, t) => cuadros.map((f) => pixel3d(f, t, N, TAM, cfg.encuadre))
-  const celdasQuieto = tomas.map(([nombre, t]) => celda(nombre, pinta(quieto, t), 'p8', 0.8, 2))
-  const celdasGesto = gestos.flatMap((g) => tomasGesto(cfg, g.lado).map(([nombre, t]) => celda(`${g.nombre} · ${nombre}`, pinta(g.cuadros, t), 'g12', 1.8, 6)))
-  const celdasHabla = tomas.map(([nombre, t]) => celda(nombre, pinta(habla, t), 'g12', 1.8, 3))
+  const celdasQuieto = tomas.map(([nombre, t]) => celda(nombre, pinta(quieto, t), 'p8', 0.8, 2, LADO))
+  const celdasGesto = gestos.flatMap((g) => tomasGesto(cfg, g.lado).map(([nombre, t]) => celda(`${g.nombre} · ${nombre}`, pinta(g.cuadros, t), 'g12', 1.8, 6, LADO)))
+  const celdasHabla = tomas.map(([nombre, t]) => celda(nombre, pinta(habla, t), 'g12', 1.8, 3, LADO))
   const [modelo, detalle] = TEXTOS[p.archivo]
-  const html = `<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>${p.nombre}, en la cabina</title>
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@1,800&family=Geist:wght@400;800&family=Geist+Mono:wght@400&display=swap">
-<style>
-body{margin:0}
-.f{opacity:0}
-.p8{animation:cuadro8 .8s step-end infinite}
+  const html = pagina({
+    titulo: `${p.nombre}, en la cabina`,
+    papel: p.papel,
+    nombre: p.nombre,
+    bajada: modelo,
+    detalle,
+    animaciones: `.p8{animation:cuadro8 .8s step-end infinite}
 .g12{animation:cuadro12 1.8s step-end infinite}
 @keyframes cuadro8{0%{opacity:1}12.5%{opacity:0}100%{opacity:0}}
-@keyframes cuadro12{0%{opacity:1}8.333%{opacity:0}100%{opacity:0}}
-@media (prefers-reduced-motion: reduce){.f{animation:none}.quieto{opacity:1}}
-</style>
-</helmet>
-<div style="width: 1440px; height: 1180px; box-sizing: border-box; padding: 40px 56px; display: flex; flex-direction: column; gap: 32px; background: #f6f9fc; font-family: Geist, system-ui, sans-serif; color: #0a1a2a">
-<div style="display: flex; gap: 48px; align-items: flex-end">
-<div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; width: 420px">
-<span style="${mono}; color: #47607a">${p.papel}</span>
-<h1 style="margin: 0; font-family: Archivo, sans-serif; font-style: italic; font-weight: 800; font-size: 34px; line-height: 1.05">${p.nombre}</h1>
-<span style="font-size: 15px; line-height: 1.4">${modelo}</span>
-</div>
-<p style="margin: 0; font-size: 15px; line-height: 1.6; max-width: 760px">${detalle}</p>
-</div>
-${fila('Al mando', celdasQuieto)}
-${fila('Gesticulando', celdasGesto)}
-${fila('Hablando', celdasHabla)}
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
-class Component extends DCLogic {
-renderVals() {
-return {};
-}
-}
-</script>
-</body>
-</html>
-`
+@keyframes cuadro12{0%{opacity:1}8.333%{opacity:0}100%{opacity:0}}`,
+    filas: [fila('Al mando', celdasQuieto), fila('Gesticulando', celdasGesto), fila('Hablando', celdasHabla)],
+    alto: 1180,
+  })
   return { html, quieto, habla, gestos, tomas, encuadre: cfg.encuadre }
 }
 

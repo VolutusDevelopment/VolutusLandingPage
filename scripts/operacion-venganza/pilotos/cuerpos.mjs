@@ -80,8 +80,9 @@ const vaiven = (u, veces = 2) => Math.sin(u * Math.PI * 2 * veces)
 
 // Figura completa: cuerpo de arriba, brazos y piernas, con el bamboleo
 // aplicado al tronco y las piernas tendidas de la cadera movida al suelo.
-const figura = (p, { tronco, manos = {}, extra = [], fase = null, salto = 0, inclina = 0, sinSombra }) => {
-  const paso = fase === null ? { φ: null, rot: [0, 0, inclina], alto: salto } : andar(fase, p.andar)
+// agacha baja la cadera sin mover los pies: las piernas se acortan.
+const figura = (p, { tronco, manos = {}, extra = [], fase = null, salto = 0, agacha = 0, inclina = 0, sinSombra }) => {
+  const paso = fase === null ? { φ: null, rot: [0, 0, inclina], alto: salto - agacha } : andar(fase, p.andar)
   const mov = transformar(paso.rot, p.pivote, [0, paso.alto, 0])
   const brazos = p.brazo ? ambos((s) => brazo([p.hombro[0], p.hombro[1], s * p.hombro[2]], manos[s], { ...p.brazo, dobla: p.dobla(s) })) : []
   const piernas = ambos((s) => {
@@ -394,3 +395,5 @@ const MOBY = {
 }
 
 export const PERSONAJES = [DUCK_ONE, MOBY, DUKE, DUKY]
+
+export { figura, transformar, pDuckOne, manosAndando }

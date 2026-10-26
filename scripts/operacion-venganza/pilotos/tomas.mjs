@@ -1,6 +1,6 @@
 // Láminas v12: el busto de cada piloto y su caza, desde seis tomas fijas.
 //
-//   node scripts/pilotos/tomas.mjs <carpeta>
+//   node scripts/operacion-venganza/pilotos/tomas.mjs <carpeta>
 //
 // Escribe <carpeta>/project/V12-<piloto>.dc.html, un tablero del lienzo de Design.
 
