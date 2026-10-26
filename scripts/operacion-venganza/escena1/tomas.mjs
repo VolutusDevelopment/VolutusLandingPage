@@ -7,7 +7,7 @@
 // atacante: 'cursor' o 'huella'.
 
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, silaba, suave } from './personajes.mjs'
-import { MAR, PANTALLA, portaaviones, destructor, navegando, sala, colocar } from './lugares.mjs'
+import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, sala, colocar } from './lugares.mjs'
 
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
@@ -15,7 +15,8 @@ const alarma = (u) => Math.floor(u * 12) % 2
 
 // ── Fuera ────────────────────────────────────────────────────────────────
 
-// El mar vacío; aparece un portaaviones, otro, otro más y la escolta. El Sitting Ducks se acerca.
+// Lejos, a ras del agua: el mar vacío; aparece un portaaviones, otro, otro más
+// y la escolta, y el Sitting Ducks, una mancha en el horizonte, se viene acercando.
 const FLOTA = [
   [0.15, portaaviones({ avion: false }), 172, [2900, 0, -950]],
   [0.3, portaaviones({ avion: false }), 188, [3300, 0, 820]],
@@ -28,8 +29,18 @@ const FLOTA = [
 const llegada = (u) => [
   MAR,
   ...FLOTA.filter(([desde]) => u >= desde).flatMap(([, formas, giro, en]) => navegando(formas, giro, en)),
-  ...(u >= 0.25 ? navegando(portaaviones({ alarma: alarma(u) }), 158, [1500 - 1100 * suave((u - 0.25) / 0.75), 0, 160]) : []),
+  ...(u >= 0.1 ? navegando(portaaviones({ alarma: alarma(u) }), 158, [3800 - 3350 * suave((u - 0.1) / 0.9), 0, 300 - 120 * u]) : []),
 ]
+
+// De cerca, por estribor: la cámara corre por el costado desde la proa hasta el
+// nombre pintado en el casco. La escolta navega lejos, detrás.
+const ESCOLTA = [
+  [destructor(), 10, [-700, 0, -900]],
+  [destructor(), -5, [600, 0, -1400]],
+  [portaaviones({ avion: false }), 5, [-200, 0, -2600]],
+]
+const costado = (u) => [MAR, ...ESCOLTA.flatMap(([formas, giro, en]) => navegando(formas, giro, en)), ...navegando(portaaviones({ alarma: alarma(u) }), 0, [0, 0, 0], [168, 6, 10])]
+const CENTRO_DEL_NOMBRE = NOMBRE.x + 25.6
 
 // En cubierta: marineros que corren de un lado a otro y el avión de mantenimiento atravesado en la pista.
 const CORREDORES = [
@@ -62,7 +73,14 @@ const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
 const SOBRE_EL_HOMBRO = [-2.6, 1.95, -2.3]
 
 export const TOMAS_3D = {
-  llegada: { escena: llegada, camara: fija([0, 9, 0], [1000, -30, 120], 46) },
+  llegada: { escena: llegada, camara: fija([0, 6, 0], [1000, -12, 180], 40) },
+  nombre: {
+    escena: costado,
+    camara: (u) => {
+      const k = suave(u)
+      return [lerp([270, 16, 150], [CENTRO_DEL_NOMBRE, 13, 108], k), lerp([150, 10, 10], [CENTRO_DEL_NOMBRE, 10, 0], k), 44]
+    },
+  },
   cubierta: { escena: cubierta, camara: fija([104, 23.2, 5], [-20, 28, -8], 72) },
   subida: {
     escena: (u) => [MAR, ...portaaviones({ alarma: alarma(u) })],

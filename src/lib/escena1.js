@@ -7,7 +7,8 @@
  * con el motor de las láminas (scripts/operacion-venganza/escena1/sprites.mjs
  * los escribe en `public/`). `ms` es lo que dura cada cuadro; `unaVez`, que
  * la tira corre una sola vez y se queda en el último (la flota que llega, la
- * cámara que sube); si no, da vueltas mientras duran sus líneas.
+ * cámara que sube); si no, da vueltas mientras duran sus líneas. Una toma
+ * dura lo que sus líneas, y nunca menos que su tira.
  *
  * Desde la toma del atacante, la pantalla de la sala muestra lo que usa quien
  * juega: un cursor o una huella. Esas tomas (`segunModo`) tienen una tira por
@@ -33,9 +34,18 @@ const OFICIAL = 'Oficial de inteligencia'
 export const TOMAS = [
   {
     id: 'llegada',
-    ms: 300,
+    ms: 250,
+    cuadros: 24,
     unaVez: true,
     lineas: [{ texto: 'El mar, vacío. Se oye un ruido lejano de motores.' }, { texto: 'Aparece un portaaviones. Después otro. Y otro más.' }],
+  },
+  // Panorámica por el costado del barco, hasta su nombre.
+  {
+    id: 'nombre',
+    ms: 200,
+    cuadros: 24,
+    unaVez: true,
+    lineas: [{ texto: 'El más cercano, el Sitting Ducks, se aproxima lentamente.' }],
   },
   {
     id: 'cubierta',

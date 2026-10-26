@@ -170,6 +170,7 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
 // Cada celda dice su toma y sus líneas, del guion del juego (src/lib/escena1.js).
 const NOMBRES = {
   llegada: 'llegan los barcos',
+  nombre: 'el Sitting Ducks',
   cubierta: 'la cubierta',
   subida: 'sube a la sala de mando',
   sala: 'la sala de mando',
@@ -195,18 +196,18 @@ const celdaDeToma = (id, modo = 'cursor', aparte = '') => {
 
 lamina('E1-tomas-llegada', {
   titulo: 'Escena 1 · la llegada',
-  papel: 'Escena 1 · tomas 1 a 3',
+  papel: 'Escena 1 · tomas 1 a 4',
   nombre: 'La llegada',
   bajada: 'Del mar vacío al puente del Sitting Ducks',
-  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar. Tres tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
-  filas: [fila('Fuera', ['llegada', 'cubierta', 'subida'].map((id) => celdaDeToma(id)), 3)],
-  alto: 620,
+  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar. Cuatro tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, el costado del Sitting Ducks con su nombre, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
+  filas: [fila('Fuera', ['llegada', 'nombre', 'cubierta', 'subida'].map((id) => celdaDeToma(id)), 3)],
+  alto: 1100,
   vistas: tomarVistas(),
 })
 
 lamina('E1-tomas-sala', {
   titulo: 'Escena 1 · la sala de mando',
-  papel: 'Escena 1 · tomas 4 a 12',
+  papel: 'Escena 1 · tomas 5 a 13',
   nombre: 'En la sala de mando',
   bajada: 'El almirante, el oficial y la fotografía del atacante',
   detalle: 'Nueve tomas dentro, siempre en la misma sala: el plano general, la pantalla por sobre el hombro del almirante, el oficial que lee sin expresión, las gafas, el recorrido por los quince caídos hasta el oficial que señala, el atacante (cursor en escritorio, huella en teléfono: el navegador elige) y la orden final. Desde el atacante, la pantalla muestra lo que use quien juega.',

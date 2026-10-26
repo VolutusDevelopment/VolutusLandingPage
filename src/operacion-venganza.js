@@ -95,7 +95,9 @@ function escena(raiz, tiras, modo) {
     } else return terminar()
     const actual = TOMAS[toma].lineas[linea]
     decir(actual)
-    espera = setTimeout(avanzar, actual ? leer(textoDe(actual, modo)) : cuadrosDe(TOMAS[toma]) * TOMAS[toma].ms + 200)
+    // La última línea espera, además, a que termine la tira.
+    const resta = linea >= TOMAS[toma].lineas.length - 1 ? desde + cuadrosDe(TOMAS[toma]) * TOMAS[toma].ms + 200 - performance.now() : 0
+    espera = setTimeout(avanzar, Math.max(actual ? leer(textoDe(actual, modo)) : 0, resta))
   }
 
   const terminar = () => {

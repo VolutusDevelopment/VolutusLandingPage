@@ -27,17 +27,32 @@ export const colocar = (formas, { k, giro = 0, en, suelo = -2.3 }) => {
 
 export const poner = (formas, giro, en) => transformar([0, giro, 0], [0, 0, 0], en).formas(formas)
 
-// ── El 15 de cuadritos ───────────────────────────────────────────────────
+// ── Letras de cuadritos ──────────────────────────────────────────────────
 
-const CIFRAS = { 1: ['.#.', '##.', '.#.', '.#.', '###'], 5: ['###', '#..', '##.', '..#', '##.'] }
-// ¿Cae (u, v) en el 15 de `alto` de alto? Empieza en u = 0 y baja desde v = alto.
-const quince = (u, v, alto) => {
+// Lo que va pintado en el barco: el 15 y su nombre. Cuatro de ancho y cinco de alto.
+const LETRAS = {
+  1: ['.#..', '##..', '.#..', '.#..', '###.'],
+  5: ['####', '#...', '###.', '...#', '###.'],
+  S: ['.###', '#...', '.##.', '...#', '###.'],
+  I: ['###.', '.#..', '.#..', '.#..', '###.'],
+  T: ['###.', '.#..', '.#..', '.#..', '.#..'],
+  N: ['#..#', '##.#', '#.##', '#..#', '#..#'],
+  G: ['.###', '#...', '#.##', '#..#', '.###'],
+  D: ['###.', '#..#', '#..#', '#..#', '###.'],
+  U: ['#..#', '#..#', '#..#', '#..#', '.##.'],
+  C: ['.###', '#...', '#...', '#...', '.###'],
+  K: ['#..#', '#.#.', '##..', '#.#.', '#..#'],
+  ' ': ['....', '....', '....', '....', '....'],
+}
+// ¿Cae (u, v) en el texto de `alto` de alto? Empieza en u = 0, v = 0 abajo.
+const enTexto = (texto, u, v, alto) => {
   const celda = alto / 5
   const i = Math.floor(u / celda)
   const j = Math.floor((alto - v) / celda)
-  if (i < 0 || j < 0 || j > 4 || i > 6 || i % 4 === 3) return false
-  return CIFRAS['15'[Math.floor(i / 4)]][j][i % 4] === '#'
+  const letra = LETRAS[texto[Math.floor(i / 5)]]
+  return Boolean(letra && i >= 0 && j >= 0 && j < 5 && i % 5 < 4 && letra[j][i % 5] === '#')
 }
+const ancho = (texto, alto) => ((texto.length * 5 - 1) * alto) / 5
 
 // ── El mar ───────────────────────────────────────────────────────────────
 
@@ -61,6 +76,9 @@ const ISLA = ['#d0d8e0', '#a4b0bc', '#7a8692', '#46505a']
 const AMARILLO = '#f2c440'
 
 
+// El nombre va a los dos costados, bajo la cubierta y a proa de la isla, y se lee de afuera.
+export const NOMBRE = { texto: 'SITTING DUCKS', x: 40 }
+
 const casco = tubo(
   [
     [-158, 36, 21, 8.5, 6],
@@ -73,7 +91,8 @@ const casco = tubo(
   CASCO,
   {
     pinta: ([x, y, z]) => {
-      if (x > 124 && x < 146 && y > 7 && y < 18 && quince(z > 0 ? x - 124 : 146 - x, y - 7, 10)) return '#f4f4ee'
+      if (x > 124 && x < 146 && y > 7 && y < 18 && enTexto('15', z > 0 ? x - 124 : 146 - x, y - 7, 10)) return '#f4f4ee'
+      if (x > NOMBRE.x && x < NOMBRE.x + ancho(NOMBRE.texto, 4) && y > 4 && y < 8 && enTexto(NOMBRE.texto, z > 0 ? x - NOMBRE.x : NOMBRE.x + ancho(NOMBRE.texto, 4) - x, y - 4, 4)) return '#f4f4ee'
       if (y > 12 && y < 17 && ((x > -60 && x < -35) || (x > 15 && x < 40))) return '#2a3036'
       return null
     },
@@ -87,7 +106,7 @@ const pintaCubierta = ([x, y, z]) => {
   if (x < 70 && Math.abs(d) < 0.5 && Math.floor(x / 8) % 2 === 0) return '#f4f4ee'
   if (x < 70 && x > -150 && Math.abs(Math.abs(d) - 12) < 0.4) return '#f4f4ee'
   if (x > 40 && (Math.abs(z - 8) < 0.35 || Math.abs(z + 6) < 0.35)) return AMARILLO
-  if (x > 126 && x < 150 && Math.abs(z) < 9 && quince(z + 9, 150 - x, 24)) return '#f4f4ee'
+  if (x > 126 && x < 150 && Math.abs(z) < 9 && enTexto('15', z + 9, 150 - x, 10)) return '#f4f4ee'
   return null
 }
 
