@@ -1,6 +1,7 @@
 /**
  * Operación Venganza (paginas/OperacionVenganza.jsx): la pantalla de carga y
- * la escena 1, «El portaaviones», con el guion de lib/escena1.js.
+ * la escena de la página, la que diga su `data-escena`, con su guion:
+ * lib/escena1.js o lib/escena3.js. Las medidas de las tiras son las de la 1.
  *
  * Mientras duck-one camina (lo anima el CSS), se descargan las tiras de las
  * tomas y la barra se llena un bloque por paso, nunca más rápido que `PASO`:
@@ -14,20 +15,24 @@
  * que flota (ratón, trackpad) es un cursor, y si no, una huella.
  */
 
-import { ALTO, LADO, TOMAS, cuadrosDe, rutaDeToma, textoDe } from './lib/escena1.js'
+import * as escena1 from './lib/escena1.js'
+import * as escena3 from './lib/escena3.js'
 import { quieto } from './lib/movimiento.js'
 
+const { ALTO, LADO, cuadrosDe, textoDe } = escena1
+const GUIONES = { 1: escena1, 3: escena3 }
 const PASO = 120
 const leer = (texto) => Math.max(1100, 500 + texto.length * 40)
 
 export default function iniciar(raiz) {
+  const { TOMAS, rutaDeToma } = GUIONES[raiz.dataset.escena]
   const modo = matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella'
   const tiras = TOMAS.map((toma) => {
     const imagen = new Image()
     imagen.src = rutaDeToma(toma, modo)
     return imagen
   })
-  cargar(raiz, tiras, () => escena(raiz, tiras, modo))
+  cargar(raiz, tiras, () => escena(raiz, TOMAS, tiras, modo))
 }
 
 function cargar(raiz, tiras, listo) {
@@ -49,7 +54,7 @@ function cargar(raiz, tiras, listo) {
   }, PASO)
 }
 
-function escena(raiz, tiras, modo) {
+function escena(raiz, TOMAS, tiras, modo) {
   const lienzo = raiz.querySelector('.escena-cuadro')
   const pincel = lienzo.getContext('2d')
   const quien = raiz.querySelector('.escena-quien')
@@ -104,7 +109,7 @@ function escena(raiz, tiras, modo) {
     cancelAnimationFrame(pintando)
     raiz.querySelector('.escena').hidden = true
     raiz.querySelector('.fin').hidden = false
-    raiz.querySelector('.fin a').focus()
+    raiz.querySelector('.fin .boton-primario').focus()
   }
 
   raiz.querySelector('.escena-siguiente').addEventListener('click', avanzar)

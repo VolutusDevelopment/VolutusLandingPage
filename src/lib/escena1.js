@@ -114,7 +114,21 @@ export const TOMAS = [
     ms: 150,
     unaVez: true,
     segunModo: true,
-    lineas: [{ texto: 'El almirante se levanta.' }, { quien: ALMIRANTE, texto: 'Llamen al escuadrón Patoon-4.' }],
+    lineas: [{ texto: 'El almirante se levanta.' }],
+  },
+  // Del sillón a la ventana, despacio: lleva más cuadros para que los pasos se lean.
+  {
+    id: 'ventana',
+    ms: 150,
+    cuadros: 40,
+    unaVez: true,
+    segunModo: true,
+    lineas: [{ texto: 'Camina despacio hasta la ventana.' }],
+  },
+  {
+    id: 'atardecer',
+    ms: 300,
+    lineas: [{ texto: 'Se queda mirando el atardecer.' }, { quien: ALMIRANTE, texto: 'Llamen al escuadrón Patoon-4.' }],
   },
   {
     id: 'cuatro',

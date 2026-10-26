@@ -11,9 +11,13 @@ const animacion = (cuadros, clase, duracion, quieto) =>
 
 export const celda = (titulo, cuadros, clase, duracion, quieto, lado) => `<div style="display: flex; flex-direction: column; gap: 8px"><div style="height: 232px; display: flex; align-items: center; justify-content: center; background: #5c94fc; border-radius: 12px"><div style="position: relative; width: ${lado}px; height: ${lado}px">${animacion(cuadros, clase, duracion, quieto)}</div></div><span style="${mono}; color: #47607a">${titulo}</span></div>`
 
-export const fila = (titulo, celdas) => `<div style="display: flex; flex-direction: column; gap: 12px">
+// Una toma de una escena: sus cuadros de `ancho` × `alto`, su título y lo que se dice en ella.
+export const celdaDeToma = (titulo, cuadros, clase, duracion, quieto, [ancho, alto], dialogo) =>
+  `<div style="display: flex; flex-direction: column; gap: 10px"><div style="position: relative; width: ${ancho}px; height: ${alto}px; background: #5c94fc; border-radius: 12px; overflow: hidden">${animacion(cuadros, clase, duracion, quieto)}</div><span style="${mono}; color: #47607a">${titulo}</span>${dialogo ? `<span style="font-size: 15px; line-height: 1.45; max-width: ${ancho}px">${dialogo}</span>` : ''}</div>`
+
+export const fila = (titulo, celdas, columnas = 6) => `<div style="display: flex; flex-direction: column; gap: 12px">
 <h2 style="margin: 0; font-size: 18px; font-weight: 800">${titulo}</h2>
-<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px">
+<div style="display: grid; grid-template-columns: repeat(${columnas}, minmax(0, 1fr)); gap: 16px">
 ${celdas.join('\n')}
 </div>
 </div>`

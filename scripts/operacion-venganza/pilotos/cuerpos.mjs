@@ -131,6 +131,7 @@ const DUCK_ONE = {
     const p = duckOne((b, s) => (s < 0 && g > 0.5 ? [hueso(b.mano, sum(b.mano, [0.03, 0.22, 0]), 0.045, C.cuero)] : []))
     return figura(p, { tronco: hablar(M.DUCK_ONE, silaba(u)), manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [0.8, 0.3 + 0.08 * vaiven(u, 3) * g, -1.05], g) }, inclina: 3 * g })
   },
+  // Señala y aprueba también con otro `tronco`: hablando o con la cabeza en otra parte.
   gestos: [
     {
       nombre: 'saluda',
@@ -143,20 +144,20 @@ const DUCK_ONE = {
     {
       nombre: 'señala',
       lado: -1,
-      pose: (u) => {
+      pose: (u, { tronco = M.DUCK_ONE } = {}) => {
         const g = curva(u)
         const p = duckOne((b, s) => (s < 0 && g > 0.5 ? [hueso(b.mano, sum(b.mano, [0.24, 0.06, 0.02]), 0.045, C.cuero)] : []))
         const empuje = 0.06 * Math.max(0, vaiven(u, 2)) * g
-        return figura(p, { tronco: M.DUCK_ONE, manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [1.35 + empuje, 0.35 + empuje, -0.75], g) }, inclina: -4 * g })
+        return figura(p, { tronco, manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [1.35 + empuje, 0.35 + empuje, -0.75], g) }, inclina: -4 * g })
       },
     },
     {
       nombre: 'pulgar arriba',
       lado: -1,
-      pose: (u) => {
+      pose: (u, { tronco = M.DUCK_ONE } = {}) => {
         const g = curva(u)
         const p = duckOne((b, s) => (s < 0 && g > 0.5 ? [hueso(b.mano, sum(b.mano, [0.02, 0.22, 0]), 0.05, C.cuero)] : []))
-        return figura(p, { tronco: M.DUCK_ONE, manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [0.95, -0.3 + 0.05 * vaiven(u, 2) * g, -0.5], g) } })
+        return figura(p, { tronco, manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [0.95, -0.3 + 0.05 * vaiven(u, 2) * g, -0.5], g) } })
       },
     },
   ],

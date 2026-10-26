@@ -18,7 +18,7 @@ const mv = (M, v) => M.map((f) => pto(f, v))
 const tr = (M) => [0, 1, 2].map((j) => [M[0][j], M[1][j], M[2][j]])
 export const rotacion = ([x = 0, y = 0, z = 0] = []) => mm(rotY(y), mm(rotZ(z), rotX(x)))
 
-// Gira un grupo de formas en torno a `pivote` y lo desplaza, pintura incluida.
+// Gira un grupo de formas en torno a `pivote` y lo desplaza, pintura y hueco incluidos.
 export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
   const R = rotacion(rot)
   const Rt = tr(R)
@@ -35,6 +35,7 @@ export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
               tris: f.tris.map((t) => ({ a: ida(t.a), b: ida(t.b), c: ida(t.c), ...(t.na ? { na: mv(R, t.na), nb: mv(R, t.nb), nc: mv(R, t.nc) } : {}) })),
             }
       if (f.pinta) g.pinta = (p, n) => f.pinta(vuelta(p), mv(Rt, n))
+      if (f.hueco) g.hueco = (p) => f.hueco(vuelta(p))
       return g
     })
   return { formas, punto: ida }
@@ -184,6 +185,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   const arriba = cruz(derecha, f)
   const paso = (2 * encuadre.radio) / (n * llenado)
   // toma.por: punto por el que pasa la cámara. Lo que quede entre ella y la figura se corta (la pared de una cabina, el tablero).
+  // toma.cielo(rayo): el color de lo que no choca con nada; sin él, queda vacío.
   const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
   const celdas = []
   for (let j = 0; j < n; j++) {
@@ -231,7 +233,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
           ? { plano: mezcla(celda.plano ?? celda.rampa[celda.tono], luz.color, luz.alfa), t: celda.t }
           : { plano: luz.color, alfa: luz.alfa, t: luces[0].t, estela: true }
       }
-      fila.push(celda)
+      fila.push(celda ?? (toma.cielo ? { plano: toma.cielo(rayo), t: Infinity } : null))
     }
     celdas.push(fila)
   }

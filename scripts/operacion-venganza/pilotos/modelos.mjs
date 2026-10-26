@@ -93,7 +93,9 @@ const aviador = (s) => {
 
 // duck-one: el mentón arriba, gafas de aviador y una ceja alzada por sobre
 // el marco. Sin gorro se le ve el resorte que lo espera debajo (gorro.mjs).
-export const DUCK_ONE_SIN_GORRO = [
+// El torso y las gafas van aparte: en la escena 3 baja la cabeza y se
+// acomoda las gafas.
+export const DUCK_ONE_TORSO = [
   el([0, -0.85, 0], [0.9, 0.7, 1.1], C.oliva, {
     pinta: ([x, y, z]) => {
       if (x < 0.2) return null
@@ -107,6 +109,13 @@ export const DUCK_ONE_SIN_GORRO = [
   }),
   el([0.1, 0, 0], [0.5, 0.52, 0.52], C.verde),
   el([0.1, -0.15, 0], [0.56, 0.12, 0.58], C.blanco),
+]
+export const GAFAS_DUCK_ONE = cabecear(
+  [...[1, -1].flatMap(aviador), hueso([1.0, 0.8, -0.28], [1.0, 0.8, 0.28], 0.025, C.oro), hueso([1.02, 0.72, -0.24], [1.02, 0.72, 0.24], 0.02, C.oro)],
+  16,
+)
+export const DUCK_ONE_SIN_GORRO = [
+  ...DUCK_ONE_TORSO,
   ...cabecear(
     [
       el([0.15, 0.6, 0], [0.72, 0.66, 0.66], C.verde),
@@ -114,12 +123,10 @@ export const DUCK_ONE_SIN_GORRO = [
       el([0.9, 0.32, 0], [0.5, 0.09, 0.28], C.pico, { rot: [0, 0, -5] }),
       el([0.74, 0.98, -0.4], [0.07, 0.045, 0.18], C.oscuro, { flat: '#0b2414', rot: [-25, 0, 0] }),
       el([0.78, 0.92, 0.4], [0.07, 0.04, 0.17], C.oscuro, { flat: '#0b2414' }),
-      ...[1, -1].flatMap(aviador),
-      hueso([1.0, 0.8, -0.28], [1.0, 0.8, 0.28], 0.025, C.oro),
-      hueso([1.02, 0.72, -0.24], [1.02, 0.72, 0.24], 0.02, C.oro),
     ],
     16,
   ),
+  ...GAFAS_DUCK_ONE,
 ]
 
 // Su gorro cuartelero: dos mitades que suben en las puntas, el pliegue al

@@ -54,14 +54,61 @@ const enTexto = (texto, u, v, alto) => {
 }
 const ancho = (texto, alto) => ((texto.length * 5 - 1) * alto) / 5
 
+// ── El atardecer ─────────────────────────────────────────────────────────
+
+// La escena sigue a /nosotros, donde el sol queda a medio ponerse en el mar:
+// aquí está igual, a la derecha de la flota que llega. `RUMBO` va de la proa
+// (+x) hacia estribor (+z), y el disco mide lo mismo que allá.
+const RUMBO = 0.28
+export const SOL = [Math.cos(RUMBO), 0, Math.sin(RUMBO)]
+const RADIO_DEL_SOL = 0.026
+
+// Los colores de la puesta de /nosotros (src/lib/atardecer.js): el cielo va
+// del oro del horizonte al coral, al lila y al azul de arriba, y la luz del
+// sol lo enciende alrededor. Aquí se reparte en franjas, del color de la
+// trama que quede más cerca.
+const HORIZONTE = '#ffad5c'
+const BAJO = '#f2967e'
+const MEDIO = '#a79fd2'
+const CENIT = '#5b8fd6'
+const LUZ = '#ffb86b'
+const DISCO = '#ffdfb3'
+
+const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+const mezclar = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
+const entre = (a, b, v) => ((k) => k * k * (3 - 2 * k))(Math.min(1, Math.max(0, (v - a) / (b - a))))
+const FRANJAS = [HORIZONTE, BAJO, '#cd9aa8', MEDIO, '#8197d4', CENIT].map((hex) => [hex, rgb(hex)])
+const franja = (c) => FRANJAS.reduce((a, b) => (Math.hypot(...res(b[1], c)) < Math.hypot(...res(a[1], c)) ? b : a))[0]
+
+// El color del cielo hacia `d`, un rayo de largo 1: las mismas mezclas que el
+// cielo de /nosotros a medio ponerse el sol.
+export const cielo = ([x, y, z]) => {
+  const a = Math.acos(Math.min(1, x * SOL[0] + y * SOL[1] + z * SOL[2]))
+  if (a < RADIO_DEL_SOL) return DISCO
+  const alto = Math.max(0, y)
+  let c = mezclar(rgb(HORIZONTE), rgb(BAJO), entre(0, 0.07, alto))
+  c = mezclar(c, rgb(MEDIO), entre(0.04, 0.24, alto))
+  c = mezclar(c, rgb(CENIT), entre(0.16, 0.62, alto))
+  return franja(mezclar(c, rgb(LUZ), (0.5 * Math.exp(-a / 0.3) + 0.35 * Math.exp(-a / 0.07)) * (1 - entre(0, 0.5, alto))))
+}
+
 // ── El mar ───────────────────────────────────────────────────────────────
 
-// Un plano: una esfera tan grande pierde precisión al cortarla.
+// El agua refleja el atardecer en tres franjas, del horizonte (0) a cerca
+// (2): el coral al fondo, el lila y el azul hondo, con sus olas. En la estela
+// del sol, las olas brillan: pareja al fondo y en destellos cerca.
+const AGUA = [['#d9967f', '#d9967f'], ['#6f6c9e', '#9a86ae'], ['#2c3f74', '#4a5a92']]
+const ESTELA = [[LUZ, LUZ], ['#d97a5e', LUZ], ['#2c3f74', '#ff8f3a']]
+const agua = (franja, ola, estela) => (estela ? ESTELA : AGUA)[franja][ola ? 1 : 0]
+
+// Un plano: una esfera tan grande pierde precisión al cortarla. La estela se
+// abre desde el horizonte hacia quien mira desde el centro (la llegada).
 export const MAR = placa([[-60000, 0, -60000], [-60000, 0, 60000], [60000, 0, 60000], [60000, 0, -60000]], 0.2, C.azul, {
   pinta: ([x, , z]) => {
     const lejos = Math.hypot(x, z)
-    const ola = Math.sin(x / 7 + Math.sin(z / 19) * 2) > 0.86
-    return lejos > 2600 ? '#8cb0ea' : lejos > 1100 ? (ola ? '#86a8e2' : '#5f8ad6') : ola ? '#5c86d0' : '#3a68b8'
+    const estela = Math.abs(Math.atan2(z, x) - RUMBO) < 0.02 + 3 / lejos
+    const ola = estela ? Math.sin(x / 2.3 + Math.sin(z / 5) * 3) * Math.sin(z / 3.1 + x / 9) > 0.35 : Math.sin(x / 7 + Math.sin(z / 19) * 2) > 0.86
+    return agua(lejos > 1100 ? 0 : lejos > 300 ? 1 : 2, ola, estela)
   },
 })
 
@@ -250,20 +297,27 @@ const pintaPantalla = (estado) => ([, y, z]) => {
   return surco > 0.15 ? '#2a1e18' : '#c8bca8'
 }
 
-// La vista por los ventanales: cielo, horizonte, mar con olas y la escolta.
+// La vista por los ventanales: el atardecer de afuera, con el sol en el panel
+// del medio (en `X_DEL_SOL`), la escolta recortada contra el horizonte y la
+// estela abierta hacia la sala. El cielo es el de `cielo`, mirado desde el
+// medio de la sala, a la altura del horizonte: hacia estribor, el sol.
+const X_DEL_SOL = -0.7
+const DERECHA_DEL_SOL = [-SOL[2], 0, SOL[0]]
 const vista = (x, y) => {
   const panel = [[-3.3, -1.15], [-1.05, 1.05], [1.15, 3.3]].find(([a, b]) => x > a && x < b)
   if (!panel || y < 1.05 || y > 2.55) return null
   if (x - panel[0] < 0.06 || panel[1] - x < 0.06 || y < 1.11 || y > 2.49) return '#2a3036'
   const horizonte = 1.72
+  const barco = [[-2.4, 0.5], [0.6, 0.35], [2.3, 0.6]].some(([bx, l]) => Math.abs(x - bx) < l && y > horizonte - 0.002 && y < horizonte + (Math.abs(x - bx) < l * 0.3 ? 0.07 : 0.03))
+  if (barco) return '#4a4060'
   if (y > horizonte) {
-    const nube = Math.hypot((x + 1.8) / 0.5, (y - 2.25) / 0.08) < 1 || Math.hypot((x - 1.6) / 0.6, (y - 2.15) / 0.07) < 1
-    return nube ? '#f3f6fc' : '#5c94fc'
+    const d = sum(sum(esc(SOL, 5), esc(DERECHA_DEL_SOL, X_DEL_SOL - x)), [0, y - horizonte, 0])
+    return cielo(esc(d, 1 / Math.hypot(...d)))
   }
-  const barco = [[-2.4, 0.5], [0.3, 0.35], [2.3, 0.6]].some(([bx, l]) => Math.abs(x - bx) < l && y > horizonte - 0.002 && y < horizonte + (Math.abs(x - bx) < l * 0.3 ? 0.07 : 0.03))
-  if (barco) return '#7d8a97'
-  const ola = Math.sin(x * 40 + Math.sin(y * 90) * 2) > 0.8
-  return y > horizonte - 0.12 ? '#8cb0ea' : ola ? '#5c86d0' : '#3a68b8'
+  const bajo = horizonte - y
+  const estela = Math.abs(x - X_DEL_SOL) < 0.1 + 0.4 * bajo
+  const ola = estela ? Math.sin(x * 70 + Math.sin(y * 160) * 3) * Math.sin(y * 230 + x * 20) > 0.35 : Math.sin(x * 40 + Math.sin(y * 90) * 2) > 0.8
+  return agua(bajo < 0.03 ? 0 : bajo < 0.12 ? 1 : 2, ola, estela)
 }
 
 // Consola de babor con radar verde y pantallitas.

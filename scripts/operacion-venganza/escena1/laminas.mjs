@@ -10,6 +10,7 @@ import { pixel3d, marco } from '../pilotos/tres.mjs'
 import { pagina, mono } from '../pilotos/tablero.mjs'
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS } from './personajes.mjs'
 import { salaCon, TOMAS_3D } from './tomas.mjs'
+import { cielo } from './lugares.mjs'
 import { TOMAS as GUION, textoDe } from '../../../src/lib/escena1.js'
 import { PERSONAJES } from '../pilotos/cuerpos.mjs'
 import { writeFileSync } from 'node:fs'
@@ -46,7 +47,7 @@ const retrato = (figuras, toma) => {
 const NP = 96
 const ALTO_P = 54
 const panoramica = (figuras, [ojo, mira, campo]) =>
-  figuras.map((f) => pixel3d(f, { ojo, mira, campo }, NP, TAM, { c: [0, 0, 0], radio: 1 }).replace(`height="${NP * TAM}" viewBox="0 0 ${NP} ${NP}"`, `height="${ALTO_P * TAM}" viewBox="0 ${(NP - ALTO_P) / 2} ${NP} ${ALTO_P}"`))
+  figuras.map((f) => pixel3d(f, { ojo, mira, campo, cielo }, NP, TAM, { c: [0, 0, 0], radio: 1 }).replace(`height="${NP * TAM}" viewBox="0 0 ${NP} ${NP}"`, `height="${ALTO_P * TAM}" viewBox="0 ${(NP - ALTO_P) / 2} ${NP} ${ALTO_P}"`))
 
 // Tomas que mueven la cámara: una por cuadro.
 const panoramicaMovil = (figuras, camara) => figuras.map((f, k) => panoramica([f], camara(k / figuras.length))[0])
@@ -87,7 +88,7 @@ const PERSPECTIVAS = [
 ]
 const TRES_CUARTOS = PERSPECTIVAS[0][1]
 
-const laminaPersonaje = (archivo, p, filas) =>
+const laminaPersonaje = (archivo, p, filas, alto = 960) =>
   lamina(archivo, {
     titulo: p.nombre,
     papel: p.papel,
@@ -95,7 +96,7 @@ const laminaPersonaje = (archivo, p, filas) =>
     bajada: p.bajada,
     detalle: p.detalle,
     filas,
-    alto: 960,
+    alto,
     vistas: tomarVistas(),
   })
 
@@ -106,8 +107,8 @@ const filaPerspectivas = (titulo, figs, clase = 'p8', quieto = 0) => fila(titulo
   const quieto = quietoDe(ALMIRANTE)
   laminaPersonaje('E1-almirante', ALMIRANTE, [
     filaPerspectivas('De pie, con las manos atrás', quieto),
-    fila('En la escena', ALMIRANTE.gestos.map((g) => cuadrada(g.nombre, anota(retrato(cuadros('g12', g.pose), TRES_CUARTOS), 6), 'g12', 6)), 4),
-  ])
+    fila('En la escena', [...ALMIRANTE.gestos, { nombre: 'camina', pose: (u) => ALMIRANTE.andando(u * 2) }].map((g) => cuadrada(g.nombre, anota(retrato(cuadros('g12', g.pose), TRES_CUARTOS), 6), 'g12', 6)), 4),
+  ], 1340)
 }
 {
   const quieto = quietoDe(OFICIAL)
@@ -139,7 +140,7 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
     papel: 'Escena 1 · el interior',
     nombre: 'La sala de mando',
     bajada: 'Bajo el puente del Sitting Ducks, a estribor de la isla',
-    detalle: 'Una sala de acero gris claro: al frente la pantalla de las bajas, a estribor los ventanales con la escolta en el horizonte, a babor las consolas de radar y al fondo la puerta y la carta náutica. El sillón de cuero del almirante mira a la pantalla, con un pupitre bajo delante. La baliza roja del techo gira mientras dura la alarma.',
+    detalle: 'Una sala de acero gris claro: al frente la pantalla de las bajas, a estribor los ventanales con el atardecer y la escolta en el horizonte, a babor las consolas de radar y al fondo la puerta y la carta náutica. El sillón de cuero del almirante mira a la pantalla, con un pupitre bajo delante. La baliza roja del techo gira mientras dura la alarma.',
     filas: [
       fila(
         'Tres miradas a la sala',
@@ -180,6 +181,8 @@ const NOMBRES = {
   caidos: 'los quince caídos',
   atacante: 'el atacante',
   levanta: 'se levanta',
+  ventana: 'a la ventana',
+  atardecer: 'el atardecer',
   cuatro: 'los cuatro disponibles',
   silencio: '…',
 }
@@ -199,7 +202,7 @@ lamina('E1-tomas-llegada', {
   papel: 'Escena 1 · tomas 1 a 4',
   nombre: 'La llegada',
   bajada: 'Del mar vacío al puente del Sitting Ducks',
-  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar. Cuatro tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, el costado del Sitting Ducks con su nombre, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
+  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar, al atardecer: el sol a medio ponerse, como lo deja Nosotros. Cuatro tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, el costado del Sitting Ducks con su nombre, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
   filas: [fila('Fuera', ['llegada', 'nombre', 'cubierta', 'subida'].map((id) => celdaDeToma(id)), 3)],
   alto: 1100,
   vistas: tomarVistas(),
@@ -207,17 +210,18 @@ lamina('E1-tomas-llegada', {
 
 lamina('E1-tomas-sala', {
   titulo: 'Escena 1 · la sala de mando',
-  papel: 'Escena 1 · tomas 5 a 13',
+  papel: 'Escena 1 · tomas 5 a 15',
   nombre: 'En la sala de mando',
   bajada: 'El almirante, el oficial y la fotografía del atacante',
-  detalle: 'Nueve tomas dentro, siempre en la misma sala: el plano general, la pantalla por sobre el hombro del almirante, el oficial que lee sin expresión, las gafas, el recorrido por los quince caídos hasta el oficial que señala, el atacante (cursor en escritorio, huella en teléfono: el navegador elige) y la orden final. Desde el atacante, la pantalla muestra lo que use quien juega.',
+  detalle: 'Once tomas dentro, siempre en la misma sala: el plano general, la pantalla por sobre el hombro del almirante, el oficial que lee sin expresión, las gafas, el recorrido por los quince caídos hasta el oficial que señala, el atacante (cursor en escritorio, huella en teléfono: el navegador elige), el almirante que camina a la ventana y mira el atardecer antes de dar la orden, y el oficial que se queda sin palabras. Desde el atacante, la pantalla muestra lo que use quien juega.',
   filas: [
     fila('Las bajas', ['sala', 'pantalla', 'oficial'].map((id) => celdaDeToma(id)), 3),
     fila('Por diversión', ['gafas', 'caidos'].map((id) => celdaDeToma(id)), 3),
     fila('El atacante', [celdaDeToma('atacante', 'cursor', ', en escritorio'), celdaDeToma('atacante', 'huella', ', en teléfono')], 3),
-    fila('Patoon-4', ['levanta', 'cuatro', 'silencio'].map((id) => celdaDeToma(id)), 3),
+    fila('El atardecer', ['levanta', 'ventana', 'atardecer'].map((id) => celdaDeToma(id)), 3),
+    fila('Patoon-4', ['cuatro', 'silencio'].map((id) => celdaDeToma(id)), 3),
   ],
-  alto: 1860,
+  alto: 2280,
   vistas: tomarVistas(),
 })
 

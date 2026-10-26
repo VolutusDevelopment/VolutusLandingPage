@@ -303,6 +303,15 @@ export const PAGINAS = {
       'Cazaste quince patos en Nosotros y la armada quiere a los responsables. Escena 1: llega el portaaviones Sitting Ducks. Se juega en el navegador.',
     fondo: '#5c94fc',
   },
+  // La escena 3 va en su propia página mientras la 2 no se escribe.
+  '/operacion-venganza/escena-3': {
+    archivo: 'operacion-venganza/escena-3.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 3: Despegue — Volutus',
+    descripcion:
+      'duck-one sube a su F-15EX en la cubierta del Sitting Ducks, prueba los sistemas y despega al atardecer. Escena 3 de Operación Venganza, en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**
