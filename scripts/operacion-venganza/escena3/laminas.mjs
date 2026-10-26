@@ -45,17 +45,17 @@ const NOMBRES = {
 const dialogo = ({ lineas }) => lineas.map(({ quien, texto }) => (quien ? `${quien.toUpperCase()}: ${texto}` : `<i>${texto}</i>`)).join('<br>')
 
 const hoja = []
-const celda = (id) => {
+const celda = (id, modo = 'cursor', aparte = '') => {
   const numero = TOMAS.findIndex((t) => t.id === id)
   const toma = TOMAS[numero]
   const { escena, camara } = TOMAS_3D[id]
   const svgs = Array.from({ length: PRUEBA ? 1 : CUADROS }, (_, k) => {
     const u = k / CUADROS
-    return cuadro(escena(u), camara(u))
+    return cuadro(escena(u, modo), camara(u))
   })
   const quieto = PRUEBA ? 0 : toma.unaVez ? CUADROS - 1 : CUADROS / 2
   hoja.push(`<div style="background:#5c94fc">${svgs[quieto]}</div>`)
-  return celdaDeToma(`${numero + 1} · ${NOMBRES[id]}`, svgs, 't12', DURACION, quieto, [N * TAM, ALTO * TAM], dialogo(toma))
+  return celdaDeToma(`${numero + 1} · ${NOMBRES[id]}${aparte}`, svgs, 't12', DURACION, quieto, [N * TAM, ALTO * TAM], dialogo(toma))
 }
 
 const lamina = (archivo, datos) => {
@@ -71,7 +71,7 @@ lamina('E3-tomas-cabina', {
   nombre: 'A la cabina',
   bajada: 'De la cubierta del Sitting Ducks a la cabina de su F-15EX',
   detalle: 'Al atardecer, como en Nosotros y la escena 1. La cámara acompaña a duck-one por la cubierta hasta su caza, que espera en la catapulta de babor, y se mete en la cabina por el costado de la cúpula. Ahí se sube las gafas con el índice, baja la cabeza para revisar sus medallas y le habla al atacante, que es quien juega: primero a la cámara del tablero, después señalándolo.',
-  filas: [fila('Hasta la cabina', ['cubierta', 'cabina', 'gafas'].map(celda), 3), fila('Al atacante', ['medallas', 'presentacion', 'advertencia'].map(celda), 3)],
+  filas: [fila('Hasta la cabina', ['cubierta', 'cabina', 'gafas'].map((id) => celda(id)), 3), fila('Al atacante', ['medallas', 'presentacion', 'advertencia'].map((id) => celda(id)), 3)],
 })
 
 lamina('E3-tomas-despegue', {
@@ -79,8 +79,8 @@ lamina('E3-tomas-despegue', {
   papel: 'Escena 3 · tomas 7 a 11',
   nombre: 'El despegue',
   bajada: 'Prueba de sistemas y lanzamiento desde la catapulta',
-  detalle: 'Busca el botón de las armas mirando a un lado y otro del tablero, duda y pulsa el rojo: se enciende el limpiaparabrisas que ningún F-15 tiene, y duck-one lo sigue con la cabeza. Lo da por bueno con el pulgar arriba. La catapulta lo lanza hasta la proa; un helicóptero lo acompaña por babor y lo deja irse hacia el sol, que se pone, con el morro arriba y el tren recogido.',
-  filas: [fila('El botón de las armas', ['instrumentos', 'boton', 'limpiaparabrisas'].map(celda), 3), fila('Despegue', ['excelente', 'despegue'].map(celda), 3)],
+  detalle: 'Busca el botón de las armas mirando a un lado y otro del tablero, duda y pulsa el rojo: se enciende el limpiaparabrisas que ningún F-15 tiene, y duck-one lo sigue con la cabeza. Lo da por bueno con el pulgar arriba. La catapulta lo lanza hasta la proa; un helicóptero lo acompaña por babor y lo deja irse hacia el sol, que se pone, con el morro arriba y el tren recogido. Ya en el aire, la cámara encuentra al atacante, quieto en el cielo a lo lejos, sobre el sol: un cursor en escritorio, una huella en teléfono.',
+  filas: [fila('El botón de las armas', ['instrumentos', 'boton', 'limpiaparabrisas'].map((id) => celda(id)), 3), fila('Despegue', [celda('excelente'), celda('despegue', 'cursor', ', en escritorio'), celda('despegue', 'huella', ', en teléfono')], 3)],
 })
 
 writeFileSync(HOJA, `<html><body style="margin:0;background:#fff;display:flex;flex-wrap:wrap;gap:4px">${hoja.join('')}</body></html>`)

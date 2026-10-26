@@ -29,7 +29,9 @@ export const poner = (formas, giro, en) => transformar([0, giro, 0], [0, 0, 0], 
 
 // ── Letras de cuadritos ──────────────────────────────────────────────────
 
-// Lo que va pintado en el barco: el 15 y su nombre. Cuatro de ancho y cinco de alto.
+// Lo que va pintado en el barco, el 15 y su nombre, y la operación en la
+// pantalla de la sala (escena 2). Cuatro de ancho y cinco de alto; las que
+// llevan tilde traen una fila más, encima.
 const LETRAS = {
   1: ['.#..', '##..', '.#..', '.#..', '###.'],
   5: ['####', '#...', '###.', '...#', '###.'],
@@ -42,6 +44,14 @@ const LETRAS = {
   U: ['#..#', '#..#', '#..#', '#..#', '.##.'],
   C: ['.###', '#...', '#...', '#...', '.###'],
   K: ['#..#', '#.#.', '##..', '#.#.', '#..#'],
+  O: ['.##.', '#..#', '#..#', '#..#', '.##.'],
+  Ó: ['..#.', '.##.', '#..#', '#..#', '#..#', '.##.'],
+  P: ['###.', '#..#', '###.', '#...', '#...'],
+  E: ['####', '#...', '###.', '#...', '####'],
+  R: ['###.', '#..#', '###.', '#.#.', '#..#'],
+  A: ['.##.', '#..#', '####', '#..#', '#..#'],
+  B: ['###.', '#..#', '###.', '#..#', '###.'],
+  Z: ['####', '...#', '.##.', '#...', '####'],
   ' ': ['....', '....', '....', '....', '....'],
 }
 // ¿Cae (u, v) en el texto de `alto` de alto? Empieza en u = 0, v = 0 abajo.
@@ -50,7 +60,8 @@ const enTexto = (texto, u, v, alto) => {
   const i = Math.floor(u / celda)
   const j = Math.floor((alto - v) / celda)
   const letra = LETRAS[texto[Math.floor(i / 5)]]
-  return Boolean(letra && i >= 0 && j >= 0 && j < 5 && i % 5 < 4 && letra[j][i % 5] === '#')
+  const fila = letra && j + letra.length - 5
+  return Boolean(letra && i >= 0 && fila >= 0 && fila < letra.length && i % 5 < 4 && letra[fila][i % 5] === '#')
 }
 const ancho = (texto, alto) => ((texto.length * 5 - 1) * alto) / 5
 
@@ -251,7 +262,12 @@ const fotoPato = (u, v, i) => {
 }
 
 // El cursor de flecha, cuadro a cuadro: # borde, o relleno.
-const FLECHA = ['#...........', '##..........', '#o#.........', '#oo#........', '#ooo#.......', '#oooo#......', '#ooooo#.....', '#oooooo#....', '#ooooooo#...', '#oooooooo#..', '#ooooo#####.', '#oo#oo#.....', '#o#.#oo#....', '##..#oo#....', '#....#oo#...', '.....#oo#...', '......##....']
+export const FLECHA = ['#...........', '##..........', '#o#.........', '#oo#........', '#ooo#.......', '#oooo#......', '#ooooo#.....', '#oooooo#....', '#ooooooo#...', '#oooooooo#..', '#ooooo#####.', '#oo#oo#.....', '#o#.#oo#....', '##..#oo#....', '#....#oo#...', '.....#oo#...', '......##....']
+
+// La operación iniciada, en tres líneas al centro: su texto, su borde de abajo
+// y su color. Con 'operacion', «INICIADA» se apaga: alternadas, parpadea.
+const ALTO_DE_LETRA = 0.33
+const OPERACION = [['OPERASIÓN', 2.172, '#ffad5c'], ['BENGANZA', 1.712, '#ffad5c'], ['INICIADA', 1.182, '#7dffa0']].map(([texto, abajo, color]) => ({ texto, abajo, color, medio: ancho(texto, ALTO_DE_LETRA) / 2 }))
 
 const grano = (u, v) => ((Math.sin(u * 913.7 + v * 377.1) * 43758.5) % 1 + 1) % 1
 
@@ -260,6 +276,10 @@ const pintaPantalla = (estado) => ([, y, z]) => {
   const u = (z - z0) / (z1 - z0)
   const v = (y - y0) / (y1 - y0)
   if (u < 0.015 || u > 0.985 || v < 0.03 || v > 0.97) return '#16191e'
+  if (estado === 'iniciada' || estado === 'operacion') {
+    const linea = OPERACION.find(({ texto, abajo, medio }) => (estado === 'iniciada' || texto !== 'INICIADA') && enTexto(texto, z + medio, y - abajo, ALTO_DE_LETRA))
+    return linea ? linea.color : '#0e1a2a'
+  }
   const ancho = z1 - z0
   const alto = y1 - y0
   if (estado === 'bajas') {
@@ -336,8 +356,9 @@ const consola = (x0, x1) => [
 // La baliza de alarma del techo gira: en cada cuadro alumbra un lado.
 const baliza = (prendida) => [hueso([3.2, 3.0, -4.3], [3.2, 2.82, -4.3], 0.08, C.oscuro), el([3.2, 2.72, -4.3], [0.14, 0.14, 0.14], C.boca, prendida ? { flat: '#ff3a2a', brilla: true } : { flat: '#7a1a14' })]
 
-export const sala = ({ pantalla = 'bajas', alarma = false } = {}) => [
-  placa([[-4, 0, -5], [-4, 0, 5], [4, 0, 5], [4, 0, -5]], 0.1, SUELO, { pinta: ([x, , z]) => (Math.abs(((x + 40) % 1) - 0.5) > 0.48 || Math.abs(((z + 50) % 1) - 0.5) > 0.48 ? SUELO[2] : null) }),
+// Con `pulido`, el piso refleja lo que se ponga bajo él, de cabeza (escena 2).
+export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false } = {}) => [
+  placa([[-4, 0, -5], [-4, 0, 5], [4, 0, 5], [4, 0, -5]], 0.1, SUELO, { pinta: ([x, , z]) => (Math.abs(((x + 40) % 1) - 0.5) > 0.48 || Math.abs(((z + 50) % 1) - 0.5) > 0.48 ? SUELO[2] : null), vidrio: pulido }),
   placa([[-4, 3, -5], [-4, 3, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA, { pinta: ([x, , z]) => (Math.abs(z) < 3.5 && [-2, 0.5, 3].some((cx) => Math.abs(x - cx) < 0.25) ? '#fbfcf4' : null) }),
   placa([[4, 0, -5], [4, 0, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA),
   placa([[PANTALLA.x, PANTALLA.y0, PANTALLA.z0], [PANTALLA.x, PANTALLA.y0, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z0]], 0.04, C.oscuro, { pinta: pintaPantalla(pantalla), brilla: true }),

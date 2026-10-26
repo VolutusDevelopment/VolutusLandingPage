@@ -9,13 +9,16 @@ import { el, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, CABEZA, DUCK_ONE, DUCK_ONE_TORSO, GAFAS_DUCK_ONE, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, figura, manosAndando, pDuckOne } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs'
-import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
+import { FLECHA, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { curva, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { BOTON, EN_CATAPULTA, ESCALA, SUELO, caza, enCaza, enPiloto } from './caza.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
+const res = (a, b) => a.map((v, i) => v - b[i])
+const cruz = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+const unitario = (a) => esc(a, 1 / Math.hypot(...a))
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 
@@ -100,6 +103,42 @@ const vapor = (u) =>
     return k > 0 && k < 1 ? [el(sum(EN_CATAPULTA, [x, SUELO + 0.6 + 1.5 * k, 0]), esc([2.4, 1.1, 1.6], 1 - k * 0.7), C.nube, { flat: '#eef4ff' })] : []
   })
 
+// ── El atacante, a lo lejos ──────────────────────────────────────────────
+
+// Quieto en el cielo, a 3 km y justo sobre el sol: no acompaña al caza, y la
+// cámara lo encuentra hacia el final. Es un cursor, o una huella donde se juega
+// con el dedo, de cuadritos de 10 m que miran hacia donde termina la cámara.
+const ATACANTE = { sale: 0.68, celda: 10, lejos: [2710, 827, 986] }
+const huella = Array.from({ length: 19 }, (_, j) =>
+  Array.from({ length: 15 }, (_, i) => {
+    const r = Math.hypot((i - 7) / 7.5, (j - 9) / 9.5)
+    return r > 1 ? '.' : Math.sin(r * 17 + Math.sin(Math.atan2(j - 9, i - 7) * 2 + r * 3) * 1.4) > 0.15 ? '#' : 'o'
+  }).join(''),
+)
+const atacante = (modo, u, { d, a }) => {
+  if (u < ATACANTE.sale) return []
+  const dibujo = modo === 'cursor' ? FLECHA : huella
+  const centro = modo === 'cursor' ? [0, 0] : [7, 9]
+  const k = ATACANTE.celda * tramo(u, ATACANTE.sale, ATACANTE.sale + 0.05)
+  return dibujo.flatMap((fila, j) =>
+    [...fila].flatMap((c, i) => {
+      const color = c === '#' ? '#2b2347' : '#ffffff'
+      return c === '.' ? [] : [el(sum(ATACANTE.lejos, sum(esc(d, (i - centro[0]) * k), esc(a, (centro[1] - j) * k))), esc([0.62, 0.62, 0.62], k), [color], { flat: color })]
+    }),
+  )
+}
+
+// Desde un helicóptero por babor, que lo acompaña, se queda atrás en la proa y lo deja irse.
+const camaraDespegue = (u) => {
+  const { en } = enVuelo(u)
+  return [[Math.min(88 + 0.85 * (en[0] - EN_CATAPULTA[0]), 182), 27, -34], sum(en, [4, 1, 0]), 40]
+}
+const haciaLaCamara = (() => {
+  const [ojo, mira] = camaraDespegue(0.85)
+  const d = unitario(cruz(unitario(res(mira, ojo)), [0, 1, 0]))
+  return { d, a: cruz(d, unitario(res(mira, ojo))) }
+})()
+
 export const TOMAS_3D = {
   cubierta: {
     escena: (u) => [...enCatapulta({}), ...colocar(figura(pDuckOne, { tronco: DUCK_ONE, manos: manosAndando(pDuckOne, (u * 4) % 1), fase: (u * 4) % 1, sinSombra: true }), { k: ESCALA, giro: -90, en: caminando(u) })],
@@ -136,12 +175,8 @@ export const TOMAS_3D = {
     escena: enCabinaCon((u) => enCabina(() => gesto('pulgar arriba')(u, { tronco: hablar(DUCK_ONE, silaba(u) * 0.8) }))),
     camara: fija(enPiloto([2.8, 0.8, -1.2]), enPiloto([0, 0.1, 0.1]), 80),
   },
-  // Desde un helicóptero por babor, que lo acompaña, se queda atrás en la proa y lo deja irse.
   despegue: {
-    escena: (u) => [...BARCO, ...despega(u), ...vapor(u)],
-    camara: (u) => {
-      const { en } = enVuelo(u)
-      return [[Math.min(88 + 0.85 * (en[0] - EN_CATAPULTA[0]), 182), 27, -34], sum(en, [4, 1, 0]), 40]
-    },
+    escena: (u, modo = 'cursor') => [...BARCO, ...despega(u), ...vapor(u), ...atacante(modo, u, haciaLaCamara)],
+    camara: camaraDespegue,
   },
 }

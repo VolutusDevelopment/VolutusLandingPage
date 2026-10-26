@@ -53,6 +53,7 @@ export const COMPONENTES = {
   '/articulos/como-trabajamos': ComoTrabajamos,
   '/nosotros': Nosotros,
   '/operacion-venganza': OperacionVenganza,
+  '/operacion-venganza/escena-2': OperacionVenganza,
   '/operacion-venganza/escena-3': OperacionVenganza,
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,

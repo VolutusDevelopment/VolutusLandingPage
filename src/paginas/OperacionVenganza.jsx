@@ -1,8 +1,9 @@
 import { ALTO, LADO } from '../lib/escena1.js'
 
-// Cada escena tiene su página; la 2 todavía no se escribe.
+// Cada escena tiene su página.
 const ESCENAS = {
   '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
+  '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
   '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
 }
 

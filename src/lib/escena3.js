@@ -3,8 +3,9 @@
  * src/operacion-venganza.js en /operacion-venganza/escena-3, con la forma del
  * de la escena 1 (lib/escena1.js), de donde salen también las medidas de las
  * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
- * tira corre una sola vez, y sus líneas. Las tiras las escribe
- * scripts/operacion-venganza/escena3/sprites.mjs, desde las tomas en 3D.
+ * tira corre una sola vez, `segunModo` si lleva el cursor o la huella de quien
+ * juega (una tira por modo, como en la escena 1), y sus líneas. Las tiras las
+ * escribe scripts/operacion-venganza/escena3/sprites.mjs, desde las tomas en 3D.
  *
  * duck-one le habla al atacante, que es quien juega. Las frases largas van en
  * dos líneas, para que cada una quepa en el alto fijo del subtítulo.
@@ -43,7 +44,7 @@ export const TOMAS = [
   { id: 'boton', ms: 150, unaVez: true, lineas: [{ texto: 'Pulsa un botón.' }] },
   { id: 'limpiaparabrisas', ms: 150, lineas: [{ texto: 'Se activa el limpiaparabrisas de la cabina.' }] },
   { id: 'excelente', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Excelente. Prueba de sistemas completada.' }] },
-  { id: 'despegue', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Su caza despega del Sitting Ducks.' }] },
+  { id: 'despegue', ms: 150, cuadros: 24, unaVez: true, segunModo: true, lineas: [{ texto: 'Su caza despega del Sitting Ducks.' }] },
 ]
 
-export const rutaDeToma = ({ id }) => `/operacion-venganza/escena3/${id}.png`
+export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena3/${id}${segunModo ? `-${modo}` : ''}.png`

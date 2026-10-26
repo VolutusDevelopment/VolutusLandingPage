@@ -389,4 +389,4 @@ export const MARINEROS = {
   ],
 }
 
-export { almiranteTronco, almiranteCabeza, oficialTronco, oficialCabeza, conTableta, gota, tableta, LEE, hablar, manosAndando }
+export { almiranteTronco, almiranteCabeza, oficialTronco, oficialCabeza, conTableta, gota, tableta, LEE, hablar, manosAndando, MANOS_ATRAS, SENTADO, pMarinero, marineroTronco }

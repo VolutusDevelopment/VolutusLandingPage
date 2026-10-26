@@ -200,8 +200,9 @@ const panuelo = (t) => {
 
 // La cabeza en un instante t (cuadros). `abre` baja el pico; `pena` da vuelta
 // el ceño, de 0 (furia) a 1 (las cejas suben al centro); `llanto` va de un
-// hilo por la mejilla a chorros en arco hacia los lados.
-export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico = true } = {}) => {
+// hilo por la mejilla a chorros en arco hacia los lados (en 0, nada). `apagado`:
+// el puro en el pico, sin brasa ni humo; sin `humea`, prendido y sin humo.
+export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico = true, apagado = false, humea = true } = {}) => {
   const [abajo] = transformar([0, 0, -34 * abre], enCabeza([0.4, -0.3, 0])).formas([el(enCabeza([0.83, -0.3, 0]), [0.5, 0.09, 0.34], C.pico)])
   const formas = [
     el(MOBY_H, [0.72, 0.64, 0.68], C.pardo, {
@@ -221,24 +222,24 @@ export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico
   for (const s of [1, -1])
     for (let j = 0; j < 6; j++) {
       const a = (t % 0.4) + j * 0.4
-      if (a > 2.4 * llanto) continue
+      if (a >= 2.4 * llanto) continue
       formas.push(el(sum(enCabeza([0.72, 0.1, s * 0.55]), [0.2 * a, 0.32 * a - 0.16 * a * a, s * 0.5 * a]), [0.08, 0.1, 0.08], C.vidrio, { flat: LAGRIMA }))
     }
   if (puroEnPico) {
     const brasa = enCabeza([1.28, -0.6, -0.89])
-    formas.push(hueso(enCabeza([0.83, -0.26, -0.3]), enCabeza([1.25, -0.58, -0.85]), 0.12, C.puro), hueso(enCabeza([0.89, -0.3, -0.38]), enCabeza([0.93, -0.33, -0.43]), 0.135, C.oro), el(brasa, [0.08, 0.08, 0.08], C.naranja, { flat: '#ff7a2a', brilla: true }), ...humareda(brasa, t / 8))
+    formas.push(hueso(enCabeza([0.83, -0.26, -0.3]), enCabeza([1.25, -0.58, -0.85]), 0.12, C.puro), hueso(enCabeza([0.89, -0.3, -0.38]), enCabeza([0.93, -0.33, -0.43]), 0.135, C.oro))
+    if (!apagado) formas.push(el(brasa, [0.08, 0.08, 0.08], C.naranja, { flat: '#ff7a2a', brilla: true }), ...(humea ? humareda(brasa, t / 8) : []))
   }
   return formas
 }
 
 // El busto de las tomas: de brazos cruzados sobre la musculosa.
 const brazoCruzado = (hombro, codo, puno) => [hueso(hombro, codo, 0.3, C.pardo), el(sum(hombro, esc(res(codo, hombro), 0.5)), [0.36, 0.32, 0.32], C.pardo), hueso(codo, puno, 0.28, C.pardo), el(puno, [0.25, 0.22, 0.22], C.pardo)]
-export const MOBY = [
-  ...MOBY_TORSO,
-  ...mobyCabeza(),
+export const MOBY_BRAZOS_CRUZADOS = [
   ...brazoCruzado([0.1, -0.5, -1.45], [0.85, -1.0, -1.25], [1.25, -0.7, 0.6]),
   ...brazoCruzado([0.1, -0.5, 1.45], [0.9, -1.05, 1.25], [1.28, -0.88, -0.6]),
 ]
+export const MOBY = [...MOBY_TORSO, ...mobyCabeza(), ...MOBY_BRAZOS_CRUZADOS]
 
 // Duke: genuinamente bello y nada más. Plumaje marfil impecable, copete
 // rubio, ojos azules con pestañas largas y uniforme blanco de gala.

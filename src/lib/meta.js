@@ -303,7 +303,15 @@ export const PAGINAS = {
       'Cazaste quince patos en Nosotros y la armada quiere a los responsables. Escena 1: llega el portaaviones Sitting Ducks. Se juega en el navegador.',
     fondo: '#5c94fc',
   },
-  // La escena 3 va en su propia página mientras la 2 no se escribe.
+  // Cada escena que sigue va en su propia página.
+  '/operacion-venganza/escena-2': {
+    archivo: 'operacion-venganza/escena-2.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 2: Patoon-4 — Volutus',
+    descripcion:
+      'El escuadrón Patoon-4 llega a la sala de mando del Sitting Ducks: medallas, un puro apagado y un pato de hule con 112 victorias. Escena 2, en el navegador.',
+    fondo: '#5c94fc',
+  },
   '/operacion-venganza/escena-3': {
     archivo: 'operacion-venganza/escena-3.html',
     actualizada: '2026-10-26',

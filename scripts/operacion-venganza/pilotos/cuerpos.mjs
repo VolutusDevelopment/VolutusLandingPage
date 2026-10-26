@@ -124,14 +124,15 @@ const DUCK_ONE = {
   nombre: 'duck-one',
   papel: 'El líder del escuadrón · nivel 1',
   detalle: 'Camina como si el escuadrón entero le siguiera el paso: el mentón arriba, guantes de cuero y el bamboleo justo. Saluda de reglamento, señala el frente sin mirar atrás y aprueba con el pulgar. Al hablar levanta el índice, como quien dicta cátedra.',
-  andando: (fase) => figura(pDuckOne, { tronco: M.DUCK_ONE, manos: manosAndando(pDuckOne, fase), fase }),
+  andando: (fase, { tronco = M.DUCK_ONE } = {}) => figura(pDuckOne, { tronco, manos: manosAndando(pDuckOne, fase), fase }),
   sentado: (u, manos) => figura(pDuckOne, { tronco: M.DUCK_ONE, manos, salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
-  hablando: (u) => {
+  hablando: (u, { tronco = M.DUCK_ONE } = {}) => {
     const g = curva(u)
     const p = duckOne((b, s) => (s < 0 && g > 0.5 ? [hueso(b.mano, sum(b.mano, [0.03, 0.22, 0]), 0.045, C.cuero)] : []))
-    return figura(p, { tronco: hablar(M.DUCK_ONE, silaba(u)), manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [0.8, 0.3 + 0.08 * vaiven(u, 3) * g, -1.05], g) }, inclina: 3 * g })
+    return figura(p, { tronco: hablar(tronco, silaba(u)), manos: { 1: pDuckOne.reposo(1), [-1]: lerp(pDuckOne.reposo(-1), [0.8, 0.3 + 0.08 * vaiven(u, 3) * g, -1.05], g) }, inclina: 3 * g })
   },
-  // Señala y aprueba también con otro `tronco`: hablando o con la cabeza en otra parte.
+  // Camina, habla, señala y aprueba también con otro `tronco`: hablando, con
+  // la cabeza en otra parte o con más medallas.
   gestos: [
     {
       nombre: 'saluda',
@@ -223,10 +224,11 @@ const DUKE = {
     {
       nombre: 'al espejo',
       lado: 1,
-      pose: (u) => {
+      // `abre` le baja el pico: se habla al espejo.
+      pose: (u, { abre = 0 } = {}) => {
         const g = curva(u)
         const mano = lerp(pDuke.reposo(1), [1.05 + 0.04 * vaiven(u, 1) * g, 0.25, 0.76], g)
-        return figura(pDuke, { tronco: g > 0.4 ? dukeAbierto : dukeCerrado, manos: { 1: mano, [-1]: pDuke.reposo(-1) }, extra: [...espejoDeMano(mano), ...(g > 0.8 && Math.floor(u * 12) % 3 === 0 ? destello([1.05, 1.3, 0.5]) : [])] })
+        return figura(pDuke, { tronco: hablar(g > 0.4 ? dukeAbierto : dukeCerrado, abre), manos: { 1: mano, [-1]: pDuke.reposo(-1) }, extra: [...espejoDeMano(mano), ...(g > 0.8 && Math.floor(u * 12) % 3 === 0 ? destello([1.05, 1.3, 0.5]) : [])] })
       },
     },
     {
@@ -257,11 +259,15 @@ const pDuky = {
   andar: { balanceo: 7, sube: 0.04, giro: 7 },
 }
 
-const dukyFigura = ({ fase = null, ala = 0, cabeza = 0, salto = 0, inclina = 0 }) => {
+// `cara` cambia la de siempre por otra; `extra` va con el cuerpo, como los puntos.
+const dukyFigura = ({ fase = null, ala = 0, cabeza = 0, salto = 0, inclina = 0, cara = DUKY_CABEZA, extra = [] }) => {
   const alas = ambos((s) => transformar([s < 0 ? ala : 0, 0, 0], [0.2, -0.6, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
-  const testa = transformar([0, 0, cabeza], [0.2, -0.35, 0]).formas(DUKY_CABEZA)
-  return figura(pDuky, { tronco: [...DUKY_CUERPO, ...alas, ...testa], fase, salto, inclina })
+  const testa = transformar([0, 0, cabeza], [0.2, -0.35, 0]).formas(cara)
+  return figura(pDuky, { tronco: [...DUKY_CUERPO, ...alas, ...testa], extra, fase, salto, inclina })
 }
+
+// Los tres puntos que le salen sobre la cabeza cuando le toca hablar: los `n` primeros.
+const puntosDeDuky = (n) => [0, 1, 2].slice(0, n).map((i) => el([0.6 - (1 - i) * 0.15, 1.2, (1 - i) * 0.45], [0.11, 0.11, 0.11], null, { flat: '#ffffff', brilla: true }))
 
 const DUKY = {
   archivo: 'duky',
@@ -270,7 +276,7 @@ const DUKY = {
   detalle: 'El pato de hule gigante, sin asiento: camina a pasitos de juguete de cuerda, y la cara de siempre. Gesticula a su manera: un aleteo mínimo, dos cabeceos y un salto en el lugar. Ninguno le cambia la expresión. Cuando le toca hablar aparecen tres puntos, y nada más.',
   andando: (fase) => dukyFigura({ fase }),
   sentado: (u) => dukyFigura({ salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
-  hablando: (u) => [...dukyFigura({}), ...[0, 1, 2].filter((i) => u >= 0.15 + i * 0.2 && u < 0.9).map((i) => el([0.6 - (1 - i) * 0.15, 1.2, (1 - i) * 0.45], [0.11, 0.11, 0.11], null, { flat: '#ffffff', brilla: true }))],
+  hablando: (u) => dukyFigura({ extra: puntosDeDuky(u < 0.9 ? [0, 1, 2].filter((i) => u >= 0.15 + i * 0.2).length : 0) }),
   gestos: [
     { nombre: 'aletea', lado: -1, pose: (u) => dukyFigura({ ala: 38 * curva(u) * (0.6 + 0.4 * Math.abs(vaiven(u, 2))) }) },
     { nombre: 'asiente', lado: -1, pose: (u) => dukyFigura({ cabeza: -16 * curva(u) * Math.abs(vaiven(u, 1.5)) }) },
@@ -329,10 +335,11 @@ const MOBY = {
   detalle: 'Espalda en V, trapecios que le tragan el cuello y antebrazos de leñador: anda abierto de brazos y pisa tan pesado que levanta polvo, con el puro humeando y las colas del pañuelo al viento. Saca músculo, se golpea la palma con el puño y se seca el llanto con el antebrazo, que le vuelve a correr al instante. Habla a los gritos, con el puño en alto.',
   andando: (fase) => [...figura(pMoby, { tronco: mobyVivo(fase), manos: manosAndando(pMoby, fase), fase }), ...polvo(fase)],
   sentado: (u, manos) => figura(pMoby, { tronco: mobyVivo(u), manos, salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
-  hablando: (u) => {
+  // `estado`, el de su cabeza: con el puro apagado, por ejemplo.
+  hablando: (u, estado) => {
     const g = curva(u)
     const p = { ...pMoby, dobla: (s) => (s > 0 ? [0, -0.3, 1] : pMoby.dobla(s)) }
-    return figura(p, { tronco: hablar(mobyVivo(u), Math.min(1, silaba(u) * 1.2)), manos: { 1: lerp(pMoby.reposo(1), [0.55, 0.4 + 0.14 * Math.abs(vaiven(u, 4)) * g, 1.9], g), [-1]: pMoby.reposo(-1) }, inclina: -4 * g })
+    return figura(p, { tronco: hablar(mobyVivo(u, estado), Math.min(1, silaba(u) * 1.2)), manos: { 1: lerp(pMoby.reposo(1), [0.55, 0.4 + 0.14 * Math.abs(vaiven(u, 4)) * g, 1.9], g), [-1]: pMoby.reposo(-1) }, inclina: -4 * g })
   },
   gestos: [
     {
@@ -368,4 +375,4 @@ const MOBY = {
 
 export const PERSONAJES = [DUCK_ONE, MOBY, DUKE, DUKY]
 
-export { figura, pDuckOne, pMoby, manosAndando }
+export { figura, pDuckOne, pMoby, pDuke, manosAndando, dukeCerrado, dukyFigura, puntosDeDuky }
