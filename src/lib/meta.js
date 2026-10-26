@@ -320,6 +320,14 @@ export const PAGINAS = {
       'duck-one sube a su F-15EX en la cubierta del Sitting Ducks, prueba los sistemas y despega al atardecer. Escena 3 de Operación Venganza, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/escena-5': {
+    archivo: 'operacion-venganza/escena-5.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 5: Regreso — Volutus',
+    descripcion:
+      'duck-one vuelve al Sitting Ducks, casi atropella a los marinos y le rinde cuentas a moby y a duke: el enemigo se mueve bastante. Escena 5, en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**

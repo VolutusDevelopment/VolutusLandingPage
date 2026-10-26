@@ -55,6 +55,7 @@ export const COMPONENTES = {
   '/operacion-venganza': OperacionVenganza,
   '/operacion-venganza/escena-2': OperacionVenganza,
   '/operacion-venganza/escena-3': OperacionVenganza,
+  '/operacion-venganza/escena-5': OperacionVenganza,
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
   '/404': NoEncontrada,

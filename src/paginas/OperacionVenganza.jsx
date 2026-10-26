@@ -5,6 +5,7 @@ const ESCENAS = {
   '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
   '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
   '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
+  '/operacion-venganza/escena-5': { numero: 5, nombre: 'Regreso' },
 }
 
 /**

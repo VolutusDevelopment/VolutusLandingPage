@@ -62,7 +62,7 @@ const medallero = ([x, y, z]) => {
   return null
 }
 const PECHO = M.DUCK_ONE_TORSO[0]
-const CONDECORADO = M.DUCK_ONE.map((f) => (f === PECHO ? { ...f, pinta: medallero } : f))
+export const CONDECORADO = M.DUCK_ONE.map((f) => (f === PECHO ? { ...f, pinta: medallero } : f))
 
 // La carpeta del expediente, de lomo al centro y abierta `abre`, de 0
 // (cerrada) a 1: una mano en el borde de cada hoja; cerrada, la otra en el
