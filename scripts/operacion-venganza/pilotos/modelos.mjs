@@ -2,7 +2,7 @@
 // medidas reales: el morro hacia +x, arriba +y y el ala derecha hacia +z.
 // Los patos miran también hacia +x.
 
-import { el, placa, tubo } from './tres.mjs'
+import { el, placa, tubo, transformar } from './tres.mjs'
 
 export const RAMPAS = {
   verde: ['#6fe08a', '#22a04a', '#14703c', '#0b4026'],
@@ -17,9 +17,9 @@ export const RAMPAS = {
   oro: ['#fff2a4', '#f2c440', '#c08a18', '#7a520a'],
   rosa: ['#ffc8de', '#f47aa8', '#c84a7c', '#82284e'],
   hule: ['#fff8b0', '#ffd62a', '#e2a400', '#9a6a00'],
+  picoHule: ['#ff9a6a', '#f0502a', '#b8341a', '#6a1a0a'],
   naranja: ['#ffb474', '#ff7a1a', '#cc5200', '#7a2e00'],
   asiento: ['#8a92a0', '#5a616c', '#3d434c', '#22262c'],
-  correa: ['#6a707c', '#43474f', '#2d3036', '#18191d'],
   gris: ['#dde3ea', '#a6b1bc', '#76828e', '#48525c'],
   perla: ['#ffffff', '#eef1f6', '#c4cad8', '#868ea6'],
   oscuro: ['#5a626c', '#30353c', '#1e2228', '#0e1014'],
@@ -91,9 +91,9 @@ const aviador = (s) => {
   ]
 }
 
-// duck-one: sin gorro, el mentón arriba, gafas de aviador y una ceja alzada
-// por sobre el marco.
-export const DUCK_ONE = [
+// duck-one: el mentón arriba, gafas de aviador y una ceja alzada por sobre
+// el marco. Sin gorro se le ve el resorte que lo espera debajo (gorro.mjs).
+export const DUCK_ONE_SIN_GORRO = [
   el([0, -0.85, 0], [0.9, 0.7, 1.1], C.oliva, {
     pinta: ([x, y, z]) => {
       if (x < 0.2) return null
@@ -122,93 +122,115 @@ export const DUCK_ONE = [
   ),
 ]
 
-// Moby es un pato colorado, la especie del pico celeste: cuerpo castaño,
-// gorra negra natural y mejillas blancas. Es el más grande del escuadrón:
-// camiseta sin mangas, brazos cruzados, un corazón tatuado y placas al
-// cuello. El borde de su gorra baja al centro y le deja el ceño fruncido.
-// Fuma para parecer duro: el puro le hace toser y le llora todo, y se
-// lastimó solo el pico.
+// Su gorro cuartelero: dos mitades que suben en las puntas, el pliegue al
+// medio, el vivo dorado del borde y la piocha al lado izquierdo. Más oscuro
+// que el uniforme, para que se lea sobre la cabeza verde.
+const OLIVA_OSCURO = ['#9aa45a', '#5c6a2c', '#3e481e', '#20260f']
+const G = 1.25 // su tamaño, respecto del primer gorro
+export const GORRO = [
+  ...[1, -1].map((s) =>
+    el([s * 0.15 * G, 0, 0], [0.25 * G, 0.14 * G, 0.18 * G], OLIVA_OSCURO, {
+      rot: [0, 0, s * 12],
+      pinta: ([, y, z]) => (y > 0.08 * G && Math.abs(z) < 0.03 * G ? OLIVA_OSCURO[3] : y > -0.06 * G && y < 0 ? C.oro : null),
+    }),
+  ),
+  el([0.22 * G, 0.03 * G, -0.175 * G], [0.05 * G, 0.05 * G, 0.03 * G], C.oro),
+]
+
+// La cabeza va con el mentón 16° arriba, como la gira cabecear().
+export const CABEZA = transformar([0, 0, 16], [0.1, 0.1, 0])
+// Puesto en la coronilla, ladeado a la derecha; al crecer sube lo que engorda.
+export const GORRO_PUESTO = { c: CABEZA.punto([0.12, 1.3 + 0.14 * (G - 1), 0.1]), rot: [12, 0, 16] }
+export const ponerGorro = ({ c, rot }) => transformar(rot, [0, 0, 0], c).formas(GORRO)
+
+export const DUCK_ONE = [...DUCK_ONE_SIN_GORRO, ...ponerGorro(GORRO_PUESTO)]
+
+// Moby, el comando: el más grande del escuadrón y el más pesado. Espalda en
+// V, trapecios que le tragan el cuello y la cabeza chica hundida entre los
+// hombros. Musculosa oliva que le cubre el pecho entero, placas al cuello,
+// pretina a rayas y un pañuelo rojo con dos colas largas. Fuma para parecer
+// duro: el puro le hace toser y llorar a chorros.
 const LAGRIMA = '#4aa8ec'
-const CASTANO = ['#d8925e', '#a05a30', '#723c1e', '#40200e']
 const CAMISETA = ['#8a9460', '#5a6438', '#3e4626', '#22280f']
-const PICO_CELESTE = ['#a8e0ff', '#3a9ae8', '#1f68b0', '#0e3a6a']
-const GORRA = ['#4a4a52', '#26262c', '#18181c', '#0a0a0c']
 const sum = (a, b) => a.map((v, i) => v + b[i])
+const res = (a, b) => a.map((v, i) => v - b[i])
+const esc = (a, k) => a.map((v) => v * k)
 
-const brazo = (hombro, codo, puno, tatuaje) => [
-  hueso(hombro, codo, 0.28, CASTANO, tatuaje ? { pinta: (p) => (Math.hypot(...sum(p, tatuaje.map((v) => -v))) < 0.1 ? '#d8283a' : null) } : {}),
-  hueso(codo, puno, 0.25, CASTANO),
-  el(puno, [0.2, 0.18, 0.18], CASTANO),
+// Centro de la cabeza, más bajo que el de los otros: va hundida en los trapecios.
+export const MOBY_H = [0.32, 0.28, 0]
+const enCabeza = (d) => sum(MOBY_H, d)
+
+// El torso: pecho y trapecios bajo la musculosa; los hombros, al aire.
+export const MOBY_TORSO = [
+  el([0, -1.3, 0], [0.78, 0.58, 0.98], CAMISETA),
+  el([0.08, -0.62, 0], [0.82, 0.7, 1.25], CAMISETA),
+  ...ambos((s) => el([-0.05, -0.05, s * 0.64], [0.5, 0.4, 0.56], CAMISETA, { rot: [s * -25, 0, 0] })),
+  ...ambos((s) => el([0.68, -0.45, s * 0.46], [0.34, 0.32, 0.46], CAMISETA, { rot: [s * 10, 0, -10] })),
+  ...ambos((s) => el([0.05, -0.4, s * 1.3], [0.48, 0.46, 0.44], C.pardo)),
+  hueso([0.65, -0.17, -0.42], [1.0, -0.62, 0], 0.02, C.gris, { flat: '#c8ccd2' }),
+  hueso([1.0, -0.62, 0], [0.65, -0.17, 0.42], 0.02, C.gris, { flat: '#c8ccd2' }),
+  el([1.03, -0.74, 0.03], [0.03, 0.12, 0.08], C.gris),
+  el([0, -1.66, 0], [0.8, 0.14, 1.0], C.blanco, { pinta: ([x, , z]) => (Math.floor(((Math.atan2(z, x) + Math.PI) / Math.PI) * 9) % 2 ? C.bermellon : null) }),
 ]
 
+// Tres bocanadas que suben de la brasa y se deshacen; u da la vuelta en un bucle.
+export const humareda = (brasa, u) =>
+  [0, 1, 2].map((i) => {
+    const k = (u + i / 3) % 1
+    return el(sum(brasa, [-0.3 * k, 0.15 + 1.0 * k, -0.2 - 0.4 * k]), esc([0.2, 0.16, 0.18], 1 - 0.45 * k), C.humo)
+  })
+
+// Pañuelo con dos colas largas que flamean; t en cuadros, una vuelta cada 8.
+const panuelo = (t) => {
+  const ola = (i, s) => 0.14 * Math.sin((t / 8) * Math.PI * 4 + i * 1.3 + (s > 0 ? 0 : 1.6))
+  const cola = (s) => {
+    const pts = [enCabeza([-0.55, 0.42, s * 0.1])]
+    for (let i = 1; i <= 4; i++) pts.push(sum(pts[i - 1], [-0.3, -0.1 + ola(i, s), s * 0.1]))
+    return pts.slice(1).map((q, i) => hueso(pts[i], q, 0.075 - i * 0.008, C.boca))
+  }
+  return [el(enCabeza([-0.03, 0.42, 0]), [0.78, 0.13, 0.72], C.boca), el(enCabeza([-0.62, 0.42, 0]), [0.1, 0.1, 0.12], C.boca), ...cola(1), ...cola(-1)]
+}
+
+// La cabeza en un instante t (cuadros). `abre` baja el pico; `pena` da vuelta
+// el ceño, de 0 (furia) a 1 (las cejas suben al centro); `llanto` va de un
+// hilo por la mejilla a chorros en arco hacia los lados.
+export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico = true } = {}) => {
+  const [abajo] = transformar([0, 0, -34 * abre], enCabeza([0.4, -0.3, 0])).formas([el(enCabeza([0.83, -0.3, 0]), [0.5, 0.09, 0.34], C.pico)])
+  const formas = [
+    el(MOBY_H, [0.72, 0.64, 0.68], C.pardo, {
+      pinta: (p) => {
+        const [x, y, z] = res(p, MOBY_H)
+        return llanto > 0.3 && x > 0.17 && y < 0.1 && y > -0.62 && Math.abs(Math.abs(z) - 0.48) < 0.08 ? LAGRIMA : null
+      },
+    }),
+    el(enCabeza([0.95, -0.14, 0]), [0.62, 0.17, 0.4], C.pico, { rot: [0, 0, -6] }),
+    abajo,
+    ...(abre > 0.15 ? [el(enCabeza([0.8, -0.26 - 0.1 * abre, 0]), [0.36, 0.03 + 0.09 * abre, 0.27], C.boca)] : []),
+    ...ambos((s) => el(enCabeza([0.69, 0.16, s * 0.44]), [0.09, 0.035, 0.13], C.oscuro, { flat: '#14161e', rot: [s * (15 - 35 * pena), 0, 0] })),
+    ...ambos((s) => el(enCabeza([0.61, 0.3 + 0.05 * pena, s * 0.38]), [0.34, 0.085, 0.2], C.oscuro, { flat: '#14100c', rot: [s * (62 * pena - 30), 0, -8] })),
+    ...panuelo(t),
+  ]
+  // Gotas en arco hacia afuera, una cada 0,4 cuadros; con más llanto llegan más lejos.
+  for (const s of [1, -1])
+    for (let j = 0; j < 6; j++) {
+      const a = (t % 0.4) + j * 0.4
+      if (a > 2.4 * llanto) continue
+      formas.push(el(sum(enCabeza([0.72, 0.1, s * 0.55]), [0.2 * a, 0.32 * a - 0.16 * a * a, s * 0.5 * a]), [0.08, 0.1, 0.08], C.vidrio, { flat: LAGRIMA }))
+    }
+  if (puroEnPico) {
+    const brasa = enCabeza([1.28, -0.6, -0.89])
+    formas.push(hueso(enCabeza([0.83, -0.26, -0.3]), enCabeza([1.25, -0.58, -0.85]), 0.12, C.puro), hueso(enCabeza([0.89, -0.3, -0.38]), enCabeza([0.93, -0.33, -0.43]), 0.135, C.oro), el(brasa, [0.08, 0.08, 0.08], C.naranja, { flat: '#ff7a2a', brilla: true }), ...humareda(brasa, t / 8))
+  }
+  return formas
+}
+
+// El busto de las tomas: de brazos cruzados sobre la musculosa.
+const brazoCruzado = (hombro, codo, puno) => [hueso(hombro, codo, 0.3, C.pardo), el(sum(hombro, esc(res(codo, hombro), 0.5)), [0.36, 0.32, 0.32], C.pardo), hueso(codo, puno, 0.28, C.pardo), el(puno, [0.25, 0.22, 0.22], C.pardo)]
 export const MOBY = [
-  el([0, -0.95, 0], [1.15, 0.85, 1.5], CAMISETA),
-  ...ambos((s) => el([0.05, -0.42, s * 1.15], [0.42, 0.36, 0.38], CASTANO)),
-  el([0.15, -0.1, 0], [0.64, 0.6, 0.68], CASTANO),
-  hueso([0.55, -0.2, -0.45], [0.75, -0.3, 0], 0.02, C.gris, { flat: '#c8ccd2' }),
-  hueso([0.75, -0.3, 0], [0.55, -0.2, 0.45], 0.02, C.gris, { flat: '#c8ccd2' }),
-  el([0.86, -0.42, 0.02], [0.03, 0.11, 0.08], C.gris),
-  el([0.25, 0.5, 0], [0.74, 0.66, 0.68], CASTANO, {
-    pinta: ([x, y, z]) => {
-      const lx = x - 0.25
-      if (y > 0.68 + Math.max(0, Math.abs(z) - 0.1) * 0.35 - Math.max(0, lx) * 0.05) return GORRA
-      if (lx > -0.25 && y > -0.05 && Math.abs(z) > 0.18) {
-        if (x > 0.42 && y < 0.6 && Math.abs(Math.abs(z) - 0.47) < 0.075) return LAGRIMA
-        return C.blanco
-      }
-      return null
-    },
-  }),
-  el([1.2, 0.36, 0], [0.62, 0.17, 0.4], PICO_CELESTE, { rot: [0, 0, -6] }),
-  el([1.1, 0.22, 0], [0.5, 0.09, 0.34], PICO_CELESTE),
-  el([1.3, 0.52, -0.05], [0.26, 0.04, 0.08], C.crema, { rot: [0, 35, -6] }),
-  el([1.3, 0.52, -0.05], [0.26, 0.04, 0.08], C.crema, { rot: [0, -35, -6] }),
-  ...ambos((s) => el([0.94, 0.64, s * 0.44], [0.09, 0.035, 0.13], C.oscuro, { flat: '#14161e', rot: [s * 15, 0, 0] })),
-  ...ambos((s) => el([0.9, 0.02, s * 0.62], [0.06, 0.09, 0.06], C.vidrio, { flat: LAGRIMA })),
-  ...ambos((s) => el([0.76, -0.28, s * 0.78], [0.05, 0.08, 0.05], C.vidrio, { flat: LAGRIMA })),
-  hueso([1.08, 0.24, -0.3], [1.5, -0.08, -0.85], 0.12, C.puro),
-  hueso([1.14, 0.2, -0.38], [1.18, 0.17, -0.43], 0.135, C.oro),
-  el([1.53, -0.1, -0.89], [0.08, 0.08, 0.08], C.naranja, { flat: '#ff7a2a', brilla: true }),
-  el([1.55, 0.2, -1.1], [0.2, 0.16, 0.18], C.humo),
-  el([1.4, 0.5, -1.3], [0.17, 0.14, 0.16], C.humo),
-  el([1.2, 0.75, -1.4], [0.13, 0.1, 0.12], C.humo),
-  ...brazo([0.1, -0.45, -1.2], [0.8, -0.8, -1.05], [1.12, -0.5, 0.55], [0.45, -0.62, -1.18]),
-  ...brazo([0.1, -0.45, 1.2], [0.85, -0.85, 1.05], [1.15, -0.66, -0.55]),
-]
-
-// Moby A parte de esta base: grande, ceño, ojos apretados, llanto a chorros
-// y el puro con su brasa y su humo.
-const brutoBase = ({ plumaje, ropa, pintaRopa }) => [
-  el([0, -0.95, 0], [1.2, 0.85, 1.55], ropa, { pinta: pintaRopa }),
-  el([0.15, -0.1, 0], [0.66, 0.6, 0.68], plumaje),
-  el([0.25, 0.5, 0], [0.76, 0.68, 0.7], plumaje, {
-    pinta: ([x, y, z]) => (x > 0.42 && y < 0.6 && y > -0.12 && Math.abs(Math.abs(z) - 0.48) < 0.08 ? LAGRIMA : null),
-  }),
-  el([1.2, 0.36, 0], [0.62, 0.17, 0.4], C.pico, { rot: [0, 0, -6] }),
-  el([1.08, 0.2, 0], [0.5, 0.09, 0.34], C.pico),
-  ...ambos((s) => el([0.94, 0.66, s * 0.44], [0.09, 0.035, 0.13], C.oscuro, { flat: '#14161e', rot: [s * 15, 0, 0] })),
-  ...ambos((s) => el([0.86, 0.8, s * 0.38], [0.34, 0.085, 0.2], C.oscuro, { flat: '#14100c', rot: [s * -30, 0, -8] })),
-  ...ambos((s) => [el([0.9, 0.02, s * 0.62], [0.06, 0.09, 0.06], C.vidrio, { flat: LAGRIMA }), el([0.76, -0.28, s * 0.78], [0.05, 0.08, 0.05], C.vidrio, { flat: LAGRIMA })]).flat(),
-  hueso([1.08, 0.24, -0.3], [1.5, -0.08, -0.85], 0.12, C.puro),
-  hueso([1.14, 0.2, -0.38], [1.18, 0.17, -0.43], 0.135, C.oro),
-  el([1.53, -0.1, -0.89], [0.08, 0.08, 0.08], C.naranja, { flat: '#ff7a2a', brilla: true }),
-  el([1.55, 0.2, -1.1], [0.2, 0.16, 0.18], C.humo),
-  el([1.4, 0.5, -1.3], [0.17, 0.14, 0.16], C.humo),
-  el([1.2, 0.75, -1.4], [0.13, 0.1, 0.12], C.humo),
-]
-
-// A · Comando: pañuelo rojo en la frente con las puntas al viento, camiseta
-// sin mangas y una canana de balas cruzada al pecho.
-export const MOBY_A = [
-  ...brutoBase({
-    plumaje: C.pardo,
-    ropa: CAMISETA,
-    pintaRopa: ([x, y, z]) => (x > 0 && Math.abs(y + 0.75 - z * 0.5) < 0.13 ? (Math.floor(z * 9) % 2 ? C.oro : C.cuero) : null),
-  }),
-  ...ambos((s) => el([0.05, -0.42, s * 1.18], [0.42, 0.36, 0.38], C.pardo)),
-  el([0.22, 0.92, 0], [0.8, 0.13, 0.74], C.boca),
-  hueso([-0.5, 0.9, 0.1], [-1.05, 0.62, 0.3], 0.07, C.boca),
-  hueso([-0.5, 0.9, -0.1], [-1.0, 0.5, -0.3], 0.07, C.boca),
+  ...MOBY_TORSO,
+  ...mobyCabeza(),
+  ...brazoCruzado([0.1, -0.5, -1.45], [0.85, -1.0, -1.25], [1.25, -0.7, 0.6]),
+  ...brazoCruzado([0.1, -0.5, 1.45], [0.9, -1.05, 1.25], [1.28, -0.88, -0.6]),
 ]
 
 // Duke: genuinamente bello y nada más. Plumaje marfil impecable, copete
@@ -275,9 +297,24 @@ export const DUKE_B = dukeBase({ ojos: ojosCerrados, menton: 14 }, [
   ...destello([-0.4, 1.4, -0.5]),
 ])
 
-// Duky es un pato de hule en su asiento eyectable. No hace nada. En el
-// apoyacabezas, las rayas de sus victorias.
+// Duky es el pato de hule gigante de Hofman: cuerpo ancho y bajo, pecho
+// que sube a una cabeza grande, cola alzada, alas ovaladas en relieve, pico
+// rojo anaranjado y ojos negros redondos. No hace nada.
 export const DUKY = [
+  el([-0.1, -1.15, 0], [1.3, 0.72, 1.0], C.hule),
+  el([0.5, -0.9, 0], [0.75, 0.66, 0.84], C.hule),
+  el([-1.1, -0.62, 0], [0.48, 0.3, 0.42], C.hule, { rot: [0, 0, 40] }),
+  el([0.3, -0.35, 0], [0.55, 0.5, 0.55], C.hule),
+  ...ambos((s) => el([-0.25, -0.85, s * 0.8], [0.6, 0.4, 0.16], C.hule, { rot: [0, 0, -12] })),
+  el([0.35, 0.2, 0], [0.7, 0.68, 0.66], C.hule),
+  el([1.02, 0.1, 0], [0.36, 0.14, 0.32], C.picoHule, { rot: [0, 0, 6] }),
+  ...ambos((s) => el([0.9, 0.38, s * 0.36], [0.07, 0.12, 0.11], C.oscuro, { flat: '#14161e' })),
+  ...ambos((s) => el([0.96, 0.43, s * 0.36], [0.02, 0.035, 0.03], C.blanco, { flat: '#ffffff' })),
+]
+
+// Su asiento eyectable, solo en la cabina. En el apoyacabezas, las rayas de
+// sus victorias.
+export const DUKY_ASIENTO = [
   placa([[-1.35, -1.9, -0.95], [-1.35, -1.9, 0.95], [-1.35, 0.9, 0.95], [-1.35, 0.9, -0.95]], 0.3, C.asiento),
   el([-1.3, 1.05, 0], [0.22, 0.42, 0.75], C.asiento, {
     pinta: ([x, y, z]) => {
@@ -291,19 +328,6 @@ export const DUKY = [
   }),
   placa([[-1.35, -1.9, -0.95], [-1.35, -1.9, 0.95], [0.9, -1.9, 0.95], [0.9, -1.9, -0.95]], 0.25, C.asiento),
   el([0.95, -1.75, 0], [0.06, 0.18, 0.24], C.rayas, { pinta: ([, y]) => (Math.floor((y + 2) * 14) % 2 ? '#1a1a1a' : null) }),
-  el([0, -1.1, 0], [1.25, 0.75, 0.95], C.hule, {
-    pinta: ([x, y, z]) => {
-      if (Math.abs(y + 1.3) < 0.09 && x > 0) return Math.abs(z) < 0.16 && x > 0.9 ? '#c8ccd2' : C.correa
-      if (Math.abs(Math.abs(z) - 0.42) < 0.1 && x > 0.1) return C.correa
-      return null
-    },
-  }),
-  el([-1.0, -0.65, 0], [0.38, 0.3, 0.42], C.hule, { rot: [0, 0, 35] }),
-  ...ambos((s) => el([-0.1, -0.95, s * 0.86], [0.6, 0.35, 0.14], C.hule)),
-  el([0.35, 0.2, 0], [0.66, 0.64, 0.62], C.hule),
-  el([1.04, 0.04, 0], [0.44, 0.13, 0.38], C.naranja),
-  ...ambos((s) => el([0.86, 0.36, s * 0.28], [0.05, 0.11, 0.075], C.oscuro, { flat: '#14161e' })),
-  ...ambos((s) => el([0.9, 0.4, s * 0.28], [0.02, 0.03, 0.025], C.blanco, { flat: '#ffffff' })),
 ]
 
 // ── Cazas ────────────────────────────────────────────────────────────────
@@ -484,4 +508,4 @@ export const CAZA_DUKY = [
   destelloMotor([-7.95, 0.15, 0], [0.35, 0.5, 0.5], '#fff0ff', 0.95, 3),
 ]
 
-export { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello, LAGRIMA }
+export { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello }

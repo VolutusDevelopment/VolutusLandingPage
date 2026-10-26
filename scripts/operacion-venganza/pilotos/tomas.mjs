@@ -1,8 +1,8 @@
-// Láminas v12: el busto de cada piloto y su caza, desde seis tomas fijas.
+// Láminas v12 (v13 la de moby-duck): el busto de cada piloto y su caza, desde seis tomas fijas.
 //
 //   node scripts/operacion-venganza/pilotos/tomas.mjs <carpeta>
 //
-// Escribe <carpeta>/project/V12-<piloto>.dc.html, un tablero del lienzo de Design.
+// Escribe <carpeta>/project/V12-<piloto>.dc.html (o la `lamina` del piloto), un tablero del lienzo de Design.
 
 import * as M from './modelos.mjs'
 import { pixel3d, marco } from './tres.mjs'
@@ -34,20 +34,20 @@ const PERSONAJES = [
     nombre: 'duck-one',
     papel: 'El líder del escuadrón · nivel 1',
     piloto: M.DUCK_ONE,
-    encuadre: { c: [0.2, 0.25, 0], radio: 1.3 },
+    encuadre: { c: [0.2, 0.35, 0], radio: 1.4 },
     caza: M.CAZA_DUCK_ONE,
     modelo: 'Boeing F-15EX Eagle II, gris tradicional',
-    detalle: 'Sin gorro y con gafas de aviador clásicas. El mentón arriba y una ceja alzada por sobre el marco. Medallas chuecas pegadas como stickers en el uniforme.',
+    detalle: 'Gorro cuartelero ladeado y gafas de aviador clásicas. El mentón arriba y una ceja alzada por sobre el marco. Medallas chuecas pegadas como stickers en el uniforme.',
   },
   {
     archivo: 'moby-duck',
+    lamina: 'V13-moby-a',
     nombre: 'moby-duck',
     papel: 'La fuerza bruta · nivel 2',
     piloto: M.MOBY,
-    encuadre: { c: [0.45, 0.1, -0.1], radio: 1.6 },
     caza: M.CAZA_MOBY,
     modelo: 'Fairchild Republic A-10 Thunderbolt II, negro',
-    detalle: 'Un pato colorado, la especie del pico celeste: cuerpo castaño, gorra negra natural y mejillas blancas. El más grande del escuadrón, de brazos cruzados, camiseta sin mangas, placa al cuello y un corazón tatuado. El borde de la gorra le baja al centro como un ceño. El puro le hace llorar a chorros y se lastimó solo el pico.',
+    detalle: 'El comando: espalda en V, trapecios que le tragan el cuello y la cabeza chica hundida entre los hombros, de brazos cruzados. Musculosa oliva, placas al cuello, pretina a rayas y pañuelo rojo con las colas al viento. Ceño de matón, el puro echando humo y el llanto que no para.',
   },
   {
     archivo: 'duke',
@@ -66,7 +66,7 @@ const PERSONAJES = [
     piloto: M.DUKY,
     caza: M.CAZA_DUKY,
     modelo: 'Lockheed Martin F-35A Lightning II, negro',
-    detalle: 'Un pato de hule atado a su asiento eyectable; ninguna toma le cambia la expresión. Su F-35 es negro furtivo, con la cabina dorada del real y las marcas de victorias en amarillo, lo único amarillo que le queda. Deja la estela de un motor F135 real: azul violeta con diamantes de choque.',
+    detalle: 'El pato de hule gigante, de cuerpo ancho, cola alzada y pico rojo; ninguna toma le cambia la expresión. Su F-35 es negro furtivo, con la cabina dorada del real y las marcas de victorias en amarillo, lo único amarillo que le queda. Deja la estela de un motor F135 real: azul violeta con diamantes de choque.',
   },
 ]
 
@@ -122,4 +122,4 @@ return {};
 </html>
 `
 
-for (const p of PERSONAJES) writeFileSync(`${RAIZ}/project/V12-${p.archivo}.dc.html`, ficha(p))
+for (const p of PERSONAJES) writeFileSync(`${RAIZ}/project/${p.lamina ?? `V12-${p.archivo}`}.dc.html`, ficha(p))

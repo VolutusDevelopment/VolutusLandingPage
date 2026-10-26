@@ -1,6 +1,7 @@
 import Inicio from './Inicio.jsx'
 import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
+import OperacionVenganza from './OperacionVenganza.jsx'
 import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
@@ -51,6 +52,7 @@ export const COMPONENTES = {
   '/articulos/casos-para-un-agente-de-ia': CasosParaUnAgenteDeIa,
   '/articulos/como-trabajamos': ComoTrabajamos,
   '/nosotros': Nosotros,
+  '/operacion-venganza': OperacionVenganza,
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
   '/404': NoEncontrada,

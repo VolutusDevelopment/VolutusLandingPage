@@ -390,8 +390,8 @@ function raiz(ruta) {
 }
 
 function cielo(ruta) {
-  const servicio = servicioDeRuta.get(ruta)
-  return servicio ? `<meta name="theme-color" content="${servicio.color}" />` : CIELO
+  const color = servicioDeRuta.get(ruta)?.color ?? PAGINAS[ruta].fondo
+  return color ? `<meta name="theme-color" content="${color}" />` : CIELO
 }
 
 // Los reemplazos van como función para que el texto entre literal: como cadena,

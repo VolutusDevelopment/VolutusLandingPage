@@ -1,11 +1,11 @@
 // Los cuatro pilotos de cuerpo entero: caminando en el lugar y con tres
 // gestos cada uno. Cada pose es una figura de tres.mjs para un instante.
 
-import { el, rotacion } from './tres.mjs'
+import { el, transformar } from './tres.mjs'
 import * as M from './modelos.mjs'
 
 const C = M.RAMPAS
-const { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello, LAGRIMA } = M
+const { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello } = M
 
 // ── Vectores y movimiento ────────────────────────────────────────────────
 
@@ -17,30 +17,6 @@ const uni = (a) => esc(a, 1 / Math.hypot(...a))
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const suave = (k) => (k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k))
 const aplicar = (R, v) => R.map((f) => pto(f, v))
-const trasp = (R) => [0, 1, 2].map((j) => [R[0][j], R[1][j], R[2][j]])
-const mul = (A, B) => A.map((f) => [0, 1, 2].map((j) => f[0] * B[0][j] + f[1] * B[1][j] + f[2] * B[2][j]))
-
-// Gira un grupo de formas en torno a `pivote` y lo desplaza, pintura incluida.
-const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
-  const R = rotacion(rot)
-  const Rt = trasp(R)
-  const ida = (p) => sum(sum(aplicar(R, res(p, pivote)), pivote), mas)
-  const vuelta = (p) => sum(aplicar(Rt, res(res(p, mas), pivote)), pivote)
-  const formas = (lista) =>
-    lista.map((f) => {
-      const g =
-        f.k === 'e'
-          ? { ...f, c: ida(f.c), M: mul(R, f.M) }
-          : {
-              ...f,
-              centro: ida(f.centro),
-              tris: f.tris.map((t) => ({ a: ida(t.a), b: ida(t.b), c: ida(t.c), ...(t.na ? { na: aplicar(R, t.na), nb: aplicar(R, t.nb), nc: aplicar(R, t.nc) } : {}) })),
-            }
-      if (f.pinta) g.pinta = (p, n) => f.pinta(vuelta(p), aplicar(Rt, n))
-      return g
-    })
-  return { formas, punto: ida }
-}
 
 // Codo de un brazo de dos tramos que va del hombro a la mano, doblado hacia
 // `dobla`. Si la mano queda lejos, el brazo se estira como de goma.
@@ -265,23 +241,23 @@ const DUKE = {
 
 // ── duky ─────────────────────────────────────────────────────────────────
 
-// Duky no tiene brazos: sus alas de hule son las formas 6 y 7, la cabeza va
-// de la 8 en adelante. Camina con el asiento puesto, sobre pies de juguete.
-const DUKY_CUERPO = M.DUKY.slice(0, 6)
-const DUKY_ALAS = M.DUKY.slice(6, 8)
-const DUKY_CABEZA = M.DUKY.slice(8)
+// Duky no tiene brazos: sus alas de hule son las formas 4 y 5, la cabeza va
+// de la 6 en adelante. Camina sobre pies de juguete.
+const DUKY_CUERPO = M.DUKY.slice(0, 4)
+const DUKY_ALAS = M.DUKY.slice(4, 6)
+const DUKY_CABEZA = M.DUKY.slice(6)
 
 const pDuky = {
-  pivote: [-0.2, -2.05, 0],
-  cadera: [-0.2, -2.05, 0.45],
-  suelo: -2.45,
+  pivote: [-0.2, -1.8, 0],
+  cadera: [-0.2, -1.8, 0.45],
+  suelo: -2.2,
   sombra: [1.5, 1.1],
   pierna: { adelante: 0.1, A: 0.16, alto: 0.12, grosor: 0.06, pie: [0.2, 0.05, 0.13] },
   andar: { balanceo: 7, sube: 0.04, giro: 7 },
 }
 
 const dukyFigura = ({ fase = null, ala = 0, cabeza = 0, salto = 0, inclina = 0 }) => {
-  const alas = ambos((s) => transformar([s < 0 ? ala : 0, 0, 0], [0.15, -0.68, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
+  const alas = ambos((s) => transformar([s < 0 ? ala : 0, 0, 0], [0.2, -0.6, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
   const testa = transformar([0, 0, cabeza], [0.2, -0.35, 0]).formas(DUKY_CABEZA)
   return figura(pDuky, { tronco: [...DUKY_CUERPO, ...alas, ...testa], fase, salto, inclina })
 }
@@ -290,7 +266,7 @@ const DUKY = {
   archivo: 'duky',
   nombre: 'duky',
   papel: 'El fantasma amarillo · nivel 3',
-  detalle: 'Camina con el asiento eyectable puesto, a pasitos de juguete de cuerda, y la cara de siempre. Gesticula a su manera: un aleteo mínimo, dos cabeceos y un salto en el lugar. Ninguno le cambia la expresión. Cuando le toca hablar aparecen tres puntos, y nada más.',
+  detalle: 'El pato de hule gigante, sin asiento: camina a pasitos de juguete de cuerda, y la cara de siempre. Gesticula a su manera: un aleteo mínimo, dos cabeceos y un salto en el lugar. Ninguno le cambia la expresión. Cuando le toca hablar aparecen tres puntos, y nada más.',
   andando: (fase) => dukyFigura({ fase }),
   sentado: (u) => dukyFigura({ salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
   hablando: (u) => [...dukyFigura({}), ...[0, 1, 2].filter((i) => u >= 0.15 + i * 0.2 && u < 0.9).map((i) => el([0.6 - (1 - i) * 0.15, 1.2, (1 - i) * 0.45], [0.11, 0.11, 0.11], null, { flat: '#ffffff', brilla: true }))],
@@ -310,57 +286,52 @@ const DUKY = {
 
 // ── moby-duck ────────────────────────────────────────────────────────────
 
-// Del busto MOBY_A se animan el humo, las lágrimas y las puntas del pañuelo.
-const esHumo = (f) => f.rampa === C.humo
-const esLagrima = (f) => f.flat === LAGRIMA && f.k === 'e'
-const MOBY_FIJO = M.MOBY_A.slice(0, -2).filter((f) => !esHumo(f) && !esLagrima(f))
+// Torso y cabeza en el instante u del bucle: el pañuelo flamea y el puro humea.
+const mobyVivo = (u, estado) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, ...estado })]
 
-const mobyVivo = (u) => {
-  const humo = [0, 1, 2].map((i) => {
-    const k = (u + i / 3) % 1
-    return el([1.55 - 0.3 * k, 0.05 + 1.0 * k, -1.05 - 0.4 * k], esc([0.2, 0.16, 0.18], 1 - 0.45 * k), C.humo)
-  })
-  const lagrimas = ambos((s) => [0, 1].map((i) => {
-    const k = (u * 2 + i / 2) % 1
-    return el([0.92 - 0.18 * k, 0.1 - 0.55 * k, s * (0.62 + 0.18 * k)], [0.05, 0.085, 0.05], C.vidrio, { flat: LAGRIMA })
-  })).flat()
-  const ondea = 0.12 * Math.sin(u * Math.PI * 4)
-  const puntas = [hueso([-0.5, 0.9, 0.1], [-1.05, 0.62 + ondea, 0.3], 0.07, C.boca), hueso([-0.5, 0.9, -0.1], [-1.0, 0.5 - ondea, -0.3], 0.07, C.boca)]
-  return [...MOBY_FIJO, ...humo, ...lagrimas, ...puntas]
-}
-
+// Brazos gruesos con bíceps y antebrazo marcados; piernas cortas y anchas.
 const pMoby = {
-  pivote: [0, -1.6, 0],
-  hombro: [0.05, -0.5, 1.35],
-  cadera: [0, -1.6, 0.6],
-  suelo: -2.5,
-  sombra: [1.5, 1.3],
-  brazo: { L1: 0.55, L2: 0.55, g1: 0.26, g2: 0.23, manga: C.pardo },
+  pivote: [0, -1.75, 0],
+  hombro: [0.05, -0.5, 1.45],
+  cadera: [0, -1.75, 0.62],
+  suelo: -2.55,
+  sombra: [1.7, 1.6],
+  brazo: { L1: 0.62, L2: 0.6, g1: 0.28, g2: 0.26, manga: C.pardo },
   dobla: (s) => [-1, 0, s * 0.5],
-  pierna: { adelante: 0.15, A: 0.32, alto: 0.18, grosor: 0.1, pie: [0.34, 0.08, 0.24] },
-  andar: { balanceo: 9, sube: 0.05, giro: 4 },
-  braceo: 0.36,
-  reposo: reposoDe([0.15, -1.45, 1.6]),
-  mano: (b) => [el(b.mano, [0.2, 0.18, 0.18], C.pardo)],
+  pierna: { adelante: 0.15, A: 0.26, alto: 0.13, grosor: 0.15, pie: [0.42, 0.1, 0.3] },
+  andar: { balanceo: 8, sube: 0.07, giro: 6 },
+  braceo: 0.3,
+  reposo: reposoDe([0.2, -1.55, 1.9]),
+  mano: (b) => [el(b.formas[0].c, [0.34, 0.31, 0.31], C.pardo), el(lerp(b.codo, b.mano, 0.42), [0.3, 0.29, 0.29], C.pardo), el(b.mano, [0.25, 0.22, 0.22], C.pardo)],
 }
+
+// Pisa tan pesado que levanta polvo: dos nubes al lado del pie que apoya.
+const polvo = (fase) =>
+  ambos((s) => {
+    const ψ = fase * Math.PI * 2 + (s > 0 ? 0 : Math.PI)
+    const k = (((ψ / (Math.PI * 2)) % 1) + 1) % 1
+    if (k > 0.25) return []
+    const x = 0.15 + pMoby.pierna.A * Math.cos(ψ)
+    return [1, -1].map((d) => el([x + d * (0.38 + k * 0.6), pMoby.suelo + 0.08 + k * 0.2, s * 0.62 + d * 0.1], esc([0.16, 0.12, 0.14], 1 - k * 1.5), C.crema))
+  }).flat()
 
 const conBiceps = (g, u) => ({
   ...pMoby,
   dobla: (s) => (s > 0 ? lerp([-1, 0, 0.5], [0, -0.3, 1], g) : pMoby.dobla(s)),
-  mano: (b, s) => [...pMoby.mano(b, s), ...(s > 0 && g > 0.5 ? [el(sum(b.formas[0].c, [0, 0.13, 0]), esc([0.24, 0.2, 0.2], 0.85 + 0.15 * Math.abs(vaiven(u, 2))), C.pardo)] : [])],
+  mano: (b, s) => [...pMoby.mano(b, s), ...(s > 0 && g > 0.5 ? [el(sum(b.formas[0].c, [0, 0.18, 0]), esc([0.3, 0.26, 0.26], 0.85 + 0.15 * Math.abs(vaiven(u, 2))), C.pardo)] : [])],
 })
 
 const MOBY = {
   archivo: 'moby-duck',
   nombre: 'moby-duck',
   papel: 'La fuerza bruta · nivel 2',
-  detalle: 'Anda abierto de brazos y cargado de hombros, con el puro humeando y las puntas del pañuelo al viento. Saca músculo, se golpea la palma con el puño y se seca el llanto con el antebrazo, que le vuelve a correr al instante. Habla a los gritos, con el puño en alto.',
-  andando: (fase) => figura(pMoby, { tronco: mobyVivo(fase), manos: manosAndando(pMoby, fase), fase }),
+  detalle: 'Espalda en V, trapecios que le tragan el cuello y antebrazos de leñador: anda abierto de brazos y pisa tan pesado que levanta polvo, con el puro humeando y las colas del pañuelo al viento. Saca músculo, se golpea la palma con el puño y se seca el llanto con el antebrazo, que le vuelve a correr al instante. Habla a los gritos, con el puño en alto.',
+  andando: (fase) => [...figura(pMoby, { tronco: mobyVivo(fase), manos: manosAndando(pMoby, fase), fase }), ...polvo(fase)],
   sentado: (u, manos) => figura(pMoby, { tronco: mobyVivo(u), manos, salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
   hablando: (u) => {
     const g = curva(u)
     const p = { ...pMoby, dobla: (s) => (s > 0 ? [0, -0.3, 1] : pMoby.dobla(s)) }
-    return figura(p, { tronco: hablar(mobyVivo(u), Math.min(1, silaba(u) * 1.2)), manos: { 1: lerp(pMoby.reposo(1), [0.45, 0.55 + 0.14 * Math.abs(vaiven(u, 4)) * g, 1.75], g), [-1]: pMoby.reposo(-1) }, inclina: -4 * g })
+    return figura(p, { tronco: hablar(mobyVivo(u), Math.min(1, silaba(u) * 1.2)), manos: { 1: lerp(pMoby.reposo(1), [0.55, 0.4 + 0.14 * Math.abs(vaiven(u, 4)) * g, 1.9], g), [-1]: pMoby.reposo(-1) }, inclina: -4 * g })
   },
   gestos: [
     {
@@ -368,7 +339,7 @@ const MOBY = {
       lado: 1,
       pose: (u) => {
         const g = curva(u)
-        return figura(conBiceps(g, u), { tronco: mobyVivo(u), manos: { 1: lerp(pMoby.reposo(1), [0.25, 0.35, 1.75], g), [-1]: pMoby.reposo(-1) }, inclina: 2 * g })
+        return figura(conBiceps(g, u), { tronco: mobyVivo(u), manos: { 1: lerp(pMoby.reposo(1), [0.25, 0.2, 1.95], g), [-1]: pMoby.reposo(-1) }, inclina: 2 * g })
       },
     },
     {
@@ -377,8 +348,8 @@ const MOBY = {
       pose: (u) => {
         const g = curva(u)
         const golpe = Math.max(0, vaiven(u, 2.5))
-        const palma = lerp(pMoby.reposo(1), [1.35, -0.85, 0.2], g)
-        const puno = lerp(pMoby.reposo(-1), [1.4, -0.45 - 0.25 * (1 - golpe), -0.3 + 0.2 * (1 - golpe)], g)
+        const palma = lerp(pMoby.reposo(1), [1.5, -1.0, 0.25], g)
+        const puno = lerp(pMoby.reposo(-1), [1.55, -0.55 - 0.25 * (1 - golpe), -0.35 + 0.2 * (1 - golpe)], g)
         return figura(pMoby, { tronco: mobyVivo(u), manos: { 1: palma, [-1]: puno }, inclina: -3 * g })
       },
     },
@@ -388,7 +359,7 @@ const MOBY = {
       pose: (u) => {
         const g = curva(u)
         const p = { ...pMoby, dobla: (s) => (s > 0 ? [-0.3, -1, 0.6] : pMoby.dobla(s)) }
-        return figura(p, { tronco: mobyVivo(u), manos: { 1: lerp(pMoby.reposo(1), [1.08, 0.75, 0.6 - 0.55 * (0.5 + 0.5 * vaiven(u, 2))], g), [-1]: pMoby.reposo(-1) }, inclina: 5 * g })
+        return figura(p, { tronco: mobyVivo(u), manos: { 1: lerp(pMoby.reposo(1), [1.25, 0.45, 0.6 - 0.55 * (0.5 + 0.5 * vaiven(u, 2))], g), [-1]: pMoby.reposo(-1) }, inclina: 5 * g })
       },
     },
   ],
@@ -396,4 +367,4 @@ const MOBY = {
 
 export const PERSONAJES = [DUCK_ONE, MOBY, DUKE, DUKY]
 
-export { figura, transformar, pDuckOne, manosAndando }
+export { figura, pDuckOne, pMoby, manosAndando }

@@ -1,0 +1,176 @@
+/* ---- Operación Venganza ----
+   Una pantalla: la carga en el azul del juego y la escena en la noche de la
+   sala. El documento toma el mismo color (ver `html` en index.css), y
+   operacion-venganza.js cambia `theme-color` al empezar la escena. Nada va
+   fijo: la página ocupa la vista en el flujo, y Safari no pinta franjas. */
+:root:has(.venganza) {
+  --fondo-de-arriba: #5c94fc;
+}
+
+:root:has(.en-escena) {
+  --fondo-de-arriba: #0a1a2a;
+}
+
+.venganza {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: max(var(--e-6), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) max(var(--e-6), env(safe-area-inset-bottom))
+    max(var(--e-4), env(safe-area-inset-left));
+  background: var(--fondo-de-arriba);
+  color: #0a1a2a;
+}
+
+.venganza.en-escena {
+  color: #ffffff;
+}
+
+/* El título es para lectores y buscadores: la pantalla es del juego. */
+.venganza-titulo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.venganza section[hidden] {
+  display: none;
+}
+
+/* ---- La carga ----
+   duck-one de tres cuartos: la tira de ocho pasos (lib/escena1.js, `CARGA`)
+   corre de a un cuadro, sin suavizar. La barra se llena de a bloques de
+   20 px: 12 en teléfono, 18 desde L; `--llenos` lo pone el JS. */
+.carga {
+  --lado: 288px;
+  --bloques: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e-8);
+}
+
+@media (min-width: 1024px) {
+  .carga {
+    --lado: 432px;
+    --bloques: 18;
+  }
+}
+
+.carga-pato {
+  width: var(--lado);
+  height: var(--lado);
+  background: url('/operacion-venganza/carga.png') 0 0 / calc(var(--lado) * 8) var(--lado) no-repeat;
+  image-rendering: pixelated;
+  animation: carga-pasos 0.8s steps(8) infinite;
+}
+
+@keyframes carga-pasos {
+  to {
+    background-position: calc(var(--lado) * -8) 0;
+  }
+}
+
+.carga-barra {
+  box-sizing: content-box;
+  width: calc(var(--bloques) * 20px);
+  height: 16px;
+  padding: 4px 0 4px 4px;
+  border: 4px solid currentColor;
+  margin-top: var(--e-8);
+}
+
+.carga-llena {
+  width: calc(var(--llenos, 0) * 20px);
+  height: 100%;
+  background: repeating-linear-gradient(90deg, currentColor 0 16px, transparent 16px 20px);
+}
+
+.carga-texto,
+.escena-quien,
+.escena-boton {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.carga-texto {
+  margin: 0;
+}
+
+/* ---- La escena ----
+   El cuadro es 4:3 en toda pantalla, del ancho que deje libre su alto. La línea
+   tiene su alto fijo: el texto cambia y nada se mueve. */
+.escena,
+.fin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e-6);
+  width: 100%;
+}
+
+.escena-cuadro {
+  display: block;
+  width: min(100%, calc((100svh - 17rem) * 4 / 3));
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+
+.escena-linea {
+  width: min(100%, 40rem);
+  height: 7.5rem;
+  text-align: center;
+}
+
+.escena-quien {
+  min-height: 1.5em;
+  margin: 0 0 var(--e-2);
+  color: #9fc0ff;
+}
+
+.escena-texto {
+  margin: 0;
+  font-size: var(--texto-lg);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.escena-texto.acotacion {
+  font-size: var(--texto-base);
+  font-style: italic;
+  color: #c8d6ea;
+}
+
+.escena-mandos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--e-3);
+  margin: 0;
+}
+
+.escena-boton {
+  min-height: 44px;
+  padding: 0 var(--e-4);
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.escena-boton:hover {
+  border-color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carga-pato {
+    animation: none;
+  }
+}

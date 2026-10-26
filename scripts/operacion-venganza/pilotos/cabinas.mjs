@@ -122,9 +122,9 @@ const CABINAS = {
     ],
   },
   'moby-duck': {
-    caza: M.CAZA_MOBY, cabeza: [4.9, 0.95], cabecita: [5.2, 0.95], izquierda: [0.3, 0.95, -1.5], cabezaU: [0.25, 0.5], k: 0.25, alto: 1.1, arcos: [5.6, 4.1], frente: 1.9,
+    caza: M.CAZA_MOBY, cabeza: [4.9, 0.95], cabecita: [5.2, 0.95], izquierda: [0.3, 0.95, -1.5], cabezaU: [0.32, 0.28], k: 0.25, alto: 1.1, arcos: [5.6, 4.1], frente: 1.9,
     ancho: 2.8, marco: C.negro,
-    consola: C.negro, tablero: C.negro, asiento: C.negro, xAsiento: -1.05, pata: C.naranja, cadera: -1.55,
+    consola: C.negro, tablero: C.negro, asiento: C.negro, xAsiento: -1.05, pata: C.naranja, cadera: -1.75,
     panel: [-1.9, 1.9, { borde: '#0a0a0c', fondo: '#26262c', linea: '#d8282c', columnas: 2 }],
     // Relojes de aguja y un cenicero con colillas. Su cámara izquierda va más atrás: el humo del puro sale por ese lado.
     delante: () => [
@@ -142,7 +142,8 @@ const CABINAS = {
     consola: C.oscuro, tablero: C.oscuro, asiento: null, xAsiento: -1.35, pata: C.naranja, cadera: -1.8,
     panel: [-1.35, 1.35, { borde: '#0a0e14', fondo: '#1a2a4a', linea: '#f8cc1c', columnas: 1 }],
     // Una sola pantalla panorámica: el F-35 no lleva visor, lo proyecta el casco.
-    delante: () => [],
+    // Su asiento eyectable va aparte: fuera de la cabina, Duky no lo lleva.
+    delante: () => M.DUKY_ASIENTO,
   },
 }
 
@@ -247,7 +248,7 @@ const TEXTOS = {
   'duck-one': ['Boeing F-15EX Eagle II, gris tradicional', 'Desde dentro de su F-15EX, con la cámara sobre el tablero: pantalla panorámica, dos retrovisores en el arco del parabrisas, de uno de los cuales cuelga una medalla, y detrás el escuadrón en formación sobre el mar.'],
   'moby-duck': ['Fairchild Republic A-10 Thunderbolt II, negro', 'Desde dentro del A-10, que le queda chico: relojes de aguja, un cenicero con colillas en el tablero y el humo del puro llenando la cúpula. Detrás vuelan los otros tres.'],
   duke: ['Boeing F-15EX Eagle II, perla, oro y rosa', 'Desde dentro de su F-15EX perla: consolas rosa, arco dorado en el parabrisas y un espejo de belleza con bombillas colgado de él, para mirarse en pleno vuelo.'],
-  duky: ['Lockheed Martin F-35A Lightning II, negro', 'Desde dentro del F-35, bajo la cúpula dorada: una sola pantalla panorámica y, atado a su asiento eyectable, un pato de hule que no mira nada mientras el escuadrón lo sigue.'],
+  duky: ['Lockheed Martin F-35A Lightning II, negro', 'Desde dentro del F-35, bajo la cúpula dorada: una sola pantalla panorámica y, sentado en su asiento eyectable, un pato de hule que no mira nada mientras el escuadrón lo sigue.'],
 }
 
 const lamina = (p) => {

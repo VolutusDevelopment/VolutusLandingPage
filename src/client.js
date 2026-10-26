@@ -315,6 +315,12 @@ function empezarSolo(boton, alternar) {
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
+// Operación Venganza baja su código solo en su página.
+function initOperacionVenganza() {
+  const raiz = document.querySelector('.venganza')
+  if (raiz) import('./operacion-venganza.js').then((juego) => juego.default(raiz))
+}
+
 // Cada parte arranca por su cuenta: si una falla en algún navegador, las demás
 // siguen. En fila, un error en la primera apagaba todas las que venían después.
 export default function init() {
@@ -341,6 +347,7 @@ export default function init() {
     initTienda,
     initTitularDelContacto,
     initFondoDelMar,
+    initOperacionVenganza,
   ]) {
     try {
       iniciar()

@@ -18,6 +18,28 @@ const mv = (M, v) => M.map((f) => pto(f, v))
 const tr = (M) => [0, 1, 2].map((j) => [M[0][j], M[1][j], M[2][j]])
 export const rotacion = ([x = 0, y = 0, z = 0] = []) => mm(rotY(y), mm(rotZ(z), rotX(x)))
 
+// Gira un grupo de formas en torno a `pivote` y lo desplaza, pintura incluida.
+export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
+  const R = rotacion(rot)
+  const Rt = tr(R)
+  const ida = (p) => sum(sum(mv(R, res(p, pivote)), pivote), mas)
+  const vuelta = (p) => sum(mv(Rt, res(res(p, mas), pivote)), pivote)
+  const formas = (lista) =>
+    lista.map((f) => {
+      const g =
+        f.k === 'e'
+          ? { ...f, c: ida(f.c), M: mm(R, f.M) }
+          : {
+              ...f,
+              centro: ida(f.centro),
+              tris: f.tris.map((t) => ({ a: ida(t.a), b: ida(t.b), c: ida(t.c), ...(t.na ? { na: mv(R, t.na), nb: mv(R, t.nb), nc: mv(R, t.nc) } : {}) })),
+            }
+      if (f.pinta) g.pinta = (p, n) => f.pinta(vuelta(p), mv(Rt, n))
+      return g
+    })
+  return { formas, punto: ida }
+}
+
 // ── Primitivas ───────────────────────────────────────────────────────────
 
 // Elipsoide. o.rot = [x, y, z] en grados; o.flat = color plano; o.vidrio deja

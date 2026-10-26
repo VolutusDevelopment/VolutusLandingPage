@@ -293,6 +293,16 @@ export const PAGINAS = {
       'Un Duck Hunt hecho con la nube de Volutus: los patos salen de los cúmulos y caen a través de ellos. Se juega en el navegador, sin instalar nada.',
     tarjetaAlt: 'El pato del juego, en píxeles cuadrados, volando en un cielo azul.',
   },
+  // El juego al que lleva el portaaviones de /nosotros. `fondo` es el color de
+  // su pantalla de carga, para `theme-color`.
+  '/operacion-venganza': {
+    archivo: 'operacion-venganza.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza — Volutus',
+    descripcion:
+      'Cazaste quince patos en Nosotros y la armada quiere a los responsables. Escena 1: llega el portaaviones Sitting Ducks. Se juega en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**
