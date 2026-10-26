@@ -8,8 +8,7 @@
  *
  * Cada toma se pinta en un lienzo de `LADO` × `ALTO` px, la franja del medio
  * de cada cuadro en 4:3, que el CSS agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas, y
- * tocar la escena, «Siguiente», Enter o la barra espaciadora pasan a la
- * siguiente. Sin movimiento, cada toma queda en un solo cuadro.
+ * «Siguiente», Enter o la barra espaciadora pasan a la siguiente. Sin movimiento, cada toma queda en un solo cuadro.
  *
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
  * que flota (ratón, trackpad) es un cursor, y si no, una huella.
@@ -108,7 +107,6 @@ function escena(raiz, tiras, modo) {
     raiz.querySelector('.fin a').focus()
   }
 
-  raiz.querySelector('.escena-cuadro').addEventListener('click', avanzar)
   raiz.querySelector('.escena-siguiente').addEventListener('click', avanzar)
   raiz.querySelector('.escena-saltar').addEventListener('click', terminar)
   raiz.querySelector('.fin-otra-vez').addEventListener('click', () => {
