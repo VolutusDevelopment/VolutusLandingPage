@@ -28,7 +28,8 @@
 }
 
 /* El título es para lectores y buscadores: la pantalla es del juego. */
-.venganza-titulo {
+.venganza-titulo,
+.nivel-leido {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -175,7 +176,14 @@
 .carga-texto,
 .escena-quien,
 .escena-boton,
-.fin-escenas-numero {
+.fin-escenas-numero,
+.nivel-nombre,
+.nivel-rotulo,
+.nivel-pv,
+.nivel-quien,
+.nivel-pista,
+.nivel-antetitulo,
+.nivel-controles {
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   letter-spacing: 0.14em;
@@ -357,6 +365,243 @@
 
 .fin-cargas[open] summary {
   margin-bottom: var(--e-2);
+}
+
+/* ---- El nivel ----
+   El cielo del combate ocupa la vista entera: el lienzo va dentro de la
+   página y no fijo, como todo aquí, y lo demás flota encima. La portada y los
+   paneles quedan al centro; arriba, el nivel y la pausa; abajo, los PV y el
+   diálogo, en una caja de borde blanco de alto fijo. Mientras se juega no
+   hay cursor del sistema en ninguna parte: el cursor es el personaje. */
+.nivel {
+  height: 100svh;
+  min-height: 0;
+  padding: max(var(--e-4), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) max(var(--e-4), env(safe-area-inset-bottom))
+    max(var(--e-4), env(safe-area-inset-left));
+  color: #ffffff;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.nivel.jugando,
+.nivel.jugando * {
+  cursor: none;
+}
+
+.nivel-cielo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+/* Quien juega va encima de todo, también del diálogo, y no se interpone. */
+.nivel-jugador {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.nivel-jugador[hidden] {
+  display: none;
+}
+
+.nivel .escena-boton {
+  background: rgb(10 26 42 / 0.6);
+}
+
+a.escena-boton {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* La pausa, solo mientras se juega: pausado, sigue el panel. */
+.nivel:not(.jugando) .nivel-pausa {
+  visibility: hidden;
+}
+
+.nivel-arriba {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-4);
+  padding: max(var(--e-4), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) 0 max(var(--e-4), env(safe-area-inset-left));
+  pointer-events: none;
+}
+
+.nivel-arriba > * {
+  pointer-events: auto;
+}
+
+.nivel-nombre {
+  margin: 0;
+  text-shadow: 0 1px 0 #0a1a2a;
+}
+
+.nivel-rotulo {
+  position: absolute;
+  top: calc(max(var(--e-4), env(safe-area-inset-top)) + 4rem);
+  left: 50%;
+  margin: 0;
+  padding: var(--e-1) var(--e-3);
+  border-radius: 999px;
+  background: rgb(10 26 42 / 0.86);
+  white-space: nowrap;
+  translate: -50% 0;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+
+.nivel-rotulo.visible {
+  opacity: 1;
+}
+
+.nivel-pv {
+  position: absolute;
+  bottom: max(var(--e-4), env(safe-area-inset-bottom));
+  left: max(var(--e-4), env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  margin: 0;
+  padding: var(--e-1) var(--e-3);
+  border-radius: 999px;
+  background: rgb(10 26 42 / 0.86);
+}
+
+.nivel-pv[hidden] {
+  display: none;
+}
+
+.nivel-pv-barra {
+  position: relative;
+  width: 5rem;
+  height: 0.75rem;
+  background: #8a2a2a;
+}
+
+.nivel-pv-lleno {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #f2c440;
+  transition: width 200ms ease;
+}
+
+.nivel-pv-numero {
+  min-width: 9ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.nivel-dialogo {
+  position: absolute;
+  bottom: calc(max(var(--e-4), env(safe-area-inset-bottom)) + 3.25rem);
+  left: 50%;
+  display: grid;
+  gap: var(--e-1);
+  width: min(100% - 2 * var(--e-4), 40rem);
+  padding: var(--e-3) var(--e-4);
+  border: 3px solid #ffffff;
+  background: #0a1a2a;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  translate: -50% 0;
+  touch-action: manipulation;
+}
+
+.nivel-dialogo[hidden] {
+  display: none;
+}
+
+.nivel-quien {
+  min-height: 1.5em;
+  color: #9fc0ff;
+}
+
+/* Cuatro renglones fijos: el texto aparece letra a letra sin mover nada. */
+.nivel-texto {
+  height: 6em;
+  overflow: hidden;
+  font-size: var(--texto-base);
+  line-height: 1.5;
+}
+
+.nivel-texto.acotacion {
+  font-style: italic;
+  color: #c8d6ea;
+}
+
+.nivel-falta {
+  visibility: hidden;
+}
+
+.nivel-pista {
+  justify-self: end;
+  opacity: 0.7;
+}
+
+.nivel-panel {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: var(--e-3);
+  width: min(100%, 30rem);
+  max-height: 100%;
+  overflow: auto;
+  padding: var(--e-6);
+  border: 3px solid #ffffff;
+  background: #0a1a2a;
+}
+
+.nivel-panel[hidden] {
+  display: none;
+}
+
+.nivel-panel h2 {
+  margin: 0;
+  font-size: var(--texto-bloque);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.nivel-panel p {
+  margin: 0;
+}
+
+.nivel-panel .escena-mandos {
+  justify-content: flex-start;
+  margin-top: var(--e-2);
+}
+
+.nivel-antetitulo {
+  color: #9fc0ff;
+}
+
+.nivel-lema {
+  font-size: var(--texto-lg);
+}
+
+.nivel-controles {
+  line-height: 1.8;
+  opacity: 0.75;
+}
+
+@media (min-width: 1024px) {
+  .nivel-texto {
+    font-size: var(--texto-lg);
+  }
+
+  .nivel-panel {
+    padding: var(--e-8);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

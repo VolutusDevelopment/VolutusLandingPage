@@ -23,6 +23,9 @@
  * escena: la barra se llena con las tiras de sus escenas y queda llena hasta
  * que se pide el índice, y «Ver otra vez» vuelve a la carga.
  *
+ * Si tras la última va un nivel jugable (`data-sigue`), al acabar sus tomas
+ * (o al saltarlas) la página sigue a él.
+ *
  * Si el guion de la última trae `FINALES`, al acabar sus tomas (o al saltarlas) quien juega
  * elige uno con sus botones, y corren sus tomas. Su nombre queda en la sesión,
  * en la clave `FINAL` del guion, para /nosotros (src/flota.js), adonde se va
@@ -188,6 +191,7 @@ function escena(raiz, guiones, tiras, modo) {
   const terminar = () => {
     if (porElegir()) return elegir()
     if (FINALES) return location.assign('/nosotros')
+    if (raiz.dataset.sigue) return location.assign(raiz.dataset.sigue)
     clearTimeout(espera)
     cancelAnimationFrame(pintando)
     raiz.querySelector('.escena').hidden = true

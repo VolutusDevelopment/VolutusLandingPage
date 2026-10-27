@@ -1,7 +1,7 @@
 // Las pantallas de carga del juego, cada una en su página para verla sola.
 // `tira` son los cuadros de lado a lado, de `LADO` px (los pinta
 // scripts/operacion-venganza/cargas/sprites.mjs), y `escenas`, las que corren
-// seguidas tras ella (entre un grupo y otro irá el juego); la de duck-one abre
+// seguidas tras ella (entre un grupo y otro va un nivel jugable, src/combate.js); la de duck-one abre
 // también las escenas que no están en ningún grupo. Los marineros, en cambio, cruzan la pantalla: cada uno con su
 // oficio, su toma, su altura (`alto`, en fracción de la vista), lo que tarda en
 // cruzar (`s`), su desfase y su sentido. `paso` es lo que dura un ciclo de la
