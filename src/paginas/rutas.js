@@ -1,6 +1,8 @@
 import Inicio from './Inicio.jsx'
 import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
+import OperacionVenganza from './OperacionVenganza.jsx'
+import { CARGAS } from '../lib/cargas.js'
 import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
@@ -51,6 +53,22 @@ export const COMPONENTES = {
   '/articulos/casos-para-un-agente-de-ia': CasosParaUnAgenteDeIa,
   '/articulos/como-trabajamos': ComoTrabajamos,
   '/nosotros': Nosotros,
+  '/operacion-venganza': OperacionVenganza,
+  '/operacion-venganza/escena-2': OperacionVenganza,
+  '/operacion-venganza/escena-3': OperacionVenganza,
+  '/operacion-venganza/nivel-1': OperacionVenganza,
+  '/operacion-venganza/escena-5': OperacionVenganza,
+  '/operacion-venganza/escena-6': OperacionVenganza,
+  '/operacion-venganza/nivel-2': OperacionVenganza,
+  '/operacion-venganza/escena-9': OperacionVenganza,
+  '/operacion-venganza/escena-10': OperacionVenganza,
+  '/operacion-venganza/escena-11': OperacionVenganza,
+  '/operacion-venganza/nivel-3': OperacionVenganza,
+  '/operacion-venganza/escena-13': OperacionVenganza,
+  '/operacion-venganza/escena-14': OperacionVenganza,
+  '/operacion-venganza/escena-15': OperacionVenganza,
+  '/operacion-venganza/escena-16': OperacionVenganza,
+  ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
   '/404': NoEncontrada,

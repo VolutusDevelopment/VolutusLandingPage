@@ -127,7 +127,3 @@ export const DICHOS_FOOTER = [
   ['¿QUIÉN TE', 'DEJÓ ENTRAR?'],
   ['SOY UN PATO', 'MUY OCUPATO.'],
 ]
-
-// Lo que dice el pato del footer en /nosotros cuando se cazó toda la parvada
-// (src/parvada.js): fuera de la ronda, una vez.
-export const FETICHE = ['¿MATAR PATOS', 'TE ES UN', 'FETICHE?']

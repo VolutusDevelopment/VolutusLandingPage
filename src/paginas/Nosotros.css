@@ -216,6 +216,208 @@
   }
 }
 
+/* ---- la flota ----
+   Cuando cae el último pato (src/parvada.js pone `.llega`), la escena queda
+   con su escolta navegando lejos, sobre el horizonte, y el portaaviones
+   «Sitting Ducks» sale de la lejanía y se acerca despacio (Nosotros.jsx). Va
+   en el telón, como la parvada: si la escena se recorta en la lámina, se va
+   con ella. El horizonte está al 62 % del alto del telón.
+
+   El barco se dibuja ya en su tamaño final, `--ancho`, y llega con `scale` y
+   `translate`, que van por el compositor: entra por el borde izquierdo de la
+   pantalla, chico y lejos, con la línea de flotación casi en el horizonte, y se acerca hasta quedar a esa altura, un
+   poco más abajo cuanto más grande. En teléfono se acerca más que en iPad,
+   y en escritorio se queda a la mitad. Su reflejo es su mitad de abajo, dada
+   vuelta y tenue. La escolta se desliza a su paso: cuanto más chica, más lejos
+   y más lenta. Con movimiento reducido no está, porque no hay parvada que
+   cazar. */
+.flota {
+  --ancho: 62vw;
+  --izq: 28vw;
+  --inicio: 0.2;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.flota.llega,
+.flota.zarpa {
+  visibility: visible;
+}
+
+@media (min-width: 640px) {
+  .flota {
+    --ancho: 37vw;
+    --izq: 30vw;
+    --inicio: 0.17;
+  }
+}
+
+@media (min-width: 1024px) {
+  .flota {
+    --ancho: 22vw;
+    --izq: 39vw;
+    --inicio: 0.16;
+  }
+}
+
+.barco {
+  position: absolute;
+  left: var(--izq);
+  top: calc(62% - 0.11 * var(--ancho));
+  width: var(--ancho);
+  transform-origin: 0 100%;
+  animation: llegar 70s cubic-bezier(0.25, 0.6, 0.4, 1) both paused;
+}
+
+.barco svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.reflejo {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 35%;
+  overflow: hidden;
+  opacity: 0.25;
+}
+
+.reflejo svg {
+  scale: 1 -1;
+}
+
+.escolta {
+  position: absolute;
+  left: var(--x);
+  top: calc(62% - 0.187 * var(--w));
+  width: var(--w);
+  height: auto;
+  animation:
+    aparecer 6s both paused,
+    derivar var(--dur) linear both paused;
+}
+
+.llega .barco,
+.llega .escolta {
+  animation-play-state: running;
+}
+
+/* Vivo en la escena 16 (src/flota.js pone `.zarpa`): la flota ya está,
+   quieta, con el portaaviones donde termina de llegar. Con `.llega` zarpa
+   entera: cada barco sigue su rumbo hacia la derecha, todos a la par, y en
+   pocos segundos van a la velocidad con que llegó el portaaviones, hasta salir
+   de la pantalla. El portaaviones, además, se achica hacia el horizonte, y al
+   final se oculta, para que el enlace no quede donde no se ve. */
+.zarpa .barco,
+.zarpa .escolta {
+  animation: none;
+}
+
+.zarpa.llega .barco,
+.zarpa.llega .escolta {
+  animation: alejarse 50s cubic-bezier(0.3, 0, 1, 1) both;
+}
+
+.zarpa.llega .barco {
+  animation-name: irse;
+}
+
+/* Hundido en la escena 16 (src/flota.js pone `.hundido`): el portaaviones ya
+   está en su lugar, partido en dos como el Titanic. Cada mitad gira sobre su
+   quiebre, que se hunde, y lo que queda bajo la línea de flotación no se ve.
+   Sin reflejo, que sería el del barco entero. */
+.restos {
+  display: none;
+}
+
+.hundido .barco {
+  animation: none;
+}
+
+.hundido .barco > svg,
+.hundido .reflejo {
+  visibility: hidden;
+}
+
+.hundido .restos {
+  position: absolute;
+  inset: 0;
+  display: block;
+  clip-path: inset(-200% -20% 0 -20%);
+}
+
+.restos svg {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.restos svg:first-child {
+  left: 0;
+  transform-origin: 100% 100%;
+  rotate: 9deg;
+  translate: -4% 20%;
+}
+
+.restos svg:last-child {
+  right: 0;
+  transform-origin: 0 100%;
+  rotate: -13deg;
+  translate: 4% 26%;
+}
+
+/* Con movimiento reducido no hay parvada ni flota que llegue; los restos sí
+   quedan, quietos. */
+@media (prefers-reduced-motion: reduce) {
+  .flota:not(.hundido) {
+    display: none;
+  }
+
+  .escolta {
+    animation: none;
+  }
+}
+
+@keyframes llegar {
+  from {
+    translate: calc(-1 * var(--inicio) * var(--ancho) - var(--izq)) calc(4.5px - 0.09 * var(--ancho));
+    scale: var(--inicio);
+  }
+}
+
+@keyframes irse {
+  to {
+    translate: 100vw calc(4.5px - 0.09 * var(--ancho));
+    scale: var(--inicio);
+    visibility: hidden;
+  }
+}
+
+@keyframes alejarse {
+  to {
+    translate: 100vw;
+  }
+}
+
+@keyframes derivar {
+  to {
+    translate: 16vw;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
 /* El titular y la entradilla, en el cielo, sobre el horizonte, y en la
    tinta: sobre el atardecer da 5.8:1 o más. Ocupan la primera pantalla, y
    las tarjetas empiezan bajo ella. Es la primera parada del encaje (ver los

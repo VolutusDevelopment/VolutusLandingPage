@@ -1360,9 +1360,9 @@ onmessage = ({ data }) => {
     }
   }
   // Sale en la mitad izquierda mirando a la derecha: ahí su primer globo cabe,
-  // y lo dice apenas sale a flote: el primero de la ronda o, si en /nosotros
-  // se cazó toda la parvada, `FETICHE`. `desde` es cuándo empezó a hablar
-  // (`null` si calla), `callo` cuándo terminó y `dicho`, el que sigue.
+  // y lo dice apenas sale a flote: el primero de la ronda. `desde` es cuándo
+  // empezó a hablar (`null` si calla), `callo` cuándo terminó y `dicho`, el
+  // que sigue.
   if (escena?.mar && data.tipo === 'pato') {
     escena.pato = {
       lado: -0.2 - 0.4 * Math.random(),
@@ -1371,7 +1371,7 @@ onmessage = ({ data }) => {
       nace: null,
       desde: null,
       callo: -Infinity,
-      dicho: data.fetiche ? RONDA : 0,
+      dicho: 0,
     }
   }
   // El cursor es viento en el cielo.

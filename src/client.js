@@ -17,6 +17,7 @@ import initNubes from './nubes.js'
 import initCopiar from './copiar.js'
 import initSocios from './socios.js'
 import initOla from './ola.js'
+import initFlota from './flota.js'
 import initParvada from './parvada.js'
 import initChat from './chat.js'
 import initEstimado from './estimado.js'
@@ -314,6 +315,15 @@ function empezarSolo(boton, alternar) {
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
+// Operación Venganza baja su código solo en su página: en la de un nivel, el
+// combate; en las demás, las escenas.
+function initOperacionVenganza() {
+  const raiz = document.querySelector('.venganza')
+  if (!raiz) return
+  const juego = 'nivel' in raiz.dataset ? import('./combate.js') : import('./operacion-venganza.js')
+  juego.then((modulo) => modulo.default(raiz))
+}
+
 // Cada parte arranca por su cuenta: si una falla en algún navegador, las demás
 // siguen. En fila, un error en la primera apagaba todas las que venían después.
 export default function init() {
@@ -330,6 +340,7 @@ export default function init() {
     initSocios,
     initOla,
     initParvada,
+    initFlota,
     initChat,
     initEstimado,
     initMapa,
@@ -339,6 +350,7 @@ export default function init() {
     initTienda,
     initTitularDelContacto,
     initFondoDelMar,
+    initOperacionVenganza,
   ]) {
     try {
       iniciar()
