@@ -27,7 +27,7 @@ export const enCaza = (p) => sum(p, EN_CATAPULTA)
 export const enPiloto = (p) => enCaza(aCaza(CFG, p))
 
 // Rueda de proa bajo la cabina y las dos principales bajo las tomas de aire.
-const TREN = [
+export const TREN = [
   hueso([6.4, -0.3, 0], [6.4, -1.9, 0], 0.07, C.grisOscuro),
   el([6.4, -1.9, 0], [0.3, 0.3, 0.12], C.negro),
   ...ambos((s) => [hueso([-1.4, -0.5, s * 1.5], [-1.4, -1.75, s * 1.85], 0.09, C.grisOscuro), el([-1.4, -1.75, s * 1.95], [0.45, 0.45, 0.17], C.negro)]).flat(),

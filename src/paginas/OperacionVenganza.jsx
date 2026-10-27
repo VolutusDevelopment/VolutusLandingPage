@@ -6,6 +6,8 @@ const ESCENAS = {
   '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
   '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
   '/operacion-venganza/escena-5': { numero: 5, nombre: 'Regreso' },
+  '/operacion-venganza/escena-6': { numero: 6, nombre: 'Entrada' },
+  '/operacion-venganza/escena-9': { numero: 9, nombre: 'Retirada' },
   '/operacion-venganza/escena-10': { numero: 10, nombre: 'La última opción' },
   '/operacion-venganza/escena-11': { numero: 11, nombre: 'Preparativos' },
 }

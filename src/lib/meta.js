@@ -328,6 +328,22 @@ export const PAGINAS = {
       'duck-one vuelve al Sitting Ducks, casi atropella a los marinos y le rinde cuentas a moby y a duke: el enemigo se mueve bastante. Escena 5, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/escena-6': {
+    archivo: 'operacion-venganza/escena-6.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 6: Entrada — Volutus',
+    descripcion:
+      'Moby y Duke llegan con el sol a la espalda. Moby amenaza, Duke se presenta ante su cámara y Moby se lanza contra quien juega. Escena 6, en el navegador.',
+    fondo: '#5c94fc',
+  },
+  '/operacion-venganza/escena-9': {
+    archivo: 'operacion-venganza/escena-9.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 9: Retirada — Volutus',
+    descripcion:
+      'La torre llama de vuelta a Moby y a Duke: ya no queda presupuesto. Duke se mira en el fuselaje y Moby abolla su avión. Escena 9, en el navegador.',
+    fondo: '#5c94fc',
+  },
   '/operacion-venganza/escena-10': {
     archivo: 'operacion-venganza/escena-10.html',
     actualizada: '2026-10-26',

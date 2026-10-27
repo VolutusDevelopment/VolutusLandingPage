@@ -87,15 +87,18 @@ export const escribir = (ruta, datos) => {
 }
 
 // Una tira por toma del guion, con la escena 3D de `TOMAS_3D`; las que van
-// `segunModo`, una por modo.
+// `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta sobre los
+// cuadros lo que va en la pantalla y no en la escena (un visor, una marca).
 export const escribirTiras = (TOMAS, TOMAS_3D, rutaDeToma) => {
   for (const toma of TOMAS) {
-    const { escena, camara } = TOMAS_3D[toma.id]
+    const { escena, camara, encima } = TOMAS_3D[toma.id]
     for (const modo of toma.segunModo ? MODOS : [MODOS[0]]) {
       const cuadros = Array.from({ length: cuadrosDe(toma) }, (_, k) => {
         const u = k / cuadrosDe(toma)
         const [ojo, mira, campo] = camara(u)
-        return rejilla(pixel3d(escena(u, modo), { ojo, mira, campo, cielo }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
+        const celdas = rejilla(pixel3d(escena(u, modo), { ojo, mira, campo, cielo }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
+        encima?.(celdas, u, modo)
+        return celdas
       })
       escribir(rutaDeToma(toma, modo), png(cuadros))
     }

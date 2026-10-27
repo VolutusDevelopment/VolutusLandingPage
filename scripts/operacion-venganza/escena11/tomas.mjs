@@ -200,9 +200,9 @@ const enLaCatapulta = (u) => sum(EN_CATAPULTA, [SONRISA.largo * tramo(u, SONRISA
 // A 300 m sobre el mar. El caza se queda donde está y las nubes pasan hacia
 // atrás, una vuelta de 600 m por bucle, más abajo y al otro lado del caza que
 // la cámara: nunca lo tapan.
-const ALTURA = [0, 300, 0]
+export const ALTURA = [0, 300, 0]
 const NUBES = [[-80, -30, 120, 40], [60, -50, 200, 55], [200, -20, 90, 35], [330, -45, 160, 60], [470, -25, 110, 45]]
-const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((x - 600 * u + 900) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
+export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((x - 600 * u + 900) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
 const volando = (u) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false }), 0, ALTURA)]
 const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 
@@ -211,8 +211,8 @@ const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 // La consola de radar de babor, en la sala de mando (escena1/lugares.mjs):
 // la pantalla va inclinada hacia la sala. El barrido da dos vueltas por
 // bucle; con `eco`, un punto parpadea donde está el enemigo.
-const RADAR = { x: -1.6, y: 1.3 }
-const enLaPantalla = (x, y) => [x, y + 0.016, -4.15 - ((y - 1.0) / 0.6) * 0.7 + 0.014]
+export const RADAR = { x: -1.6, y: 1.3 }
+export const enLaPantalla = (x, y) => [x, y + 0.016, -4.15 - ((y - 1.0) / 0.6) * 0.7 + 0.014]
 const ECO = [RADAR.x + 0.3, RADAR.y + 0.09]
 const radar = (u, eco) => {
   const a = u * Math.PI * 4
@@ -220,7 +220,7 @@ const radar = (u, eco) => {
   const prendido = eco && Math.floor(u * 12) % 3 !== 2
   return [barrido, ...(prendido ? [el(enLaPantalla(...ECO), [0.035, 0.035, 0.035], C.verde, { flat: '#eaffee', brilla: true })] : [])]
 }
-const torre = (eco) => (u) => [...reunion({ pantalla: PANTALLA, figuras: [] }), ...radar(u, eco)]
+export const torre = (eco) => (u) => [...reunion({ pantalla: PANTALLA, figuras: [] }), ...radar(u, eco)]
 
 export const TOMAS_3D = {
   // El caza solo en el hangar, mientras la cámara se le acerca.
