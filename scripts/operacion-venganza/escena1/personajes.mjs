@@ -323,13 +323,14 @@ export const OFICIOS = {
 
 const MAR_CABEZA = transformar([0, 0, 8], [0.1, 0.1, 0])
 
-const marineroTronco = (color) => [
+// `abre`, los ojos: cerrados en 0.
+const marineroTronco = (color, abre = 1) => [
   el([0, -0.85, 0], [0.86, 0.7, 1.04], color, { pinta: ([x, y]) => (Math.abs(y + 0.62) < 0.05 || Math.abs(y + 1.0) < 0.05 ? (x > -0.2 ? '#eef6f4' : null) : null) }),
   el([0.1, 0, 0], [0.48, 0.5, 0.5], PEKIN),
   ...MAR_CABEZA.formas([
     el([0.15, 0.6, 0], [0.68, 0.64, 0.64], PEKIN),
     ...pico(),
-    ...ambos((s) => ojo(s, { abre: 1, plumaje: PEKIN, grande: 1.25 })).flat(),
+    ...ambos((s) => ojo(s, { abre, plumaje: PEKIN, grande: 1.25 })).flat(),
     el([0.08, 0.98, 0], [0.62, 0.36, 0.62], color),
     ...ambos((s) => el([0.12, 0.66, s * 0.64], [0.2, 0.24, 0.1], PIEL_OREJERA)),
     ...ambos((s) => el([0.6, 1.06, s * 0.2], [0.08, 0.1, 0.13], C.oscuro, { flat: '#24303c' })),

@@ -376,6 +376,22 @@ export const PAGINAS = {
       'Duky gasta toda su munición y no le da a nadie. Chilla de rabia, vuelve al portaaviones y Moby llora en la sala de mando. Escena 14, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/escena-15': {
+    archivo: 'operacion-venganza/escena-15.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, escena 15: El regreso del fantasma — Volutus',
+    descripcion:
+      'Duky vuelve al Sitting Ducks y el escuadrón Patoon-4 mira con él el atardecer. Después, una caja clasificada rumbo a Myanmar. Escena 15, en el navegador.',
+    fondo: '#5c94fc',
+  },
+  '/operacion-venganza/escena-16': {
+    archivo: 'operacion-venganza/escena-16.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, escena 16: Desolación — Volutus',
+    descripcion:
+      'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 16, en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**

@@ -56,13 +56,14 @@ const vaiven = (u, veces = 2) => Math.sin(u * Math.PI * 2 * veces)
 
 // Figura completa: cuerpo de arriba, brazos y piernas, con el bamboleo
 // aplicado al tronco y las piernas tendidas de la cadera movida al suelo.
-// agacha baja la cadera sin mover los pies: las piernas se acortan.
-const figura = (p, { tronco, manos = {}, extra = [], fase = null, salto = 0, agacha = 0, inclina = 0, sinSombra }) => {
+// agacha baja la cadera sin mover los pies: las piernas se acortan. patada,
+// de pie, es el ψ de la pierna derecha sola.
+const figura = (p, { tronco, manos = {}, extra = [], fase = null, salto = 0, agacha = 0, inclina = 0, patada = Math.PI / 2, sinSombra }) => {
   const paso = fase === null ? { φ: null, rot: [0, 0, inclina], alto: salto - agacha } : andar(fase, p.andar)
   const mov = transformar(paso.rot, p.pivote, [0, paso.alto, 0])
   const brazos = p.brazo ? ambos((s) => brazo([p.hombro[0], p.hombro[1], s * p.hombro[2]], manos[s], { ...p.brazo, dobla: p.dobla(s) })) : []
   const piernas = ambos((s) => {
-    const ψ = paso.φ === null ? Math.PI / 2 : paso.φ + (s > 0 ? 0 : Math.PI)
+    const ψ = paso.φ === null ? (s > 0 ? patada : Math.PI / 2) : paso.φ + (s > 0 ? 0 : Math.PI)
     const cadera = mov.punto([p.cadera[0], p.cadera[1], s * p.cadera[2]])
     return pierna(cadera, ψ, { ...p.pierna, x: p.cadera[0] + p.pierna.adelante, z: s * p.cadera[2], suelo: p.suelo + (fase === null ? salto * 0.85 : 0) })
   }).flat()

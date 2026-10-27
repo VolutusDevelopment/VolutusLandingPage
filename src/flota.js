@@ -6,14 +6,23 @@
 // 44 px) y se ve, no lo tapa una tarjeta ni la sección siguiente, se pulsa el
 // enlace. Con teclado y lectores, el enlace se usa solo. Con el cursor encima
 // del barco, el cursor es una mano.
+//
+// Lo que se eligió al final de la escena 16 dura lo que la sesión: si se
+// hundió, el barco ya está, partido en dos (`.hundido`, también con movimiento
+// reducido); si se los dejó vivir, la flota no está.
 
+import { elegido } from './lib/final.js'
 import { quieto } from './lib/movimiento.js'
 
 const DEDO = 22
 
 export default function initFlota() {
   const flota = document.querySelector('.flota')
-  if (!flota || quieto()) return
+  if (!flota) return
+  const final = elegido()
+  if (final === 'vivir') return flota.remove()
+  if (final === 'hundir') flota.classList.add('llega', 'hundido')
+  else if (quieto()) return
   const barco = flota.querySelector('.barco')
   const telon = flota.parentElement
 

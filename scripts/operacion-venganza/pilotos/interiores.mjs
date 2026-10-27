@@ -135,7 +135,8 @@ export const CABINAS = {
   },
 }
 
-// Interior de la cabina, en unidades del piloto: consolas, tablero, asiento y piernas.
+// Interior de la cabina, en unidades del piloto: consolas, tablero, asiento y
+// piernas, si tiene de qué color (`pata`).
 const interior = (cfg) => {
   const a = cfg.ancho
   const [z0, z1, estilo] = cfg.panel
@@ -146,7 +147,7 @@ const interior = (cfg) => {
     placa([[2.0, -1.05, -a + 0.46], [3.0, -1.0, -a + 0.46], [3.0, -1.0, a - 0.46], [2.0, -1.05, a - 0.46]], 0.1, cfg.tablero),
     panelInclinado(z0, z1, pantallas(z0, z1, estilo)),
     ...(cfg.asiento ? asiento(cfg.xAsiento, cfg.asiento) : []),
-    ...piernas(cfg.cadera, cfg.pata),
+    ...(cfg.pata ? piernas(cfg.cadera, cfg.pata) : []),
     ...cfg.delante(),
   ]
 }

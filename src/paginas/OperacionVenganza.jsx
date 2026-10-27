@@ -1,6 +1,7 @@
 import { ALTO, LADO } from '../lib/escena1.js'
+import { FINALES } from '../lib/escena16.js'
 
-// Cada escena tiene su página.
+// Cada escena tiene su página; la que termina eligiendo, sus `finales`.
 const ESCENAS = {
   '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
   '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
@@ -12,6 +13,8 @@ const ESCENAS = {
   '/operacion-venganza/escena-11': { numero: 11, nombre: 'Preparativos' },
   '/operacion-venganza/escena-13': { numero: 13, nombre: 'La sala de mando' },
   '/operacion-venganza/escena-14': { numero: 14, nombre: 'Último ataque' },
+  '/operacion-venganza/escena-15': { numero: 15, nombre: 'El regreso del fantasma' },
+  '/operacion-venganza/escena-16': { numero: 16, nombre: 'Desolación', finales: FINALES },
 }
 
 /**
@@ -27,7 +30,7 @@ const ESCENAS = {
  * duck-one va en el CSS, así que empieza a bajar con la página.
  */
 export default function OperacionVenganza({ ruta }) {
-  const { numero, nombre } = ESCENAS[ruta]
+  const { numero, nombre, finales } = ESCENAS[ruta]
   return (
     <main id="contenido" className="venganza" data-escena={numero}>
       <h1 className="venganza-titulo">{`Operación Venganza, escena ${numero}: ${nombre}`}</h1>
@@ -57,6 +60,15 @@ export default function OperacionVenganza({ ruta }) {
             Saltar escena
           </button>
         </p>
+        {finales && (
+          <p className="escena-mandos escena-eleccion" hidden>
+            {Object.entries(finales).map(([final, { boton }]) => (
+              <button key={final} className="escena-boton" type="button" data-final={final}>
+                {boton}
+              </button>
+            ))}
+          </p>
+        )}
       </section>
 
       <section className="fin" aria-label={`Fin de la escena ${numero}`} hidden>

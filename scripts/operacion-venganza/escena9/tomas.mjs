@@ -71,7 +71,7 @@ const enCubierta = (quien, p) => sum((quien === 'duke' ? DUKE : MOBY).enCabina(p
 // Llegan por la popa, tocan la cubierta y frenan hasta su parada, con el
 // morro arriba mientras están en el aire (escena5/tomas.mjs).
 const LLEGA = { largo: 170, toca: 0.3, hasta: 0.75 }
-const enPista = (k, parada) => {
+export const enPista = (k, parada) => {
   const corrido = Math.min(1, k / LLEGA.hasta)
   const aire = Math.max(0, 1 - corrido / LLEGA.toca)
   return { aire, en: sum(parada, [-LLEGA.largo * (1 - corrido) ** 2, 16 * aire ** 1.5, 0]) }

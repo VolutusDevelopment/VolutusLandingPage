@@ -65,9 +65,10 @@ const ARMAS = ambos((s) => {
 }).flat()
 
 // El caza en sus metros: la cúpula abierta `cupula` grados; sin `motor`, con
-// la tobera apagada (las estelas son las formas con luz propia).
-export const caza = ({ cupula = 0, motor = false, tren = true } = {}) => [
-  ...cabinaCon(conCupula(CFG, cupula), []).filter((f) => motor || !f.luz),
+// la tobera apagada (las estelas son las formas con luz propia), y sin
+// `piernas`, sin las del piloto en la cabina.
+export const caza = ({ cupula = 0, motor = false, tren = true, piernas = true } = {}) => [
+  ...cabinaCon(conCupula(piernas ? CFG : { ...CFG, pata: null }, cupula), []).filter((f) => motor || !f.luz),
   ...ARMAS,
   ...(tren ? TREN : []),
 ]

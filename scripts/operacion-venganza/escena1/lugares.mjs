@@ -29,8 +29,8 @@ export const poner = (formas, giro, en) => transformar([0, giro, 0], [0, 0, 0], 
 
 // ── Letras de cuadritos ──────────────────────────────────────────────────
 
-// Lo que va pintado en el barco, el 15 y su nombre, y la operación en la
-// pantalla de la sala (escena 2). Cuatro de ancho y cinco de alto; las que
+// Lo que va pintado en el barco, el 15 y su nombre, la operación en la
+// pantalla de la sala (escena 2) y el sticker de la caja de duky (escena 15). Cuatro de ancho y cinco de alto; las que
 // llevan tilde traen una fila más, encima.
 const LETRAS = {
   1: ['.#..', '##..', '.#..', '.#..', '###.'],
@@ -48,6 +48,8 @@ const LETRAS = {
   Ó: ['..#.', '.##.', '#..#', '#..#', '#..#', '.##.'],
   P: ['###.', '#..#', '###.', '#...', '#...'],
   E: ['####', '#...', '###.', '#...', '####'],
+  F: ['####', '#...', '###.', '#...', '#...'],
+  L: ['#...', '#...', '#...', '#...', '####'],
   R: ['###.', '#..#', '###.', '#.#.', '#..#'],
   A: ['.##.', '#..#', '####', '#..#', '#..#'],
   B: ['###.', '#..#', '###.', '#..#', '###.'],
@@ -55,7 +57,7 @@ const LETRAS = {
   ' ': ['....', '....', '....', '....', '....'],
 }
 // ¿Cae (u, v) en el texto de `alto` de alto? Empieza en u = 0, v = 0 abajo.
-const enTexto = (texto, u, v, alto) => {
+export const enTexto = (texto, u, v, alto) => {
   const celda = alto / 5
   const i = Math.floor(u / celda)
   const j = Math.floor((alto - v) / celda)
@@ -63,7 +65,7 @@ const enTexto = (texto, u, v, alto) => {
   const fila = letra && j + letra.length - 5
   return Boolean(letra && i >= 0 && fila >= 0 && fila < letra.length && i % 5 < 4 && letra[fila][i % 5] === '#')
 }
-const ancho = (texto, alto) => ((texto.length * 5 - 1) * alto) / 5
+export const ancho = (texto, alto) => ((texto.length * 5 - 1) * alto) / 5
 
 // ── El atardecer ─────────────────────────────────────────────────────────
 

@@ -208,6 +208,8 @@ const BUQUES = [
  * pato (src/parvada.js): la escolta ya navega lejos y el portaaviones sale de
  * la lejanía y se acerca despacio (`.llega`, ver Nosotros.css). Es el enlace al
  * juego, y la página lo pulsa por él cuando algo se lo tapa (src/flota.js).
+ * Si en la escena 16 se hundió, ya está ahí, partido en dos: sus `restos` son
+ * sus dos mitades, que repiten su dibujo (`#barco`).
  */
 function Flota() {
   return (
@@ -227,8 +229,17 @@ function Flota() {
       ))}
       <a className="barco" href="/operacion-venganza" aria-label="Sitting Ducks: empezar Operación Venganza">
         <svg viewBox="0 0 100 20" shapeRendering="crispEdges" focusable="false" aria-hidden="true">
-          <Celdas filas={BARCO} colores={COLORES_BARCO} />
+          <g id="barco">
+            <Celdas filas={BARCO} colores={COLORES_BARCO} />
+          </g>
         </svg>
+        <span className="restos" aria-hidden="true">
+          {['0 0 50 20', '50 0 50 20'].map((mitad) => (
+            <svg key={mitad} viewBox={mitad} shapeRendering="crispEdges" focusable="false">
+              <use href="#barco" />
+            </svg>
+          ))}
+        </span>
         <span className="reflejo" aria-hidden="true">
           <svg viewBox="0 0 100 20" shapeRendering="crispEdges" focusable="false">
             <Celdas filas={BARCO} colores={COLORES_BARCO} />

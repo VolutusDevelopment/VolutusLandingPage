@@ -29,8 +29,8 @@ const PANTALLA = 'bajas'
 
 // Lleva a duky sobre la cabeza, con los brazos arriba: así, al darse vuelta
 // o al caminar, ninguno de los dos tapa al otro.
-const ARRIBA = { 1: [0.15, 1.45, 0.7], [-1]: [0.15, 1.45, -0.7] }
-const sobreLaCabeza = ({ en, giro }, k) => ({ en: sum(en, [0, 3.4 * k, 0]), giro, suelo: -2.2 })
+export const ARRIBA = { 1: [0.15, 1.45, 0.7], [-1]: [0.15, 1.45, -0.7] }
+export const sobreLaCabeza = ({ en, giro }, k) => ({ en: sum(en, [0, 3.4 * k, 0]), giro, suelo: -2.2 })
 
 // ── En la sala: el marinero se lleva a duky ──────────────────────────────
 
@@ -70,18 +70,20 @@ const seLoLleva = (u) => {
 // El caza, con las ruedas en el piso, y lo que va con él en sus metros.
 const AVION = [2, PISO - SUELO, -3]
 const enHangar = (formas) => [...hangar, ...poner(formas, 0, AVION)]
-const CUPULA_ABIERTA = 85
+export const CUPULA_ABIERTA = 85
 
 // El marinero se para en el lomo, junto a la cabina y mirando a ella: sube
 // por una escalerilla desde el piso.
 const LOMO = { en: enCabina([0.3, -1.6, -2.6]), giro: -90 }
-const escalerilla = [-0.25, 0.25].map((dx) => hueso([LOMO.en[0] + dx, SUELO, LOMO.en[2] - 1.4], [LOMO.en[0] + dx, LOMO.en[1], LOMO.en[2] - 0.2], 0.04, C.rayas))
+export const escalerilla = [-0.25, 0.25].map((dx) => hueso([LOMO.en[0] + dx, SUELO, LOMO.en[2] - 1.4], [LOMO.en[0] + dx, LOMO.en[1], LOMO.en[2] - 0.2], 0.04, C.rayas))
 const enSusManos = (p) => enUnidades(p, { ...LOMO, k: K })
 const elMarinero = (cfg) => colocar(figura(pMar, { tronco: marineroTronco(VERDE), ...cfg }), { k: K, ...LOMO })
 
-// duky sentado en su cabina, con los pies donde los pone la cabina.
+// duky sentado en su cabina, con los pies donde los pone la cabina; con
+// `patas`, con las suyas, sin su sombra.
+const SOMBRA = '#4a80e6'
 const SENTADO = { en: enCabina([0, -2.2, 0]), giro: 0, suelo: -2.2 }
-const dukyEn = (donde, formas = DUKY.sentado(0)) => colocar(formas.filter((f) => !f.pata), { k: K, ...donde })
+const dukyEn = (donde, formas = DUKY.sentado(0), patas = false) => colocar(formas.filter((f) => (patas ? f.flat !== SOMBRA : !f.pata)), { k: K, ...donde })
 
 // Lo pasa de sobre su cabeza a sobre la cabina, lo gira hacia el morro, lo
 // baja y lo suelta para el último tramo, que duky cae solo.
@@ -92,10 +94,11 @@ const bajando = (u) => {
   const baja = lerp(pasa, sum(SENTADO.en, [0, 0.3, 0]), tramo(u, 0.45, 0.7))
   return lerp(baja, SENTADO.en, tramo(u, 0.7, 0.8))
 }
-const deposita = (u) => {
+// Con `patas`, duky lleva las suyas (escena15/tomas.mjs, que lo saca).
+export const deposita = (u, patas = false) => {
   const llevado = sum(enSusManos(bajando(Math.min(u, 0.7))), enSusManos(EN_EL_LOMO.en).map((v) => -v))
   const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(sum(ARRIBA[s], llevado), REPOSO[s], tramo(u, 0.75, 0.95))]))
-  return [...elMarinero({ manos }), ...dukyEn({ en: bajando(u), giro: girar(-90, 0, tramo(u, 0.1, 0.45)), suelo: -2.2 }, duky.enBrazos())]
+  return [...elMarinero({ manos }), ...dukyEn({ en: bajando(u), giro: girar(-90, 0, tramo(u, 0.1, 0.45)), suelo: -2.2 }, duky.enBrazos(), patas)]
 }
 
 // El cinturón: una correa a cada lado, del respaldo a la hebilla, en

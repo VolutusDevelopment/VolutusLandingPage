@@ -307,9 +307,60 @@
   animation-play-state: running;
 }
 
+/* Hundido en la escena 16 (src/flota.js pone `.hundido`): el portaaviones ya
+   está en su lugar, partido en dos como el Titanic. Cada mitad gira sobre su
+   quiebre, que se hunde, y lo que queda bajo la línea de flotación no se ve.
+   Sin reflejo, que sería el del barco entero. */
+.restos {
+  display: none;
+}
+
+.hundido .barco {
+  animation: none;
+}
+
+.hundido .barco > svg,
+.hundido .reflejo {
+  visibility: hidden;
+}
+
+.hundido .restos {
+  position: absolute;
+  inset: 0;
+  display: block;
+  clip-path: inset(-200% -20% 0 -20%);
+}
+
+.restos svg {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.restos svg:first-child {
+  left: 0;
+  transform-origin: 100% 100%;
+  rotate: 9deg;
+  translate: -4% 20%;
+}
+
+.restos svg:last-child {
+  right: 0;
+  transform-origin: 0 100%;
+  rotate: -13deg;
+  translate: 4% 26%;
+}
+
+/* Con movimiento reducido no hay parvada ni flota que llegue; los restos sí
+   quedan, quietos. */
 @media (prefers-reduced-motion: reduce) {
-  .flota {
+  .flota:not(.hundido) {
     display: none;
+  }
+
+  .escolta {
+    animation: none;
   }
 }
 
