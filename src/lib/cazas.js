@@ -8,7 +8,7 @@
 export const LADO = 56
 export const GIROS = 24
 export const ALTURAS = [-60, -30, 0, 30, 60]
-export const RADIO = 11.5
+export const RADIO = 12.4
 export const LLENADO = 0.94
 
 export const rutaDeCaza = (nombre) => `/operacion-venganza/combate/${nombre}.png`

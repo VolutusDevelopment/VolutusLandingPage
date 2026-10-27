@@ -347,6 +347,14 @@ export const PAGINAS = {
       'Moby y Duke llegan con el sol a la espalda. Moby amenaza, Duke se presenta ante su cámara y Moby se lanza contra quien juega. Escena 6, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/nivel-2': {
+    archivo: 'operacion-venganza/nivel-2.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, nivel 2: Moby-Duck y Duke SkyDucker — Volutus',
+    descripcion:
+      'Moby ataca solo con el cañón de su A-10 y humo negro; después llega Duke con flores de estrellas. Esquívalos en el cielo del atardecer. Nivel 2, en el navegador.',
+    fondo: '#5c94fc',
+  },
   '/operacion-venganza/escena-9': {
     archivo: 'operacion-venganza/escena-9.html',
     actualizada: '2026-10-26',
@@ -369,6 +377,14 @@ export const PAGINAS = {
     titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
     descripcion:
       'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-35 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
+    fondo: '#5c94fc',
+  },
+  '/operacion-venganza/nivel-3': {
+    archivo: 'operacion-venganza/nivel-3.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, nivel 3: Duky — Volutus',
+    descripcion:
+      'El Fantasma Amarillo dispara adonde vas a estar, con rayos prototipo, racimos y misiles de seguimiento. El nivel difícil de Operación Venganza, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-13': {

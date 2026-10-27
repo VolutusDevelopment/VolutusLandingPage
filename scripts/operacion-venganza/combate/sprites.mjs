@@ -7,11 +7,11 @@
 // public/operacion-venganza: pintarlas tarda y no entra al build.
 
 import { marco, pixel3d } from '../pilotos/tres.mjs'
-import { CAZA_DUCK_ONE } from '../pilotos/modelos.mjs'
+import { CAZA_DUCK_ONE, CAZA_DUKE, CAZA_DUKY, CAZA_MOBY } from '../pilotos/modelos.mjs'
 import { escribir, png, rejilla } from '../tiras.mjs'
 import { ALTURAS, GIROS, LADO, LLENADO, RADIO, rutaDeCaza } from '../../../src/lib/cazas.js'
 
-const CAZAS = { 'duck-one': CAZA_DUCK_ONE }
+const CAZAS = { 'duck-one': CAZA_DUCK_ONE, moby: CAZA_MOBY, duke: CAZA_DUKE, duky: CAZA_DUKY }
 
 for (const [nombre, caza] of Object.entries(CAZAS)) {
   const encuadre = { c: marco(caza, true).c, radio: RADIO }

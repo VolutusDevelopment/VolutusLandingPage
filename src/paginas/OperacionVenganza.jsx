@@ -2,20 +2,24 @@ import { ALTO, LADO } from '../lib/escena1.js'
 import { FINALES } from '../lib/escena16.js'
 import { CARGAS } from '../lib/cargas.js'
 import * as nivel1 from '../lib/nivel1.js'
+import * as nivel2 from '../lib/nivel2.js'
+import * as nivel3 from '../lib/nivel3.js'
 
 // Cada escena tiene su página; la que termina eligiendo, sus `finales`. Entre
-// ellas van los niveles jugables, cada uno `tras` su escena: al terminar ese
-// tramo se juega el nivel, y al terminar el nivel sigue la escena siguiente.
+// ellas, en su lugar, van los niveles jugables. Es el orden del juego: al
+// terminar cada página sigue la próxima de la lista.
 const ESCENAS = {
   '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
   '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
   '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
-  '/operacion-venganza/nivel-1': { nivel: 1, nombre: 'Duck-One', tras: 3, guion: nivel1 },
+  '/operacion-venganza/nivel-1': { nivel: 1, nombre: 'Duck-One', guion: nivel1 },
   '/operacion-venganza/escena-5': { numero: 5, nombre: 'Regreso' },
   '/operacion-venganza/escena-6': { numero: 6, nombre: 'Entrada' },
+  '/operacion-venganza/nivel-2': { nivel: 2, nombre: 'Moby-Duck y Duke SkyDucker', guion: nivel2 },
   '/operacion-venganza/escena-9': { numero: 9, nombre: 'Retirada' },
   '/operacion-venganza/escena-10': { numero: 10, nombre: 'La última opción' },
   '/operacion-venganza/escena-11': { numero: 11, nombre: 'Preparativos' },
+  '/operacion-venganza/nivel-3': { nivel: 3, nombre: 'Duky', guion: nivel3 },
   '/operacion-venganza/escena-13': { numero: 13, nombre: 'La sala de mando' },
   '/operacion-venganza/escena-14': { numero: 14, nombre: 'Último ataque' },
   '/operacion-venganza/escena-15': { numero: 15, nombre: 'El regreso del fantasma' },
@@ -24,26 +28,36 @@ const ESCENAS = {
 
 const DUCK_ONE = '/operacion-venganza/carga-duck-one'
 
+const ENLACES = Object.keys(ESCENAS)
+const siguienteDe = (enlace) => ENLACES[ENLACES.indexOf(enlace) + 1]
+const enlaceDe = (numero) => ENLACES.find((enlace) => ESCENAS[enlace].numero === numero)
+
+// Las escenas tras las que va un nivel.
+const ANTES_DE_UN_NIVEL = ENLACES.filter((enlace) => ESCENAS[siguienteDe(enlace)]?.nivel).map((enlace) => ESCENAS[enlace].numero)
+
 // La pantalla de carga que abre la escena `numero` y las escenas que corren
-// desde ella hasta el fin de su grupo (lib/cargas.js); sin grupo, duck-one y
-// la escena sola.
+// desde ella hasta el fin de su grupo (lib/cargas.js), o hasta la que lleva a
+// un nivel; sin grupo, duck-one y la escena sola.
 function tramoDe(numero) {
   const [ruta, { escenas }] = Object.entries(CARGAS).find(([, { escenas }]) => escenas?.includes(numero)) ?? [DUCK_ONE, { escenas: [numero] }]
-  return { carga: CARGAS[ruta], escenas: escenas.slice(escenas.indexOf(numero)) }
+  const desde = escenas.slice(escenas.indexOf(numero))
+  const hasta = desde.findIndex((n) => ANTES_DE_UN_NIVEL.includes(n))
+  return { carga: CARGAS[ruta], escenas: hasta < 0 ? desde : desde.slice(0, hasta + 1) }
 }
 
 /**
  * Operación Venganza, el juego al que lleva el portaaviones de /nosotros.
  * Abre en la pantalla de carga de su grupo y abajo se llena la barra mientras
  * bajan las tomas. Después corren la escena de la página y las que le siguen
- * en el grupo, y al final (salvo tras la 16, que lleva sola a Nosotros) están todas las escenas construidas, para saltar a
- * otra, y se puede volver a verla o volver a Nosotros. Todo lo
- * mueve src/operacion-venganza.js, que lee la escena en `data-escena`; aquí
- * está el HTML que espera.
+ * en el grupo, y al final sigue la próxima página del juego (un nivel o la
+ * escena siguiente), salvo tras la 16, que lleva a Nosotros: se juega entero
+ * sin pasar por el índice. Todo lo mueve src/operacion-venganza.js, que lee la
+ * escena en `data-escena`; aquí está el HTML que espera.
  *
  * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. La tira de
  * duck-one va además en el CSS, así que empieza a bajar con la página. Las pantallas
- * de carga (lib/cargas.js) tienen también su página, para verlas solas.
+ * de carga (lib/cargas.js) tienen también su página, para verlas solas, y
+ * desde ella se llega al índice de todo.
  */
 export default function OperacionVenganza({ ruta }) {
   const carga = CARGAS[ruta]
@@ -100,13 +114,14 @@ function Pato({ tira, quieto, paso, destellos }) {
 }
 
 // La escena de la página y las que le siguen en su grupo, en `data-escena`;
-// si la última termina eligiendo, sus `finales`, y si tras ella va un nivel,
-// en `data-sigue`, adonde se va al terminar.
+// si la última termina eligiendo, sus `finales`, y si no, en `data-sigue`, la
+// página que viene después de ella, adonde se va al terminar.
 function Escena({ ruta }) {
   const { numero, nombre } = ESCENAS[ruta]
   const { carga, escenas } = tramoDe(numero)
-  const { finales } = Object.values(ESCENAS).find((escena) => escena.numero === escenas.at(-1))
-  const sigue = Object.keys(ESCENAS).find((enlace) => ESCENAS[enlace].tras === escenas.at(-1))
+  const ultima = enlaceDe(escenas.at(-1))
+  const { finales } = ESCENAS[ultima]
+  const sigue = finales ? undefined : siguienteDe(ultima)
   return (
     <main id="contenido" className="venganza" data-escena={escenas.join(' ')} data-sigue={sigue}>
       <h1 className="venganza-titulo">{`Operación Venganza, escena ${numero}: ${nombre}`}</h1>
@@ -140,7 +155,6 @@ function Escena({ ruta }) {
         )}
       </section>
 
-      {!finales && !sigue && <Fin ruta={ruta} titulo={`Fin de la escena ${numero}`} />}
     </main>
   )
 }
@@ -148,14 +162,13 @@ function Escena({ ruta }) {
 /**
  * Un nivel jugable: el combate de src/combate.js con el guion de `data-nivel`.
  * Se llega desde las escenas que lo preceden y, al terminar, sigue la escena
- * que viene en el índice (`data-sigue`); también se puede saltar. El cielo se
+ * que viene después (`data-sigue`); también se puede saltar. El cielo se
  * pinta en el lienzo y todo lo demás flota encima: la portada, los PV, el
  * diálogo y los paneles de pausa y derrota.
  */
 function Nivel({ ruta }) {
   const { nivel, nombre, guion } = ESCENAS[ruta]
-  const enlaces = Object.keys(ESCENAS)
-  const sigue = enlaces[enlaces.indexOf(ruta) + 1]
+  const sigue = siguienteDe(ruta)
   const saltar = (
     <a className="escena-boton" href={sigue}>
       Saltar nivel
@@ -196,7 +209,7 @@ function Nivel({ ruta }) {
         <p className="nivel-antetitulo">Operación Venganza</p>
         <h2 id="nivel-portada">{`NIVEL ${nivel} — ${nombre.toUpperCase()}.`}</h2>
         <p className="nivel-lema">{guion.LEMA}</p>
-        <p>{`Eres quien está detrás de la pantalla. Esquiva las balas del caza de ${nombre} mientras el cielo cambia de vista.`}</p>
+        <p>{guion.INTRO}</p>
         <p className="nivel-controles">
           Ratón: mueve el cursor
           <br />

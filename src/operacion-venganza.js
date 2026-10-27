@@ -10,7 +10,7 @@
  * de las tomas de todas y la barra muestra cuántas ya están decodificadas, en
  * memoria, pero no se llena antes de `MINIMO`: con todo en caché la carga se
  * alcanza a ver igual. Llena, tras `PASO` empieza la primera, y «Saltar escena» pasa a la
- * siguiente, o al fin desde la última.
+ * siguiente, o desde la última a lo que sigue.
  *
  * Cada toma se pinta en un lienzo de `LADO` × `ALTO` px, la franja del medio
  * de cada cuadro en 4:3, que el CSS agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas, y
@@ -23,8 +23,9 @@
  * escena: la barra se llena con las tiras de sus escenas y queda llena hasta
  * que se pide el índice, y «Ver otra vez» vuelve a la carga.
  *
- * Si tras la última va un nivel jugable (`data-sigue`), al acabar sus tomas
- * (o al saltarlas) la página sigue a él.
+ * Al acabar las tomas de la última (o al saltarlas), la página sigue a
+ * `data-sigue`: un nivel jugable o la escena siguiente, con su carga. Así el
+ * juego corre entero sin volver al índice.
  *
  * Si el guion de la última trae `FINALES`, al acabar sus tomas (o al saltarlas) quien juega
  * elige uno con sus botones, y corren sus tomas. Su nombre queda en la sesión,
@@ -136,7 +137,6 @@ function escena(raiz, guiones, tiras, modo) {
   let linea = 0
   let desde = 0
   let espera = 0
-  let pintando = 0
 
   const dibujar = (ahora) => {
     const { ms, unaVez } = tomas[toma]
@@ -146,7 +146,7 @@ function escena(raiz, guiones, tiras, modo) {
     pincel.imageSmoothingEnabled = false
     const tira = tiras.get(tomas[toma])
     if (tira.naturalWidth) pincel.drawImage(tira, cuadro * LADO, (LADO - ALTO) / 2, LADO, ALTO, 0, 0, LADO, ALTO)
-    pintando = requestAnimationFrame(dibujar)
+    requestAnimationFrame(dibujar)
   }
 
   const decir = (l) => {
@@ -156,7 +156,7 @@ function escena(raiz, guiones, tiras, modo) {
   }
 
   // Avanza una línea; sin más líneas, a la toma siguiente; sin más tomas, a
-  // elegir el final, si hay que elegirlo, o al fin.
+  // elegir el final, si hay que elegirlo, o a lo que sigue.
   const avanzar = () => {
     clearTimeout(espera)
     const lineas = toma < 0 ? [] : tomas[toma].lineas
@@ -188,16 +188,7 @@ function escena(raiz, guiones, tiras, modo) {
     eleccion.querySelector('button').focus()
   }
 
-  const terminar = () => {
-    if (porElegir()) return elegir()
-    if (FINALES) return location.assign('/nosotros')
-    if (raiz.dataset.sigue) return location.assign(raiz.dataset.sigue)
-    clearTimeout(espera)
-    cancelAnimationFrame(pintando)
-    raiz.querySelector('.escena').hidden = true
-    raiz.querySelector('.fin').hidden = false
-    raiz.querySelector('.fin .boton-primario').focus()
-  }
+  const terminar = () => (porElegir() ? elegir() : location.assign(FINALES ? '/nosotros' : raiz.dataset.sigue))
 
   // Empieza de nuevo `lista`, desde su primera toma.
   const empezar = (lista) => {
@@ -230,13 +221,7 @@ function escena(raiz, guiones, tiras, modo) {
     mandos.hidden = false
     empezar(FINALES[final].tomas)
   })
-  raiz.querySelector('.fin-otra-vez')?.addEventListener('click', () => {
-    raiz.querySelector('.fin').hidden = true
-    raiz.querySelector('.escena').hidden = false
-    pintando = requestAnimationFrame(dibujar)
-    empezar(TOMAS)
-  })
 
   empezar(TOMAS)
-  pintando = requestAnimationFrame(dibujar)
+  requestAnimationFrame(dibujar)
 }
