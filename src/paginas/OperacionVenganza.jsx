@@ -1,5 +1,6 @@
 import { ALTO, LADO } from '../lib/escena1.js'
 import { FINALES } from '../lib/escena16.js'
+import { CARGAS } from '../lib/cargas.js'
 
 // Cada escena tiene su página; la que termina eligiendo, sus `finales`.
 const ESCENAS = {
@@ -27,24 +28,67 @@ const ESCENAS = {
  * está el HTML que espera.
  *
  * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. La tira de
- * duck-one va en el CSS, así que empieza a bajar con la página.
+ * duck-one va en el CSS, así que empieza a bajar con la página. Las pantallas
+ * de carga (lib/cargas.js) tienen también su página, para verlas solas.
  */
 export default function OperacionVenganza({ ruta }) {
+  const carga = CARGAS[ruta]
+  return carga ? <PantallaDeCarga ruta={ruta} {...carga} /> : <Escena ruta={ruta} />
+}
+
+/**
+ * Una pantalla de carga sola, para verla desde el índice: la barra se llena
+ * una y otra vez hasta que se pide el índice.
+ * La tira va en `--tira`; los marineros, cada uno en su fila, cruzan la vista.
+ */
+function PantallaDeCarga({ ruta, nombre, tira, quieto, paso, destellos, corredores }) {
+  return (
+    <main id="contenido" className="venganza" data-carga={ruta}>
+      <h1 className="venganza-titulo">{`Operación Venganza, pantalla de carga: ${nombre}`}</h1>
+      <Carga
+        titulo={`Pantalla de carga: ${nombre}`}
+        salir={
+          <button className="escena-boton carga-salir" type="button">
+            Ver el índice
+          </button>
+        }
+      >
+        {corredores?.map(({ tira, alto, s, demora, derecha }, k) => (
+          <div
+            key={tira}
+            className={`carga-pato carga-cruza${derecha ? '' : ' carga-izquierda'}`}
+            style={{
+              '--tira': `url('${tira}')`,
+              '--columna': k / (corredores.length - 1),
+              top: `${alto * 100}%`,
+              animationDuration: `0.8s, ${s}s`,
+              animationDelay: `0s, -${demora}s`,
+            }}
+            aria-hidden="true"
+          />
+        ))}
+        {tira && (
+          <div className={`carga-pato${quieto ? ' carga-quieto' : ''}`} style={{ '--tira': `url('${tira}')`, animationDuration: paso && `${paso}s` }}>
+            {destellos?.map(([x, y], k) => (
+              <span key={k} className="carga-destello" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `-${(k * 0.37).toFixed(2)}s` }} />
+            ))}
+          </div>
+        )}
+      </Carga>
+      <Fin ruta={ruta} titulo="Fin de la pantalla de carga" />
+    </main>
+  )
+}
+
+function Escena({ ruta }) {
   const { numero, nombre, finales } = ESCENAS[ruta]
   return (
     <main id="contenido" className="venganza" data-escena={numero}>
       <h1 className="venganza-titulo">{`Operación Venganza, escena ${numero}: ${nombre}`}</h1>
 
-      <section className="carga" aria-label={`Cargando la escena ${numero}`}>
+      <Carga titulo={`Cargando la escena ${numero}`}>
         <div className="carga-pato" />
-        <div className="carga-barra" role="progressbar" aria-label="Cargando la escena" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div className="carga-llena" />
-        </div>
-        <p className="carga-texto">Cargando</p>
-        <noscript>
-          <p className="carga-texto">La escena necesita JavaScript.</p>
-        </noscript>
-      </section>
+      </Carga>
 
       <section className="escena" aria-label={`Escena ${numero}: ${nombre}`} hidden>
         <canvas className="escena-cuadro" width={LADO} height={ALTO} aria-hidden="true" />
@@ -71,24 +115,56 @@ export default function OperacionVenganza({ ruta }) {
         )}
       </section>
 
-      <section className="fin" aria-label={`Fin de la escena ${numero}`} hidden>
-        <h2 className="titular">{`Fin de la escena ${numero}`}</h2>
-        <nav className="fin-escenas" aria-label="Escenas">
-          {Object.entries(ESCENAS).map(([enlace, escena]) => (
+      <Fin ruta={ruta} titulo={`Fin de la escena ${numero}`} />
+    </main>
+  )
+}
+
+function Carga({ titulo, salir, children }) {
+  return (
+    <section className="carga" aria-label={titulo}>
+      {children}
+      <div className="carga-barra" role="progressbar" aria-label="Cargando la escena" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div className="carga-llena" />
+      </div>
+      <p className="carga-texto">Cargando</p>
+      {salir}
+      <noscript>
+        <p className="carga-texto">La escena necesita JavaScript.</p>
+      </noscript>
+    </section>
+  )
+}
+
+// El fin: el índice de las escenas y, en un desplegable, el de las pantallas
+// de carga, abierto cuando se viene de una.
+function Fin({ ruta, titulo }) {
+  return (
+    <section className="fin" aria-label={titulo} hidden>
+      <h2 className="titular">{titulo}</h2>
+      <nav className="fin-escenas" aria-label="Escenas">
+        {Object.entries(ESCENAS).map(([enlace, escena]) => (
+          <a key={enlace} href={enlace} aria-current={enlace === ruta ? 'page' : undefined}>
+            <span className="fin-escenas-numero">{`Escena ${escena.numero}`}</span> {escena.nombre}
+          </a>
+        ))}
+        <details className="fin-cargas" open={ruta in CARGAS}>
+          <summary>Pantallas de carga</summary>
+          {Object.entries(CARGAS).map(([enlace, { nombre }]) => (
             <a key={enlace} href={enlace} aria-current={enlace === ruta ? 'page' : undefined}>
-              <span className="fin-escenas-numero">{`Escena ${escena.numero}`}</span> {escena.nombre}
+              {nombre}
             </a>
           ))}
-        </nav>
-        <p className="escena-mandos">
-          <a className="boton boton-primario" href="/nosotros">
-            Volver a Nosotros
-          </a>
-          <button className="escena-boton fin-otra-vez" type="button">
-            Ver otra vez
-          </button>
-        </p>
-      </section>
-    </main>
+        </details>
+      </nav>
+      <p className="escena-mandos">
+        <a className="boton boton-primario" href="/nosotros">
+          Volver a Nosotros
+        </a>
+        <button className="escena-boton fin-otra-vez" type="button">
+          Ver otra vez
+        </button>
+      </p>
+    </section>
   )
 }

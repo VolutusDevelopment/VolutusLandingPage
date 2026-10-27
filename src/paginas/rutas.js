@@ -2,6 +2,7 @@ import Inicio from './Inicio.jsx'
 import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
 import OperacionVenganza from './OperacionVenganza.jsx'
+import { CARGAS } from '../lib/cargas.js'
 import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
@@ -64,6 +65,7 @@ export const COMPONENTES = {
   '/operacion-venganza/escena-14': OperacionVenganza,
   '/operacion-venganza/escena-15': OperacionVenganza,
   '/operacion-venganza/escena-16': OperacionVenganza,
+  ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
   '/404': NoEncontrada,

@@ -16,6 +16,10 @@
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
  * que flota (ratón, trackpad) es un cursor, y si no, una huella.
  *
+ * En la página de una pantalla de carga (lib/cargas.js, `data-carga`) no hay
+ * escena: la barra se llena una y otra vez hasta que se pide el índice, y
+ * «Ver otra vez» vuelve a la carga.
+ *
  * Si el guion trae `FINALES`, al acabar sus tomas (o al saltarlas) quien juega
  * elige uno con sus botones, y corren sus tomas. Su nombre queda en la sesión,
  * en la clave `FINAL` del guion, para /nosotros (src/flota.js).
@@ -34,6 +38,7 @@ import * as escena14 from './lib/escena14.js'
 import * as escena15 from './lib/escena15.js'
 import * as escena16 from './lib/escena16.js'
 import { quieto } from './lib/movimiento.js'
+import { CARGAS } from './lib/cargas.js'
 
 const { ALTO, LADO, cuadrosDe, textoDe } = escena1
 const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
@@ -41,6 +46,7 @@ const PASO = 120
 const leer = (texto) => Math.max(1100, 500 + texto.length * 40)
 
 export default function iniciar(raiz) {
+  if ('carga' in raiz.dataset) return pantallaDeCarga(raiz)
   const guion = GUIONES[raiz.dataset.escena]
   const { TOMAS, TODAS = TOMAS, rutaDeToma } = guion
   const modo = matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella'
@@ -52,6 +58,29 @@ export default function iniciar(raiz) {
     }),
   )
   cargar(raiz, [...tiras.values()], () => escena(raiz, guion, tiras, modo))
+}
+
+function pantallaDeCarga(raiz) {
+  const { tira, corredores = [] } = CARGAS[raiz.dataset.carga]
+  const tiras = [tira, ...corredores.map((c) => c.tira)].filter(Boolean).map((ruta) => Object.assign(new Image(), { src: ruta }))
+  const carga = raiz.querySelector('.carga')
+  const fin = raiz.querySelector('.fin')
+  let vuelta = 0
+  const llenar = () => {
+    const esta = vuelta
+    cargar(raiz, tiras, () => esta === vuelta && llenar())
+  }
+  const mostrar = (verla) => {
+    vuelta++
+    carga.hidden = !verla
+    fin.hidden = verla
+    raiz.classList.toggle('en-escena', !verla)
+    if (verla) llenar()
+    else fin.querySelector('.boton-primario').focus()
+  }
+  raiz.querySelector('.carga-salir').addEventListener('click', () => mostrar(false))
+  raiz.querySelector('.fin-otra-vez').addEventListener('click', () => mostrar(true))
+  mostrar(true)
 }
 
 function cargar(raiz, tiras, listo) {

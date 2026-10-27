@@ -12,7 +12,6 @@ import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS } from './personajes.mjs'
 import { salaCon, TOMAS_3D } from './tomas.mjs'
 import { cielo } from './lugares.mjs'
 import { TOMAS as GUION, textoDe } from '../../../src/lib/escena1.js'
-import { PERSONAJES } from '../pilotos/cuerpos.mjs'
 import { writeFileSync } from 'node:fs'
 
 const [RAIZ, HOJA] = process.argv.slice(2)
@@ -224,67 +223,5 @@ lamina('E1-tomas-sala', {
   alto: 2280,
   vistas: tomarVistas(),
 })
-
-// ── La pantalla de carga ─────────────────────────────────────────────────
-
-// Lo primero al tocar el portaaviones: duck-one camina en el lugar, de tres
-// cuartos, y abajo se llena una barra de bloques. La barra avanza un bloque
-// por paso, como el resto del juego, y sin movimiento queda a la mitad.
-const DUCK_ONE = PERSONAJES.find((p) => p.archivo === 'duck-one')
-const pasos = cuadros('p8', DUCK_ONE.andando)
-const encuadreDuckOne = apretado(pasos[0])
-
-const pantallaDeCarga = (archivo, { ancho, alto, tam, bloques }) => {
-  const svgs = anota(pasos.map((f) => pixel3d(f, TRES_CUARTOS, N, tam, encuadreDuckOne)))
-  const barra = bloques * 20
-  hoja.push(`<h3 style="font:14px sans-serif;margin:6px">${archivo}</h3><div style="display:flex;gap:4px;margin:4px"><div style="background:#5c94fc">${tomarVistas()[0]}</div></div>`)
-  if (PRUEBA) return
-  writeFileSync(
-    `${RAIZ}/project/${archivo}.dc.html`,
-    `<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>Cargando la escena 1</title>
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400&display=swap">
-<style>
-body{margin:0}
-.f{opacity:0}
-${ANIMACIONES}
-.llena{width:100%;animation:carga 4s steps(${bloques}, end) infinite}
-@keyframes carga{0%{width:0}100%{width:100%}}
-@media (prefers-reduced-motion: reduce){.f{animation:none}.quieto{opacity:1}.llena{animation:none;width:${Math.floor(bloques / 2) * 20}px}}
-</style>
-</helmet>
-<div style="width: ${ancho}px; height: ${alto}px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; background: #5c94fc; color: #0a1a2a">
-<div style="position: relative; width: ${N * tam}px; height: ${N * tam}px">${apilar(svgs, 'p8', 0)}</div>
-<div style="display: flex; flex-direction: column; align-items: center; gap: 12px">
-<div role="progressbar" aria-label="Cargando la escena" style="box-sizing: content-box; width: ${barra}px; height: 16px; padding: 4px 0 4px 4px; border: 4px solid #0a1a2a">
-<div class="llena" style="height: 16px; background: repeating-linear-gradient(90deg, #0a1a2a 0 16px, transparent 16px 20px)"></div>
-</div>
-<span style="${mono}">Cargando</span>
-</div>
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":${ancho},"height":${alto}}}'>
-class Component extends DCLogic {
-renderVals() {
-return {};
-}
-}
-</script>
-</body>
-</html>
-`,
-  )
-}
-
-pantallaDeCarga('E1-carga-telefono', { ancho: 390, alto: 844, tam: 4, bloques: 12 })
-pantallaDeCarga('E1-carga-escritorio', { ancho: 1440, alto: 900, tam: 6, bloques: 18 })
 
 writeFileSync(HOJA, `<html><body style="margin:0;background:#fff">${hoja.join('')}</body></html>`)

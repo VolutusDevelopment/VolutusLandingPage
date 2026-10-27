@@ -12,6 +12,8 @@
 }
 
 .venganza {
+  position: relative;
+  overflow: hidden;
   display: grid;
   place-items: center;
   min-height: 100svh;
@@ -41,7 +43,8 @@
 
 /* ---- La carga ----
    duck-one de tres cuartos: la tira de ocho pasos (lib/escena1.js, `CARGA`)
-   corre de a un cuadro, sin suavizar. La barra se llena de a bloques de
+   corre de a un cuadro, sin suavizar. En la página de cada pantalla de carga
+   (lib/cargas.js) la tira llega en `--tira`; la de Duky es un solo cuadro. La barra se llena de a bloques de
    20 px: 12 en teléfono, 18 desde L; `--llenos` lo pone el JS. */
 .carga {
   --lado: 288px;
@@ -60,9 +63,10 @@
 }
 
 .carga-pato {
+  position: relative;
   width: var(--lado);
   height: var(--lado);
-  background: url('/operacion-venganza/carga.png') 0 0 / calc(var(--lado) * 8) var(--lado) no-repeat;
+  background: var(--tira, url('/operacion-venganza/carga.png')) 0 0 / calc(var(--lado) * 8) var(--lado) no-repeat;
   image-rendering: pixelated;
   animation: carga-pasos 0.8s steps(8) infinite;
 }
@@ -70,6 +74,86 @@
 @keyframes carga-pasos {
   to {
     background-position: calc(var(--lado) * -8) 0;
+  }
+}
+
+/* Los destellos de Duke: estrellas de cuatro puntas que se encienden y se
+   apagan de a saltos, cada una a su tiempo. */
+.carga-destello {
+  position: absolute;
+  width: calc(var(--lado) / 14);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: #fff6c2;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0;
+  animation: carga-destello 1.8s steps(1) infinite;
+}
+
+@keyframes carga-destello {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  10% {
+    opacity: 1;
+    scale: 0.75;
+  }
+  20% {
+    scale: 1;
+  }
+  30% {
+    opacity: 1;
+    scale: 0.6;
+  }
+  40%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.carga-quieto {
+  background-size: var(--lado);
+  animation: none;
+}
+
+/* Los marineros cruzan la vista de lado a lado, a la mitad del tamaño, cada
+   uno a su altura y su ritmo (los pone el JSX). */
+.carga-cruza {
+  --lado: 144px;
+  position: absolute;
+  left: 0;
+  margin-top: calc(var(--lado) / -2);
+  animation-name: carga-pasos, carga-derecha;
+  animation-timing-function: steps(8), linear;
+  animation-iteration-count: infinite;
+}
+
+.carga-izquierda {
+  animation-name: carga-pasos, carga-izquierda;
+}
+
+@media (min-width: 1024px) {
+  .carga-cruza {
+    --lado: 216px;
+  }
+}
+
+@keyframes carga-derecha {
+  from {
+    transform: translateX(calc(var(--lado) * -1));
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@keyframes carga-izquierda {
+  from {
+    transform: translateX(100vw);
+  }
+  to {
+    transform: translateX(calc(var(--lado) * -1));
   }
 }
 
@@ -100,6 +184,19 @@
 
 .carga-texto {
   margin: 0;
+}
+
+/* Los marineros pasan por detrás de la barra, del texto y del botón. */
+.carga-barra,
+.carga-texto,
+.carga-salir {
+  position: relative;
+  z-index: 1;
+}
+
+.carga-barra,
+.carga .carga-salir {
+  background: var(--fondo-de-arriba);
 }
 
 /* ---- La escena ----
@@ -199,7 +296,8 @@
   width: min(100%, 22rem);
 }
 
-.fin-escenas a {
+.fin-escenas a,
+.fin-cargas summary {
   display: flex;
   align-items: baseline;
   gap: var(--e-3);
@@ -213,6 +311,7 @@
 }
 
 .fin-escenas a:hover,
+.fin-cargas summary:hover,
 .fin-escenas a[aria-current] {
   border-color: currentColor;
 }
@@ -225,8 +324,53 @@
   color: #9fc0ff;
 }
 
+/* Las pantallas de carga, en un desplegable al final del índice: al abrirlo,
+   sus filas siguen debajo, igual que las de las escenas. */
+.fin-cargas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.fin-cargas summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9fc0ff;
+}
+
+.fin-cargas summary::-webkit-details-marker {
+  display: none;
+}
+
+.fin-cargas summary::after {
+  content: '+';
+  margin-left: auto;
+}
+
+.fin-cargas[open] summary::after {
+  content: '−';
+}
+
+.fin-cargas[open] summary {
+  margin-bottom: var(--e-2);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .carga-pato {
     animation: none;
+  }
+
+  .carga-destello {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* Quietos, cada marinero en su columna para que ninguno tape a otro. */
+  .carga-cruza {
+    left: calc(var(--columna) * (100% - var(--lado)));
   }
 }

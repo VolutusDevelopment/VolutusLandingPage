@@ -1,3 +1,5 @@
+import { CARGAS } from './cargas.js'
+
 /**
  * Metadatos de las páginas, en un solo sitio.
  *
@@ -392,6 +394,19 @@ export const PAGINAS = {
       'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 16, en el navegador.',
     fondo: '#5c94fc',
   },
+  // Las pantallas de carga, cada una sola: se llega desde el índice del juego.
+  ...Object.fromEntries(
+    Object.entries(CARGAS).map(([ruta, { nombre }]) => [
+      ruta,
+      {
+        archivo: `${ruta.slice(1)}.html`,
+        titulo: `Operación Venganza, pantalla de carga: ${nombre} — Volutus`,
+        descripcion: `${nombre}: una pantalla de carga de Operación Venganza, sola, para verla desde el índice del juego.`,
+        fondo: '#5c94fc',
+        indexar: false,
+      },
+    ]),
+  ),
 }
 
 /**

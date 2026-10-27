@@ -1,6 +1,6 @@
 // Las tiras de la escena 1 (src/lib/escena1.js), una por toma (tiras.mjs), y
-// la de duck-one caminando para la pantalla de carga. Se pintan con el mismo
-// motor que las láminas.
+// la de duck-one caminando para la pantalla de carga (su lámina está en
+// cargas.mjs). Se pintan con el mismo motor que las láminas.
 //
 //   node scripts/operacion-venganza/escena1/sprites.mjs
 //
