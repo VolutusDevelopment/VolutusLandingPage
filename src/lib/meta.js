@@ -328,6 +328,22 @@ export const PAGINAS = {
       'duck-one vuelve al Sitting Ducks, casi atropella a los marinos y le rinde cuentas a moby y a duke: el enemigo se mueve bastante. Escena 5, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/escena-10': {
+    archivo: 'operacion-venganza/escena-10.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 10: La última opción — Volutus',
+    descripcion:
+      'Nada ha funcionado y duck-one propone una medida extraordinal. Moby tose, Duke quiere pintura nueva y todos miran a Duky. Escena 10, en el navegador.',
+    fondo: '#5c94fc',
+  },
+  '/operacion-venganza/escena-11': {
+    archivo: 'operacion-venganza/escena-11.html',
+    actualizada: '2026-10-26',
+    titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
+    descripcion:
+      'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-35 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**

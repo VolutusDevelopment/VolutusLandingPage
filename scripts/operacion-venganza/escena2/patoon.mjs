@@ -25,7 +25,7 @@ const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
 
 // Sentado en el sillón: el cuerpo baja `agacha` y las piernas van del asiento
 // al piso, hacia adelante. Sirve para cualquier pose de pie de `p`.
-const sentar = (p, formas, agacha = SENTADO) => {
+export const sentar = (p, formas, agacha = SENTADO) => {
   const { grosor, pie, color = C.naranja } = p.pierna
   const piernas = ambos((s) => {
     const z = s * p.cadera[2]
@@ -148,11 +148,11 @@ export const duke = {
 
 // La cara del susto, como el meme de Pingu: el pico abierto de par en par,
 // los ojos redondos y blancos con la pupila chiquita y una lágrima en cada
-// uno. De vez en cuando le tiembla el párpado derecho: un pasado que no se
-// cuenta.
+// uno. De vez en cuando (en los tramos de `tics`) le tiembla el párpado
+// derecho: un pasado que no se cuenta.
 const TIC = [[0.3, 0.36], [0.52, 0.55], [0.7, 0.78], [0.9, 0.94]]
 const BOCA_ABIERTA = ['#ffb4a4', '#e8806e', '#b0503e', '#5a1e14']
-const caraDeSusto = (u) => [
+const caraDeSusto = (u, tics) => [
   el([0.35, 0.2, 0], [0.7, 0.68, 0.66], C.hule),
   el([1.02, 0.18, 0], [0.36, 0.08, 0.32], C.picoHule, { rot: [0, 0, 14] }),
   el([0.97, -0.13, 0], [0.32, 0.07, 0.28], C.picoHule, { rot: [0, 0, -28] }),
@@ -164,14 +164,16 @@ const caraDeSusto = (u) => [
     el([0.985, 0.43, s * 0.365], [0.012, 0.02, 0.018], C.boca, { flat: '#e0302a' }),
     el([0.95, 0.26, s * 0.38], [0.03, 0.055, 0.04], C.blanco, { flat: '#ffffff' }),
   ]).flat(),
-  ...(TIC.some(([a, b]) => u >= a && u < b) ? [el([0.9, 0.56, 0.34], [0.09, 0.09, 0.18], C.hule, { rot: [0, -22, 0] })] : []),
+  ...(tics.some(([a, b]) => u >= a && u < b) ? [el([0.9, 0.56, 0.34], [0.09, 0.09, 0.18], C.hule, { rot: [0, -22, 0] })] : []),
 ]
 
-// Sentado no se hunde: sube hasta el asiento y le cuelgan las patas.
+// Sentado no se hunde: sube hasta el asiento y le cuelgan las patas. Con
+// `tiembla`, de 0 a 1, le tirita el cuerpo entero, a saltos de un cuadro.
 const EN_EL_SILLON = 0.15
+const tirita = (u, k) => Math.sin(Math.floor(u * 80) * 2.39 + k)
 export const duky = {
   sentado: (puntos = 0) => dukyFigura({ salto: EN_EL_SILLON, extra: puntosDeDuky(puntos) }),
-  susto: (u) => dukyFigura({ salto: EN_EL_SILLON, cara: caraDeSusto(u) }),
+  susto: (u, { tics = TIC, tiembla = 0 } = {}) => dukyFigura({ salto: EN_EL_SILLON + 0.04 * tiembla * tirita(u, 0), inclina: 3 * tiembla * tirita(u, 1), cabeza: 4 * tiembla * tirita(u, 2), cara: caraDeSusto(u, tics) }),
   enBrazos: () => dukyFigura({}),
 }
 
@@ -182,6 +184,12 @@ export const duky = {
 export const marinero = (fase, manos) => figura(pMarinero(OFICIOS.verde.color), { tronco: marineroTronco(OFICIOS.verde.color), manos, fase })
 // Lo lleva contra el pecho: la barriga de duky sobre las manos.
 export const EN_BRAZOS = { duky: [1.2, 1.22, 0], manos: enLaMesa(1.0, -0.55, 0.75) }
+// Dónde va duky en brazos de quien está en `donde` ({ en, giro }), a escala `k`.
+export const dukyEnBrazos = ({ en, giro }, k) => {
+  const a = (giro * Math.PI) / 180
+  const [ax, ay] = [EN_BRAZOS.duky[0] * k, (EN_BRAZOS.duky[1] + 0.1) * k]
+  return { en: sum(en, [ax * Math.cos(a), ay, -ax * Math.sin(a)]), giro, suelo: -2.2 }
+}
 
 // ── El almirante ─────────────────────────────────────────────────────────
 

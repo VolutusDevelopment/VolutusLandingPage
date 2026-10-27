@@ -13,6 +13,7 @@ const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
 const esc = (a, k) => a.map((v) => v * k)
 const uni = (a) => esc(a, 1 / Math.hypot(...a))
+const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const cruz = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
 
 // Los patos miden lo mismo que en la sala de la escena 1.
@@ -31,12 +32,38 @@ export const ASIENTOS = {
 // Hacia dónde mira, en grados como colocar, quien está en `de` y mira a `a` ([x, z]).
 export const giroHacia = ([x0, z0], [x1, z1]) => (Math.atan2(z0 - z1, x1 - x0) * 180) / Math.PI
 
-// Un punto de la sala en las unidades de quien está en `donde`: lo contrario de colocar.
-export const enUnidades = ([x, y, z], { en, giro, suelo = -2.3 }) => {
+// De un giro a otro por el lado corto.
+export const girar = (a, b, k) => a + ((((b - a) % 360) + 540) % 360 - 180) * k
+
+// Un punto de la sala en las unidades de quien está en `donde`, a escala `k`: lo contrario de colocar.
+export const enUnidades = ([x, y, z], { en, giro, suelo = -2.3, k = K }) => {
   const a = (giro * Math.PI) / 180
   const [dx, dz] = [x - en[0], z - en[2]]
-  return [(dx * Math.cos(a) - dz * Math.sin(a)) / K, (y - en[1]) / K + suelo, (dx * Math.sin(a) + dz * Math.cos(a)) / K]
+  return [(dx * Math.cos(a) - dz * Math.sin(a)) / k, (y - en[1]) / k + suelo, (dx * Math.sin(a) + dz * Math.cos(a)) / k]
 }
+
+// ── Caminando ────────────────────────────────────────────────────────────
+
+// Un recorrido por tramos rectos ([x, z]), a paso parejo: dónde va a los `s`
+// metros y hacia dónde mira, que en las esquinas gira de a poco.
+export const recorrido = (puntos) => {
+  const tramos = puntos.slice(1).map((b, i) => ({ a: puntos[i], b, largo: Math.hypot(b[0] - puntos[i][0], b[1] - puntos[i][1]) }))
+  const largo = tramos.reduce((total, t) => total + t.largo, 0)
+  const punto = (s) => {
+    let resta = Math.min(Math.max(s, 0), largo)
+    for (const t of tramos) {
+      if (resta <= t.largo) return lerp(t.a, t.b, resta / t.largo)
+      resta -= t.largo
+    }
+    return puntos.at(-1)
+  }
+  return { largo, donde: (s) => ({ en: [punto(s)[0], 0, punto(s)[1]], giro: giroHacia(punto(s - 0.25), punto(s + 0.25)) }) }
+}
+// Un ciclo de pasos cada medio metro.
+export const fase = (s) => (s / 0.5) % 1
+
+// Por la puerta del fondo, en el carril `z`, hasta la mesa.
+export const ENTRADA = (z) => recorrido([[-5.2, z], [-0.8, z]])
 
 // Un punto justo delante de la cámara [ojo, mira, campo]: (x, y) de -1 a 1
 // cubren lo que se ve de cada cuadro, la franja del medio en 4:3.
@@ -114,3 +141,14 @@ const reflejar = (formas) =>
     if (f.pinta) g.pinta = (p, n) => f.pinta(voltea(p), voltea(n))
     return g
   })
+
+// Alguien entra solo por la puerta, a paso lento, con la cámara delante que
+// lo acompaña: `camara(x)`, según por dónde va. `quienes(u)`, los que ya
+// estaban en la sala.
+export const entra = (pose, camino, camara, { quienes = () => [], ...extra } = {}) => {
+  const s = (u) => 1.5 + 2.2 * u
+  return {
+    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, ...extra, figuras: [...quienes(u), [pose(fase(s(u))), camino.donde(s(u))]] }),
+    camara: (u) => camara(camino.donde(s(u)).en[0]),
+  }
+}

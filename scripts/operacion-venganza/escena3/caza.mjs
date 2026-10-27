@@ -6,9 +6,9 @@
 // El caza va en sus metros (morro hacia +x) y el piloto en sus unidades;
 // enCaza() y enPiloto() los llevan a los metros del barco (escena1/lugares.mjs).
 
-import { el, transformar } from '../pilotos/tres.mjs'
+import { el } from '../pilotos/tres.mjs'
 import { RAMPAS as C, ambos, disco, hueso } from '../pilotos/modelos.mjs'
-import { CABINAS, NORMAL, aCaza, avion, cabinaCon, enPanel } from '../pilotos/interiores.mjs'
+import { CABINAS, NORMAL, aCaza, avion, cabinaCon, conCupula, enPanel } from '../pilotos/interiores.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)
@@ -56,17 +56,10 @@ const boton = (pulsado) => [
   el(sum(BOTON, esc(NORMAL, pulsado ? 0.01 : 0.05)), [0.08, 0.08, 0.08], C.boca, pulsado ? { flat: '#ff5a3a', brilla: true } : {}),
 ]
 
-// La cúpula se abre de la bisagra de atrás, con sus arcos, `abre` grados (escena 5).
-const ARCOS = CFG.avion.slice(-CFG.arcos.length * 12)
-const conCupula = (abre) => {
-  if (!abre) return CFG
-  const sube = transformar([0, 0, abre], [CUPULA.c[0] - CUPULA.r[0], CUPULA.c[1], 0])
-  return { ...CFG, avion: [...CFG.avion.filter((f) => f !== CUPULA && !ARCOS.includes(f)), ...sube.formas([CUPULA, ...ARCOS])] }
-}
-
-// El caza en sus metros: `piloto` es la figura de duck-one sentado, o nada.
+// El caza en sus metros: `piloto` es la figura de duck-one sentado, o nada;
+// `cupula`, los grados que tiene abierta la cúpula (escena 5).
 export const caza = ({ piloto = [], palanca, acelerador, limpia = LIMPIA_QUIETO, pulsado = false, tren = true, cupula = 0 } = {}) => [
-  ...cabinaCon(conCupula(cupula), [...piloto, ...boton(pulsado)], palanca, acelerador),
+  ...cabinaCon(conCupula(CFG, cupula), [...piloto, ...boton(pulsado)], palanca, acelerador),
   ...limpiaparabrisas(limpia),
   ...(tren ? TREN : []),
 ]

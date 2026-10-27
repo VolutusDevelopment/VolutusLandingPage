@@ -6,8 +6,8 @@
 // [ojo, mira, campo] en metros y grados. `modo` es lo que muestra la pantalla:
 // 'cursor' o 'huella', como desde el atacante en la escena 1.
 
-import { ASIENTOS, K, PUERTA, anteLaCamara, enUnidades, giroHacia, huecoDePuerta, reunion } from './reunion.mjs'
-import { EN_BRAZOS, PRENDIDO, SIN_HUMO, almirante, duckOne, duke, duky, marinero, moby, silueta } from './patoon.mjs'
+import { ASIENTOS, ENTRADA, K, PUERTA, anteLaCamara, enUnidades, entra, fase, girar, giroHacia, huecoDePuerta, recorrido, reunion } from './reunion.mjs'
+import { EN_BRAZOS, PRENDIDO, SIN_HUMO, almirante, duckOne, duke, duky, dukyEnBrazos, marinero, moby, silueta } from './patoon.mjs'
 import { FOTOS_3D } from './fotos.mjs'
 import { PANTALLA } from '../escena1/lugares.mjs'
 import { silaba, suave } from '../escena1/personajes.mjs'
@@ -17,8 +17,6 @@ const sum = (a, b) => a.map((v, i) => v + b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
-// De un giro a otro por el lado corto.
-const girar = (a, b, k) => a + ((((b - a) % 360) + 540) % 360 - 180) * k
 
 // ── Quién está y dónde ───────────────────────────────────────────────────
 
@@ -63,28 +61,7 @@ const firme = () => duckOne.atras()
 const conAutoridad = (u) => duckOne.atras(null, 0.8 * silaba(u))
 const conLaCarpeta = (u) => duckOne.carpeta(0, 0.8 * silaba(u))
 
-// ── Caminando ────────────────────────────────────────────────────────────
-
-// Un recorrido por tramos rectos ([x, z]), a paso parejo: dónde va a los `s`
-// metros y hacia dónde mira, que en las esquinas gira de a poco.
-const recorrido = (puntos) => {
-  const tramos = puntos.slice(1).map((b, i) => ({ a: puntos[i], b, largo: Math.hypot(b[0] - puntos[i][0], b[1] - puntos[i][1]) }))
-  const largo = tramos.reduce((total, t) => total + t.largo, 0)
-  const punto = (s) => {
-    let resta = Math.min(Math.max(s, 0), largo)
-    for (const t of tramos) {
-      if (resta <= t.largo) return lerp(t.a, t.b, resta / t.largo)
-      resta -= t.largo
-    }
-    return puntos.at(-1)
-  }
-  return { largo, donde: (s) => ({ en: [punto(s)[0], 0, punto(s)[1]], giro: giroHacia(punto(s - 0.25), punto(s + 0.25)) }) }
-}
-// Un ciclo de pasos cada medio metro.
-const fase = (s) => (s / 0.5) % 1
-
 // Entran de a uno por la puerta del fondo, cada uno por su carril.
-const ENTRADA = (z) => recorrido([[-5.2, z], [-0.8, z]])
 const DE_DUCK = ENTRADA(2.7)
 const DE_MOBY = ENTRADA(2.95)
 const DE_DUKE = ENTRADA(2.6)
@@ -115,10 +92,7 @@ const traeADuky = (u) => {
   const s = DE_MARINERO.largo * tramo(u, 0, 0.5)
   const andando = u < 0.5
   const donde = andando ? DE_MARINERO.donde(s) : { ...DETRAS_DEL_SILLON, giro: girar(DE_MARINERO.donde(s).giro, 90, tramo(u, 0.5, 0.6)) }
-  // Delante del marinero, en sus metros: así va duky en brazos.
-  const rad = (donde.giro * Math.PI) / 180
-  const [ax, ay] = [EN_BRAZOS.duky[0] * K, (EN_BRAZOS.duky[1] + 0.1) * K]
-  const enBrazos = sum(donde.en, [ax * Math.cos(rad), ay, -ax * Math.sin(rad)])
+  const enBrazos = dukyEnBrazos(donde, K).en
   const deja = tramo(u, 0.62, 0.86)
   const sentado = sum(ASIENTOS.duky.en, [0, 0.15 * K, 0])
   const suelta = tramo(u, 0.88, 1)
@@ -185,15 +159,6 @@ const velo = (prendida) => {
 
 // ── Las tomas ────────────────────────────────────────────────────────────
 
-// Cada uno entra solo por la puerta, a paso lento, con la cámara delante que
-// lo acompaña: `camara(x)`, según por dónde va.
-const entra = (pose, camino, camara, extra = {}) => {
-  const s = (u) => 1.5 + 2.2 * u
-  return {
-    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, ...extra, figuras: [[pose(fase(s(u))), camino.donde(s(u))]] }),
-    camara: (u) => camara(camino.donde(s(u)).en[0]),
-  }
-}
 // duck-one se gira hacia el escuadrón y les señala sus puestos.
 const AL_ESCUADRON = fija([0.2, 1.3, -0.6], [2.75, 1.1, -1.0], 50)
 

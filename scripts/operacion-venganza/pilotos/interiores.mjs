@@ -6,7 +6,7 @@
 // El interior y el piloto van en unidades del piloto; aCaza() y escalar() los
 // llevan a los metros del caza.
 
-import { el, placa, tubo } from './tres.mjs'
+import { el, placa, transformar, tubo } from './tres.mjs'
 import * as M from './modelos.mjs'
 import { RAMPAS as C, hueso, disco, ambos } from './modelos.mjs'
 import { cabina } from './cuerpos.mjs'
@@ -181,6 +181,15 @@ export const avion = (cfg) => {
   const hueco = ([x, y, z]) => y > cupula.c[1] - 0.25 && ((x - cupula.c[0]) / cupula.r[0]) ** 2 + (z / cupula.r[2]) ** 2 < 0.92
   const sinCabecita = cfg.caza.filter((f) => f.vidrio || f.k !== 'e' || Math.hypot(f.c[0] - hx, f.c[1] - hy) > 0.5 || Math.abs(f.c[2]) > 0.3)
   return [...sinCabecita.map((f) => (f.k === 'm' && !f.luz ? { ...f, hueco } : f)), ...cfg.arcos.flatMap(arcoDe)]
+}
+
+// La cúpula se abre de la bisagra de atrás, con sus arcos, `abre` grados.
+export const conCupula = (cfg, abre) => {
+  if (!abre) return cfg
+  const cupula = cfg.caza.find((f) => f.vidrio)
+  const arcos = cfg.avion.slice(-cfg.arcos.length * 12)
+  const sube = transformar([0, 0, abre], [cupula.c[0] - cupula.r[0], cupula.c[1], 0])
+  return { ...cfg, avion: [...cfg.avion.filter((f) => f !== cupula && !arcos.includes(f)), ...sube.formas([cupula, ...arcos])] }
 }
 
 // El caza con el piloto sentado y los mandos donde los deje su mano.
