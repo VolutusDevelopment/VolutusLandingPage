@@ -22,6 +22,7 @@ import * as nivel2 from './lib/nivel2.js'
 import * as nivel3 from './lib/nivel3.js'
 import { ALTURAS, GIROS, LADO, LLENADO, RADIO, rutaDeCaza } from './lib/cazas.js'
 import { quieto } from './lib/movimiento.js'
+import { FLECHA, escalaDe } from './lib/flecha.js'
 
 const NIVELES = { 1: nivel1, 2: nivel2, 3: nivel3 }
 
@@ -65,7 +66,7 @@ let w = 0, h = 0, escala = 2, k = 1, imagen, pix
 
 function ajustar() {
   const antes = [w, h]
-  escala = Math.max(2, Math.ceil(Math.sqrt((raiz.clientWidth * raiz.clientHeight) / 62000)))
+  escala = escalaDe(raiz.clientWidth, raiz.clientHeight)
   w = Math.ceil(raiz.clientWidth / escala)
   h = Math.ceil(raiz.clientHeight / escala)
   lienzo.width = w
@@ -547,7 +548,6 @@ function pintarEstelas() {
 
 // ── Quien juega ───────────────────────────────────────────────────────────
 // Le pega lo que toque la cabeza de la flecha o el centro de la huella.
-const FLECHA = ['X', 'XX', 'XWX', 'XWWX', 'XWWWX', 'XWWWWX', 'XWWWWWX', 'XWWWWWWX', 'XWWWXXXX', 'XWXWWX', 'XX XWWX', 'X   XWWX', '     XX']
 const HUELLA = ['  XXXXX  ', ' XWWWWWX ', 'XWWXXXWWX', 'XWXWWWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWWWXWWWX', ' XWWWWWX ', '  XXXXX  ']
 const FORMAS = {
   cursor: { mapa: FLECHA, ox: 0, oy: 0, hx: 2, hy: 4, r: 2 },
@@ -613,7 +613,7 @@ function pintarJugador(visible) {
 // misil guiado detrás, se cierran y parpadean.
 function pintarMira() {
   const f = FORMAS[modo]
-  const cx = Math.round(jugador.x - f.ox + (modo === 'cursor' ? 4 : f.mapa[0].length / 2))
+  const cx = Math.round(jugador.x - f.ox + (modo === 'cursor' ? 6 : f.mapa[0].length / 2))
   const cy = Math.round(jugador.y - f.oy + f.mapa.length / 2)
   const fijado = balas.some((b) => b.tipo === 'misil' && b.t < b.guia)
   if (fijado) corchetes(cx, cy, 8, Math.floor(reloj * 10) % 2 ? '#ffffff' : '#ff4a36')

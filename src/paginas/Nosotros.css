@@ -242,7 +242,8 @@
   pointer-events: none;
 }
 
-.flota.llega {
+.flota.llega,
+.flota.zarpa {
   visibility: visible;
 }
 
@@ -307,6 +308,26 @@
   animation-play-state: running;
 }
 
+/* Vivo en la escena 16 (src/flota.js pone `.zarpa`): la flota ya está,
+   quieta, con el portaaviones donde termina de llegar. Con `.llega` zarpa
+   entera: cada barco sigue su rumbo hacia la derecha, todos a la par, y en
+   pocos segundos van a la velocidad con que llegó el portaaviones, hasta salir
+   de la pantalla. El portaaviones, además, se achica hacia el horizonte, y al
+   final se oculta, para que el enlace no quede donde no se ve. */
+.zarpa .barco,
+.zarpa .escolta {
+  animation: none;
+}
+
+.zarpa.llega .barco,
+.zarpa.llega .escolta {
+  animation: alejarse 50s cubic-bezier(0.3, 0, 1, 1) both;
+}
+
+.zarpa.llega .barco {
+  animation-name: irse;
+}
+
 /* Hundido en la escena 16 (src/flota.js pone `.hundido`): el portaaviones ya
    está en su lugar, partido en dos como el Titanic. Cada mitad gira sobre su
    quiebre, que se hunde, y lo que queda bajo la línea de flotación no se ve.
@@ -368,6 +389,20 @@
   from {
     translate: calc(-1 * var(--inicio) * var(--ancho) - var(--izq)) calc(4.5px - 0.09 * var(--ancho));
     scale: var(--inicio);
+  }
+}
+
+@keyframes irse {
+  to {
+    translate: 100vw calc(4.5px - 0.09 * var(--ancho));
+    scale: var(--inicio);
+    visibility: hidden;
+  }
+}
+
+@keyframes alejarse {
+  to {
+    translate: 100vw;
   }
 }
 

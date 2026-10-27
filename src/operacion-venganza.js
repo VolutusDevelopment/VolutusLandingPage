@@ -19,6 +19,8 @@
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
  * que flota (ratón, trackpad) es un cursor, y si no, una huella.
  *
+ * Con ratón, el cursor de la página es la flecha del juego (`flecha`).
+ *
  * En la página de una pantalla de carga (lib/cargas.js, `data-carga`) no hay
  * escena: la barra se llena con las tiras de sus escenas y queda llena hasta
  * que se pide el índice, y «Ver otra vez» vuelve a la carga.
@@ -47,6 +49,7 @@ import * as escena15 from './lib/escena15.js'
 import * as escena16 from './lib/escena16.js'
 import { quieto } from './lib/movimiento.js'
 import { CARGAS } from './lib/cargas.js'
+import { FLECHA, escalaDe } from './lib/flecha.js'
 
 const { ALTO, LADO, cuadrosDe, textoDe } = escena1
 const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
@@ -55,6 +58,7 @@ const MINIMO = 3000
 const leer = (texto) => Math.max(1100, 500 + texto.length * 40)
 
 export default function iniciar(raiz) {
+  flecha(raiz)
   if ('carga' in raiz.dataset) return pantallaDeCarga(raiz)
   const guiones = raiz.dataset.escena.split(' ').map((numero) => GUIONES[numero])
   const modo = modoDelPuntero()
@@ -64,6 +68,49 @@ export default function iniciar(raiz) {
 
 const modoDelPuntero = () => (matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella')
 const imagenDe = (ruta) => Object.assign(new Image(), { src: ruta })
+
+// Con ratón, el cursor es la flecha del juego, en su lienzo encima de todo, y
+// el CSS esconde el del sistema, también la mano de los botones: esa queda
+// para los niveles. Sobre lo que se pulsa, la flecha se mece; al pulsar, se
+// hunde. Aparece con el primer movimiento y se va si el ratón sale de la
+// página: nunca se ven dos cursores, ni ninguno.
+function flecha(raiz) {
+  const lienzo = Object.assign(document.createElement('canvas'), { className: 'venganza-flecha', hidden: true })
+  lienzo.width = Math.max(...FLECHA.map((fila) => fila.length))
+  lienzo.height = FLECHA.length
+  lienzo.setAttribute('aria-hidden', 'true')
+  const pincel = lienzo.getContext('2d')
+  FLECHA.forEach((fila, y) => {
+    for (let x = 0; x < fila.length; x++) {
+      if (fila[x] === ' ') continue
+      pincel.fillStyle = fila[x] === 'X' ? '#0a1a2a' : '#ffffff'
+      pincel.fillRect(x, y, 1, 1)
+    }
+  })
+  raiz.append(lienzo)
+
+  const medir = () => {
+    const px = escalaDe(innerWidth, innerHeight)
+    lienzo.style.setProperty('--px', `${px}px`)
+    lienzo.style.width = `${lienzo.width * px}px`
+  }
+  const seguir = (e) => {
+    const raton = e.pointerType !== 'touch'
+    raiz.classList.toggle('con-flecha', raton)
+    lienzo.hidden = !raton
+    lienzo.style.translate = `${e.clientX}px ${e.clientY}px`
+    lienzo.classList.toggle('sobre', Boolean(e.target.closest?.('a, button, summary')))
+  }
+  medir()
+  addEventListener('resize', medir)
+  document.addEventListener('pointermove', seguir)
+  document.addEventListener('pointerdown', (e) => {
+    seguir(e)
+    lienzo.classList.add('hundida')
+  })
+  document.addEventListener('pointerup', () => lienzo.classList.remove('hundida'))
+  document.addEventListener('pointerout', (e) => e.relatedTarget || (lienzo.hidden = true))
+}
 
 // La imagen de cada toma de `guiones`, incluidas las de sus finales.
 const tirasDe = (guiones, modo) => new Map(guiones.flatMap(({ TOMAS, TODAS = TOMAS, rutaDeToma }) => TODAS.map((toma) => [toma, imagenDe(rutaDeToma(toma, modo))])))

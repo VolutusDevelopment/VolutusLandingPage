@@ -9,7 +9,9 @@
 //
 // Lo que se eligió al final de la escena 16 dura lo que la sesión: si se
 // hundió, el barco ya está, partido en dos (`.hundido`, también con movimiento
-// reducido); si se los dejó vivir, la flota no está.
+// reducido); si se los dejó vivir, la flota ya está y zarpa entera cuando
+// saldría la parvada (`.zarpa`, ver `zarpar`). Con movimiento reducido,
+// esa flota no está.
 
 import { elegido } from './lib/final.js'
 import { quieto } from './lib/movimiento.js'
@@ -20,14 +22,16 @@ export default function initFlota() {
   const flota = document.querySelector('.flota')
   if (!flota) return
   const final = elegido()
-  if (final === 'vivir') return flota.remove()
-  if (final === 'hundir') flota.classList.add('llega', 'hundido')
+  if (final === 'vivir') {
+    if (quieto()) return flota.remove()
+    zarpar(flota)
+  } else if (final === 'hundir') flota.classList.add('llega', 'hundido')
   else if (quieto()) return
   const barco = flota.querySelector('.barco')
   const telon = flota.parentElement
 
   const sobreElBarco = ({ clientX: x, clientY: y, target }) => {
-    if (!flota.classList.contains('llega') || target.closest('a, button, .socio')) return false
+    if (getComputedStyle(barco).visibility !== 'visible' || target.closest('a, button, .socio')) return false
     const caja = barco.getBoundingClientRect()
     return (
       x >= caja.left - DEDO &&
@@ -44,4 +48,20 @@ export default function initFlota() {
     (evento) => evento.pointerType === 'mouse' && (document.body.style.cursor = sobreElBarco(evento) ? 'pointer' : ''),
     { passive: true },
   )
+}
+
+// La flota se queda quieta hasta que la pausa que sigue al último socio
+// asoma, como la parvada (src/parvada.js); entonces `.llega` la echa a andar
+// y se va entera.
+function zarpar(flota) {
+  flota.classList.add('zarpa')
+  const salida = new IntersectionObserver(
+    ([{ boundingClientRect, rootBounds }]) => {
+      if (boundingClientRect.top > rootBounds.bottom) return
+      salida.disconnect()
+      flota.classList.add('llega')
+    },
+    { rootMargin: '0px 0px -15% 0px' },
+  )
+  salida.observe(document.querySelector('.atardecer-pausa'))
 }

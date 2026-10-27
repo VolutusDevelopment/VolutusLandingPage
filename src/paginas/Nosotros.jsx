@@ -209,7 +209,8 @@ const BUQUES = [
  * la lejanía y se acerca despacio (`.llega`, ver Nosotros.css). Es el enlace al
  * juego, y la página lo pulsa por él cuando algo se lo tapa (src/flota.js).
  * Si en la escena 16 se hundió, ya está ahí, partido en dos: sus `restos` son
- * sus dos mitades, que repiten su dibujo (`#barco`).
+ * sus dos mitades, que repiten su dibujo (`#barco`). Si se los dejó vivir,
+ * ya está ahí y zarpa con su escolta (`.zarpa`).
  */
 function Flota() {
   return (
