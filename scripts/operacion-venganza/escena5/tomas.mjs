@@ -11,7 +11,6 @@ import { RAMPAS as C, disco, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, figura, pDuckOne, pMoby, pDuke, dukeCerrado } from '../pilotos/cuerpos.mjs'
 import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, marineroTronco, pMarinero, silaba, suave } from '../escena1/personajes.mjs'
-import { CONDECORADO } from '../escena2/patoon.mjs'
 import { giroHacia } from '../escena2/reunion.mjs'
 import { EN_CATAPULTA, ESCALA as K, SUELO, caza, enPiloto } from '../escena3/caza.mjs'
 
@@ -39,12 +38,11 @@ const estacionado = (opciones = {}) => [...BARCO, ...poner(caza({ cupula: CUPULA
 
 // ── duck-one ─────────────────────────────────────────────────────────────
 
-// Con todas sus medallas, como en la reunión. La cabeza gira en el cuello:
+// La cabeza gira en el cuello:
 // `sube` grados hacia arriba, el mentón en alto.
-const TORSO = new Set([...M.DUCK_ONE_TORSO.map((f) => CONDECORADO[M.DUCK_ONE.indexOf(f)])])
-const CARA = CONDECORADO.filter((f) => !TORSO.has(f))
-const cabezaAlta = (sube) => [...TORSO, ...transformar([0, 0, sube], [0.1, 0.1, 0]).formas(CARA)]
-const atras = (tronco = CONDECORADO) => figura(pDuckOne, { tronco, manos: MANOS_ATRAS })
+const CARA = M.DUCK_ONE.filter((f) => !M.DUCK_ONE_TORSO.includes(f))
+const cabezaAlta = (sube) => [...M.DUCK_ONE_TORSO, ...transformar([0, 0, sube], [0.1, 0.1, 0]).formas(CARA)]
+const atras = (tronco = M.DUCK_ONE) => figura(pDuckOne, { tronco, manos: MANOS_ATRAS })
 const indice = (mano, hacia) => hueso(mano, sum(mano, hacia), 0.045, C.cuero)
 
 // Salta del ala a la cubierta y queda en jarras, con el pecho afuera.
@@ -57,7 +55,7 @@ const pose = (u) => {
 }
 
 // Habla con el índice arriba, como siempre.
-const hablando = (u) => DUCK.hablando(u, { tronco: CONDECORADO })
+const hablando = (u) => DUCK.hablando(u, { tronco: M.DUCK_ONE })
 
 // Se va con el mentón en alto, y suelta una medalla y otra por el camino.
 const MEDALLAS = [

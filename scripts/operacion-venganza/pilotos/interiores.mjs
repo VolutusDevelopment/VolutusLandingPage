@@ -8,7 +8,7 @@
 
 import { el, placa, transformar, tubo } from './tres.mjs'
 import * as M from './modelos.mjs'
-import { RAMPAS as C, hueso, disco, ambos } from './modelos.mjs'
+import { RAMPAS as C, hueso, disco, ambos, enEstrella } from './modelos.mjs'
 import { cabina } from './cuerpos.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -60,11 +60,17 @@ const mira = (c, n, r, marco, cristal) => [disco(c, n, r + 0.05, 0.03, marco), d
 
 // ── Piezas comunes de cabina ─────────────────────────────────────────────
 
-const asiento = (x, rampa) => [
-  placa([[x, -2.3, -0.9], [x, -2.3, 0.9], [x, 0.5, 0.7], [x, 0.5, -0.7]], 0.3, rampa),
-  el([x + 0.05, 0.95, 0], [0.22, 0.5, 0.55], rampa),
-  placa([[x, -1.8, -0.85], [x + 1.9, -1.8, -0.85], [x + 1.9, -1.8, 0.85], [x, -1.8, 0.85]], 0.25, rampa),
+// El asiento eyectable de cada uno, macizo como el de Duky: respaldo ancho,
+// apoyacabezas, cojín con sus laterales y la manilla amarilla y negra.
+// cabecera(v, u) pinta la cara del apoyacabezas desde su centro (v hacia
+// arriba, u de lado); remate va encima.
+const asiento = (x, { rampa, cabecera, remate = [] }) => [
+  placa([[x, -2.3, -1.0], [x, -2.3, 1.0], [x, 0.7, 1.0], [x, 0.7, -1.0]], 0.5, rampa),
+  el([x + 0.05, 1.0, 0], [0.28, 0.45, 0.8], rampa, { pinta: cabecera && (([px, y, z]) => (px > x + 0.1 ? cabecera(y - 1.0, z) : null)) }),
+  placa([[x, -1.8, -1.0], [x + 1.9, -1.8, -1.0], [x + 1.9, -1.8, 1.0], [x, -1.8, 1.0]], 0.4, rampa),
+  ...ambos((s) => placa([[x, -1.7, s * 0.95], [x + 1.7, -1.7, s * 0.95], [x + 1.5, -1.25, s * 0.95], [x, -0.9, s * 0.95]], 0.22, rampa)),
   el([0.85, -1.7, 0], [0.06, 0.12, 0.25], C.rayas),
+  ...remate.map(([c, r, rampa]) => el([x + c[0], c[1], c[2]], r, rampa)),
 ]
 
 const piernas = (cadera, rampa) =>
@@ -87,10 +93,12 @@ const mandos = (palanca, acelerador) => [
 
 export const CABINAS = {
   'duck-one': {
-    caza: M.CAZA_DUCK_ONE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0], frente: 1.58,
+    caza: M.CAZA_DUCK_ONE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0, 4.5], lomo: 4.5, frente: 1.58,
     ancho: 2.4, marco: C.oscuro,
-    consola: C.grisOscuro, tablero: C.grisOscuro, asiento: C.asiento, xAsiento: -1.05, pata: C.naranja, cadera: -1.45,
+    consola: C.grisOscuro, tablero: C.grisOscuro, xAsiento: -1.05, pata: C.naranja, cadera: -1.45,
     panel: [-1.3, 1.3, { borde: '#0a0e14', fondo: '#1f4b3a', linea: '#7dffa0', columnas: 3 }],
+    // Su asiento, verde oliva como el uniforme, con la estrella del líder.
+    asiento: { rampa: C.oliva, cabecera: (v, u) => (enEstrella(u, v, 0.32) ? C.oro : null) },
     // Dos retrovisores en el arco delantero y una medalla colgando de él.
     delante: () => [
       ...ambos((s) => mira([3.7, 1.15, s * 0.75], uni([-0.9, -0.3, -s * 0.2]), 0.2, C.oscuro, C.vidrio)).flat(),
@@ -99,10 +107,16 @@ export const CABINAS = {
     ],
   },
   duke: {
-    caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0], frente: 1.58,
+    caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0, 4.5], lomo: 4.5, frente: 1.58,
     ancho: 2.4, marco: C.oro,
-    consola: C.rosa, tablero: C.perla, asiento: C.rosa, xAsiento: -1.05, pata: C.pico, cadera: -1.45,
+    consola: C.rosa, tablero: C.perla, xAsiento: -1.05, pata: C.pico, cadera: -1.45,
     panel: [-1.3, 1.3, { borde: '#7a2848', fondo: '#d8629a', linea: '#fff0f6', columnas: 3 }],
+    // Su asiento es un trono: capitoné rosa con ribete de oro y una corona encima.
+    asiento: {
+      rampa: C.rosa,
+      cabecera: (v, u) => (Math.hypot(v / 0.45, u / 0.8) > 0.8 ? C.oro : Math.hypot(((v + 0.6) % 0.24) - 0.12, ((u + 0.6) % 0.24) - 0.12) < 0.03 ? C.blanco : null),
+      remate: [[[0.05, 1.5, 0], [0.14, 0.08, 0.34], C.oro], ...[-0.25, 0, 0.25].map((z) => [[0.05, 1.63, z], [0.06, 0.11, 0.06], C.oro]), [[0.14, 1.5, 0], [0.07, 0.06, 0.07], C.boca]],
+    },
     // Un espejo de belleza con bombillas, de lado sobre el tablero, para mirarse.
     delante: () => [
       ...mira([3.7, 0.85, 0.75], uni([-1, -0.2, -0.35]), 0.36, C.oro, C.vidrio),
@@ -112,8 +126,10 @@ export const CABINAS = {
   'moby-duck': {
     caza: M.CAZA_MOBY, cabeza: [4.9, 0.95], cabecita: [5.2, 0.95], izquierda: [0.3, 0.95, -1.5], cabezaU: [0.32, 0.28], k: 0.25, alto: 1.1, arcos: [5.6, 4.1], frente: 1.9,
     ancho: 2.8, marco: C.negro,
-    consola: C.negro, tablero: C.negro, asiento: C.negro, xAsiento: -1.05, pata: C.naranja, cadera: -1.75,
+    consola: C.negro, tablero: C.negro, xAsiento: -1.05, pata: C.naranja, cadera: -1.75,
     panel: [-1.9, 1.9, { borde: '#0a0a0c', fondo: '#26262c', linea: '#d8282c', columnas: 2 }],
+    // Su asiento de cuero gastado, con el apoyacabezas parchado con cinta en cruz.
+    asiento: { rampa: C.cuero, cabecera: (v, u) => (Math.abs(Math.abs(v) - Math.abs(u) * 0.8) < 0.07 ? C.gris : null) },
     // Relojes de aguja y un cenicero con colillas. Su cámara izquierda va más atrás: el humo del puro sale por ese lado.
     delante: () => [
       ...[-1.55, -1.05, -0.55].flatMap((z, i) => [reloj(0.28, z, 0.2, 0.6 + i), reloj(0.72, z, 0.2, 2 + i)]),
@@ -181,7 +197,21 @@ export const avion = (cfg) => {
   // La cabina es una abertura en el fuselaje, del tamaño de la cúpula vista desde arriba.
   const hueco = ([x, y, z]) => y > cupula.c[1] - 0.25 && ((x - cupula.c[0]) / cupula.r[0]) ** 2 + (z / cupula.r[2]) ** 2 < 0.92
   const sinCabecita = cfg.caza.filter((f) => f.vidrio || f.k !== 'e' || Math.hypot(f.c[0] - hx, f.c[1] - hy) > 0.5 || Math.abs(f.c[2]) > 0.3)
-  return [...sinCabecita.map((f) => (f.k === 'm' && !f.luz ? { ...f, hueco } : f)), ...cfg.arcos.flatMap(arcoDe)]
+  // La cúpula del F-15EX es de dos plazas y en estos cazas va uno solo. Como en
+  // el F-35, la cabina es una bañera del color del caza por fuera y de las
+  // consolas por dentro, con el borde a media cúpula; tras el asiento, desde el
+  // arco `lomo`, el vidrio cubre un carenado a la altura del apoyacabezas.
+  const cerrada = () => {
+    const [cx, cy] = cupula.c
+    const ancho = (x) => Math.sqrt(Math.max(0, 1 - ((x - cx) / cupula.r[0]) ** 2))
+    const tramo = (x0, x1, seccion) => [0, 0.2, 0.5, 0.8, 1].map((t) => seccion(x0 + (x1 - x0) * t, ancho(x0 + (x1 - x0) * t)))
+    const adentro = (y0) => ([, y, z], n) => (n[0] > 0.7 || n[1] * (y - y0) + n[2] * z < 0 ? cfg.consola : null)
+    const yBanera = cy - 0.4
+    const banera = tubo(tramo(cx + cupula.r[0], cfg.lomo, (x, s) => [x, 2.1 * cupula.r[2] * s, 1.5, yBanera, 4]), cfg.caza[0].rampa, { pinta: adentro(yBanera), hueco: ([, y]) => y > cy })
+    const lomo = tubo(tramo(cfg.lomo, cx - cupula.r[0], (x, s) => [x, 1.9 * cupula.r[2] * s, 1.55 * cupula.r[1] * s, cy - 0.225 * cupula.r[1] * s]), cfg.caza[0].rampa, { pinta: (p, n) => (n[0] > 0.7 ? cfg.consola : null) })
+    return [banera, lomo]
+  }
+  return [...sinCabecita.map((f) => (f.k === 'm' && !f.luz ? { ...f, hueco } : f)), ...(cfg.lomo ? cerrada() : []), ...cfg.arcos.flatMap(arcoDe)]
 }
 
 // La cúpula se abre de la bisagra de atrás, con sus arcos, `abre` grados.

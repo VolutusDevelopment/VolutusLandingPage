@@ -16,8 +16,8 @@
 // detrás de las tarjetas de los socios, no se caza. La sección siguiente se
 // monta sobre la lámina, así que el puntero se escucha en toda la página
 // mientras vuelan. Cuando la parvada sale de la pantalla, se quita. Con
-// movimiento reducido no está, ni si en la escena 16 de Operación Venganza se
-// hundió el portaaviones: los quince patos ya cayeron (src/flota.js).
+// movimiento reducido no está, ni si ya se eligió un final en la escena 16 de
+// Operación Venganza: los quince patos ya cayeron (src/flota.js).
 
 import { elegido } from './lib/final.js'
 import { quieto } from './lib/movimiento.js'
@@ -28,7 +28,7 @@ const DEDO = 16
 export default function initParvada() {
   const parvada = document.querySelector('.parvada')
   if (!parvada || quieto()) return
-  if (elegido() === 'hundir') return parvada.remove()
+  if (elegido()) return parvada.remove()
   const telon = parvada.parentElement
   const patos = [...parvada.querySelectorAll('.pato')]
   const caza = new AbortController()

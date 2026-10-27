@@ -95,18 +95,22 @@ const aviador = (s) => {
 // el marco. Sin gorro se le ve el resorte que lo espera debajo (gorro.mjs).
 // El torso y las gafas van aparte: en la escena 3 baja la cabeza y se
 // acomoda las gafas.
+// Lleva todas sus medallas: el pecho entero, en filas corridas, cada una con
+// su cinta.
+const CINTAS = ['#d83a2c', '#2c4cb0', '#22a04a', '#f2c440', '#8a3ab8']
+const medallero = ([x, y, z]) => {
+  if (x < 0) return null
+  const fila = Math.round((y + 0.4) / -0.19)
+  if (fila < 0 || fila > 4) return null
+  const corrida = (fila % 2) * 0.105
+  const columna = Math.round((z - corrida) / 0.21)
+  const [my, mz] = [-0.4 - 0.19 * fila, corrida + 0.21 * columna]
+  if (Math.hypot(y - my, z - mz) < 0.065) return (fila + columna) % 3 ? C.oro : C.gris
+  if (Math.abs(z - mz) < 0.055 && y > my + 0.05 && y < my + 0.14) return Math.abs(z - mz) < 0.018 ? '#f2f2f2' : CINTAS[(((fila * 3 + columna) % 5) + 5) % 5]
+  return null
+}
 export const DUCK_ONE_TORSO = [
-  el([0, -0.85, 0], [0.9, 0.7, 1.1], C.oliva, {
-    pinta: ([x, y, z]) => {
-      if (x < 0.2) return null
-      const medallas = [[-0.38, -0.6], [-0.48, -0.2], [-0.36, 0.2], [-0.45, 0.56], [-0.72, -0.4], [-0.7, 0.32]]
-      for (const [my, mz] of medallas) {
-        if (Math.hypot(y - my, z - mz) < 0.1) return C.oro
-        if (Math.abs(z - mz) < 0.07 && y > my + 0.07 && y < my + 0.24) return Math.abs(z - mz) < 0.025 ? '#f2f2f2' : mz > 0 ? '#2c4cb0' : '#d83a2c'
-      }
-      return null
-    },
-  }),
+  el([0, -0.85, 0], [0.9, 0.7, 1.1], C.oliva, { pinta: medallero }),
   el([0.1, 0, 0], [0.5, 0.52, 0.52], C.verde),
   el([0.1, -0.15, 0], [0.56, 0.12, 0.58], C.blanco),
 ]
@@ -523,4 +527,4 @@ export const CAZA_DUKY = [
   destelloMotor([-7.95, 0.15, 0], [0.35, 0.5, 0.5], '#fff0ff', 0.95, 3),
 ]
 
-export { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello }
+export { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello, enEstrella }

@@ -18,17 +18,27 @@ const ESCENAS = {
   '/operacion-venganza/escena-16': { numero: 16, nombre: 'Desolación', finales: FINALES },
 }
 
+const DUCK_ONE = '/operacion-venganza/carga-duck-one'
+
+// La pantalla de carga que abre la escena `numero` y las escenas que corren
+// desde ella hasta el fin de su grupo (lib/cargas.js); sin grupo, duck-one y
+// la escena sola.
+function tramoDe(numero) {
+  const [ruta, { escenas }] = Object.entries(CARGAS).find(([, { escenas }]) => escenas?.includes(numero)) ?? [DUCK_ONE, { escenas: [numero] }]
+  return { carga: CARGAS[ruta], escenas: escenas.slice(escenas.indexOf(numero)) }
+}
+
 /**
  * Operación Venganza, el juego al que lleva el portaaviones de /nosotros.
- * Abre en la pantalla de carga: duck-one camina de tres cuartos y abajo se
- * llena la barra mientras bajan las tomas. Después corre la escena de la
- * página, y al final están todas las escenas construidas, para saltar a
+ * Abre en la pantalla de carga de su grupo y abajo se llena la barra mientras
+ * bajan las tomas. Después corren la escena de la página y las que le siguen
+ * en el grupo, y al final (salvo tras la 16, que lleva sola a Nosotros) están todas las escenas construidas, para saltar a
  * otra, y se puede volver a verla o volver a Nosotros. Todo lo
  * mueve src/operacion-venganza.js, que lee la escena en `data-escena`; aquí
  * está el HTML que espera.
  *
  * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. La tira de
- * duck-one va en el CSS, así que empieza a bajar con la página. Las pantallas
+ * duck-one va además en el CSS, así que empieza a bajar con la página. Las pantallas
  * de carga (lib/cargas.js) tienen también su página, para verlas solas.
  */
 export default function OperacionVenganza({ ruta }) {
@@ -38,7 +48,7 @@ export default function OperacionVenganza({ ruta }) {
 
 /**
  * Una pantalla de carga sola, para verla desde el índice: la barra se llena
- * una y otra vez hasta que se pide el índice.
+ * con las tiras de sus escenas y queda llena hasta que se pide el índice.
  * La tira va en `--tira`; los marineros, cada uno en su fila, cruzan la vista.
  */
 function PantallaDeCarga({ ruta, nombre, tira, quieto, paso, destellos, corredores }) {
@@ -67,27 +77,35 @@ function PantallaDeCarga({ ruta, nombre, tira, quieto, paso, destellos, corredor
             aria-hidden="true"
           />
         ))}
-        {tira && (
-          <div className={`carga-pato${quieto ? ' carga-quieto' : ''}`} style={{ '--tira': `url('${tira}')`, animationDuration: paso && `${paso}s` }}>
-            {destellos?.map(([x, y], k) => (
-              <span key={k} className="carga-destello" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `-${(k * 0.37).toFixed(2)}s` }} />
-            ))}
-          </div>
-        )}
+        {tira && <Pato tira={tira} quieto={quieto} paso={paso} destellos={destellos} />}
       </Carga>
       <Fin ruta={ruta} titulo="Fin de la pantalla de carga" />
     </main>
   )
 }
 
-function Escena({ ruta }) {
-  const { numero, nombre, finales } = ESCENAS[ruta]
+function Pato({ tira, quieto, paso, destellos }) {
   return (
-    <main id="contenido" className="venganza" data-escena={numero}>
+    <div className={`carga-pato${quieto ? ' carga-quieto' : ''}`} style={{ '--tira': `url('${tira}')`, animationDuration: paso && `${paso}s` }}>
+      {destellos?.map(([x, y], k) => (
+        <span key={k} className="carga-destello" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `-${(k * 0.37).toFixed(2)}s` }} />
+      ))}
+    </div>
+  )
+}
+
+// La escena de la página y las que le siguen en su grupo, en `data-escena`;
+// si la última termina eligiendo, sus `finales`.
+function Escena({ ruta }) {
+  const { numero, nombre } = ESCENAS[ruta]
+  const { carga, escenas } = tramoDe(numero)
+  const { finales } = Object.values(ESCENAS).find((escena) => escena.numero === escenas.at(-1))
+  return (
+    <main id="contenido" className="venganza" data-escena={escenas.join(' ')}>
       <h1 className="venganza-titulo">{`Operación Venganza, escena ${numero}: ${nombre}`}</h1>
 
       <Carga titulo={`Cargando la escena ${numero}`}>
-        <div className="carga-pato" />
+        <Pato {...carga} />
       </Carga>
 
       <section className="escena" aria-label={`Escena ${numero}: ${nombre}`} hidden>
@@ -115,7 +133,7 @@ function Escena({ ruta }) {
         )}
       </section>
 
-      <Fin ruta={ruta} titulo={`Fin de la escena ${numero}`} />
+      {!finales && <Fin ruta={ruta} titulo={`Fin de la escena ${numero}`} />}
     </main>
   )
 }

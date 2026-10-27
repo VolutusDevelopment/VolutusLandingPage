@@ -19,7 +19,7 @@ import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukeAbierto, dukyFigura, espejoDeMano, figura, manosAndando, pDuckOne, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { recoge } from '../pilotos/recoge.mjs'
 import { silaba, suave } from '../escena1/personajes.mjs'
-import { CONDECORADO, duckOne, sentar } from '../escena2/patoon.mjs'
+import { duckOne, sentar } from '../escena2/patoon.mjs'
 import { ASIENTOS, fase, giroHacia, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, caraQueSonrie, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
@@ -282,14 +282,14 @@ const enLaSala = (escena, camara) => ({
 const AL_VENTANAL = recorrido([[FILA, 1.7], [1.6, 2.6], [0.2, 2.9], [-0.6, 4.2]])
 const DESDE = Math.hypot(1.1, 0.9)
 const PARA = AL_VENTANAL.largo - Math.hypot(0.8, 1.3)
-const SIN_GORRO = CONDECORADO.slice(0, M.DUCK_ONE_SIN_GORRO.length)
+const SIN_GORRO = M.DUCK_ONE_SIN_GORRO
 const RECOGE = { desde: 0.3, hasta: 0.75 }
 const duckOneVaAlVentanal = (u) => {
   const recogiendo = u >= RECOGE.desde && u < RECOGE.hasta
   const s = u < RECOGE.desde ? entre(DESDE, PARA, tramo(u, 0, RECOGE.desde)) : recogiendo ? PARA : entre(PARA, AL_VENTANAL.largo, tramo(u, RECOGE.hasta, 0.95))
   const donde = AL_VENTANAL.donde(s)
   if (recogiendo) return [recoge(tramo(u, RECOGE.desde, RECOGE.hasta), { tronco: SIN_GORRO, saluda: false }), donde]
-  const cuerpo = s < AL_VENTANAL.largo ? DUCK_ONE.andando(fase(s), { tronco: CONDECORADO }) : figura(pDuckOne, { tronco: CONDECORADO, manos: reposo(pDuckOne) })
+  const cuerpo = s < AL_VENTANAL.largo ? DUCK_ONE.andando(fase(s)) : figura(pDuckOne, { tronco: M.DUCK_ONE, manos: reposo(pDuckOne) })
   return [cuerpo, donde]
 }
 const EN_EL_VENTANAL = () => ({ duckOne: duckOneVaAlVentanal(1) })

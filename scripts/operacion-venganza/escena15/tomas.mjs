@@ -16,7 +16,7 @@ import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { dukeAbierto, dukyFigura, figura, manosAndando, pDuckOne, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { MAR, SOL, ancho, colocar, enTexto, poner, portaaviones } from '../escena1/lugares.mjs'
 import { OFICIOS, corre, hablar, marineroTronco, pMarinero, silaba, suave } from '../escena1/personajes.mjs'
-import { CONDECORADO, almirante } from '../escena2/patoon.mjs'
+import { almirante } from '../escena2/patoon.mjs'
 import { enUnidades, giroHacia, girar, recorrido } from '../escena2/reunion.mjs'
 import { K, SUELO, caza, enCabina } from '../escena11/hangar.mjs'
 import { ARRIBA, CUPULA_ABIERTA, conDuky, deposita, escalerilla, sobreLaCabeza } from '../escena11/tomas.mjs'
@@ -139,7 +139,7 @@ const loDeja = (u) => {
 const mobyTronco = (u) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })]
 const ESCUADRON = {
   moby: { lado: -2.2, p: pMoby, suelo: pMoby.suelo, tronco: mobyTronco },
-  duckOne: { lado: -1.05, p: pDuckOne, suelo: pDuckOne.suelo, tronco: () => CONDECORADO },
+  duckOne: { lado: -1.05, p: pDuckOne, suelo: pDuckOne.suelo, tronco: () => M.DUCK_ONE },
   duke: { lado: 1.0, p: pDuke, suelo: pDuke.suelo, tronco: () => dukeAbierto },
 }
 const dondeDe = (quien, atras = 0) => ({ ...deFrente(ESCUADRON[quien].lado, atras), suelo: ESCUADRON[quien].suelo })

@@ -47,22 +47,6 @@ const AGACHA_MOBY = 0.2
 
 // ── duck-one ─────────────────────────────────────────────────────────────
 
-// Va a la reunión con todas sus medallas: el pecho entero, en filas corridas,
-// cada una con su cinta.
-const CINTAS = ['#d83a2c', '#2c4cb0', '#22a04a', '#f2c440', '#8a3ab8']
-const medallero = ([x, y, z]) => {
-  if (x < 0) return null
-  const fila = Math.round((y + 0.4) / -0.19)
-  if (fila < 0 || fila > 4) return null
-  const corrida = (fila % 2) * 0.105
-  const columna = Math.round((z - corrida) / 0.21)
-  const [my, mz] = [-0.4 - 0.19 * fila, corrida + 0.21 * columna]
-  if (Math.hypot(y - my, z - mz) < 0.065) return (fila + columna) % 3 ? C.oro : C.gris
-  if (Math.abs(z - mz) < 0.055 && y > my + 0.05 && y < my + 0.14) return Math.abs(z - mz) < 0.018 ? '#f2f2f2' : CINTAS[(((fila * 3 + columna) % 5) + 5) % 5]
-  return null
-}
-const PECHO = M.DUCK_ONE_TORSO[0]
-export const CONDECORADO = M.DUCK_ONE.map((f) => (f === PECHO ? { ...f, pinta: medallero } : f))
 
 // La carpeta del expediente, de lomo al centro y abierta `abre`, de 0
 // (cerrada) a 1: una mano en el borde de cada hoja; cerrada, la otra en el
@@ -83,19 +67,19 @@ const carpeta = (abre) => {
 }
 
 export const duckOne = {
-  andando: (fase) => DUCK.andando(fase, { tronco: CONDECORADO }),
+  andando: (fase) => DUCK.andando(fase, { tronco: M.DUCK_ONE }),
   // De pie con las manos atrás, marcando autoridad: así camina a la pantalla
   // y así la mira. `abre` le baja el pico.
-  atras: (fase = null, abre = 0) => figura(pDuckOne, { tronco: hablar(CONDECORADO, abre), manos: MANOS_ATRAS, fase }),
-  hablando: (u) => DUCK.hablando(u, { tronco: CONDECORADO }),
-  señala: (u) => gesto(DUCK, 'señala')(u, { tronco: hablar(CONDECORADO, silaba(u)) }),
-  pulgar: (u) => gesto(DUCK, 'pulgar arriba')(u, { tronco: hablar(CONDECORADO, silaba(u)) }),
+  atras: (fase = null, abre = 0) => figura(pDuckOne, { tronco: hablar(M.DUCK_ONE, abre), manos: MANOS_ATRAS, fase }),
+  hablando: (u) => DUCK.hablando(u, { tronco: M.DUCK_ONE }),
+  señala: (u) => gesto(DUCK, 'señala')(u, { tronco: hablar(M.DUCK_ONE, silaba(u)) }),
+  pulgar: (u) => gesto(DUCK, 'pulgar arriba')(u, { tronco: hablar(M.DUCK_ONE, silaba(u)) }),
   carpeta: (abre, abrePico = 0) => {
     const { formas, manos } = carpeta(abre)
-    return figura(pDuckOne, { tronco: hablar(CONDECORADO, abrePico), manos, extra: formas, inclina: 4 })
+    return figura(pDuckOne, { tronco: hablar(M.DUCK_ONE, abrePico), manos, extra: formas, inclina: 4 })
   },
-  sentado: () => sentar(pDuckOne, figura(pDuckOne, { tronco: CONDECORADO, manos: MESA_PILOTO })),
-  sentadoHablando: (u) => sentar(pDuckOne, DUCK.hablando(u, { tronco: CONDECORADO })),
+  sentado: () => sentar(pDuckOne, figura(pDuckOne, { tronco: M.DUCK_ONE, manos: MESA_PILOTO })),
+  sentadoHablando: (u) => sentar(pDuckOne, DUCK.hablando(u, { tronco: M.DUCK_ONE })),
 }
 
 // ── moby-duck ────────────────────────────────────────────────────────────

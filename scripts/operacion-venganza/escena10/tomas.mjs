@@ -7,7 +7,7 @@
 // carpeta, y los otros tres en sus sillones. Duky sigue donde lo dejaron.
 
 import { ASIENTOS, ENTRADA, entra, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
-import { CONDECORADO, PRENDIDO, SIN_HUMO, duckOne, duke, duky, moby, sentar } from '../escena2/patoon.mjs'
+import { PRENDIDO, SIN_HUMO, duckOne, duke, duky, moby, sentar } from '../escena2/patoon.mjs'
 import * as M from '../pilotos/modelos.mjs'
 import { PERSONAJES, figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { calada } from '../pilotos/calada.mjs'
@@ -73,7 +73,7 @@ const mirada = (u) => {
 
 // ── duck-one señala a duky ───────────────────────────────────────────────
 
-const señala = (u) => DUCK.gestos.find((g) => g.nombre === 'señala').pose(u, { tronco: CONDECORADO })
+const señala = (u) => DUCK.gestos.find((g) => g.nombre === 'señala').pose(u)
 
 // ── Las cámaras ──────────────────────────────────────────────────────────
 
