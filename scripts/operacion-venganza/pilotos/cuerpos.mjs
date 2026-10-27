@@ -375,4 +375,4 @@ const MOBY = {
 
 export const PERSONAJES = [DUCK_ONE, MOBY, DUKE, DUKY]
 
-export { figura, pDuckOne, pMoby, pDuke, manosAndando, dukeCerrado, dukyFigura, puntosDeDuky }
+export { figura, pDuckOne, pMoby, pDuke, manosAndando, dukeAbierto, dukeCerrado, espejoDeMano, dukyFigura, puntosDeDuky }

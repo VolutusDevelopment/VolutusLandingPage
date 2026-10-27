@@ -149,6 +149,13 @@ export const CABEZA = transformar([0, 0, 16], [0.1, 0.1, 0])
 // Puesto en la coronilla, ladeado a la derecha; al crecer sube lo que engorda.
 export const GORRO_PUESTO = { c: CABEZA.punto([0.12, 1.3 + 0.14 * (G - 1), 0.1]), rot: [12, 0, 16] }
 export const ponerGorro = ({ c, rot }) => transformar(rot, [0, 0, 0], c).formas(GORRO)
+// Lo que esconde el gorro: un rizo de resorte que sube `alto` desde la
+// coronilla, ladeado `ladeo` grados.
+export const rizo = (alto, ladeo) => {
+  const R = transformar([ladeo, 0, -0.6 * ladeo])
+  const punto = (k, r) => sum([0.08, 1.2, 0.1], R.punto([r * Math.cos(k * 9 * Math.PI), k * alto, r * Math.sin(k * 9 * Math.PI)]))
+  return CABEZA.formas([...Array.from({ length: 32 }, (_, i) => el(punto(i / 31, 0.16), [0.07, 0.07, 0.07], C.verdinegro)), el(punto(1, 0), [0.09, 0.08, 0.09], C.verdinegro)])
+}
 
 export const DUCK_ONE = [...DUCK_ONE_SIN_GORRO, ...ponerGorro(GORRO_PUESTO)]
 

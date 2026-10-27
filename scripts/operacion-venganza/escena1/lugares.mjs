@@ -276,6 +276,8 @@ const pintaPantalla = (estado) => ([, y, z]) => {
   const u = (z - z0) / (z1 - z0)
   const v = (y - y0) / (y1 - y0)
   if (u < 0.015 || u > 0.985 || v < 0.03 || v > 0.97) return '#16191e'
+  // Otro estado: una función que pinta la pantalla entera, con (u, v) de 0 a 1.
+  if (typeof estado === 'function') return estado(u, v)
   if (estado === 'iniciada' || estado === 'operacion') {
     const linea = OPERACION.find(({ texto, abajo, medio }) => (estado === 'iniciada' || texto !== 'INICIADA') && enTexto(texto, z + medio, y - abajo, ALTO_DE_LETRA))
     return linea ? linea.color : '#0e1a2a'
@@ -362,7 +364,7 @@ export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false } = {}
   placa([[-4, 3, -5], [-4, 3, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA, { pinta: ([x, , z]) => (Math.abs(z) < 3.5 && [-2, 0.5, 3].some((cx) => Math.abs(x - cx) < 0.25) ? '#fbfcf4' : null) }),
   placa([[4, 0, -5], [4, 0, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA),
   placa([[PANTALLA.x, PANTALLA.y0, PANTALLA.z0], [PANTALLA.x, PANTALLA.y0, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z0]], 0.04, C.oscuro, { pinta: pintaPantalla(pantalla), brilla: true }),
-  placa([[-4, 0, 5], [4, 0, 5], [4, 3, 5], [-4, 3, 5]], 0.1, SALA, { pinta: ([x, y]) => vista(x, y) }),
+  placa([[-4, 0, 5], [4, 0, 5], [4, 3, 5], [-4, 3, 5]], 0.1, SALA, { pinta: ([x, y]) => vista(x, y), lejos: ([x, y]) => ![null, '#2a3036'].includes(vista(x, y)) }),
   placa([[-4, 0, -5], [4, 0, -5], [4, 3, -5], [-4, 3, -5]], 0.1, SALA),
   placa([[-4, 0, -5], [-4, 0, 5], [-4, 3, 5], [-4, 3, -5]], 0.1, SALA, {
     pinta: ([, y, z]) => {

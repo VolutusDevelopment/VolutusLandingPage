@@ -26,13 +26,13 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'El marinero lo intenta una vez más, se encoge de hombros y cierra la cabina.' }],
   },
-  // Desde el tablero, de frente: sonríe y lo lanza la catapulta.
+  // Desde el tablero, de frente: jadea de la emoción y lo lanza la catapulta.
   {
-    id: 'sonrisa',
+    id: 'emocion',
     ms: 150,
     cuadros: 40,
     unaVez: true,
-    lineas: [{ texto: 'Duky empieza a sonreír, poco a poco.' }, { texto: 'Se le ponen los ojos rojos.' }, { texto: 'El caza acelera a toda velocidad.' }],
+    lineas: [{ texto: 'Duky empieza a inhalar y exhalar rápidamente, de la emoción.' }, { texto: 'El caza acelera a toda velocidad.' }],
   },
   { id: 'despega', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El avión despega.' }] },
   { id: 'combate', ms: 300, lineas: [{ texto: 'DUKY SE HA UNIDO AL COMBATE.' }] },

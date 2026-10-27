@@ -80,6 +80,36 @@ export const png = (todos) => {
   return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), trozo('IHDR', cabecera), trozo('PLTE', rgb), trozo('tRNS', alfa), trozo('IDAT', deflateSync(filas, { level: 9 })), trozo('IEND', Buffer.alloc(0))])
 }
 
+// Un cuadro de LADO × LADO: `formas` vistas desde `camara` ([ojo, mira, campo,
+// vertical]), con el cielo del atardecer donde no hay nada. Si viene
+// `distancias`, se llena con la distancia a lo que se ve en cada pixel.
+export const cuadro = (formas, [ojo, mira, campo, vertical], distancias) =>
+  rejilla(pixel3d(formas, { ojo, mira, campo, vertical, cielo, distancias }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
+
+// Dónde cae `punto` en un cuadro de `camara`, como lo pinta pixel3d: [x, y]
+// en pixeles, o null si queda detrás de la cámara.
+export const proyectar = ([ojo, mira, campo, vertical = [0, 1, 0]], punto) => {
+  const pto = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+  const cruz = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+  const uni = (a) => a.map((v) => v / Math.hypot(...a))
+  const f = uni(mira.map((v, i) => v - ojo[i]))
+  const derecha = uni(cruz(f, vertical))
+  const arriba = cruz(derecha, f)
+  const v = punto.map((p, i) => p - ojo[i])
+  const lejos = pto(v, f)
+  if (lejos <= 0) return null
+  const abre = Math.tan((campo * Math.PI) / 360) * lejos
+  return [((pto(v, derecha) / abre + 1) * LADO) / 2, ((1 - pto(v, arriba) / abre) * LADO) / 2]
+}
+
+// Lo que `dibuja` pinta sobre `celdas` a `lejos` metros de la cámara, tapado
+// por lo que esté más cerca según las `distancias` de cuadro().
+export const aSuDistancia = (celdas, distancias, lejos, dibuja) => {
+  const antes = celdas.map((fila) => [...fila])
+  dibuja(celdas)
+  celdas.forEach((fila, y) => fila.forEach((_, x) => distancias[y]?.[x] < lejos && (fila[x] = antes[y][x])))
+}
+
 export const escribir = (ruta, datos) => {
   mkdirSync(dirname(`${PUBLICO}${ruta}`), { recursive: true })
   writeFileSync(`${PUBLICO}${ruta}`, datos)
@@ -88,16 +118,17 @@ export const escribir = (ruta, datos) => {
 
 // Una tira por toma del guion, con la escena 3D de `TOMAS_3D`; las que van
 // `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta sobre los
-// cuadros lo que va en la pantalla y no en la escena (un visor, una marca).
+// cuadros lo que va en la pantalla y no en la escena (un visor, una marca), y
+// recibe las distancias de cada pixel para que lo de atrás quede tapado.
 export const escribirTiras = (TOMAS, TOMAS_3D, rutaDeToma) => {
   for (const toma of TOMAS) {
     const { escena, camara, encima } = TOMAS_3D[toma.id]
     for (const modo of toma.segunModo ? MODOS : [MODOS[0]]) {
       const cuadros = Array.from({ length: cuadrosDe(toma) }, (_, k) => {
         const u = k / cuadrosDe(toma)
-        const [ojo, mira, campo] = camara(u)
-        const celdas = rejilla(pixel3d(escena(u, modo), { ojo, mira, campo, cielo }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
-        encima?.(celdas, u, modo)
+        const distancias = []
+        const celdas = cuadro(escena(u, modo), camara(u), distancias)
+        encima?.(celdas, u, modo, distancias)
         return celdas
       })
       escribir(rutaDeToma(toma, modo), png(cuadros))

@@ -360,6 +360,22 @@ export const PAGINAS = {
       'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-35 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
     fondo: '#5c94fc',
   },
+  '/operacion-venganza/escena-13': {
+    archivo: 'operacion-venganza/escena-13.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, escena 13: La sala de mando — Volutus',
+    descripcion:
+      'Duck-One, Moby y Duke miran en los monitores cómo Duky dispara como si viera el futuro. Moby se mira en la pantalla apagada. Escena 13, en el navegador.',
+    fondo: '#5c94fc',
+  },
+  '/operacion-venganza/escena-14': {
+    archivo: 'operacion-venganza/escena-14.html',
+    actualizada: '2026-10-27',
+    titulo: 'Operación Venganza, escena 14: Último ataque — Volutus',
+    descripcion:
+      'Duky gasta toda su munición y no le da a nadie. Chilla de rabia, vuelve al portaaviones y Moby llora en la sala de mando. Escena 14, en el navegador.',
+    fondo: '#5c94fc',
+  },
 }
 
 /**

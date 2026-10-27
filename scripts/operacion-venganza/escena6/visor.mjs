@@ -14,7 +14,7 @@ const BLANCO = '#ffffff'
 const SOMBRA = '#16191e'
 const ROJO = '#e0201c'
 
-const poner = (celdas, x, y, color) => {
+export const poner = (celdas, x, y, color) => {
   if (y >= 0 && y < LADO && x >= 0 && x < LADO) celdas[y][x] = color
 }
 
@@ -53,11 +53,11 @@ const HUELLA = Array.from({ length: 15 }, (_, j) =>
   }),
 )
 
-// Quien juega, marcado en el cielo al medio del cuadro: su cursor o su huella,
-// entre cuatro esquinas rojas que laten.
-export const objetivo = (celdas, u, modo) => {
-  if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== '.' && poner(celdas, MEDIO - 3 + i, MEDIO - 8 + j, c === '#' ? '#0c0e12' : BLANCO)))
-  else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, MEDIO - 5 + i, MEDIO - 7 + j, c)))
+// Quien juega, marcado en el cielo en `[x, y]` (al medio del cuadro, si no se
+// dice): su cursor o su huella, entre cuatro esquinas rojas que laten.
+export const objetivo = (celdas, u, modo, [x, y] = [MEDIO, MEDIO]) => {
+  if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== '.' && poner(celdas, x - 3 + i, y - 8 + j, c === '#' ? '#0c0e12' : BLANCO)))
+  else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, x - 5 + i, y - 7 + j, c)))
   const lado = 14 + (Math.floor(u * 12) % 2)
-  esquinas(celdas, [MEDIO - lado, MEDIO - lado, MEDIO + lado, MEDIO + lado], 5, ROJO)
+  esquinas(celdas, [x - lado, y - lado, x + lado, y + lado], 5, ROJO)
 }

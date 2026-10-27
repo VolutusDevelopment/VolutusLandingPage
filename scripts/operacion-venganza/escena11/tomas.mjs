@@ -148,7 +148,7 @@ const enVuelo = (u) => {
   const vuelo = Math.max(0, (u - CARRERA.hasta) / (1 - CARRERA.hasta))
   return { vuelo, en: sum(EN_CATAPULTA, [corrido + 450 * Math.max(0, u - CARRERA.hasta), 50 * vuelo ** 1.6, 0]) }
 }
-const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
+export const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
 
 // ── La sonrisa ───────────────────────────────────────────────────────────
 
@@ -164,7 +164,7 @@ const delante = (y, z) => {
   const cabeza = 0.35 + 0.7 * Math.sqrt(Math.max(0, 1 - ((y - 0.2) / 0.68) ** 2 - (z / 0.66) ** 2))
   return Math.max(pico * (Math.abs(z) < 0.3 ? 1 : 0), cabeza) + 0.01
 }
-const caraQueSonrie = (k) => {
+export const caraQueSonrie = (k) => {
   if (k < 0.08) return CARA
   const ancho = 0.2 + 0.32 * k
   const N = 15
@@ -190,10 +190,41 @@ const caraQueSonrie = (k) => {
   ]
 }
 
-// Sonríe en la catapulta y, a la mitad, la catapulta lo lanza: la cámara va
+// ── La emoción ───────────────────────────────────────────────────────────
+
+// Con la cabina cerrada, duky jadea de la emoción como lo que es, un pato de
+// hule que alguien aprieta: con `k` de 0 a 1 se aplasta entero desde el
+// asiento, ancho y bajo, y bota el aire por el pico abierto; al soltarlo
+// vuelve a su forma y lo recupera. El pico de su cara de siempre (la forma 7
+// de pilotos/modelos.mjs) se parte en dos.
+const PICO = DUKY_HULE[7]
+const caraQueJadea = (k) => [
+  ...CARA.filter((forma) => forma !== PICO),
+  el(sum(PICO.c, [0, 0.03 + 0.05 * k, 0]), [0.36, 0.08, 0.32], C.picoHule, { rot: [0, 0, 6 + 10 * k] }),
+  el(sum(PICO.c, [-0.04, -0.03 - 0.06 * k, 0]), [0.3, 0.07, 0.28], C.picoHule, { rot: [0, 0, -14 * k] }),
+  el(sum(PICO.c, [-0.08, 0, 0]), [0.22, 0.02 + 0.08 * k, 0.22], C.oscuro, { flat: '#3a0e0a' }),
+]
+const BASE = [0, -1.9, 0]
+const aplastar = (formas, k) => {
+  const S = [1 + 0.14 * k, 1 - 0.24 * k, 1 + 0.14 * k]
+  const p = (v) => v.map((x, i) => BASE[i] + (x - BASE[i]) * S[i])
+  return formas.map((f) =>
+    f.k === 'e' ? { ...f, c: p(f.c), r: f.r.map((x, i) => x * S[i]) } : { ...f, centro: p(f.centro), tris: f.tris.map((t) => ({ ...t, a: p(t.a), b: p(t.b), c: p(t.c) })) },
+  )
+}
+
+// Primero exhala y después inhala, una vez cada cuatro cuadros de los 40 de
+// la toma, y cada vez más fuerte.
+const apretado = (u) => tramo(u, 0.05, 0.2) * (0.5 - 0.5 * Math.cos((u / 0.1) * Math.PI * 2))
+const dukyJadea = (u) => {
+  const k = apretado(u)
+  return aplastar(dukyFigura({ cara: caraQueJadea(k) }), k)
+}
+
+// Jadea en la catapulta y, a la mitad, la catapulta lo lanza: la cámara va
 // en el tablero y la cubierta pasa hacia atrás cada vez más rápido.
-const SONRISA = { lanza: 0.55, largo: 96 }
-const enLaCatapulta = (u) => sum(EN_CATAPULTA, [SONRISA.largo * tramo(u, SONRISA.lanza, 1) ** 2, 0, 0])
+const LANZA = { lanza: 0.55, largo: 96 }
+const enLaCatapulta = (u) => sum(EN_CATAPULTA, [LANZA.largo * tramo(u, LANZA.lanza, 1) ** 2, 0, 0])
 
 // ── En vuelo ─────────────────────────────────────────────────────────────
 
@@ -264,10 +295,10 @@ export const TOMAS_3D = {
     },
   },
   // Un poco desde abajo: se ve todo lo que lleva bajo las alas.
-  sonrisa: {
-    escena: (u) => [...BARCO, ...poner(conDuky({ motor: u > SONRISA.lanza }, dukyFigura({ cara: caraQueSonrie(tramo(u, 0.05, 0.5)) })), 0, enLaCatapulta(u))],
+  emocion: {
+    escena: (u) => [...BARCO, ...poner(conDuky({ motor: u > LANZA.lanza }, dukyJadea(u)), 0, enLaCatapulta(u))],
     camara: (u) => {
-      const tiembla = u > SONRISA.lanza ? 0.015 * Math.sin(Math.floor(u * 40) * 2.3) : 0
+      const tiembla = u > LANZA.lanza ? 0.015 * Math.sin(Math.floor(u * 40) * 2.3) : 0
       const en = enLaCatapulta(u)
       return [sum(enCabina([3.4, 0.55 + tiembla, tiembla]), en), sum(enCabina([0, 0.3, 0]), en), 80]
     },

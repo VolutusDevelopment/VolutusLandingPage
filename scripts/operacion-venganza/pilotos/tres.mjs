@@ -176,16 +176,20 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   const M = mm(rotX(alabeo), rotZ(cabeceo))
   const Mt = tr(M)
   // toma.ojo y toma.mira: cámara en perspectiva puesta en ese punto, con
-  // toma.campo grados de ángulo. Sin ojo, la cámara es ortográfica.
-  const { ojo, mira, campo = 80 } = toma
+  // toma.campo grados de ángulo y toma.vertical hacia arriba (otra, si la
+  // cámara va en un caza que vira). Sin ojo, la cámara es ortográfica.
+  const { ojo, mira, campo = 80, vertical = [0, 1, 0] } = toma
   const dir = ojo ? uni(res(ojo, mira)) : [Math.cos(rad(altura)) * Math.cos(rad(giro)), Math.sin(rad(altura)), Math.cos(rad(altura)) * Math.sin(rad(giro))]
   const f = esc(dir, -1)
   const abre = Math.tan(rad(campo) / 2)
-  const derecha = Math.abs(dir[1]) > 0.999 ? [0, 0, -1] : uni(cruz(f, [0, 1, 0]))
+  const derecha = Math.abs(pto(dir, uni(vertical))) > 0.999 ? [0, 0, -1] : uni(cruz(f, vertical))
   const arriba = cruz(derecha, f)
   const paso = (2 * encuadre.radio) / (n * llenado)
   // toma.por: punto por el que pasa la cámara. Lo que quede entre ella y la figura se corta (la pared de una cabina, el tablero).
   // toma.cielo(rayo): el color de lo que no choca con nada; sin él, queda vacío.
+  // toma.distancias: si viene, se llena con la distancia a lo que se ve en
+  // cada celda (Infinity para el cielo y para lo que fig.lejos(p) diga que
+  // está pintado lejos, como la vista de un ventanal).
   const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
   const celdas = []
   for (let j = 0; j < n; j++) {
@@ -224,7 +228,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
           const fondo = atras ? color(atras) : null
           c = { plano: fondo ? mezcla(fondo.plano ?? fondo.rampa[fondo.tono], vidrio, 0.5) : vidrio, rampa: primero.fig.rampa, tono: c.tono }
         }
-        celda = { ...c, t: primero.t, brilla: primero.fig.brilla }
+        celda = { ...c, t: primero.t, brilla: primero.fig.brilla, lejos: primero.fig.lejos?.(sum(o, esc(d, primero.t))) }
       }
       const luces = golpes.filter((g) => g.fig.luz && (!primero || g.t < primero.t))
       if (luces.length) {
@@ -237,6 +241,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
     }
     celdas.push(fila)
   }
+  toma.distancias?.push(...celdas.map((fila) => fila.map((v) => (!v || v.lejos ? Infinity : v.t))))
   const salto = encuadre.radio * 0.05
   const vacia = (i, j, t) => {
     if (i < 0 || j < 0 || i >= n || j >= n) return true

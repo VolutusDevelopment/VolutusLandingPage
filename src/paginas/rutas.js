@@ -60,6 +60,8 @@ export const COMPONENTES = {
   '/operacion-venganza/escena-9': OperacionVenganza,
   '/operacion-venganza/escena-10': OperacionVenganza,
   '/operacion-venganza/escena-11': OperacionVenganza,
+  '/operacion-venganza/escena-13': OperacionVenganza,
+  '/operacion-venganza/escena-14': OperacionVenganza,
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
   '/404': NoEncontrada,

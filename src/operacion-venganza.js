@@ -2,7 +2,8 @@
  * Operación Venganza (paginas/OperacionVenganza.jsx): la pantalla de carga y
  * la escena de la página, la que diga su `data-escena`, con su guion:
  * lib/escena1.js, escena2.js, escena3.js, escena5.js, escena6.js,
- * escena9.js, escena10.js o escena11.js. Las medidas de las tiras son las de la 1.
+ * escena9.js, escena10.js, escena11.js, escena13.js o escena14.js. Las medidas
+ * de las tiras son las de la 1.
  *
  * Mientras duck-one camina (lo anima el CSS), se descargan las tiras de las
  * tomas y la barra se llena un bloque por paso, nunca más rápido que `PASO`:
@@ -24,10 +25,12 @@ import * as escena6 from './lib/escena6.js'
 import * as escena9 from './lib/escena9.js'
 import * as escena10 from './lib/escena10.js'
 import * as escena11 from './lib/escena11.js'
+import * as escena13 from './lib/escena13.js'
+import * as escena14 from './lib/escena14.js'
 import { quieto } from './lib/movimiento.js'
 
 const { ALTO, LADO, cuadrosDe, textoDe } = escena1
-const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11 }
+const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14 }
 const PASO = 120
 const leer = (texto) => Math.max(1100, 500 + texto.length * 40)
 
