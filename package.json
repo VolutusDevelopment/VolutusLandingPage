@@ -21,7 +21,7 @@
     "playwright": "1.63.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "vite": "^7.0.0"
+    "vite": "^7.3.7"
   },
   "description": "Landing page de Volutus, construida con React y Vite, con pre-renderizado estático para SEO y rendimiento.",
   "main": "vite.config.js",
