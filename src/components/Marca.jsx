@@ -29,9 +29,11 @@ export function Logotipo({ className }) {
  * aparecen a su paso; con el ratón encima, los colores pasan por la ola. Va
  * dentro de la misma caja que el logotipo, que tiene que estar posicionada:
  * mientras barre, el lienzo se estira desde ella hasta el borde izquierdo.
+ * Con `repite`, los colores siguen pasando mientras el lienzo esté en la
+ * página: es la bienvenida del home (Bienvenida.jsx).
  */
-export function OlaLienzo() {
-  return <canvas className="ola-lienzo" data-ola="logotipo" aria-hidden="true" />
+export function OlaLienzo({ repite = false }) {
+  return <canvas className="ola-lienzo" data-ola="logotipo" data-repite={repite || undefined} aria-hidden="true" />
 }
 
 /**

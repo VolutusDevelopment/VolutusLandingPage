@@ -24,6 +24,8 @@
 //   - El desbordamiento horizontal aparece en un solo ancho y solo si se mira.
 //   - Las fichas de proyectos se cerraban con un `<form>` sin anotar para los
 //     agentes de IA, y Lighthouse lo cuenta.
+//   - Con la rueda del ratón, donde la página se baja libre, bajaba el doble y
+//     en dos tirones.
 //   - Con gráficos Intel la nube salía como un recorte a la derecha, o no
 //     salía, y la primera visita congelaba la página casi 2 s (ver
 //     `revisarNubes`).
@@ -35,6 +37,7 @@ import { fileURLToPath } from 'node:url'
 
 import { chromium, webkit } from 'playwright'
 
+import { campoPara } from '../src/lib/campos.js'
 import { PAGINAS } from '../src/lib/meta.js'
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8787'
@@ -261,10 +264,54 @@ async function formulariosSinAnotar(pagina, ruta) {
   })
 }
 
+/**
+ * Comprueba que la página no encaja al final, donde las que encajan se bajan
+ * libres (src/encaje.js): con la rueda del ratón Chrome encajaba ahí cada tick
+ * y la página bajaba el doble y en dos tirones. La rueda de Playwright no lo
+ * reproduce, así que se mira el encaje. Se recorre de a poco, como quien baja:
+ * de un salto, encaja en el borde de la zona libre, donde todavía encaja, y
+ * ahí se queda.
+ */
+async function encajaAlFinal(pagina, ruta) {
+  await recorrer(pagina)
+  await pagina.waitForTimeout(300)
+  const encaja = await pagina.evaluate(() => getComputedStyle(document.documentElement).scrollSnapType !== 'none')
+  return encaja ? [`${ruta}: al final de la página, donde se baja libre, encaja`] : []
+}
+
 async function revisarMarcado(ruta) {
   const pagina = await abrir(chrome, ruta, ESCRITORIO)
-  const problemas = [...(await enlacesRotos(pagina, ruta)), ...(await formulariosSinAnotar(pagina, ruta))]
+  const problemas = [
+    ...(await enlacesRotos(pagina, ruta)),
+    ...(await formulariosSinAnotar(pagina, ruta)),
+    ...(await encajaAlFinal(pagina, ruta)),
+  ]
   await pagina.context().close()
+  return problemas
+}
+
+// La bienvenida del home tapa la página y se va a los 4 s, con o sin
+// JavaScript. Con él sale del documento, también si el script llega cuando ya
+// se fue (src/bienvenida.js): si no, su ola sigue pasando sin que nadie la vea.
+async function revisarBienvenida() {
+  const problemas = []
+  for (const [como, opciones, tarde] of [
+    ['', ESCRITORIO],
+    [' con el script tarde', ESCRITORIO, true],
+    [' sin JavaScript', { ...ESCRITORIO, javaScriptEnabled: false }],
+  ]) {
+    const pagina = await (await chrome.newContext(opciones)).newPage()
+    if (tarde) await pagina.route('**/assets/index-*.js', (ruta) => setTimeout(() => ruta.continue(), 4500))
+    await pagina.goto(BASE + '/', { waitUntil: 'load' })
+    await pagina.waitForTimeout(tarde ? 500 : 4500)
+    const queda = await pagina.evaluate(() => {
+      const bienvenida = document.querySelector('.bienvenida')
+      return bienvenida && getComputedStyle(bienvenida).visibility
+    })
+    if (queda === 'visible') problemas.push(`/${como}: a los 4 s la bienvenida sigue tapando la página`)
+    else if (queda && opciones.javaScriptEnabled !== false) problemas.push(`/${como}: la bienvenida se fue pero quedó en el documento`)
+    await pagina.context().close()
+  }
   return problemas
 }
 
@@ -283,6 +330,10 @@ async function revisarMarcado(ruta) {
 //   - Con el dibujo por software de Windows (WARP), que el filtro de GPU deja
 //     pasar, la nube se movía a 274 ms por fotograma y ocupaba la CPU entera.
 //     Sin GPU de verdad la escena va quieta, con su grabación encima.
+//   - En un teléfono la nube cabía en vivo, pero trababa la página, y el cielo
+//     de /servicios seguía en vivo a 100 ms por fotograma. Pasado su
+//     presupuesto, la escena con grabación va desde su campo grabado, de la
+//     cámara y la densidad de su lienzo, y las demás quedan quietas.
 //   - En un artículo se descargaba el pintor aunque nadie llegara al mar.
 //
 // Van en el Chromium completo (`channel: 'chromium'`), que usa la GPU de la
@@ -292,6 +343,7 @@ async function revisarMarcado(ruta) {
 const CIELO = 'canvas.nubes[data-vista="cielo"]'
 const ATARDECER = 'canvas.nubes[data-vista="atardecer"]'
 const GRABACION = '.portada-cielo video.grabado'
+const LIVIANA = '/grabados/nube-sin-gpu.mp4'
 const EN_FRIO = ['--disable-gpu-program-cache', '--disable-gpu-shader-disk-cache']
 const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
 // Cuánto puede diferir la nube de la GPU de la de software, en % de píxeles: la
@@ -306,6 +358,10 @@ const viva = (pagina, selector = CIELO) =>
 // acepta el dibujo por software como si fuera una GPU.
 const SIN_FILTRO = ['failIfMajorPerformanceCaveat:!0', 'failIfMajorPerformanceCaveat:!1']
 const SIN_NOMBRE = ['/basic render|swiftshader|llvmpipe|softpipe|software/i', '/(?!)/']
+// Sin presupuesto, la GPU de la máquina nunca da abasto: la escena con
+// grabación va desde su campo grabado y las demás quedan quietas.
+// `PRESUPUESTO` se declara justo después de `LENTO` (nubes-lienzo.js).
+const SIN_PRESUPUESTO = [/(=150,\w+=)11,/, '$10,']
 
 async function parcharPintor(pagina, cambios) {
   await pagina.route('**/assets/nubes-lienzo-*.js', async (ruta) => {
@@ -448,6 +504,8 @@ async function revisarNubes() {
     await pagina.goto(BASE + '/', { waitUntil: 'load' })
     const que = `/ ${caso.nombre}`
     if (!(await viva(pagina, GRABACION))) problemas.push(`${que}: la nube grabada no se reprodujo`)
+    const src = await pagina.locator(GRABACION).getAttribute('src')
+    if (src !== LIVIANA) problemas.push(`${que}: la grabación fue ${src} y no la liviana`)
     // Antes de ocultar la grabación para las fotos de abajo: oculta, el
     // navegador no la reproduce.
     if (caso.alterna) {
@@ -461,7 +519,7 @@ async function revisarNubes() {
       // La nube de debajo, sin la grabación encima y pasado su fundido: dos
       // fotos seguidas, iguales.
       if (!(await viva(pagina))) problemas.push(`${que}: la nube quieta no se pintó`)
-      await pagina.addStyleTag({ content: 'video.grabado,.portada-texto,.barra{visibility:hidden!important}' })
+      await pagina.addStyleTag({ content: 'video.grabado,.portada-texto,.barra,.bienvenida{visibility:hidden!important}' })
       await pagina.waitForTimeout(1500)
       const foto = () => pagina.screenshot({ clip: { x: 0, y: 0, width: 1366, height: 600 } })
       const antes = await foto()
@@ -470,6 +528,51 @@ async function revisarNubes() {
       if (pct > 0) problemas.push(`${que}: la nube se movió en vivo (${pct} % distinta en 1 s)`)
     }
     if (caso.sinPintor && pagina.workers().length) problemas.push(`${que}: el pintor quedó vivo`)
+    await navegador.close()
+  }
+
+  // Con una GPU que no da abasto la escena con grabación va desde su campo
+  // grabado: el de la cámara y la densidad de su lienzo (lib/campos.js), y se
+  // sigue moviendo. En el teléfono, vertical: 2340 px de alto en celdas de 4
+  // son 585 filas, y el mar del pie, el de todos los teléfonos; en el
+  // escritorio, apaisado: 768 px en celdas de 3, 256. La liviana no se
+  // descarga. Se mira apenas cambia: sin presupuesto, a los pocos segundos
+  // tampoco cabe grabada y queda quieta. El cielo de /servicios no tiene
+  // grabación: queda quieto, pasado su fundido, y no descarga nada.
+  const TELEFONO = { viewport: { width: 384, height: 832 }, deviceScaleFactor: 2.8125, isMobile: true }
+  for (const [ruta, nombre, contexto, cielo, mar] of [
+    ['/', 'en el teléfono', TELEFONO, campoPara('vertical', 585), campoPara('mar', 100)],
+    ['/', 'en el escritorio', { viewport: { width: 1366, height: 768 } }, campoPara('apaisado', 256)],
+    ['/servicios', 'en el teléfono', TELEFONO],
+  ]) {
+    const que = `${ruta} con una GPU que no da abasto, ${nombre}`
+    const navegador = await chromium.launch({ channel: 'chromium' })
+    const pagina = await (await navegador.newContext(contexto)).newPage()
+    const grabaciones = []
+    pagina.on('request', (pedido) => pedido.url().includes('/grabados/') && grabaciones.push(new URL(pedido.url()).pathname))
+    await parcharPintor(pagina, [SIN_PRESUPUESTO])
+    const pide = (campo) =>
+      pagina.waitForRequest((pedido) => pedido.url().endsWith(campo), { timeout: 30000 }).then(() => true, () => false)
+    const pideCielo = cielo && pide(cielo)
+    await pagina.goto(BASE + ruta, { waitUntil: 'load' })
+    if (cielo && !(await pideCielo)) problemas.push(`${que}: no pidió ${cielo}`)
+    if (!cielo && !(await viva(pagina))) problemas.push(`${que}: la nube quieta no se pintó`)
+    await pagina.addStyleTag({ content: '.portada-texto,.barra,.bienvenida{visibility:hidden!important}' })
+    await pagina.waitForTimeout(cielo ? 600 : 1500)
+    const { width, height } = contexto.viewport
+    const foto = () => pagina.screenshot({ clip: { x: 0, y: 0, width, height: Math.round(height * 0.7) } })
+    const antes = await foto()
+    await pagina.waitForTimeout(400)
+    const pct = await diferencia(navegador, antes, await foto())
+    if (cielo && !pct) problemas.push(`${que}: la nube grabada no se movió`)
+    if (!cielo && pct) problemas.push(`${que}: la nube se movió en vivo (${pct} % distinta)`)
+    if (mar) {
+      const pideMar = pide(mar)
+      await pagina.locator('canvas.nubes[data-vista="mar"]').scrollIntoViewIfNeeded()
+      if (!(await pideMar)) problemas.push(`${que}: el mar no pidió ${mar}`)
+    }
+    const otras = grabaciones.filter((grabacion) => grabacion !== cielo && grabacion !== mar)
+    if (otras.length) problemas.push(`${que}: además se descargó ${otras.join(', ')}`)
     await navegador.close()
   }
 
@@ -502,6 +605,7 @@ for (const ruta of RUTAS) {
   actual.foco[ruta] = await medirFoco(ruta)
   marcado.push(...(await revisarMarcado(ruta)))
 }
+marcado.push(...(await revisarBienvenida()))
 
 await Promise.all([chrome.close(), safari.close()])
 

@@ -16,6 +16,7 @@ import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import initCopiar from './copiar.js'
 import initSocios from './socios.js'
+import initBienvenida from './bienvenida.js'
 import initOla from './ola.js'
 import initFlota from './flota.js'
 import initParvada from './parvada.js'
@@ -24,6 +25,7 @@ import initEstimado from './estimado.js'
 import initMapa from './mapa.js'
 import initMenuServicios from './menu-servicios.js'
 import initServicios from './servicios.js'
+import initEncaje from './encaje.js'
 import initPreguntas from './preguntas.js'
 import initTienda from './tienda.js'
 import initTitularDelContacto from './titular-del-contacto.js'
@@ -338,6 +340,8 @@ export default function init() {
     initNubes,
     initCopiar,
     initSocios,
+    // Antes que la ola: si la bienvenida ya se fue, que no la monte.
+    initBienvenida,
     initOla,
     initParvada,
     initFlota,
@@ -346,6 +350,7 @@ export default function init() {
     initMapa,
     initMenuServicios,
     initServicios,
+    initEncaje,
     initPreguntas,
     initTienda,
     initTitularDelContacto,

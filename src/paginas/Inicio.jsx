@@ -1,3 +1,4 @@
+import Bienvenida from '../components/Bienvenida.jsx'
 import Pagina from '../components/Pagina.jsx'
 import Portada from '../components/Portada.jsx'
 import Proyectos from '../components/Proyectos.jsx'
@@ -18,16 +19,22 @@ import Contacto from '../components/Contacto.jsx'
  * lo que A.4 temía del «descenso sin retorno», un formulario sobre fondo oscuro,
  * y la tarjeta lo resuelve sin romper la caída.
  *
+ * Al entrar, la bienvenida tapa la página 4 s (Bienvenida.jsx). Va antes que
+ * todo: así es lo primero que se pinta.
+ *
  * Esta composición no tiene estado. React la convierte en HTML durante el build
  * y no viaja al navegador: lo que llega es el HTML ya pintado más el JavaScript
  * de `client.js`.
  */
 export default function Inicio() {
   return (
-    <Pagina enHome hora="dia" cierre={<Contacto />}>
-      <Portada />
-      <Servicios />
-      <Proyectos />
-    </Pagina>
+    <>
+      <Bienvenida />
+      <Pagina enHome hora="dia" cierre={<Contacto />}>
+        <Portada />
+        <Servicios />
+        <Proyectos />
+      </Pagina>
+    </>
   )
 }

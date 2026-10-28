@@ -4,10 +4,11 @@
    servicio, sin saltarse ninguno, y abajo, en Proyectos. Su margen de abajo
    alarga su zona de encaje hasta el final de la página, así que de ahí en
    adelante se baja libre: una zona más alta que la pantalla deja parar en
-   cualquier punto de ella (Safari 15). Con movimiento reducido no encaja: el
+   cualquier punto de ella (Safari 15), y adentro de ella no encaja, por la
+   rueda del ratón (src/encaje.js). Con movimiento reducido no encaja: el
    encaje mueve la página solo. */
 @media (prefers-reduced-motion: no-preference) {
-  :root:has(.servicios) {
+  :root:has(.servicios):not(.libre) {
     scroll-snap-type: y mandatory;
   }
 }

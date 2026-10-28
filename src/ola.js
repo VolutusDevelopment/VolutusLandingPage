@@ -16,7 +16,9 @@
 // La ola de /nosotros, que no lleva letras, sale de su cola en cascada.
 //
 // Con el ratón encima la ola no se borra ni toca las letras: los colores pasan
-// por ella en cascada, de la cola a la punta, la línea de arriba primero.
+// por ella en cascada, de la cola a la punta, la línea de arriba primero. En la
+// bienvenida del home (`data-repite`, Bienvenida.jsx) pasan una vez tras otra,
+// sin ratón, hasta que la bienvenida sale del documento.
 //
 // Cada línea se pinta de un solo trazo, del color de la ola quieta, y el
 // chicle se tiñe encima (`source-atop`): el color no engruesa el borde, y el
@@ -190,6 +192,7 @@ function montar(lienzo) {
   // La primera vez el logotipo se escribe y la ola sola sale de su cola;
   // después, con el ratón encima, pasan los colores.
   let modo = palabra ? 'barre' : 'traza'
+  const repite = 'repite' in lienzo.dataset
   let barrido = []
   let corriendo = false
 
@@ -231,6 +234,8 @@ function montar(lienzo) {
     modo = 'pasa'
     caja.classList.remove('trazando', 'barriendo')
     limpiar()
+    // Con movimiento reducido `correr` termina sin empezar: no se repite.
+    if (repite && lienzo.isConnected && !quieto()) correr()
   }
 
   function correr() {
@@ -249,13 +254,16 @@ function montar(lienzo) {
       t += Math.max(ahora - antes, 0)
       antes = ahora
       limpiar()
-      if (t >= fin) return terminar()
+      // Fuera del documento ya no hay color que leer.
+      if (t >= fin || !lienzo.isConnected) return terminar()
       ctx.setTransform(...matriz)
       // El color de la ola quieta, que puede cambiar con la zona bajo la barra.
       pintar(ctx, ola, lineas, colorDe(trazo), t, como)
       requestAnimationFrame(cuadro)
     }
-    requestAnimationFrame(cuadro)
+    // El primero va ya: al repetir, `correr` se llama desde un cuadro, y
+    // esperar al siguiente dejaba uno sin ola.
+    cuadro(antes)
   }
 
   const asomo = new IntersectionObserver(

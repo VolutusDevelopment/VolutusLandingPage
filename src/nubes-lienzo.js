@@ -44,6 +44,7 @@ import {
 } from './lib/mar.js'
 import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import * as ATARDECER from './lib/atardecer.js'
+import { CAMPOS, ENTRE_PLANOS } from './lib/campos.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
 
 // ~30 fps: las nubes se mueven lento y la mitad de fotogramas no se nota.
@@ -221,6 +222,17 @@ float ruido3(vec3 x) {
   return mix(rg.x, rg.y, f.z);
 }`
 
+// El viento en la celda (ver `CAMPO`): corre `px` lo que el aire movió la nube
+// y devuelve cuánto la deja el aire seco que entró. Lo usa también
+// `DESEMPACAR`.
+const VIENTO = `
+const float SECO = 40.0;
+float viento(inout vec2 px) {
+  vec3 aire = texture2D(estado, px / res).xyz;
+  px -= aire.xy * ${CELDAS_POR_AIRE}.0 * celda;
+  return exp(-3.0 * aire.z * (0.4 + ruido3(vec3(px / celda * lado / SECO, t * 0.5))));
+}`
+
 const CAMPO = `precision highp float;
 uniform vec2 res, centro;
 uniform float t, tiempo, celda, forma, lado, focal, giro;
@@ -230,10 +242,11 @@ uniform vec4 cumulos[10];
 #endif
 uniform sampler2D estado;
 ${RUIDO}
+${VIENTO}
 ${FISICA}
 const float SIGMA = 0.05, PASO = 40.0, SOLAR = 1.1, CIELO = 0.6, SUELO = 0.3, PISO = 0.15, TOPE = 1.5;
 const float LISO = 0.35, TURBIO = 0.5, CRESTA = 0.3, ATRAS = -0.6, ENVUELVE = 1.5, GRANO = 2.5, MEDIA = 0.4;
-const float HERVOR = 0.001, SECO = 40.0, LEJOS = 100000.0, COLIFLOR = 1.15, CUMULO = 160.0;
+const float HERVOR = 0.001, LEJOS = 100000.0, COLIFLOR = 1.15, CUMULO = 160.0;
 float altura;
 float detalle(float puntos) {
   return clamp(log2(max(puntos, 1.0) / GRANO) / log2(2.03) + 1.0, 1.0, 5.0);
@@ -326,9 +339,7 @@ vec2 esfera(vec3 d, vec4 c) {
 void main() {
   vec2 celdaXY = floor(gl_FragCoord.xy) + 0.5;
   vec2 px = celdaXY * celda;
-  vec3 aire = texture2D(estado, px / res).xyz;
-  px -= aire.xy * ${CELDAS_POR_AIRE}.0 * celda;
-  float abre = exp(-3.0 * aire.z * (0.4 + ruido3(vec3(px / celda * lado / SECO, t * 0.5))));
+  float abre = viento(px);
   vec3 d = normalize(frente * focal + derecha * (px.x - centro.x) - arriba * (px.y - centro.y));
   vec2 tramo = forma < 1.0 ? cilindro(d) : vec2(1e9, -1e9);
 #ifdef JUEGO
@@ -428,6 +439,46 @@ void main() {
   }
   float a = alfa * step(0.02, area) * punto(px, (celdaXY + 0.5) * celda, celda * 0.5 * sqrt(area));
   gl_FragColor = vec4(m.rgb * a + sombra * agua * (1.0 - a), a + agua * (1.0 - a));
+}`
+
+// El campo grabado (lib/campos.js) en lugar del calculado: escribe en cada
+// celda lo que habrían escrito `CAMPO` o `MAR`, y `TRAMA` dibuja los puntos
+// como siempre. `encuadre` lleva cada px del lienzo a su lugar en el campo
+// (`encuadrarGrabado`), y `plano`, dónde empieza el segundo plano en el cuadro
+// y cuánto mide cada uno. Cuando la pantalla tiene menos celdas que el video,
+// cuatro lecturas, separadas por `huella`, promedian lo que cae en la celda:
+// sin eso, el detalle que la pantalla no alcanza a dibujar parpadearía. Con
+// tantas o más, `huella` es cero y se lee el punto justo: promediar ahí
+// mezclaba las celdas vecinas y el mar, que cambia de golpe de una a otra,
+// salía borroso. En la nube corre el viento, como en `CAMPO`: el aire seco
+// entra en la cobertura igual que en la densidad que la da, como potencia de
+// lo que deja pasar. En el mar el tono da el color y el área, como en `MAR`.
+const DESEMPACAR = `precision highp float;
+uniform vec2 res, plano, huella;
+uniform vec4 encuadre;
+uniform float t, celda, lado;
+uniform vec3 luz, sombra, borde;
+uniform sampler2D grabado, estado;
+${RUIDO}
+${VIENTO}
+float en(float desde, vec2 uv) {
+  uv = clamp(uv, 0.0, 1.0);
+  return texture2D(grabado, vec2(desde + uv.x * plano.y, uv.y)).r;
+}
+float leer(float desde, vec2 px) {
+  vec2 uv = px * encuadre.xy + encuadre.zw, h = huella;
+  return 0.25 * (en(desde, uv - h) + en(desde, uv + h) + en(desde, uv + vec2(h.x, -h.y)) + en(desde, uv + vec2(-h.x, h.y)));
+}
+void main() {
+  vec2 px = (floor(gl_FragCoord.xy) + 0.5) * celda;
+#ifdef MAR
+  float tono = leer(0.0, px);
+  vec3 color = tono < 0.6 ? mix(sombra, luz, tono / 0.6) : mix(luz, borde, (tono - 0.6) / 0.4);
+  gl_FragColor = vec4(color, step(0.5, leer(plano.x, px)) * 0.5 + 0.249 * smoothstep(0.07, 0.6, tono));
+#else
+  float abre = viento(px);
+  gl_FragColor = vec4(mix(sombra, luz, leer(0.0, px)), 1.0 - pow(1.0 - leer(plano.x, px), abre));
+#endif
 }`
 
 // El aire del cielo. Se mide en px CSS, así que soplar es igual en cualquier
@@ -543,10 +594,22 @@ const cuadro = self.requestAnimationFrame ?? ((f) => setTimeout(() => f(performa
 // «Microsoft Basic Render Driver», 274 ms por fotograma en un portátil), y los
 // de Chromium y Linux, por si algún navegador no los marca.
 const SOFTWARE = /basic render|swiftshader|llvmpipe|softpipe|software/i
-// Lo que puede tardar en dibujarse una escena (ver `estrenar`) antes de tratarla
-// como dibujada por software: WARP y SwiftShader pasan de 270 ms, y una GPU
-// integrada no llega a 5.
+// Lo que puede tardar en dibujarse una escena (ver `estrenar` y `paso`) antes de
+// tratarla como dibujada por software: WARP y SwiftShader pasan de 270 ms, y una
+// GPU integrada no llega a 5. Y su presupuesto: si pasa de 11 ms, la que tiene
+// grabación (la nube de la portada y el mar, ver nubes.js) va desde su campo
+// grabado, y las demás quedan quietas (`aliviar`). Sin él, el cielo de
+// /servicios o de /patos seguía en vivo con 100 ms por fotograma, a saltos, y
+// le quitaba la GPU a la página.
 const LENTO = 150
+const PRESUPUESTO = 11
+// Hasta cuántas veces el presupuesto una medida del estreno se confirma con
+// otra (ver `estrenar`).
+const DUDOSA = 3
+// Lo más rápido que se reproduce el campo grabado de la nube para correr como
+// en vivo (ver `encuadrarGrabado`): más, y el teléfono decodificaría más de
+// 150 cuadros por segundo.
+const RAPIDEZ_MAXIMA = 1.25
 // Cada cuánto se cronometra un fotograma para fijar el ritmo (ver `paso`).
 const MEDIR_CADA = 2000
 
@@ -570,7 +633,7 @@ const UNIFORMS = [
   'res', 'rejilla', 't', 'celda', 'alfa', 'luz', 'sombra', 'borde', 'campo', 'relleno',
   'estado', 'forma', 'cumulos', 'camara', 'escala', 'nado', 'gota', 'pato', 'globo', 'dice', 'rastro', 'cuerpo',
   'lado', 'tiempo', 'centro', 'focal', 'ojo', 'frente', 'derecha', 'arriba', 'sol', 'giro',
-  'mira', 'olas', 'fases', 'rafagas',
+  'mira', 'olas', 'fases', 'rafagas', 'grabado', 'encuadre', 'plano', 'huella',
 ]
 const UNIFORMS_DEL_AIRE = ['malla', 'dt', 'uno', 'dos', 'tres', 'tramo', 'empuje', 'pxPorAire']
 
@@ -700,7 +763,7 @@ function laminasDelAire(aire) {
   return [...aire.velocidad, ...aire.presion, ...aire.estado, aire.rotor, aire.divergencia]
 }
 
-// Una textura de bytes que no cambia, en la unidad activa.
+// Una textura de bytes, en la unidad activa.
 function subirTextura(gl, ancho, alto, datos, filtro) {
   gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, ancho, alto, 0, gl.RGBA, gl.UNSIGNED_BYTE, datos)
@@ -748,11 +811,14 @@ function encargar(escena) {
   const lectura = gl.getExtension('EXT_shader_texture_lod') ? LEER_SIN_DERIVADAS : LEER_COMO_SIEMPRE
   // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar,
   // el círculo de siempre. Por software la escena no se mueve, y su aire no se
-  // compila.
+  // compila. La que tiene campo grabado compila con ella el que lo lee: si no
+  // da abasto en vivo, cambia sin esperar a enlazar nada (`aliviar`).
+  escena.grabacion = null
   escena.pedidos = {
     principales: [
       pedir(gl, lectura + (mar ? MAR : (juego ? '#define JUEGO\n' : '') + CAMPO)),
       pedir(gl, (mar ? '' : '#define CUADRADO\n') + TRAMA),
+      ...(escena.conCampo ? [pedir(gl, lectura + (mar ? '#define MAR\n' : '') + DESEMPACAR)] : []),
     ],
     aire:
       mar || escena.software || !hayAire(gl)
@@ -776,7 +842,7 @@ function armar(escena) {
   gl.enableVertexAttribArray(0)
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
-  const [campo, trama] = programas
+  const [campo, trama, desempacar] = programas
   escena.programas = programas
   if (!atardecer) texturaDeRuido(gl)
   gl.activeTexture(gl.TEXTURE1)
@@ -784,6 +850,14 @@ function armar(escena) {
   gl.useProgram(trama.programa)
   gl.uniform1i(trama.campo, 1)
   gl.uniform1f(trama.relleno, mar ? 1 : 0)
+  // El cuadro del campo grabado va en la unidad 5, y se lee interpolado.
+  if (desempacar) {
+    gl.activeTexture(gl.TEXTURE5)
+    subirTextura(gl, 1, 1, null, gl.LINEAR)
+    gl.useProgram(desempacar.programa)
+    gl.uniform1i(desempacar.grabado, 5)
+    gl.uniform1i(desempacar.estado, 2)
+  }
   gl.useProgram(campo.programa)
   if (atardecer) {
     gl.uniform4fv(campo.olas, ATARDECER.OLAS)
@@ -805,7 +879,7 @@ function armar(escena) {
 // La escena existe desde que la página la monta, aunque su contexto tarde: lo
 // que la página le diga mientras tanto (tamaño, colores, si se ve) se guarda y
 // se aplica al armarla.
-function montar(id, lienzo, { mar, atardecer, perspectiva, juego }) {
+function montar(id, lienzo, { mar, atardecer, perspectiva, juego, campo }) {
   const escena = {
     id,
     gl: null,
@@ -813,6 +887,13 @@ function montar(id, lienzo, { mar, atardecer, perspectiva, juego }) {
     atardecer,
     perspectiva,
     juego,
+    // Las medidas seguidas que pasaron del presupuesto (ver `paso`).
+    excesos: 0,
+    // Si la página puede darle su campo grabado, si ya lo pinta y el último
+    // cuadro que le llegó (ver `aliviar`).
+    conCampo: campo,
+    grabada: false,
+    cuadro: null,
     tiempo: 0,
     activa: false,
     vivo: false,
@@ -888,7 +969,20 @@ function porSoftware(gl) {
 function pasarASoftware(escena) {
   escena.software = true
   escena.sucia = true
+  escena.cuadro?.close()
+  escena.cuadro = null
   postMessage({ tipo: 'software', id: escena.id })
+}
+
+// La escena que en vivo no cabe en su presupuesto pasa a su campo grabado
+// (`DESEMPACAR`): la página reproduce el video y le pasa cada cuadro
+// (`lenta`, ver nubes.js). Si no tiene, si la página no puede, o si grabada
+// tampoco cabe, queda quieta, con su grabación encima si la tiene.
+function aliviar(escena) {
+  if (!escena.conCampo || escena.grabada) return pasarASoftware(escena)
+  escena.grabada = true
+  escena.excesos = 0
+  postMessage({ tipo: 'lenta', id: escena.id })
 }
 
 // La escena no se pinta: se suelta su contexto, y la página deja de hablarle y
@@ -901,21 +995,36 @@ function rechazar(id, gl, motivo) {
   postMessage({ tipo: 'sin-gl', id, motivo })
 }
 
-// La primera vez que una escena que se mueve se pinta, se pinta dos veces con
-// el lienzo aún invisible (`.nubes` va en opacidad 0 hasta `vivo`): la primera
-// calienta la GPU y la segunda se cronometra esperando a que termine
-// (`readPixels` de un píxel). Si tarda lo que un dibujo por software, se trata
-// como uno. Una escena fija se pinta una sola vez.
+// La primera vez que una escena que se mueve se pinta, se cronometra con el
+// lienzo aún invisible (`.nubes` va en opacidad 0 hasta `vivo`), esperando a
+// que la GPU termine (`readPixels` de un píxel). Antes se calienta pintando un
+// solo píxel (`scissor`): paga lo que cuesta usar cada programa la primera vez
+// sin pagar la pantalla entera. Mientras la GPU pinta, la página espera, y con
+// tres pintadas enteras una GPU lenta congelaba la carga casi un segundo. Una
+// medida suelta tarda de más cuando el equipo hace otra cosa, así que la que
+// pasa del presupuesto sin llegar a `DUDOSA` veces se confirma con otra, y
+// manda la más rápida. Si tarda lo que un dibujo por software, se trata como
+// uno; si solo pasa de su presupuesto, se alivia (`aliviar`). El aire nace
+// quieto, en cero, y el píxel del calentamiento no lo mueve. Una escena fija
+// se pinta una sola vez.
 function estrenar(escena, ahora) {
   const { gl } = escena
   if (!fija(escena)) {
     const pixel = new Uint8Array(4)
-    pintar(escena, ahora)
-    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
-    const desde = performance.now()
-    pintar(escena, ahora)
-    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
-    if (performance.now() - desde > LENTO) pasarASoftware(escena)
+    const cronometrar = () => {
+      const desde = performance.now()
+      pintar(escena, ahora)
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+      return performance.now() - desde
+    }
+    gl.enable(gl.SCISSOR_TEST)
+    gl.scissor(0, 0, 1, 1)
+    cronometrar()
+    gl.disable(gl.SCISSOR_TEST)
+    let tarda = cronometrar()
+    if (tarda > PRESUPUESTO && tarda < DUDOSA * PRESUPUESTO) tarda = Math.min(tarda, cronometrar())
+    if (tarda > LENTO) pasarASoftware(escena)
+    else if (tarda > PRESUPUESTO) aliviar(escena)
   }
   if (fija(escena)) {
     escena.sucia = false
@@ -1072,11 +1181,31 @@ function simular(escena) {
 }
 
 // Sin `conAire`, el aire no da su paso: solo se repinta la cámara (ver `paso`).
+// La grabada pinta su campo desde el video mientras tiene cuadro; quieta, o
+// antes del primero, lo calcula.
 function pintar(escena, ahora, conAire = true) {
-  const { gl, programas: [campo, trama] } = escena
+  const { gl, programas: [, trama] } = escena
   const t = (ahora - inicio) / 1000
   const quieta = fija(escena)
   if (escena.aire && !quieta && conAire) simular(escena)
+  // El atardecer: el sol donde lo dejó el scroll (ver `ponerse`).
+  const sol = escena.atardecer && ATARDECER.sol(escena.ocaso.x)
+  if (escena.grabada && !quieta && (escena.cuadro || escena.grabacion)) desempacar(escena, t)
+  else calcular(escena, ahora, t, quieta, sol)
+  gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
+  gl.viewport(0, 0, ...escena.rejilla)
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+  gl.useProgram(trama.programa)
+  if (sol) gl.uniform3fv(trama.sol, sol)
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+}
+
+// El campo calculado en vivo: `CAMPO`, `MAR` o el del atardecer, listo para
+// pintar.
+function calcular(escena, ahora, t, quieta, sol) {
+  const { gl, programas: [campo] } = escena
   gl.useProgram(campo.programa)
   gl.uniform1f(campo.t, t)
   // El tiempo de la nube va en cámara rápida (`lapso`, lib/volutus.js) y se
@@ -1098,23 +1227,69 @@ function pintar(escena, ahora, conAire = true) {
     if (escena.pato && !quieta) nadar(escena, t)
     gl.uniform4fv(campo.rastro, escena.rastro)
   }
-  // El atardecer: el sol donde lo dejó el scroll y las ráfagas que siguen
-  // soplando (ver `ponerse`).
-  const sol = escena.atardecer && ATARDECER.sol(escena.ocaso.x)
+  // Las ráfagas del atardecer siguen soplando.
   if (sol) {
     escena.rafagas = escena.rafagas.filter((rafaga) => ahora - rafaga.t < 6000)
     gl.uniform3fv(campo.sol, sol)
     gl.uniform4fv(campo.rafagas, ATARDECER.soplos(escena.rafagas, ahora))
     escena.antes = ahora
   }
-  gl.bindFramebuffer(gl.FRAMEBUFFER, escena.campo.fbo)
-  gl.viewport(0, 0, ...escena.rejilla)
-  gl.drawArrays(gl.TRIANGLES, 0, 3)
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-  gl.useProgram(trama.programa)
-  if (sol) gl.uniform3fv(trama.sol, sol)
-  gl.drawArrays(gl.TRIANGLES, 0, 3)
+}
+
+// El campo grabado: sube el último cuadro que llegó y lo deja listo para
+// pintar con `DESEMPACAR`. Al cambiar el tamaño del cuadro —otro video, al
+// girar el teléfono— se vuelve a encuadrar.
+function desempacar(escena, t) {
+  const { gl, programas: [, , u], cuadro } = escena
+  gl.useProgram(u.programa)
+  gl.uniform1f(u.t, t)
+  if (!cuadro) return
+  gl.activeTexture(gl.TEXTURE5)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cuadro)
+  const medida = [(cuadro.width - ENTRE_PLANOS) / 2, cuadro.height]
+  if (String(medida) !== String(escena.grabacion)) encuadrarGrabado(escena, medida)
+  cuadro.close()
+  escena.cuadro = null
+}
+
+// Dónde cae cada px del lienzo en el campo grabado (ver `DESEMPACAR`). La
+// cámara de la escena para su lienzo y la de la grabación miran igual —mismo
+// rumbo y mismo campo—, así que un mismo rayo cae en px que solo cambian de
+// escala y se corren: los del lienzo, desde su centro de cámara, por la razón
+// de las focales. `medida` son las celdas del campo. La nube corre además más
+// rápido en un lienzo más bajo (`lapso`), y la página reproduce su video a esa
+// razón (`rapidez`).
+function encuadrarGrabado(escena, medida) {
+  const { gl, programas: [, , u], mar, perspectiva } = escena
+  const camaraDe = mar
+    ? (ancho, alto) => {
+        const { focal, horizonte } = camara(ancho, alto)
+        return { focal, centro: [ancho / 2, horizonte] }
+      }
+    : (ancho, alto) => encuadrar(perspectiva, ancho, alto)
+  const [ancho, alto] = medida
+  const { celda, densidad } = escena.ultimos.medir
+  const lienzo = camaraDe(gl.canvas.width, gl.canvas.height)
+  const campo = camaraDe(ancho, alto)
+  const k = campo.focal / lienzo.focal
+  const total = 2 * ancho + ENTRE_PLANOS
+  // Cuántas celdas del campo caen en una del lienzo, menos la que se lee.
+  const sobra = Math.max(0, celda * k - 1) / 4
+  // En la misma densidad (el mar del teléfono), cada celda del lienzo cae justo
+  // en una del campo si el campo se corre menos de media celda: sin eso, la
+  // lectura mezcla dos vecinas.
+  let [x, y] = [campo.centro[0] - lienzo.centro[0] * k, campo.centro[1] - lienzo.centro[1] * k]
+  if (Math.abs(celda * k - 1) < 1e-3) [x, y] = [Math.round(x), Math.round(y)]
+  gl.useProgram(u.programa)
+  gl.uniform4f(u.encuadre, k / ancho, k / alto, x / ancho, y / alto)
+  gl.uniform2f(u.plano, (ancho + ENTRE_PLANOS) / total, ancho / total)
+  gl.uniform2f(u.huella, sobra / ancho, sobra / alto)
+  escena.grabacion = medida
+  if (mar) return
+  const grabada = gl.canvas.width > gl.canvas.height ? CAMPOS.apaisado : CAMPOS.vertical
+  const enVivo = lapso(lienzo.focal, densidad)
+  const enVideo = lapso(encuadrar(perspectiva, grabada.alto * grabada.proporcion, grabada.alto).focal, 1)
+  postMessage({ tipo: 'rapidez', id: escena.id, valor: Math.min(RAPIDEZ_MAXIMA, enVivo / enVideo) })
 }
 
 // Un paso del bucle: arma las escenas cuyos programas ya se enlazaron, estrena
@@ -1125,12 +1300,16 @@ function pintar(escena, ahora, conAire = true) {
 // en el doble de lo que tardó la GPU en dibujar un fotograma (`readPixels` de un
 // píxel espera a que termine), y nunca bajo `INTERVALO`. Con una GPU rápida no
 // cambia nada; con una lenta, las nubes nunca ocupan más de la mitad de la GPU
-// y la página no se traba.
+// y la página no se traba. Si tres medidas seguidas pasan del presupuesto (un
+// teléfono que se calienta), la escena se alivia (`aliviar`), o queda quieta si
+// tarda lo que un dibujo por software: una medida suelta puede pasarse porque
+// el equipo hace otra cosa.
 //
 // La cámara que se mueve (al bajar por la portada, `seguir`) no espera a
 // `intervalo`: se repinta hasta a 60 fps, porque a 30 se la ve avanzar a
 // saltos. El aire sigue a su paso. Solo con una GPU que da abasto, la que deja
-// `intervalo` en `INTERVALO`.
+// `intervalo` en `INTERVALO`. La grabada tampoco espera: se pinta con cada
+// cuadro que le llega, al ritmo del video.
 function paso(ahora) {
   marco = 0
   for (const escena of [...escenas.values()]) {
@@ -1154,22 +1333,34 @@ function paso(ahora) {
   if (todas.some((e) => e.pedidos && !e.perdida) || animadas.length) marco = cuadro(paso)
 
   const vivas = animadas.filter((e) => !nuevas.includes(e))
+  const enVivo = vivas.filter((e) => !e.grabada)
+  const pintadas = vivas.filter((e) => e.grabada && e.cuadro)
   if (ahora - ultimo < intervalo) {
     if (intervalo === INTERVALO) {
-      for (const e of vivas) if (ahora - e.antes >= MOVIDA && seguir(e, ahora)) pintar(e, ahora, false)
+      for (const e of enVivo) if (ahora - e.antes >= MOVIDA && seguir(e, ahora)) pintar(e, ahora, false)
     }
-    return
+  } else {
+    ultimo = ahora
+    enVivo.forEach((e) => seguir(e, ahora))
+    pintadas.push(...enVivo)
   }
-  ultimo = ahora
   const desde = performance.now()
-  vivas.forEach((e) => {
-    seguir(e, ahora)
-    pintar(e, ahora)
+  // El aire da un paso de `DT` por fotograma: en la grabada, que se pinta más
+  // seguido, solo cada `INTERVALO` (`antes` es su último paso).
+  pintadas.forEach((e) => {
+    const conAire = !e.grabada || ahora - (e.antes ?? 0) >= INTERVALO
+    if (e.grabada && conAire) e.antes = ahora
+    pintar(e, ahora, conAire)
   })
-  if (!vivas.length || ahora - medido < MEDIR_CADA) return
+  if (!pintadas.length || ahora - medido < MEDIR_CADA) return
   const pixel = new Uint8Array(4)
-  vivas.forEach(({ gl }) => gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel))
-  intervalo = Math.max(INTERVALO, 2 * (performance.now() - desde))
+  pintadas.forEach(({ gl }) => gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel))
+  const tarda = performance.now() - desde
+  for (const e of pintadas) {
+    e.excesos = tarda > PRESUPUESTO ? e.excesos + 1 : 0
+    if (e.excesos === 3) (tarda > LENTO ? pasarASoftware : aliviar)(e)
+  }
+  intervalo = Math.max(INTERVALO, 2 * tarda)
   medido = ahora
 }
 
@@ -1278,6 +1469,7 @@ function aplicar(escena, data) {
     })
     // Los cúmulos de la 404 están donde estaba el rollo, que acaba de moverse.
     if (escena.ultimos.forma) aplicar(escena, escena.ultimos.forma)
+    if (escena.grabacion) encuadrarGrabado(escena, escena.grabacion)
   }
   if (data.tipo === 'colores') {
     fijar(escena, (gl, u) => {
@@ -1379,6 +1571,15 @@ onmessage = ({ data }) => {
     soplar(escena, data)
     return
   }
+  // Un cuadro del campo grabado (ver `grabarCampo` en nubes.js): se pinta el
+  // último, y el que llega tarde se suelta. Si el video no se puede
+  // reproducir, la escena queda quieta con su grabación.
+  if (data.tipo === 'campo') {
+    if (!escena?.grabada || escena.software) return data.cuadro.close()
+    escena.cuadro?.close()
+    escena.cuadro = data.cuadro
+  }
+  if (escena && data.tipo === 'sin-campo') pasarASoftware(escena)
 
   // Cambiar el tamaño borra el lienzo, y una escena fija nadie más la repinta:
   // cualquier mensaje ensucia su escena y despierta un fotograma.

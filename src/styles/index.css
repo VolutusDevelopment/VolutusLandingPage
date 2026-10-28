@@ -1094,6 +1094,19 @@ svg {
   object-fit: cover;
 }
 
+/* El video del campo grabado, que el pintor lee cuadro a cuadro
+   (src/nubes.js): en pantalla, para que iOS lo reproduzca, pero de 1 px y
+   transparente. */
+.campo-grabado {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* El punto de la nube, en px CSS: el mismo en todas las páginas, salvo la
    portada en el teléfono (Portada.css), y el lienzo lo pinta a la densidad
    real de la pantalla (`rejilla` en src/nubes.js). El mar del pie lleva el

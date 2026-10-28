@@ -714,43 +714,31 @@
  * sobresale 32 de la tarjeta oscura, y con su radio de 12, un píxel más
  * dejaría a la vista la esquina recta de esa tarjeta.
  * Con esta curva la pendiente máxima es 1,587 veces la media, así que para ir
- * al 70 % el tramo mide 1,587 × 40 / 0,3 ≈ 212 px de scroll. */
-.formulario {
-  isolation: isolate;
-}
-
-.formulario::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  box-shadow:
-    0 28px 56px -28px rgb(6 22 44 / 0.42),
-    0 2px 10px rgb(6 22 44 / 0.06);
-  opacity: 0;
-  pointer-events: none;
-}
-
+ * al 70 % el tramo mide 1,587 × 40 / 0,3 ≈ 212 px de scroll.
+ *
+ * La sombra es la de la propia tarjeta, con su alfa animado. Antes era la
+ * opacidad de un `::after` debajo de ella, y esa capa animada encarecía cada
+ * cuadro de Chrome desde el contacto hasta el pie: en una pantalla de
+ * 2560 × 1440, con el pato nadando, la página caía a 20 fps. */
 @supports (animation-timeline: view()) {
   @media screen and (prefers-reduced-motion: no-preference) {
     .formulario-cabe {
-      animation: formulario-subir cubic-bezier(0.33, 1, 0.68, 1) both;
+      animation:
+        formulario-subir cubic-bezier(0.33, 1, 0.68, 1) both,
+        formulario-sombra cubic-bezier(0.37, 0, 0.63, 1) both;
       animation-timeline: view(block var(--barra-alto) 0px);
-      animation-range: cover 0% cover 50%;
-    }
-
-    .formulario-cabe::after {
-      animation: formulario-sombra cubic-bezier(0.37, 0, 0.63, 1) both;
-      animation-timeline: view(block var(--barra-alto) 0px);
-      animation-range: cover 20% cover 80%;
+      animation-range:
+        cover 0% cover 50%,
+        cover 20% cover 80%;
     }
 
     @media (min-width: 1024px) {
       .formulario-cabe {
-        animation-name: formulario-iman;
+        animation-name: formulario-iman, formulario-sombra;
         animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
-        animation-range: cover calc(50% - 106px) cover calc(50% + 106px);
+        animation-range:
+          cover calc(50% - 106px) cover calc(50% + 106px),
+          cover 20% cover 80%;
       }
     }
   }
@@ -772,8 +760,19 @@
   }
 }
 
+/* Las dos sombras van siempre, transparentes en las puntas: así solo cambia
+   su alfa, como cuando se animaba la opacidad. */
 @keyframes formulario-sombra {
+  from,
+  to {
+    box-shadow:
+      0 28px 56px -28px rgb(6 22 44 / 0),
+      0 2px 10px rgb(6 22 44 / 0);
+  }
+
   50% {
-    opacity: 1;
+    box-shadow:
+      0 28px 56px -28px rgb(6 22 44 / 0.42),
+      0 2px 10px rgb(6 22 44 / 0.06);
   }
 }

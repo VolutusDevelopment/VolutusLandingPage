@@ -47,6 +47,11 @@
  *     OffscreenCanvas o sin pintor, el lienzo queda transparente y se deja de
  *     escucharlo (`sin-gl`). En todos esos casos, si la escena está grabada,
  *     encima va su video (ver `grabado`), y la página sigue entera.
+ *   - Nada que trabe la página. Cada escena tiene un presupuesto: si un
+ *     fotograma suyo pasa de 11 ms (un teléfono), el pintor deja de calcularla.
+ *     La grabada la pinta desde su campo grabado, un video que esta página le
+ *     pasa cuadro a cuadro (`grabarCampo`); las demás quedan quietas
+ *     (`PRESUPUESTO` en nubes-lienzo.js).
  *   - Nada fuera de pantalla. Se para al salir del viewport, al quedar tapado
  *     (la nube fija de la portada) y con la pestaña oculta.
  *   - Nada interactivo con movimiento reducido. Pinta un solo fotograma,
@@ -54,6 +59,7 @@
  *     grabada, encima va su video.
  */
 
+import { CAMPOS, campoPara } from './lib/campos.js'
 import { quieto } from './lib/movimiento.js'
 
 // Tope de densidad de píxeles del mar: por encima de 1.5 sus puntos no se ven
@@ -81,6 +87,11 @@ export function rejilla(lienzo) {
 
 // El enlace de cada pato del mar, por lienzo.
 const patos = new Map()
+
+// El video del campo grabado de cada lienzo que lo pinta (ver `grabarCampo`),
+// y la cámara y la densidad de cada lienzo, que lo eligen (`medir`).
+const campos = new Map()
+const densidades = new Map()
 
 const rgb = (hex) => {
   const n = parseInt(hex.trim().slice(1), 16)
@@ -129,15 +140,14 @@ function montar(pintor, lienzo, id) {
       densidad = dpr
     }
     escala = densidad
-    pintor.postMessage({
-      tipo: 'medir',
-      id,
-      ancho: Math.round(lienzo.clientWidth * densidad),
-      alto: Math.round(lienzo.clientHeight * densidad),
-      celda,
-      lado,
-      densidad,
-    })
+    const ancho = Math.round(lienzo.clientWidth * densidad)
+    const alto = Math.round(lienzo.clientHeight * densidad)
+    pintor.postMessage({ tipo: 'medir', id, ancho, alto, celda, lado, densidad })
+    // La cámara y la densidad del lienzo dicen qué campo grabado se ve como él
+    // (lib/campos.js): al girar el teléfono, la nube cambia de cámara.
+    const camara = mar ? 'mar' : ancho > alto ? 'apaisado' : 'vertical'
+    densidades.set(id, { camara, filas: Math.max(alto, ancho / CAMPOS[camara].proporcion) / celda })
+    if (campos.has(id)) elegirCampo(pintor, id)
   }
 
   // `--nubes-borde` es del mar: la nube no tiene borde.
@@ -218,8 +228,11 @@ function montar(pintor, lienzo, id) {
     telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radio * k}px)`
   }
 
+  // El video del campo grabado se reproduce solo mientras la escena se pinta.
   function activar() {
-    pintor.postMessage({ tipo: 'activa', id, valor: visible && !document.hidden })
+    const activa = visible && !document.hidden
+    pintor.postMessage({ tipo: 'activa', id, valor: activa })
+    reproducir(campos.get(id), activa && !quieto())
   }
 
   // El pintor lleva un solo trazo de viento, y no solo lo sopla el cursor: un
@@ -299,7 +312,10 @@ function montar(pintor, lienzo, id) {
   const { perspectiva } = lienzo.dataset
   // `juego`: los cúmulos del juego de la 404 solo se compilan donde se juega.
   const juego = 'juego' in lienzo.dataset
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, atardecer, perspectiva, juego }, [offscreen])
+  // `campo`: tiene grabación y esta página puede pasarle su campo grabado (ver
+  // `grabarCampo`).
+  const campo = Boolean(grabacion(lienzo)) && 'requestVideoFrameCallback' in HTMLVideoElement.prototype
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, atardecer, perspectiva, juego, campo }, [offscreen])
   if (!atardecer) colorear()
   medir()
   if (mar) {
@@ -349,6 +365,7 @@ function montar(pintor, lienzo, id) {
   for (const visto of tapa ? zonas : [lienzo]) enPantalla.observe(visto)
   observadores.push(tamano, enPantalla)
   document.addEventListener('visibilitychange', activar, { signal })
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', activar, { signal })
 
   return () => {
     control.abort()
@@ -384,21 +401,25 @@ function seguirPato(enlace, { x, y, visible }) {
   if (enlace.hidden === visible) enlace.hidden = !visible
 }
 
-// Donde el pintor no puede mover una escena, y con movimiento reducido, encima
-// va la misma escena grabada: un video en bucle, que decodificar cuesta mucho
-// menos que pintarla y no responde al cursor. Hay del mar y de la nube de la
-// portada; los cielos con otra cámara quedan quietos, o transparentes sin
-// WebGL. El video se pide recién aquí: con GPU y sin movimiento reducido no
-// se descarga, y con ahorro de datos tampoco. El navegador lo pausa fuera de
-// pantalla. Ojo: su primer fotograma cuenta para el LCP, así que tiene que
-// llegar pronto. Safari lo pide por partes: lo sirve el Worker (`porPartes`,
-// worker/index.js).
+// Donde el pintor no puede mover una escena —sin GPU, o ni grabada cabe en su
+// presupuesto— y con movimiento reducido, encima va la misma escena grabada:
+// un video en bucle, que decodificar cuesta mucho menos que pintarla y no
+// responde al cursor. Hay del mar y de la nube de la portada; los cielos con
+// otra cámara quedan quietos, o transparentes sin WebGL. El video se pide
+// recién aquí: con GPU y sin movimiento reducido no se descarga, y con ahorro
+// de datos tampoco. El navegador lo pausa fuera de pantalla. Ojo: su primer
+// fotograma cuenta para el LCP, así que tiene que llegar pronto. Safari lo
+// pide por partes: lo sirve el Worker (`porPartes`, worker/index.js).
 const GRABADOS = { mar: '/grabados/mar-sin-gpu.mp4', cielo: '/grabados/nube-sin-gpu.mp4' }
 const grabados = new Map()
 
+// El video de un lienzo, si tiene y se puede pedir.
+const grabacion = (lienzo) =>
+  !lienzo.dataset.perspectiva && !navigator.connection?.saveData && GRABADOS[lienzo.dataset.vista]
+
 function grabado(lienzo) {
-  const src = GRABADOS[lienzo.dataset.vista]
-  if (!src || lienzo.dataset.perspectiva || grabados.has(lienzo) || navigator.connection?.saveData) return
+  const src = grabacion(lienzo)
+  if (!src || grabados.has(lienzo)) return
   const video = document.createElement('video')
   video.className = 'nubes grabado'
   video.src = src
@@ -413,6 +434,51 @@ function quitarGrabado(lienzo) {
   grabados.get(lienzo)?.remove()
   grabados.delete(lienzo)
 }
+
+// La escena que en vivo no cabe en su presupuesto pasa a su campo grabado
+// (`lenta`, ver `aliviar` en nubes-lienzo.js): un video gris con el tono y la
+// cobertura de cada celda, que el pintor vuelve puntos a la medida de esta
+// pantalla (lib/campos.js). Aquí solo se reproduce y se le pasa cada cuadro.
+// Va en la página, de 1 px y transparente: iOS no reproduce un video oculto,
+// y así no compite por el LCP. Si no se puede reproducir, la escena queda
+// quieta con su grabación (`sin-campo`).
+function grabarCampo(pintor, lienzo, id) {
+  const video = document.createElement('video')
+  video.className = 'campo-grabado'
+  video.muted = video.loop = video.autoplay = video.playsInline = true
+  video.setAttribute('aria-hidden', 'true')
+  const enviar = () => {
+    if (campos.get(id) !== video) return
+    createImageBitmap(video).then(
+      (cuadro) => (campos.get(id) === video ? pintor.postMessage({ tipo: 'campo', id, cuadro }, [cuadro]) : cuadro.close()),
+      () => {},
+    )
+    video.requestVideoFrameCallback(enviar)
+  }
+  video.requestVideoFrameCallback(enviar)
+  video.addEventListener('error', () => pintor.postMessage({ tipo: 'sin-campo', id }), { once: true })
+  campos.set(id, video)
+  lienzo.after(video)
+  elegirCampo(pintor, id)
+}
+
+// El campo de la cámara y la densidad del lienzo. Si ninguno se ve como él,
+// la escena queda quieta con su grabación (`sin-campo`). La rapidez la dice el
+// pintor (`rapidez`).
+function elegirCampo(pintor, id) {
+  const { camara, filas } = densidades.get(id)
+  const src = campoPara(camara, filas)
+  const video = campos.get(id)
+  if (!src) pintor.postMessage({ tipo: 'sin-campo', id })
+  else if (video.getAttribute('src') !== src) video.src = src
+}
+
+function quitarCampo(id) {
+  campos.get(id)?.remove()
+  campos.delete(id)
+}
+
+const reproducir = (video, si) => video && (si ? video.play().catch(() => {}) : video.pause())
 
 export default function initNubes() {
   const lienzos = [...document.querySelectorAll('canvas.nubes')]
@@ -466,6 +532,7 @@ export default function initNubes() {
     montados.delete(id)
     patos.get(id)?.remove()
     patos.delete(id)
+    quitarCampo(id)
     grabado(lienzos[id])
     if (motivo === 'sin-gpu') sinPintor = true
     if (pintor && !montados.size && (sinPintor || !pendientes.size)) {
@@ -482,7 +549,14 @@ export default function initNubes() {
       if (data.tipo === 'sin-gl') return soltar(data.id, data.motivo)
       if (data.tipo === 'software') {
         porSoftware.add(data.id)
+        quitarCampo(data.id)
         return grabado(lienzos[data.id])
+      }
+      if (data.tipo === 'lenta') return grabarCampo(nuevo, lienzos[data.id], data.id)
+      if (data.tipo === 'rapidez') {
+        const video = campos.get(data.id)
+        if (video) video.defaultPlaybackRate = video.playbackRate = data.valor
+        return
       }
       if (data.tipo === 'pato') {
         const enlace = patos.get(data.id)

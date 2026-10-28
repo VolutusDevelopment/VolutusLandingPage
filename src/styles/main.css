@@ -12,6 +12,7 @@
 @import './index.css';
 
 @import '../components/Barra.css';
+@import '../components/Bienvenida.css';
 @import '../components/Icono.css';
 @import '../components/Portada.css';
 @import '../components/Proyectos.css';

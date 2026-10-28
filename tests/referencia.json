@@ -2,7 +2,7 @@
   "rutas": {
     "/": {
       "S": {
-        "alto": 9564,
+        "alto": 10585,
         "desborda": false,
         "h1": 102.609375,
         "bloquesQueEntran": 6,
@@ -10,7 +10,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 9564,
+        "alto": 10585,
         "desborda": false,
         "h1": 102.5625,
         "bloquesQueEntran": 6,
@@ -18,7 +18,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 12180,
+        "alto": 13702,
         "desborda": false,
         "h1": 158.0625,
         "bloquesQueEntran": 6,
@@ -26,7 +26,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 12180,
+        "alto": 13702,
         "desborda": false,
         "h1": 158.015625,
         "bloquesQueEntran": 6,
@@ -34,7 +34,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 8957,
+        "alto": 9743,
         "desborda": false,
         "h1": 209.25,
         "bloquesQueEntran": 6,
@@ -42,7 +42,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 8957,
+        "alto": 9742,
         "desborda": false,
         "h1": 209.25,
         "bloquesQueEntran": 6,
@@ -50,7 +50,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 9602,
+        "alto": 10547,
         "desborda": false,
         "h1": 209.25,
         "bloquesQueEntran": 6,
@@ -60,58 +60,58 @@
     },
     "/nosotros": {
       "S": {
-        "alto": 9602,
+        "alto": 9519,
         "desborda": false,
         "h1": 86.375,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 9602,
+        "alto": 9546,
         "desborda": false,
         "h1": 86.375,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 9148,
+        "alto": 9357,
         "desborda": false,
         "h1": 61.984375,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 9148,
+        "alto": 9357,
         "desborda": false,
         "h1": 61.96875,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 7451,
+        "alto": 7406,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 7451,
+        "alto": 7406,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 7844,
+        "alto": 7848,
         "desborda": false,
         "h1": 82.078125,
-        "bloquesQueEntran": 20,
+        "bloquesQueEntran": 19,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
@@ -176,7 +176,7 @@
     },
     "/servicios/desarrollo-web": {
       "S": {
-        "alto": 7420,
+        "alto": 7499,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 31,
@@ -184,7 +184,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 7438,
+        "alto": 7516,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 31,
@@ -192,7 +192,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 6014,
+        "alto": 6093,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 31,
@@ -200,7 +200,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6058,
+        "alto": 6135,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 31,
@@ -216,7 +216,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 5730,
+        "alto": 5729,
         "desborda": false,
         "h1": 328.3125,
         "bloquesQueEntran": 31,
@@ -234,7 +234,7 @@
     },
     "/servicios/tiendas-online": {
       "S": {
-        "alto": 10363,
+        "alto": 10672,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 32,
@@ -242,7 +242,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 10381,
+        "alto": 10689,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 32,
@@ -250,7 +250,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 10720,
+        "alto": 11029,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 32,
@@ -258,7 +258,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 10764,
+        "alto": 11072,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 32,
@@ -274,7 +274,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 8821,
+        "alto": 8819,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 32,
@@ -292,7 +292,7 @@
     },
     "/servicios/desarrollo-software-a-medida": {
       "S": {
-        "alto": 7803,
+        "alto": 7882,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 32,
@@ -300,7 +300,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 7821,
+        "alto": 7899,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 32,
@@ -308,7 +308,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 6429,
+        "alto": 6508,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 32,
@@ -316,7 +316,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6473,
+        "alto": 6551,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 32,
@@ -332,7 +332,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 5891,
+        "alto": 5890,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 32,
@@ -350,7 +350,7 @@
     },
     "/servicios/agentes-ia": {
       "S": {
-        "alto": 9770,
+        "alto": 9849,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 25,
@@ -358,7 +358,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 9788,
+        "alto": 9866,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 25,
@@ -366,7 +366,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 7705,
+        "alto": 7784,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 25,
@@ -374,7 +374,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 7749,
+        "alto": 7827,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 25,
@@ -390,7 +390,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 6943,
+        "alto": 6941,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 25,
@@ -408,7 +408,7 @@
     },
     "/servicios/automatizacion-procesos": {
       "S": {
-        "alto": 7835,
+        "alto": 7914,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 30,
@@ -416,7 +416,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 7853,
+        "alto": 7931,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 30,
@@ -424,7 +424,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 6368,
+        "alto": 6447,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 30,
@@ -432,7 +432,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6411,
+        "alto": 6489,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 30,
@@ -448,7 +448,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 6110,
+        "alto": 6108,
         "desborda": false,
         "h1": 246.234375,
         "bloquesQueEntran": 30,
@@ -466,7 +466,7 @@
     },
     "/servicios/sistemas-de-gestion": {
       "S": {
-        "alto": 8635,
+        "alto": 8714,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 37,
@@ -474,7 +474,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 8653,
+        "alto": 8731,
         "desborda": false,
         "h1": 129.5625,
         "bloquesQueEntran": 37,
@@ -482,7 +482,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 6758,
+        "alto": 6837,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 37,
@@ -490,7 +490,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6802,
+        "alto": 6880,
         "desborda": false,
         "h1": 123.9375,
         "bloquesQueEntran": 37,
@@ -506,7 +506,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 6255,
+        "alto": 6253,
         "desborda": false,
         "h1": 328.3125,
         "bloquesQueEntran": 37,
@@ -524,7 +524,7 @@
     },
     "/servicios/prospeccion-de-clientes": {
       "S": {
-        "alto": 6833,
+        "alto": 6912,
         "desborda": false,
         "h1": 172.75,
         "bloquesQueEntran": 28,
@@ -532,7 +532,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 6852,
+        "alto": 6931,
         "desborda": false,
         "h1": 172.75,
         "bloquesQueEntran": 28,
@@ -540,7 +540,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 5999,
+        "alto": 6078,
         "desborda": false,
         "h1": 185.953125,
         "bloquesQueEntran": 28,
@@ -548,7 +548,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 6044,
+        "alto": 6122,
         "desborda": false,
         "h1": 185.90625,
         "bloquesQueEntran": 28,
@@ -564,7 +564,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 5775,
+        "alto": 5774,
         "desborda": false,
         "h1": 410.390625,
         "bloquesQueEntran": 28,
@@ -640,7 +640,7 @@
     },
     "/articulos/que-es-un-agente-de-ia": {
       "S": {
-        "alto": 6017,
+        "alto": 6424,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -648,7 +648,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 6017,
+        "alto": 6424,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -656,7 +656,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4362,
+        "alto": 4809,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -664,7 +664,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4362,
+        "alto": 4809,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -672,7 +672,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4598,
+        "alto": 4559,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -680,7 +680,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4600,
+        "alto": 4559,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -688,7 +688,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4691,
+        "alto": 4652,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -698,7 +698,7 @@
     },
     "/articulos/pagina-web-o-tienda-online": {
       "S": {
-        "alto": 5243,
+        "alto": 5710,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -706,7 +706,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5243,
+        "alto": 5710,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -714,7 +714,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3924,
+        "alto": 4371,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -722,7 +722,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3924,
+        "alto": 4371,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -730,7 +730,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4158,
+        "alto": 4119,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -738,7 +738,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4160,
+        "alto": 4119,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -746,7 +746,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4246,
+        "alto": 4207,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -756,7 +756,7 @@
     },
     "/articulos/software-a-medida-o-ya-hecho": {
       "S": {
-        "alto": 5192,
+        "alto": 5640,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -764,7 +764,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5192,
+        "alto": 5640,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -772,7 +772,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3894,
+        "alto": 4373,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -780,7 +780,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3894,
+        "alto": 4373,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -788,7 +788,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4128,
+        "alto": 4121,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -796,7 +796,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4130,
+        "alto": 4121,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -804,7 +804,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4217,
+        "alto": 4209,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -814,7 +814,7 @@
     },
     "/articulos/planilla-o-sistema-de-gestion": {
       "S": {
-        "alto": 4689,
+        "alto": 5114,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -822,7 +822,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4689,
+        "alto": 5114,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -830,7 +830,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3551,
+        "alto": 4030,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -838,7 +838,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3551,
+        "alto": 4030,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -846,7 +846,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3757,
+        "alto": 3782,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -854,7 +854,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3758,
+        "alto": 3782,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -862,7 +862,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3836,
+        "alto": 3861,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -872,7 +872,7 @@
     },
     "/articulos/que-automatizar-primero": {
       "S": {
-        "alto": 4856,
+        "alto": 5244,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -880,7 +880,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4856,
+        "alto": 5244,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -888,7 +888,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3713,
+        "alto": 4160,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -896,7 +896,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3713,
+        "alto": 4160,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -904,7 +904,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3945,
+        "alto": 3882,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -912,7 +912,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3947,
+        "alto": 3882,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -920,7 +920,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4029,
+        "alto": 3966,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -930,7 +930,7 @@
     },
     "/articulos/que-preparar-antes-de-cotizar": {
       "S": {
-        "alto": 5148,
+        "alto": 5537,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -938,7 +938,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5148,
+        "alto": 5537,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -946,7 +946,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3975,
+        "alto": 4422,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -954,7 +954,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3975,
+        "alto": 4422,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -962,7 +962,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4218,
+        "alto": 4211,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -970,7 +970,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4219,
+        "alto": 4211,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -978,7 +978,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4321,
+        "alto": 4314,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -988,7 +988,7 @@
     },
     "/articulos/dos-formas-de-trabajar": {
       "S": {
-        "alto": 4943,
+        "alto": 5350,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -996,7 +996,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4943,
+        "alto": 5350,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1004,7 +1004,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3685,
+        "alto": 4159,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1012,7 +1012,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3685,
+        "alto": 4159,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1020,7 +1020,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3861,
+        "alto": 3905,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1028,7 +1028,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3862,
+        "alto": 3905,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1036,7 +1036,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3944,
+        "alto": 3989,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1046,7 +1046,7 @@
     },
     "/articulos/datos-de-tus-clientes-y-la-ley": {
       "S": {
-        "alto": 5007,
+        "alto": 5428,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1054,7 +1054,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5007,
+        "alto": 5428,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1062,7 +1062,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3734,
+        "alto": 4213,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1070,7 +1070,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3734,
+        "alto": 4213,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1078,7 +1078,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3912,
+        "alto": 3961,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1086,7 +1086,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3913,
+        "alto": 3961,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1094,7 +1094,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4000,
+        "alto": 4049,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1104,7 +1104,7 @@
     },
     "/articulos/por-que-no-te-sirvio-la-herramienta": {
       "S": {
-        "alto": 4360,
+        "alto": 4804,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1112,7 +1112,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4360,
+        "alto": 4804,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1120,7 +1120,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3417,
+        "alto": 3864,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1128,7 +1128,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3417,
+        "alto": 3864,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1136,7 +1136,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3680,
+        "alto": 3641,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1144,7 +1144,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3682,
+        "alto": 3641,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1152,7 +1152,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3759,
+        "alto": 3719,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1162,7 +1162,7 @@
     },
     "/articulos/conectar-con-lo-que-ya-usas": {
       "S": {
-        "alto": 4514,
+        "alto": 4963,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1170,7 +1170,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4514,
+        "alto": 4963,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1178,7 +1178,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3509,
+        "alto": 3988,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1186,7 +1186,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3509,
+        "alto": 3988,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1194,7 +1194,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3685,
+        "alto": 3734,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1202,7 +1202,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3686,
+        "alto": 3734,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1210,7 +1210,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3768,
+        "alto": 3817,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1220,7 +1220,7 @@
     },
     "/articulos/boleta-factura-y-sii": {
       "S": {
-        "alto": 4596,
+        "alto": 5012,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1228,7 +1228,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4596,
+        "alto": 5012,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1236,7 +1236,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3458,
+        "alto": 3905,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1244,7 +1244,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3458,
+        "alto": 3905,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1252,7 +1252,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3722,
+        "alto": 3683,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1260,7 +1260,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3724,
+        "alto": 3683,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1268,7 +1268,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3806,
+        "alto": 3766,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1278,7 +1278,7 @@
     },
     "/articulos/como-se-paga-en-linea": {
       "S": {
-        "alto": 4744,
+        "alto": 5193,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1286,7 +1286,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4744,
+        "alto": 5193,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1294,7 +1294,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3571,
+        "alto": 4050,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1302,7 +1302,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3571,
+        "alto": 4050,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1310,7 +1310,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3804,
+        "alto": 3796,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1318,7 +1318,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3805,
+        "alto": 3796,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1326,7 +1326,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3887,
+        "alto": 3880,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1336,7 +1336,7 @@
     },
     "/articulos/casos-para-un-agente-de-ia": {
       "S": {
-        "alto": 4978,
+        "alto": 5422,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1344,7 +1344,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4978,
+        "alto": 5422,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1352,7 +1352,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3705,
+        "alto": 4152,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1360,7 +1360,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3705,
+        "alto": 4152,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1368,7 +1368,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3971,
+        "alto": 3931,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1376,7 +1376,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3972,
+        "alto": 3931,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1384,7 +1384,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4059,
+        "alto": 4020,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1394,7 +1394,7 @@
     },
     "/articulos/como-trabajamos": {
       "S": {
-        "alto": 5116,
+        "alto": 5500,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1402,7 +1402,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5116,
+        "alto": 5500,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1410,7 +1410,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3858,
+        "alto": 4332,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1418,7 +1418,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3858,
+        "alto": 4332,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1426,7 +1426,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4041,
+        "alto": 4062,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1434,7 +1434,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4042,
+        "alto": 4062,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1442,7 +1442,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4144,
+        "alto": 4164,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1510,7 +1510,7 @@
     },
     "/ley21719": {
       "S": {
-        "alto": 10495,
+        "alto": 10496,
         "desborda": false,
         "h1": 86.375,
         "bloquesQueEntran": 23,
@@ -1526,7 +1526,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 7809,
+        "alto": 7810,
         "desborda": false,
         "h1": 123.96875,
         "bloquesQueEntran": 23,
@@ -1619,6 +1619,876 @@
         "alto": 900,
         "desborda": false,
         "h1": 82.078125,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-2": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-3": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/nivel-1": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-5": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-6": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/nivel-2": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-9": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-10": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-11": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/nivel-3": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-13": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-14": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-15": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/operacion-venganza/escena-16": {
+      "S": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 844,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 1180,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 820,
+        "desborda": false,
+        "h1": 1,
+        "bloquesQueEntran": 0,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 900,
+        "desborda": false,
+        "h1": 1,
         "bloquesQueEntran": 0,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
@@ -1787,59 +2657,59 @@
       "sinAnillo": 0
     },
     "/articulos/que-es-un-agente-de-ia": {
-      "paradas": 35,
+      "paradas": 41,
       "sinAnillo": 0
     },
     "/articulos/pagina-web-o-tienda-online": {
-      "paradas": 34,
+      "paradas": 39,
       "sinAnillo": 0
     },
     "/articulos/software-a-medida-o-ya-hecho": {
-      "paradas": 33,
+      "paradas": 38,
       "sinAnillo": 0
     },
     "/articulos/planilla-o-sistema-de-gestion": {
-      "paradas": 33,
+      "paradas": 36,
       "sinAnillo": 0
     },
     "/articulos/que-automatizar-primero": {
-      "paradas": 33,
+      "paradas": 37,
       "sinAnillo": 0
     },
     "/articulos/que-preparar-antes-de-cotizar": {
-      "paradas": 32,
+      "paradas": 40,
       "sinAnillo": 0
     },
     "/articulos/dos-formas-de-trabajar": {
-      "paradas": 32,
+      "paradas": 36,
       "sinAnillo": 0
     },
     "/articulos/datos-de-tus-clientes-y-la-ley": {
-      "paradas": 33,
+      "paradas": 38,
       "sinAnillo": 0
     },
     "/articulos/por-que-no-te-sirvio-la-herramienta": {
-      "paradas": 34,
+      "paradas": 37,
       "sinAnillo": 0
     },
     "/articulos/conectar-con-lo-que-ya-usas": {
-      "paradas": 33,
+      "paradas": 37,
       "sinAnillo": 0
     },
     "/articulos/boleta-factura-y-sii": {
-      "paradas": 33,
+      "paradas": 37,
       "sinAnillo": 0
     },
     "/articulos/como-se-paga-en-linea": {
-      "paradas": 31,
+      "paradas": 35,
       "sinAnillo": 0
     },
     "/articulos/casos-para-un-agente-de-ia": {
-      "paradas": 33,
+      "paradas": 38,
       "sinAnillo": 0
     },
     "/articulos/como-trabajamos": {
-      "paradas": 35,
+      "paradas": 43,
       "sinAnillo": 0
     },
     "/privacidad": {
@@ -1852,6 +2722,66 @@
     },
     "/patos": {
       "paradas": 8,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-2": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-3": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/nivel-1": {
+      "paradas": 2,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-5": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-6": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/nivel-2": {
+      "paradas": 2,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-9": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-10": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-11": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/nivel-3": {
+      "paradas": 2,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-13": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-14": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-15": {
+      "paradas": 0,
+      "sinAnillo": 0
+    },
+    "/operacion-venganza/escena-16": {
+      "paradas": 0,
       "sinAnillo": 0
     },
     "/articulos/pagina/2": {

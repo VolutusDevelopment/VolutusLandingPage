@@ -1,0 +1,47 @@
+/* La bienvenida del home (Bienvenida.jsx). Dura 4 s y la lleva el CSS, no el
+   script: a los 3.6 s se desvanece y a los 4 s ya no está, con o sin
+   JavaScript. Al imprimir o con movimiento reducido no aparece.
+
+   El fondo es el cielo de arriba de la portada (Portada.jsx), así que al irse
+   no hay corte: el cielo sigue y aparece lo que estaba debajo. Va antes que el
+   enlace de salto y con su mismo `z-index`: quien tabula lo ve encima. */
+.bienvenida {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  .bienvenida {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(#1976cc, #3088d9 45%, #61abed);
+    color: #fff;
+    animation: bienvenida-se-va 400ms cubic-bezier(0.23, 1, 0.32, 1) 3.6s forwards;
+  }
+
+  /* Como el logotipo de la barra (Barra.css): espera escondido a que llegue
+     el script, y si en un segundo no llegó, aparece solo. */
+  .bienvenida path {
+    animation: ola-espera 1s step-end both;
+  }
+}
+
+@keyframes bienvenida-se-va {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Posicionado para el lienzo donde el logotipo se escribe (ola.js). */
+.bienvenida-marca {
+  position: relative;
+}
+
+.bienvenida-logotipo {
+  display: block;
+  width: min(76vw, 440px);
+  height: auto;
+}

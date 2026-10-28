@@ -119,10 +119,11 @@
    la tapa ocupa arriba. Antes y después se baja libre: el título de la sección
    alarga su zona de encaje hasta arriba de la página y la sección que sigue,
    hasta abajo, y una zona más alta que la pantalla deja parar en cualquier
-   punto de ella. Con movimiento reducido no encaja: el encaje mueve la página
-   solo. */
+   punto de ella; adentro de ellas no encaja, por la rueda del ratón
+   (src/encaje.js). Con movimiento reducido no encaja: el encaje mueve la
+   página solo. */
 @media (prefers-reduced-motion: no-preference) {
-  :root:has(.tienda-recorrido) {
+  :root:has(.tienda-recorrido):not(.libre) {
     scroll-snap-type: y mandatory;
   }
 }

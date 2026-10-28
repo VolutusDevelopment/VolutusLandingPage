@@ -466,10 +466,11 @@
    la cabecera, y después del último, la pausa con la escena sola (ver el
    atardecer, arriba). En S la tarjeta es más alta que la pantalla: encaja a su inicio y otra vez al
    final de su texto, y entre los dos se lee libre, así que nadie queda leído
-   a medias. Desde M encaja al centro (abajo). Con movimiento reducido no
-   encaja: el encaje mueve la página solo. */
+   a medias. Desde M encaja al centro (abajo). Desde la sección siguiente se
+   baja libre, y ahí no encaja, por la rueda del ratón (src/encaje.js). Con
+   movimiento reducido no encaja: el encaje mueve la página solo. */
 @media (prefers-reduced-motion: no-preference) {
-  :root:has(.socios) {
+  :root:has(.socios):not(.libre) {
     scroll-snap-type: y mandatory;
   }
 }
