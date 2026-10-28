@@ -9,10 +9,12 @@
  *
  * **La primera pantalla es la mañana: una volutus y un mensaje.** La nube en
  * rollo que da nombre a la marca, en volumen y de puntos finos, con su luz y
- * su sombra, formándose en su frente y deshaciéndose detrás; el cursor la
- * mueve como viento (ver nubes-lienzo.js). En toda pantalla cruza la portada
- * en perspectiva, detrás del titular centrado, y es ella la que se impone. La
- * página baja por las horas del día hasta la noche del pie (DESIGN-BRIEF A.8).
+ * su sombra, formándose en su frente y deshaciéndose detrás. El cursor no la
+ * mueve: su aire está en calma (`data-calma`, ver nubes-lienzo.js), porque
+ * simular el viento en cada fotograma costaba. En toda pantalla cruza la
+ * portada en perspectiva, detrás del titular centrado, y es ella la que se
+ * impone. La página baja por las horas del día hasta la noche del pie
+ * (DESIGN-BRIEF A.8).
  *
  * **Ninguna afirmación de aquí cuenta obra.** Es deliberado: contarla era lo
  * que obligaba a andar corrigiendo el plural cada vez que `carflip.cl` se cae.
@@ -57,7 +59,7 @@ export default function Portada() {
           </linearGradient>
           <rect width="1" height="1" fill="url(#cielo-de-la-manana)" />
         </svg>
-        <canvas className="nubes" data-vista="cielo" data-recorrido="#proyectos" aria-hidden="true" />
+        <canvas className="nubes" data-vista="cielo" data-recorrido="#proyectos" data-calma aria-hidden="true" />
       </div>
       <section id="portada" className="seccion zona-cielo hora-manana portada" data-barra="hora-dia">
         <div className="alba hora-dia" aria-hidden="true" />

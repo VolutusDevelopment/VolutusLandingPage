@@ -22,11 +22,11 @@
  * su sección y el sol se pone con el scroll hasta la mitad (ver `ponerSol`).
  *
  * El cielo escucha al cursor, o al dedo: le cuenta al pintor por dónde pasa
- * sobre su sección (en la portada, también sobre los servicios que suben por
- * la nube fija), y el pintor lo vuelve viento. Lo mismo con lo que la
- * página haga pasar por la nube —los patos de la 404—, que lo avisa con un
- * evento `soplo` en el lienzo. Y el juego de la 404 cambia la forma de la nube
- * con un evento `forma`, que aquí solo se reenvía al pintor (ver patos.js).
+ * sobre su sección, y el pintor lo vuelve viento. El que dice `data-calma` (la
+ * portada) no: su aire no se simula. Lo mismo con lo que la página haga pasar
+ * por la nube —los patos de la 404—, que lo avisa con un evento `soplo` en el
+ * lienzo. Y el juego de la 404 cambia la forma de la nube con un evento
+ * `forma`, que aquí solo se reenvía al pintor (ver patos.js).
  * Cuando un lienzo ya pinta, recibe la clase y el evento `vivo`: el juego de
  * /patos lo espera para empezar.
  *
@@ -120,9 +120,8 @@ function montar(pintor, lienzo, id) {
   const atardecer = lienzo.dataset.vista === 'atardecer'
   // La sección que tapa la nube fija de la portada.
   const tapa = lienzo.dataset.recorrido && document.querySelector(lienzo.dataset.recorrido)
-  // Las secciones sobre las que se ve el cielo: la suya y, si queda pegado, las
-  // que lo dejan ver hasta que lo tapan, desde la que le sigue (Portada.jsx).
-  const zonas = tapa ? dejanVer(lienzo.parentElement.nextElementSibling, tapa) : [lienzo.closest('section')]
+  // Un cielo en calma no escucha al cursor, y el pintor no le arma el aire.
+  const calma = 'calma' in lienzo.dataset
   const control = new AbortController()
   const { signal } = control
   const observadores = []
@@ -262,10 +261,9 @@ function montar(pintor, lienzo, id) {
   // llegando mientras la página se desplaza (`pointermove` se cancela en
   // cuanto empieza el scroll). Nada impide desplazar. Como mucho un aviso por
   // fotograma, y la caja del lienzo se lee en ese fotograma, no en cada evento.
-  // Se escucha en las `zonas`, no en el lienzo, que no recibe el puntero: así
-  // el cursor sigue soplando sobre los servicios que pasan por la nube fija.
-  // Pasar de una zona a la siguiente no corta el trazo.
+  // Se escucha en su sección, no en el lienzo, que no recibe el puntero.
   function seguirCursor() {
+    const zona = lienzo.closest('section')
     let cursor = null
     const apuntarCursor = () => {
       if (cursor && !ajeno) apuntar(cursor.x, cursor.y)
@@ -282,16 +280,11 @@ function montar(pintor, lienzo, id) {
       cursor = null
       if (!ajeno) pintor.postMessage({ tipo: 'cursor', id, fuera: true })
     }
-    const salir = ({ relatedTarget }) => {
-      if (!zonas.some((zona) => zona.contains(relatedTarget))) soltar()
-    }
     const pasivo = { passive: true, signal }
-    for (const zona of zonas) {
-      zona.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
-      zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
-      zona.addEventListener('pointerleave', salir, { signal })
-      zona.addEventListener('touchend', soltar, pasivo)
-    }
+    zona.addEventListener('pointermove', (evento) => evento.pointerType !== 'touch' && seguir(evento), pasivo)
+    zona.addEventListener('touchmove', (evento) => seguir(evento.touches[0]), pasivo)
+    zona.addEventListener('pointerleave', soltar, { signal })
+    zona.addEventListener('touchend', soltar, pasivo)
   }
 
   // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
@@ -315,7 +308,7 @@ function montar(pintor, lienzo, id) {
   // `campo`: tiene grabación y esta página puede pasarle su campo grabado (ver
   // `grabarCampo`).
   const campo = Boolean(grabacion(lienzo)) && 'requestVideoFrameCallback' in HTMLVideoElement.prototype
-  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, atardecer, perspectiva, juego, campo }, [offscreen])
+  pintor.postMessage({ tipo: 'montar', id, lienzo: offscreen, mar, atardecer, perspectiva, juego, calma, campo }, [offscreen])
   if (!atardecer) colorear()
   medir()
   if (mar) {
@@ -326,7 +319,7 @@ function montar(pintor, lienzo, id) {
       }),
     )
   } else {
-    seguirCursor()
+    if (!calma) seguirCursor()
     if (tapa) recorrer()
     if (atardecer) ponerSol()
     lienzo.addEventListener(
@@ -362,7 +355,7 @@ function montar(pintor, lienzo, id) {
     },
     tapa ? { rootMargin: '100% 0px 0px 0px' } : {},
   )
-  for (const visto of tapa ? zonas : [lienzo]) enPantalla.observe(visto)
+  for (const visto of tapa ? dejanVer(lienzo.parentElement.nextElementSibling, tapa) : [lienzo]) enPantalla.observe(visto)
   observadores.push(tamano, enPantalla)
   document.addEventListener('visibilitychange', activar, { signal })
   matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', activar, { signal })

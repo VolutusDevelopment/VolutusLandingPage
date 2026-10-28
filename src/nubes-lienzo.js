@@ -14,7 +14,8 @@
  *     página mira con su cámara (`data-perspectiva`). Se forma en su frente,
  *     donde el aire sube, y se evapora detrás, donde baja: eso es lo que se
  *     ve rodar. El cursor, o el dedo, la empuja apenas donde pasa, y la nube
- *     se vuelve a cerrar sola.
+ *     se vuelve a cerrar sola. En la portada no: su cielo está en calma
+ *     (`data-calma`), sin aire, porque simularlo en cada fotograma costaba.
  *   - `mar`: el agua bajo la nube, mirada desde muy cerca de ella. Las olas
  *     llegan de frente con su física de verdad, rompen y dejan espuma, el sol
  *     brilla en ellas, y las crestas que pasan la altura de los ojos asoman
@@ -811,8 +812,9 @@ function encargar(escena) {
   const lectura = gl.getExtension('EXT_shader_texture_lod') ? LEER_SIN_DERIVADAS : LEER_COMO_SIEMPRE
   // El punto de la nube es un cuadrado redondeado (ver `PUNTO`); el del mar,
   // el círculo de siempre. Por software la escena no se mueve, y su aire no se
-  // compila. La que tiene campo grabado compila con ella el que lo lee: si no
-  // da abasto en vivo, cambia sin esperar a enlazar nada (`aliviar`).
+  // compila; en calma tampoco. La que tiene campo grabado compila con ella el
+  // que lo lee: si no da abasto en vivo, cambia sin esperar a enlazar nada
+  // (`aliviar`).
   escena.grabacion = null
   escena.pedidos = {
     principales: [
@@ -821,7 +823,7 @@ function encargar(escena) {
       ...(escena.conCampo ? [pedir(gl, lectura + (mar ? '#define MAR\n' : '') + DESEMPACAR)] : []),
     ],
     aire:
-      mar || escena.software || !hayAire(gl)
+      mar || escena.software || escena.calma || !hayAire(gl)
         ? null
         : Object.fromEntries(Object.entries(FUENTES_DEL_AIRE).map(([nombre, fuente]) => [nombre, pedir(gl, fuente)])),
   }
@@ -879,7 +881,7 @@ function armar(escena) {
 // La escena existe desde que la página la monta, aunque su contexto tarde: lo
 // que la página le diga mientras tanto (tamaño, colores, si se ve) se guarda y
 // se aplica al armarla.
-function montar(id, lienzo, { mar, atardecer, perspectiva, juego, campo }) {
+function montar(id, lienzo, { mar, atardecer, perspectiva, juego, calma, campo }) {
   const escena = {
     id,
     gl: null,
@@ -887,6 +889,7 @@ function montar(id, lienzo, { mar, atardecer, perspectiva, juego, campo }) {
     atardecer,
     perspectiva,
     juego,
+    calma,
     // Las medidas seguidas que pasaron del presupuesto (ver `paso`).
     excesos: 0,
     // Si la página puede darle su campo grabado, si ya lo pinta y el último
