@@ -7,9 +7,9 @@
 // cazado, como en el Duck Hunt: se pasma y cae al mar. Con el dedo se caza
 // tocando, no arrastrando: arrastrar es desplazarse, y el navegador lo cancela
 // (`pointercancel`) antes de soltar. El pato mide 12 px en el teléfono, así que
-// el toque vale hasta `DEDO` px fuera de él, y cae el más cercano. El cursor
-// los bota uno a uno, con `PAUSA` entre uno y otro aunque barra la V entera;
-// cada toque es un tiro y no espera. Pueden caer todos: entonces llega el
+// el toque vale hasta `DEDO` px fuera de él, y cae el más cercano. Ni el cursor
+// ni el toque esperan: si el cursor barre la V entera, caen todos los que toca.
+// Pueden caer todos: entonces llega el
 // portaaviones (`.flota`, ver flota.js). El vuelo y
 // la caída los lleva el CSS (Nosotros.css); aquí se les da la salida y se mira
 // si el puntero da en un pato que se vea: fuera de la lámina, recortado, o
@@ -22,7 +22,6 @@
 import { elegido } from './lib/final.js'
 import { quieto } from './lib/movimiento.js'
 
-const PAUSA = 600
 const DEDO = 16
 
 export default function initParvada() {
@@ -32,9 +31,8 @@ export default function initParvada() {
   const telon = parvada.parentElement
   const patos = [...parvada.querySelectorAll('.pato')]
   const caza = new AbortController()
-  let ultimo = -PAUSA
 
-  const cazar = ({ clientX: x, clientY: y, target, timeStamp }, holgura) => {
+  const cazar = ({ clientX: x, clientY: y, target }, holgura) => {
     if (target.closest('.socio')) return
     let pato
     for (const candidato of patos) {
@@ -45,7 +43,6 @@ export default function initParvada() {
     if (!pato || !document.elementsFromPoint(x, y).includes(telon)) return
     pato.classList.add('cazado')
     patos.splice(patos.indexOf(pato), 1)
-    ultimo = timeStamp
     if (patos.length) return
     caza.abort()
     document.querySelector('.flota')?.classList.add('llega')
@@ -57,11 +54,7 @@ export default function initParvada() {
       salida.disconnect()
       parvada.classList.add('vuela')
       const opciones = { passive: true, signal: caza.signal }
-      addEventListener(
-        'pointermove',
-        (evento) => evento.pointerType === 'mouse' && evento.timeStamp - ultimo >= PAUSA && cazar(evento, 0),
-        opciones,
-      )
+      addEventListener('pointermove', (evento) => evento.pointerType === 'mouse' && cazar(evento, 0), opciones)
       addEventListener('pointerup', (evento) => evento.pointerType !== 'mouse' && cazar(evento, DEDO), opciones)
     },
     { rootMargin: '0px 0px -15% 0px' },
