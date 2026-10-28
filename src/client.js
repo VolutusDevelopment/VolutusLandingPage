@@ -316,10 +316,10 @@ function empezarSolo(boton, alternar) {
 }
 
 // Operación Venganza baja su código solo en su página: en la de un nivel, el
-// combate; en las demás, las escenas.
+// combate; en las demás, las escenas. El índice no baja nada.
 function initOperacionVenganza() {
   const raiz = document.querySelector('.venganza')
-  if (!raiz) return
+  if (!raiz || 'indice' in raiz.dataset) return
   const juego = 'nivel' in raiz.dataset ? import('./combate.js') : import('./operacion-venganza.js')
   juego.then((modulo) => modulo.default(raiz))
 }

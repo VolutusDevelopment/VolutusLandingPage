@@ -68,6 +68,7 @@ export const COMPONENTES = {
   '/operacion-venganza/escena-14': OperacionVenganza,
   '/operacion-venganza/escena-15': OperacionVenganza,
   '/operacion-venganza/escena-16': OperacionVenganza,
+  '/operacion-venganza/indice': OperacionVenganza,
   ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,

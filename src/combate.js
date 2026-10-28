@@ -547,10 +547,10 @@ function pintarEstelas() {
 }
 
 // ── Quien juega ───────────────────────────────────────────────────────────
-// Le pega lo que toque la cabeza de la flecha o el centro de la huella.
+// Le pega lo que toque casi toda la flecha, sin la cola, o el centro de la huella.
 const HUELLA = ['  XXXXX  ', ' XWWWWWX ', 'XWWXXXWWX', 'XWXWWWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWWWXWWWX', ' XWWWWWX ', '  XXXXX  ']
 const FORMAS = {
-  cursor: { mapa: FLECHA, ox: 0, oy: 0, hx: 2, hy: 4, r: 2 },
+  cursor: { mapa: FLECHA, ox: 0, oy: 0, hx: 3, hy: 5, r: 4 },
   huella: { mapa: HUELLA, ox: 4, oy: 5, hx: 0, hy: 0, r: 3 },
 }
 
@@ -613,7 +613,7 @@ function pintarJugador(visible) {
 // misil guiado detrás, se cierran y parpadean.
 function pintarMira() {
   const f = FORMAS[modo]
-  const cx = Math.round(jugador.x - f.ox + (modo === 'cursor' ? 6 : f.mapa[0].length / 2))
+  const cx = Math.round(jugador.x - f.ox + (modo === 'cursor' ? 4 : f.mapa[0].length / 2))
   const cy = Math.round(jugador.y - f.oy + f.mapa.length / 2)
   const fijado = balas.some((b) => b.tipo === 'misil' && b.t < b.guia)
   if (fijado) corchetes(cx, cy, 8, Math.floor(reloj * 10) % 2 ? '#ffffff' : '#ff4a36')

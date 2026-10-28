@@ -419,6 +419,14 @@ export const PAGINAS = {
       'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 16, en el navegador.',
     fondo: '#5c94fc',
   },
+  // El índice de todo el juego, para entrar a cualquier página sin jugar.
+  '/operacion-venganza/indice': {
+    archivo: 'operacion-venganza/indice.html',
+    titulo: 'Operación Venganza: índice — Volutus',
+    descripcion: 'El índice de Operación Venganza: cada escena, nivel y pantalla de carga del juego, para entrar a cualquiera.',
+    fondo: '#5c94fc',
+    indexar: false,
+  },
   // Las pantallas de carga, cada una sola: se llega desde el índice del juego.
   ...Object.fromEntries(
     Object.entries(CARGAS).map(([ruta, { nombre }]) => [

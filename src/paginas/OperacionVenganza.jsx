@@ -27,6 +27,7 @@ const ESCENAS = {
 }
 
 const DUCK_ONE = '/operacion-venganza/carga-duck-one'
+const INDICE = '/operacion-venganza/indice'
 
 const ENLACES = Object.keys(ESCENAS)
 const siguienteDe = (enlace) => ENLACES[ENLACES.indexOf(enlace) + 1]
@@ -60,6 +61,7 @@ function tramoDe(numero) {
  * desde ella se llega al índice de todo.
  */
 export default function OperacionVenganza({ ruta }) {
+  if (ruta === INDICE) return <Indice />
   const carga = CARGAS[ruta]
   if (carga) return <PantallaDeCarga ruta={ruta} {...carga} />
   return ESCENAS[ruta].nivel ? <Nivel ruta={ruta} /> : <Escena ruta={ruta} />
@@ -203,7 +205,7 @@ function Nivel({ ruta }) {
         <span className="nivel-pista">Seguir ▸</span>
       </button>
       <p className="venganza-titulo nivel-leido" aria-live="polite" />
-      <canvas className="nivel-jugador" width="9" height="13" aria-hidden="true" hidden />
+      <canvas className="nivel-jugador" width="9" height="15" aria-hidden="true" hidden />
 
       <section className="nivel-panel nivel-portada" aria-labelledby="nivel-portada">
         <p className="nivel-antetitulo">Operación Venganza</p>
@@ -274,11 +276,24 @@ function Carga({ titulo, salir, children }) {
   )
 }
 
-// El fin: el índice de las escenas y, en un desplegable, el de las pantallas
-// de carga, abierto cuando se viene de una.
-function Fin({ ruta, titulo }) {
+// El índice en su propia página, para entrar a cualquier escena, nivel o
+// pantalla de carga sin jugar desde el principio. `data-indice` le dice a
+// client.js que aquí no baja el juego.
+function Indice() {
   return (
-    <section className="fin" aria-label={titulo} hidden>
+    <main id="contenido" className="venganza" data-indice>
+      <h1 className="venganza-titulo">Operación Venganza: índice</h1>
+      <Fin titulo="Índice" visible />
+    </main>
+  )
+}
+
+// El fin: el índice de las escenas y, en un desplegable, el de las pantallas
+// de carga, abierto cuando se viene de una. `visible` es el de la página del
+// índice, que se ve de entrada y no tiene nada que ver otra vez.
+function Fin({ ruta, titulo, visible }) {
+  return (
+    <section className="fin" aria-label={titulo} hidden={!visible}>
       <h2 className="titular">{titulo}</h2>
       <nav className="fin-escenas" aria-label="Escenas">
         {Object.entries(ESCENAS).map(([enlace, escena]) => (
@@ -299,9 +314,11 @@ function Fin({ ruta, titulo }) {
         <a className="boton boton-primario" href="/nosotros">
           Volver a Nosotros
         </a>
-        <button className="escena-boton fin-otra-vez" type="button">
-          Ver otra vez
-        </button>
+        {!visible && (
+          <button className="escena-boton fin-otra-vez" type="button">
+            Ver otra vez
+          </button>
+        )}
       </p>
     </section>
   )
