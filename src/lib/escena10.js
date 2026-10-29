@@ -56,8 +56,8 @@ export const TOMAS = [
     id: 'eficacia',
     ms: 150,
     lineas: [
-      { quien: DUCK_ONE, texto: 'La eficacia militar exige decisiones que, en ocasiones,' },
-      { quien: DUCK_ONE, texto: 'exceden los límites de la comprensión internacional.' },
+      { quien: DUCK_ONE, texto: 'La eficacia militar a veces, exige decisiones que, en ocasiones,' },
+      { quien: DUCK_ONE, texto: 'exseden los límites de la comprensión internacional.' },
     ],
   },
   // El dolly de la escena 2, más brusco.

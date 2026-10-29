@@ -33,7 +33,7 @@ export const TOMAS = [
     ms: 150,
     lineas: [
       { quien: DUCK_ONE, texto: 'Te recomiendo que abandones inmediatamente el espacio aéreo.' },
-      { quien: DUCK_ONE, texto: 'No quisiera verme obligado a recurrir a medidas de una complejidad balística superior.' },
+      { quien: DUCK_ONE, texto: 'No quisiera verme obligado a recurrir a medidas de una complegidad balística superior.' },
     ],
   },
   {
@@ -44,7 +44,7 @@ export const TOMAS = [
   { id: 'boton', ms: 150, unaVez: true, lineas: [{ texto: 'Pulsa un botón.' }] },
   { id: 'limpiaparabrisas', ms: 150, lineas: [{ texto: 'Se activa el limpiaparabrisas de la cabina.' }] },
   { id: 'excelente', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Excelente. Prueba de sistemas completada.' }] },
-  { id: 'despegue', ms: 150, cuadros: 24, unaVez: true, segunModo: true, lineas: [{ texto: 'Su caza despega del Sitting Ducks.' }] },
+  { id: 'despegue', ms: 150, cuadros: 24, unaVez: true, segunModo: true, lineas: [{ texto: 'Su caza despega del Sitting Ducks…' }, { texto: { cursor: '…y se lanza contra el cursor, marcado en el cielo.', huella: '…y se lanza contra el dedo, marcado en el cielo.' } }] },
 ]
 
 export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena3/${id}${segunModo ? `-${modo}` : ''}.png`

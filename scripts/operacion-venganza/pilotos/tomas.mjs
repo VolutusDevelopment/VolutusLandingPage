@@ -56,8 +56,8 @@ const PERSONAJES = [
     piloto: M.DUKE_B,
     encuadre: { c: [0.2, 0.5, 0], radio: 1.45 },
     caza: M.CAZA_DUKE,
-    modelo: 'Boeing F-15EX Eagle II, perla, oro y rosa',
-    detalle: 'Plumaje marfil impecable y copete rubio. Uniforme blanco de gala cruzado, con botones dorados, cordón dorado al pecho y hombreras doradas con flecos. Con el mentón arriba y los ojos cerrados de gusto, se pasa un peine por el copete entre destellos. Sin casco.',
+    modelo: 'McDonnell Douglas F/A-18C Hornet, blanco y rosa',
+    detalle: 'Plumaje marfil impecable y copete rubio. Uniforme blanco de gala cruzado, con botones dorados, cordón dorado al pecho y hombreras doradas con flecos. Con el mentón arriba y los ojos cerrados de gusto, se pasa un peine por el copete entre destellos. Sin casco. Su Hornet va pintado como los de los Blue Angels, pero blanco donde ellos son azules y rosa donde son dorados: la franja del morro a las LEX, los bordes de ataque, el remate de las derivas y las alas por debajo.',
   },
   {
     archivo: 'duky',

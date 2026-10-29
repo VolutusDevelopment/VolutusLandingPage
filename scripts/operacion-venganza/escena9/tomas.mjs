@@ -5,7 +5,8 @@
 // Moby y duke vuelan juntos a 300 m sobre el mar, como duky en la escena 11,
 // y la torre les habla desde la consola de radar de la sala de mando. Vuelven
 // al Sitting Ducks y frenan en la cubierta, uno detrás del otro, en el eje de
-// la catapulta de babor. Todo en metros del barco.
+// la catapulta de babor. Duke sale de un saltito mientras su Hornet pliega
+// las alas, como en la vida real. Todo en metros del barco.
 
 import { placa, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
@@ -66,6 +67,8 @@ const BARCO = [MAR, ...portaaviones()]
 // escena 5 y moby detrás, más a popa.
 const PARADA = { duke: [0, CUBIERTA - DUKE.suelo, -6], moby: [-30, CUBIERTA - MOBY.suelo, -6] }
 const CUPULA_ABIERTA = 40
+// Las puntas de las alas del Hornet suben hasta pasar un poco la vertical.
+const PLEGADAS = 100
 const enCubierta = (quien, p) => sum((quien === 'duke' ? DUKE : MOBY).enCabina(p), PARADA[quien])
 
 // Llegan por la popa, tocan la cubierta y frenan hasta su parada, con el
@@ -83,12 +86,13 @@ const aterriza = (quien, k) => {
 }
 
 // Los dos cazas detenidos, duke ya sin su piloto; `duke`, sus opciones.
-const estacionados = (duke = {}) => [...BARCO, ...poner(DUKE.caza({ cupula: CUPULA_ABIERTA, ...duke }), 0, PARADA.duke), ...poner(MOBY.caza(), 0, PARADA.moby)]
+const estacionados = (duke = {}) => [...BARCO, ...poner(DUKE.caza({ cupula: CUPULA_ABIERTA, alas: PLEGADAS, ...duke }), 0, PARADA.duke), ...poner(MOBY.caza(), 0, PARADA.moby)]
 
 // ── duke sale de un saltito ──────────────────────────────────────────────
 
 // Se para en el asiento, salta por babor y cae en la cubierta junto al morro,
-// con los brazos arriba, girando hacia la cámara.
+// con los brazos arriba, de cara a la cámara. Mientras baja, detrás de él
+// las puntas de las alas suben hasta quedar casi de pie.
 const ASIENTO = enCubierta('duke', [0, -2.3, 0])
 const AL_LADO = [3.6, CUBIERTA, -9.0]
 const saltito = (u) => {
@@ -97,16 +101,16 @@ const saltito = (u) => {
   const arriba = Math.sin(Math.PI * Math.min(1, k * 1.2))
   const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(pDuke.reposo(s), [0.3, 0.9, s * 1.1], arriba)]))
   const brilla = u > 0.75 && Math.floor(u * 12) % 2 ? M.destello([0.1, 1.55, -0.55]) : []
-  return colocar(figura(pDuke, { tronco: dukeCerrado, manos, extra: brilla, inclina: -8 * arriba }), { k: K, en, giro: 100 * tramo(u, 0.2, 0.7) })
+  return colocar(figura(pDuke, { tronco: dukeCerrado, manos, extra: brilla, inclina: -8 * arriba }), { k: K, en })
 }
 
 // ── duke en el fuselaje ──────────────────────────────────────────────────
 
-// Junto a la toma de aire de babor, que es plana, perla y brilla como un
-// espejo. Su reflejo va dentro, tras un vidrio perla en un hueco del
-// fuselaje, y más arriba: duke no le llega a la toma, y así se ve.
-const ESPEJO = { x0: 1.95, x1: 3.45, y0: -0.6, y1: 0.72, z: -2.04 }
-const enElEspejo = ([x, y, z]) => x > ESPEJO.x0 && x < ESPEJO.x1 && y > ESPEJO.y0 && y < ESPEJO.y1 && z < -1.9
+// Junto a la toma de aire de babor, que es plana, blanca y brilla como un
+// espejo, delante de la rueda. Su reflejo va dentro, tras un vidrio perla en
+// un hueco del fuselaje, y más arriba: duke no le llega a la toma, y así se ve.
+const ESPEJO = { x0: -0.3, x1: 1.2, y0: -0.42, y1: 0.32, z: -1.43 }
+const enElEspejo = ([x, y, z]) => x > ESPEJO.x0 && x < ESPEJO.x1 && y > ESPEJO.y0 && y < ESPEJO.y1 && z < -0.4
 const VIDRIO = placa(
   [[ESPEJO.x0, ESPEJO.y0, ESPEJO.z], [ESPEJO.x1, ESPEJO.y0, ESPEJO.z], [ESPEJO.x1, ESPEJO.y1, ESPEJO.z], [ESPEJO.x0, ESPEJO.y1, ESPEJO.z]],
   0.02,
@@ -114,7 +118,7 @@ const VIDRIO = placa(
   { vidrio: true },
 )
 const PLANO = PARADA.duke[2] + ESPEJO.z
-const SUBE = 1.6
+const SUBE = 1.15
 const SOMBRA = '#4a80e6'
 const voltea = ([x, y, z]) => [x, y, 2 * PLANO - z]
 const espejar = (formas) =>
@@ -129,11 +133,14 @@ const espejar = (formas) =>
       return g
     })
 const SE_PEINA = DUKE_P.gestos.find((g) => g.nombre === 'se peina').pose
-const ANTE_EL_ESPEJO = { k: K, en: [2.7, CUBIERTA, PLANO - 0.75], giro: -90 }
+const FRENTE = (ESPEJO.x0 + ESPEJO.x1) / 2
+const ANTE_EL_ESPEJO = { k: K, en: [FRENTE, CUBIERTA, PLANO - 0.75], giro: -90 }
 const fuselaje = (u) => {
   const duke = colocar(SE_PEINA(u), ANTE_EL_ESPEJO)
-  const brillo = Math.floor(u * 12) % 4 === 0 ? M.destello([0.5, 0.2, 0]).map((f) => ({ ...f, c: [2.2 + 0.8 * ((u * 3) % 1), CUBIERTA + SUBE + 1.2, PLANO - 0.03], r: f.r.map((r) => r * K) })) : []
-  return [...estacionados({ hueco: enElEspejo }), ...poner([VIDRIO], 0, PARADA.duke), ...duke, ...espejar(duke), ...brillo]
+  const brillo = Math.floor(u * 12) % 4 === 0 ? M.destello([0.5, 0.2, 0]).map((f) => ({ ...f, c: [ESPEJO.x0 + 0.25 + 1.0 * ((u * 3) % 1), PARADA.duke[1] + ESPEJO.y1 - 0.12, PLANO - 0.03], r: f.r.map((r) => r * K) })) : []
+  // Bajo la toma no hay espejo: ahí el reflejo no se ve.
+  const reflejo = espejar(duke).filter((f) => (f.c ?? f.centro)[1] > PARADA.duke[1] + ESPEJO.y0)
+  return [...estacionados({ hueco: enElEspejo }), ...poner([VIDRIO], 0, PARADA.duke), ...duke, ...reflejo, ...brillo]
 }
 
 // ── moby y su abolladura ─────────────────────────────────────────────────
@@ -182,8 +189,9 @@ export const TOMAS_3D = {
     escena: (u) => [...BARCO, ...aterriza('duke', Math.min(1, u / 0.5)), ...aterriza('moby', Math.max(0, (u - 0.4) / 0.55))],
     camara: fija([-14, 34, -42], [-14, 23, -6], 64),
   },
-  saltito: { escena: (u) => [...estacionados(), ...saltito(u)], camara: fija([7.4, 22.0, -12.8], [4.2, 22.5, -8], 52) },
-  fuselaje: { escena: fuselaje, camara: fija([5.0, 21.6, -11.8], [2.7, 22.0, -8.3], 52) },
+  // De frente y desde abajo, a la altura de la rueda de proa.
+  saltito: { escena: (u) => [...estacionados({ alas: PLEGADAS * tramo(u, 0.35, 0.9) }), ...saltito(u)], camara: fija([13, 21.3, -8], [0, 23.2, -6], 50) },
+  fuselaje: { escena: fuselaje, camara: fija([FRENTE + 2.3, 21.6, PLANO - 3.8], [FRENTE, 22.0, PLANO - 0.3], 52) },
   abolladura: {
     escena: (u) => [...estacionados(), ...colocar(pegando(u), JUNTO_A_LA_GONDOLA), ...abolladura(tramo(u, 0.25, 0.65))],
     camara: fija([GOLPE[0] + 2.4, 21.4, GOLPE[2] - 3.0], [GOLPE[0] - 0.2, 21.6, GOLPE[2] - 0.3], 50),

@@ -26,7 +26,8 @@ export const TOMAS = [
     ms: 150,
     cuadros: 24,
     lineas: [
-      { quien: ALMIRANTE, texto: 'Tú, quien está detrás de este plano dimensional, lograste tu objetivo.' },
+      { quien: ALMIRANTE, texto: 'Tú, quien está detrás de este plano dimensional,' },
+      { quien: ALMIRANTE, texto: 'el cual no tengo la capacidad de entender, lograste tu objetivo.' },
       { quien: ALMIRANTE, texto: 'Mataste 15 patos porque querías, nos dejaste en ridículo y ahora estamos sin defensa alguna.' },
     ],
   },
@@ -65,7 +66,7 @@ export const TOMAS = [
   { id: 'vuelve', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Vuelve a la proa, pensativo.' }] },
   { id: 'dios', ms: 150, cuadros: 24, lineas: [{ quien: ALMIRANTE, texto: 'Que sea lo que Dios quiera.' }] },
   { id: 'retira', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'El almirante se retira. La cámara se queda quieta.' }] },
-  { id: 'destino', ms: 200, cuadros: 2, lineas: [{ texto: 'Queda en tus manos el destino del portaaviones «Sitting Ducks». Piensa en sus familias.' }] },
+  { id: 'destino', ms: 200, cuadros: 2, lineas: [{ texto: 'Queda en tus manos el destino del portaaviones «Sitting Ducks».' }] },
 ]
 
 export const FINALES = {

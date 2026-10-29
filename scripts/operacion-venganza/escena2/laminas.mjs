@@ -117,7 +117,7 @@ lamina('E2-tomas-reunion', {
   papel: 'Escena 2 · tomas 6 a 12',
   nombre: 'La reunión',
   bajada: 'Lagartijas, una sesión de fotos y ocho autobiografías',
-  detalle: 'El almirante abre la reunión desde la cabecera de la pantalla, que sigue mostrando al atacante (cursor en escritorio, huella en teléfono). Moby habla a los gritos y todavía no llora: el puro está apagado. Duke habla sin abrir los ojos. Sus fotos son instantáneas, con su marco blanco, y pasan una vez cada una: posa sobre su F-15EX en la cubierta, como la aviadora de las fotos de antes, tendido en el morro y de cerca, con el sol detrás. duck-one dicta cátedra con el índice en alto. Cada uno habla en su toma.',
+  detalle: 'El almirante abre la reunión desde la cabecera de la pantalla, que sigue mostrando al atacante (cursor en escritorio, huella en teléfono). Moby habla a los gritos y todavía no llora: el puro está apagado. Duke habla sin abrir los ojos. Sus fotos son instantáneas, con su marco blanco, y pasan una vez cada una: posa sobre su Hornet en la cubierta, como la aviadora de las fotos de antes, tendido en el morro y de cerca, con el sol detrás. duck-one dicta cátedra con el índice en alto. Cada uno habla en su toma.',
   filas: [fila('Caballeros', ['reunion', 'lagartijas', 'sesion'].map(celda), 3), fila('Las fotos', ['fotos', 'autobiografias'].map(celda), 3), fila('Como 8', ['cuantas', 'ocho'].map(celda), 3)],
 })
 

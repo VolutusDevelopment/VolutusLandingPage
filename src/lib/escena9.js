@@ -26,7 +26,7 @@ export const TOMAS = [
     ],
   },
   { id: 'tengo', ms: 150, lineas: [{ quien: MOBY, texto: '¡TENGO COMBUSTIBLE!' }] },
-  { id: 'presupuesto', ms: 150, lineas: [{ quien: TORRE, texto: 'El suyo sí. El del presupuesto no.' }] },
+  { id: 'presupuesto', ms: 150, lineas: [{ quien: TORRE, texto: 'No se consideraron en nuestros cálculos.' }] },
   { id: 'significa', ms: 150, lineas: [{ quien: MOBY, texto: '¡¿QUÉ SIGNIFICA ESO?!' }] },
   { id: 'recortado', ms: 150, lineas: [{ quien: DUKE, texto: 'Que alguien ha recortado la financiación.' }] },
   { id: 'contabilidad', ms: 150, lineas: [{ quien: MOBY, texto: '¡VOY A DESTRUIR EL DEPARTAMENTO DE CONTABILIDAD!' }] },
@@ -34,7 +34,8 @@ export const TOMAS = [
 
   { id: 'regresan', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Los dos cazas regresan al portaaviones.' }] },
   { id: 'aterrizan', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Ambos aterrizan en el Sitting Ducks.' }] },
-  { id: 'saltito', ms: 150, unaVez: true, lineas: [{ texto: 'Duke sale de un saltito…' }] },
+  // Mientras baja, detrás de él se pliegan las alas de su Hornet.
+  { id: 'saltito', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke sale de un saltito…' }] },
   { id: 'fuselaje', ms: 150, lineas: [{ texto: '…y aprovecha de mirarse en el fuselaje.' }] },
   {
     id: 'abolladura',

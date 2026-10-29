@@ -22,7 +22,7 @@ export const TOMAS = [
     ms: 200,
     cuadros: 32,
     unaVez: true,
-    lineas: [{ texto: 'NIVEL 2 — MOBY-DUCK Y DUKE SKYDUCKER.' }, { texto: '«La rabia y la belleza».' }, { texto: 'Los compañeros aparecen en el horizonte, con el sol a la espalda.' }],
+    lineas: [{ texto: 'Los compañeros aparecen en el horizonte, con el sol a la espalda.' }],
   },
   { id: 'moby', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El avión de Moby es oscuro, pesado y está cubierto de marcas de combate.' }] },
   { id: 'duke', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El de Duke brilla bajo el sol y parece recién salido de una exhibición.' }] },
@@ -44,7 +44,7 @@ export const TOMAS = [
   { id: 'humo', ms: 150, lineas: [{ quien: DUKE, texto: 'Perfecto. Intenta no taparme con humo.' }] },
 
   // Lo que graba la cámara de la cabina de Duke, de frente y por su izquierda.
-  { id: 'gira', ms: 150, cuadros: 16, unaVez: true, lineas: [{ texto: 'Duke se gira hacia la cámara de su cabina y le muestra su mejor perfil.' }] },
+  { id: 'gira', ms: 150, cuadros: 16, unaVez: true, lineas: [{ texto: 'Duke se gira hacia la cámara de su cabina y le muestra su mejor perfil y sus increíbles ojos azules.' }] },
   {
     id: 'presenta',
     ms: 150,
@@ -55,7 +55,7 @@ export const TOMAS = [
   },
   { id: 'destellos', ms: 150, lineas: [{ texto: 'Unos destellos rodean a Duke.' }] },
   { id: 'pato', ms: 150, lineas: [{ quien: MOBY, texto: '¡ERES UN PATO CON UN AVIÓN!' }] },
-  { id: 'indescriptible', ms: 150, lineas: [{ quien: DUKE, texto: 'Nah ah, soy indescriptible.' }] },
+  { id: 'indescriptible', ms: 150, lineas: [{ quien: DUKE, texto: 'Nah ah, soy indescriptibleee.' }] },
 
   // Duke lo sigue con la cabeza, y Moby se va contra quien juega.
   { id: 'acelera', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke sigue con la cabeza a Moby, que acelera…' }] },

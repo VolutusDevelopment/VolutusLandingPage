@@ -428,14 +428,61 @@ export const CAZA_DUCK_ONE = f15({
   pintaCola: ([x, y]) => (enEstrella(x + 8.2, y - 2.5, 0.55) ? '#f2c440' : null),
 })
 
-export const CAZA_DUKE = f15({
-  cuerpo: C.perla,
-  colas: C.rosa,
-  piloto: [C.crema, [el([4.75, 1.18, 0], [0.24, 0.16, 0.18], C.corona)]],
-  pintaCuerpo: ([x, y]) => (Math.abs(y - 0.05) < 0.1 && x < 8 ? C.oro : null),
-  pintaAla: ([x, , z]) => (Math.abs(x - (1.8 - (Math.abs(z) - 1.9) * 1.1)) < 0.28 ? C.oro : null),
-  pintaCola: ([, y]) => (Math.abs(y - 3.0) < 0.14 ? C.oro : null),
-})
+// McDonnell Douglas F/A-18C Hornet: 17,1 m de largo, 12,3 m de envergadura
+// y 4,7 m de alto. Una plaza bajo una cúpula de burbuja, las extensiones del
+// borde de ataque (LEX) que nacen junto a la cabina, las tomas de aire bajo
+// ellas, ala trapezoidal, dos derivas inclinadas 20° hacia afuera y dos
+// toberas juntas.
+//
+// El de duke va pintado como los de los Blue Angels, pero blanco donde ellos
+// son azules y rosa donde son dorados: una franja que nace en el morro y se
+// ensancha hasta las LEX, los bordes de ataque, el remate de las derivas y
+// las alas rosa por debajo.
+const ataque = (z) => 0.6 - (Math.abs(z) - 0.95) * 0.503
+const bordeLex = (x) => (x > 2.2 ? 0.55 + (6.2 - x) / 4 : 1.55 + ((2.2 - x) / 2.05) * 0.3)
+const franja = ([x, y], n) => {
+  if (x > 8.35) return C.rosa
+  const t = (8.2 - x) / 7
+  return t > 0 && t < 1 && Math.abs(n[2]) > 0.45 && y < 0.25 + 0.2 * t && y > 0.15 - 0.35 * t ? C.rosa : null
+}
+const alaRosa = ([x, , z], n) => (n[1] < -0.5 || ataque(z) - x < 0.3 ? C.rosa : null)
+
+// Las puntas de las alas se pliegan hacia arriba por una bisagra a 4,1 m del
+// eje, como en la cubierta de un portaaviones; `plegable` dice de qué lado son.
+const BISAGRA = { y: 0.45, z: 4.1 }
+export const plegarAlas = (formas, grados) =>
+  grados ? formas.map((f) => (f.plegable ? transformar([-f.plegable * grados, 0, 0], [0, BISAGRA.y, f.plegable * BISAGRA.z]).formas([f])[0] : f)) : formas
+
+export const CAZA_DUKE = [
+  tubo(
+    [
+      [9.0, 0.05, 0.05, 0.2],
+      [8.4, 0.5, 0.5, 0.2],
+      [7.4, 0.9, 0.9, 0.22],
+      [6.4, 1.15, 1.2, 0.3],
+      [5.2, 1.25, 1.45, 0.3],
+      [3.5, 1.4, 1.5, 0.3],
+      [1.5, 1.7, 1.45, 0.3, 2.4],
+      [-1.5, 1.9, 1.4, 0.3, 2.6],
+      [-4.5, 2.0, 1.25, 0.3, 2.6],
+      [-6.8, 1.9, 1.0, 0.25, 2.6],
+      [-7.5, 1.75, 0.85, 0.25],
+    ],
+    C.blanco,
+    { pinta: franja },
+  ),
+  ...ambos((s) => tubo([[1.35, 0.75, 1.0, -0.05, 3, s * 1.0], [0, 0.8, 1.05, -0.05, 3, s * 1.0], [-2.6, 0.6, 0.8, 0.0, 3, s * 0.8]], C.blanco)),
+  ...ambos((s) => el([1.37, -0.05, s * 1.0], [0.05, 0.42, 0.3], C.oscuro)),
+  ...ambos((s) => placa([[6.2, 0.5, s * 0.55], [2.2, 0.5, s * 1.55], [0.15, 0.5, s * 1.85], [-0.1, 0.5, s * 0.6]], 0.12, C.blanco, { pinta: ([x, , z]) => (bordeLex(x) - Math.abs(z) < 0.22 ? C.rosa : null) })),
+  ...ambos((s) => placa([[ataque(0.95), 0.45, s * 0.95], [ataque(4.1), 0.45, s * 4.1], [-3.47, 0.45, s * 4.1], [-3.5, 0.45, s * 0.95]], 0.2, C.blanco, { pinta: alaRosa })),
+  ...ambos((s) => placa([[ataque(4.1), 0.45, s * 4.1], [ataque(5.7), 0.45, s * 5.7], [-3.2, 0.45, s * 5.7], [-3.47, 0.45, s * 4.1]], 0.14, C.blanco, { pinta: alaRosa, plegable: s })),
+  ...ambos((s) => placa([[-5.4, 0.25, s * 0.95], [-7.3, 0.25, s * 3.29], [-8.15, 0.25, s * 3.29], [-8.0, 0.25, s * 0.95]], 0.14, C.blanco, { pinta: ([x, , z]) => (x > -5.4 - (Math.abs(z) - 0.95) * 0.81 - 0.3 ? C.rosa : null) })),
+  ...ambos((s) => placa([[-2.3, 0.6, s * 0.85], [-3.9, 2.66, s * 1.6], [-5.6, 2.66, s * 1.6], [-6.0, 0.6, s * 0.85]], 0.14, C.blanco, { pinta: ([, y]) => (y > 2.15 ? C.rosa : null) })),
+  ...ambos((s) => el([-7.75, 0.25, s * 0.5], [0.3, 0.42, 0.42], C.grisOscuro)),
+  ...ambos((s) => llama(-8.0, 0.25, s * 0.5, 3.4, 0.8)).flat(),
+  el([4.3, 0.95, 0], [2.0, 0.62, 0.58], C.vidrio, { vidrio: true }),
+  ...cabezaPiloto(5.0, 0.95, C.crema, [el([4.75, 1.18, 0], [0.24, 0.16, 0.18], C.corona)]),
+]
 
 // Fairchild Republic A-10 Thunderbolt II: 16,3 m de largo, 17,5 m de
 // envergadura. Ala recta y baja con góndolas del tren, dos motores altos

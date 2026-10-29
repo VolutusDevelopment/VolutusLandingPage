@@ -46,7 +46,7 @@ const MARCAS = ambos((s) => [
 ]).flat()
 
 // Duke: el sol le saca destellos que van y vienen por el fuselaje y las alas.
-const BRILLOS = [[7.2, 0.7, 0], [3.0, 1.2, 0.4], [-1.0, -0.2, 4.2], [-6.5, 2.6, 1.0], [-1.0, -0.2, -4.2]]
+const BRILLOS = [[7.6, 0.65, 0], [4.0, 1.5, 0.3], [-1.6, 0.55, 4.4], [-4.6, 2.6, 1.6], [-1.6, 0.55, -4.4]]
 const destellos = (puntos, u, tam) =>
   puntos.flatMap((c, i) => ((Math.floor(u * 12) + i) % 3 === 0 ? M.destello(c).map((f) => ({ ...f, r: f.r.map((r) => r * tam) })) : []))
 

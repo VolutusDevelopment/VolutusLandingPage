@@ -58,6 +58,25 @@ const pantallas = (z0, z1, { borde, fondo, linea, columnas }) => (s, z) => {
 
 const mira = (c, n, r, marco, cristal) => [disco(c, n, r + 0.05, 0.03, marco), disco(sum(c, esc(n, 0.05)), n, r, 0.02, cristal)]
 
+// El tablero del Hornet de duke: arriba, las dos pantallas DDI con sus
+// botones en el bisel y, al medio, el teclado del UFC; abajo al centro, la
+// pantalla MPCD, con un corazón. Todo en rosa sobre un tablero perla.
+const ROSA_TABLERO = { bisel: '#7a2848', fondo: '#d8629a', linea: '#fff0f6', tablero: '#f4e6ee' }
+const corazon = (u, v) => (u * u + v * v - 1) ** 3 - u * u * v ** 3 < 0
+const tableroHornet = (s, z) => {
+  const { bisel, fondo, linea, tablero } = ROSA_TABLERO
+  for (const zc of [-0.85, 0.85]) {
+    const [du, ds] = [Math.abs(z - zc), Math.abs(s - 0.64)]
+    if (du > 0.4 || ds > 0.32) continue
+    if (du > 0.32 || ds > 0.25) return Math.floor((z + s) * 14) % 3 === 0 ? linea : bisel
+    return Math.floor(s * 12) % 3 === 0 ? linea : fondo
+  }
+  if (Math.abs(z) < 0.36 && s > 0.04 && s < 0.56) return Math.abs(z) > 0.3 || s < 0.09 || s > 0.51 ? bisel : corazon(z / 0.2, (s - 0.3) / 0.17) ? linea : fondo
+  if (Math.abs(z) < 0.3 && s > 0.64 && s < 0.96) return (Math.floor(z * 12) + Math.floor(s * 14)) % 2 ? linea : bisel
+  return tablero
+}
+const VIDRIO_ROSA = ['#ffe0ee', '#f8b0d0', '#d880aa', '#a05078']
+
 // ── Piezas comunes de cabina ─────────────────────────────────────────────
 
 // El asiento eyectable de cada uno, macizo como el de Duky: respaldo ancho,
@@ -107,20 +126,23 @@ export const CABINAS = {
     ],
   },
   duke: {
-    caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0, 4.5], lomo: 4.5, frente: 1.58,
-    ancho: 2.4, marco: C.oro,
+    caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [5.75, 4.5], lomo: 4.5, frente: 1.58,
+    ancho: 2.4, marco: C.rosa,
     consola: C.rosa, tablero: C.perla, xAsiento: -1.05, pata: C.pico, cadera: -1.45,
-    panel: [-1.3, 1.3, { borde: '#7a2848', fondo: '#d8629a', linea: '#fff0f6', columnas: 3 }],
+    panel: [-1.3, 1.3, tableroHornet],
     // Su asiento es un trono: capitoné rosa con ribete de oro y una corona encima.
     asiento: {
       rampa: C.rosa,
       cabecera: (v, u) => (Math.hypot(v / 0.45, u / 0.8) > 0.8 ? C.oro : Math.hypot(((v + 0.6) % 0.24) - 0.12, ((u + 0.6) % 0.24) - 0.12) < 0.03 ? C.blanco : null),
       remate: [[[0.05, 1.5, 0], [0.14, 0.08, 0.34], C.oro], ...[-0.25, 0, 0.25].map((z) => [[0.05, 1.63, z], [0.06, 0.11, 0.06], C.oro]), [[0.14, 1.5, 0], [0.07, 0.06, 0.07], C.boca]],
     },
-    // Un espejo de belleza con bombillas, de lado sobre el tablero, para mirarse.
+    // El HUD con el cristal rosa y, colgado del arco del parabrisas, un
+    // espejo de belleza con bombillas, de lado sobre el tablero, para mirarse.
     delante: () => [
-      ...mira([3.7, 0.85, 0.75], uni([-1, -0.2, -0.35]), 0.36, C.oro, C.vidrio),
-      ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => el([3.67, 0.85 + 0.44 * Math.sin((i / 8) * Math.PI * 2), 0.75 + 0.44 * Math.cos((i / 8) * Math.PI * 2)], [0.035, 0.035, 0.035], C.blanco, { flat: '#fff8d0', brilla: true })),
+      placa([[2.3, -1.0, -0.34], [2.3, -1.0, 0.34], [2.15, -0.4, 0.34], [2.15, -0.4, -0.34]], 0.02, VIDRIO_ROSA, { vidrio: true }),
+      ...ambos((s) => hueso([2.3, -1.0, s * 0.37], [2.15, -0.4, s * 0.37], 0.03, C.oro)),
+      ...mira([3.7, 0.4, 0.55], uni([-1, -0.2, -0.35]), 0.28, C.oro, C.vidrio),
+      ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => el([3.67, 0.4 + 0.36 * Math.sin((i / 8) * Math.PI * 2), 0.55 + 0.36 * Math.cos((i / 8) * Math.PI * 2)], [0.035, 0.035, 0.035], C.blanco, { flat: '#fff8d0', brilla: true })),
     ],
   },
   'moby-duck': {
@@ -161,7 +183,7 @@ const interior = (cfg) => {
     caja(1.6, 3.0, 2 * (a - 0.46), 1.2, -2.4, 0, cfg.tablero),
     caja(2.0, 3.0, 2 * (a - 0.46), 0.8, -1.4, 0, cfg.tablero),
     placa([[2.0, -1.05, -a + 0.46], [3.0, -1.0, -a + 0.46], [3.0, -1.0, a - 0.46], [2.0, -1.05, a - 0.46]], 0.1, cfg.tablero),
-    panelInclinado(z0, z1, pantallas(z0, z1, estilo)),
+    panelInclinado(z0, z1, typeof estilo === 'function' ? estilo : pantallas(z0, z1, estilo)),
     ...(cfg.asiento ? asiento(cfg.xAsiento, cfg.asiento) : []),
     ...(cfg.pata ? piernas(cfg.cadera, cfg.pata) : []),
     ...cfg.delante(),
@@ -197,7 +219,8 @@ export const avion = (cfg) => {
   // La cabina es una abertura en el fuselaje, del tamaño de la cúpula vista desde arriba.
   const hueco = ([x, y, z]) => y > cupula.c[1] - 0.25 && ((x - cupula.c[0]) / cupula.r[0]) ** 2 + (z / cupula.r[2]) ** 2 < 0.92
   const sinCabecita = cfg.caza.filter((f) => f.vidrio || f.k !== 'e' || Math.hypot(f.c[0] - hx, f.c[1] - hy) > 0.5 || Math.abs(f.c[2]) > 0.3)
-  // La cúpula del F-15EX es de dos plazas y en estos cazas va uno solo. Como en
+  // La cúpula del F-15EX es de dos plazas y en estos cazas va uno solo (la del
+  // Hornet, de una, se cierra igual). Como en
   // el F-35, la cabina es una bañera del color del caza por fuera y de las
   // consolas por dentro, con el borde a media cúpula; tras el asiento, desde el
   // arco `lomo`, el vidrio cubre un carenado a la altura del apoyacabezas.

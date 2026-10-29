@@ -1,5 +1,5 @@
 // Las fotos de la sesión de duke skyducker, como las de los aviadores de
-// antes: posa sobre su F-15EX en la cubierta del Sitting Ducks, al atardecer,
+// antes: posa sobre su Hornet en la cubierta del Sitting Ducks, al atardecer,
 // con nubes y cazas que pasan. Cada foto lleva su marco blanco de
 // instantánea, puesto justo delante de la cámara.
 //
@@ -18,7 +18,7 @@ const esc = (a, k) => a.map((v) => v * k)
 
 // Su caza estacionado en la cubierta, cerrado y con los motores apagados; él,
 // a la escala que tiene en la cabina.
-const EN = [10, 23.0, 6]
+const EN = [10, 22.8, 6]
 const enCaza = (p) => sum(p, EN)
 const CAZA = avion(CABINAS.duke)
   .filter((f) => !f.luz)
@@ -61,21 +61,21 @@ const sobreElAla = () =>
       { ...quieto, pierna: { ...pDuke.pierna, A: 0.4, alto: 0.7 } },
       { tronco: dukeCerrado, manos: { 1: [0.3, 1.0, 1.5], [-1]: [-0.5, -0.7, -1.35] }, extra: destello([0.75, 1.6, -0.2]), fase: 0.65, sinSombra: true },
     ),
-    { k: K, en: enCaza([-1.6, 0.35, 2.5]), giro: -30 },
+    { k: K, en: enCaza([-1.6, 0.55, 2.5]), giro: -30 },
   )
 
 // 2 · Tendido en el morro, de lado, con la cabeza en la mano.
 const enElMorro = () =>
-  colocar(transformar([-90, -90, 0]).formas(figura(pDuke, { tronco: dukeCerrado, manos: { 1: [0.15, -1.15, 1.05], [-1]: [0.35, 0.55, -0.75] }, sinSombra: true })), { k: K, en: enCaza([7.3, 0.85, 0]), suelo: -1.1 })
+  colocar(transformar([-90, -90, 0]).formas(figura(pDuke, { tronco: dukeCerrado, manos: { 1: [0.15, -1.15, 1.05], [-1]: [0.35, 0.55, -0.75] }, sinSombra: true })), { k: K, en: enCaza([7.3, 0.74, 0]), suelo: -1.1 })
 
 // 3 · De cerca, con la mano en el mentón y el sol detrás.
 const retrato = () =>
-  colocar(figura(pDuke, { tronco: dukeCerrado, manos: { 1: [0.85, 0.3, 0.35], [-1]: [0.15, -1.15, -1.05] }, extra: destello([0.6, 1.5, 0.5]), sinSombra: true }), { k: K, en: enCaza([-1.6, 0.35, 2.5]) })
+  colocar(figura(pDuke, { tronco: dukeCerrado, manos: { 1: [0.85, 0.3, 0.35], [-1]: [0.15, -1.15, -1.05] }, extra: destello([0.6, 1.5, 0.5]), sinSombra: true }), { k: K, en: enCaza([-1.6, 0.55, 2.5]) })
 
 const FOTOS = [
-  { duke: sobreElAla, camara: [enCaza([1.4, 0.55, 5.4]), enCaza([-1.6, 0.95, 2.5]), 36] },
-  { duke: enElMorro, camara: [enCaza([8.6, 1.5, 4.2]), enCaza([7.3, 1.0, 0]), 32] },
-  { duke: retrato, camara: [enCaza([0.4, 1.3, 4.3]), enCaza([-1.6, 1.12, 2.5]), 26] },
+  { duke: sobreElAla, camara: [enCaza([1.4, 0.75, 5.4]), enCaza([-1.6, 1.15, 2.5]), 36] },
+  { duke: enElMorro, camara: [enCaza([8.6, 1.4, 4.2]), enCaza([7.3, 0.9, 0]), 32] },
+  { duke: retrato, camara: [enCaza([0.4, 1.5, 4.3]), enCaza([-1.6, 1.32, 2.5]), 26] },
 ]
 
 // Tres fotos, una tras otra, en el instante u ∈ [0, 1).
