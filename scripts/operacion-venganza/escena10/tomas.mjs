@@ -9,7 +9,7 @@
 import { ASIENTOS, ENTRADA, entra, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { PRENDIDO, SIN_HUMO, duckOne, duke, duky, moby, sentar } from '../escena2/patoon.mjs'
 import * as M from '../pilotos/modelos.mjs'
-import { PERSONAJES, figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
+import { figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { calada } from '../pilotos/calada.mjs'
 import { hablar, silaba, suave } from '../escena1/personajes.mjs'
 
@@ -17,7 +17,6 @@ const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 const xz = ({ en }) => [en[0], en[2]]
 
-const [DUCK] = PERSONAJES
 const PANTALLA = 'bajas'
 
 // ── Quién está y dónde ───────────────────────────────────────────────────
@@ -71,10 +70,6 @@ const mirada = (u) => {
   return sentar(pDuke, figura(pDuke, { tronco, manos: { 1: pDuke.reposo(1), [-1]: pDuke.reposo(-1) }, extra: brillan }))
 }
 
-// ── duck-one señala a duky ───────────────────────────────────────────────
-
-const señala = (u) => DUCK.gestos.find((g) => g.nombre === 'señala').pose(u)
-
 // ── Las cámaras ──────────────────────────────────────────────────────────
 
 // duck-one, desde la mesa; moby y duke, cada uno desde el otro lado.
@@ -105,8 +100,6 @@ export const TOMAS_3D = {
   // De frente, a la altura de sus ojos.
   mirada: { escena: sala(lloroso((u) => ({ duke: mirada(u) }))), camara: fija([-1.0, 1.05, 0.6], [-1.0, 1.0, -1.0], 44) },
 
-  esquina: { escena: sala(lloroso((u) => ({ duckOne: [señala(u), aDuky(DUCK_ONE)] }))), camara: fija([1.8, 1.3, 0.55], [2.75, 1.05, -1.0], 48) },
-  silla: { escena: sala(lloroso(() => ({}))), camara: fija([-2.6, 1.25, -0.6], [-1.6, 0.95, 0.9], 34) },
   recurso: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_DE_CERCA },
   nuclear: { escena: sala(lloroso((u) => ({ moby: moby.hablando(u, PRENDIDO) }))), camara: A_MOBY },
   especializado: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK },

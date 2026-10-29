@@ -25,7 +25,6 @@ export const TOMAS = [
     lineas: [{ texto: 'Duck-One aterriza, casi atropellando a los marinos de cubierta, que deben correr del caza.' }],
   },
   { id: 'pose', ms: 150, unaVez: true, lineas: [{ texto: 'Sale del avión con una pose heroica.' }] },
-  { id: 'medalla', ms: 150, unaVez: true, lineas: [{ texto: 'El mecánico debe retirar una medalla atrapada en la cabina.' }] },
   { id: 'ybien', ms: 150, lineas: [{ quien: MOBY, texto: '¿Y bien?' }] },
   {
     id: 'estimasiones',
@@ -50,7 +49,7 @@ export const TOMAS = [
     ms: 150,
     cuadros: 24,
     unaVez: true,
-    lineas: [{ texto: 'Duck-One se marcha con la cabeza alta.' }, { texto: 'Se le caen un par de medallas de camino.' }],
+    lineas: [{ texto: 'Duck-One se marcha con la cabeza alta.' }],
   },
   { id: 'salta', ms: 150, unaVez: true, lineas: [{ texto: 'Mirando al horizonte, salta levantando la mano con el dedo índice.' }] },
   { id: 'fase', ms: 150, lineas: [{ quien: DUCK_ONE, texto: '¡Preparad la siguiente fase de la operasión benganza!' }] },

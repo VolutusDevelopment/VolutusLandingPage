@@ -5,14 +5,14 @@
 // duck-one vuelve al Sitting Ducks: frena su caza en la cubierta, de babor, y
 // moby y duke lo esperan al costado del avión. Todo en metros del barco.
 
-import { el, transformar } from '../pilotos/tres.mjs'
+import { transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
-import { RAMPAS as C, disco, hueso } from '../pilotos/modelos.mjs'
+import { RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, figura, pDuckOne, pMoby, pDuke, dukeCerrado } from '../pilotos/cuerpos.mjs'
 import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
-import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, marineroTronco, pMarinero, silaba, suave } from '../escena1/personajes.mjs'
+import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { giroHacia } from '../escena2/reunion.mjs'
-import { EN_CATAPULTA, ESCALA as K, SUELO, caza, enPiloto } from '../escena3/caza.mjs'
+import { ESCALA as K, SUELO, caza } from '../escena3/caza.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -31,7 +31,6 @@ const CUBIERTA = 20.8
 // EN_CATAPULTA, así que aquí se corre a `PARADA`.
 const PARADA = [0, CUBIERTA - SUELO, -6]
 const enParada = (p) => sum(p, PARADA)
-const pilotoEnParada = (p) => sum(res(enPiloto(p), EN_CATAPULTA), PARADA)
 const BARCO = [MAR, ...portaaviones()]
 const CUPULA_ABIERTA = 40
 const estacionado = (opciones = {}) => [...BARCO, ...poner(caza({ cupula: CUPULA_ABIERTA, ...opciones }), 0, PARADA)]
@@ -57,16 +56,6 @@ const pose = (u) => {
 // Habla con el índice arriba, como siempre.
 const hablando = (u) => DUCK.hablando(u, { tronco: M.DUCK_ONE })
 
-// Se va con el mentón en alto, y suelta una medalla y otra por el camino.
-const MEDALLAS = [
-  { cae: 0.3, en: [0.95, -0.55, 0.3] },
-  { cae: 0.55, en: [0.95, -0.8, -0.25] },
-]
-const medalla = (centro, giro = 0, r = 0.08) => [
-  disco(centro, [Math.cos(giro), Math.sin(giro), 0], r, r / 4, C.oro),
-  hueso(sum(centro, [0, r, 0]), sum(centro, [0, r * 2.2, 0]), r * 0.45, ['#ff8a7a', '#d83a2c', '#9a2218', '#5a1008']),
-]
-
 // En el horizonte: salta, con la mano arriba y el índice al cielo.
 const saltaYSeñala = (u, abre) => {
   const vuelo = Math.max(0, Math.sin(tramo(u, 0.1, 0.55) * Math.PI))
@@ -81,28 +70,6 @@ const saltaYSeñala = (u, abre) => {
 const dukeQuieto = () => figura(pDuke, { tronco: dukeCerrado, manos: { 1: pDuke.reposo(1), [-1]: pDuke.reposo(-1) } })
 // moby, de brazos cruzados y con el puro prendido desde la escena 2.
 const mobyQuieto = (u) => figura({ ...pMoby, brazo: null }, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8 }), ...M.MOBY_BRAZOS_CRUZADOS] })
-
-// El mecánico, verde como los de la escena 2, sube por una escalerilla al
-// costado de la cabina y tironea hasta sacar una medalla enganchada.
-const MECANICO = { en: pilotoEnParada([0.3, -0.6, -4.2]), giro: -90 }
-const mecanico = (u) => {
-  const p = pMarinero(OFICIOS.verde.color)
-  const sale = tramo(u, 0.55, 0.75)
-  const tiron = 0.12 * Math.max(0, Math.sin(u * Math.PI * 10)) * (1 - sale)
-  const dentro = [2.5 - tiron, -0.4, 0]
-  const arriba = [0.7, 0.9, -0.9]
-  const manos = lerp(dentro, arriba, sale)
-  return figura(p, {
-    tronco: marineroTronco(OFICIOS.verde.color),
-    manos: { 1: sum(manos, [0, 0, 0.18]), [-1]: sum(manos, [0, 0, -0.18]) },
-    extra: medalla(sum(manos, [0.2, -0.2, 0]), Math.PI / 2 + 0.6 * sale, 0.35),
-    inclina: -12 * (1 - sale) + 4 * sale,
-  })
-}
-const escalerilla = (() => {
-  const [x, y, z] = MECANICO.en
-  return [-0.25, 0.25].map((dx) => hueso([x + dx, CUBIERTA, z - 0.6], [x + dx, y + 0.1, z], 0.04, C.rayas))
-})()
 
 // ── En la cubierta ───────────────────────────────────────────────────────
 
@@ -165,10 +132,6 @@ export const TOMAS_3D = {
     // Desde abajo, como en los afiches.
     camara: fija([4.6, CUBIERTA + 0.2, -10.4], [3.2, CUBIERTA + 0.9, -8.2], 60),
   },
-  medalla: {
-    escena: (u) => [...estacionado(), ...escalerilla, ...colocar(mecanico(u), { k: K, ...MECANICO })],
-    camara: fija(sum(MECANICO.en, [1.4, 0.7, -2.2]), sum(MECANICO.en, [0, 0.55, 0.5]), 55),
-  },
   ybien: { escena: (u) => cubierta(u, { mobyF: MOBY.hablando(u) }), camara: plano('duck', 'moby') },
   estimasiones: { escena: (u) => cubierta(u, { duck: hablando(u) }), camara: plano('moby', 'duck') },
   lediste: { escena: (u) => cubierta(u, { mobyF: MOBY.hablando(u) }), camara: plano('duck', 'moby', { lado: -0.4 }) },
@@ -179,14 +142,8 @@ export const TOMAS_3D = {
   bastante: { escena: (u) => cubierta(u, { duck: hablando(u) }), camara: plano('duke', 'duck', { lado: -0.4 }) },
   marcha: {
     escena: (u) => {
-      const camino = (t) => sum(AQUI.duck, [5 * t, 0, 0])
-      const caidas = MEDALLAS.filter(({ cae }) => u > cae).flatMap(({ cae, en }) => {
-        const k = Math.min(1, (u - cae) / 0.08)
-        const desde = colocar([el(en, [0.01, 0.01, 0.01], C.oro)], { k: K, en: camino(cae), giro: 0 })[0].c
-        const centro = [desde[0], desde[1] + (CUBIERTA + 0.03 - desde[1]) * k * k, desde[2]]
-        return medalla(centro, (Math.PI / 2) * k)
-      })
-      return [...estacionado(), ...colocar(mobyQuieto(u), DONDE.moby), ...colocar(dukeQuieto(), DONDE.duke), ...colocar(DUCK.andando((u * 6) % 1, { tronco: cabezaAlta(14) }), { k: K, en: camino(u), giro: 0 }), ...caidas]
+      const camino = sum(AQUI.duck, [5 * u, 0, 0])
+      return [...estacionado(), ...colocar(mobyQuieto(u), DONDE.moby), ...colocar(dukeQuieto(), DONDE.duke), ...colocar(DUCK.andando((u * 6) % 1, { tronco: cabezaAlta(14) }), { k: K, en: camino, giro: 0 })]
     },
     camara: fija([5, CUBIERTA + 0.9, -17.5], [5.2, CUBIERTA + 0.4, -10.5], 46),
   },

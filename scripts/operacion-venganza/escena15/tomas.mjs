@@ -53,10 +53,8 @@ const aterriza = (u) => {
 }
 
 // El marinero lo saca como lo metió en el hangar (escena11/tomas.mjs): la
-// misma toma, al revés. Sentado, sus pies son los de la cabina; al dejar el
-// asiento, se los lleva puestos.
-const SE_PARA = 0.2
-const saca = (u) => [...BARCO, ...poner([...caza({ cupula: CUPULA_ABIERTA, piernas: u < SE_PARA }), ...escalerilla, ...deposita(1 - u, u >= SE_PARA)], 0, PARADA)]
+// misma toma, al revés.
+const saca = (u) => [...BARCO, ...poner([...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(1 - u)], 0, PARADA)]
 const SOBRE_LA_CABINA = (() => {
   const de = (p) => sum(enCabina(p), PARADA)
   return fija(de([9.5, 4.2, -1.6]), de([0, 0.4, -1.2]), 54)

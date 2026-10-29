@@ -7,13 +7,28 @@
 // atacante: 'cursor' o 'huella'.
 
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON, silaba, suave } from './personajes.mjs'
-import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, sala, colocar } from './lugares.mjs'
+import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, poner, sala, colocar } from './lugares.mjs'
+import { DUKE, MOBY } from '../escena9/cazas.mjs'
+import { SUELO as SUELO_DUCK_ONE, caza as cazaDuckOne } from '../escena3/caza.mjs'
 
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 const alarma = (u) => Math.floor(u * 12) % 2
 
 // ── Fuera ────────────────────────────────────────────────────────────────
+
+// Los cazas del escuadrón, estacionados en fila a estribor, a popa de la isla
+// y con la cola hacia el borde: el F-15 de duck-one, el A-10 de moby y el
+// Hornet de duke, con las alas plegadas, todos con el motor apagado (sin las
+// estelas, las formas con luz). Quedan fuera de la pista en ángulo y del
+// camino de la cámara que sube a la isla.
+const ESTACIONADOS = [
+  [cazaDuckOne().filter((f) => !f.luz), SUELO_DUCK_ONE, -100],
+  [MOBY.caza(), MOBY.suelo, -120],
+  [DUKE.caza({ alas: 100 }), DUKE.suelo, -140],
+].flatMap(([formas, suelo, x]) => poner(formas, 30, [x, 20.8 - suelo, 10]))
+// El Sitting Ducks con sus cazas, las alarmas y el radar, que da una vuelta por tira.
+const sittingDucks = (u) => [...portaaviones({ alarma: alarma(u), radar: u * 360 }), ...ESTACIONADOS]
 
 // Lejos, a ras del agua: el mar vacío; aparece un portaaviones, otro, otro más
 // y la escolta, y el Sitting Ducks, una mancha en el horizonte, se viene acercando.
@@ -29,7 +44,7 @@ const FLOTA = [
 const llegada = (u) => [
   MAR,
   ...FLOTA.filter(([desde]) => u >= desde).flatMap(([, formas, giro, en]) => navegando(formas, giro, en)),
-  ...(u >= 0.1 ? navegando(portaaviones({ alarma: alarma(u) }), 158, [3800 - 3350 * suave((u - 0.1) / 0.9), 0, 300 - 120 * u]) : []),
+  ...(u >= 0.1 ? navegando(sittingDucks(u), 158, [3800 - 3350 * suave((u - 0.1) / 0.9), 0, 300 - 120 * u]) : []),
 ]
 
 // De cerca, por estribor: la cámara corre por el costado desde la proa hasta el
@@ -39,23 +54,42 @@ const ESCOLTA = [
   [destructor(), -5, [600, 0, -1400]],
   [portaaviones({ avion: false }), 5, [-200, 0, -2600]],
 ]
-const costado = (u) => [MAR, ...ESCOLTA.flatMap(([formas, giro, en]) => navegando(formas, giro, en)), ...navegando(portaaviones({ alarma: alarma(u) }), 0, [0, 0, 0], [168, 6, 10])]
+const costado = (u) => [MAR, ...ESCOLTA.flatMap(([formas, giro, en]) => navegando(formas, giro, en)), ...navegando(sittingDucks(u), 0, [0, 0, 0], [168, 6, 10])]
 const CENTRO_DEL_NOMBRE = NOMBRE.x + 25.6
 
-// En cubierta: marineros que corren de un lado a otro y el avión de mantenimiento atravesado en la pista.
+// La órbita: de la popa, a contraluz, por estribor, que se acerca y baja
+// hasta la amura, donde empieza la panorámica del nombre. En grados desde la
+// proa hacia estribor.
+const ORBITA = { desde: 205, hasta: 35, lejos: [290, 250], alto: [70, 24] }
+const enOrbita = (u) => {
+  const k = suave(u)
+  const a = ((ORBITA.desde + (ORBITA.hasta - ORBITA.desde) * k) * Math.PI) / 180
+  const r = ORBITA.lejos[0] + (ORBITA.lejos[1] - ORBITA.lejos[0]) * k
+  return [r * Math.cos(a), ORBITA.alto[0] + (ORBITA.alto[1] - ORBITA.alto[0]) * k, r * Math.sin(a)]
+}
+
+// En cubierta: siete marineros corren de un lado a otro a lo largo de la
+// cubierta, cada uno derecho de `desde` a `hasta` ([x, z]) durante toda la
+// toma, y se cruzan de a dos sin chocar; el avión de mantenimiento sigue
+// atravesado en la pista. Los pasos siguen lo que avanzan, a 1,6 m por zancada.
 const CORREDORES = [
-  [OFICIOS.amarillo, [96, -1], 90, 0],
-  [OFICIOS.rojo, [92, 6], -90, 0.3],
-  [OFICIOS.morado, [86, -5], 70, 0.6],
-  [OFICIOS.verde, [98, 3], -100, 0.15],
+  [OFICIOS.verde, [97, -8], [97.5, 6]],
+  [OFICIOS.amarillo, [94, 7], [93, -9]],
+  [OFICIOS.rojo, [89, -3], [71, -7]],
+  [OFICIOS.morado, [72.3, -13.5], [88.3, 0.5]],
+  [OFICIOS.amarillo, [66, 6], [64, -14]],
+  [OFICIOS.verde, [61, -13], [63, 5]],
+  [OFICIOS.rojo, [57, 4], [49, -11]],
 ]
+const ZANCADA = 1.6
 const cubierta = (u) => [
   MAR,
-  ...portaaviones({ alarma: alarma(u) }),
-  ...CORREDORES.flatMap(([oficio, [x, z], giro, desfase]) => {
-    const fase = (u * 3 + desfase) % 1
-    const avance = Math.sin(((u + desfase) % 1) * Math.PI * 2) * 5
-    return colocar(MARINEROS.corre(oficio, fase), { k: 0.6, giro, en: [x, 20.8, z + avance * (giro > 0 ? -1 : 1)] })
+  ...sittingDucks(u),
+  ...CORREDORES.flatMap(([oficio, desde, hasta], i) => {
+    const [x, z] = lerp(desde, hasta, u)
+    const giro = (Math.atan2(desde[1] - hasta[1], hasta[0] - desde[0]) * 180) / Math.PI
+    const fase = ((Math.hypot(hasta[0] - desde[0], hasta[1] - desde[1]) * u) / ZANCADA + i * 0.37) % 1
+    return colocar(MARINEROS.corre(oficio, fase), { k: 0.6, giro, en: [x, 20.8, z] })
   }),
 ]
 
@@ -100,6 +134,7 @@ const SOBRE_EL_HOMBRO = [-2.6, 1.95, -2.3]
 
 export const TOMAS_3D = {
   llegada: { escena: llegada, camara: fija([0, 6, 0], [1000, -12, 180], 40) },
+  orbita: { escena: costado, camara: (u) => [enOrbita(u), [-10, 22, 0], 46] },
   nombre: {
     escena: costado,
     camara: (u) => {
@@ -109,7 +144,7 @@ export const TOMAS_3D = {
   },
   cubierta: { escena: cubierta, camara: fija([104, 23.2, 5], [-20, 28, -8], 72) },
   subida: {
-    escena: (u) => [MAR, ...portaaviones({ alarma: alarma(u) })],
+    escena: (u) => [MAR, ...sittingDucks(u)],
     camara: (u) => [lerp([20, 23, 6], [-2, 42, 13], suave(u)), lerp([-25, 36, 27], [-30, 41, 27], suave(u)), 62],
   },
   sala: { escena: dentro('bajas', pregunta), camara: fija([-3.6, 2.5, -4.4], [3, 1.0, 1.4], 80) },

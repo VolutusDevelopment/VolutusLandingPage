@@ -39,17 +39,21 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'El mar, vacío. Se oye un ruido lejano de motores.' }, { texto: 'Aparece un portaaviones. Después otro. Y otro más.' }],
   },
-  // Panorámica por el costado del barco, hasta su nombre.
+  // La cámara da la vuelta al Sitting Ducks, de la popa a la amura de estribor.
   {
-    id: 'nombre',
-    ms: 200,
-    cuadros: 24,
+    id: 'orbita',
+    ms: 150,
+    cuadros: 40,
     unaVez: true,
     lineas: [{ texto: 'El más cercano, el Sitting Ducks, se aproxima lentamente.' }],
   },
+  // Y sigue en panorámica por el costado, hasta su nombre.
+  { id: 'nombre', ms: 200, cuadros: 24, unaVez: true, lineas: [] },
   {
     id: 'cubierta',
-    ms: 300,
+    ms: 90,
+    cuadros: 40,
+    unaVez: true,
     lineas: [{ texto: 'Suenan las alarmas. Los marineros corren de un lado a otro y un avión de mantenimiento bloquea la pista.' }],
   },
   { id: 'subida', ms: 150, unaVez: true, lineas: [] },

@@ -2,7 +2,7 @@
 // Ducks con su cubierta, la escolta y la sala de mando de la isla, con la
 // pantalla de las bajas. Proa hacia +x, arriba +y, estribor hacia +z.
 
-import { el, placa, tubo, transformar } from '../pilotos/tres.mjs'
+import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso, ambos, disco } from '../pilotos/modelos.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -136,28 +136,68 @@ const ISLA = ['#d0d8e0', '#a4b0bc', '#7a8692', '#46505a']
 const AMARILLO = '#f2c440'
 
 
-// El nombre va a los dos costados, bajo la cubierta y a proa de la isla, y se lee de afuera.
+// El nombre va a los dos costados, bajo la cubierta y a proa de la isla, y en
+// la popa; siempre se lee de afuera.
 export const NOMBRE = { texto: 'SITTING DUCKS', x: 40 }
+const POPA = { alto: 2.5, y: 10, z: -ancho(NOMBRE.texto, 2.5) / 2 }
 
-const casco = tubo(
-  [
-    [-158, 36, 21, 8.5, 6],
-    [-120, 40, 21, 8.5, 6],
-    [80, 40, 21, 8.5, 6],
-    [125, 30, 21, 9, 5],
-    [150, 16, 20, 10, 4],
-    [163, 3, 18, 11, 3],
-  ],
+// El ascensor de popa, a estribor detrás de la isla, como en un Nimitz: una
+// plataforma por fuera del casco que sube del piso del hangar a la cubierta.
+// El hangar va dentro del casco y se abre al ascensor por un portalón.
+export const ASCENSOR = { x0: -88, x1: -64, z0: 22, z1: 38 }
+export const HANGAR = { x0: -104, x1: -58, z0: -12, piso: 12, techo: 19.15, portalon: 18.4 }
+const dentroDelHangar = ([x, y, z]) => x > HANGAR.x0 && x < HANGAR.x1 && y > HANGAR.piso - 0.05 && z > HANGAR.z0
+
+// Las cuadernas del casco, de popa a proa: [x, manga en la flotación, manga
+// bajo la cubierta], las dos a cada lado. Angosto en el agua, se abre hacia
+// arriba hasta la cubierta, y en la proa más: corta el mar con la roda y se
+// ensancha hasta la cubierta de las catapultas. Bajo el agua se recoge en la quilla.
+const CUADERNAS = [
+  [-158, 14, 17.5],
+  [-135, 16.5, 18.6],
+  [-100, 17.8, 19],
+  [70, 17.8, 19],
+  [105, 15.5, 18.8],
+  [128, 10.5, 17],
+  [148, 4.5, 13],
+  [160, 1.2, 9],
+  [166, 0.3, 6],
+]
+const BORDA = 19.2
+const ALTOS = [-2, -0.6, 0, 2.5, 5, 7.5, 10, 12.5, 15, 17, BORDA]
+const manga = (abajo, arriba, y) => (y < 0 ? abajo * (1 + y * 0.18) : abajo + (arriba - abajo) * (y / BORDA) ** 2)
+// La manga del casco en (x, y), entre las dos cuadernas que la rodean.
+const mangaEn = (x, y) => {
+  const i = Math.max(1, CUADERNAS.findIndex(([cx]) => cx >= x))
+  const [[x0, a0, b0], [x1, a1, b1]] = [CUADERNAS[i - 1], CUADERNAS[i]]
+  const k = Math.min(1, Math.max(0, (x - x0) / (x1 - x0)))
+  return manga(a0 + (a1 - a0) * k, b0 + (b1 - b0) * k, y)
+}
+const cuaderna = ([x, abajo, arriba]) => {
+  const estribor = ALTOS.map((y) => [x, y, manga(abajo, arriba, y)])
+  return [...estribor, ...estribor.toReversed().map(([, y, z]) => [x, y, -z])]
+}
+
+const casco = forro(
+  CUADERNAS.map(cuaderna),
   CASCO,
   {
     pinta: ([x, y, z]) => {
       if (x > 124 && x < 146 && y > 7 && y < 18 && enTexto('15', z > 0 ? x - 124 : 146 - x, y - 7, 10)) return '#f4f4ee'
       if (x > NOMBRE.x && x < NOMBRE.x + ancho(NOMBRE.texto, 4) && y > 4 && y < 8 && enTexto(NOMBRE.texto, z > 0 ? x - NOMBRE.x : NOMBRE.x + ancho(NOMBRE.texto, 4) - x, y - 4, 4)) return '#f4f4ee'
-      if (y > 12 && y < 17 && ((x > -60 && x < -35) || (x > 15 && x < 40))) return '#2a3036'
+      if (x < -157.5 && enTexto(NOMBRE.texto, z - POPA.z, y - POPA.y, POPA.alto)) return '#f4f4ee'
+      if (y > 12 && y < 17 && x > 15 && x < 40) return '#2a3036'
       return null
     },
+    // Donde va el hangar no hay casco: lo cubren sus paredes.
+    hueco: dentroDelHangar,
   },
 )
+
+// Donde la cubierta vuela por fuera del casco, un faldón inclinado la une
+// al costado, de `y` metros hacia arriba: de `a` a `b`, los dos [x, z] del
+// borde de la cubierta, sobre el lado `s` (1 estribor, -1 babor).
+const faldon = ([xa, za], [xb, zb], s, y = 8) => placa([[xa, BORDA, za], [xb, BORDA, zb], [xb, y, s * mangaEn(xb, y)], [xa, y, s * mangaEn(xa, y)]], 0.4, CASCO)
 
 // Pista en ángulo hacia babor, con su eje a trazos y sus bordes; catapultas de proa en amarillo; el 15 en la proa.
 const pintaCubierta = ([x, y, z]) => {
@@ -170,30 +210,89 @@ const pintaCubierta = ([x, y, z]) => {
   return null
 }
 
+// La cubierta vuela por fuera del casco: a babor, bajo la pista en ángulo,
+// los faldones la sostienen.
 const cubierta = [
   placa([[-160, 20, -19], [-160, 20, 22], [150, 20, 22], [166, 20, 6], [166, 20, -6], [150, 20, -19]], 1.6, CUBIERTA, { pinta: pintaCubierta }),
   placa([[-150, 20, -19], [-40, 20, -36], [40, 20, -36], [70, 20, -19]], 1.6, CUBIERTA, { pinta: pintaCubierta }),
+  faldon([-150, -19], [-40, -36], -1),
+  faldon([-40, -36], [40, -36], -1),
+  faldon([40, -36], [70, -19], -1),
 ]
 
 const caja = (x0, x1, ancho, alto, yc, zc, rampa, o) => tubo([[x0, ancho, alto, yc, 8, zc], [x1, ancho, alto, yc, 8, zc]], rampa, o)
 
-// La isla, a estribor: el puente de mando con sus ventanales y, arriba, las
-// balizas de alarma. Va sobre un saliente de la cubierta que el casco sostiene
-// desde el agua, como en un Nimitz: sin él, la isla quedaba en el aire.
-const isla = (alarma) => [
-  caja(-46, -4, 14, 19, 10.5, 26, CASCO),
-  placa([[-46, 20, 21], [-46, 20, 33], [-4, 20, 33], [-4, 20, 21]], 1.6, CUBIERTA),
-  caja(-40, -10, 9, 18, 29.5, 27, ISLA),
-  caja(-43, -13, 11, 6, 41, 27, ISLA, { pinta: ([x, y, z]) => (y > 39.6 && y < 42.8 && (z < 22 || x > -13.6 || z > 32) ? (Math.abs((x + z) % 2.2) < 0.3 ? ISLA[3] : '#1b2a3a') : null) }),
-  caja(-37, -20, 7, 8, 48, 27, ISLA),
-  hueso([-28, 52, 27], [-28, 68, 27], 0.6, ISLA),
-  hueso([-28, 63, 22], [-28, 63, 32], 0.35, ISLA),
+// Ventanales en la franja de `y0` a `y1`, con sus montantes.
+const ventanales = (y0, y1, donde = () => true) => ([x, y, z]) => (y > y0 && y < y1 && donde(x, z) ? (Math.abs((x + z) % 2.2) < 0.3 ? ISLA[3] : '#1b2a3a') : null)
+
+// Pasarela alrededor de un piso, con la baranda oscura en el borde.
+const pasarela = (x0, x1, z0, z1, y) => placa([[x0, y, z0], [x0, y, z1], [x1, y, z1], [x1, y, z0]], 0.3, ISLA, { pinta: ([x, , z]) => (Math.min(x - x0, x1 - x, z - z0, z1 - z) < 0.3 ? ISLA[3] : null) })
+
+// Antena de radar plana, enrejada, que gira `giro` grados sobre su eje (x, z).
+const enrejada = (p, n) => (Math.abs(n[1]) < 0.9 && (Math.abs((((p[1] + p[2]) * 1.6) % 1) - 0.5) < 0.12 || Math.abs(((p[1] * 1.6) % 1) - 0.5) < 0.12) ? ISLA[3] : null)
+const radar = ([x, y, z], ancho, alto, giro) =>
+  transformar([0, giro, 0], [x, 0, z]).formas([
+    hueso([x, y - 1.6, z], [x, y, z], 0.35, ISLA),
+    placa([[x, y, z - ancho / 2], [x, y, z + ancho / 2], [x - alto * 0.25, y + alto, z + ancho / 2], [x - alto * 0.25, y + alto, z - ancho / 2]], 0.3, ISLA, { pinta: enrejada }),
+  ])
+
+// El mástil, como el de un Nimitz: una columna enrejada que se angosta hacia
+// arriba, con tres crucetas anchas, cada una con su baranda y sus antenas,
+// domos en las puntas de la primera, una antena plana en la segunda y, en la
+// punta, la antena con su luz.
+const mastil = ([mx, mz]) => {
+  const pies = [[-2.5, -2], [-2.5, 2], [2.5, -2], [2.5, 2]].map(([dx, dz]) => [mx + dx, 52, mz + dz])
+  const punta = [mx, 74, mz]
+  const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
+  const cruceta = (y, largo) => [
+    placa([[mx - 1.3, y, mz - largo], [mx - 1.3, y, mz + largo], [mx + 1.3, y, mz + largo], [mx + 1.3, y, mz - largo]], 0.35, ISLA, { pinta: ([x, , z]) => (Math.abs(x - mx) > 1 || Math.abs(z - mz) > largo - 0.3 ? ISLA[3] : null) }),
+    ...[-0.85, -0.45, 0.45, 0.85].map((k) => hueso([mx, y, mz + k * largo], [mx, y + 1.8, mz + k * largo], 0.08, ISLA)),
+  ]
+  return [
+    ...pies.map((p) => hueso(p, punta, 0.3, ISLA)),
+    ...[0.25, 0.5, 0.75].flatMap((k) => pies.map((p, i) => hueso(lerp(p, punta, k), lerp(pies[[1, 3, 0, 2][i]], punta, k), 0.16, ISLA))),
+    ...cruceta(58, 8.5),
+    ...cruceta(64, 7),
+    ...cruceta(69, 4.5),
+    ...[-8.5, 8.5].map((dz) => el([mx, 59.2, mz + dz], [0.8, 0.8, 0.8], C.nube)),
+    ...radar([mx + 2.4, 66, mz], 4, 1.2, 0),
+    hueso(punta, [mx, 80, mz], 0.2, ISLA),
+    el([mx, 80.2, mz], [0.35, 0.35, 0.35], C.boca, { flat: '#ff3a2a', brilla: true }),
+  ]
+}
+
+// La isla, a estribor: el bloque con el 15 a los costados, el puente de mando
+// con sus ventanales y pasarelas, el control de vuelo y, encima, el mástil,
+// los domos de las antenas y las balizas de alarma. Detrás, en su propia
+// torre, el radar de búsqueda aérea gira `giro` grados. Va sobre un saliente
+// de la cubierta que un faldón une al casco, como en un Nimitz.
+const QUINCE = { alto: 8, x: -25 - ancho('15', 8) / 2, y: 25 }
+const isla = (alarma, giro) => [
+  faldon([-56, 33], [-4, 33], 1),
+  ...[-56, -4].map((x) => placa([[x, BORDA, 19], [x, BORDA, 33], [x, 8, mangaEn(x, 8)]], 0.4, CASCO)),
+  placa([[-56, 20, 21], [-56, 20, 33], [-4, 20, 33], [-4, 20, 21]], 1.6, CUBIERTA),
+  caja(-40, -10, 7.5, 18, 29.5, 27, ISLA, {
+    pinta: ([x, y, z]) => (Math.abs(z - 27) > 3.5 && enTexto('15', z > 27 ? x - QUINCE.x : QUINCE.x + ancho('15', QUINCE.alto) - x, y - QUINCE.y, QUINCE.alto) ? '#f4f4ee' : null),
+  }),
+  pasarela(-41.5, -8.5, 21, 33, 34),
+  caja(-43, -13, 9.5, 6, 41, 27, ISLA, { pinta: ventanales(39.6, 42.8, (x, z) => z < 22.6 || x > -13.6 || z > 31.4) }),
+  pasarela(-39, -18, 23, 31, 44.3),
+  caja(-37, -20, 6, 8, 48, 27, ISLA, { pinta: ventanales(46.4, 48.6) }),
+  ...mastil([-28, 27]),
   el([-22, 54, 27], [2.2, 2.2, 2.2], C.nube),
-  ...[23.5, 30.5].map((z, i) => el([-34, 53, z], [1.1, 1.1, 1.1], C.boca, alarma === i ? { flat: '#ff3a2a', brilla: true } : { flat: '#6a1a14' })),
+  ...[23.8, 30.2].map((z) => el([-15.5, 45.3, z], [1.3, 1.3, 1.3], C.nube)),
+  ...[[-36, 24], [-36, 30], [-21, 24]].map(([x, z]) => hueso([x, 52, z], [x - 1.2, 59, z + (z < 27 ? -1.2 : 1.2)], 0.07, ISLA)),
+  ...[24.6, 29.4].map((z, i) => el([-34, 53, z], [1.1, 1.1, 1.1], C.boca, alarma === i ? { flat: '#ff3a2a', brilla: true } : { flat: '#6a1a14' })),
+  caja(-54.5, -49.5, 4, 18, 29.8, 27, ISLA),
+  pasarela(-56, -48, 24, 30, 39),
+  caja(-53.5, -50.5, 2.6, 8, 43, 27, ISLA),
+  pasarela(-55.5, -48.5, 24, 30, 47.1),
+  el([-52, 48.6, 27], [1.4, 1.4, 1.4], C.nube),
+  ...radar([-52, 51.6, 27], 7, 4.5, giro),
 ]
 
 // Caza estacionado: un dardo gris con ala en delta y deriva.
-const jet = (x, z, giro) =>
+const jet = (x, z, giro, y = 20.8) =>
   poner(
     [
       tubo([[-8, 1.8, 1.8, 1.8], [5, 2.0, 2.2, 2.0], [9, 0.3, 0.5, 1.8]], CASCO),
@@ -201,8 +300,59 @@ const jet = (x, z, giro) =>
       placa([[-8, 2.4, 0], [-4, 2.4, 0], [-7, 6, 0]], 0.3, CASCO),
     ],
     giro,
-    [x, 20.8, z],
+    [x, y, z],
   )
+
+// ── El hangar y el ascensor ──────────────────────────────────────────────
+
+const PARED = ['#a8b0b8', '#7e8894', '#5e6874', '#363e48']
+const PISO_GRIS = ['#8a949e', '#646e7a', '#4a525c', '#2c3238']
+const conCostillas = ([x]) => (Math.abs(((x + 100) % 4) - 2) < 0.15 ? PARED[2] : null)
+
+// La nave bajo la cubierta, con su piso a rayas, las luces del techo y dos
+// cazas guardados. La pared de estribor es casco por fuera y hangar por
+// dentro, con el portalón abierto al ascensor; el piso sale por él hasta la
+// plataforma.
+const hangar = () => {
+  const { x0, x1, z0, piso, techo, portalon } = HANGAR
+  const { x0: a0, x1: a1, z0: borde } = ASCENSOR
+  const z1 = 19.05
+  const costado = (pts) => placa(pts, 0.2, CASCO, { pinta: (p, n) => (n[2] < 0 ? conCostillas(p) ?? PARED : null) })
+  return [
+    placa([[x0, piso - 0.1, z0], [x0, piso - 0.1, borde], [x1, piso - 0.1, borde], [x1, piso - 0.1, z0]], 0.2, PISO_GRIS, {
+      pinta: ([x, , z]) => (Math.abs(z - 15) < 0.1 || Math.abs(z + 6) < 0.1 ? AMARILLO : Math.hypot(((x + 100) % 3) - 1.5, ((z + 100) % 3) - 1.5) < 0.12 ? PISO_GRIS[3] : null),
+    }),
+    placa([[x0, techo, z0], [x0, techo, z1], [x1, techo, z1], [x1, techo, z0]], 0.1, PARED, { pinta: ([x, , z]) => (z < 16 && Math.abs(((x + 100) % 6) - 3) < 0.25 ? '#fbfcf4' : null) }),
+    placa([[x0, piso, z0], [x1, piso, z0], [x1, techo, z0], [x0, techo, z0]], 0.2, PARED, { pinta: conCostillas }),
+    ...[x0, x1].map((x) => placa([[x, piso, z0], [x, piso, z1], [x, techo, z1], [x, techo, z0]], 0.2, PARED)),
+    costado([[x0, piso, z1], [a0, piso, z1], [a0, techo, z1], [x0, techo, z1]]),
+    costado([[a1, piso, z1], [x1, piso, z1], [x1, techo, z1], [a1, techo, z1]]),
+    costado([[a0, portalon, z1], [a1, portalon, z1], [a1, techo, z1], [a0, techo, z1]]),
+    ...jet(-96, 2, -20, piso),
+    ...jet(-70, -4, 160, piso),
+  ]
+}
+
+// La plataforma del ascensor con su borde amarillo y negro, sus líneas y los
+// anillos de amarre, entre dos guías pegadas al casco. Sube con `k`, de 0 (en
+// el piso del hangar) a 1 (a ras de la cubierta). Mientras no está arriba,
+// la baranda del borde de afuera está levantada.
+const ascensor = (k) => {
+  const { x0, x1, z0, z1 } = ASCENSOR
+  const arriba = HANGAR.piso + (20.8 - HANGAR.piso) * k
+  const pinta = ([x, y, z]) => {
+    if (y < arriba - 0.1) return null
+    if (Math.min(z1 - z, x - x0, x1 - x) < 0.6) return Math.floor((x + z) / 0.9) % 2 ? AMARILLO : '#1e2226'
+    if (Math.abs(z - (z0 + z1) / 2) < 0.12 || Math.abs(x - (x0 + x1) / 2) < 0.12) return '#f4f4ee'
+    return Math.hypot(((x + 100) % 2.5) - 1.25, ((z + 100) % 2.5) - 1.25) < 0.14 ? CUBIERTA[3] : null
+  }
+  const baranda = k < 0.98 ? [...Array.from({ length: 9 }, (_, i) => hueso([x0 + 1 + i * 2.75, arriba, z1 - 0.3], [x0 + 1 + i * 2.75, arriba + 1.1, z1 - 0.3], 0.06, C.rayas)), hueso([x0 + 1, arriba + 1.1, z1 - 0.3], [x1 - 1, arriba + 1.1, z1 - 0.3], 0.06, C.rayas)] : []
+  return [
+    placa([[x0, arriba - 0.6, z0], [x0, arriba - 0.6, z1], [x1, arriba - 0.6, z1], [x1, arriba - 0.6, z0]], 1.2, CUBIERTA, { pinta }),
+    ...[x0 - 0.8, x1 + 0.8].map((x) => caja(x - 0.7, x + 0.7, 4, 9.4, 14.5, 20.4, CASCO)),
+    ...baranda,
+  ]
+}
 
 const AVION_BLANCO = ['#ffffff', '#e4e8ee', '#b8c0cc', '#7a8494']
 
@@ -221,11 +371,15 @@ const mantenimiento = () => [
   hueso([8, 0.9, 0], [9.2, 0.9, 0], 0.15, C.oscuro),
 ]
 
-export const portaaviones = ({ alarma = -1, avion = true } = {}) => [
+// `radar`: los grados que lleva girado el radar de la isla; `ascensor`: dónde
+// va la plataforma, de 0 (en el hangar) a 1 (en la cubierta).
+export const portaaviones = ({ alarma = -1, avion = true, radar = 0, ascensor: plataforma = 1 } = {}) => [
   casco,
   ...cubierta,
-  ...isla(alarma),
-  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30], [-120, 15, -30], [-100, 15, -30]].flatMap(([x, z, g]) => jet(x, z, g)),
+  ...isla(alarma, radar),
+  ...hangar(),
+  ...ascensor(plataforma),
+  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30]].flatMap(([x, z, g]) => jet(x, z, g)),
   ...(avion ? poner(mantenimiento(), 62, [30, 20.8, -24]) : []),
 ]
 

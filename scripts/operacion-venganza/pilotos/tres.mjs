@@ -44,7 +44,10 @@ export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
 // ── Primitivas ───────────────────────────────────────────────────────────
 
 // Elipsoide. o.rot = [x, y, z] en grados; o.flat = color plano; o.vidrio deja
-// ver lo que hay detrás; o.pinta(p) devuelve una rampa, un color o null.
+// ver lo que hay detrás; o.dentro, de 0 a 1, es cuánto lo tiñe visto por una
+// cámara que está dentro (una cúpula polarizada, desde la cabina; sin él, desde
+// dentro no se ve, y el cielo no se ve a través); o.pinta(p) devuelve una
+// rampa, un color o null.
 export const el = (c, r, rampa, o = {}) => ({ k: 'e', c, r, M: rotacion(o.rot), rampa, ...o })
 
 const malla = (tris, rampa, o) => {
@@ -82,6 +85,13 @@ export const tubo = (secciones, rampa, o = {}) => {
       return [x, y + (h / 2) * s(Math.sin(a)), z + (w / 2) * s(Math.cos(a))]
     }),
   )
+  return forro(anillos, rampa, o)
+}
+
+// Anillos de puntos que dan la vuelta, todos con los mismos, unidos en orden
+// con normales suaves y tapados en los extremos (un casco por cuadernas).
+export const forro = (anillos, rampa, o = {}) => {
+  const K = anillos[0].length
   const normales = anillos.map((anillo, i) =>
     anillo.map((p, k) => {
       const a = anillos[Math.max(0, i - 1)][k]
@@ -117,10 +127,11 @@ const cortaElipsoide = (f, o, d) => {
   const c = pto(lo, lo) - 1
   const disc = b * b - 4 * a * c
   if (disc < 0) return null
-  const t = (-b - Math.sqrt(disc)) / (2 * a)
+  const cerca = (-b - Math.sqrt(disc)) / (2 * a)
+  const t = cerca < 0 && f.dentro !== undefined ? (-b + Math.sqrt(disc)) / (2 * a) : cerca
   if (t < 0) return null
   const h = sum(lo, esc(ld, t))
-  return { t, n: uni(mv(f.M, h.map((v, i) => v / f.r[i]))) }
+  return { t, n: uni(mv(f.M, h.map((v, i) => v / f.r[i]))), dentro: t !== cerca }
 }
 
 const cortaMalla = (f, o, d) => {
@@ -225,8 +236,9 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
         if (primero.fig.vidrio) {
           const atras = golpes.find((g) => !g.fig.vidrio && !g.fig.luz)
           const vidrio = primero.fig.rampa[c.tono]
-          const fondo = atras ? color(atras) : null
-          c = { plano: fondo ? mezcla(fondo.plano ?? fondo.rampa[fondo.tono], vidrio, 0.5) : vidrio, rampa: primero.fig.rampa, tono: c.tono }
+          // Sin nada detrás, por la cúpula polarizada se ve el cielo.
+          const fondo = atras ? color(atras) : primero.fig.dentro !== undefined && toma.cielo ? { plano: toma.cielo(rayo) } : null
+          c = { plano: fondo ? mezcla(fondo.plano ?? fondo.rampa[fondo.tono], vidrio, primero.dentro ? primero.fig.dentro : 0.5) : vidrio, rampa: primero.fig.rampa, tono: c.tono }
         }
         celda = { ...c, t: primero.t, brilla: primero.fig.brilla, lejos: primero.fig.lejos?.(sum(o, esc(d, primero.t))) }
       }

@@ -52,7 +52,7 @@ export const VISTAS = [
     dur: 15,
     lineas: [
       { texto: { cursor: 'Moby se lanza de frente contra el cursor, sin frenar.', huella: 'Moby se lanza de frente contra el dedo, sin frenar.' } },
-      { quien: MOBY, texto: '¡AHORA VAS A SABER LO QUE ES UN CAÑÓN DE VERDAD!' },
+      { quien: MOBY, texto: '¡TU MAMÁ NO TE VA A RECONOCER! ¡VOY A REDUCIR TU PANTALLA A CENIZAS! ¡VOY A…!' },
     ],
     presenta: (j) => j.cazas.moby.ir(j.w * 0.5, j.h * 0.36, 260, 2),
     mover(t, s, j) {
@@ -73,8 +73,10 @@ export const VISTAS = [
     fondo: 0,
     dur: 16,
     lineas: [
-      { texto: 'Moby pasa de costado, echando humo negro.' },
-      { quien: MOBY, texto: '¡QUÉDATE QUIETO, HIJO DE PATA!' },
+      { texto: 'Moby da una calada al puro y llora. Tose mientras intenta mantener el avión estable.' },
+      { quien: MOBY, texto: 'Estoy perfecto.' },
+      { quien: DUKE, texto: '¿Estás llorando? Patéticooo.' },
+      { quien: MOBY, texto: '¡ES EL HUMO TÁCTICO!' },
     ],
     presenta: (j) => j.cazas.moby.ir(j.w * 0.72, j.h * 0.3, 110, 2.5),
     mover(t, s, j) {
@@ -94,9 +96,9 @@ export const VISTAS = [
     fondo: 0,
     dur: 18,
     lineas: [
-      { texto: 'Duke SkyDucker entra en el plano, con el sol a la espalda.' },
-      { quien: DUKE, texto: 'Para los espectadores que acaban de conectarse: sí, soy yo.' },
-      { quien: MOBY, texto: '¡DEJA DE POSAR Y DISPARA!' },
+      { texto: 'Duke entra a la batalla: su avión hace un giro elegante y entra en una formación simétrica.' },
+      { quien: DUKE, texto: 'Observa, Moby. Precisión, control y elegancia.' },
+      { quien: MOBY, texto: '¡YA CÁLLATE!' },
     ],
     presenta(j) {
       j.cazas.moby.ir(j.w * 0.25, j.h * 0.3, 120, 2)
@@ -134,8 +136,7 @@ export const VISTAS = [
           huella: 'Moby y Duke vuelan en círculos sobre el dedo, cada uno para su lado.',
         },
       },
-      { quien: DUKE, texto: 'Moby, intenta no taparme con humo.' },
-      { quien: MOBY, texto: '¡TE TAPO CON LO QUE YO QUIERA!' },
+      { quien: DUKE, texto: 'Sal de mi encuadre.' },
     ],
     presenta(j) {
       j.cazas.moby.ir(j.w * 0.65, j.h * 0.35, 170, 2)

@@ -26,7 +26,7 @@ const DUCK_ONE = 'Duck-One'
 export const CAZAS = { duckOne: { hoja: 'duck-one' } }
 
 // Lo que dice la portada bajo el nombre del nivel, y quien te derriba.
-export const LEMA = '«Superioridad táctico-operativa».'
+export const LEMA = '«Superioridad intelectual».'
 export const INTRO = 'Eres quien está detrás de la pantalla. Esquiva las balas del caza de Duck-One mientras el cielo cambia de vista.'
 export const TRIUNFO = 'Superioridad tactico-operativa confirmada.'
 
@@ -38,8 +38,8 @@ export const VISTAS = [
     fondo: 0,
     dur: 16,
     lineas: [
-      { quien: DUCK_ONE, texto: 'Aquí el comandante autoritario Duck-One, máxima autoridad de las fuerzas aeronavales.' },
-      { quien: DUCK_ONE, texto: 'Te recomiendo que abandones inmediatamente el espacio aéreo.' },
+      { texto: 'Duck-One llega a la zona de combate.' },
+      { quien: DUCK_ONE, texto: 'Estimado hadbersario, procederé a ejecutar la Formasión Imperial de Triangulación Inbersa.' },
     ],
     presenta: (j) => j.cazas.duckOne.ir(j.w * 0.72, j.h * 0.3, 110, 2.5),
     mover(t, s, j) {
@@ -65,7 +65,7 @@ export const VISTAS = [
     dur: 17,
     lineas: [
       { texto: 'Duck-One se aleja, da la vuelta y vuelve de frente.' },
-      { quien: DUCK_ONE, texto: 'No quisiera verme obligado a recurrir a medidas de una complejidad balística superior.' },
+      { quien: DUCK_ONE, texto: 'En los livros de combate, a esto se le conoce como sicocombate 101.' },
     ],
     presenta: (j) => j.cazas.duckOne.ir(j.w * 0.5, j.h * 0.36, 260, 2),
     // Pasadas de 6 s: aparece en el horizonte, se acerca y se encabrita por
@@ -97,7 +97,7 @@ export const VISTAS = [
     dur: 17,
     lineas: [
       { texto: 'Entra viento desde el mar, en ráfagas.' },
-      { quien: DUCK_ONE, texto: 'El viento es una variable que ya e considerado en mis estimasiones.' },
+      { quien: DUCK_ONE, texto: 'Aparentemente, por cambios en la conbergencia de la gravedad cósmica, esa bala no llegó a su objetivo.' },
     ],
     presenta: (j) => j.cazas.duckOne.ir(j.w * 0.3, j.h * 0.25, 130, 2.5),
     mover(t, s, j) {
@@ -124,7 +124,6 @@ export const VISTAS = [
     dur: 18,
     lineas: [
       { texto: { cursor: 'Duck-One sube y vuela en círculos sobre el cursor.', huella: 'Duck-One sube y vuela en círculos sobre el dedo.' } },
-      { quien: DUCK_ONE, texto: 'Procedo a la recopilasión de datos desde una posición de superioridad.' },
     ],
     presenta: (j) => j.cazas.duckOne.ir(j.w * 0.5, j.h * 0.32, 170, 2),
     // Círculos a 140 m por encima, siempre a la misma altura, ladeado hacia dentro.
@@ -157,6 +156,6 @@ export const VISTAS = [
 
 // Al terminar, el caza se va y empiezan las escenas que siguen.
 export const FINAL = [
-  { quien: DUCK_ONE, texto: 'Recopilasión de datos completada. Regreso a la base.' },
-  { texto: 'Duck-One vuelve al Sitting Ducks.' },
+  { quien: DUCK_ONE, texto: 'Recopilación de datos induljentes completada.' },
+  { texto: 'Duck-One procede a retirarse.' },
 ]

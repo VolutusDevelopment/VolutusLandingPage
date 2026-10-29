@@ -42,8 +42,6 @@ export const TOMAS = [
   { id: 'sigue', ms: 150, lineas: [{ texto: 'Moby sigue tosiendo.' }] },
   { id: 'reparar', ms: 150, lineas: [{ quien: DUKE, texto: 'Entonces no debería ser difícil repararlo.' }] },
   { id: 'mirada', ms: 150, lineas: [{ texto: 'Duke mira fijamente a la cámara, con sus ojos muy azules.' }] },
-  { id: 'esquina', ms: 150, lineas: [{ texto: 'Duck-One señala la esquina de la sala.' }] },
-  { id: 'silla', ms: 150, lineas: [{ texto: 'Duky sigue sentado en la misma silla donde quedó.' }] },
   { id: 'recurso', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Ha llegado el momento de recurrir a nuestro último recurso.' }] },
   { id: 'nuclear', ms: 150, lineas: [{ quien: MOBY, texto: '¿Bomba nuclear?' }] },
   { id: 'especializado', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Algo mucho más especializado.' }] },

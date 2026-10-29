@@ -77,6 +77,32 @@ const tableroHornet = (s, z) => {
 }
 const VIDRIO_ROSA = ['#ffe0ee', '#f8b0d0', '#d880aa', '#a05078']
 
+// La pantalla panorámica del F-35 de duky, de `-ANCHO_F35` a `ANCHO_F35`: dos
+// mitades de vidrio negro con el bisel gris. En la izquierda, el radar en
+// anillos verdes con su barrido; en la derecha, el caza visto desde arriba en
+// cian, con sus sistemas en cuadros; arriba, una franja de avisos.
+const ANCHO_F35 = 1.3
+const tableroF35 = (s, z) => {
+  if (Math.abs(z) > ANCHO_F35 - 0.06 || s < 0.08 || s > 0.94 || Math.abs(z) < 0.04) return '#3a424c'
+  if (s > 0.84) return Math.floor((z + 2) * 6) % 3 === 0 ? '#f8cc1c' : Math.floor((z + 2) * 6) % 3 === 1 ? '#c84ae0' : '#0a0e14'
+  if (z < 0) {
+    const r = Math.hypot((z + 0.65) / 0.55, (s - 0.45) / 0.36)
+    if (r < 1) return Math.abs(((r * 3) % 1) - 0.5) < 0.12 || Math.abs(z + 0.65 - (s - 0.45) * 0.8) < 0.03 ? '#3aff7a' : '#0a1e14'
+    return Math.floor(s * 10) % 2 && Math.abs(z + 0.65) > 0.6 ? '#2a9a5a' : '#0a1e14'
+  }
+  const [u, v] = [(z - 0.65) / 0.3, (s - 0.45) / 0.3]
+  if (Math.abs(u) < 0.12 || (Math.abs(v + 0.1) < 0.12 && Math.abs(u) < 0.9) || (Math.abs(v - 0.7) < 0.08 && Math.abs(u) < 0.4)) return '#5ae0ff'
+  return Math.abs(z - 0.65) > 0.45 && Math.floor(s * 8) % 2 ? '#1a5a8a' : '#0a1420'
+}
+
+// Los mandos del F-35: la palanca corta sobre la consola derecha y el
+// acelerador sobre la izquierda, los dos con empuñadura roja. Entre las
+// piernas, el pedestal con su pantallita.
+const mandosF35 = () => [
+  ...ambos((s) => [hueso([0.5, BASE, s * 2.15], [0.62, BASE + 0.4, s * 2.15], 0.05, C.oscuro), el([0.64, BASE + 0.52, s * 2.15], [0.13, 0.16, 0.11], C.boca)]).flat(),
+  caja(1.15, 1.6, 0.4, 1.0, -2.2, 0, C.oscuro, { pinta: ([x, y]) => (x < 1.2 && y > -2.0 && y < -1.8 ? '#5ae0ff' : null) }),
+]
+
 // ── Piezas comunes de cabina ─────────────────────────────────────────────
 
 // El asiento eyectable de cada uno, macizo como el de Duky: respaldo ancho,
@@ -166,15 +192,18 @@ export const CABINAS = {
     caza: M.CAZA_DUKY, cabeza: [4.3, 0.8], cabezaU: [0.35, 0.2], k: 0.28, alto: 0.88, arcos: [5.3], frente: 1.55,
     ancho: 2.4, marco: C.oscuro,
     consola: C.oscuro, tablero: C.oscuro, asiento: null, xAsiento: -1.35, pata: C.naranja, cadera: -1.8,
-    panel: [-1.35, 1.35, { borde: '#0a0e14', fondo: '#1a2a4a', linea: '#f8cc1c', columnas: 1 }],
-    // Una sola pantalla panorámica: el F-35 no lleva visor, lo proyecta el casco.
-    // Su asiento eyectable va aparte: fuera de la cabina, Duky no lo lleva.
+    // Una sola pantalla panorámica: el F-35 no lleva visor, lo proyecta el
+    // casco. Su asiento eyectable va aparte: fuera de la cabina, Duky no lo
+    // lleva. La cúpula se abre hacia arriba desde adelante.
+    panel: [-ANCHO_F35, ANCHO_F35, tableroF35],
+    mandos: mandosF35,
+    bisagra: 'delante',
     delante: () => M.DUKY_ASIENTO,
   },
 }
 
 // Interior de la cabina, en unidades del piloto: consolas, tablero, asiento y
-// piernas, si tiene de qué color (`pata`).
+// lo que lleve delante.
 const interior = (cfg) => {
   const a = cfg.ancho
   const [z0, z1, estilo] = cfg.panel
@@ -185,7 +214,6 @@ const interior = (cfg) => {
     placa([[2.0, -1.05, -a + 0.46], [3.0, -1.0, -a + 0.46], [3.0, -1.0, a - 0.46], [2.0, -1.05, a - 0.46]], 0.1, cfg.tablero),
     panelInclinado(z0, z1, typeof estilo === 'function' ? estilo : pantallas(z0, z1, estilo)),
     ...(cfg.asiento ? asiento(cfg.xAsiento, cfg.asiento) : []),
-    ...(cfg.pata ? piernas(cfg.cadera, cfg.pata) : []),
     ...cfg.delante(),
   ]
 }
@@ -237,17 +265,25 @@ export const avion = (cfg) => {
   return [...sinCabecita.map((f) => (f.k === 'm' && !f.luz ? { ...f, hueco } : f)), ...(cfg.lomo ? cerrada() : []), ...cfg.arcos.flatMap(arcoDe)]
 }
 
-// La cúpula se abre de la bisagra de atrás, con sus arcos, `abre` grados.
+// La cúpula se abre `abre` grados con sus arcos, de la bisagra de atrás o,
+// si el caza la tiene ahí (`bisagra`), de la de adelante.
 export const conCupula = (cfg, abre) => {
   if (!abre) return cfg
   const cupula = cfg.caza.find((f) => f.vidrio)
   const arcos = cfg.avion.slice(-cfg.arcos.length * 12)
-  const sube = transformar([0, 0, abre], [cupula.c[0] - cupula.r[0], cupula.c[1], 0])
+  const lado = cfg.bisagra === 'delante' ? -1 : 1
+  const sube = transformar([0, 0, lado * abre], [cupula.c[0] - lado * cupula.r[0], cupula.c[1], 0])
   return { ...cfg, avion: [...cfg.avion.filter((f) => f !== cupula && !arcos.includes(f)), ...sube.formas([cupula, ...arcos])] }
 }
 
 // El caza con el piloto sentado y los mandos donde los deje su mano.
-export const cabinaCon = (cfg, piloto, palanca = PALANCA, acelerador = ACELERADOR) => [...cfg.avion, ...escalar(cfg, [...interior(cfg), ...piloto.filter((f) => !f.pata), ...mandos(palanca, acelerador)])]
+// El caza y el piloto son modelos aparte: las piernas que llegan a los
+// pedales (`pata`, su color) son del piloto, en vez de las suyas (las formas
+// `pata`), y van solo si hay uno sentado. Vacía, la cabina no tiene piernas.
+export const cabinaCon = (cfg, piloto, palanca = PALANCA, acelerador = ACELERADOR) => {
+  const sentado = cfg.pata && piloto.some((f) => f.pata)
+  return [...cfg.avion, ...escalar(cfg, [...interior(cfg), ...piloto.filter((f) => !f.pata), ...(sentado ? piernas(cfg.cadera, cfg.pata) : []), ...(cfg.mandos ?? mandos)(palanca, acelerador)])]
+}
 
 // Las poses de cuerpos.mjs dejan las manos en reposo: en la cabina, en la palanca y el acelerador.
 export const enCabina = (pose) => {

@@ -2,21 +2,25 @@
 // desde dónde, como las de la escena 2 (escena2/tomas.mjs). El guion, con
 // sus líneas, está en src/lib/escena11.js.
 //
-// Un marinero saca a duky de la sala de mando (escena2/reunion.mjs), lo
-// sube a su F-35 en el hangar (hangar.mjs) y el caza despega de la cubierta
-// del Sitting Ducks. En vuelo, la torre le habla por radio, desde la consola
-// de radar de la sala, y duky no contesta.
+// Un marinero saca a duky de la sala de mando (escena2/reunion.mjs), choca
+// con él contra la pared de la puerta y lo lleva al hangar del Sitting Ducks
+// (escena1/lugares.mjs), donde su F-35 (hangar.mjs) espera sobre el ascensor
+// de popa. Lo sube a la cabina mientras la plataforma sube a la cubierta, y
+// el caza despega desde el comienzo de la pista, con la cámara siempre en
+// duky. En vuelo, la torre le habla por radio, desde la consola de radar de
+// la sala, y duky no contesta.
 
-import { ASIENTOS, K as K_SALA, enUnidades, fase, girar, recorrido, reunion } from '../escena2/reunion.mjs'
+import { ASIENTOS, K as K_SALA, PUERTA, enUnidades, fase, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { EN_BRAZOS, duky, marinero } from '../escena2/patoon.mjs'
-import { el } from '../pilotos/tres.mjs'
+import { el, transformar } from '../pilotos/tres.mjs'
 import { DUKY as DUKY_HULE, RAMPAS as C, ambos, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukyFigura, figura, manosAndando } from '../pilotos/cuerpos.mjs'
-import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
+import { ASCENSOR, HANGAR, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
-import { K, PISO, SUELO, caza, enCabina, hangar } from './hangar.mjs'
+import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
+const res = (a, b) => a.map((v, i) => v - b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
@@ -34,10 +38,10 @@ export const sobreLaCabeza = ({ en, giro }, k) => ({ en: sum(en, [0, 3.4 * k, 0]
 
 // ── En la sala: el marinero se lleva a duky ──────────────────────────────
 
-// Entra hasta el costado del sillón, lo levanta, se da vuelta y sale con él,
-// primero de lado a la cámara: duky va delante y no lo tapa.
+// Entra hasta el costado del sillón, lo levanta, se da vuelta y camina con
+// él hacia la puerta, primero de lado a la cámara: duky va delante y no lo tapa.
 const DE_LA_PUERTA = recorrido([[-4.6, 2.8], [-2.4, 1.0]])
-const A_LA_PUERTA = recorrido([[-2.4, 1.0], [-3.8, 1.1], [-4.6, 2.8]])
+const A_LA_PUERTA = recorrido([[-2.4, 1.0], [-3.0, 1.05], [-3.0, 2.0]])
 const JUNTO_AL_SILLON = { en: [-2.4, 0, 1.0], giro: 0 }
 const SENTADO_EN_EL_SILLON = { ...ASIENTOS.duky, en: sum(ASIENTOS.duky.en, [0, 0.15 * K_SALA, 0]) }
 // Se da vuelta de cara a la cámara, para que duky no le pase por detrás.
@@ -65,25 +69,58 @@ const seLoLleva = (u) => {
   return [[marinero(fase(s), ARRIBA), donde], [duky.enBrazos(), sobreLaCabeza(donde, K_SALA)]]
 }
 
-// ── En el hangar ─────────────────────────────────────────────────────────
+// ── La puerta ────────────────────────────────────────────────────────────
 
-// El caza, con las ruedas en el piso, y lo que va con él en sus metros.
-const AVION = [2, PISO - SUELO, -3]
-const enHangar = (formas) => [...hangar, ...poner(formas, 0, AVION)]
-export const CUPULA_ABIERTA = 85
+// Va derecho a la puerta, pero duky, sobre su cabeza, no cabe: la cabeza le
+// da contra la pared de arriba. Los dos rebotan, duky se bambolea con
+// estrellitas alrededor y el marinero se queda tambaleando.
+const MEDIO_DE_LA_PUERTA = (PUERTA.z0 + PUERTA.z1) / 2
+const CONTRA_LA_PUERTA = recorrido([[-2.6, MEDIO_DE_LA_PUERTA], [-3.5, MEDIO_DE_LA_PUERTA]])
+const CHOCA = 0.45
+const estrellitas = (centro, u) =>
+  [0, 1, 2].map((i) => {
+    const a = u * 14 + (i * Math.PI * 2) / 3
+    return el(sum(centro, [Math.sin(a) * 0.4, 0.06 * Math.sin(a * 2), Math.cos(a) * 0.4]), [0.07, 0.07, 0.07], C.oro, { flat: '#fff2a4', brilla: true })
+  })
+const choca = (u) => {
+  const rebote = 0.35 * tramo(u, CHOCA, CHOCA + 0.15)
+  const s = CONTRA_LA_PUERTA.largo * Math.min(1, u / CHOCA) - rebote
+  const { en, giro } = CONTRA_LA_PUERTA.donde(s)
+  const golpe = Math.max(0, u - CHOCA)
+  const bambolea = u > CHOCA ? 22 * Math.exp(-golpe * 9) * Math.cos(golpe * 40) : 0
+  const tambalea = u > CHOCA ? 6 * Math.sin(golpe * 18) * (1 - tramo(u, 0.8, 1)) : 0
+  const donde = { en, giro }
+  const marineroF = figura(pMar, { tronco: marineroTronco(VERDE), manos: ARRIBA, fase: u < CHOCA ? fase(s) : null, inclina: tambalea })
+  const dukyDonde = sobreLaCabeza(donde, K_SALA)
+  const cabeza = sum(dukyDonde.en, [0, 3.6 * K_SALA, 0])
+  return {
+    figuras: [[marineroF, donde], [dukyFigura({ inclina: -bambolea }), dukyDonde]],
+    extra: u > CHOCA && u < 0.85 ? estrellitas(cabeza, u) : [],
+  }
+}
+
+// ── El caza y la escalerilla ─────────────────────────────────────────────
+
+export const CUPULA_ABIERTA = 40
 
 // El marinero se para en el lomo, junto a la cabina y mirando a ella: sube
-// por una escalerilla desde el piso.
+// por una escalerilla desde el piso, con sus dos largueros y siete peldaños.
 const LOMO = { en: enCabina([0.3, -1.6, -2.6]), giro: -90 }
-export const escalerilla = [-0.25, 0.25].map((dx) => hueso([LOMO.en[0] + dx, SUELO, LOMO.en[2] - 1.4], [LOMO.en[0] + dx, LOMO.en[1], LOMO.en[2] - 0.2], 0.04, C.rayas))
+const PIE = [LOMO.en[0], SUELO, LOMO.en[2] - 1.4]
+const CIMA = [LOMO.en[0], LOMO.en[1], LOMO.en[2] - 0.2]
+export const escalerilla = [
+  ...[-0.25, 0.25].map((dx) => hueso(sum(PIE, [dx, 0, 0]), sum(CIMA, [dx, 0, 0]), 0.04, C.rayas)),
+  ...Array.from({ length: 7 }, (_, i) => lerp(PIE, CIMA, (i + 1) / 8)).map((p) => hueso(sum(p, [-0.25, 0, 0]), sum(p, [0.25, 0, 0]), 0.03, C.rayas)),
+]
 const enSusManos = (p) => enUnidades(p, { ...LOMO, k: K })
 const elMarinero = (cfg) => colocar(figura(pMar, { tronco: marineroTronco(VERDE), ...cfg }), { k: K, ...LOMO })
 
-// duky sentado en su cabina, con los pies donde los pone la cabina; con
-// `patas`, con las suyas, sin su sombra.
+// duky, un modelo aparte del caza: siempre con sus patas, sin su sombra.
 const SOMBRA = '#4a80e6'
 const SENTADO = { en: enCabina([0, -2.2, 0]), giro: 0, suelo: -2.2 }
-const dukyEn = (donde, formas = DUKY.sentado(0), patas = false) => colocar(formas.filter((f) => (patas ? f.flat !== SOMBRA : !f.pata)), { k: K, ...donde })
+const dukyEn = (donde, formas = DUKY.sentado(0)) => colocar(formas.filter((f) => f.flat !== SOMBRA), { k: K, ...donde })
+// El marinero con duky sobre la cabeza; con `paso`, caminando.
+const conLaCarga = (donde, paso = null) => [...colocar(marinero(paso, ARRIBA), { k: K, ...donde }), ...dukyEn(sobreLaCabeza(donde, K), duky.enBrazos())]
 
 // Lo pasa de sobre su cabeza a sobre la cabina, lo gira hacia el morro, lo
 // baja y lo suelta para el último tramo, que duky cae solo.
@@ -94,64 +131,72 @@ const bajando = (u) => {
   const baja = lerp(pasa, sum(SENTADO.en, [0, 0.3, 0]), tramo(u, 0.45, 0.7))
   return lerp(baja, SENTADO.en, tramo(u, 0.7, 0.8))
 }
-// Con `patas`, duky lleva las suyas (escena15/tomas.mjs, que lo saca).
-export const deposita = (u, patas = false) => {
+export const deposita = (u) => {
   const llevado = sum(enSusManos(bajando(Math.min(u, 0.7))), enSusManos(EN_EL_LOMO.en).map((v) => -v))
   const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(sum(ARRIBA[s], llevado), REPOSO[s], tramo(u, 0.75, 0.95))]))
-  return [...elMarinero({ manos }), ...dukyEn({ en: bajando(u), giro: girar(-90, 0, tramo(u, 0.1, 0.45)), suelo: -2.2 }, duky.enBrazos(), patas)]
+  return [...elMarinero({ manos }), ...dukyEn({ en: bajando(u), giro: girar(-90, 0, tramo(u, 0.1, 0.45)), suelo: -2.2 }, duky.enBrazos())]
 }
 
-// El cinturón: una correa a cada lado, del respaldo a la hebilla, en
-// unidades de la cabina. No le dan la vuelta a duky: con `tira`, de 0 a 1,
-// el marinero las acerca por delante y siempre les falta.
-const HOMBRO = (s) => [-1.25, 0.65, s * 0.6]
-const COSTADO = (s) => [0.5, -0.45, s * 1.05]
-const SUELTA = (s) => [-0.2, -1.3, s * 1.1]
-const CASI = (s) => [1.45, -0.85, s * 0.42]
-const correas = (tira) =>
-  [1, -1].map((s) => {
-    const [hombro, costado, punta] = [HOMBRO(s), COSTADO(s), lerp(SUELTA(s), CASI(s), tira)].map(enCabina)
-    return { s, punta, formas: [hueso(hombro, costado, 0.06 * K, C.grisOscuro), hueso(costado, punta, 0.06 * K, C.grisOscuro), el(punta, [0.03, 0.035, 0.035], C.gris)] }
-  })
-// Tironea de las dos puntas, o las suelta (`suelta`, de 0 a 1) y se encoge de hombros (`encoge`).
-const conElCinturon = (tira, { suelta = 0, encoge = 0 } = {}) => {
-  const lasCorreas = correas(tira * (1 - suelta))
+export const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
+
+// El marinero tironea de las dos puntas del cinturón (`tira`, de 0 a 1), o
+// las suelta (`suelta`) y se encoge de hombros (`encoge`). duky es medio
+// gordito: mientras más tironea, más se le aprieta la barriga, y la correa
+// igual no le cierra. Da el cinturón como quedó y a los dos.
+const tirando = (tira, { suelta = 0, encoge = 0 } = {}) => {
+  const cinturon = tira * (1 - suelta)
   const hombros = { 1: [0.35, -0.35, 1.45], [-1]: [0.35, -0.35, -1.45] }
-  const manos = Object.fromEntries(lasCorreas.map(({ s, punta }) => [s, lerp(lerp(enSusManos(punta), REPOSO[s], suelta), hombros[s], encoge)]))
-  return [...lasCorreas.flatMap(({ formas }) => formas), ...elMarinero({ manos, salto: 0.08 * encoge })]
+  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(enSusManos(puntaDelCinturon(s, cinturon)), REPOSO[s], suelta), hombros[s], encoge)]))
+  const aprieta = Math.max(0, (cinturon - 0.55) / 0.45)
+  const apretado = deformar(DUKY.sentado(0), [0, -1.9, 0], [1, 1 + 0.06 * aprieta, 1 - 0.14 * aprieta])
+  return { cinturon, figuras: [...elMarinero({ manos, salto: 0.08 * encoge }), ...dukyEn(SENTADO, apretado)] }
 }
 
-// El caza en el hangar con duky en la cabina y la escalerilla puesta.
-const enLaCabina = (cupula, extra = []) => enHangar([...caza({ cupula }), ...escalerilla, ...dukyEn(SENTADO), ...extra])
-// La cabina vista desde el morro, por arriba: el marinero a un lado y duky al otro.
-const SOBRE_LA_CABINA = (() => {
-  const de = (p) => sum(enCabina(p), AVION)
-  return fija(de([9.5, 4.2, -1.6]), de([0, 0.4, -1.2]), 54)
-})()
+// ── En el ascensor ───────────────────────────────────────────────────────
 
-// El marinero cruza el hangar con duky en brazos, hacia la escalerilla.
-const AL_CAZA = recorrido([[AVION[0] + LOMO.en[0] - 2.6, AVION[2] + LOMO.en[2] - 4.1], [AVION[0] + LOMO.en[0], AVION[2] + LOMO.en[2] - 2.2]])
-const pasos = (s) => (s / 0.33) % 1
-const alCaza = (u) => {
-  const s = AL_CAZA.largo * u
-  const { en, giro } = AL_CAZA.donde(s)
-  const donde = { en: [en[0], PISO, en[2]], giro }
-  return [...colocar(marinero(pasos(s), ARRIBA), { k: K, ...donde }), ...dukyEn(sobreLaCabeza(donde, K), duky.enBrazos())]
+// El caza espera sobre la plataforma del ascensor de popa con el morro a popa,
+// así la escalerilla queda hacia el mar. `k` es dónde va la plataforma, de 0
+// (en el hangar) a 1 (en la cubierta); `delCaza` lleva un punto del caza al barco.
+const SOBRE_EL_ASCENSOR = [(ASCENSOR.x0 + ASCENSOR.x1) / 2, (ASCENSOR.z0 + ASCENSOR.z1) / 2]
+const enAscensor = (k) => [SOBRE_EL_ASCENSOR[0], HANGAR.piso + (20.8 - HANGAR.piso) * k - SUELO, SOBRE_EL_ASCENSOR[1]]
+const delCaza = (k, [x, y, z]) => sum(enAscensor(k), [-x, y, -z])
+const enElAscensor = (k, formas) => [MAR, ...portaaviones({ ascensor: k }), ...poner(formas, 180, enAscensor(k))]
+// Arriba, a ras de la cubierta, con la escalerilla puesta.
+const enLaCabina = (cupula, { cinturon, figuras }) => enElAscensor(1, [...caza({ cupula, cinturon }), ...escalerilla, ...figuras])
+// Junto a la cabina, del lado de afuera del marinero, bajo la cúpula abierta.
+const JUNTO_A_LA_CABINA = { ojo: [3.0, 1.2, 7.5], mira: [-0.2, 0.0, -0.6], campo: 54 }
+const CERCA_DE_LA_CABINA = { ojo: [2.2, 1.6, 5.0], mira: [-0.1, -0.6, -0.4], campo: 52 }
+const alLado = (k, { ojo, mira, campo }) => [delCaza(k, enCabina(ojo)), delCaza(k, enCabina(mira)), campo]
+
+// Cruza el hangar con duky en brazos, hacia el portalón y el caza.
+const AL_PORTALON = recorrido([[SOBRE_EL_ASCENSOR[0] + 1.5, 3], [SOBRE_EL_ASCENSOR[0] + 1.5, 16.5]])
+const enElHangar = (u) => {
+  const { en, giro } = AL_PORTALON.donde(AL_PORTALON.largo * u)
+  return { en: [en[0], HANGAR.piso, en[2]], giro }
+}
+const alPortalon = (u) => conLaCarga(enElHangar(u), fase(AL_PORTALON.largo * u))
+
+// Sube por la escalerilla mientras se abre la cúpula y la plataforma
+// arranca; después lo deposita y la plataforma termina de subir.
+const SUBE = 0.4
+const subiendo = (u) => {
+  const s = tramo(u, 0.2, 0.85)
+  return conLaCarga({ en: lerp([PIE[0], SUELO, PIE[2] - 0.35], LOMO.en, s), giro: LOMO.giro }, s > 0 && s < 1 ? (s * 5) % 1 : null)
 }
 
 // ── El despegue ──────────────────────────────────────────────────────────
 
-// En la catapulta de babor, como el de duck-one (escena3/tomas.mjs): lo
-// lanza hasta la proa y, ya en el aire, sube y recoge el tren.
-const BARCO = [MAR, ...portaaviones()]
-const EN_CATAPULTA = [70, 20.8 - SUELO, -6]
-const CARRERA = { desde: 0.15, hasta: 0.55, largo: 96 }
-const enVuelo = (u) => {
-  const corrido = CARRERA.largo * Math.min(1, Math.max(0, (u - CARRERA.desde) / (CARRERA.hasta - CARRERA.desde))) ** 2
-  const vuelo = Math.max(0, (u - CARRERA.hasta) / (1 - CARRERA.hasta))
-  return { vuelo, en: sum(EN_CATAPULTA, [corrido + 450 * Math.max(0, u - CARRERA.hasta), 50 * vuelo ** 1.6, 0]) }
+// Desde el comienzo de la catapulta de babor: quieto un instante, la
+// catapulta lo lanza hasta la proa y, ya en el aire, sube con el morro
+// arriba. La cámara va en el tablero, mirando a duky todo el tiempo.
+const PISTA = { en: [40, 20.8 - SUELO, -6], lanza: 0.12, sale: 0.62, largo: 127 }
+const despegando = (u) => {
+  const corre = Math.min(1, Math.max(0, (u - PISTA.lanza) / (PISTA.sale - PISTA.lanza)))
+  const aire = Math.max(0, u - PISTA.sale)
+  const rapidez = (2 * PISTA.largo) / (PISTA.sale - PISTA.lanza)
+  const sube = 35 * (aire / (1 - PISTA.sale)) ** 1.6
+  return transformar([0, 0, 10 * tramo(u, PISTA.sale, PISTA.sale + 0.2)], [0, 0, 0], sum(PISTA.en, [PISTA.largo * corre ** 2 + rapidez * aire, sube, 0]))
 }
-export const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
 
 // ── La sonrisa ───────────────────────────────────────────────────────────
 
@@ -195,11 +240,12 @@ export const caraQueSonrie = (k) => {
 
 // ── La emoción ───────────────────────────────────────────────────────────
 
-// Con la cabina cerrada, duky jadea de la emoción como lo que es, un pato de
-// hule que alguien aprieta: con `k` de 0 a 1 se aplasta entero desde el
-// asiento, ancho y bajo, y bota el aire por el pico abierto; al soltarlo
-// vuelve a su forma y lo recupera. El pico de su cara de siempre (la forma 7
-// de pilotos/modelos.mjs) se parte en dos.
+// duky jadea de la emoción como lo que es, un pato de hule que alguien
+// aprieta: con `k` de 0 a 1 se aplasta entero desde el asiento, ancho y bajo,
+// y bota el aire por el pico abierto; al soltarlo vuelve a su forma y lo
+// recupera. El pico de su cara de siempre (la forma 7 de pilotos/modelos.mjs)
+// se parte en dos. En la catapulta, en cambio, la aceleración lo pega al
+// respaldo (`pegar`, con `g` de 0 a 1): se achata contra él.
 const PICO = DUKY_HULE[7]
 const caraQueJadea = (k) => [
   ...CARA.filter((forma) => forma !== PICO),
@@ -207,27 +253,29 @@ const caraQueJadea = (k) => [
   el(sum(PICO.c, [-0.04, -0.03 - 0.06 * k, 0]), [0.3, 0.07, 0.28], C.picoHule, { rot: [0, 0, -14 * k] }),
   el(sum(PICO.c, [-0.08, 0, 0]), [0.22, 0.02 + 0.08 * k, 0.22], C.oscuro, { flat: '#3a0e0a' }),
 ]
-const BASE = [0, -1.9, 0]
-const aplastar = (formas, k) => {
-  const S = [1 + 0.14 * k, 1 - 0.24 * k, 1 + 0.14 * k]
-  const p = (v) => v.map((x, i) => BASE[i] + (x - BASE[i]) * S[i])
+const deformar = (formas, base, S) => {
+  const p = (v) => v.map((x, i) => base[i] + (x - base[i]) * S[i])
   return formas.map((f) =>
     f.k === 'e' ? { ...f, c: p(f.c), r: f.r.map((x, i) => x * S[i]) } : { ...f, centro: p(f.centro), tris: f.tris.map((t) => ({ ...t, a: p(t.a), b: p(t.b), c: p(t.c) })) },
   )
 }
-
-// Primero exhala y después inhala, una vez cada cuatro cuadros de los 40 de
-// la toma, y cada vez más fuerte.
-const apretado = (u) => tramo(u, 0.05, 0.2) * (0.5 - 0.5 * Math.cos((u / 0.1) * Math.PI * 2))
-const dukyJadea = (u) => {
-  const k = apretado(u)
-  return aplastar(dukyFigura({ cara: caraQueJadea(k) }), k)
+const aplastar = (formas, k) => deformar(formas, [0, -1.9, 0], [1 + 0.14 * k, 1 - 0.24 * k, 1 + 0.14 * k])
+// Pegado, se achata contra el respaldo, se ensancha y aprieta los ojos.
+const [, , ...OJOS] = CARA
+const caraPegada = (g) => CARA.filter((f, i) => g < 0.5 || i < 4).map((f) => (OJOS.includes(f) ? { ...f, r: [f.r[0], f.r[1] * (1 - 0.75 * g), f.r[2] * (1 + 0.3 * g)] } : f))
+const pegar = (formas, g) => deformar(formas, [-1.2, -1.9, 0], [1 - 0.35 * g, 1 - 0.14 * g, 1 + 0.24 * g])
+// Jadea `veces` por bucle, con fuerza `fuerza` (de 0 a 1).
+const jadea = (u, veces, fuerza = 1) => fuerza * (0.5 - 0.5 * Math.cos(u * Math.PI * 2 * veces))
+const jadeando = (u, veces) => aplastar(dukyFigura({ cara: caraQueJadea(jadea(u, veces)) }), jadea(u, veces))
+// En la pista va pegado al asiento; recién en el aire se suelta y empieza a jadear.
+const dukyDespega = (u) => {
+  const g = tramo(u, PISTA.lanza, PISTA.lanza + 0.05) * (1 - tramo(u, PISTA.sale + 0.02, PISTA.sale + 0.14))
+  const k = jadea(u, 10, tramo(u, PISTA.sale + 0.14, 0.95))
+  return pegar(aplastar(dukyFigura({ cara: g > 0.05 ? caraPegada(g) : caraQueJadea(k) }), k), g)
 }
 
-// Jadea en la catapulta y, a la mitad, la catapulta lo lanza: la cámara va
-// en el tablero y la cubierta pasa hacia atrás cada vez más rápido.
-const LANZA = { lanza: 0.55, largo: 96 }
-const enLaCatapulta = (u) => sum(EN_CATAPULTA, [LANZA.largo * tramo(u, LANZA.lanza, 1) ** 2, 0, 0])
+// La cámara en el tablero, sobre la pantalla, mirando a duky: en unidades de la cabina.
+const TABLERO = { ojo: [3.6, 0.55, 0], mira: [-0.4, -0.5, 0], campo: 72 }
 
 // ── En vuelo ─────────────────────────────────────────────────────────────
 
@@ -237,7 +285,7 @@ const enLaCatapulta = (u) => sum(EN_CATAPULTA, [LANZA.largo * tramo(u, LANZA.lan
 export const ALTURA = [0, 300, 0]
 const NUBES = [[-80, -30, 120, 40], [60, -50, 200, 55], [200, -20, 90, 35], [330, -45, 160, 60], [470, -25, 110, 45]]
 export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((x - 600 * u + 900) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
-const volando = (u) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false }), 0, ALTURA)]
+const volando = (u, piloto = DUKY.sentado(0)) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false }, piloto), 0, ALTURA)]
 const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 
 // ── La radio ─────────────────────────────────────────────────────────────
@@ -257,61 +305,65 @@ const radar = (u, eco) => {
 export const torre = (eco) => (u) => [...reunion({ pantalla: PANTALLA, figuras: [] }), ...radar(u, eco)]
 
 export const TOMAS_3D = {
-  // El caza solo en el hangar, mientras la cámara se le acerca.
-  nivel: {
-    escena: () => enHangar(caza({ cupula: CUPULA_ABIERTA })),
-    camara: (u) => {
-      const k = suave(u)
-      return [sum(AVION, lerp([10, 2.2, -6], [8, 1.5, -4.5], k)), sum(AVION, [1, 0, 0]), 60]
-    },
-  },
   recoge: {
     escena: (u) => reunion({ pantalla: PANTALLA, abre: 1, figuras: seLoLleva(u) }),
     camara: fija([-2.3, 1.8, -2.2], [-2.7, 1.2, 1.2], 64),
   },
+  // De costado, desde la sala: se ve la puerta y la pared contra la que choca.
+  choca: {
+    escena: (u) => {
+      const { figuras, extra } = choca(u)
+      return [...reunion({ pantalla: PANTALLA, abre: 1, figuras }), ...extra]
+    },
+    camara: fija([-2.4, 1.9, -0.3], [-3.5, 2.0, MEDIO_DE_LA_PUERTA], 56),
+  },
+  // La primera vez que se ve el caza: con la cúpula cerrada, recortado en el
+  // portalón contra el atardecer. La cámara va detrás del marinero.
   hangar: {
-    escena: (u) => enHangar([...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla]).concat(alCaza(u)),
-    // Lo acompaña de lado, a su altura.
+    escena: (u) => [...enElAscensor(0, [...caza(), ...escalerilla]), ...alPortalon(u)],
     camara: (u) => {
-      const { en } = AL_CAZA.donde(AL_CAZA.largo * u)
-      return [[en[0] + 1.2, PISO + 1.4, en[2] - 3.4], [en[0] + 0.6, PISO + 0.9, en[2]], 54]
+      const { en } = enElHangar(u)
+      return [[en[0] + 1.6, HANGAR.piso + 1.2, en[2] - 3.4], [en[0] - 0.4, HANGAR.piso + 2.4, en[2] + 10], 58]
     },
   },
-  deposita: { escena: (u) => enHangar([...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]), camara: SOBRE_LA_CABINA },
-  cinturon: { escena: (u) => enLaCabina(CUPULA_ABIERTA, conElCinturon(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: SOBRE_LA_CABINA },
+  // Desde la plataforma, abajo y de contrapicado: sube con ella, y detrás el
+  // costado del barco baja hasta que asoma el cielo.
+  sube: {
+    escena: (u) => enElAscensor(SUBE * suave(u), [...caza({ cupula: CUPULA_ABIERTA * tramo(u, 0, 0.2) }), ...escalerilla, ...subiendo(u)]),
+    camara: (u) => {
+      const y = HANGAR.piso + (20.8 - HANGAR.piso) * SUBE * suave(u)
+      return [[-74, y + 0.9, 36.4], [-80, y + 2.4 + 0.6 * suave(u), 31.2], 60]
+    },
+  },
+  // De costado y adelante, bajo la cúpula, que se abre desde adelante como
+  // una tapa: lo deja en el asiento con el atardecer detrás, mientras la
+  // plataforma llega a la cubierta.
+  deposita: {
+    escena: (u) => enElAscensor(SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
+    camara: (u) => alLado(SUBE + (1 - SUBE) * suave(u), JUNTO_A_LA_CABINA),
+  },
+  cinturon: { escena: (u) => enLaCabina(CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
   encoge: {
     escena: (u) => {
       const tira = 0.55 + 0.45 * Math.sin(tramo(u, 0, 0.25) * Math.PI)
-      return enLaCabina(CUPULA_ABIERTA * (1 - tramo(u, 0.7, 0.95)), conElCinturon(tira, { suelta: tramo(u, 0.28, 0.4), encoge: tramo(u, 0.4, 0.5) * (1 - tramo(u, 0.62, 0.7)) }))
+      return enLaCabina(CUPULA_ABIERTA * (1 - tramo(u, 0.7, 0.95)), tirando(tira, { suelta: tramo(u, 0.28, 0.4), encoge: tramo(u, 0.4, 0.5) * (1 - tramo(u, 0.62, 0.7)) }))
     },
-    camara: SOBRE_LA_CABINA,
+    camara: () => alLado(1, JUNTO_A_LA_CABINA),
   },
-  despega: {
-    escena: (u) => {
-      const { vuelo, en } = enVuelo(u)
-      return [...BARCO, ...poner(conDuky({ motor: true, tren: vuelo < 0.4 }), 0, en)]
-    },
-    // Desde un helicóptero por babor, que lo acompaña y se queda en la proa.
+  despegue: {
+    escena: (u) => [MAR, ...portaaviones({ radar: u * 120 }), ...despegando(u).formas(conDuky({ motor: u > PISTA.lanza - 0.04, tren: u < PISTA.sale + 0.2 }, dukyDespega(u)))],
     camara: (u) => {
-      const { en } = enVuelo(u)
-      return [[Math.min(88 + 0.85 * (en[0] - EN_CATAPULTA[0]), 182), 27, -34], sum(en, [4, 1, 0]), 40]
+      const { punto } = despegando(u)
+      const tiembla = u > PISTA.lanza && u < PISTA.sale + 0.05 ? 0.08 * Math.sin(Math.floor(u * 30) * 2.3) : 0
+      return [punto(enCabina(sum(TABLERO.ojo, [0, tiembla, tiembla]))), punto(enCabina(TABLERO.mira)), TABLERO.campo, res(punto([0, 1, 0]), punto([0, 0, 0]))]
     },
   },
-  // Un poco desde abajo: se ve todo lo que lleva bajo las alas.
-  emocion: {
-    escena: (u) => [...BARCO, ...poner(conDuky({ motor: u > LANZA.lanza }, dukyJadea(u)), 0, enLaCatapulta(u))],
-    camara: (u) => {
-      const tiembla = u > LANZA.lanza ? 0.015 * Math.sin(Math.floor(u * 40) * 2.3) : 0
-      const en = enLaCatapulta(u)
-      return [sum(enCabina([3.4, 0.55 + tiembla, tiembla]), en), sum(enCabina([0, 0.3, 0]), en), 80]
-    },
-  },
-  combate: { escena: volando, camara: fija(sum(ALTURA, [-13, -2.2, -14]), sum(ALTURA, [0.5, 0.6, 0]), 54) },
+  emocion: { escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
 
   radio: { escena: torre(false), camara: fija([RADAR.x, 2.15, -3.75], enLaPantalla(RADAR.x, RADAR.y), 56) },
-  silencio: { escena: volando, camara: fija(enVueloDe([3.4, 1.0, 0]), enVueloDe([0, 0.1, 0]), 85) },
+  silencio: { escena: (u) => volando(u), camara: fija(enVueloDe([3.4, 1.0, 0]), enVueloDe([0, 0.1, 0]), 85) },
   pitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.85, -3.85], enLaPantalla(...ECO), 40) },
   termina: { escena: torre(false), camara: fija([RADAR.x - 0.9, 1.9, -3.5], enLaPantalla(RADAR.x, RADAR.y), 50) },
-  calla: { escena: volando, camara: fija(enVueloDe([2.8, 0.8, -1.2]), enVueloDe([0, 0.1, 0.1]), 80) },
+  calla: { escena: (u) => volando(u), camara: fija(enVueloDe([2.8, 0.8, -1.2]), enVueloDe([0, 0.1, 0.1]), 80) },
   otroPitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.65, -4.05], enLaPantalla(...ECO), 32) },
 }

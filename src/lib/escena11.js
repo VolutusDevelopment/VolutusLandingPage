@@ -13,29 +13,24 @@
 const TORRE = 'Torre de control'
 
 export const TOMAS = [
-  // El caza de duky, solo en el hangar.
-  { id: 'nivel', ms: 200, cuadros: 24, unaVez: true, lineas: [{ texto: 'NIVEL 3 — DUKY.' }, { texto: '«El fantasma amarillo».' }] },
   { id: 'recoge', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Un marinero entra en la sala y recoge a Duky.' }] },
+  { id: 'choca', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Intenta pasar, pero choca con la pared de la puerta.' }] },
+  // La primera vez que se ve el caza de duky: con la cabina cerrada.
   { id: 'hangar', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Lo lleva al hangar…' }] },
-  { id: 'deposita', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: '…y lo deposita en la cabina de un caza experimental.' }] },
-  { id: 'cinturon', ms: 150, lineas: [{ texto: 'El cinturón no encaja.' }] },
+  { id: 'sube', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…y sube con él a un caza experimental, mientras la plataforma se eleva…' }] },
+  { id: 'deposita', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…hasta dejarlo en la cabina.' }] },
+  { id: 'cinturon', ms: 150, lineas: [{ texto: 'El marinero intenta ponerle el cinturón, pero Duky es medio gordito y no le cierra.' }] },
   {
     id: 'encoge',
     ms: 150,
     cuadros: 24,
     unaVez: true,
-    lineas: [{ texto: 'El marinero lo intenta una vez más, se encoge de hombros y cierra la cabina.' }],
+    lineas: [{ texto: 'Lo intenta una vez más, se rinde y cierra la cabina. Duky se queda sin cinturón.' }],
   },
-  // Desde el tablero, de frente: jadea de la emoción y lo lanza la catapulta.
-  {
-    id: 'emocion',
-    ms: 150,
-    cuadros: 40,
-    unaVez: true,
-    lineas: [{ texto: 'Duky empieza a inhalar y exhalar rápidamente, de la emoción.' }, { texto: 'El caza acelera a toda velocidad.' }],
-  },
-  { id: 'despega', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El avión despega.' }] },
-  { id: 'combate', ms: 300, lineas: [{ texto: 'DUKY SE HA UNIDO AL COMBATE.' }] },
+  // Desde el comienzo de la pista hasta que deja el portaaviones, en 3 s, con
+  // la cámara siempre en duky: pegado al asiento y, ya en el aire, feliz.
+  { id: 'despegue', ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: 'El avión despega.' }] },
+  { id: 'emocion', ms: 150, lineas: [{ texto: 'Duky se pone feliz: exhala e inhala rápidamente, de la emoción.' }] },
 
   // La radio: la torre, desde la consola de radar, y duky en su cabina.
   { id: 'radio', ms: 150, lineas: [{ quien: TORRE, texto: 'Torre de control, aquí torre de control, ¿me recibe?' }] },
