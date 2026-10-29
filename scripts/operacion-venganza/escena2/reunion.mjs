@@ -36,6 +36,9 @@ export const giroHacia = ([x0, z0], [x1, z1]) => (Math.atan2(z0 - z1, x1 - x0) *
 // De un giro a otro por el lado corto.
 export const girar = (a, b, k) => a + ((((b - a) % 360) + 540) % 360 - 180) * k
 
+// Cuánto gira duky la cabeza, sentado en su sillón, para ver a quien está en `donde`.
+export const desdeDuky = ({ en }) => girar(0, giroHacia([ASIENTOS.duky.en[0], ASIENTOS.duky.en[2]], [en[0], en[2]]) - ASIENTOS.duky.giro, 1)
+
 // Un punto de la sala en las unidades de quien está en `donde`, a escala `k`: lo contrario de colocar.
 export const enUnidades = ([x, y, z], { en, giro, suelo = -2.3, k = K }) => {
   const a = (giro * Math.PI) / 180

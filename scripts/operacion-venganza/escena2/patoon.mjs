@@ -1,6 +1,6 @@
 // Los patos de la escena 2 en sus poses de la reunión: el escuadrón sentado
 // a la mesa, duck-one con todas sus medallas, moby-duck con el puro apagado,
-// duky con la cara del susto, el marinero que lo trae y el almirante con su
+// duky, que se desinfla o resopla, el marinero que lo trae y el almirante con su
 // palo de presentación. En unidades de pato, como los pilotos: mira hacia
 // +x, su ala derecha hacia +z.
 
@@ -138,34 +138,40 @@ export const duke = {
 
 // ── duky ─────────────────────────────────────────────────────────────────
 
-// La cara del susto, como el meme de Pingu: el pico abierto de par en par,
-// los ojos redondos y blancos con la pupila chiquita y una lágrima en cada
-// uno. De vez en cuando (en los tramos de `tics`) le tiembla el párpado
-// derecho: un pasado que no se cuenta.
-const TIC = [[0.3, 0.36], [0.52, 0.55], [0.7, 0.78], [0.9, 0.94]]
-const BOCA_ABIERTA = ['#ffb4a4', '#e8806e', '#b0503e', '#5a1e14']
-const caraDeSusto = (u, tics) => [
-  el([0.35, 0.2, 0], [0.7, 0.68, 0.66], C.hule),
-  el([1.02, 0.18, 0], [0.36, 0.08, 0.32], C.picoHule, { rot: [0, 0, 14] }),
-  el([0.97, -0.13, 0], [0.32, 0.07, 0.28], C.picoHule, { rot: [0, 0, -28] }),
-  el([0.92, 0.02, 0], [0.24, 0.16, 0.25], BOCA_ABIERTA),
-  ...ambos((s) => [
-    el([0.86, 0.42, s * 0.34], [0.08, 0.19, 0.17], C.oscuro, { flat: '#3a3d48', rot: [0, -s * 22, 0] }),
-    el([0.9, 0.42, s * 0.34], [0.07, 0.165, 0.145], C.blanco, { flat: '#eef0f4', rot: [0, -s * 22, 0] }),
-    el([0.965, 0.42, s * 0.36], [0.03, 0.06, 0.05], C.oscuro, { flat: '#2a2c34' }),
-    el([0.985, 0.43, s * 0.365], [0.012, 0.02, 0.018], C.boca, { flat: '#e0302a' }),
-    el([0.95, 0.26, s * 0.38], [0.03, 0.055, 0.04], C.blanco, { flat: '#ffffff' }),
-  ]).flat(),
-  ...(tics.some(([a, b]) => u >= a && u < b) ? [el([0.9, 0.56, 0.34], [0.09, 0.09, 0.18], C.hule, { rot: [0, -22, 0] })] : []),
-]
+// Mira al equipo: la cabeza va de frente a cada uno de `vistas` (giros, en
+// grados, como desdeDuky en reunion.mjs) y vuelve al frente, con u de 0 a 1.
+const mirada = (u, vistas) => {
+  const paradas = [0, ...vistas, 0]
+  const tramos = paradas.length - 1
+  const i = Math.min(tramos - 1, Math.floor(Math.max(0, u) * tramos))
+  return paradas[i] + (paradas[i + 1] - paradas[i]) * tramo(u * tramos - i, 0, 0.4)
+}
 
-// Sentado no se hunde: sube hasta el asiento y le cuelgan las patas. Con
-// `tiembla`, de 0 a 1, le tirita el cuerpo entero, a saltos de un cuadro.
+// Sentado no se hunde: sube hasta el asiento y le cuelgan las patas.
 const EN_EL_SILLON = 0.15
-const tirita = (u, k) => Math.sin(Math.floor(u * 80) * 2.39 + k)
+const enElSillon = ({ salto = 0, ...pose }) => dukyFigura({ ...pose, salto: EN_EL_SILLON + salto })
 export const duky = {
-  sentado: (puntos = 0) => dukyFigura({ salto: EN_EL_SILLON, extra: puntosDeDuky(puntos) }),
-  susto: (u, { tics = TIC, tiembla = 0 } = {}) => dukyFigura({ salto: EN_EL_SILLON + 0.04 * tiembla * tirita(u, 0), inclina: 3 * tiembla * tirita(u, 1), cabeza: 4 * tiembla * tirita(u, 2), cara: caraDeSusto(u, tics) }),
+  sentado: (puntos = 0) => enElSillon({ extra: puntosDeDuky(puntos) }),
+  mira: (u, vistas) => enElSillon({ mira: mirada(u, vistas) }),
+  // Se desinfla con la cabeza gacha, y el hule tiembla un poco al quedar en el asiento.
+  seDesinfla: (u) => {
+    const k = tramo(u, 0.12, 0.6)
+    const tirita = u > 0.6 ? 0.1 * Math.sin((u - 0.6) * 18) * (1 - tramo(u, 0.6, 1)) : 0
+    return enElSillon({ aire: -k - tirita, cabeza: -8 * k })
+  },
+  // Desinflado, se vuelve a inflar de golpe con un salto, se pasa un poco y
+  // queda como siempre.
+  seInfla: (u) => {
+    const k = tramo(u, 0, 0.2)
+    return enElSillon({ aire: k - 1 + 0.3 * Math.sin(tramo(u, 0.1, 0.5) * Math.PI), cabeza: -8 * (1 - k), salto: 0.25 * Math.sin(tramo(u, 0, 0.4) * Math.PI) })
+  },
+  // Mira a los que lo miran, pero de la emoción resopla cuatro veces: se
+  // desinfla, se infla aleteando y dando un saltito, y queda como siempre.
+  resopla: (u, vistas) => {
+    const vez = u > 0.36 && u < 0.92 ? Math.sin(((u - 0.36) / 0.56) * 4 * Math.PI * 2) : 0
+    const toma = Math.max(0, -vez)
+    return enElSillon({ mira: mirada((u - 0.03) / 0.33, vistas), aire: vez > 0 ? -0.4 * vez : 0.7 * toma, aletea: 30 * toma, salto: 0.05 * toma, cabeza: 10 * toma })
+  },
   enBrazos: () => dukyFigura({}),
 }
 

@@ -260,12 +260,21 @@ const pDuky = {
   andar: { balanceo: 7, sube: 0.04, giro: 7 },
 }
 
+// Es de hule: con `aire` bajo cero se desinfla, aplastado y ensanchado sobre
+// su base, y sobre cero se infla parejo. Cada elipsoide conserva su giro.
+const BASE_DE_DUKY = [-0.1, -1.87, 0]
+const inflar = (formas, aire) => {
+  const S = aire < 0 ? [1 - 0.12 * aire, 1 + 0.4 * aire, 1 - 0.12 * aire] : [1, 1, 1].map(() => 1 + 0.25 * aire)
+  return formas.map((f) => ({ ...f, c: f.c.map((v, i) => BASE_DE_DUKY[i] + (v - BASE_DE_DUKY[i]) * S[i]), r: f.r.map((v, j) => v * Math.hypot(...f.M.map((fila, i) => fila[j] * S[i]))) }))
+}
+
 // `cara` cambia la de siempre por otra; `extra` va con el cuerpo, como los
-// puntos. `ala` levanta una de las alas; `aletea`, las dos.
-const dukyFigura = ({ fase = null, ala = 0, aletea = 0, cabeza = 0, salto = 0, inclina = 0, cara = DUKY_CABEZA, extra = [] }) => {
+// puntos. `ala` levanta una de las alas; `aletea`, las dos. `mira` gira la
+// cabeza a un lado, en grados, y `cabeza` la cabecea.
+const dukyFigura = ({ fase = null, ala = 0, aletea = 0, mira = 0, cabeza = 0, salto = 0, inclina = 0, aire = 0, cara = DUKY_CABEZA, extra = [] }) => {
   const alas = ambos((s) => transformar([(s < 0 ? ala : 0) - s * aletea, 0, 0], [0.2, -0.6, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
-  const testa = transformar([0, 0, cabeza], [0.2, -0.35, 0]).formas(cara)
-  return figura(pDuky, { tronco: [...DUKY_CUERPO, ...alas, ...testa], extra, fase, salto, inclina })
+  const testa = transformar([0, mira, cabeza], [0.2, -0.35, 0]).formas(cara)
+  return figura(pDuky, { tronco: inflar([...DUKY_CUERPO, ...alas, ...testa], aire), extra, fase, salto, inclina })
 }
 
 // Los tres puntos que le salen sobre la cabeza cuando le toca hablar: los `n` primeros.

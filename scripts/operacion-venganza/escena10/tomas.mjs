@@ -6,13 +6,12 @@
 // almirante: duck-one de pie frente a la pantalla de las bajas, con la
 // carpeta, y los otros tres en sus sillones. Duky sigue donde lo dejaron.
 
-import { ASIENTOS, ENTRADA, entra, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
+import { ASIENTOS, ENTRADA, desdeDuky, entra, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { PRENDIDO, SIN_HUMO, duckOne, duke, duky, moby, sentar } from '../escena2/patoon.mjs'
 import * as M from '../pilotos/modelos.mjs'
 import { figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { calada } from '../pilotos/calada.mjs'
 import { hablar, silaba, suave } from '../escena1/personajes.mjs'
-import { alargar } from '../tiras.mjs'
 
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
@@ -26,6 +25,8 @@ const PANTALLA = 'bajas'
 const DUCK_ONE = { en: [2.75, 0, -1.0], giro: 180 }
 const DUKY = xz(ASIENTOS.duky)
 const aDuky = (donde, k = 1) => ({ ...donde, giro: girar(donde.giro, giroHacia(xz(donde), DUKY), k) })
+// Y él los mira: a duke, a duck-one y a moby.
+const AL_EQUIPO = [ASIENTOS.duke, DUCK_ONE, ASIENTOS.moby].map(desdeDuky)
 
 // El elenco: duck-one con la carpeta cerrada, los demás sentados, moby con el
 // puro apagado. `cambios`, por nombre, como en la escena 2: una figura (va a
@@ -118,16 +119,7 @@ export const TOMAS_3D = {
   },
   enserio: { escena: mirandoADuky((u) => ({ moby: [moby.hablando(u, PRENDIDO), MIRAN.moby] })), camara: fija([-1.0, 1.6, -0.3], [-1.0, 1.0, 1.05], 60) },
   eficacia: { escena: mirandoADuky((u) => ({ duckOne: [conLaCarpeta(u), aDuky(DUCK_ONE)] })), camara: A_DUCK },
-  // El dolly de la escena 2, más brusco: la cámara se lanza de 4,7 a 0,7 m
-  // mientras abre el campo, la cara queda del mismo ancho y todo tiembla,
-  // un cuadro más al final.
-  noot: alargar({
-    escena: mirandoADuky((u) => ({ duky: duky.susto(u, { tics: [[0.12, 0.2], [0.3, 0.42], [0.5, 0.56], [0.62, 0.74], [0.8, 0.88], [0.92, 1]], tiembla: tramo(u, 0.2, 0.6) }) })),
-    camara: (u) => {
-      const k = suave(tramo(u, 0.05, 0.6))
-      const d = 4.7 - 4.0 * k
-      const sacude = 0.012 * tramo(u, 0.55, 0.7) * Math.sin(Math.floor(u * 40) * 2.1)
-      return [[-1.7 + sacude, 1.07 + sacude, 0.75 - d], [-1.6, 1.07, 0.75], (2 * Math.atan((1.1 - 0.3 * k) / 2 / d) * 180) / Math.PI]
-    },
-  }, 0, 41 / 40),
+  // Como en la escena 2, los mira a los tres, pero esta vez le toca a él:
+  // resopla de la emoción.
+  noot: { escena: mirandoADuky((u) => ({ duky: duky.resopla(u, AL_EQUIPO) })), camara: fija([-1.75, 1.35, -1.6], [-1.6, 0.9, 0.95], 44) },
 }

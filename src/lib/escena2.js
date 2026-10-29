@@ -114,14 +114,17 @@ export const TOMAS = [
   },
   // Giran todos en sus sillas, a la vez.
   { id: 'miran', ms: 150, cuadros: 14, unaVez: true, lineas: [{ texto: 'Todos miran a Duky.' }] },
-  // Dolly zoom: la cámara se acerca mientras abre el campo, y la cara no cambia de tamaño.
-  { id: 'noot', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duky sigue inmóvil.' }, { texto: 'Le tiembla un párpado.' }] },
+  // Los mira de a uno, de frente.
+  { id: 'noot', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duky mira al equipo.' }] },
   { id: 'ese', ms: 150, lineas: [{ quien: MOBY, texto: '¿Ese?' }] },
+  { id: 'desinfla', ms: 150, cuadros: 16, unaVez: true, lineas: [{ texto: 'Duky se desinfla.' }] },
 
-  // La alarma. La torre habla por los parlantes.
+  // La alarma. La torre habla por los parlantes, y duky se vuelve a inflar del susto.
   {
     id: 'alarma',
     ms: 150,
+    cuadros: 27,
+    unaVez: true,
     segunModo: true,
     lineas: [{ texto: 'Suena una alarma.' }, { quien: TORRE, texto: '¡Objetivo avistado frente al portaaviones!' }],
   },

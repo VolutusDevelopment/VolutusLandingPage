@@ -58,8 +58,8 @@ export const TOMAS = [
       { quien: DUCK_ONE, texto: 'exseden los límites de la comprensión internacional.' },
     ],
   },
-  // El dolly de la escena 2, más brusco.
-  { id: 'noot', ms: 150, cuadros: 41, unaVez: true, lineas: [{ texto: 'La cámara se lanza otra vez sobre Duky.' }, { texto: 'Le tiembla el párpado, y ahora también el cuerpo.' }] },
+  // Los mira como en la escena 2, pero esta vez le toca a él.
+  { id: 'noot', ms: 150, cuadros: 36, unaVez: true, lineas: [{ texto: 'Duky mira al equipo.' }, { texto: 'Emocionadísimo, resopla cuatro veces.' }] },
 ]
 
 export const rutaDeToma = ({ id }) => `/operacion-venganza/escena10/${id}.png`

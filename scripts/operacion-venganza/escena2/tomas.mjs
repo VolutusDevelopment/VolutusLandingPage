@@ -6,7 +6,7 @@
 // [ojo, mira, campo] en metros y grados. `modo` es lo que muestra la pantalla:
 // 'cursor' o 'huella', como desde el atacante en la escena 1.
 
-import { ASIENTOS, ENTRADA, K, PUERTA, anteLaCamara, enUnidades, entra, fase, girar, giroHacia, huecoDePuerta, recorrido, reunion } from './reunion.mjs'
+import { ASIENTOS, ENTRADA, K, PUERTA, anteLaCamara, desdeDuky, enUnidades, entra, fase, girar, giroHacia, huecoDePuerta, recorrido, reunion } from './reunion.mjs'
 import { EN_BRAZOS, PRENDIDO, SIN_HUMO, almirante, duckOne, duke, duky, dukyEnBrazos, marinero, moby, silueta } from './patoon.mjs'
 import { FOTOS_3D } from './fotos.mjs'
 import { PANTALLA } from '../escena1/lugares.mjs'
@@ -120,6 +120,13 @@ const seAcerca = (u) => {
 const DUKY = xz(ASIENTOS.duky)
 const hacia = (donde, k) => ({ ...donde, giro: girar(donde.giro, giroHacia(xz(donde), DUKY), k) })
 const aDuky = (quien, k) => hacia(ASIENTOS[quien], k)
+// Y él los mira: a duke, a duck-one y a moby.
+const AL_EQUIPO = [ASIENTOS.duke, FRENTE, ASIENTOS.moby].map(desdeDuky)
+// Todos girados hacia él, y duck-one con el expediente abierto.
+const anteDuky = (cambios) =>
+  sala((u) => ({ duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, 1)], moby: [moby.sentado(u, PRENDIDO), aDuky('moby', 1)], duke: [duke.sentado(u), aDuky('duke', 1)], ...cambios(u) }), { giros: { moby: aDuky('moby', 1).giro, duke: aDuky('duke', 1).giro } })
+// Duky de frente, por sobre la mesa.
+const A_DUKY = fija([-1.75, 1.3, -1.6], [-1.6, 0.8, 0.95], 40)
 
 // ── Se van ───────────────────────────────────────────────────────────────
 
@@ -242,28 +249,24 @@ export const TOMAS_3D = {
     },
     camara: fija([1.1, 1.7, -0.6], [-1.8, 0.7, 0.4], 68),
   },
-  // La cara queda del mismo ancho, `ANCHO` m, mientras la cámara se acerca de 4,5 a 0,8 m.
-  noot: {
-    escena: sala((u) => ({ duky: duky.susto(u), duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, 1)], moby: [moby.sentado(u, PRENDIDO), aDuky('moby', 1)], duke: [duke.sentado(u), aDuky('duke', 1)] }), { giros: { moby: aDuky('moby', 1).giro, duke: aDuky('duke', 1).giro } }),
-    camara: (u) => {
-      const k = suave(u)
-      const d = 4.5 - 3.7 * k
-      const ancho = 1.1 - 0.3 * k
-      return [[-1.7, 1.07, 0.75 - d], [-1.6, 1.07, 0.75], (2 * Math.atan(ancho / 2 / d) * 180) / Math.PI]
-    },
-  },
-  ese: {
-    escena: sala((u) => ({ moby: [moby.hablando(u, PRENDIDO), aDuky('moby', 1)], duke: [duke.sentado(u), aDuky('duke', 1)], duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, 1)] }), { giros: { moby: aDuky('moby', 1).giro, duke: aDuky('duke', 1).giro } }),
-    camara: fija([-0.1, 1.75, -2.1], [-1.0, 0.95, 1.0], 50),
-  },
+  // Los mira de a uno y vuelve al frente.
+  noot: { escena: anteDuky((u) => ({ duky: duky.mira((u - 0.08) / 0.84, AL_EQUIPO) })), camara: A_DUKY },
+  ese: { escena: anteDuky((u) => ({ moby: [moby.hablando(u, PRENDIDO), aDuky('moby', 1)] })), camara: fija([-0.1, 1.75, -2.1], [-1.0, 0.95, 1.0], 50) },
+  desinfla: { escena: anteDuky((u) => ({ duky: duky.seDesinfla(u) })), camara: A_DUKY },
 
-  alarma: {
-    escena: (u, modo) => {
-      const prendida = Math.floor(u * 8) % 2 === 0
-      return [...reunion({ pantalla: modo, alarma: prendida, figuras: elenco(u, { duckOne: [duckOne.carpeta(1), DUCK_A_LA_MESA], moby: moby.sentado(u, PRENDIDO) }) }), ...velo(prendida)]
+  // La baliza sigue girando, al ritmo de siempre, mientras duky se vuelve a
+  // inflar del susto.
+  alarma: alargar(
+    {
+      escena: (u, modo) => {
+        const prendida = Math.floor(u * 8) % 2 === 0
+        return [...reunion({ pantalla: modo, alarma: prendida, figuras: elenco(u, { duckOne: [duckOne.carpeta(1), DUCK_A_LA_MESA], moby: moby.sentado(u, PRENDIDO), duky: duky.seInfla(u) }) }), ...velo(prendida)]
+      },
+      camara: () => CAMARA_DE_LA_ALARMA,
     },
-    camara: () => CAMARA_DE_LA_ALARMA,
-  },
+    0,
+    27 / 12,
+  ),
   // La cierra y se gira hacia el almirante.
   carpeta: {
     escena: sala(conPuro((u) => ({ duckOne: [duckOne.carpeta(1 - tramo(u, 0, 0.32)), { ...FRENTE, giro: girar(180, DUCK_AL_ALMIRANTE.giro, tramo(u, 0.4, 0.8)) }] }))),

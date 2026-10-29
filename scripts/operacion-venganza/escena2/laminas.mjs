@@ -66,8 +66,9 @@ const NOMBRES = {
   fantasma: 'el fantasma amarillo',
   expediente: 'el expediente',
   miran: 'todos miran',
-  noot: 'dolly zoom',
+  noot: 'mira al equipo',
   ese: '¿ese?',
+  desinfla: 'se desinfla',
   alarma: 'la alarma',
   carpeta: 'la carpeta',
   perfecto: 'perfecto',
@@ -141,19 +142,19 @@ lamina('E2-tomas-puro', {
 
 lamina('E2-tomas-fantasma', {
   titulo: 'Escena 2 · el fantasma amarillo',
-  papel: 'Escena 2 · tomas 31 a 37',
+  papel: 'Escena 2 · tomas 31 a 38',
   nombre: 'El fantasma amarillo',
   bajada: 'Ciento doce victorias confirmadas',
-  detalle: 'Duky no se mueve. duck-one abre su expediente, con la foto de duky adentro, y lo lee en voz alta. Todos giran sus sillones hacia él a la vez. Dolly zoom: la cámara se acerca de 4,5 a 0,8 m mientras abre el campo, y la cara de duky no cambia de tamaño mientras el atardecer se abre detrás. Tiene la cara del meme de Pingu: el pico abierto de par en par, los ojos redondos con la pupila chiquita y una lágrima, y de vez en cuando le tiembla el párpado. Moby ya fuma el puro.',
-  filas: [fila('Inmóvil', ['aportar', 'inmovil', 'fantasma'].map(celda), 3), fila('Noot noot', ['expediente', 'miran', 'noot'].map(celda), 3), fila('¿Ese?', ['ese'].map(celda), 3)],
+  detalle: 'Duky no se mueve. duck-one abre su expediente, con la foto de duky adentro, y lo lee en voz alta. Todos giran sus sillones hacia él a la vez, y duky, de frente, los mira de a uno: a duke, a duck-one y a moby. Cuando moby pregunta «¿Ese?», duky se desinfla en su sillón como el pato de hule que es, con la cabeza gacha. Moby ya fuma el puro.',
+  filas: [fila('Inmóvil', ['aportar', 'inmovil', 'fantasma'].map(celda), 3), fila('Noot noot', ['expediente', 'miran', 'noot'].map(celda), 3), fila('¿Ese?', ['ese', 'desinfla'].map(celda), 3)],
 })
 
 lamina('E2-tomas-operacion', {
   titulo: 'Escena 2 · la operación',
-  papel: 'Escena 2 · tomas 38 a 48',
+  papel: 'Escena 2 · tomas 39 a 49',
   nombre: 'Operasión Bengansa',
   bajada: 'Objetivo avistado frente al portaaviones',
-  detalle: 'Suena la alarma: la baliza gira y la sala se enciende de rojo a cada vuelta. duck-one cierra la carpeta: todo fue parte del plan, en plano y contraplano con el almirante. Se gira hacia el escuadrón y les señala sus puestos. Moby se para con el puño en alto y duke se habla a su espejo de mano. Se van todos por la puerta, cada uno por su lado de la mesa; duky se queda sentado, y le salen los tres puntos. El texto en pantalla va en la pantalla de la sala, en letras de cuadritos, con «INICIADA» parpadeando.',
+  detalle: 'Suena la alarma: la baliza gira y la sala se enciende de rojo a cada vuelta, y duky se vuelve a inflar del susto. duck-one cierra la carpeta: todo fue parte del plan, en plano y contraplano con el almirante. Se gira hacia el escuadrón y les señala sus puestos. Moby se para con el puño en alto y duke se habla a su espejo de mano. Se van todos por la puerta, cada uno por su lado de la mesa; duky se queda sentado, y le salen los tres puntos. El texto en pantalla va en la pantalla de la sala, en letras de cuadritos, con «INICIADA» parpadeando.',
   filas: [
     fila('La alarma', ['alarma', 'carpeta', 'perfecto'].map(celda), 3),
     fila('Parte del plan', ['vino', 'plan', 'gira'].map(celda), 3),
