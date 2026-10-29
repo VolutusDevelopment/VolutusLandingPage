@@ -11,7 +11,7 @@ import { el, placa, transformar, tubo } from './tres.mjs'
 import * as M from './modelos.mjs'
 import { RAMPAS as C, hueso, disco, ambos, enEstrella } from './modelos.mjs'
 import { cabina } from './cuerpos.mjs'
-import { actitud, armas, icp, pantalla, radar, tactica, ufd } from './pantallas.mjs'
+import { acm, actitud, adi, armas, barrido, hsi, icp, indexador, pantalla, radar, radio, redondo, rwr, tactica, ufd, vdi } from './pantallas.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -126,15 +126,20 @@ const hud = () => {
   ]
 }
 
+// La visera sobre el tablero: el panel de arriba y el techo hasta el parabrisas.
+const visera = () => [
+  placa([[...ARRIBA.abajo, -1.2], [...ARRIBA.abajo, 1.2], [...ARRIBA.arriba, 1.05], [...ARRIBA.arriba, -1.05]], 0.08, C.oscuro, { pinta: OSCURO }),
+  caja(2.1, 3.3, 2.3, 0.5, -0.82, 0, C.oscuro),
+  placa([[2.17, -0.56, -1.1], [2.17, -0.56, 1.1], [3.3, -0.58, 1.15], [3.3, -0.58, -1.15]], 0.06, C.oscuro),
+]
+
 // El tablero del F-22, como el real: abajo, las dos SMFD de 6,25 pulgadas a
 // los lados de la PMFD de 8; arriba, el ICP entre las dos UFD y el HUD
 // encima; la cuarta SMFD, entre las rodillas, y el piso bajo los pies.
 const tableroF22 = () => [
   enFila(0.5, 0, 0.41, 0.4, pantalla(tactica, 5)),
   ...ambos((s) => enFila(0.56, s * 0.86, 0.32, 0.31, pantalla(s > 0 ? radar : actitud, 4))),
-  placa([[...ARRIBA.abajo, -1.2], [...ARRIBA.abajo, 1.2], [...ARRIBA.arriba, 1.05], [...ARRIBA.arriba, -1.05]], 0.08, C.oscuro, { pinta: OSCURO }),
-  caja(2.1, 3.3, 2.3, 0.5, -0.82, 0, C.oscuro),
-  placa([[2.17, -0.56, -1.1], [2.17, -0.56, 1.1], [3.3, -0.58, 1.15], [3.3, -0.58, -1.15]], 0.06, C.oscuro),
+  ...visera(),
   cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.4, icp),
   ...ambos((s) => cara(enArriba(0.45, s * 0.72), Z, T_ARRIBA, 0.27, ALTO_ARRIBA * 0.36, pantalla(ufd, 3))),
   ...hud(),
@@ -186,6 +191,41 @@ const proa = (cfg) => {
   return placa([[3.3, -0.58, -1.6], [3.3, -0.58, 1.6], [x, y, 0.3], [x, y, -0.3]], 0.1, cfg.caza[0].rampa)
 }
 
+// ── La cabina del F-14 de duck-one ───────────────────────────────────────
+
+// El tablero del Tomcat, como el real: al centro la VDI, la pantalla verde,
+// con el panel de combate (ACM) y el HUD encima; a la izquierda, relojes de
+// aguja, y a la derecha el horizonte artificial, el rumbo, el radar de alerta
+// y la radio. En la visera, el indicador de ángulo de ataque y el del barrido
+// de las alas; la visera sigue, oscura, hasta el parabrisas. Abajo a la
+// izquierda queda su botón (escena3/caza.mjs).
+const GRIS_TABLERO = () => '#30353c'
+const tableroTomcat = () => [
+  enFila(0.52, 0, 0.34, 0.36, pantalla(vdi, 3)),
+  reloj(0.74, -0.62, 0.18, 0.6),
+  reloj(0.74, -1.08, 0.18, 2.2),
+  reloj(0.28, -0.62, 0.18, 1.4),
+  ...[[0.74, 0.62, adi], [0.28, 0.62, hsi], [0.74, 1.08, rwr]].map(([s, z, imagen]) => enFila(s, z, 0.18, 0.18, redondo(imagen))),
+  enFila(0.28, 1.08, 0.18, 0.12, radio),
+  ...visera(),
+  placa([[3.3, -0.58, -1.8], [3.3, -0.58, 1.8], [3.4, -0.08, 1.8], [3.4, -0.08, -1.8]], 0.06, C.oscuro),
+  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.42, acm),
+  ...ambos((s) => cara(enArriba(0.45, s * 0.62), Z, T_ARRIBA, 0.1, ALTO_ARRIBA * 0.4, s > 0 ? barrido : indexador)),
+  ...hud(),
+]
+
+// En el arco del parabrisas, el espejo ancho del Tomcat y, colgando de él,
+// una de sus medallas, de cara al piloto, que se balancea `medalla` grados.
+const espejoTomcat = (medalla = 0) => {
+  const a = (medalla * Math.PI) / 180
+  const colgando = (largo) => [3.66, 0.95 - largo * Math.cos(a), 0.3 + largo * Math.sin(a)]
+  return [
+    placa([[3.64, 0.95, -0.55], [3.64, 0.95, 0.55], [3.7, 1.2, 0.55], [3.7, 1.2, -0.55]], 0.05, C.oscuro, { pinta: ([, y, z]) => (Math.abs(z) < 0.5 && y > 0.98 && y < 1.17 ? C.vidrio : null) }),
+    hueso([3.66, 0.95, 0.3], colgando(0.3), 0.02, C.blanco),
+    el(colgando(0.4), [0.04, 0.12, 0.12], C.oro, { rot: [medalla, 0, 0] }),
+  ]
+}
+
 // ── Piezas comunes de cabina ─────────────────────────────────────────────
 
 // El asiento eyectable de cada uno, macizo como el de Duky: respaldo ancho,
@@ -221,18 +261,13 @@ const mandos = (palanca, acelerador) => [
 
 export const CABINAS = {
   'duck-one': {
-    caza: M.CAZA_DUCK_ONE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [6.0, 4.5], lomo: 4.5, frente: 1.58,
+    caza: M.CAZA_DUCK_ONE, cabeza: [4.7, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [5.7, 3.2], lomo: 4.1, parabrisas: 5.6, frente: 1.58,
     ancho: 2.4, marco: C.oscuro,
     consola: C.grisOscuro, tablero: C.grisOscuro, xAsiento: -1.05, pata: C.naranja, cadera: -1.45,
-    panel: [-1.3, 1.3, { borde: '#0a0e14', fondo: '#1f4b3a', linea: '#7dffa0', columnas: 3 }],
+    panel: [-1.3, 1.3, GRIS_TABLERO],
     // Su asiento, verde oliva como el uniforme, con la estrella del líder.
     asiento: { rampa: C.oliva, cabecera: (v, u) => (enEstrella(u, v, 0.32) ? C.oro : null) },
-    // Dos retrovisores en el arco delantero y una medalla colgando de él.
-    delante: () => [
-      ...ambos((s) => mira([3.7, 1.15, s * 0.75], uni([-0.9, -0.3, -s * 0.2]), 0.2, C.oscuro, C.vidrio)).flat(),
-      hueso([3.7, 1.4, 0.3], [3.7, 0.9, 0.3], 0.02, C.blanco),
-      el([3.7, 0.8, 0.3], [0.12, 0.12, 0.04], C.oro),
-    ],
+    delante: (cfg) => [...tableroTomcat(), ...espejoTomcat(cfg.medalla)],
   },
   duke: {
     caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [5.75, 4.5], lomo: 4.5, frente: 1.58,
@@ -326,10 +361,12 @@ export const avion = (cfg) => {
     const p = (t) => [x, cupula.c[1] + cupula.r[1] * s * Math.sin(t), cupula.r[2] * s * Math.cos(t)]
     return Array.from({ length: 12 }, (_, i) => hueso(p((i * Math.PI) / 12), p(((i + 1) * Math.PI) / 12), 0.035, cfg.marco))
   }
-  // La cabina es una abertura en el fuselaje, del tamaño de la cúpula vista desde arriba.
-  const hueco = ([x, y, z]) => y > cupula.c[1] - 0.25 && ((x - cupula.c[0]) / cupula.r[0]) ** 2 + (z / cupula.r[2]) ** 2 < 0.92
+  // La cabina es una abertura en el fuselaje, del tamaño de la cúpula vista
+  // desde arriba, o hasta el `parabrisas` si el morro queda bajo el vidrio.
+  const frente = cfg.parabrisas ?? cupula.c[0] + cupula.r[0]
+  const hueco = ([x, y, z]) => x < frente && y > cupula.c[1] - 0.25 && ((x - cupula.c[0]) / cupula.r[0]) ** 2 + (z / cupula.r[2]) ** 2 < 0.92
   const sinCabecita = cfg.caza.filter((f) => f.vidrio || f.k !== 'e' || Math.hypot(f.c[0] - hx, f.c[1] - hy) > 0.5 || Math.abs(f.c[2]) > 0.3)
-  // La cúpula del F-15EX es de dos plazas y en estos cazas va uno solo (la del
+  // La cúpula del F-14 es de dos plazas y en estos cazas va uno solo (la del
   // Hornet, de una, se cierra igual). Como en el F-22, la cabina es una
   // bañera del color del caza por fuera y de las consolas por dentro, con el
   // borde a media cúpula; tras el asiento, desde `lomo`, el vidrio cubre un
@@ -340,7 +377,7 @@ export const avion = (cfg) => {
     const tramo = (x0, x1, seccion) => [0, 0.2, 0.5, 0.8, 1].map((t) => seccion(x0 + (x1 - x0) * t, ancho(x0 + (x1 - x0) * t)))
     const adentro = (y0) => ([, y, z], n) => (n[0] > 0.7 || n[1] * (y - y0) + n[2] * z < 0 ? cfg.consola : null)
     const yBanera = cy - 0.4
-    const banera = tubo(tramo(cx + cupula.r[0], cfg.lomo, (x, s) => [x, 2.1 * cupula.r[2] * s, 1.5, yBanera, 4]), cfg.caza[0].rampa, { pinta: adentro(yBanera), hueco: ([, y]) => y > cy })
+    const banera = tubo(tramo(frente, cfg.lomo, (x, s) => [x, 2.1 * cupula.r[2] * s, 1.5, yBanera, 4]), cfg.caza[0].rampa, { pinta: adentro(yBanera), hueco: ([, y]) => y > cy })
     const lomo = tubo(tramo(cfg.lomo, cx - cupula.r[0], (x, s) => [x, 1.9 * cupula.r[2] * s, 1.55 * cupula.r[1] * s, cy - 0.225 * cupula.r[1] * s]), cfg.caza[0].rampa, { pinta: (p, n) => (n[0] > 0.7 ? cfg.consola : null) })
     return [banera, lomo]
   }

@@ -1,10 +1,11 @@
 // Escena 9, «Retirada»: las tomas de la cubierta en una lámina animada del
 // lienzo de Design, como las de la escena 3 (escena3/laminas.mjs), con el
-// Hornet de duke plegando las alas detrás de él.
+// Hornet de duke plegando las alas detrás de él, y en otra las de la radio,
+// desde el control de vuelo.
 //
 //   node scripts/operacion-venganza/escena9/laminas.mjs <carpeta>
 //
-// Escribe <carpeta>/project/E9-tomas-cubierta.dc.html.
+// Escribe <carpeta>/project/E9-tomas-cubierta.dc.html y E9-tomas-radio.dc.html.
 
 import { pixel3d } from '../pilotos/tres.mjs'
 import { celdaDeToma, fila, pagina } from '../pilotos/tablero.mjs'
@@ -27,8 +28,8 @@ const ANIMACIONES = `.t12{animation:cuadro12 ${DURACION}s step-end infinite}
 const cuadro = (figura, [ojo, mira, campo]) =>
   pixel3d(figura, { ojo, mira, campo, cielo }, N, TAM, { c: [0, 0, 0], radio: 1 }).replace(`height="${N * TAM}" viewBox="0 0 ${N} ${N}"`, `height="${ALTO * TAM}" viewBox="0 ${(N - ALTO) / 2} ${N} ${ALTO}"`)
 
-const NOMBRES = { regresan: 'regresan', aterrizan: 'aterrizan', saltito: 'el saltito', fuselaje: 'el fuselaje', abolladura: 'la abolladura', torre: 'a la torre' }
-const dialogo = ({ lineas }) => lineas.map(({ texto }) => `<i>${texto}</i>`).join('<br>')
+const NOMBRES = { regresen: 'regresen', presupuesto: 'el presupuesto', regresan: 'regresan', aterrizan: 'aterrizan', saltito: 'el saltito', fuselaje: 'el fuselaje', abolladura: 'la abolladura', torre: 'a la torre' }
+const dialogo = ({ lineas }) => lineas.map(({ quien, texto }) => (quien ? `${quien}: ${texto}` : `<i>${texto}</i>`)).join('<br>')
 
 const celda = (id) => {
   const numero = TOMAS.findIndex((t) => t.id === id)
@@ -50,5 +51,18 @@ writeFileSync(
     animaciones: ANIMACIONES,
     filas: [fila('El aterrizaje', ['regresan', 'aterrizan', 'saltito'].map(celda), 3), fila('En la cubierta', ['fuselaje', 'abolladura', 'torre'].map(celda), 3)],
     alto: 1180,
+  }),
+)
+writeFileSync(
+  `${RAIZ}/project/E9-tomas-radio.dc.html`,
+  pagina({
+    titulo: 'Escena 9 · la radio',
+    papel: 'Escena 9 · tomas 2 y 4',
+    nombre: 'El control de vuelo',
+    bajada: 'El oficial de inteligencia llama de vuelta al Patoon-4',
+    detalle: 'En lo alto de la isla, con ventanales a babor, a proa y a popa sobre la cubierta y pantallas colgadas del techo. El oficial habla por radio sentado a la consola, con la mano en el audífono, entre el radar de aproximación y el combustible de los dos cazas, que parpadea en rojo. Detrás de él, de pie y con las manos atrás, el almirante mira las pantallas con el ceño fruncido.',
+    animaciones: ANIMACIONES,
+    filas: [fila('En el control de vuelo', ['regresen', 'presupuesto'].map(celda), 3)],
+    alto: 640,
   }),
 )

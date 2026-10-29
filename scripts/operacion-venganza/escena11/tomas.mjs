@@ -7,8 +7,8 @@
 // (escena1/lugares.mjs), donde su F-22 (hangar.mjs) espera sobre el ascensor
 // de popa. Lo sube a la cabina mientras la plataforma sube a la cubierta, y
 // el caza despega desde el comienzo de la pista, con la cámara siempre en
-// duky. En vuelo, la torre le habla por radio, desde la consola de radar de
-// la sala, y duky no contesta.
+// duky. En vuelo, el oficial de inteligencia le habla por radio desde la sala
+// azul (cic.mjs), con el almirante detrás, y duky no contesta.
 
 import { ASIENTOS, K as K_SALA, PUERTA, enUnidades, fase, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { EN_BRAZOS, duky, marinero } from '../escena2/patoon.mjs'
@@ -16,8 +16,9 @@ import { el, transformar } from '../pilotos/tres.mjs'
 import { DUKY as DUKY_HULE, RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukyFigura, figura, manosAndando } from '../pilotos/cuerpos.mjs'
 import { ASCENSOR, HANGAR, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
-import { OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
+import { ALMIRANTE, OFICIAL, OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
 import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
+import { cic } from './cic.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -252,19 +253,11 @@ const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 
 // ── La radio ─────────────────────────────────────────────────────────────
 
-// La consola de radar de babor, en la sala de mando (escena1/lugares.mjs):
-// la pantalla va inclinada hacia la sala. El barrido da dos vueltas por
-// bucle; con `eco`, un punto parpadea donde está el enemigo.
-export const RADAR = { x: -1.6, y: 1.3 }
-export const enLaPantalla = (x, y) => [x, y + 0.016, -4.15 - ((y - 1.0) / 0.6) * 0.7 + 0.014]
-const ECO = [RADAR.x + 0.3, RADAR.y + 0.09]
-const radar = (u, eco) => {
-  const a = u * Math.PI * 4
-  const barrido = hueso(enLaPantalla(RADAR.x, RADAR.y), enLaPantalla(RADAR.x + 0.55 * Math.cos(a), RADAR.y + 0.2 * Math.sin(a)), 0.012, C.verde, { flat: '#b8ffc8', brilla: true })
-  const prendido = eco && Math.floor(u * 12) % 3 !== 2
-  return [barrido, ...(prendido ? [el(enLaPantalla(...ECO), [0.035, 0.035, 0.035], C.verde, { flat: '#eaffee', brilla: true })] : [])]
-}
-export const torre = (eco) => (u) => [...reunion({ pantalla: PANTALLA, figuras: [] }), ...radar(u, eco)]
+// En la sala azul, el oficial habla por radio o calla, y el almirante, detrás,
+// mira las pantallas; con `eco`, quien juega aparece en los radares.
+const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
+const POR_RADIO = gesto(OFICIAL, 'habla por radio')
+const enLaSalaAzul = ({ habla = false, eco = false }) => cic({ oficial: habla ? POR_RADIO : (u) => POR_RADIO(u, { abre: 0 }), almirante: gesto(ALMIRANTE, 'mira las pantallas'), eco })
 
 export const TOMAS_3D = {
   recoge: {
@@ -326,12 +319,17 @@ export const TOMAS_3D = {
   },
   emocion: { escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
 
-  radio: { escena: torre(false), camara: fija([RADAR.x, 2.15, -3.75], enLaPantalla(RADAR.x, RADAR.y), 56) },
-  // Mientras la torre llama, duky de perfil frente al tablero del F-22, de un
+  // Desde su consola, junto a la pantalla, de frente al oficial; el almirante, detrás.
+  radio: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.5, 1.15, 0.2], [1.0, 1.02, -0.05], 50) },
+  // Mientras el oficial llama, duky de perfil frente al tablero del F-22, de un
   // lado y del otro: las pantallas encendidas y él, que no contesta.
   silencio: { escena: (u) => volando(u), camara: fija(enVueloDe([1.2, 0.6, -1.45]), enVueloDe([1.9, -1.0, 0.7]), 96) },
-  pitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.85, -3.85], enLaPantalla(...ECO), 40) },
-  termina: { escena: torre(false), camara: fija([RADAR.x - 0.9, 1.9, -3.5], enLaPantalla(RADAR.x, RADAR.y), 50) },
+  // El radar de su consola, de cerca: aparece el eco.
+  pitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([1.5, 1.2, -0.95], [2.12, 1.1, -0.5], 40) },
+  // Por el lado izquierdo del oficial, el que no tapa su brazo.
+  termina: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.0, 1.25, -1.2], [1.0, 1.0, 0.0], 54) },
   calla: { escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
-  otroPitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.65, -4.05], enLaPantalla(...ECO), 32) },
+  // Desde el rincón del fondo, en alto, la sala entera: el almirante de
+  // espaldas, el oficial en su consola y el eco otra vez en el radar grande.
+  otroPitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([-3.1, 2.0, 2.3], [1.1, 1.1, -0.42], 58) },
 }

@@ -131,6 +131,8 @@ export const SILLON = [
   hueso([-0.1, -2.1, 0], [-0.1, -2.75, 0], 0.16, C.oscuro),
   el([-0.1, -2.8, 0], [0.75, 0.06, 0.75], C.oscuro),
 ]
+// La silla de una consola: la misma, de cuero negro.
+export const SILLA = SILLON.map((f) => (f.rampa === C.cuero ? { ...f, rampa: C.negro } : f))
 
 const SENTADO = 0.5
 // Las manos van antes de bajar la figura: se suben lo que se sienta para quedar en los apoyabrazos.
@@ -191,6 +193,11 @@ export const ALMIRANTE = {
     {
       nombre: 'mira el atardecer',
       pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: u > 0.55 && u < 0.67 ? 0 : 0.3 })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 3 }),
+    },
+    {
+      nombre: 'mira las pantallas',
+      // Atento, con el ceño fruncido y las manos atrás, mientras el oficial habla por radio.
+      pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: 0.8, abre: u > 0.3 && u < 0.4 ? 0 : 0.4 })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 2 }),
     },
   ],
 }
@@ -280,6 +287,7 @@ export const pOficial = {
 }
 
 const LEE = [0.75, -0.6, -0.55]
+const AL_AUDIFONO = OF_CABEZA.punto([0.22, 0.6, 0.8])
 const of = (cfg) => figura(pOficial, { sinSombra: true, ...cfg })
 const conTableta = (cabeza, u, extra = {}) => of({ tronco: oficialTronco(cabeza), manos: { 1: pOficial.reposo(1), [-1]: LEE }, extra: tableta(LEE, 25), salto: 0.012 * Math.sin(u * Math.PI * 2), ...extra })
 
@@ -309,6 +317,17 @@ export const OFICIAL = {
     {
       nombre: 'se queda callado',
       pose: (u) => conTableta(oficialCabeza({ abre: u > 0.45 && u < 0.6 ? 0 : 0.7, mira: [0, 0] }), u, { extra: [...tableta(LEE, 25), ...gota(suave(u / 0.9))] }),
+    },
+    {
+      nombre: 'habla por radio',
+      // Sentado a una consola, con la mano en el audífono y el codo afuera; `abre`, su pico.
+      pose: (u, { abre = silaba(u) * 0.6 } = {}) => [
+        ...figura(
+          { ...pOficial, dobla: (s) => (s > 0 ? [0, -1, 0.6] : pOficial.dobla(s)) },
+          { sinSombra: true, tronco: hablar(oficialTronco(oficialCabeza({ abre: u > 0.62 && u < 0.7 ? 0 : 0.55, mira: [0, -0.02] })), abre), manos: { 1: AL_AUDIFONO, [-1]: LEE }, extra: tableta(LEE, 25), agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) },
+        ),
+        ...SILLA,
+      ],
     },
   ],
 }

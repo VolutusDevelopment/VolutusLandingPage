@@ -316,27 +316,27 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-3': {
     archivo: 'operacion-venganza/escena-3.html',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-29',
     titulo: 'Operación Venganza, escena 3: Despegue — Volutus',
     descripcion:
-      'duck-one sube a su F-15EX en la cubierta del Sitting Ducks, prueba los sistemas y despega al atardecer. Escena 3 de Operación Venganza, en el navegador.',
+      'duck-one sube a su F-14 en el Sitting Ducks, prueba los sistemas y la catapulta lo lanza al atardecer. Escena 3 de Operación Venganza, en el navegador.',
     fondo: '#5c94fc',
   },
   // Los niveles jugables, entre un grupo de escenas y el siguiente.
   '/operacion-venganza/nivel-1': {
     archivo: 'operacion-venganza/nivel-1.html',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-29',
     titulo: 'Operación Venganza, nivel 1: Duck-One — Volutus',
     descripcion:
-      'duck-one ataca a quien juega: esquiva las balas de su F-15EX mientras el cielo del atardecer cambia de vista, con ráfagas de viento. Nivel 1, en el navegador.',
+      'duck-one ataca a quien juega: esquiva las balas de su F-14 mientras el cielo del atardecer cambia de vista, con ráfagas de viento. Nivel 1, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-5': {
     archivo: 'operacion-venganza/escena-5.html',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-29',
     titulo: 'Operación Venganza, escena 5: Regreso — Volutus',
     descripcion:
-      'duck-one vuelve al Sitting Ducks, casi atropella a los marinos y le rinde cuentas a moby y a duke: el enemigo se mueve bastante. Escena 5, en el navegador.',
+      'duck-one aterriza su F-14 en el Sitting Ducks como puede, casi atropella a los marinos y le rinde cuentas a moby y a duke. Escena 5, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-6': {

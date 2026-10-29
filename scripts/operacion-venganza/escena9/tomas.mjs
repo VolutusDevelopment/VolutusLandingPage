@@ -3,8 +3,9 @@
 // sus líneas, está en src/lib/escena9.js.
 //
 // Moby y duke vuelan juntos a 300 m sobre el mar, como duky en la escena 11,
-// y la torre les habla desde la consola de radar de la sala de mando. Vuelven
-// al Sitting Ducks y frenan en la cubierta, uno detrás del otro, en el eje de
+// y el oficial de inteligencia les habla por radio desde el control de vuelo,
+// en lo alto de la isla (control.mjs), con el almirante detrás. Vuelven al
+// Sitting Ducks y frenan en la cubierta, uno detrás del otro, en el eje de
 // la catapulta de babor. Duke sale de un saltito mientras su Hornet pliega
 // las alas, como en la vida real. Todo en metros del barco.
 
@@ -14,8 +15,9 @@ import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { ACELERADOR, PALANCA, enCabina as conMandos } from '../pilotos/interiores.mjs'
 import { PERSONAJES, dukeCerrado, figura, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
-import { suave } from '../escena1/personajes.mjs'
-import { ALTURA, RADAR, enLaPantalla, nubes, torre } from '../escena11/tomas.mjs'
+import { ALMIRANTE, OFICIAL, suave } from '../escena1/personajes.mjs'
+import { ALTURA, nubes } from '../escena11/tomas.mjs'
+import { CONTROL, control } from './control.mjs'
 import { DUKE, MOBY } from './cazas.mjs'
 import { alargar } from '../tiras.mjs'
 
@@ -60,6 +62,13 @@ const TEMBLANDO = (quien) => (u) => {
   const tiembla = 0.06 * Math.sin(Math.floor(u * 24) * 2.3)
   return [enVuelo(quien, [3.6, 0.2 + tiembla, 0.8 + tiembla]), enVuelo(quien, [0, 0.4, 0]), 80]
 }
+
+// ── En el control de vuelo ───────────────────────────────────────────────
+
+// El oficial habla por radio y el almirante, detrás, mira las pantallas.
+const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
+const RADIO = control({ oficial: gesto(OFICIAL, 'habla por radio'), almirante: gesto(ALMIRANTE, 'mira las pantallas') })
+const { piso: PISO } = CONTROL
 
 // ── En la cubierta ───────────────────────────────────────────────────────
 
@@ -174,9 +183,11 @@ const abolladura = (k) => (k > 0 ? [M.disco(GOLPE, [0, 0, -1], 0.2 * k, 0.02, C.
 export const TOMAS_3D = {
   // Los dos de frente, por babor; la alarma prende y apaga la cúpula.
   alarma: { escena: volando({ alarma: (u) => Math.floor(u * 6) % 2 === 0 }), camara: fija(sum(ALTURA, [24, -1, -26]), sum(ALTURA, [-5, 3, 9]), 42) },
-  regresen: { escena: torre(true), camara: fija([RADAR.x - 0.3, 2.05, -3.6], enLaPantalla(RADAR.x, RADAR.y), 52) },
+  // Desde la consola, entre sus dos pantallas, de frente al oficial.
+  regresen: { escena: RADIO, camara: fija([-27.45, PISO + 1.12, 24.2], [-27.6, PISO + 1.0, 25.75], 50) },
   tengo: { escena: hablando('moby'), camara: DEL_TABLERO('moby') },
-  presupuesto: { escena: torre(true), camara: fija([RADAR.x - 0.9, 1.9, -3.5], enLaPantalla(RADAR.x, RADAR.y), 50) },
+  // Por su lado de popa, junto a los ventanales: detrás, la proa y el atardecer.
+  presupuesto: { escena: RADIO, camara: fija([-30.6, PISO + 1.35, 24.3], [-27.9, PISO + 1.0, 26.7], 58) },
   significa: { escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
   recortado: { escena: hablando('duke'), camara: DEL_TABLERO('duke') },
   contabilidad: { escena: hablando('moby'), camara: TEMBLANDO('moby') },

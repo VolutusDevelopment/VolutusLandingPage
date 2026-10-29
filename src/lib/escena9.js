@@ -6,12 +6,13 @@
  * tira corre una sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena9/sprites.mjs, desde las tomas en 3D.
  *
- * Moby y Duke, en vuelo, y la torre que les habla por radio desde la consola
- * de radar de la sala de mando. Después, la cubierta del Sitting Ducks. Cada
- * toma tiene a lo más quien hable, y solo a él se le mueve el pico.
+ * Moby y Duke, en vuelo, y el oficial de inteligencia, que les habla por
+ * radio desde el control de vuelo, con el almirante detrás. Después, la
+ * cubierta del Sitting Ducks. Cada toma tiene a lo más quien hable, y solo a
+ * él se le mueve el pico.
  */
 
-const TORRE = 'Torre de control'
+const OFICIAL = 'Oficial de inteligencia'
 const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
@@ -21,12 +22,12 @@ export const TOMAS = [
     id: 'regresen',
     ms: 150,
     lineas: [
-      { quien: TORRE, texto: 'Patoon-4, regresen inmediatamente al portaaviones.' },
-      { quien: TORRE, texto: 'Combustible insuficiente para continuar el enfrentamiento.' },
+      { quien: OFICIAL, texto: 'Patoon-4, regresen inmediatamente al portaaviones.' },
+      { quien: OFICIAL, texto: 'Combustible insuficiente para continuar el enfrentamiento.' },
     ],
   },
   { id: 'tengo', ms: 150, lineas: [{ quien: MOBY, texto: '¡TENGO COMBUSTIBLE!' }] },
-  { id: 'presupuesto', ms: 150, lineas: [{ quien: TORRE, texto: 'No se consideraron en nuestros cálculos.' }] },
+  { id: 'presupuesto', ms: 150, lineas: [{ quien: OFICIAL, texto: 'No se consideraron en nuestros cálculos.' }] },
   { id: 'significa', ms: 150, lineas: [{ quien: MOBY, texto: '¡¿QUÉ SIGNIFICA ESO?!' }] },
   { id: 'recortado', ms: 150, lineas: [{ quien: DUKE, texto: 'Que alguien ha recortado la financiación.' }] },
   { id: 'contabilidad', ms: 150, lineas: [{ quien: MOBY, texto: '¡VOY A DESTRUIR EL DEPARTAMENTO DE CONTABILIDAD!' }] },

@@ -7,10 +7,11 @@
  * sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena11/sprites.mjs, desde las tomas en 3D.
  *
- * Duky no habla. La torre de control le habla por radio y nadie contesta.
+ * Duky no habla. El oficial de inteligencia le habla por radio desde la sala
+ * azul, con el almirante detrás, y nadie contesta.
  */
 
-const TORRE = 'Torre de control'
+const OFICIAL = 'Oficial de inteligencia'
 
 export const TOMAS = [
   { id: 'recoge', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Un marinero entra en la sala y recoge a Duky.' }] },
@@ -32,11 +33,11 @@ export const TOMAS = [
   { id: 'despegue', ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: 'El avión despega.' }] },
   { id: 'emocion', ms: 150, lineas: [{ texto: 'Duky se pone feliz: exhala e inhala rápidamente, de la emoción.' }] },
 
-  // La radio: la torre, desde la consola de radar, y duky en su cabina.
-  { id: 'radio', ms: 150, lineas: [{ quien: TORRE, texto: 'Torre de control, aquí torre de control, ¿me recibe?' }] },
+  // La radio: el oficial, desde la sala azul, y duky en su cabina.
+  { id: 'radio', ms: 150, lineas: [{ quien: OFICIAL, texto: 'Torre de control, aquí torre de control, ¿me recibe?' }] },
   { id: 'silencio', ms: 150, lineas: [{ texto: 'Silencio.' }] },
   { id: 'pitido', ms: 150, lineas: [{ texto: 'El radar emite un pitido.' }] },
-  { id: 'termina', ms: 150, lineas: [{ quien: TORRE, texto: 'Bien, Fantasma Amarillo, termina con ese maldito.' }] },
+  { id: 'termina', ms: 150, lineas: [{ quien: OFICIAL, texto: 'Bien, Fantasma Amarillo, termina con ese maldito.' }] },
   { id: 'calla', ms: 150, lineas: [{ texto: 'Silencio.' }] },
   { id: 'otroPitido', ms: 150, lineas: [{ texto: 'El radar emite un pitido.' }] },
 ]

@@ -10,6 +10,7 @@ import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON, silaba, suave } from '.
 import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, poner, sala, colocar } from './lugares.mjs'
 import { DUKE, MOBY } from '../escena9/cazas.mjs'
 import { SUELO as SUELO_DUCK_ONE, caza as cazaDuckOne } from '../escena3/caza.mjs'
+import { ALAS_TOMCAT } from '../pilotos/modelos.mjs'
 import { alargar } from '../tiras.mjs'
 
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
@@ -20,12 +21,12 @@ const alarma = (u) => Math.floor(u * 12) % 2
 // ── Fuera ────────────────────────────────────────────────────────────────
 
 // Los cazas del escuadrón, estacionados en fila a estribor, a popa de la isla
-// y con la cola hacia el borde: el F-15 de duck-one, el A-10 de moby y el
-// Hornet de duke, con las alas plegadas, todos con el motor apagado (sin las
-// estelas, las formas con luz). Quedan fuera de la pista en ángulo y del
-// camino de la cámara que sube a la isla.
+// y con la cola hacia el borde: el F-14 de duck-one, con las alas barridas
+// al máximo, el A-10 de moby y el Hornet de duke, con las alas plegadas,
+// todos con el motor apagado (sin las estelas, las formas con luz). Quedan
+// fuera de la pista en ángulo y del camino de la cámara que sube a la isla.
 const ESTACIONADOS = [
-  [cazaDuckOne().filter((f) => !f.luz), SUELO_DUCK_ONE, -100],
+  [cazaDuckOne({ alas: ALAS_TOMCAT.estacionadas }).filter((f) => !f.luz), SUELO_DUCK_ONE, -100],
   [MOBY.caza(), MOBY.suelo, -120],
   [DUKE.caza({ alas: 100 }), DUKE.suelo, -140],
 ].flatMap(([formas, suelo, x]) => poner(formas, 30, [x, 20.8 - suelo, 10]))

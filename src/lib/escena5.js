@@ -16,11 +16,14 @@ const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
 export const TOMAS = [
-  // El caza entra por la popa y frena entre los marinos, que se apartan corriendo.
+  // El caza llega por la popa, visto desde atrás: abre las alas y baja el tren y el gancho…
+  { id: 'aproximacion', ms: 100, cuadros: 30, unaVez: true, lineas: [] },
+  // …y aterriza visto desde la cabeza de duck-one: se ladea de lado a lado, golpea
+  // la cubierta y frena entre los marinos, que se apartan corriendo.
   {
     id: 'aterrizaje',
-    ms: 150,
-    cuadros: 30,
+    ms: 100,
+    cuadros: 44,
     unaVez: true,
     lineas: [{ texto: 'Duck-One aterriza, casi atropellando a los marinos de cubierta, que deben correr del caza.' }],
   },

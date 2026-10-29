@@ -36,7 +36,7 @@ const PERSONAJES = [
     piloto: M.DUCK_ONE,
     encuadre: { c: [0.2, 0.35, 0], radio: 1.4 },
     caza: M.CAZA_DUCK_ONE,
-    modelo: 'Boeing F-15EX Eagle II, gris tradicional',
+    modelo: 'Grumman F-14 Tomcat, gris de la marina, de una plaza',
     detalle: 'Gorro cuartelero ladeado y gafas de aviador clásicas. El mentón arriba y una ceja alzada por sobre el marco. Medallas chuecas pegadas como stickers en el uniforme.',
   },
   {

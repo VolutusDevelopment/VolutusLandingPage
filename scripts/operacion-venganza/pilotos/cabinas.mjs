@@ -75,7 +75,7 @@ const encuadreDe = (cfg) => ({ c: aCaza(cfg, [0.45, 0.1, 0]), radio: 2.2 * cfg.k
 const escena = (cfg, pilote, palanca, acelerador) => [mar, ...nubes, ...cfg.escuadron, ...cabinaCon(cfg, pilote, palanca, acelerador)]
 
 const TEXTOS = {
-  'duck-one': ['Boeing F-15EX Eagle II, gris tradicional', 'Desde dentro de su F-15EX, con la cámara sobre el tablero: pantalla panorámica, dos retrovisores en el arco del parabrisas, de uno de los cuales cuelga una medalla, y detrás el escuadrón en formación sobre el mar.'],
+  'duck-one': ['Grumman F-14 Tomcat, gris de la marina, de una plaza', 'Desde dentro de su Tomcat, con la cámara sobre el tablero: el HUD, el panel de combate con la manija a rayas, la VDI verde entre relojes de aguja, el espejo ancho en el arco del parabrisas, del que cuelga una medalla, y detrás el escuadrón en formación sobre el mar.'],
   'moby-duck': ['Fairchild Republic A-10 Thunderbolt II, negro', 'Desde dentro del A-10, que le queda chico: relojes de aguja, un cenicero con colillas en el tablero y el humo del puro llenando la cúpula. Detrás vuelan los otros tres.'],
   duke: ['McDonnell Douglas F/A-18C Hornet, blanco y rosa', 'Desde dentro de su Hornet: consolas y arcos rosa, el HUD con el cristal rosa, las pantallas del Hornet en rosa con un corazón en la del medio, su trono de capitoné con corona y un espejo de belleza con bombillas colgado del parabrisas, para mirarse en pleno vuelo.'],
   duky: ['Lockheed Martin F-22A Raptor, pintura de guerra negra', 'Desde dentro del F-22, bajo la cúpula dorada: el HUD, el teclado ICP entre las dos UFD, las tres pantallas grandes y la de las armas y, sentado en su ACES II, un pato de hule que no mira nada mientras el escuadrón lo sigue.'],

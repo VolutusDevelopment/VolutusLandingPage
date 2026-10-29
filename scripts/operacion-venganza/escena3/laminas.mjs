@@ -69,7 +69,7 @@ lamina('E3-tomas-cabina', {
   titulo: 'Escena 3 · a la cabina',
   papel: 'Escena 3 · tomas 1 a 6',
   nombre: 'A la cabina',
-  bajada: 'De la cubierta del Sitting Ducks a la cabina de su F-15EX',
+  bajada: 'De la cubierta del Sitting Ducks a la cabina de su F-14 Tomcat',
   detalle: 'Al atardecer, como en Nosotros y la escena 1. La cámara acompaña a duck-one por la cubierta hasta su caza, que espera en la catapulta de babor, y se mete en la cabina por el costado de la cúpula. Ahí se sube las gafas con el índice, baja la cabeza para revisar sus medallas y le habla al atacante, que es quien juega: primero a la cámara del tablero, después señalándolo.',
   filas: [fila('Hasta la cabina', ['cubierta', 'cabina', 'gafas'].map((id) => celda(id)), 3), fila('Al atacante', ['medallas', 'presentacion', 'advertencia'].map((id) => celda(id)), 3)],
 })
@@ -79,7 +79,7 @@ lamina('E3-tomas-despegue', {
   papel: 'Escena 3 · tomas 7 a 11',
   nombre: 'El despegue',
   bajada: 'Prueba de sistemas y lanzamiento desde la catapulta',
-  detalle: 'Busca el botón de las armas mirando a un lado y otro del tablero, duda y pulsa el rojo: se enciende el limpiaparabrisas que ningún F-15 tiene, y duck-one lo sigue con la cabeza. Lo da por bueno con el pulgar arriba. La catapulta lo lanza hasta la proa; un helicóptero lo acompaña por babor y lo deja irse hacia el sol, que se pone, con el morro arriba y el tren recogido. Ya en el aire, la cámara encuentra al atacante, quieto en el cielo a lo lejos, sobre el sol: un cursor en escritorio, una huella en teléfono.',
+  detalle: 'Busca el botón de las armas mirando a un lado y otro del tablero, duda y pulsa el rojo: se enciende el limpiaparabrisas que ningún F-14 tiene, y duck-one lo sigue con la cabeza. Lo da por bueno con el pulgar arriba. Enciende la postcombustión contra el deflector, la catapulta lo lanza hasta la proa entre el vapor y un helicóptero lo sigue por detrás, por babor, y lo deja irse hacia el sol, que se pone, con el morro arriba, el tren recogido y las alas barriéndose hacia atrás. Ya en el aire, la cámara encuentra al atacante, quieto en el cielo a lo lejos, sobre el sol: un cursor en escritorio, una huella en teléfono.',
   filas: [fila('El botón de las armas', ['instrumentos', 'boton', 'limpiaparabrisas'].map((id) => celda(id)), 3), fila('Despegue', [celda('excelente'), celda('despegue', 'cursor', ', en escritorio'), celda('despegue', 'huella', ', en teléfono')], 3)],
 })
 

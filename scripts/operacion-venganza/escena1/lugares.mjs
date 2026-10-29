@@ -132,7 +132,7 @@ const espuma = (x, z, largo) => [el([x, 0.3, z], [largo, 0.8, largo * 0.35], C.n
 
 const CASCO = ['#c4ccd6', '#96a2ae', '#6c7884', '#3c4650']
 const CUBIERTA = ['#6a7078', '#4c525a', '#3a3f46', '#22262b']
-const ISLA = ['#d0d8e0', '#a4b0bc', '#7a8692', '#46505a']
+export const ISLA = ['#d0d8e0', '#a4b0bc', '#7a8692', '#46505a']
 const AMARILLO = '#f2c440'
 
 
@@ -220,7 +220,7 @@ const cubierta = [
   faldon([40, -36], [70, -19], -1),
 ]
 
-const caja = (x0, x1, ancho, alto, yc, zc, rampa, o) => tubo([[x0, ancho, alto, yc, 8, zc], [x1, ancho, alto, yc, 8, zc]], rampa, o)
+export const caja = (x0, x1, ancho, alto, yc, zc, rampa, o) => tubo([[x0, ancho, alto, yc, 8, zc], [x1, ancho, alto, yc, 8, zc]], rampa, o)
 
 // Ventanales en la franja de `y0` a `y1`, con sus montantes.
 const ventanales = (y0, y1, donde = () => true) => ([x, y, z]) => (y > y0 && y < y1 && donde(x, z) ? (Math.abs((x + z) % 2.2) < 0.3 ? ISLA[3] : '#1b2a3a') : null)
@@ -265,9 +265,10 @@ const mastil = ([mx, mz]) => {
 // con sus ventanales y pasarelas, el control de vuelo y, encima, el mástil,
 // los domos de las antenas y las balizas de alarma. Detrás, en su propia
 // torre, el radar de búsqueda aérea gira `giro` grados. Va sobre un saliente
-// de la cubierta que un faldón une al casco, como en un Nimitz.
+// de la cubierta que un faldón une al casco, como en un Nimitz. Con `control`,
+// el control de vuelo, cerrado, cambia por esas formas (escena9/control.mjs).
 const QUINCE = { alto: 8, x: -25 - ancho('15', 8) / 2, y: 25 }
-const isla = (alarma, giro) => [
+const isla = (alarma, giro, control) => [
   faldon([-56, 33], [-4, 33], 1),
   ...[-56, -4].map((x) => placa([[x, BORDA, 19], [x, BORDA, 33], [x, 8, mangaEn(x, 8)]], 0.4, CASCO)),
   placa([[-56, 20, 21], [-56, 20, 33], [-4, 20, 33], [-4, 20, 21]], 1.6, CUBIERTA),
@@ -277,7 +278,7 @@ const isla = (alarma, giro) => [
   pasarela(-41.5, -8.5, 21, 33, 34),
   caja(-43, -13, 9.5, 6, 41, 27, ISLA, { pinta: ventanales(39.6, 42.8, (x, z) => z < 22.6 || x > -13.6 || z > 31.4) }),
   pasarela(-39, -18, 23, 31, 44.3),
-  caja(-37, -20, 6, 8, 48, 27, ISLA, { pinta: ventanales(46.4, 48.6) }),
+  ...(control ?? [caja(-37, -20, 6, 8, 48, 27, ISLA, { pinta: ventanales(46.4, 48.6) })]),
   ...mastil([-28, 27]),
   el([-22, 54, 27], [2.2, 2.2, 2.2], C.nube),
   ...[23.8, 30.2].map((z) => el([-15.5, 45.3, z], [1.3, 1.3, 1.3], C.nube)),
@@ -372,11 +373,12 @@ const mantenimiento = () => [
 ]
 
 // `radar`: los grados que lleva girado el radar de la isla; `ascensor`: dónde
-// va la plataforma, de 0 (en el hangar) a 1 (en la cubierta).
-export const portaaviones = ({ alarma = -1, avion = true, radar = 0, ascensor: plataforma = 1 } = {}) => [
+// va la plataforma, de 0 (en el hangar) a 1 (en la cubierta); `control`, el
+// control de vuelo por dentro.
+export const portaaviones = ({ alarma = -1, avion = true, radar = 0, ascensor: plataforma = 1, control } = {}) => [
   casco,
   ...cubierta,
-  ...isla(alarma, radar),
+  ...isla(alarma, radar, control),
   ...hangar(),
   ...ascensor(plataforma),
   ...[[70, 14, 30], [90, 14, 30], [110, 14, 30]].flatMap(([x, z, g]) => jet(x, z, g)),
@@ -399,7 +401,7 @@ export const navegando = (formas, giro, en, rumbo) => [...poner(formas, giro, en
 // los ventanales a estribor (z = 5), consolas a babor y la puerta al fondo.
 const SALA = ['#c4ccd4', '#98a4b0', '#74808c', '#48525c']
 const SUELO = ['#7a8694', '#56606c', '#3e4650', '#262c32']
-const CONSOLA = ['#7c8794', '#4e5864', '#3a424c', '#20252b']
+export const CONSOLA = ['#7c8794', '#4e5864', '#3a424c', '#20252b']
 
 export const PANTALLA = { x: 3.94, y0: 1.0, y1: 2.75, z0: -2.5, z1: 2.5 }
 

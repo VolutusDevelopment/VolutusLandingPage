@@ -5,8 +5,8 @@
 // `escena(u)` arma la figura en metros del barco; `camara(u)` da [ojo, mira,
 // campo] en metros y grados.
 
-import { el, transformar } from '../pilotos/tres.mjs'
-import { RAMPAS as C, CABEZA, DUCK_ONE, DUCK_ONE_TORSO, GAFAS_DUCK_ONE, hueso } from '../pilotos/modelos.mjs'
+import { el, placa, transformar } from '../pilotos/tres.mjs'
+import { ALAS_TOMCAT, RAMPAS as C, CABEZA, DUCK_ONE, DUCK_ONE_TORSO, GAFAS_DUCK_ONE, POSTCOMBUSTION_TOMCAT, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, figura, manosAndando, pDuckOne } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs'
 import { FLECHA, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
@@ -79,18 +79,22 @@ const pulsaElBoton = (u) => {
 
 // ── Las tomas ────────────────────────────────────────────────────────────
 
-const BARCO = [MAR, ...portaaviones()]
-// El caza en la catapulta, con duck-one en la cabina en la pose `piloto`.
-const enCatapulta = (opciones) => [...BARCO, ...poner(caza(opciones), 0, EN_CATAPULTA)]
+// Detrás del caza, el deflector levantado, para que el chorro de los motores
+// salga hacia arriba.
+const DEFLECTOR = placa([[56.4, 20.8, -10], [56.4, 20.8, -2], [54.2, 23.5, -2], [54.2, 23.5, -10]], 0.3, C.grisOscuro)
+const BARCO = [MAR, ...portaaviones(), DEFLECTOR]
+// El caza enganchado a la catapulta, con duck-one en la cabina en la pose `piloto`.
+const enCatapulta = (opciones) => [...BARCO, ...poner(caza({ barra: true, ...opciones }), 0, EN_CATAPULTA)]
 const enCabinaCon = (pose) => (u) => enCatapulta({ piloto: pose(u) })
 
 // Cruza la cubierta hacia el caza, por babor, hasta quedar bajo la cabina.
 const PASOS = { desde: enCaza([4.4, SUELO, -8]), largo: 2.5 }
 const caminando = (u) => sum(PASOS.desde, [0, 0, PASOS.largo * u])
 
-// La catapulta lo lanza por la cubierta hasta la proa; ya en el aire, sube
-// con el morro arriba y recoge el tren. El vapor queda atrás, deshaciéndose.
-const CARRERA = { desde: 0.15, hasta: 0.55, largo: 96 }
+// Enciende la postcombustión, la catapulta lo lanza por la cubierta hasta la
+// proa y, ya en el aire, sube con el morro arriba, recoge el tren y barre las
+// alas hacia atrás. El vapor queda atrás, deshaciéndose.
+const CARRERA = { enciende: 0.06, desde: 0.15, hasta: 0.55, largo: 96 }
 const corrido = (u) => CARRERA.largo * Math.min(1, Math.max(0, (u - CARRERA.desde) / (CARRERA.hasta - CARRERA.desde))) ** 2
 const enVuelo = (u) => {
   const vuelo = Math.max(0, (u - CARRERA.hasta) / (1 - CARRERA.hasta))
@@ -98,14 +102,27 @@ const enVuelo = (u) => {
 }
 const despega = (u) => {
   const { vuelo, en } = enVuelo(u)
-  return transformar([0, 0, 12 * suave(vuelo / 0.4)], [-1.4, SUELO, 0], en).formas(caza({ piloto: sentado(), tren: vuelo < 0.4 }))
+  const { abiertas, barridas } = ALAS_TOMCAT
+  const formas = caza({ piloto: sentado(), tren: vuelo < 0.4, barra: u < CARRERA.desde, alas: abiertas + (barridas - abiertas) * tramo(vuelo, 0.35, 0.85) })
+  // Hasta encender la postcombustión, los motores no echan llama.
+  const motores = u > CARRERA.enciende ? POSTCOMBUSTION_TOMCAT : []
+  return transformar([0, 0, 12 * suave(vuelo / 0.4)], [-1.4, SUELO, 0], en).formas([...formas.filter((f) => motores.length || !f.luz), ...motores])
 }
-const vapor = (u) =>
-  [4, 24, 44, 64].flatMap((x) => {
+// Antes del lanzamiento, el vapor se escapa en hilos por la ranura de la
+// catapulta, delante del caza; después, la lanzadera deja nubes a su paso.
+const vapor = (u) => [
+  ...(u < CARRERA.desde
+    ? [10, 25, 40, 55, 70, 85].map((x, i) => {
+        const k = (u * 4 + i * 0.37) % 1
+        return el(sum(EN_CATAPULTA, [x, SUELO + 0.2 + 0.9 * k, 0]), [0.9 + k, 0.35 + 0.3 * k, 0.5 + 0.4 * k], C.nube)
+      })
+    : []),
+  ...[4, 24, 44, 64].flatMap((x) => {
     const paso = CARRERA.desde + (CARRERA.hasta - CARRERA.desde) * Math.sqrt(x / CARRERA.largo)
     const k = (u - paso) / 0.45
-    return k > 0 && k < 1 ? [el(sum(EN_CATAPULTA, [x, SUELO + 0.6 + 1.5 * k, 0]), esc([2.4, 1.1, 1.6], 1 - k * 0.7), C.nube, { flat: '#eef4ff' })] : []
-  })
+    return k > 0 && k < 1 ? [el(sum(EN_CATAPULTA, [x, SUELO + 0.6 + 1.5 * k, 0]), esc([2.4, 1.1, 1.6], 1 - k * 0.7), C.nube)] : []
+  }),
+]
 
 // ── El atacante, a lo lejos ──────────────────────────────────────────────
 
@@ -132,10 +149,13 @@ const atacante = (modo, u, { d, a }) => {
   )
 }
 
-// Desde un helicóptero por babor, que lo acompaña, se queda atrás en la proa y lo deja irse.
+// Desde un helicóptero por babor, detrás del caza y por sobre el deflector:
+// ve encenderse la postcombustión, lo sigue por la cubierta, se queda en la
+// proa y lo deja irse hacia el sol, mirando hacia el atacante.
 const camaraDespegue = (u) => {
   const { en } = enVuelo(u)
-  return [[Math.min(88 + 0.85 * (en[0] - EN_CATAPULTA[0]), 182), 27, -34], sum(en, [4, 1, 0]), 40]
+  const avanza = Math.min(en[0] - EN_CATAPULTA[0], 110)
+  return [sum(EN_CATAPULTA, [-24 + 0.9 * avanza, 5 + 0.04 * avanza, -12]), lerp(sum(en, [6, 1, 0]), ATACANTE.lejos, 0.04 * tramo(u, 0.65, 0.9)), 46]
 }
 const haciaLaCamara = (() => {
   const [ojo, mira] = camaraDespegue(0.85)

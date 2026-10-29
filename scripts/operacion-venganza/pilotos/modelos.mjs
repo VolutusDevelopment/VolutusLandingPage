@@ -376,63 +376,119 @@ const destelloMotor = (c, r, color, alfa, nivel) => el(c, r, null, { luz: { colo
 // Propulsión común: llama corta naranja con el centro claro.
 const llama = (x, y, z, largo, ancho) => [estela(x, y, z, largo, ancho, '#ff8a20', 0.75), estela(x, y, z, largo * 0.45, ancho * 0.55, '#fff0b0', 0.9, 2)]
 
-// Boeing F-15EX Eagle II: 19,4 m de largo, 13 m de envergadura. Dos plazas,
-// tomas de aire rectangulares a los lados de la cabina, ala en flecha de 45°
-// con puntas cortadas, dos derivas verticales y dos toberas.
-const f15 = ({ cuerpo, colas, piloto, pintaAla, pintaCuerpo, pintaCola }) => [
-  tubo(
-    [
-      [9.7, 0.05, 0.05, 0.15],
-      [8.9, 0.6, 0.6, 0.15],
-      [7.6, 1.15, 1.1, 0.2],
-      [5.8, 1.45, 1.45, 0.3],
-      [3.8, 1.55, 1.6, 0.35],
-      [1.5, 1.6, 1.4, 0.3, 2.6],
-      [-2, 1.5, 1.1, 0.35, 2.6],
-      [-6, 1.3, 0.9, 0.35, 2.6],
-      [-8.6, 0.9, 0.6, 0.4],
-    ],
-    cuerpo,
-    { pinta: pintaCuerpo },
-  ),
-  ...ambos((s) =>
-    tubo(
-      [
-        [3.6, 1.15, 1.35, 0.05, 6, s * 1.35],
-        [2.5, 1.25, 1.45, 0.05, 6, s * 1.4],
-        [-2, 1.35, 1.3, 0.1, 4, s * 1.35],
-        [-6.5, 1.25, 1.15, 0.15, 3, s * 0.95],
-        [-9.0, 1.05, 1.05, 0.2, 2, s * 0.62],
-      ],
-      cuerpo,
-      { pinta: pintaCuerpo },
-    ),
-  ),
-  ...ambos((s) => el([3.62, 0.05, s * 1.35], [0.06, 0.62, 0.5], C.oscuro)),
-  ...ambos((s) => el([-9.1, 0.2, s * 0.62], [0.35, 0.48, 0.48], C.grisOscuro)),
-  ...ambos((s) => llama(-9.4, 0.2, s * 0.62, 3.6, 0.85)).flat(),
-  ...ambos((s) =>
-    placa([[1.8, 0.25, s * 1.9], [-3.3, 0.15, s * 6.5], [-4.7, 0.15, s * 6.5], [-4.6, 0.25, s * 1.9]].map((p) => p), 0.22, cuerpo, { pinta: pintaAla }),
-  ),
-  ...ambos((s) => placa([[-6.3, 0.15, s * 1.6], [-8.4, 0.1, s * 4.3], [-9.6, 0.1, s * 4.3], [-9.4, 0.15, s * 1.6]], 0.16, cuerpo)),
-  ...ambos((s) => placa([[-5.4, 0.7, s * 1.45], [-7.9, 3.4, s * 1.45], [-9.2, 3.4, s * 1.45], [-9.3, 0.7, s * 1.45]], 0.18, colas, { pinta: pintaCola })),
-  el([4.2, 0.95, 0], [2.5, 0.62, 0.58], C.vidrio, { vidrio: true }),
-  ...cabezaPiloto(5.0, 0.95, piloto[0], piloto[1]),
+// Los planos de los cazas van en metros desde la punta del morro (X); enX
+// los lleva al eje del caza.
+const enX = (X) => 9.45 - X
+
+// Grumman F-14 Tomcat: 19,1 m de largo y 4,9 m de alto, calcado de un plano
+// de tres vistas. Morro largo y redondo, la cabina alta bajo una cúpula
+// larga, las tomas de aire rectangulares bajo el guante fijo del ala, los
+// motores separados con el lomo plano entre ellos, la cola de castor, dos
+// estabilizadores y dos derivas abiertas 5°. Las alas giran en un pivote
+// del guante (barrerAlas): 19,5 m de envergadura abiertas a 20°, para
+// despegar y aterrizar, 12 m barridas a 68° y menos en la cubierta, a 75°.
+//
+// El real es de dos plazas y el de duck-one, de una: la cúpula es la misma
+// y bajo ella un carenado ocupa el puesto de atrás (interiores.mjs). Gris de
+// la marina, con sus estrellas de líder en las alas y las derivas.
+const GRIS_TOMCAT = C.grisEX
+const ESTRELLA = C.oro[1]
+
+// El fuselaje, de la punta del morro a la cola: [X, ancho, alto, centro, exponente].
+const FUSELAJE_TOMCAT = [
+  [0, 0.04, 0.04, -0.33],
+  [0.5, 0.5, 0.46, -0.31],
+  [1.2, 0.9, 0.84, -0.26],
+  [2.0, 1.2, 1.16, -0.17, 2.1],
+  [3.0, 1.44, 1.46, -0.05, 2.3],
+  [4.0, 1.64, 1.68, 0.04, 2.5],
+  [5.0, 1.74, 1.73, 0.065, 2.6],
+  [6.4, 1.8, 1.85, 0.125, 2.6],
+  [7.6, 1.86, 1.92, 0.21, 2.6],
+  [8.6, 1.9, 1.8, 0.2, 2.7],
+  [9.6, 1.92, 1.52, 0.11, 2.8],
+  [11, 2.0, 1.17, 0.035, 3],
+  [13, 2.0, 0.92, 0.04, 3.5],
+  [15.5, 1.8, 0.76, 0.04, 3.5],
+  [17.6, 1.1, 0.5, 0, 3],
+]
+// Delante del parabrisas, el antirreflejo.
+const antirreflejo = ([x], n) => (x < enX(1.7) && x > enX(3.1) && n[1] > 0.55 ? C.grisOscuro : null)
+
+// Los motores, de la toma de aire a la tobera: [X, ancho, alto, centro, exponente].
+const MOTOR = [
+  [6.4, 1.0, 1.3, -0.4, 6],
+  [7.5, 1.1, 1.45, -0.42, 5],
+  [10, 1.25, 1.5, -0.45, 3.5],
+  [13, 1.3, 1.4, -0.45, 2.4],
+  [16, 1.2, 1.2, -0.4, 2.2],
+  [17.6, 1.05, 1.05, -0.35, 2],
+]
+const Z_MOTOR = 1.45
+// Un anillo del motor, como los de tubo(), con la boca inclinada: arriba va
+// `inclina` m más adelante y abajo, más atrás.
+const anilloMotor = ([X, ancho, alto, y, e], s, inclina = 0) =>
+  Array.from({ length: 24 }, (_, k) => {
+    const a = (k / 24) * Math.PI * 2
+    const f = (v) => Math.sign(v) * Math.abs(v) ** (2 / e)
+    return [enX(X - inclina * f(Math.sin(a))), y + (alto / 2) * f(Math.sin(a)), s * (Z_MOTOR + (ancho / 2) * f(Math.cos(a)))]
+  })
+const TOBERA_TOMCAT = { x: enX(19.0), y: -0.35 }
+
+// El guante, el ala abierta y el estabilizador del lado derecho, cada punto
+// [X, Z]; la deriva, [X, y], abierta 5° hacia afuera desde el lomo del motor.
+const GUANTE = [[6.5, 0.95], [6.5, 1.95], [11.6, 3.6], [13.6, 2.4], [13.6, 0.95]]
+const ALA_TOMCAT = [[10.6, 2.3], [13.25, 9.6], [14.3, 9.4], [13.8, 2.3]]
+const ESTABILIZADOR_TOMCAT = [[15.0, 1.9], [18.2, 4.98], [19.0, 4.8], [18.0, 1.9]]
+const DERIVA_TOMCAT = [[15.0, 0.35], [17.8, 2.68], [19.05, 2.68], [18.4, 0.35]]
+const abierta = (y) => Z_MOTOR + (y - 0.35) * Math.tan((5 * Math.PI) / 180)
+const enPlanta = (puntos, y, s) => puntos.map(([X, Z]) => [enX(X), y, s * Z])
+
+// Una estrella de líder en cada ala y en cada deriva.
+const estrellaEnAla = ([x, , z]) => (enEstrella(Math.abs(z) - 6.3, x - enX(13.1), 0.75) ? ESTRELLA : null)
+const estrellaEnDeriva = ([x, y]) => (enEstrella(x - enX(17.55), y - 1.5, 0.5) ? ESTRELLA : null)
+
+// Las alas giran en el pivote, dentro del guante, de abiertas a `grados`;
+// `barre` dice de qué lado son.
+export const ALAS_TOMCAT = { abiertas: 20, barridas: 68, estacionadas: 75 }
+const PIVOTE = { x: enX(11.6), z: 2.6 }
+export const barrerAlas = (formas, grados) =>
+  formas.map((f) => (f.barre ? transformar([0, -f.barre * (grados - ALAS_TOMCAT.abiertas), 0], [PIVOTE.x, 0, f.barre * PIVOTE.z]).formas([f])[0] : f))
+
+export const CAZA_DUCK_ONE = [
+  tubo(FUSELAJE_TOMCAT.map(([X, ...seccion]) => [enX(X), ...seccion]), GRIS_TOMCAT, { pinta: antirreflejo }),
+  hueso([enX(0), -0.33, 0], [enX(-0.45), -0.33, 0], 0.025, C.grisOscuro),
+  ...ambos((s) => [
+    // De frente, la boca de la toma es un hueco oscuro.
+    forro(MOTOR.map((seccion, i) => anilloMotor(seccion, s, i ? 0 : 0.5)), GRIS_TOMCAT, { pinta: ([x], n) => (n[0] > 0.55 && x > enX(7.0) ? C.oscuro : null) }),
+    tubo([[enX(17.5), 1.06, 1.06, TOBERA_TOMCAT.y, 2, s * Z_MOTOR], [TOBERA_TOMCAT.x, 0.94, 0.94, TOBERA_TOMCAT.y, 2, s * Z_MOTOR]], C.grisOscuro),
+    el([TOBERA_TOMCAT.x - 0.02, TOBERA_TOMCAT.y, s * Z_MOTOR], [0.04, 0.4, 0.4], C.oscuro, { flat: '#1a1d22' }),
+    placa(enPlanta(GUANTE, 0.3, s), 0.32, GRIS_TOMCAT),
+    placa(enPlanta(ALA_TOMCAT, 0.3, s), 0.16, GRIS_TOMCAT, { pinta: estrellaEnAla, barre: s }),
+    placa(enPlanta(ESTABILIZADOR_TOMCAT, -0.3, s), 0.14, GRIS_TOMCAT),
+    placa(DERIVA_TOMCAT.map(([X, y]) => [enX(X), y, s * abierta(y)]), 0.14, GRIS_TOMCAT, { pinta: estrellaEnDeriva }),
+    // Las aletas ventrales, bajo los motores.
+    placa([[enX(14.2), -0.9, s * 1.65], [enX(15.0), -1.35, s * 1.75], [enX(15.9), -1.35, s * 1.75], [enX(15.9), -0.9, s * 1.65]], 0.08, GRIS_TOMCAT),
+    ...llama(TOBERA_TOMCAT.x, TOBERA_TOMCAT.y, s * Z_MOTOR, 3.6, 0.85),
+  ]).flat(),
+  // La cola de castor, entre los motores.
+  placa([[enX(17.0), -0.05, -0.5], [enX(17.0), -0.05, 0.5], [enX(19.4), -0.05, 0.36], [enX(19.4), -0.05, -0.36]], 0.14, GRIS_TOMCAT),
+  el([enX(5.5), 0.9, 0], [2.5, 0.58, 0.62], C.vidrio, { vidrio: true }),
+  ...cabezaPiloto(enX(4.75), 0.95, C.verde),
 ]
 
-const estrellasEnAla = ([x, , z]) => {
-  const az = Math.abs(z)
-  for (const [ex, ez] of [[-1.6, 3.6], [-3.2, 5.4], [-0.2, 2.6]]) if (enEstrella(az - ez, x - ex, 0.75)) return '#f2c440'
-  return null
-}
-
-export const CAZA_DUCK_ONE = f15({
-  cuerpo: C.grisEX,
-  colas: C.grisEX,
-  piloto: [C.verde, []],
-  pintaAla: estrellasEnAla,
-  pintaCola: ([x, y]) => (enEstrella(x + 8.2, y - 2.5, 0.55) ? '#f2c440' : null),
-})
+// La postcombustión de sus dos TF30, para la catapulta: larga, naranja y
+// rosada, con el centro claro y los diamantes de choque.
+export const POSTCOMBUSTION_TOMCAT = ambos((s) => {
+  const { x, y } = TOBERA_TOMCAT
+  const z = s * Z_MOTOR
+  return [
+    estela(x, y, z, 7, 0.95, '#ff9a7a', 0.45, 0),
+    estela(x, y, z, 4.6, 0.8, '#ff8a2a', 0.75, 1),
+    estela(x, y, z, 2.2, 0.55, '#fff0c0', 0.9, 2),
+    ...[0, 1, 2].map((i) => destelloMotor([x - 1.3 - i * 1.1, y, z], [0.26, 0.24 * (1 - i * 0.2), 0.24 * (1 - i * 0.2)], '#fff2e6', 0.9, 3)),
+  ]
+}).flat()
 
 // McDonnell Douglas F/A-18C Hornet: 17,1 m de largo, 12,3 m de envergadura
 // y 4,7 m de alto. Una plaza bajo una cúpula de burbuja, las extensiones del
@@ -547,8 +603,7 @@ const BOCA = '#0c0e12'
 // tomas de aire de caret a los lados de la cabina, ala en diamante (borde de
 // ataque a 42°, el de fuga hacia adelante, 3° de caída), estabilizadores de
 // una pieza con la punta en flecha, derivas abiertas 28° y dos toberas
-// planas. Las medidas del plano van en metros desde la punta del morro (X).
-const enX = (X) => 9.45 - X
+// planas.
 
 // El contador: dos renglones de palotes de a cinco, los cuatro y el que los
 // cruza, a lo largo de las tomas de aire y hasta las toberas.

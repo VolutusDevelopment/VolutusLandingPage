@@ -1,6 +1,6 @@
-// Lo que muestran las pantallas del F-22 de duky (interiores.mjs), como las
-// del real. Cada imagen recibe (u, v) de -1 a 1, con v hacia arriba, y
-// devuelve un color.
+// Lo que muestran las pantallas del F-22 de duky y los instrumentos del F-14
+// de duck-one (interiores.mjs), como los de los reales. Cada imagen recibe
+// (u, v) de -1 a 1, con v hacia arriba, y devuelve un color.
 
 const NEGRO = '#06090e'
 const BISEL = '#1c2026'
@@ -102,4 +102,76 @@ export const icp = (u, v) => {
   const [fu, fv] = [cu % 1, cv % 1]
   if (fu < 0.14 || fu > 0.86 || fv < 0.16 || fv > 0.84) return BISEL
   return fu > 0.35 && fu < 0.65 && Math.abs(fv - 0.5) < 0.07 ? '#30363e' : '#c2c8d0'
+}
+
+// ── El tablero del F-14 de duck-one ──────────────────────────────────────
+
+const NARANJA = '#ff8a2a'
+const CIELO = '#4a8ad8'
+const TIERRA = '#8a5a2a'
+
+// Un instrumento redondo en su caja: fuera del círculo, el bisel.
+export const redondo = (imagen) => (u, v) => (Math.hypot(u, v) > 0.92 ? BISEL : imagen(u, v))
+
+// La VDI: el horizonte verde de un tubo de rayos catódicos, la escalera de
+// cabeceo, la pista de aterrizaje en perspectiva y el avión, al medio.
+export const vdi = (u, v) => {
+  const ancho = 0.12 + (0.05 - v) * 0.7
+  if (Math.abs(v - 0.05) < 0.03) return VERDE
+  if (v < 0.05 && Math.abs(Math.abs(u) - ancho) < 0.035) return VERDE
+  if ([0.35, 0.65].some((y) => Math.abs(v - y) < 0.025) && Math.abs(u) > 0.15 && Math.abs(u) < 0.45) return VERDE
+  if (Math.abs(v + 0.3) < 0.03 && Math.abs(u) > 0.08 && Math.abs(u) < 0.35) return '#c8ffd8'
+  return texto(u, v, -0.9, 0.9, 0.4, VERDE) ?? '#06200e'
+}
+
+// El horizonte artificial: la bola del cielo y la tierra, con el avión naranja.
+export const adi = (u, v) => {
+  if (Math.abs(v) < 0.05 && Math.abs(u) < 0.5 && Math.abs(u) > 0.12) return NARANJA
+  if (Math.abs(v) < 0.025) return BLANCO
+  if (v > 0 && Math.abs(u) < 0.025 && v < 0.35) return BLANCO
+  return v > 0 ? CIELO : TIERRA
+}
+
+// El indicador de rumbo: la rosa con sus marcas y la flecha del curso.
+export const hsi = (u, v) => {
+  const r = Math.hypot(u, v)
+  if (r > 0.72 && Math.abs(((Math.atan2(u, v) / Math.PI) * 18) % 1) < 0.2) return BLANCO
+  if (Math.abs(u) < 0.04 && Math.abs(v) < 0.6) return AMBAR
+  if (v > 0.45 && v < 0.65 && Math.abs(u) < (0.65 - v) * 0.8) return AMBAR
+  return NEGRO
+}
+
+// El radar de alerta: anillos verdes y dos amenazas.
+export const rwr = (u, v) => {
+  const r = Math.hypot(u, v)
+  if (enAnillo(r, 0.35, 0.03) || enAnillo(r, 0.7, 0.03)) return '#2a8a4a'
+  if (Math.hypot(u - 0.3, v - 0.4) < 0.08 || Math.hypot(u + 0.45, v + 0.1) < 0.08) return VERDE
+  return '#04140a'
+}
+
+// Los relojes de la radio: dos renglones de números naranjos.
+export const radio = (u, v) => texto(u, v, -0.8, 0.3, 1.6, NARANJA) ?? texto(u, v, -0.8, -0.3, 1.1, NARANJA) ?? NEGRO
+
+// El panel de combate (ACM): la manija del lanzamiento de emergencia, a rayas
+// rojas y blancas, a la izquierda; una fila de interruptores y sus letreros.
+export const acm = (u, v) => {
+  if (u < -0.45 && u > -0.85 && Math.abs(v) < 0.6) return Math.floor((u + v) * 7) % 2 ? ROJO : BLANCO
+  if (u > -0.3 && Math.abs(((u + 1) * 5) % 1 - 0.5) < 0.18 && Math.abs(v + 0.1) < 0.25) return BOTON
+  return texto(u, v, -0.25, 0.6, 1.1, BLANCO) ?? NEGRO
+}
+
+// El indicador de ángulo de ataque: dos chevrones, verde y rojo, y una dona ámbar al medio.
+export const indexador = (u, v) => {
+  if (v > 0.35 && Math.abs(v - 0.55 - Math.abs(u) * 0.4) < 0.1 && Math.abs(u) < 0.5) return VERDE
+  if (enAnillo(Math.hypot(u, v), 0.22, 0.08)) return AMBAR
+  if (v < -0.35 && Math.abs(v + 0.55 + Math.abs(u) * 0.4) < 0.1 && Math.abs(u) < 0.5) return ROJO
+  return NEGRO
+}
+
+// El indicador del barrido de las alas: una cinta con sus marcas y la aguja.
+export const barrido = (u, v) => {
+  if (Math.abs(u + 0.2) < 0.06) return BLANCO
+  if (u > -0.14 && u < 0.2 && Math.abs(((v + 1) * 4) % 1 - 0.5) < 0.1) return BLANCO
+  if (Math.abs(v - 0.4) < 0.08 && u > -0.6 && u < 0.6) return AMBAR
+  return NEGRO
 }
