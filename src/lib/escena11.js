@@ -23,7 +23,7 @@ export const TOMAS = [
   {
     id: 'encoge',
     ms: 150,
-    cuadros: 24,
+    cuadros: 33,
     unaVez: true,
     lineas: [{ texto: 'Lo intenta una vez más, se rinde y cierra la cabina. Duky se queda sin cinturón.' }],
   },

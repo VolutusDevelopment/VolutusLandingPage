@@ -76,11 +76,12 @@ const ARMAS = ambos((s) => {
 }).flat()
 
 // El caza en sus metros, sin duky, que va aparte con sus patas: la cúpula
-// abierta `cupula` grados, el cinturón tirado `cinturon` (suelto, si no) y
-// sin `motor`, con la tobera apagada (las estelas son las formas con luz propia).
-export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true } = {}) => [
+// abierta `cupula` grados, el cinturón tirado `cinturon` (suelto, si no),
+// sin `motor`, con la tobera apagada (las estelas son las formas con luz
+// propia), y sin `armas` cuando ya las gastó contra quien juega.
+export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true, armas = true } = {}) => [
   ...cabinaCon(conCupula(CFG, cupula), []).filter((f) => motor || !f.luz),
   ...cinturon(tira),
-  ...ARMAS,
+  ...(armas ? ARMAS : []),
   ...(tren ? TREN : []),
 ]

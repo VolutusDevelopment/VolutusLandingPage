@@ -13,13 +13,13 @@ import { MAR, PANTALLA, colocar } from '../escena1/lugares.mjs'
 import { el, pixel3d, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
 import { RAMPAS as C } from '../pilotos/modelos.mjs'
-import { PERSONAJES, dukyFigura, figura, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
+import { PERSONAJES, dukyFigura, figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { silaba, suave } from '../escena1/personajes.mjs'
 import { duckOne } from '../escena2/patoon.mjs'
-import { K, giroHacia, reunion } from '../escena2/reunion.mjs'
+import { K, fase, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
-import { aSuDistancia, cuadro, proyectar, rejilla } from '../tiras.mjs'
+import { aSuDistancia, alargar, cuadro, proyectar, rejilla } from '../tiras.mjs'
 import { ALTO, LADO } from '../../../src/lib/escena1.js'
 import { enemigo } from './visor.mjs'
 
@@ -206,6 +206,17 @@ const seRefleja = (camara, abre, apaga = 0) => (u, modo) => {
   const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara)
   return reunion({ pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
 }
+// Antes de u = 0, con la pantalla aún prendida, da el paso desde donde miraba
+// a duky hasta el vidrio y se vuelve hacia él; poco después, se apaga.
+const ACERCA = [-0.375, -0.06]
+const seAcercaYSeRefleja = (u, modo) => {
+  if (u >= ACERCA[1]) return seRefleja(ANTE_EL_REFLEJO, () => 0, 0.1)(u, modo)
+  const k = tramo(u, ...ACERCA)
+  const paso = fase(0.4 * k)
+  const moby = figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })], manos: manosAndando(pMoby, paso), fase: paso })
+  const donde = { ...AL_VIDRIO, en: lerp(HACIA_DUKY.en, AL_VIDRIO.en, k), giro: girar(HACIA_DUKY.giro, AL_VIDRIO.giro, k) }
+  return reunion({ pantalla: prendida('vuela', u, modo), figuras: figuras(u, { moby: [moby, donde] }) })
+}
 
 // ── Las cámaras de la sala ───────────────────────────────────────────────
 
@@ -224,7 +235,7 @@ export const TOMAS_3D = {
 
   // Por sobre su hombro derecho, el monitor de la cara de duky.
   mira: { escena: ante('vuela', (u) => ({ moby: [mobyQuieto(u), HACIA_DUKY] })), camara: fija([2.0, 1.75, 0.8], [PANTALLA.x, 1.8, -1.6], 50) },
-  reflejo: { escena: seRefleja(ANTE_EL_REFLEJO, () => 0, 0.3), camara: fija(...ANTE_EL_REFLEJO) },
+  reflejo: alargar({ escena: seAcercaYSeRefleja, camara: fija(...ANTE_EL_REFLEJO) }, ACERCA[0], 1),
   nomegusta: { escena: seRefleja(DE_CERCA, silaba), camara: fija(...DE_CERCA) },
 }
 

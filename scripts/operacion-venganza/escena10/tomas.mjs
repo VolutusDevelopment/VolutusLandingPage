@@ -12,6 +12,7 @@ import * as M from '../pilotos/modelos.mjs'
 import { figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
 import { calada } from '../pilotos/calada.mjs'
 import { hablar, silaba, suave } from '../escena1/personajes.mjs'
+import { alargar } from '../tiras.mjs'
 
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
@@ -86,7 +87,7 @@ const mirandoADuky = (cambios) => sala((u) => ({ duckOne: [duckOne.carpeta(0), a
 
 export const TOMAS_3D = {
   espera: { escena: sala(() => ({ duke: null, moby: null })), camara: fija([-3.4, 1.9, -2.6], [2.0, 0.8, 0.6], 60) },
-  furioso: entra(furioso, ENTRADA(2.95), (x) => [[x + 2.4, 1.3, 1.9], [x, 0.85, 2.95], 44], { pantalla: PANTALLA, quienes: (u) => elenco(u, { duke: null, moby: null }) }),
+  furioso: entra(furioso, ENTRADA(2.95), (x) => [[x + 2.4, 1.3, 1.9], [x, 0.85, 2.95], 44], { pantalla: PANTALLA, suelo: ASIENTOS.moby.suelo, quienes: (u) => elenco(u, { duke: null, moby: null }) }),
   reflejo: entra(duke.alPiso, ENTRADA(2.6), (x) => [[x + 3.0, 0.9, 3.7], [x + 0.2, 0.45, 2.6], 50], { pantalla: PANTALLA, pulido: true, quienes: (u) => elenco(u, { duke: null }) }),
 
   evaluasion: { escena: sala((u) => ({ duckOne: conLaCarpeta(u) })), camara: A_DUCK },
@@ -105,12 +106,12 @@ export const TOMAS_3D = {
   especializado: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK },
   guapo: { escena: sala(lloroso((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
   chiyar: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_ABIERTO },
-  // Giran todos hacia duky, a la vez.
+  // Giran hacia duky en cadena: moby primero, y duke y duck-one tras él.
   miran: {
     escena: (u) => {
-      const k = tramo(u, 0.1, 0.5)
-      const giros = { moby: aDuky(ASIENTOS.moby, k).giro, duke: aDuky(ASIENTOS.duke, k).giro }
-      const figuras = elenco(u, { duckOne: [duckOne.carpeta(0), aDuky(DUCK_ONE, k)], moby: [moby.sentado(u, SIN_HUMO), aDuky(ASIENTOS.moby, k)], duke: [duke.sentado(u), aDuky(ASIENTOS.duke, k)] })
+      const [k, tras] = [tramo(u, 0.08, 0.4), tramo(u, 0.23, 0.55)]
+      const giros = { moby: aDuky(ASIENTOS.moby, k).giro, duke: aDuky(ASIENTOS.duke, tras).giro }
+      const figuras = elenco(u, { duckOne: [duckOne.carpeta(0), aDuky(DUCK_ONE, tras)], moby: [moby.sentado(u, SIN_HUMO), aDuky(ASIENTOS.moby, k)], duke: [duke.sentado(u), aDuky(ASIENTOS.duke, tras)] })
       return reunion({ pantalla: PANTALLA, giros, figuras })
     },
     camara: fija([-1.0, 2.9, -2.4], [-1.0, 0.5, 0.6], 60),
@@ -118,8 +119,9 @@ export const TOMAS_3D = {
   enserio: { escena: mirandoADuky((u) => ({ moby: [moby.hablando(u, PRENDIDO), MIRAN.moby] })), camara: fija([-1.0, 1.6, -0.3], [-1.0, 1.0, 1.05], 60) },
   eficacia: { escena: mirandoADuky((u) => ({ duckOne: [conLaCarpeta(u), aDuky(DUCK_ONE)] })), camara: A_DUCK },
   // El dolly de la escena 2, más brusco: la cámara se lanza de 4,7 a 0,7 m
-  // mientras abre el campo, la cara queda del mismo ancho y todo tiembla.
-  noot: {
+  // mientras abre el campo, la cara queda del mismo ancho y todo tiembla,
+  // un cuadro más al final.
+  noot: alargar({
     escena: mirandoADuky((u) => ({ duky: duky.susto(u, { tics: [[0.12, 0.2], [0.3, 0.42], [0.5, 0.56], [0.62, 0.74], [0.8, 0.88], [0.92, 1]], tiembla: tramo(u, 0.2, 0.6) }) })),
     camara: (u) => {
       const k = suave(tramo(u, 0.05, 0.6))
@@ -127,5 +129,5 @@ export const TOMAS_3D = {
       const sacude = 0.012 * tramo(u, 0.55, 0.7) * Math.sin(Math.floor(u * 40) * 2.1)
       return [[-1.7 + sacude, 1.07 + sacude, 0.75 - d], [-1.6, 1.07, 0.75], (2 * Math.atan((1.1 - 0.3 * k) / 2 / d) * 180) / Math.PI]
     },
-  },
+  }, 0, 41 / 40),
 }

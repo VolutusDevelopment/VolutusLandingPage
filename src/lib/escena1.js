@@ -8,8 +8,9 @@
  * los escribe en `public/`). `ms` es lo que dura cada cuadro; `unaVez`, que
  * la tira corre una sola vez y se queda en el último (la flota que llega, la
  * cámara que sube); si no, da vueltas mientras duran sus líneas. Una toma
- * dura lo que sus líneas, y nunca menos que su tira; la que corre una vez se
- * estira si sus líneas tardan más, y si se estira mucho, lleva más cuadros.
+ * dura lo que sus líneas, y nunca menos que su tira; la que corre una vez
+ * lleva los cuadros que tarden en leerse, y nunca se estira: cada cuadro dura
+ * siempre su `ms`.
  *
  * Desde la toma del atacante, la pantalla de la sala muestra lo que usa quien
  * juega: un cursor o una huella. Esas tomas (`segunModo`) tienen una tira por
@@ -36,7 +37,7 @@ export const TOMAS = [
   {
     id: 'llegada',
     ms: 250,
-    cuadros: 24,
+    cuadros: 26,
     unaVez: true,
     lineas: [{ texto: 'El mar, vacío. Se oye un ruido lejano de motores.' }, { texto: 'Aparece un portaaviones. Después otro. Y otro más.' }],
   },
@@ -95,7 +96,7 @@ export const TOMAS = [
   {
     id: 'caidos',
     ms: 225,
-    cuadros: 24,
+    cuadros: 29,
     unaVez: true,
     lineas: [
       { quien: OFICIAL, texto: 'Sí, señor.' },
@@ -118,6 +119,7 @@ export const TOMAS = [
   {
     id: 'levanta',
     ms: 150,
+    cuadros: 14,
     unaVez: true,
     segunModo: true,
     lineas: [{ texto: 'El almirante se levanta.' }],

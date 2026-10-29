@@ -13,6 +13,8 @@ import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { giroHacia } from '../escena2/reunion.mjs'
 import { ESCALA as K, SUELO, caza } from '../escena3/caza.mjs'
+import { ACELERADOR, PALANCA } from '../pilotos/interiores.mjs'
+import { alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -44,13 +46,14 @@ const cabezaAlta = (sube) => [...M.DUCK_ONE_TORSO, ...transformar([0, 0, sube], 
 const atras = (tronco = M.DUCK_ONE) => figura(pDuckOne, { tronco, manos: MANOS_ATRAS })
 const indice = (mano, hacia) => hueso(mano, sum(mano, hacia), 0.045, C.cuero)
 
-// Salta del ala a la cubierta y queda en jarras, con el pecho afuera.
+// Salta del ala a la cubierta y queda en jarras, con el pecho afuera. Antes
+// de u = 0 el caza está solo, y él baja desde el ala, por arriba del cuadro.
 const enJarras = { ...pDuckOne, dobla: (s) => [-0.4, 0, s] }
 const pose = (u) => {
-  const cae = tramo(u, 0, 0.3)
+  const cae = tramo(u, -0.25, 0.3)
   const k = tramo(u, 0.3, 0.5)
   const manos = { 1: lerp([0.5, 0.2, 1.1], [-0.05, -1.25, 1.0], k), [-1]: lerp([0.5, 0.2, -1.1], [-0.05, -1.25, -1.0], k) }
-  return figura(enJarras, { tronco: cabezaAlta(14 * k), manos, salto: 2.6 * (1 - cae) ** 2, inclina: 7 * k })
+  return figura(enJarras, { tronco: cabezaAlta(14 * k), manos, salto: 11 * (1 - cae) ** 2, inclina: 7 * k })
 }
 
 // Habla con el índice arriba, como siempre.
@@ -102,12 +105,16 @@ const enPista = (u) => {
   const aire = Math.max(0, 1 - k / LLEGA.toca)
   return { aire, en: sum(PARADA, [-LLEGA.largo * (1 - k) ** 2, 16 * aire ** 1.5, 0]) }
 }
+// Con duck-one en la cabina, que ya detenido abre la cúpula: pasado u = 1,
+// más cuadros al mismo ritmo.
+const EN_LOS_MANDOS = figura(pDuckOne, { tronco: M.DUCK_ONE, manos: { 1: PALANCA, [-1]: ACELERADOR } })
 const aterriza = (u) => {
   const { aire, en } = enPista(u)
-  return transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(caza({ piloto: [] }))
+  return transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(caza({ piloto: EN_LOS_MANDOS, cupula: CUPULA_ABIERTA * tramo(u, 0.85, 1.15) }))
 }
 
-// Los marinos esperan en la pista y escapan a un lado cuando el caza se les viene encima.
+// Los marinos esperan en la pista, escapan a un lado cuando el caza se les
+// viene encima y, ya a salvo, se quedan quietos.
 const MARINOS = [
   { oficio: OFICIOS.amarillo, x: 5, z: -5.4, lado: 1, desfase: 0 },
   { oficio: OFICIOS.morado, x: 1, z: -6.6, lado: -1, desfase: 0.3 },
@@ -117,21 +124,29 @@ const marinos = (u) => {
   const nariz = enPista(u).en[0] + 9
   return MARINOS.flatMap(({ oficio, x, z, lado, desfase }) => {
     const huye = tramo(nariz, x - 30, x - 2)
-    const figuraM = huye > 0 ? MARINEROS.corre(oficio, (u * 6 + desfase) % 1) : MARINEROS.corre(oficio, 0, { fase: null })
+    const figuraM = huye > 0 && huye < 1 ? MARINEROS.corre(oficio, (u * 6 + desfase) % 1) : MARINEROS.corre(oficio, 0, { fase: null })
     return colocar(figuraM, { k: K, giro: lado > 0 ? -90 : 90, en: [x, CUBIERTA, z + lado * 5 * huye] })
   })
 }
 
 export const TOMAS_3D = {
-  aterrizaje: {
-    escena: (u) => [...BARCO, ...aterriza(u), ...marinos(u)],
-    camara: (u) => [[13, 21.8, -11.5], lerp(sum(enPista(u).en, [3, -1, 0]), enParada([0, -1, 0]), tramo(u, 0.5, 0.8)), 60],
-  },
-  pose: {
-    escena: (u) => [...estacionado(), ...colocar(pose(u), { k: K, en: [3.2, CUBIERTA, -8.2], giro: giroHacia([3.2, -8.2], [4.6, -10.4]) })],
-    // Desde abajo, como en los afiches.
-    camara: fija([4.6, CUBIERTA + 0.2, -10.4], [3.2, CUBIERTA + 0.9, -8.2], 60),
-  },
+  aterrizaje: alargar(
+    {
+      escena: (u) => [...BARCO, ...aterriza(u), ...marinos(u)],
+      camara: (u) => [[13, 21.8, -11.5], lerp(sum(enPista(u).en, [3, -1, 0]), enParada([0, -1, 0]), tramo(u, 0.5, 0.8)), 60],
+    },
+    0,
+    1.25,
+  ),
+  pose: alargar(
+    {
+      escena: (u) => [...estacionado(), ...colocar(pose(u), { k: K, en: [3.2, CUBIERTA, -8.2], giro: giroHacia([3.2, -8.2], [4.6, -10.4]) })],
+      // Desde abajo, como en los afiches.
+      camara: fija([4.6, CUBIERTA + 0.2, -10.4], [3.2, CUBIERTA + 0.9, -8.2], 60),
+    },
+    -0.5,
+    1,
+  ),
   ybien: { escena: (u) => cubierta(u, { mobyF: MOBY.hablando(u) }), camara: plano('duck', 'moby') },
   estimasiones: { escena: (u) => cubierta(u, { duck: hablando(u) }), camara: plano('moby', 'duck') },
   lediste: { escena: (u) => cubierta(u, { mobyF: MOBY.hablando(u) }), camara: plano('duck', 'moby', { lado: -0.4 }) },
@@ -147,10 +162,15 @@ export const TOMAS_3D = {
     },
     camara: fija([5, CUBIERTA + 0.9, -17.5], [5.2, CUBIERTA + 0.4, -10.5], 46),
   },
-  salta: {
-    escena: (u) => [...estacionado(), ...colocar(saltaYSeñala(u, 0), { k: K, en: [9, CUBIERTA, -10.5], giro: -16 })],
-    camara: fija([7.4, CUBIERTA + 0.5, -12.4], [11, CUBIERTA + 1.2, -9.2], 58),
-  },
+  // Sin la espera del final, que ya no pide el texto.
+  salta: alargar(
+    {
+      escena: (u) => [...estacionado(), ...colocar(saltaYSeñala(u, 0), { k: K, en: [9, CUBIERTA, -10.5], giro: -16 })],
+      camara: fija([7.4, CUBIERTA + 0.5, -12.4], [11, CUBIERTA + 1.2, -9.2], 58),
+    },
+    0,
+    25 / 32,
+  ),
   fase: {
     escena: (u) => [...estacionado(), ...colocar(saltaYSeñala(1, silaba(u)), { k: K, en: [9, CUBIERTA, -10.5], giro: -16 })],
     camara: fija([10.6, CUBIERTA + 0.7, -12.2], [9, CUBIERTA + 0.75, -10.5], 46),

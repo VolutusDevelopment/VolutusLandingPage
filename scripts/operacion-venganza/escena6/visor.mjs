@@ -58,6 +58,6 @@ const HUELLA = Array.from({ length: 15 }, (_, j) =>
 export const objetivo = (celdas, u, modo, [x, y] = [MEDIO, MEDIO]) => {
   if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== '.' && poner(celdas, x - 3 + i, y - 8 + j, c === '#' ? '#0c0e12' : BLANCO)))
   else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, x - 5 + i, y - 7 + j, c)))
-  const lado = 14 + (Math.floor(u * 12) % 2)
+  const lado = 14 + Math.abs(Math.floor(u * 12) % 2)
   esquinas(celdas, [x - lado, y - lado, x + lado, y + lado], 5, ROJO)
 }

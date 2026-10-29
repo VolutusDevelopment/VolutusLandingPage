@@ -12,6 +12,7 @@ import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs
 import { FLECHA, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { curva, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { BOTON, EN_CATAPULTA, ESCALA, SUELO, caza, enCaza, enPiloto } from './caza.mjs'
+import { alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)
@@ -37,15 +38,18 @@ const tronco = ({ gira = 0, baja = 0, gafas = [0, 0, 0], abre = 0 } = {}) =>
 const sentado = ({ tronco: t = DUCK_ONE, mano, extra = [] } = {}) => figura(pDuckOne, { tronco: t, manos: { 1: PALANCA, [-1]: mano ?? ACELERADOR }, extra })
 const indice = (mano, punta) => hueso(mano, punta, 0.045, C.cuero)
 
-// Se le resbalan las gafas por el pico y se las sube con el índice.
+// Se le resbalan las gafas por el pico y se las sube con el índice. Las
+// sostiene un momento, con el mentón arriba, satisfecho, y la mano vuelve
+// al acelerador. Pasado u = 1, más cuadros al mismo ritmo.
 const PUENTE = CABEZA.punto([1.0, 0.76, 0])
 const RESBALA = [0.06, -0.08, 0]
 const ajustaGafas = (u) => {
   const corrida = esc(RESBALA, tramo(u, 0, 0.25) * (1 - tramo(u, 0.45, 0.6)))
-  const llega = tramo(u, 0.15, 0.4) * (1 - tramo(u, 0.7, 0.95))
-  const punta = sum(PUENTE, sum(corrida, [0.03, -0.02, 0]))
+  const llega = tramo(u, 0.15, 0.4) * (1 - tramo(u, 0.95, 1.2))
+  const menton = 10 * tramo(u, 0.6, 0.75) * (1 - tramo(u, 0.95, 1.2))
+  const punta = transformar([0, 0, menton], [0.1, 0.1, 0]).punto(sum(PUENTE, sum(corrida, [0.03, -0.02, 0])))
   const mano = lerp(ACELERADOR, sum(punta, [0.2, -0.14, -0.14]), llega)
-  return sentado({ tronco: tronco({ gafas: corrida }), mano, extra: llega > 0.8 ? [indice(mano, punta)] : [] })
+  return sentado({ tronco: tronco({ gafas: corrida, baja: -menton }), mano, extra: llega > 0.8 ? [indice(mano, punta)] : [] })
 }
 
 // Baja la cabeza y se golpea las medallas, una y otra, a ver si están bien pegadas.
@@ -154,7 +158,7 @@ export const TOMAS_3D = {
       return [lerp(enCaza([4.4, 2.6, -3.4]), enPiloto([3.4, 1.0, 0]), k), lerp(enCaza([5.0, 1.0, 0]), enPiloto([0, 0.1, 0]), k), 50 + 35 * k]
     },
   },
-  gafas: { escena: enCabinaCon(ajustaGafas), camara: fija(enPiloto([2.9, 0.95, -1.3]), enPiloto([0.4, 0.7, -0.15]), 55) },
+  gafas: alargar({ escena: enCabinaCon(ajustaGafas), camara: fija(enPiloto([2.9, 0.95, -1.3]), enPiloto([0.4, 0.7, -0.15]), 55) }, 0, 17 / 12),
   medallas: { escena: enCabinaCon(revisaMedallas), camara: fija(enPiloto([2.6, 0.5, -1.15]), enPiloto([0.4, -0.15, -0.25]), 62) },
   presentacion: { escena: enCabinaCon((u) => enCabina(() => DUCK.hablando(u))), camara: fija(enPiloto([3.2, 1.2, 0.1]), enPiloto([0.1, 0.3, 0]), 72) },
   advertencia: {

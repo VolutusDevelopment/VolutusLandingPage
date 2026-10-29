@@ -21,11 +21,12 @@ export const K = 0.42
 
 // Dónde se sienta cada uno, mirando a la mesa (`giro`, como en colocar), y
 // a qué altura de sus unidades pisa: moby es más alto de piernas cortas y
-// duky pisa en sus patas de juguete.
+// duky pisa en sus patas de juguete. duky es más largo que el asiento: su
+// sillón (`sillon`) va más atrás, para que la cola no atraviese el respaldo.
 export const ASIENTOS = {
   duckOne: { en: [-2.8, 0, 0], giro: 0, suelo: -2.3 },
   duke: { en: [-1.0, 0, -1.0], giro: -90, suelo: -2.3 },
-  duky: { en: [-1.6, 0, 1.0], giro: 90, suelo: -2.2 },
+  duky: { en: [-1.6, 0, 1.0], giro: 90, suelo: -2.2, sillon: [-1.6, 0, 1.23] },
   moby: { en: [-0.4, 0, 1.1], giro: 90, suelo: -2.55 },
 }
 
@@ -108,7 +109,7 @@ const puerta = (abre) => {
       return y > 1.0 && y < 1.12 ? '#f2c440' : '#5c6874'
     },
   })
-  const charco = placa([[-3.9, 0.07, MEDIO - hueco], [-3.9, 0.07, MEDIO + hueco], [-1.4, 0.07, MEDIO + hueco * 1.7], [-1.4, 0.07, MEDIO - hueco * 1.7]], 0.01, null, { luz: { color: '#ffe0a0', alfa: 0.3, nivel: 1 } })
+  const charco = placa([[-3.9, 0.01, MEDIO - hueco], [-3.9, 0.01, MEDIO + hueco], [-1.4, 0.01, MEDIO + hueco * 1.7], [-1.4, 0.01, MEDIO - hueco * 1.7]], 0.01, null, { luz: { color: '#ffe0a0', alfa: 0.3, nivel: 1 } })
   return abre > 0.05 ? [hojas, charco] : [hojas]
 }
 
@@ -127,7 +128,7 @@ export const reunion = ({ pantalla = 'cursor', alarma = false, pulido = false, a
     ...sala({ pantalla, alarma, pulido }),
     ...mesa,
     ...puerta(abre),
-    ...Object.entries(ASIENTOS).flatMap(([quien, { en, giro }]) => colocar(SILLON, { k: K, en, giro: giros[quien] ?? giro })),
+    ...Object.entries(ASIENTOS).flatMap(([quien, { en, giro, sillon = en }]) => colocar(SILLON, { k: K, en: sillon, giro: giros[quien] ?? giro })),
     ...patos,
     ...(pulido ? reflejar(patos) : []),
   ]
@@ -142,13 +143,14 @@ const reflejar = (formas) =>
     return g
   })
 
-// Alguien entra solo por la puerta, a paso lento, con la cámara delante que
-// lo acompaña: `camara(x)`, según por dónde va. `quienes(u)`, los que ya
-// estaban en la sala.
-export const entra = (pose, camino, camara, { quienes = () => [], ...extra } = {}) => {
-  const s = (u) => 1.5 + 2.2 * u
+// Alguien entra solo por la puerta, a paso lento, de los `desde` a los
+// `hasta` metros del camino, con la cámara delante que lo acompaña:
+// `camara(x)`, según por dónde va. `quienes(u)`, los que ya estaban en la
+// sala; `suelo`, dónde pisa quien entra.
+export const entra = (pose, camino, camara, { quienes = () => [], desde = 1.5, hasta = 3.7, suelo, ...extra } = {}) => {
+  const s = (u) => desde + (hasta - desde) * u
   return {
-    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, ...extra, figuras: [...quienes(u), [pose(fase(s(u))), camino.donde(s(u))]] }),
+    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, ...extra, figuras: [...quienes(u), [pose(fase(s(u))), { ...camino.donde(s(u)), suelo }]] }),
     camara: (u) => camara(camino.donde(s(u)).en[0]),
   }
 }

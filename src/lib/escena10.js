@@ -48,7 +48,7 @@ export const TOMAS = [
   { id: 'guapo', ms: 150, lineas: [{ quien: DUKE, texto: '¿Un piloto extranjero y guapo?' }] },
   { id: 'chiyar', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Un piloto que no necesita chiyar para cumplir sus objetivos.' }] },
   // Giran todos en sus sillones, a la vez.
-  { id: 'miran', ms: 150, unaVez: true, lineas: [{ texto: 'Los tres miran a Duky.' }] },
+  { id: 'miran', ms: 150, cuadros: 15, unaVez: true, lineas: [{ texto: 'Los tres miran a Duky.' }] },
   { id: 'enserio', ms: 150, lineas: [{ quien: MOBY, texto: 'No puede ser en serio.' }] },
   {
     id: 'eficacia',
@@ -59,7 +59,7 @@ export const TOMAS = [
     ],
   },
   // El dolly de la escena 2, más brusco.
-  { id: 'noot', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'La cámara se lanza otra vez sobre Duky.' }, { texto: 'Le tiembla el párpado, y ahora también el cuerpo.' }] },
+  { id: 'noot', ms: 150, cuadros: 41, unaVez: true, lineas: [{ texto: 'La cámara se lanza otra vez sobre Duky.' }, { texto: 'Le tiembla el párpado, y ahora también el cuerpo.' }] },
 ]
 
 export const rutaDeToma = ({ id }) => `/operacion-venganza/escena10/${id}.png`

@@ -18,7 +18,7 @@ export const TOMAS = [
   { id: 'cubierta', ms: 150, cuadros: 24, unaVez: true, lineas: [] },
   // …y se mete en la cabina, por el costado de la cúpula.
   { id: 'cabina', ms: 150, cuadros: 24, unaVez: true, lineas: [] },
-  { id: 'gafas', ms: 150, unaVez: true, lineas: [{ texto: 'Duck-One ajusta sus gafas de sol.' }] },
+  { id: 'gafas', ms: 150, cuadros: 17, unaVez: true, lineas: [{ texto: 'Duck-One ajusta sus gafas de sol.' }] },
   { id: 'medallas', ms: 150, lineas: [{ texto: 'Comprueba que sus medallas estén correctamente colocadas.' }] },
   {
     id: 'presentacion',

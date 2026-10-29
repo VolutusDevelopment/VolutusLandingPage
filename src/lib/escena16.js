@@ -34,14 +34,14 @@ export const TOMAS = [
   {
     id: 'mira',
     ms: 150,
-    cuadros: 40,
+    cuadros: 47,
     unaVez: true,
     lineas: [{ texto: 'Pausa. El almirante respira y vuelve a mirar al cielo…' }, { texto: '…pero ahora gira lentamente hacia la cámara y la mira fijamente.' }],
   },
   {
     id: 'espalda',
     ms: 150,
-    cuadros: 40,
+    cuadros: 57,
     unaVez: true,
     lineas: [{ texto: 'La cámara cambia de lugar: ahora lo ve de espaldas, frente al atardecer.' }, { texto: 'Él espera unos segundos, se da la vuelta y camina directo hacia la cámara.' }],
   },
@@ -53,7 +53,7 @@ export const TOMAS = [
     lineas: [{ texto: 'A mitad de camino, la cámara cambia otra vez: lo mira desde detrás de un caza.' }, { texto: 'Desconcertado, el almirante mira a todos lados… y descubre que la cámara estaba oculta ahí.' }],
   },
   { id: 'persigue', ms: 100, cuadros: 32, unaVez: true, lineas: [{ texto: 'Ahora corre directo hacia la cámara…' }] },
-  { id: 'huye', ms: 100, cuadros: 32, unaVez: true, lineas: [{ texto: '…y la cámara, esta vez en primera persona, también se pone a correr.' }] },
+  { id: 'huye', ms: 100, cuadros: 42, unaVez: true, lineas: [{ texto: '…y la cámara, esta vez en primera persona, también se pone a correr.' }] },
   {
     id: 'harari',
     ms: 150,
@@ -74,7 +74,7 @@ export const FINALES = {
     boton: 'Hundir el «Sitting Ducks»',
     tomas: [
       { id: 'caos', ms: 100, cuadros: 24, lineas: [{ texto: 'Todo es un caos: todos corren por sus vidas con las manos en el aire.' }] },
-      { id: 'lagrima', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'El único que no se mueve es el almirante. Una lágrima le cae por la cara.' }] },
+      { id: 'lagrima', ms: 150, cuadros: 33, unaVez: true, lineas: [{ texto: 'El único que no se mueve es el almirante. Una lágrima le cae por la cara.' }] },
       { id: 'ataque', segunModo: true, ms: 120, cuadros: 32, unaVez: true, lineas: [{ texto: segunQuien((el) => `El ${el} ataca el portaaviones y lo parte en dos…`) }] },
       { id: 'hundimiento', ms: 200, cuadros: 48, unaVez: true, lineas: [{ texto: '…y las dos mitades se hunden, como el Titanic.' }] },
     ],

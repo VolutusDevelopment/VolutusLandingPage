@@ -36,7 +36,7 @@ export const TOMAS = [
   {
     id: 'cinta',
     ms: 150,
-    cuadros: 32,
+    cuadros: 41,
     unaVez: true,
     lineas: [{ texto: '…la sella con cinta de peligro, amarilla y negra…' }, { texto: '…y le pega un gran sticker rojo: «CLASIFICADO».' }],
   },
@@ -48,7 +48,7 @@ export const TOMAS = [
   { id: 'proteccion', ms: 150, lineas: [{ quien: MARINERO_1, texto: '¿Y por qué tanta protección para el Amarillento?' }] },
 
   // El miedo.
-  { id: 'patea', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El primer marinero patea la caja, para asegurarse de que esté bien protegida.' }] },
+  { id: 'patea', ms: 150, cuadros: 28, unaVez: true, lineas: [{ texto: 'El primer marinero patea la caja, para asegurarse de que esté bien protegida.' }] },
   { id: 'tiembla', ms: 100, cuadros: 24, lineas: [{ texto: 'El segundo marinero mira la caja y niega con la cabeza, tembloroso.' }] },
   { id: 'corre', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Sale corriendo y, del miedo, se cae por la borda.' }] },
   {

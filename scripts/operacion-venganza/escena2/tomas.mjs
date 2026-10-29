@@ -12,6 +12,7 @@ import { FOTOS_3D } from './fotos.mjs'
 import { PANTALLA } from '../escena1/lugares.mjs'
 import { silaba, suave } from '../escena1/personajes.mjs'
 import { placa } from '../pilotos/tres.mjs'
+import { alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
@@ -68,26 +69,27 @@ const DE_DUKE = ENTRADA(2.6)
 
 // ── La puerta ────────────────────────────────────────────────────────────
 
-// Las cuatro siluetas en la puerta, con su medio ancho: se ven cuando la luz
-// las alcanza entera.
+// Las cuatro siluetas en la puerta, con su medio ancho y dónde pisan: se ven
+// cuando la luz las alcanza entera.
 const SILUETAS = [
   [() => duke.alPiso(null), [-3.75, 1.85], 0.32],
   [() => duckOne.atras(), [-3.55, 2.55], 0.36],
-  [() => moby.cruzado(null), [-3.75, 3.3], 0.6],
-  [() => duky.enBrazos(), [-3.75, 4.0], 0.45],
+  [() => moby.cruzado(null), [-3.75, 3.3], 0.6, ASIENTOS.moby.suelo],
+  [() => duky.enBrazos(), [-3.75, 4.0], 0.45, ASIENTOS.duky.suelo],
 ]
 const MEDIO = (PUERTA.z0 + PUERTA.z1) / 2
 const puerta = (u, modo) => {
   const abre = tramo(u, 0, 0.6)
-  const figuras = SILUETAS.filter(([, [, z], ancho]) => huecoDePuerta(abre) > Math.abs(z - MEDIO) + ancho).map(([pose, [x, z]]) => [silueta(pose()), { en: [x, 0, z], giro: 0 }])
+  const figuras = SILUETAS.filter(([, [, z], ancho]) => huecoDePuerta(abre) > Math.abs(z - MEDIO) + ancho).map(([pose, [x, z], , suelo]) => [silueta(pose()), { en: [x, 0, z], giro: 0, suelo }])
   return reunion({ pantalla: modo, abre, figuras })
 }
 
 // ── duky llega en brazos ─────────────────────────────────────────────────
 
-// El marinero entra hasta detrás del sillón de duky, gira y lo deja en él.
-const DE_MARINERO = recorrido([[-4.6, 2.8], [-1.6, 1.95]])
-const DETRAS_DEL_SILLON = { en: [-1.6, 0, 1.95], giro: 90 }
+// El marinero entra hasta detrás del sillón de duky, gira y lo deja en él,
+// estirando los brazos por sobre el respaldo.
+const DE_MARINERO = recorrido([[-4.6, 2.8], [-1.6, 2.18]])
+const DETRAS_DEL_SILLON = { en: [-1.6, 0, 2.18], giro: 90 }
 const traeADuky = (u) => {
   const s = DE_MARINERO.largo * tramo(u, 0, 0.5)
   const andando = u < 0.5
@@ -96,7 +98,7 @@ const traeADuky = (u) => {
   const deja = tramo(u, 0.62, 0.86)
   const sentado = sum(ASIENTOS.duky.en, [0, 0.15 * K, 0])
   const suelta = tramo(u, 0.88, 1)
-  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(EN_BRAZOS.manos[s], sum(EN_BRAZOS.manos[s], [1.0, -0.45, 0]), deja), [0.08, -1.1, s * 1.3], suelta)]))
+  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(EN_BRAZOS.manos[s], sum(EN_BRAZOS.manos[s], [1.55, -0.45, 0]), deja), [0.08, -1.1, s * 1.3], suelta)]))
   return [
     [marinero(andando ? fase(s) : null, manos), donde],
     [duky.enBrazos(), { en: lerp(enBrazos, sentado, deja), giro: girar(donde.giro, ASIENTOS.duky.giro, deja), suelo: ASIENTOS.duky.suelo }],
@@ -124,15 +126,15 @@ const aDuky = (quien, k) => hacia(ASIENTOS[quien], k)
 // Todos a la puerta, cada uno por su lado de la mesa y a su hora; duky se
 // queda, y le salen los puntos.
 const SALIDAS = [
-  [(f) => moby.andando(f), recorrido([[-0.4, 1.45], [-0.6, 2.4], [-5.0, 2.7]]), 0],
+  [(f) => moby.andando(f), recorrido([[-0.4, 1.45], [-0.6, 2.4], [-5.0, 2.7]]), 0, ASIENTOS.moby.suelo],
   [(f) => duckOne.andando(f), recorrido([[2.75, -1.0], [2.2, 2.4], [-5.0, 2.8]]), 0.1],
   [(f) => duke.alPiso(f), recorrido([[-1.0, -1.0], [-1.6, -1.75], [-3.5, -1.5], [-3.55, 2.2], [-5.0, 2.9]]), 0.05],
   [(f) => almirante.andando(f), recorrido([[2.6, 1.6], [1.9, 2.6], [-5.0, 2.9]]), 0.3],
 ]
 const seVan = (u) =>
-  SALIDAS.map(([pose, camino, desde]) => {
+  SALIDAS.map(([pose, camino, desde, suelo]) => {
     const s = Math.max(0, (u - desde) * 9.5)
-    return [pose(fase(s)), camino.donde(s)]
+    return [pose(fase(s)), { ...camino.donde(s), suelo }]
   })
 
 // ── Frente a frente ──────────────────────────────────────────────────────
@@ -163,14 +165,21 @@ const velo = (prendida) => {
 const AL_ESCUADRON = fija([0.2, 1.3, -0.6], [2.75, 1.1, -1.0], 50)
 
 export const TOMAS_3D = {
-  puerta: { escena: puerta, camara: fija([1.2, 1.7, 2.6], [-4, 1.0, 2.85], 46) },
-  medallas: entra(duckOne.andando, DE_DUCK, (x) => [[x + 2.6, 1.15, 2.2], [x, 0.85, 2.7], 40]),
-  puro: entra(moby.cruzado, DE_MOBY, (x) => [[x + 2.4, 1.3, 1.9], [x, 0.85, 2.95], 44]),
+  // La puerta cerrada, un momento, antes de abrirse.
+  puerta: alargar({ escena: puerta, camara: fija([1.2, 1.7, 2.6], [-4, 1.0, 2.85], 46) }, -0.25, 0.92),
+  // Duck-One y Moby salen de la luz de la puerta, al paso de duke.
+  medallas: entra(duckOne.andando, DE_DUCK, (x) => [[x + 2.6, 1.15, 2.2], [x, 0.85, 2.7], 40], { desde: 1.13 }),
+  puro: entra(moby.cruzado, DE_MOBY, (x) => [[x + 2.4, 1.3, 1.9], [x, 0.85, 2.95], 44], { desde: 1.13, suelo: ASIENTOS.moby.suelo }),
   reflejo: entra(duke.alPiso, DE_DUKE, (x) => [[x + 3.0, 0.9, 3.7], [x + 0.2, 0.45, 2.6], 50], { pulido: true }),
-  duky: {
-    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, figuras: [...elenco(u, { duky: null, almirante: null, duke: null, moby: null, duckOne: null }), ...traeADuky(u)] }),
-    camara: fija([0.3, 1.6, -1.2], [-2.2, 0.6, 1.9], 58),
-  },
+  // Hasta que el marinero lo suelta y se endereza.
+  duky: alargar(
+    {
+      escena: (u, modo) => reunion({ pantalla: modo, abre: 1, figuras: [...elenco(u, { duky: null, almirante: null, duke: null, moby: null, duckOne: null }), ...traeADuky(u)] }),
+      camara: fija([0.3, 1.6, -1.2], [-2.2, 0.6, 1.9], 58),
+    },
+    0,
+    25 / 24,
+  ),
 
   reunion: { escena: sala((u) => ({ almirante: almirante.habla(u) })), camara: fija([-3.7, 2.4, -2.6], [2.4, 0.8, 1.2], 58) },
   lagartijas: { escena: sala((u) => ({ moby: moby.hablando(u) })), camara: fija([-0.3, 1.05, -0.9], [-0.4, 0.85, 1.05], 50) },
@@ -218,15 +227,16 @@ export const TOMAS_3D = {
   inmovil: { escena: sala(conPuro(() => ({ duckOne: [firme(), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([-2.6, 1.25, -0.6], [-1.6, 0.95, 0.9], 34) },
   fantasma: { escena: sala(conPuro(careo(firme, almirante.ordena))), camara: fija([3.6, 1.3, 0.4], [2.6, 1.2, 1.6], 52) },
   expediente: { escena: sala(conPuro((u) => ({ duckOne: [duckOne.carpeta(1, 0.8 * silaba(u)), DUCK_A_LA_MESA] }))), camara: fija([1.2, 1.25, -0.9], [2.75, 1.05, -1.0], 54) },
+  // Giran en cadena, desde duck-one, que leía: cada uno un cuadro después del anterior.
   miran: {
     escena: (u, modo) => {
-      const k = tramo(u, 0.1, 0.5)
-      const giros = Object.fromEntries(['duckOne', 'duke', 'moby'].map((quien) => [quien, aDuky(quien, k).giro]))
+      const k = Object.fromEntries(['duckOne', 'moby', 'duke', 'almirante'].map((quien, i) => [quien, tramo(u, 0.07 * (i + 1), 0.07 * (i + 1) + 0.34)]))
+      const giros = Object.fromEntries(['duckOne', 'duke', 'moby'].map((quien) => [quien, aDuky(quien, k[quien]).giro]))
       const figuras = elenco(u, {
-        duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, k)],
-        duke: [duke.sentado(u), aDuky('duke', k)],
-        moby: [moby.sentado(u, PRENDIDO), aDuky('moby', k)],
-        almirante: [almirante.quieto(u), hacia(ALMIRANTE, k)],
+        duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, k.duckOne)],
+        duke: [duke.sentado(u), aDuky('duke', k.duke)],
+        moby: [moby.sentado(u, PRENDIDO), aDuky('moby', k.moby)],
+        almirante: [almirante.quieto(u), hacia(ALMIRANTE, k.almirante)],
       })
       return reunion({ pantalla: modo, giros, figuras })
     },
@@ -254,11 +264,25 @@ export const TOMAS_3D = {
     },
     camara: () => CAMARA_DE_LA_ALARMA,
   },
-  carpeta: { escena: sala(conPuro((u) => ({ duckOne: [duckOne.carpeta(1 - tramo(u, 0, 0.4)), DUCK_A_LA_MESA] }))), camara: fija([2.5, 1.35, 1.2], [2.65, 0.95, -1.0], 48) },
+  // La cierra y se gira hacia el almirante.
+  carpeta: {
+    escena: sala(conPuro((u) => ({ duckOne: [duckOne.carpeta(1 - tramo(u, 0, 0.32)), { ...FRENTE, giro: girar(180, DUCK_AL_ALMIRANTE.giro, tramo(u, 0.4, 0.8)) }] }))),
+    camara: fija([2.5, 1.35, 1.2], [2.65, 0.95, -1.0], 48),
+  },
   perfecto: { escena: sala(conPuro(careo(conLaCarpeta))), camara: DUCK_DE_CERCA },
   vino: { escena: sala(conPuro(careo(() => duckOne.carpeta(0), almirante.habla))), camara: AL_ALMIRANTE },
   plan: { escena: sala(conPuro(careo(conLaCarpeta))), camara: A_DUCK },
-  gira: { escena: sala(conPuro((u) => ({ duckOne: [firme(), { ...FRENTE, giro: girar(DUCK_AL_ALMIRANTE.giro, 180, tramo(u, 0, 0.8)) }] }))), camara: AL_ESCUADRON },
+  // Se lleva la carpeta a la espalda, se gira hacia el escuadrón y saca pecho.
+  gira: {
+    escena: sala(
+      conPuro((u) => {
+        const guarda = tramo(u, 0, 0.18)
+        const pose = guarda < 1 ? duckOne.guarda(guarda) : duckOne.atras(null, 0, 6 * tramo(u, 0.78, 0.9))
+        return { duckOne: [pose, { ...FRENTE, giro: girar(DUCK_AL_ALMIRANTE.giro, 180, tramo(u, 0.18, 0.745)) }] }
+      }),
+    ),
+    camara: AL_ESCUADRON,
+  },
   puestos: { escena: sala(conPuro((u) => ({ duckOne: [duckOne.señala(u), DUCK_A_LA_MESA] }))), camara: AL_ESCUADRON },
   porfin: { escena: sala((u) => ({ duckOne: [firme(), DUCK_A_LA_MESA], moby: [moby.grita(u), { ...ASIENTOS.moby, en: [-0.4, 0, 1.45] }] })), camara: fija([-0.5, 1.1, -0.9], [-0.4, 1.2, 1.2], 55) },
   // El humo del puro de moby pasaría por delante de duke.

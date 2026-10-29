@@ -158,7 +158,8 @@ export const ALMIRANTE = {
     },
     {
       nombre: 'se quita las gafas',
-      pose: (u, { sentado = false } = {}) => {
+      // `abrePico`, si habla mientras.
+      pose: (u, { sentado = false, abrePico = 0 } = {}) => {
         const sube = suave(u / 0.3)
         const baja = suave((u - 0.42) / 0.4)
         const lentes = sum(PUENTE_GAFAS, [0.12, -0.05, 0.12])
@@ -166,16 +167,18 @@ export const ALMIRANTE = {
         const mano = lerp(lerp([0.08, -1.2, 1.32], lentes, sube), pecho, baja)
         const gafas = u > 0.38 ? transformar([0, 0, -50 * baja], PUENTE_GAFAS, res(mano, lentes)).formas(GAFAS_PUESTAS) : []
         const otra = sentado ? brazosEnSillon(-1) : [0.08, -1.2, -1.32]
-        const figura = alm({ tronco: almiranteTronco(almiranteCabeza({ gafas: u <= 0.38, abre: baja > 0.5 ? 0.25 : 0.45, ceño: baja })), manos: { 1: mano, [-1]: otra }, extra: gafas, agacha: sentado ? SENTADO : 0, inclina: 3 * baja })
+        const figura = alm({ tronco: hablar(almiranteTronco(almiranteCabeza({ gafas: u <= 0.38, abre: baja > 0.5 ? 0.25 : 0.45, ceño: baja })), abrePico), manos: { 1: mano, [-1]: otra }, extra: gafas, agacha: sentado ? SENTADO : 0, inclina: 3 * baja })
         return sentado ? [...figura, ...SILLON] : figura
       },
     },
     {
       nombre: 'se levanta',
-      pose: (u) => {
+      // Ya de pie, `atras` lleva las manos a la espalda, como camina.
+      pose: (u, { atras = 0 } = {}) => {
         const k = suave((u - 0.15) / 0.55)
         const empuje = Math.sin(k * Math.PI)
-        return [...alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: k })), manos: { 1: lerp(brazosEnSillon(1), [0.2, -1.2, 1.3], k), [-1]: lerp(brazosEnSillon(-1), [0.2, -1.2, -1.3], k) }, agacha: SENTADO * (1 - k), inclina: -14 * empuje }), ...SILLON]
+        const mano = (s) => lerp(lerp(brazosEnSillon(s), [0.2, -1.2, s * 1.3], k), MANOS_ATRAS[s], atras)
+        return [...alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: k })), manos: { 1: mano(1), [-1]: mano(-1) }, agacha: SENTADO * (1 - k), inclina: -14 * empuje }), ...SILLON]
       },
     },
     {
@@ -297,9 +300,10 @@ export const OFICIAL = {
     { nombre: 'lee el informe', pose: (u) => conTableta(hablar(oficialCabeza({ mira: [0, -0.03] }), silaba(u) * 0.6), u) },
     {
       nombre: 'señala la pantalla',
-      pose: (u) => {
+      // Habla mientras señala, o lo que diga `abre`.
+      pose: (u, { abre } = {}) => {
         const g = curva(u)
-        return of({ tronco: hablar(oficialTronco(oficialCabeza({ mira: [0.03 * g, 0] })), silaba(u) * 0.5 * g), manos: { 1: lerp(pOficial.reposo(1), [0.7, 0.25 + 0.04 * vaiven(u, 2) * g, 1.6], g), [-1]: LEE }, extra: tableta(LEE, 25) })
+        return of({ tronco: hablar(oficialTronco(oficialCabeza({ mira: [0.03 * g, 0] })), abre ?? silaba(u) * 0.5 * g), manos: { 1: lerp(pOficial.reposo(1), [0.7, 0.25 + 0.04 * vaiven(u, 2) * g, 1.6], g), [-1]: LEE }, extra: tableta(LEE, 25) })
       },
     },
     {

@@ -40,7 +40,7 @@ export const TOMAS = [
   {
     id: 'abolladura',
     ms: 150,
-    cuadros: 24,
+    cuadros: 31,
     unaVez: true,
     lineas: [{ texto: 'Moby le pega a su avión, descontrolado.' }, { texto: 'Le deja una abolladura.' }],
   },

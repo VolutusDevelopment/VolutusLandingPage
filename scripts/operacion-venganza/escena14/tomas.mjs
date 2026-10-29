@@ -25,7 +25,7 @@ import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
 import { ASIENTO, BISEL, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
 import { enemigo } from '../escena13/visor.mjs'
-import { aSuDistancia, proyectar } from '../tiras.mjs'
+import { aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 import { aLoLejos, municion } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -60,10 +60,11 @@ const aplastar = (formas, escala, pivote) => {
 // Desinflado en `k` (0, como siempre; 1, la mitad de alto y más ancho), sentado.
 const desinflado = (formas, k) => aplastar(formas, [1 + 0.3 * k, 1 - 0.5 * k, 1 + 0.3 * k], ASIENTO)
 
-const enElCaza = (piloto) => conDuky({ motor: true, tren: false }, piloto).filter((f) => !f.vidrio)
+// Sin `armas` después del ataque: las gastó todas contra quien juega.
+const enElCaza = (piloto, armas = true) => conDuky({ motor: true, tren: false, armas }, piloto).filter((f) => !f.vidrio)
 // Mientras tiene balas, va feliz como en la escena 13.
 const feliz = (u) => dukyFeliz(u, 6)
-const DE_HULE = conDuky({ motor: true, tren: false }, dukyFigura({}))
+const DE_HULE = conDuky({ motor: true, tren: false, armas: false }, dukyFigura({}))
 
 // ── Las maniobras ────────────────────────────────────────────────────────
 
@@ -113,17 +114,19 @@ const trazadora = (canon, destino, s, [ojo, , campo]) => {
 }
 const fogonazo = (canon) => el(canon, [0.5, 0.35, 0.35], C.blanco, { flat: '#fff1a8', brilla: true })
 
-// Una ráfaga: `tiros` por vuelta, que se turnan los cañones, y `desvio(k)`, lo
-// que el tiro k se aparta de quien juega, en metros (y, z). Solo los que salen
-// antes de `hasta`.
-const rafaga = ({ tiros, objetivo, desvio, hasta = 1 }) => (u, T, camara) =>
+// Una ráfaga: `tiros` por vuelta, que se turnan los cañones, y `desvio(k, t)`,
+// lo que el tiro k, disparado en el instante t, se aparta de quien juega, en
+// metros (y, z). Solo los que salen antes de `hasta` en cada vuelta, y los
+// disparados desde `desde`.
+const rafaga = ({ tiros, objetivo, desvio, hasta = 1, desde = -Infinity }) => (u, T, camara) =>
   Array.from({ length: tiros }, (_, k) => {
     const sale = k / tiros
     if (sale >= hasta) return []
-    const s = ciclo(u - sale) / VIAJE
-    if (s > 1.6) return []
+    const vuela = ciclo(u - sale)
+    const s = vuela / VIAJE
+    if (s > 1.6 || u - vuela < desde) return []
     const canon = T.punto(CANONES[k % 2])
-    const destino = sum(objetivo(sale), [0, ...desvio(k)])
+    const destino = sum(objetivo(sale), [0, ...desvio(k, u - vuela)])
     return [trazadora(canon, destino, s, camara), ...(s < 0.15 ? [fogonazo(canon)] : [])]
   }).flat()
 
@@ -151,8 +154,9 @@ const marcar = (camara, objetivo) => (celdas, u, modo, distancias) => {
 // ── El ataque ────────────────────────────────────────────────────────────
 
 // Desde la cabina: la maniobra, la ráfaga, quien juega, las balas que
-// quedan, de `municiones[0]` a `municiones[1]`, y el `piloto` en el instante u.
-const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], piloto = feliz }) => {
+// quedan, de `municiones[0]` (en u = `empieza`) a `municiones[1]` (en u = 1),
+// y el `piloto` en el instante u.
+const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], empieza = 0, piloto = feliz }) => {
   const cam = aBordo(maniobra, CAMARAS[camara])
   return {
     escena: (u) => {
@@ -162,7 +166,7 @@ const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dis
     camara: cam,
     encima: (celdas, u, modo, distancias) => {
       marcar(cam, objetivo)(celdas, u, modo, distancias)
-      municion(celdas, u, desde + (hasta - desde) * Math.min(1, u))
+      municion(celdas, u, desde + (hasta - desde) * Math.min(1, Math.max(0, (u - empieza) / (1 - empieza))))
     },
   }
 }
@@ -178,16 +182,27 @@ const afuera = ({ maniobra, objetivo, dispara, camara }) => ({
   encima: objetivo && marcar(camara, objetivo),
 })
 
+// Las tomas que duran más que su vuelta siguen al mismo ritmo, antes de u = 0
+// o después de 1 (alargar): los patrones empiezan con estrellas de tres
+// puntas y se complican; la lluvia empieza con la pantalla vacía.
 const ATAQUE = {
-  patrones: cabina({ maniobra: virajes(45), objetivo: QUIETO, dispara: RAFAGAS.patrones, municiones: [999, 720] }),
+  patrones: alargar(
+    cabina({ maniobra: virajes(45), objetivo: QUIETO, dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: (k, t) => estrella(t < 0 ? 3 : 6, 14)(k) }), municiones: [999, 720], empieza: -5 / 32 }),
+    -5 / 32,
+    1,
+  ),
   // Desde donde está quien juega: el caza le viene de frente, disparándole.
   frente: afuera({ maniobra: virajes(30), dispara: RAFAGAS.patrones, camara: (u) => [QUIETO(u), sum(ALTURA, [0, 1, 0]), 11] }),
-  lluvia: cabina({ maniobra: virajes(70, 2), camara: 'hombro', objetivo: NERVIOSO, dispara: RAFAGAS.lluvia, municiones: [720, 400] }),
+  lluvia: alargar(
+    cabina({ maniobra: virajes(70, 2), camara: 'hombro', objetivo: NERVIOSO, dispara: rafaga({ tiros: 48, objetivo: NERVIOSO, desvio: espiral, desde: -4 / 30 }), municiones: [720, 400], empieza: -4 / 30 }),
+    -4 / 30,
+    1,
+  ),
   // A su lado, dando un tonel mientras la lluvia sale hacia adelante.
   costado: afuera({ maniobra: TONEL, objetivo: NERVIOSO, dispara: RAFAGAS.lluvia, camara: fija(sum(ALTURA, [-1, 3, -18]), sum(ALTURA, [2, 4, 0]), 60) }),
-  secuencia: cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, municiones: [400, 60] }),
+  secuencia: alargar(cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, municiones: [400, 60] }), 0, 25 / 24),
   // Por detrás y arriba, siguiendo los tiros hasta quien juega.
-  cola: afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46) }),
+  cola: alargar(afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46) }), -6 / 24, 1),
   cero: cabina({ maniobra: virajes(20), dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: estrella(3, 10), hasta: 0.3 }), municiones: [60, -140] }),
   // Sin balas, se queda quieto.
   silencio: cabina({ municiones: [0, 0], piloto: () => dukyFigura({}) }),
@@ -200,7 +215,7 @@ const ATAQUE = {
 const chilla = (u) => {
   const aprieta = Math.abs(Math.sin(vuelta(u) * 4)) ** 3
   const piloto = desinflado(dukyFigura({ inclina: 6 * Math.sin(Math.floor(u * 48) * 1.7) }), 0.45 * aprieta)
-  return [MAR, ...nubes(u), ...enManiobra(TEMBLOR(u)).formas(enElCaza(piloto))]
+  return [MAR, ...nubes(u), ...enManiobra(TEMBLOR(u)).formas(enElCaza(piloto, false))]
 }
 
 // Una S partida: se pone de espaldas, tira del morro hasta quedar al revés de
@@ -216,7 +231,7 @@ const S_PARTIDA = (u) => {
 // inhala hasta quedar como estaba.
 const respira = (u) => {
   const k = tramo(u, 0.1, 0.45) - tramo(u, 0.6, 0.9)
-  return [MAR, ...nubes(u * 0.5), ...enManiobra({}).formas(enElCaza(desinflado(dukyFigura({}), k)))]
+  return [MAR, ...nubes(u * 0.5), ...enManiobra({}).formas(enElCaza(desinflado(dukyFigura({}), k), false))]
 }
 
 // ── La sala ──────────────────────────────────────────────────────────────

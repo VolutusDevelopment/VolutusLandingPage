@@ -18,7 +18,7 @@ import { MANOS_ATRAS, OFICIOS, almiranteCabeza, almiranteTronco, corre, hablar, 
 import { giroHacia, girar } from '../escena2/reunion.mjs'
 import { K, SUELO, caza } from '../escena11/hangar.mjs'
 import { objetivo } from '../escena6/visor.mjs'
-import { proyectar } from '../tiras.mjs'
+import { alargar, proyectar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)
@@ -32,10 +32,10 @@ const CUBIERTA = 20.8
 const pato = (formas, donde) => colocar(formas, { k: K, ...donde })
 const enCubierta = ([x, z]) => [x, CUBIERTA, z]
 
-// El caza de duky, estacionado a estribor de la proa: detrás de él se
-// esconde la cámara.
+// El caza de duky, estacionado a estribor de la proa y ya sin armas: detrás
+// de él se esconde la cámara.
 const ESTACIONADO = [152, CUBIERTA - SUELO, 8]
-const CAZA = poner(caza(), 200, ESTACIONADO)
+const CAZA = poner(caza({ armas: false }), 200, ESTACIONADO)
 const BARCO = [...portaaviones({ avion: false }), ...CAZA]
 
 // ── El almirante ─────────────────────────────────────────────────────────
@@ -52,7 +52,7 @@ const alm = (cfg) => figura(pAlmirante, { sinSombra: true, ...cfg })
 const tronco = ({ habla = 0, ...cabeza } = {}) => hablar(almiranteTronco(almiranteCabeza(cabeza)), habla)
 // Respira: sube y baja apenas.
 const respira = (u) => 0.015 * Math.sin(vuelta(u))
-const quieto = (u, { inclina = 0, ...cabeza } = {}) => alm({ tronco: tronco(cabeza), manos: MANOS_ATRAS, salto: respira(u), inclina })
+const quieto = (u, { inclina = 0, salto = respira(u), ...cabeza } = {}) => alm({ tronco: tronco(cabeza), manos: MANOS_ATRAS, salto, inclina })
 // Habla con una mano adelante, como cuando pregunta en la sala.
 const habla = (u, { inclina = 0, ceño = 0 } = {}) => {
   const g = suave(u / 0.2) * (1 - suave((u - 0.85) / 0.15))
@@ -85,23 +85,37 @@ const seAcerca = (u) => {
 // Le habla al aire, de cara al sol: la cámara, de tres cuartos sobre el mar.
 const DE_FRENTE = fija(sum(enLaProa(-4.5, -2.5), [0, 1.5, 0]), sum(PROA, [0, 0.95, 0]), 40)
 
-// Mira al cielo y, despacio, se da vuelta hacia la cámara y la mira.
+// Una pausa antes de u = 0: respira hondo, el pecho se le infla y baja, y
+// deja la pose de cuando hablaba. Después mira al cielo y, despacio, se da
+// vuelta hacia la cámara y la mira.
 const HACIA_LA_CAMARA = giroHacia(xz(PROA), xz(DE_FRENTE()[0]))
+const PAUSA = -0.125
 const laMira = (u) => {
+  const respiro = Math.sin(Math.PI * Math.min(1, Math.max(0, (u - PAUSA) / -PAUSA)))
+  const deja = 6 * (1 - tramo(u, PAUSA, 0))
   const sube = tramo(u, 0.05, 0.3) * (1 - tramo(u, 0.45, 0.6))
-  return pato(quieto(u, { inclina: 12 * sube, abre: u > 0.7 ? 0.65 : 0.45, ceño: tramo(u, 0.7, 0.9) }), { en: PROA, giro: girar(MIRA_AL_SOL, HACIA_LA_CAMARA, tramo(u, 0.45, 0.85)) })
+  return pato(quieto(u, { inclina: 12 * sube + deja + 4 * respiro, salto: respira(u) + 0.05 * respiro, abre: u > 0.7 ? 0.65 : 0.45, ceño: tramo(u, 0.7, 0.9) }), { en: PROA, giro: girar(MIRA_AL_SOL, HACIA_LA_CAMARA, tramo(u, 0.45, 0.85)) })
 }
 
-// La cámara cambia: detrás de él, sobre la cubierta, con el sol delante. Él
-// espera, se da vuelta y camina hacia ella; la toma corta a mitad de camino.
+// La cámara cambia: detrás de él, sobre la cubierta, con el sol delante. Él,
+// todavía vuelto hacia donde la miraba y con el ceño, regresa al sol; espera
+// unos segundos, se da vuelta despacio y camina hacia ella. La toma corta a
+// mitad de camino. En cuadros de su tira, de 57: regresa en 5, espera hasta el
+// 27, gira en 10 y camina un 5 % del camino por cuadro.
 const ATRAS = sum(enLaProa(0.3, 7.5), [0, 1.3, 0])
 const DE_ESPALDAS = fija(ATRAS, sum(PROA, sum(esc(AL_SOL, 6), [0, 0.6, 0])), 44)
 const A_LA_CAMARA = giroHacia(xz(PROA), xz(ATRAS))
 const MITAD = lerp(xz(PROA), xz(ATRAS), 0.45)
+const CUADRO = 1 / 57
+const [REGRESA, ESPERA, GIRA] = [5 * CUADRO, 27 * CUADRO, 37 * CUADRO]
 const seVuelve = (u) => {
-  if (u < 0.35) return pato(quieto(u, { abre: 0.3 }), { en: PROA, giro: MIRA_AL_SOL })
-  if (u < 0.5) return pato(quieto(u), { en: PROA, giro: girar(MIRA_AL_SOL, A_LA_CAMARA, tramo(u, 0.35, 0.5)) })
-  const k = (u - 0.5) / 0.5
+  if (u < REGRESA) {
+    const k = tramo(u, 0, REGRESA)
+    return pato(quieto(u, { abre: 0.65 - 0.35 * k, ceño: 1 - k }), { en: PROA, giro: girar(HACIA_LA_CAMARA, MIRA_AL_SOL, k) })
+  }
+  if (u < ESPERA) return pato(quieto(u, { abre: 0.3 }), { en: PROA, giro: MIRA_AL_SOL })
+  if (u < GIRA) return pato(quieto(u), { en: PROA, giro: girar(MIRA_AL_SOL, A_LA_CAMARA, tramo(u, ESPERA, GIRA)) })
+  const k = (0.05 * (u - GIRA)) / CUADRO
   return pato(andando(pasos(k * 2.6)), deA(xz(PROA), MITAD, k))
 }
 
@@ -120,21 +134,31 @@ const busca = (u) => {
 const HASTA = lerp(MITAD, xz(ESCONDIDA), 0.55)
 const laPersigue = (u) => pato(corriendo(pasos(u * 7, 1)), deA(MITAD, HASTA, u))
 // La cámara, en primera persona, también corre: hacia atrás, sin dejar de
-// mirarlo, tambaleándose a cada zancada. Él la sigue un trecho y se detiene.
+// mirarlo, tambaleándose a cada zancada. Antes de u = 0 sigue escondida,
+// quieta, mientras él se le viene encima por el último tramo de la carrera.
+// Él la sigue un trecho, se detiene jadeando y la cámara, ya parada, deja de
+// tambalearse.
 const LEJOS_DE_EL = ((d) => esc(d, 18 / Math.hypot(...d)))([ESCONDIDA[0] - MITAD[0], 0, ESCONDIDA[2] - MITAD[1]])
 const HUIDA = sum(ESCONDIDA, LEJOS_DE_EL)
 const enLaHuida = (u) => lerp(ESCONDIDA, HUIDA, u)
+const ARRANCA = -0.125
+const ANTES = lerp(HASTA, MITAD, 1.26 / Math.hypot(HASTA[0] - MITAD[0], HASTA[1] - MITAD[1]))
+const llegando = (u) => deA(ANTES, HASTA, (u - ARRANCA) / -ARRANCA)
 const huye = (u) => {
+  if (u < 0) return pato(corriendo(pasos(1.26 * (u - ARRANCA) / -ARRANCA, 1)), llegando(u))
   const k = tramo(u, 0, 0.65)
   const donde = deA(HASTA, lerp(HASTA, xz(HUIDA), 0.4), k)
-  return u < 0.65 ? pato(corriendo(pasos(k * 5, 1)), donde) : pato(quieto(u, { ceño: 1, inclina: -6 }), { ...donde, giro: giroHacia(xz(donde.en), xz(enLaHuida(u))) })
+  const jadea = Math.abs(Math.sin(vuelta(u) * 5)) * tramo(u, 0.65, 0.75)
+  return u < 0.65 ? pato(corriendo(pasos(k * 5, 1)), donde) : pato(quieto(u, { ceño: 1, inclina: -6 - 4 * jadea, salto: 0.04 * jadea }), { ...donde, giro: giroHacia(xz(donde.en), xz(enLaHuida(u))) })
 }
 const DONDE_SE_DETIENE = enCubierta(lerp(HASTA, xz(HUIDA), 0.4))
 const corriendoConLaCamara = (u) => {
-  const zancada = Math.abs(Math.sin(vuelta(u) * 6))
+  const corre = u > 0 ? 1 - tramo(u, 0.9, 1.15) : 0
+  const zancada = Math.abs(Math.sin(vuelta(u) * 6)) * corre
   const ojo = sum(enLaHuida(suave(u)), [0, 0.18 * zancada, 0])
-  const ladeo = 0.06 * Math.sin(vuelta(u) * 3)
-  return [ojo, sum(lerp(enCubierta(HASTA), DONDE_SE_DETIENE, tramo(u, 0, 0.65)), [0, 0.6, 0]), 34, [ladeo, 1, 0]]
+  const ladeo = 0.06 * Math.sin(vuelta(u) * 3) * corre
+  const mira = u < 0 ? llegando(u).en : lerp(enCubierta(HASTA), DONDE_SE_DETIENE, tramo(u, 0, 0.65))
+  return [ojo, sum(mira, [0, 0.6, 0]), 34, [ladeo, 1, 0]]
 }
 
 // Se detiene, jadeando, y le habla a la cámara.
@@ -263,11 +287,12 @@ export const TOMAS_3D = {
   // Desde atrás, de costado y en alto: llega solo a la proa.
   llega: { escena: conMar(seAcerca), camara: DE_COSTADO },
   aire: { escena: conMar((u) => pato(habla(u, { inclina: 6 }), { en: PROA, giro: MIRA_AL_SOL })), camara: DE_FRENTE },
-  mira: { escena: conMar(laMira), camara: DE_FRENTE },
+  // La pausa antes, y dos cuadros más mirando fijo.
+  mira: alargar({ escena: conMar(laMira), camara: DE_FRENTE }, PAUSA, 42 / 40),
   espalda: { escena: conMar(seVuelve), camara: DE_ESPALDAS },
   caza: { escena: conMar(busca), camara: DETRAS_DEL_CAZA },
   persigue: { escena: conMar(laPersigue), camara: DETRAS_DEL_CAZA },
-  huye: { escena: conMar(huye), camara: corriendoConLaCamara },
+  huye: alargar({ escena: conMar(huye), camara: corriendoConLaCamara }, ARRANCA, 38 / 32),
   harari: { escena: conMar((u) => pato(habla(u, { ceño: 1 }), { en: DONDE_SE_DETIENE, giro: HARARI })), camara: ANTE_EL(2.4, 40) },
   vuelve: { escena: conMar(vuelve), camara: A_SU_ENCUENTRO },
   dios: { escena: conMar((u) => pato(habla(u, { inclina: 4 }), { en: PROA, giro: MIRA_AL_SOL })), camara: TRES_CUARTOS },
@@ -275,7 +300,8 @@ export const TOMAS_3D = {
   destino: { escena: () => [MAR, ...BARCO], camara: LA_PROA },
 
   caos: { escena: caos, camara: SOBRE_EL_CAOS },
-  lagrima: { escena: lloroso, camara: SU_CARA },
+  // Un cuadro más, quieto, después de la lágrima.
+  lagrima: alargar({ escena: lloroso, camara: SU_CARA }, 0, 33 / 32),
   ataque: { escena: ataque, camara: DESDE_EL_MAR, encima: golpea },
   hundimiento: { escena: hundimiento, camara: DESDE_EL_MAR },
 

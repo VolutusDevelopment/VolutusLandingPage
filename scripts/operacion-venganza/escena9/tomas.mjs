@@ -17,6 +17,7 @@ import { MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { suave } from '../escena1/personajes.mjs'
 import { ALTURA, RADAR, enLaPantalla, nubes, torre } from '../escena11/tomas.mjs'
 import { DUKE, MOBY } from './cazas.mjs'
+import { alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
@@ -146,19 +147,27 @@ const fuselaje = (u) => {
 // ── moby y su abolladura ─────────────────────────────────────────────────
 
 // Bajo el ala de babor, al costado de la góndola del tren, le pega con un
-// puño y otro, saltando, hasta que la góndola se hunde. Después resopla.
+// puño y otro, saltando, hasta que la góndola se hunde. Después retrocede
+// resoplando, se agacha a mirar la abolladura y, pasado u = 1, sacude la mano
+// adolorida. Los puños se turnan en cada cuadro.
 const GONDOLA = sum(PARADA.moby, [1.2, -0.85, -2.9])
 const GOLPE = sum(GONDOLA, [1.1, -0.08, -0.22])
 const JUNTO_A_LA_GONDOLA = { k: K, en: [GOLPE[0], CUBIERTA, GOLPE[2] - 0.6], giro: -90, suelo: pMoby.suelo }
+const RETROCEDE = 0.5
 const MOBY_ENOJADO = (u) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })]
 const pegando = (u) => {
   const golpea = u < 0.7
   const golpe = Math.floor(u * 24) % 2 ? 1 : -1
+  const sacude = tramo(u, 1.0, 1.08)
+  const duele = sum(lerp(pMoby.reposo(1), [1.0, -0.25, 0.85], sacude), [0, 0.1 * golpe * sacude, 0])
   const manos = golpea
     ? { [golpe]: [1.6, 0.9, golpe * 0.35], [-golpe]: [0.6, -0.2, -golpe * 1.1] }
-    : { 1: pMoby.reposo(1), [-1]: pMoby.reposo(-1) }
-  return figura(pMoby, { tronco: MOBY_ENOJADO(u), manos, salto: golpea ? 0.5 + 0.4 * (golpe > 0 ? 1 : 0) : 0.06 * Math.abs(Math.sin(u * Math.PI * 8)), inclina: golpea ? 10 : -4 })
+    : { 1: duele, [-1]: pMoby.reposo(-1) }
+  const mira = tramo(u, 0.82, 0.9) * (1 - tramo(u, 1.0, 1.08))
+  const retrocede = u >= 0.7 && u < 0.82
+  return figura(pMoby, { tronco: MOBY_ENOJADO(u), manos, fase: retrocede ? (1 - (u - 0.7) / 0.06) % 1 : null, salto: golpea ? 0.5 + 0.4 * (golpe > 0 ? 1 : 0) : 0.06 * Math.abs(Math.sin(u * Math.PI * 8)), inclina: golpea ? 10 : -4 - 8 * mira })
 }
+const dondePega = (u) => ({ ...JUNTO_A_LA_GONDOLA, en: sum(JUNTO_A_LA_GONDOLA.en, [0, 0, -RETROCEDE * tramo(u, 0.7, 0.82)]) })
 // La abolladura crece con los golpes: un hundido oscuro con su borde gris.
 const abolladura = (k) => (k > 0 ? [M.disco(GOLPE, [0, 0, -1], 0.2 * k, 0.02, C.gris), M.disco(sum(GOLPE, [0, 0, -0.03]), [0, 0, -1], 0.12 * k, 0.02, C.oscuro, { flat: '#101216' })] : [])
 
@@ -192,10 +201,14 @@ export const TOMAS_3D = {
   // De frente y desde abajo, a la altura de la rueda de proa.
   saltito: { escena: (u) => [...estacionados({ alas: PLEGADAS * tramo(u, 0.35, 0.9) }), ...saltito(u)], camara: fija([13, 21.3, -8], [0, 23.2, -6], 50) },
   fuselaje: { escena: fuselaje, camara: fija([FRENTE + 2.3, 21.6, PLANO - 3.8], [FRENTE, 22.0, PLANO - 0.3], 52) },
-  abolladura: {
-    escena: (u) => [...estacionados(), ...colocar(pegando(u), JUNTO_A_LA_GONDOLA), ...abolladura(tramo(u, 0.25, 0.65))],
-    camara: fija([GOLPE[0] + 2.4, 21.4, GOLPE[2] - 3.0], [GOLPE[0] - 0.2, 21.6, GOLPE[2] - 0.3], 50),
-  },
+  abolladura: alargar(
+    {
+      escena: (u) => [...estacionados(), ...colocar(pegando(u), dondePega(u)), ...abolladura(tramo(u, 0.25, 0.65))],
+      camara: fija([GOLPE[0] + 2.4, 21.4, GOLPE[2] - 3.0], [GOLPE[0] - 0.2, 21.6, GOLPE[2] - 0.3], 50),
+    },
+    0,
+    31 / 24,
+  ),
   // A ras de cubierta, detrás de los dos: caminan hacia la isla y la cámara
   // sube despacio hasta el último piso.
   torre: {

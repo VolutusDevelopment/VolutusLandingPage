@@ -26,14 +26,14 @@ export const TOMAS = [
   {
     id: 'puerta',
     ms: 200,
-    cuadros: 24,
+    cuadros: 28,
     unaVez: true,
     lineas: [{ texto: 'Una puerta de la torre de comando se abre lentamente.' }, { texto: 'Tres siluetas aparecen a contraluz.' }],
   },
-  { id: 'medallas', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duck-One camina al frente con una cantidad absurda de medallas en el pecho.' }] },
-  { id: 'puro', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Moby-Duck camina con los brazos cruzados y un puro apagado en la boca.' }] },
+  { id: 'medallas', ms: 150, cuadros: 28, unaVez: true, lineas: [{ texto: 'Duck-One camina al frente con una cantidad absurda de medallas en el pecho.' }] },
+  { id: 'puro', ms: 150, cuadros: 28, unaVez: true, lineas: [{ texto: 'Moby-Duck camina con los brazos cruzados y un puro apagado en la boca.' }] },
   { id: 'reflejo', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke SkyDucker sigue admirando su reflejo.' }] },
-  { id: 'duky', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duky es transportado por un marinero y colocado sobre una silla.' }] },
+  { id: 'duky', ms: 150, cuadros: 25, unaVez: true, lineas: [{ texto: 'Duky es transportado por un marinero y colocado sobre una silla.' }] },
 
   // La reunión.
   { id: 'reunion', ms: 150, segunModo: true, lineas: [{ quien: ALMIRANTE, texto: 'Caballeros, gracias por asistir a esta reunión de extrema urgencia.' }] },
@@ -113,7 +113,7 @@ export const TOMAS = [
     lineas: [{ texto: 'Asombrado, Duck-One revisa brevemente su expediente.' }, { quien: DUCK_ONE, texto: 'Ciento doce victorias confirmadas…' }],
   },
   // Giran todos en sus sillas, a la vez.
-  { id: 'miran', ms: 150, unaVez: true, lineas: [{ texto: 'Todos miran a Duky.' }] },
+  { id: 'miran', ms: 150, cuadros: 14, unaVez: true, lineas: [{ texto: 'Todos miran a Duky.' }] },
   // Dolly zoom: la cámara se acerca mientras abre el campo, y la cara no cambia de tamaño.
   { id: 'noot', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duky sigue inmóvil.' }, { texto: 'Le tiembla un párpado.' }] },
   { id: 'ese', ms: 150, lineas: [{ quien: MOBY, texto: '¿Ese?' }] },
@@ -125,11 +125,11 @@ export const TOMAS = [
     segunModo: true,
     lineas: [{ texto: 'Suena una alarma.' }, { quien: TORRE, texto: '¡Objetivo avistado frente al portaaviones!' }],
   },
-  { id: 'carpeta', ms: 150, unaVez: true, lineas: [{ texto: 'Duck-One cierra la carpeta inmediatamente.' }] },
+  { id: 'carpeta', ms: 150, cuadros: 15, unaVez: true, lineas: [{ texto: 'Duck-One cierra la carpeta inmediatamente.' }] },
   { id: 'perfecto', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Estupefacto. Justo donde lo planeamos.' }] },
   { id: 'vino', ms: 150, lineas: [{ quien: ALMIRANTE, texto: 'Él vino hacia nosotros…' }] },
   { id: 'plan', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Parte del plan.' }] },
-  { id: 'gira', ms: 150, unaVez: true, segunModo: true, lineas: [{ texto: 'Duck-One se gira hacia el escuadrón.' }] },
+  { id: 'gira', ms: 150, cuadros: 17, unaVez: true, segunModo: true, lineas: [{ texto: 'Duck-One se gira hacia el escuadrón.' }] },
   {
     id: 'puestos',
     ms: 150,

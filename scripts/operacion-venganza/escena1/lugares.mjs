@@ -515,8 +515,9 @@ const consola = (x0, x1) => [
 const baliza = (prendida) => [hueso([3.2, 3.0, -4.3], [3.2, 2.82, -4.3], 0.08, C.oscuro), el([3.2, 2.72, -4.3], [0.14, 0.14, 0.14], C.boca, prendida ? { flat: '#ff3a2a', brilla: true } : { flat: '#7a1a14' })]
 
 // Con `pulido`, el piso refleja lo que se ponga bajo él, de cabeza (escena 2).
+// Su cara de arriba queda en y = 0, donde pisan los patos.
 export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false } = {}) => [
-  placa([[-4, 0, -5], [-4, 0, 5], [4, 0, 5], [4, 0, -5]], 0.1, SUELO, { pinta: ([x, , z]) => (Math.abs(((x + 40) % 1) - 0.5) > 0.48 || Math.abs(((z + 50) % 1) - 0.5) > 0.48 ? SUELO[2] : null), vidrio: pulido }),
+  placa([[-4, -0.05, -5], [-4, -0.05, 5], [4, -0.05, 5], [4, -0.05, -5]], 0.1, SUELO, { pinta: ([x, , z]) => (Math.abs(((x + 40) % 1) - 0.5) > 0.48 || Math.abs(((z + 50) % 1) - 0.5) > 0.48 ? SUELO[2] : null), vidrio: pulido }),
   placa([[-4, 3, -5], [-4, 3, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA, { pinta: ([x, , z]) => (Math.abs(z) < 3.5 && [-2, 0.5, 3].some((cx) => Math.abs(x - cx) < 0.25) ? '#fbfcf4' : null) }),
   placa([[4, 0, -5], [4, 0, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA),
   placa([[PANTALLA.x, PANTALLA.y0, PANTALLA.z0], [PANTALLA.x, PANTALLA.y0, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z1], [PANTALLA.x, PANTALLA.y1, PANTALLA.z0]], 0.04, C.oscuro, { pinta: pintaPantalla(pantalla), brilla: true }),

@@ -69,14 +69,22 @@ const carpeta = (abre) => {
 export const duckOne = {
   andando: (fase) => DUCK.andando(fase, { tronco: M.DUCK_ONE }),
   // De pie con las manos atrás, marcando autoridad: así camina a la pantalla
-  // y así la mira. `abre` le baja el pico.
-  atras: (fase = null, abre = 0) => figura(pDuckOne, { tronco: hablar(M.DUCK_ONE, abre), manos: MANOS_ATRAS, fase }),
+  // y así la mira. `abre` le baja el pico; `inclina`, el pecho afuera.
+  atras: (fase = null, abre = 0, inclina = 0) => figura(pDuckOne, { tronco: hablar(M.DUCK_ONE, abre), manos: MANOS_ATRAS, fase, inclina }),
   hablando: (u) => DUCK.hablando(u, { tronco: M.DUCK_ONE }),
   señala: (u) => gesto(DUCK, 'señala')(u, { tronco: hablar(M.DUCK_ONE, silaba(u)) }),
   pulgar: (u) => gesto(DUCK, 'pulgar arriba')(u, { tronco: hablar(M.DUCK_ONE, silaba(u)) }),
   carpeta: (abre, abrePico = 0) => {
     const { formas, manos } = carpeta(abre)
     return figura(pDuckOne, { tronco: hablar(M.DUCK_ONE, abrePico), manos, extra: formas, inclina: 4 })
+  },
+  // Se lleva la carpeta cerrada a la espalda por el costado, `k` de 0 a 1, y
+  // queda con las manos atrás.
+  guarda: (k) => {
+    const { formas, manos } = carpeta(0)
+    const lleva = [-1.6 * k, -0.4 * k, 1.3 * Math.sin(Math.PI * k)]
+    const conLaCarpeta = lerp(sum(manos[1], lleva), MANOS_ATRAS[1], k)
+    return figura(pDuckOne, { tronco: M.DUCK_ONE, manos: { 1: conLaCarpeta, [-1]: lerp(manos[-1], MANOS_ATRAS[-1], k) }, extra: transformar([0, 0, 0], [0, 0, 0], lleva).formas(formas), inclina: 4 * (1 - k) })
   },
   sentado: () => sentar(pDuckOne, figura(pDuckOne, { tronco: M.DUCK_ONE, manos: MESA_PILOTO })),
   sentadoHablando: (u) => sentar(pDuckOne, DUCK.hablando(u, { tronco: M.DUCK_ONE })),

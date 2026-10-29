@@ -44,7 +44,7 @@ export const TOMAS = [
 
   { id: 'mira', ms: 150, segunModo: true, lineas: [{ texto: 'Moby mira a Duky en el monitor.' }] },
   // La pantalla se apaga y moby se ve en ella.
-  { id: 'reflejo', ms: 150, cuadros: 16, unaVez: true, segunModo: true, lineas: [{ texto: 'Después mira su propio reflejo en la pantalla apagada.' }] },
+  { id: 'reflejo', ms: 150, cuadros: 22, unaVez: true, segunModo: true, lineas: [{ texto: 'Después mira su propio reflejo en la pantalla apagada.' }] },
   { id: 'nomegusta', ms: 150, lineas: [{ quien: MOBY, texto: 'No me gusta el pato que veo.' }] },
 ]
 

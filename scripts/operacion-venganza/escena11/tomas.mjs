@@ -140,16 +140,17 @@ export const deposita = (u) => {
 export const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
 
 // El marinero tironea de las dos puntas del cinturón (`tira`, de 0 a 1), o
-// las suelta (`suelta`) y se encoge de hombros (`encoge`). duky es medio
-// gordito: mientras más tironea, más se le aprieta la barriga, y la correa
-// igual no le cierra. Da el cinturón como quedó y a los dos.
-const tirando = (tira, { suelta = 0, encoge = 0 } = {}) => {
+// las suelta (`suelta`) y se encoge de hombros (`encoge`); con `mira`, se
+// inclina a mirar la correa. duky es medio gordito: mientras más tironea, más
+// se le aprieta la barriga, y la correa igual no le cierra. Da el cinturón
+// como quedó y a los dos.
+const tirando = (tira, { suelta = 0, encoge = 0, mira = 0 } = {}) => {
   const cinturon = tira * (1 - suelta)
   const hombros = { 1: [0.35, -0.35, 1.45], [-1]: [0.35, -0.35, -1.45] }
   const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(enSusManos(puntaDelCinturon(s, cinturon)), REPOSO[s], suelta), hombros[s], encoge)]))
   const aprieta = Math.max(0, (cinturon - 0.55) / 0.45)
   const apretado = deformar(DUKY.sentado(0), [0, -1.9, 0], [1, 1 + 0.06 * aprieta, 1 - 0.14 * aprieta])
-  return { cinturon, figuras: [...elMarinero({ manos, salto: 0.08 * encoge }), ...dukyEn(SENTADO, apretado)] }
+  return { cinturon, figuras: [...elMarinero({ manos, salto: 0.08 * encoge, inclina: -10 * mira }), ...dukyEn(SENTADO, apretado)] }
 }
 
 // ── En el ascensor ───────────────────────────────────────────────────────
@@ -245,7 +246,7 @@ const TABLERO = { ojo: [3.6, 0.55, 0], mira: [-0.4, -0.5, 0], campo: 72 }
 // la cámara: nunca lo tapan.
 export const ALTURA = [0, 300, 0]
 const NUBES = [[-80, -30, 120, 40], [60, -50, 200, 55], [200, -20, 90, 35], [330, -45, 160, 60], [470, -25, 110, 45]]
-export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((x - 600 * u + 900) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
+export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((((x - 600 * u + 900) % 600) + 600) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
 const volando = (u, piloto = DUKY.sentado(0)) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false }, piloto), 0, ALTURA)]
 const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 
@@ -304,10 +305,14 @@ export const TOMAS_3D = {
     camara: (u) => alLado(SUBE + (1 - SUBE) * suave(u), JUNTO_A_LA_CABINA),
   },
   cinturon: { escena: (u) => enLaCabina(CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
+  // Un último tirón, con fuerza: lo sostiene, se inclina a mirar la correa que
+  // no cierra y la suelta. Se encoge de hombros, cierra la cabina, y duky
+  // queda adentro un momento, sin cinturón.
   encoge: {
     escena: (u) => {
-      const tira = 0.55 + 0.45 * Math.sin(tramo(u, 0, 0.25) * Math.PI)
-      return enLaCabina(CUPULA_ABIERTA * (1 - tramo(u, 0.7, 0.95)), tirando(tira, { suelta: tramo(u, 0.28, 0.4), encoge: tramo(u, 0.4, 0.5) * (1 - tramo(u, 0.62, 0.7)) }))
+      const tira = 0.55 + 0.45 * tramo(u, 0, 0.09) * (1 - tramo(u, 0.24, 0.33))
+      const mira = tramo(u, 0.15, 0.21) * (1 - tramo(u, 0.24, 0.3))
+      return enLaCabina(CUPULA_ABIERTA * (1 - tramo(u, 0.64, 0.82)), tirando(tira, { suelta: tramo(u, 0.33, 0.42), encoge: tramo(u, 0.42, 0.5) * (1 - tramo(u, 0.585, 0.64)), mira }))
     },
     camara: () => alLado(1, JUNTO_A_LA_CABINA),
   },

@@ -131,15 +131,18 @@ const llegan = (u) => {
 
 export const TOMAS_3D = {
   horizonte: { escena: llegan, camara: fija(sum(ALTURA, [55, 2, -6]), sum(ALTURA, [-200, 0, -6]), 40) },
-  // De costado y desde abajo, la cámara se adelanta junto a moby.
+  // De costado y desde abajo, la cámara se adelanta junto a moby hasta verlo
+  // de tres cuartos, con sus marcas. Las nubes van a su paso: la toma dura
+  // 1,25 de antes.
   moby: {
-    escena: volando(),
-    camara: (u) => [VUELO.punto(sum(EN.moby, lerp([-18, -3, 22], [10, -2, 22], suave(u)))), VUELO.punto(EN.moby), 48],
+    escena: (u) => volando()(1.25 * u),
+    camara: (u) => [VUELO.punto(sum(EN.moby, lerp([-18, -3, 22], [17, -1.75, 22], suave(u)))), VUELO.punto(EN.moby), 48],
   },
-  // De costado, un poco desde abajo, duke brillando contra el cielo.
+  // De costado, un poco desde abajo, duke brillando contra el cielo, hasta
+  // quedar de perfil.
   duke: {
-    escena: volando(),
-    camara: (u) => [VUELO.punto(sum(EN.duke, lerp([22, -2, -22], [8, -1.5, -26], suave(u)))), VUELO.punto(EN.duke), 42],
+    escena: (u) => volando()(1.25 * u),
+    camara: (u) => [VUELO.punto(sum(EN.duke, lerp([22, -2, -22], [4.5, -1.4, -27], suave(u)))), VUELO.punto(EN.duke), 42],
   },
   // Los dos de frente, con el sol detrás.
   juntos: {

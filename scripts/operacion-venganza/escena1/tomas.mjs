@@ -10,8 +10,10 @@ import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON, silaba, suave } from '.
 import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, poner, sala, colocar } from './lugares.mjs'
 import { DUKE, MOBY } from '../escena9/cazas.mjs'
 import { SUELO as SUELO_DUCK_ONE, caza as cazaDuckOne } from '../escena3/caza.mjs'
+import { alargar } from '../tiras.mjs'
 
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
+const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 const alarma = (u) => Math.floor(u * 12) % 2
 
@@ -30,21 +32,22 @@ const ESTACIONADOS = [
 // El Sitting Ducks con sus cazas, las alarmas y el radar, que da una vuelta por tira.
 const sittingDucks = (u) => [...portaaviones({ alarma: alarma(u), radar: u * 360 }), ...ESTACIONADOS]
 
-// Lejos, a ras del agua: el mar vacío; aparece un portaaviones, otro, otro más
-// y la escolta, y el Sitting Ducks, una mancha en el horizonte, se viene acercando.
+// Lejos, a ras del agua: el mar vacío mientras se oyen los motores, y el
+// Sitting Ducks, una mancha en el horizonte, se viene acercando. Con la
+// segunda línea aparece un portaaviones, otro, otro más y la escolta.
 const FLOTA = [
-  [0.15, portaaviones({ avion: false }), 172, [2900, 0, -950]],
-  [0.3, portaaviones({ avion: false }), 188, [3300, 0, 820]],
-  [0.45, portaaviones({ avion: false }), 176, [2300, 0, -420]],
-  [0.55, destructor(), 165, [1700, 0, -1100]],
-  [0.55, destructor(), 195, [1900, 0, 1000]],
-  [0.6, destructor(), 180, [2600, 0, 250]],
-  [0.65, destructor(), 160, [1300, 0, 700]],
+  [0.54, portaaviones({ avion: false }), 172, [2900, 0, -950]],
+  [0.65, portaaviones({ avion: false }), 188, [3300, 0, 820]],
+  [0.77, portaaviones({ avion: false }), 176, [2300, 0, -420]],
+  [0.85, destructor(), 165, [1700, 0, -1100]],
+  [0.85, destructor(), 195, [1900, 0, 1000]],
+  [0.88, destructor(), 180, [2600, 0, 250]],
+  [0.92, destructor(), 160, [1300, 0, 700]],
 ]
 const llegada = (u) => [
   MAR,
   ...FLOTA.filter(([desde]) => u >= desde).flatMap(([, formas, giro, en]) => navegando(formas, giro, en)),
-  ...(u >= 0.1 ? navegando(sittingDucks(u), 158, [3800 - 3350 * suave((u - 0.1) / 0.9), 0, 300 - 120 * u]) : []),
+  ...(u >= 0.1 ? navegando(sittingDucks(u), 158, [3800 - 3350 * suave((u - 0.1) / 0.83), 0, 300 - 120 * u]) : []),
 ]
 
 // De cerca, por estribor: la cámara corre por el costado desde la proa hasta el
@@ -81,11 +84,19 @@ const CORREDORES = [
   [OFICIOS.verde, [61, -13], [63, 5]],
   [OFICIOS.rojo, [57, 4], [49, -11]],
 ]
+// Por la borda de babor, a la derecha del cuadro, otros tres corren
+// desesperados a lo largo del borde (z = -19): dos en fila hacia proa, que
+// salen de cuadro, y uno, más adentro, hacia popa.
+const POR_LA_BORDA = [
+  [OFICIOS.morado, [74, -17.6], [100, -17.6]],
+  [OFICIOS.amarillo, [99, -15.8], [73, -15.8]],
+  [OFICIOS.verde, [68, -17.6], [94, -17.6]],
+]
 const ZANCADA = 1.6
 const cubierta = (u) => [
   MAR,
   ...sittingDucks(u),
-  ...CORREDORES.flatMap(([oficio, desde, hasta], i) => {
+  ...[...CORREDORES, ...POR_LA_BORDA].flatMap(([oficio, desde, hasta], i) => {
     const [x, z] = lerp(desde, hasta, u)
     const giro = (Math.atan2(desde[1] - hasta[1], hasta[0] - desde[0]) * 180) / Math.PI
     const fase = ((Math.hypot(hasta[0] - desde[0], hasta[1] - desde[1]) * u) / ZANCADA + i * 0.37) % 1
@@ -142,7 +153,8 @@ export const TOMAS_3D = {
       return [lerp([270, 16, 150], [CENTRO_DEL_NOMBRE, 13, 108], k), lerp([150, 10, 10], [CENTRO_DEL_NOMBRE, 10, 0], k), 44]
     },
   },
-  cubierta: { escena: cubierta, camara: fija([104, 23.2, 5], [-20, 28, -8], 72) },
+  // Hacia popa, con la borda de babor a la derecha.
+  cubierta: { escena: cubierta, camara: fija([104, 23.2, 5], [-20, 28, -30], 72) },
   subida: {
     escena: (u) => [MAR, ...sittingDucks(u)],
     camara: (u) => [lerp([20, 23, 6], [-2, 42, 13], suave(u)), lerp([-25, 36, 27], [-30, 41, 27], suave(u)), 62],
@@ -150,17 +162,21 @@ export const TOMAS_3D = {
   sala: { escena: dentro('bajas', pregunta), camara: fija([-3.6, 2.5, -4.4], [3, 1.0, 1.4], 80) },
   pantalla: { escena: dentro('bajas', pregunta), camara: fija(SOBRE_EL_HOMBRO, [4, 1.55, 0.7], 58) },
   oficial: { escena: dentro('bajas', callado, gesto(OFICIAL, 'lee el informe')), camara: fija([0.3, 1.15, 0.05], [2.4, 1.05, 2.0], 44) },
-  gafas: { escena: dentro('bajas', (u) => gesto(ALMIRANTE, 'se quita las gafas')(u, { sentado: true })), camara: fija([0.9, 1.0, -0.3], [-0.55, 0.98, -0.6], 56) },
+  // Se quita las gafas y, con ellas en la mano, pregunta: desde su línea, a los 0,62.
+  gafas: { escena: dentro('bajas', (u) => gesto(ALMIRANTE, 'se quita las gafas')(u, { sentado: true, abrePico: u >= 0.62 ? silaba(u) * 0.8 : 0 })), camara: fija([0.9, 1.0, -0.3], [-0.55, 0.98, -0.6], 56) },
+  // El oficial, con el brazo arriba, contesta y anuncia la foto (antes de los
+  // 0,23 y desde los 0,65, sus líneas); entremedio habla el almirante.
   caidos: {
-    escena: dentro('bajas', callado, (u) => gesto(OFICIAL, 'señala la pantalla')(Math.min(u, 0.45))),
+    escena: dentro('bajas', callado, (u) => gesto(OFICIAL, 'señala la pantalla')(Math.min(u, 0.45), { abre: u < 0.23 || u >= 0.65 ? silaba(u) * 0.5 : 0 })),
     camara: (u) => {
-      const gira = suave((u - 0.7) / 0.3)
-      const ojo = [1.6 - 0.7 * gira, 1.85 - 0.4 * gira, -1.7 + 2.9 * suave(u / 0.7)]
+      const gira = tramo(u, 0.72, 0.97)
+      const ojo = [1.6 - 0.7 * gira, 1.85 - 0.4 * gira, -1.7 + 3.25 * suave(u / 0.72)]
       return [ojo, lerp([PANTALLA.x, 1.85, ojo[2]], [2.5, 0.95, 1.8], gira), 45]
     },
   },
   atacante: { escena: dentro('modo', callado, gesto(OFICIAL, 'señala la pantalla')), camara: fija(SOBRE_EL_HOMBRO, [4, 1.7, 0.7], 54) },
-  levanta: { escena: dentro('modo', gesto(ALMIRANTE, 'se levanta')), camara: fija([1.0, 0.3, -0.25], [-0.6, 1.1, -0.6], 72) },
+  // Ya de pie, lleva las manos a la espalda, como camina a la ventana.
+  levanta: alargar({ escena: dentro('modo', (u) => gesto(ALMIRANTE, 'se levanta')(u, { atras: tramo(u, 0.75, 1.05) })), camara: fija([1.0, 0.3, -0.25], [-0.6, 1.1, -0.6], 72) }, 0, 14 / 12),
   ventana: {
     escena: (u, modo) => salaCon(u, { pantalla: modo, oficial: OFICIAL.quieto(u), ...paseo(u) }),
     // Desde el rincón de la puerta, la cámara lo sigue.

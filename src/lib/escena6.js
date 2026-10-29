@@ -24,8 +24,8 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'Los compañeros aparecen en el horizonte, con el sol a la espalda.' }],
   },
-  { id: 'moby', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El avión de Moby es oscuro, pesado y está cubierto de marcas de combate.' }] },
-  { id: 'duke', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'El de Duke brilla bajo el sol y parece recién salido de una exhibición.' }] },
+  { id: 'moby', ms: 150, cuadros: 30, unaVez: true, lineas: [{ texto: 'El avión de Moby es oscuro, pesado y está cubierto de marcas de combate.' }] },
+  { id: 'duke', ms: 150, cuadros: 30, unaVez: true, lineas: [{ texto: 'El de Duke brilla bajo el sol y parece recién salido de una exhibición.' }] },
   { id: 'juntos', ms: 150, cuadros: 24, unaVez: true, lineas: [] },
 
   // Desde el tablero de Moby, con el caza de Duke a la derecha.

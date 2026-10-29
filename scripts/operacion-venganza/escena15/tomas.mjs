@@ -22,7 +22,7 @@ import { K, SUELO, caza, enCabina } from '../escena11/hangar.mjs'
 import { ARRIBA, CUPULA_ABIERTA, conDuky, deposita, escalerilla, sobreLaCabeza } from '../escena11/tomas.mjs'
 import { enPista } from '../escena9/tomas.mjs'
 import { aLoLejos } from '../escena14/visor.mjs'
-import { aSuDistancia, proyectar } from '../tiras.mjs'
+import { aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -49,12 +49,12 @@ const enElAire = (formas) => formas.filter((f) => f.flat !== SOMBRA)
 const PARADA = [0, CUBIERTA - SUELO, -6]
 const aterriza = (u) => {
   const { aire, en } = enPista(u, PARADA)
-  return [...BARCO, ...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(conDuky({ motor: aire > 0 || u < 0.5 }, dukyFigura({})))]
+  return [...BARCO, ...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(conDuky({ motor: aire > 0 || u < 0.5, armas: false }, dukyFigura({})))]
 }
 
 // El marinero lo saca como lo metió en el hangar (escena11/tomas.mjs): la
 // misma toma, al revés.
-const saca = (u) => [...BARCO, ...poner([...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(1 - u)], 0, PARADA)]
+const saca = (u) => [...BARCO, ...poner([...caza({ cupula: CUPULA_ABIERTA, armas: false }), ...escalerilla, ...deposita(1 - u)], 0, PARADA)]
 const SOBRE_LA_CABINA = (() => {
   const de = (p) => sum(enCabina(p), PARADA)
   return fija(de([9.5, 4.2, -1.6]), de([0, 0.4, -1.2]), 54)
@@ -280,13 +280,20 @@ const enLaCaja = (u) => {
   return tapando(u)
 }
 
-// Mientras la cinta se pone sola, el primer marinero la va pasando, y el
-// segundo mira.
+// Mientras la cinta se pone sola (hasta u = 0,47), el primer marinero la va
+// pasando. Después se inclina, estira el brazo por la esquina y pega el
+// sticker de un manotazo (aparece con el golpe, en u = 0,6), lo aplasta otra
+// vez y baja las manos. El segundo mira.
+const EN_EL_STICKER = [X0 + 0.2, (STICKER.y0 + STICKER.y1) / 2, Z1 + 0.04]
 const pegando = (u) => {
-  const ida = Math.sin(vuelta(u) * 3)
-  const manos = { 1: enUnidades([X0 + 0.05, Y1 - 0.15 + 0.1 * ida, CAJA.z + 0.2], { ...M1, k: K }), [-1]: enUnidades([X0 + 0.05, Y1 - 0.15 - 0.1 * ida, CAJA.z - 0.2], { ...M1, k: K }) }
-  return pato(marinero(VERDE, { manos }), M1)
+  const ida = Math.sin(vuelta(u) * 3.84) * (1 - tramo(u, 0.44, 0.48))
+  const [estira, aplasta, baja] = [tramo(u, 0.52, 0.6), Math.sin(Math.PI * tramo(u, 0.63, 0.69)), tramo(u, 0.71, 0.79)]
+  const enCaja = (p) => enUnidades(p, { ...M1, k: K })
+  const pega = lerp(lerp(enCaja([X0 + 0.05, Y1 - 0.15 + 0.1 * ida, CAJA.z + 0.2]), enCaja(sum(EN_EL_STICKER, [0, 0, 0.12 * aplasta])), estira), M1_REPOSO[1], baja)
+  const otra = lerp(enCaja([X0 + 0.05, Y1 - 0.15 - 0.1 * ida, CAJA.z - 0.2]), M1_REPOSO[-1], estira)
+  return pato(marinero(VERDE, { manos: { 1: pega, [-1]: otra }, inclina: -12 * estira * (1 - baja) }), M1)
 }
+const M1_REPOSO = reposo(pMarinero(VERDE))
 const segundo = (u, cfg = {}) => pato(marinero(AMARILLO, { salto: 0.01 * Math.sin(vuelta(u)), ...cfg }), M2)
 const primero = (u, cfg = {}) => pato(marinero(VERDE, { salto: 0.01 * Math.sin(vuelta(u) + 1), ...cfg }), M1)
 
@@ -311,15 +318,20 @@ const conversacion = (cambios = {}) => (u) => [
 
 // ── La patada y el miedo ─────────────────────────────────────────────────
 
-// Patea dos veces con la derecha, sola: el pie sube y se adelanta como un
-// paso largo, la izquierda queda plantada y la caja salta con cada golpe.
+// Abre los brazos y patea dos veces con la derecha, sola: el pie sube y se
+// adelanta como un paso largo, la izquierda queda plantada y la caja salta
+// con cada golpe. Conforme, baja los brazos y asiente. Antes de u = 0 y
+// después de 1, más cuadros al mismo ritmo.
 const PATADA = { ...pMarinero(VERDE), pierna: { ...pMarinero(VERDE).pierna, A: 1.4, alto: 0.9 } }
 const GOLPES = [0.3, 0.65]
 const golpe = (u) => Math.max(...GOLPES.map((g) => Math.max(0, 1 - Math.abs(u - g) / 0.1)))
 const patea = (u) => {
   const k = golpe(u)
   const ψ = Math.PI / 2 - (Math.PI / 2 + 0.45) * suave(k)
-  const cuerpo = figura(PATADA, { tronco: marineroTronco(VERDE), manos: { 1: [0.1, -0.7, 1.4], [-1]: [0.1, -0.7, -1.4] }, patada: ψ, inclina: 10 * k })
+  const abre = tramo(u, -0.08, 0) * (1 - tramo(u, 0.95, 1.03))
+  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(PATADA.reposo(s), [0.1, -0.7, s * 1.4], abre)]))
+  const asiente = Math.max(0, Math.sin(2 * Math.PI * tramo(u, 1.0, 1.08)))
+  const cuerpo = figura(PATADA, { tronco: marineroTronco(VERDE), manos, patada: ψ, inclina: 10 * k - 6 * asiente })
   const sacude = Math.max(...GOLPES.map((g) => (u > g ? Math.max(0, 1 - (u - g) / 0.12) : 0))) * Math.sin(vuelta(u) * 6)
   return [...BARCO, ...caja({ ...CERRADA, salto: sacude }), ...pato(cuerpo, M1), ...segundo(u), ...pato(almirante.quieto(u), ALM)]
 }
@@ -401,8 +413,8 @@ export const TOMAS_3D = {
   caja: { escena: (u) => [...BARCO, ...enLaCaja(u)], camara: fija([CAJA.x - 1.6, CUBIERTA + 2.9, CAJA.z + 3.0], [CAJA.x - 0.3, CUBIERTA + 0.5, CAJA.z], 54) },
   // De cerca, de frente a la cara del sticker.
   cinta: {
-    escena: (u) => [...BARCO, ...caja({ cinta: tramo(u, 0.05, 0.6), sticker: u > 0.72 }), ...pegando(u), ...segundo(u)],
-    camara: (u) => [[CAJA.x + 0.1, CUBIERTA + 1.3, CAJA.z + 2.3 - 0.5 * tramo(u, 0.65, 0.85)], [CAJA.x, CUBIERTA + 0.55, CAJA.z], 54],
+    escena: (u) => [...BARCO, ...caja({ cinta: tramo(u, 0.039, 0.468), sticker: u > 0.6 }), ...pegando(u), ...segundo(u)],
+    camara: (u) => [[CAJA.x + 0.1, CUBIERTA + 1.3, CAJA.z + 2.3 - 0.5 * tramo(u, 0.55, 0.71)], [CAJA.x, CUBIERTA + 0.55, CAJA.z], 54],
   },
   almirante: { escena: (u) => [...BARCO, ...caja(CERRADA), ...primero(u), ...segundo(u), ...llegaElAlmirante(u)], camara: fija([CAJA.x + 0.2, CUBIERTA + 3.8, CAJA.z + 3.8], [CAJA.x - 0.3, CUBIERTA + 0.3, CAJA.z + 0.8], 54) },
   destino: { escena: conversacion({ m1: hablando(VERDE) }), camara: primerPlano(M1, -100) },
@@ -411,7 +423,7 @@ export const TOMAS_3D = {
   clasificada: { escena: conversacion({ alm: almirante.ordena }), camara: primerPlano(ALM, -70, 1.8, 40) },
   proteccion: { escena: conversacion({ m1: hablando(VERDE) }), camara: primerPlano(M1, 100) },
 
-  patea: { escena: patea, camara: fija([CAJA.x - 0.6, CUBIERTA + 0.9, CAJA.z + 3.4], [CAJA.x - 0.6, CUBIERTA + 0.45, CAJA.z], 52) },
+  patea: alargar({ escena: patea, camara: fija([CAJA.x - 0.6, CUBIERTA + 0.9, CAJA.z + 3.4], [CAJA.x - 0.6, CUBIERTA + 0.45, CAJA.z], 52) }, -2 / 24, 26 / 24),
   tiembla: { escena: conversacion({ m2: niega }), camara: primerPlano(M2, -100, 2.0, 44) },
   // Desde fuera de la borda, a la altura de la cubierta: lo ve venir y lo
   // sigue en la caída hasta la espuma.

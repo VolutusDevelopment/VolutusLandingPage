@@ -22,12 +22,12 @@ const segunQuien = (frase) => ({ cursor: frase('cursor'), huella: frase('dedo') 
 export const TOMAS = [
   // La cabina de duky, cortada con tomas de afuera. Cada tira dura lo que se
   // tarda en leer su línea: el ataque no se detiene.
-  { id: 'patrones', segunModo: true, ms: 100, cuadros: 32, unaVez: true, lineas: [{ texto: segunQuien((el) => `El ${el} esquiva una sucesión de patrones cada vez más complejos.`) }] },
+  { id: 'patrones', segunModo: true, ms: 100, cuadros: 37, unaVez: true, lineas: [{ texto: segunQuien((el) => `El ${el} esquiva una sucesión de patrones cada vez más complejos.`) }] },
   { id: 'frente', ms: 90, cuadros: 14, unaVez: true, lineas: [] },
-  { id: 'lluvia', segunModo: true, ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: 'La pantalla se llena de proyectiles y de munición derrochada.' }] },
+  { id: 'lluvia', segunModo: true, ms: 100, cuadros: 34, unaVez: true, lineas: [{ texto: 'La pantalla se llena de proyectiles y de munición derrochada.' }] },
   { id: 'costado', segunModo: true, ms: 90, cuadros: 14, unaVez: true, lineas: [] },
-  { id: 'secuencia', segunModo: true, ms: 100, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duky ejecuta una última secuencia, precisa…' }] },
-  { id: 'cola', segunModo: true, ms: 100, cuadros: 24, unaVez: true, lineas: [{ texto: segunQuien((el) => `…que obliga al ${el} a moverse sin descanso.`) }] },
+  { id: 'secuencia', segunModo: true, ms: 100, cuadros: 25, unaVez: true, lineas: [{ texto: 'Duky ejecuta una última secuencia, precisa…' }] },
+  { id: 'cola', segunModo: true, ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: segunQuien((el) => `…que obliga al ${el} a moverse sin descanso.`) }] },
   { id: 'cero', segunModo: true, ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Finalmente, el indicador de munición llega a cero.' }] },
   { id: 'silencio', segunModo: true, ms: 150, lineas: [{ texto: 'Silencio.' }] },
 

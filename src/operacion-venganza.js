@@ -59,16 +59,15 @@ const MINIMO = 3000
 // encontrarla y ver quién habla. Cuenta las palabras como lib/lectura.js.
 const leer = (texto) => Math.max(1500, 1000 + (texto.match(/\S*[\p{L}\p{N}]\S*/gu)?.length ?? 0) * 240)
 
-// Lo que dura cada cuadro de la tira de `toma` y cada una de sus líneas. La
-// toma dura lo que tardan en leerse sus líneas, y nunca menos que su tira, y
-// las líneas se la reparten según su largo. Una tira que corre una vez se
-// estira hasta la última línea: nadie se queda quieto esperando el texto.
-function ritmoDe(toma, modo) {
+// Lo que dura cada línea de `toma`. La toma dura lo que tardan en leerse sus
+// líneas, y nunca menos que su tira, y las líneas se la reparten según su
+// largo. Las tiras corren siempre a su `ms`: la que corre una vez lleva los
+// cuadros que pida su texto, y nadie se queda quieto esperándolo.
+function duracionesDe(toma, modo) {
   const lecturas = toma.lineas.map((l) => leer(textoDe(l, modo)))
   const lectura = lecturas.reduce((suma, ms) => suma + ms, 0)
-  const ms = toma.unaVez ? Math.max(toma.ms, lectura / cuadrosDe(toma)) : toma.ms
-  const dura = Math.max(lectura, cuadrosDe(toma) * ms)
-  return { ms, lineas: lecturas.map((l) => (dura * l) / lectura) }
+  const dura = Math.max(lectura, cuadrosDe(toma) * toma.ms)
+  return lecturas.map((l) => (dura * l) / lectura)
 }
 
 export default function iniciar(raiz) {
@@ -187,7 +186,7 @@ function escena(raiz, guiones, tiras, modo) {
   const siguiente = raiz.querySelector('.escena-siguiente')
   const mandos = siguiente.parentElement
   const eleccion = raiz.querySelector('.escena-eleccion')
-  const ritmos = new Map([...tiras.keys()].map((toma) => [toma, ritmoDe(toma, modo)]))
+  const duraciones = new Map([...tiras.keys()].map((toma) => [toma, duracionesDe(toma, modo)]))
 
   raiz.querySelector('.carga').hidden = true
   raiz.querySelector('.escena').hidden = false
@@ -201,8 +200,7 @@ function escena(raiz, guiones, tiras, modo) {
   let espera = 0
 
   const dibujar = (ahora) => {
-    const { unaVez } = tomas[toma]
-    const { ms } = ritmos.get(tomas[toma])
+    const { unaVez, ms } = tomas[toma]
     const cuadros = cuadrosDe(tomas[toma])
     const paso = Math.floor((ahora - desde) / ms)
     const cuadro = quieto() ? (unaVez ? cuadros - 1 : cuadros / 2) : unaVez ? Math.min(paso, cuadros - 1) : paso % cuadros
@@ -230,9 +228,9 @@ function escena(raiz, guiones, tiras, modo) {
       desde = performance.now()
     } else return porElegir() ? elegir() : terminar()
     decir(tomas[toma].lineas[linea])
-    const { ms, lineas: partes } = ritmos.get(tomas[toma])
+    const partes = duraciones.get(tomas[toma])
     // La última línea espera, además, a que termine la tira.
-    const resta = linea >= tomas[toma].lineas.length - 1 ? desde + cuadrosDe(tomas[toma]) * ms + 200 - performance.now() : 0
+    const resta = linea >= tomas[toma].lineas.length - 1 ? desde + cuadrosDe(tomas[toma]) * tomas[toma].ms + 200 - performance.now() : 0
     espera = setTimeout(avanzar, Math.max(partes[linea] ?? 0, resta))
   }
 
@@ -244,7 +242,7 @@ function escena(raiz, guiones, tiras, modo) {
     clearTimeout(espera)
     toma = tomas.length - 1
     linea = tomas[toma].lineas.length - 1
-    desde = performance.now() - cuadrosDe(tomas[toma]) * ritmos.get(tomas[toma]).ms
+    desde = performance.now() - cuadrosDe(tomas[toma]) * tomas[toma].ms
     decir(tomas[toma].lineas[linea])
     mandos.hidden = true
     eleccion.hidden = false

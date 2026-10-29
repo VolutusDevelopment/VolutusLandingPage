@@ -110,6 +110,18 @@ export const aSuDistancia = (celdas, distancias, lejos, dibuja) => {
   celdas.forEach((fila, y) => fila.forEach((_, x) => distancias[y]?.[x] < lejos && (fila[x] = antes[y][x])))
 }
 
+// La misma toma 3D en una tira más larga, al mismo ritmo: el u de la tira
+// nueva recorre de `desde` a `hasta` del u de la vieja. Antes de 0 queda como
+// empieza, y después de 1 como termina, o sigue su ciclo.
+export const alargar = ({ escena, camara, encima }, desde, hasta) => {
+  const viejo = (u) => desde + (hasta - desde) * u
+  return {
+    escena: (u, modo) => escena(viejo(u), modo),
+    camara: (u) => camara(viejo(u)),
+    encima: encima && ((celdas, u, modo, distancias) => encima(celdas, viejo(u), modo, distancias)),
+  }
+}
+
 export const escribir = (ruta, datos) => {
   mkdirSync(dirname(`${PUBLICO}${ruta}`), { recursive: true })
   writeFileSync(`${PUBLICO}${ruta}`, datos)
