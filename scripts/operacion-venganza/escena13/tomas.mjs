@@ -4,8 +4,8 @@
 // la cabina, en visor.mjs.
 //
 // Duky vuela a 300 m (escena11/tomas.mjs) y lo que graba su cabina se ve en
-// la pantalla de la sala de mando, como en una película de naves: su nuca,
-// el arco de la cúpula y, delante, quien juega. Duck-one, moby y duke lo
+// la pantalla de la sala de mando, como en una película de naves: su nuca
+// y, delante, quien juega. Duck-one, moby y duke lo
 // miran de pie frente a la pantalla, que se parte en tres monitores: la
 // cara de duky, la cabina y el radar.
 
@@ -17,7 +17,7 @@ import { PERSONAJES, dukyFigura, figura, pDuke, pMoby } from '../pilotos/cuerpos
 import { silaba, suave } from '../escena1/personajes.mjs'
 import { duckOne } from '../escena2/patoon.mjs'
 import { K, giroHacia, reunion } from '../escena2/reunion.mjs'
-import { ALTURA, caraQueSonrie, conDuky, nubes } from '../escena11/tomas.mjs'
+import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
 import { aSuDistancia, cuadro, proyectar, rejilla } from '../tiras.mjs'
 import { ALTO, LADO } from '../../../src/lib/escena1.js'
@@ -34,19 +34,28 @@ const [, MOBY, DUKE] = PERSONAJES
 
 // ── La cabina de duky ────────────────────────────────────────────────────
 
-// El caza, alabeado `alabeo` grados, con duky sonriendo como al final de la
-// escena 11 y sin el vidrio de la cúpula: la cámara va adentro y vira con él.
-const DUKY_SONRIE = dukyFigura({ cara: caraQueSonrie(1) })
-const CAZA = conDuky({ motor: true, tren: false }, DUKY_SONRIE).filter((f) => !f.vidrio)
+// Duky, feliz con su cara de siempre: rebota en el asiento `saltos` veces por
+// tira (un número par, para que la tira cierre), se mece hacia el lado de cada
+// salto, cabecea y aletea.
+export const ASIENTO = [-0.2, -1.8, 0]
+export const dukyFeliz = (u, saltos = 4) => {
+  const s = Math.sin(Math.PI * saltos * u)
+  const sube = Math.abs(s)
+  return transformar([12 * s, 0, 0], ASIENTO).formas(dukyFigura({ salto: 0.15 * sube, aletea: 45 * sube, cabeza: -10 * sube }))
+}
+
+// El caza, alabeado `alabeo` grados, con duky feliz y sin el vidrio de la
+// cúpula: la cámara va adentro y vira con él.
+const caza = (u) => conDuky({ motor: true, tren: false }, dukyFeliz(u)).filter((f) => !f.vidrio)
 export const enVuelo = (alabeo) => transformar([alabeo, 0, 0], [0, 0, 0], ALTURA)
 const desdeElCaza = (alabeo, ojo, mira, campo) => (u) => {
   const T = enVuelo(alabeo(u))
   return [T.punto(ojo), T.punto(mira), campo, res(T.punto([0, 1, 0]), T.punto([0, 0, 0]))]
 }
 const NIVELADO = () => 0
-// Sobre la nuca de duky, un poco hacia abajo: el arco y el horizonte.
-export const detras = (alabeo) => desdeElCaza(alabeo, [3.62, 1.16, 0], [12, 0.6, 0], 80)
-// Su cara, desde el tablero, como en la sonrisa de la escena 11.
+// Sobre la nuca de duky, un poco hacia abajo: su cabeza y el horizonte.
+export const detras = (alabeo) => desdeElCaza(alabeo, enCabina([-1.0, 1.2, 0]), enCabina([29, -0.8, 0]), 80)
+// Su cara, desde el tablero, como en la emoción de la escena 11.
 export const SU_CARA = fija(sum(enCabina([3.4, 0.55, 0]), ALTURA), sum(enCabina([0, 0.3, 0]), ALTURA), 80)
 
 // Quien juega va adelante, a 140 m, y se mueve sin parar.
@@ -78,10 +87,10 @@ const cabina = ({ alabeo = NIVELADO, dispara = false, blanco = BLANCO, clic = ()
   return {
     escena: (u) => {
       const T = enVuelo(alabeo(u))
-      return [MAR, ...nubes(u), ...T.formas(CAZA), ...(dispara ? disparos(u, T, camara(u)[0]) : [])]
+      return [MAR, ...nubes(u), ...T.formas(caza(u)), ...(dispara ? disparos(u, T, camara(u)[0]) : [])]
     },
     camara,
-    // Quien juega, tapado por lo que tenga delante: el arco de la cúpula, el caza.
+    // Quien juega, tapado por lo que tenga delante: la cabeza de duky, el caza.
     encima: (celdas, u, modo, distancias) => {
       const [c, en] = [camara(u), blanco(u)]
       if (en) aSuDistancia(celdas, distancias, Math.hypot(...res(en, c[0])), (cs) => enemigo(cs, u, modo, proyectar(c, en), clic(u)))

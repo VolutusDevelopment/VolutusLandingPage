@@ -376,7 +376,7 @@ export const PAGINAS = {
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
     descripcion:
-      'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-35 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
+      'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-22 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/nivel-3': {

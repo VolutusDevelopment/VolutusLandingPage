@@ -260,9 +260,10 @@ const pDuky = {
   andar: { balanceo: 7, sube: 0.04, giro: 7 },
 }
 
-// `cara` cambia la de siempre por otra; `extra` va con el cuerpo, como los puntos.
-const dukyFigura = ({ fase = null, ala = 0, cabeza = 0, salto = 0, inclina = 0, cara = DUKY_CABEZA, extra = [] }) => {
-  const alas = ambos((s) => transformar([s < 0 ? ala : 0, 0, 0], [0.2, -0.6, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
+// `cara` cambia la de siempre por otra; `extra` va con el cuerpo, como los
+// puntos. `ala` levanta una de las alas; `aletea`, las dos.
+const dukyFigura = ({ fase = null, ala = 0, aletea = 0, cabeza = 0, salto = 0, inclina = 0, cara = DUKY_CABEZA, extra = [] }) => {
+  const alas = ambos((s) => transformar([(s < 0 ? ala : 0) - s * aletea, 0, 0], [0.2, -0.6, s * 0.8]).formas([DUKY_ALAS[s > 0 ? 0 : 1]])).flat()
   const testa = transformar([0, 0, cabeza], [0.2, -0.35, 0]).formas(cara)
   return figura(pDuky, { tronco: [...DUKY_CUERPO, ...alas, ...testa], extra, fase, salto, inclina })
 }

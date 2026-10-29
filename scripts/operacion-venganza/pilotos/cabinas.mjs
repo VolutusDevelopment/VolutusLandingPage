@@ -78,7 +78,7 @@ const TEXTOS = {
   'duck-one': ['Boeing F-15EX Eagle II, gris tradicional', 'Desde dentro de su F-15EX, con la cámara sobre el tablero: pantalla panorámica, dos retrovisores en el arco del parabrisas, de uno de los cuales cuelga una medalla, y detrás el escuadrón en formación sobre el mar.'],
   'moby-duck': ['Fairchild Republic A-10 Thunderbolt II, negro', 'Desde dentro del A-10, que le queda chico: relojes de aguja, un cenicero con colillas en el tablero y el humo del puro llenando la cúpula. Detrás vuelan los otros tres.'],
   duke: ['McDonnell Douglas F/A-18C Hornet, blanco y rosa', 'Desde dentro de su Hornet: consolas y arcos rosa, el HUD con el cristal rosa, las pantallas del Hornet en rosa con un corazón en la del medio, su trono de capitoné con corona y un espejo de belleza con bombillas colgado del parabrisas, para mirarse en pleno vuelo.'],
-  duky: ['Lockheed Martin F-35A Lightning II, negro', 'Desde dentro del F-35, bajo la cúpula dorada: una sola pantalla panorámica y, sentado en su asiento eyectable, un pato de hule que no mira nada mientras el escuadrón lo sigue.'],
+  duky: ['Lockheed Martin F-22A Raptor, pintura de guerra negra', 'Desde dentro del F-22, bajo la cúpula dorada: el HUD, el teclado ICP entre las dos UFD, las tres pantallas grandes y la de las armas y, sentado en su ACES II, un pato de hule que no mira nada mientras el escuadrón lo sigue.'],
 }
 
 const lamina = (p) => {

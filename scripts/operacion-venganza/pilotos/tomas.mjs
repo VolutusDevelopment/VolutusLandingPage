@@ -65,8 +65,8 @@ const PERSONAJES = [
     papel: 'El fantasma amarillo · nivel 3',
     piloto: M.DUKY,
     caza: M.CAZA_DUKY,
-    modelo: 'Lockheed Martin F-35A Lightning II, negro',
-    detalle: 'El pato de hule gigante, de cuerpo ancho, cola alzada y pico rojo; ninguna toma le cambia la expresión. Su F-35 es negro furtivo, con la cabina dorada del real y las marcas de victorias en amarillo, lo único amarillo que le queda. Deja la estela de un motor F135 real: azul violeta con diamantes de choque.',
+    modelo: 'Lockheed Martin F-22A Raptor, pintura de guerra negra',
+    detalle: 'El pato de hule gigante, de cuerpo ancho, cola alzada y pico rojo; ninguna toma le cambia la expresión. Su F-22 lleva pintura de guerra, negro entero, con la cúpula dorada del real y un contador de bajas amarillo que le recorre cada costado, de la cabina a la cola: lo único amarillo que le queda. Deja la postcombustión de dos F119: violeta por fuera, naranja y el centro claro, con diamantes de choque.',
   },
 ]
 

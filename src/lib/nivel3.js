@@ -1,6 +1,6 @@
 /**
  * Operación Venganza, nivel 3: «El fantasma amarillo», después de la escena 11.
- * Duky en su F-35 experimental, con la forma de lib/nivel1.js. Es el nivel
+ * Duky en su F-22 experimental, con la forma de lib/nivel1.js. Es el nivel
  * difícil: Duky dispara adonde va a estar quien juega (`j.futuro`), como dicen
  * en la escena 13, con armas prototipo de luz violeta, la de su estela (rayos
  * que se apuntan antes de quemar, racimos que revientan) y misiles de

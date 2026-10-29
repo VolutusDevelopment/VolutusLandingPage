@@ -32,7 +32,7 @@ export const TOMAS = [
   },
   { id: 'medallas', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duck-One camina al frente con una cantidad absurda de medallas en el pecho.' }] },
   { id: 'puro', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Moby-Duck camina con los brazos cruzados y un puro apagado en la boca.' }] },
-  { id: 'reflejo', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke SkyDucker avanza mirando su reflejo en el suelo pulido.' }] },
+  { id: 'reflejo', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke SkyDucker sigue admirando su reflejo.' }] },
   { id: 'duky', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duky es transportado por un marinero y colocado sobre una silla.' }] },
 
   // La reunión.

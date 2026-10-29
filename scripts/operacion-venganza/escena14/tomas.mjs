@@ -21,9 +21,9 @@ import { recoge } from '../pilotos/recoge.mjs'
 import { silaba, suave } from '../escena1/personajes.mjs'
 import { duckOne, sentar } from '../escena2/patoon.mjs'
 import { ASIENTOS, fase, giroHacia, girar, recorrido, reunion } from '../escena2/reunion.mjs'
-import { ALTURA, caraQueSonrie, conDuky, nubes } from '../escena11/tomas.mjs'
+import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
-import { BISEL, DE_FRENTE, DONDE, FILA, MONITORES, dentro, radar } from '../escena13/tomas.mjs'
+import { ASIENTO, BISEL, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
 import { enemigo } from '../escena13/visor.mjs'
 import { aSuDistancia, proyectar } from '../tiras.mjs'
 import { aLoLejos, municion } from './visor.mjs'
@@ -58,14 +58,11 @@ const aplastar = (formas, escala, pivote) => {
   })
 }
 // Desinflado en `k` (0, como siempre; 1, la mitad de alto y más ancho), sentado.
-const ASIENTO = [-0.2, -1.8, 0]
 const desinflado = (formas, k) => aplastar(formas, [1 + 0.3 * k, 1 - 0.5 * k, 1 + 0.3 * k], ASIENTO)
 
 const enElCaza = (piloto) => conDuky({ motor: true, tren: false }, piloto).filter((f) => !f.vidrio)
-const SONRIE = dukyFigura({ cara: caraQueSonrie(1) })
-const CAZA = enElCaza(SONRIE)
-// Desde afuera, con la cúpula.
-const CAZA_CERRADO = conDuky({ motor: true, tren: false }, SONRIE)
+// Mientras tiene balas, va feliz como en la escena 13.
+const feliz = (u) => dukyFeliz(u, 6)
 const DE_HULE = conDuky({ motor: true, tren: false }, dukyFigura({}))
 
 // ── Las maniobras ────────────────────────────────────────────────────────
@@ -88,7 +85,7 @@ const aBordo = (maniobra, [ojo, mira, campo]) => (u) => {
   return [T.punto(enCabina(ojo)), T.punto(enCabina(mira)), campo, res(T.punto([0, 1, 0]), T.punto([0, 0, 0]))]
 }
 const CAMARAS = {
-  // Sobre la nuca de duky: el arco y, delante, quien juega.
+  // Sobre la nuca de duky: su cabeza y, delante, quien juega.
   detras: [[-0.9, 1.6, 0], [6, 0.6, 0], 80],
   tablero: [[3.4, 1.0, 0], [0, 0.1, 0], 85],
   tresCuartos: [[2.8, 0.8, -1.2], [0, 0.1, 0.1], 80],
@@ -153,14 +150,14 @@ const marcar = (camara, objetivo) => (celdas, u, modo, distancias) => {
 
 // ── El ataque ────────────────────────────────────────────────────────────
 
-// Desde la cabina: la maniobra, la ráfaga, quien juega y las balas que
-// quedan, de `municiones[0]` a `municiones[1]`.
-const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta] }) => {
+// Desde la cabina: la maniobra, la ráfaga, quien juega, las balas que
+// quedan, de `municiones[0]` a `municiones[1]`, y el `piloto` en el instante u.
+const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], piloto = feliz }) => {
   const cam = aBordo(maniobra, CAMARAS[camara])
   return {
     escena: (u) => {
       const T = enManiobra(maniobra(u))
-      return [MAR, ...nubes(u), ...T.formas(CAZA), ...(dispara ? dispara(u, T, cam(u)) : [])]
+      return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u))), ...(dispara ? dispara(u, T, cam(u)) : [])]
     },
     camara: cam,
     encima: (celdas, u, modo, distancias) => {
@@ -175,7 +172,7 @@ const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dis
 const afuera = ({ maniobra, objetivo, dispara, camara }) => ({
   escena: (u) => {
     const T = enManiobra(maniobra(u))
-    return [MAR, ...nubes(u), ...T.formas(CAZA_CERRADO), ...dispara(u, T, camara(u))]
+    return [MAR, ...nubes(u), ...T.formas(conDuky({ motor: true, tren: false }, feliz(u))), ...dispara(u, T, camara(u))]
   },
   camara,
   encima: objetivo && marcar(camara, objetivo),
@@ -192,13 +189,14 @@ const ATAQUE = {
   // Por detrás y arriba, siguiendo los tiros hasta quien juega.
   cola: afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46) }),
   cero: cabina({ maniobra: virajes(20), dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: estrella(3, 10), hasta: 0.3 }), municiones: [60, -140] }),
-  silencio: cabina({ municiones: [0, 0] }),
+  // Sin balas, se queda quieto.
+  silencio: cabina({ municiones: [0, 0], piloto: () => dukyFigura({}) }),
 }
 
 // ── El chillido, la vuelta y el respiro ──────────────────────────────────
 
-// Sin balas, la sonrisa se le va: vuelve a su cara de pato de hule y chilla
-// como chillan los patos de hule, apretándose de golpe, una y otra vez.
+// Y después chilla como chillan los patos de hule, apretándose de golpe, una
+// y otra vez.
 const chilla = (u) => {
   const aprieta = Math.abs(Math.sin(vuelta(u) * 4)) ** 3
   const piloto = desinflado(dukyFigura({ inclina: 6 * Math.sin(Math.floor(u * 48) * 1.7) }), 0.45 * aprieta)

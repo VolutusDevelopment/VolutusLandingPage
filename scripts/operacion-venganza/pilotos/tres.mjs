@@ -47,7 +47,7 @@ export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
 // ver lo que hay detrás; o.dentro, de 0 a 1, es cuánto lo tiñe visto por una
 // cámara que está dentro (una cúpula polarizada, desde la cabina; sin él, desde
 // dentro no se ve, y el cielo no se ve a través); o.pinta(p) devuelve una
-// rampa, un color o null.
+// rampa, un color o null; o.hueco(p), true donde no hay nada.
 export const el = (c, r, rampa, o = {}) => ({ k: 'e', c, r, M: rotacion(o.rot), rampa, ...o })
 
 const malla = (tris, rampa, o) => {
@@ -75,7 +75,8 @@ export const placa = (pts, grosor, rampa, o = {}) => {
 }
 
 // Fuselaje: secciones [x, ancho, alto, y, exponente, z] unidas en un tubo
-// de normales suaves. Exponente 2 = elipse; menos de 2 = con aristas (F-35).
+// de normales suaves. Exponente 2 = elipse; menos de 2 = con aristas; más,
+// casi un rectángulo (las toberas planas del F-22).
 export const tubo = (secciones, rampa, o = {}) => {
   const K = 24
   const anillos = secciones.map(([x, w, h, y, e = 2, z = 0]) =>
@@ -128,8 +129,11 @@ const cortaElipsoide = (f, o, d) => {
   const disc = b * b - 4 * a * c
   if (disc < 0) return null
   const cerca = (-b - Math.sqrt(disc)) / (2 * a)
-  const t = cerca < 0 && f.dentro !== undefined ? (-b + Math.sqrt(disc)) / (2 * a) : cerca
-  if (t < 0) return null
+  const lejos = (-b + Math.sqrt(disc)) / (2 * a)
+  // Lo que cae en o.hueco no está: se ve la cara de atrás (una cúpula abierta, por debajo del marco).
+  const falta = (t) => f.hueco?.(sum(o, esc(d, t)))
+  const t = (cerca < 0 && f.dentro !== undefined) || (cerca >= 0 && falta(cerca)) ? lejos : cerca
+  if (t < 0 || falta(t)) return null
   const h = sum(lo, esc(ld, t))
   return { t, n: uni(mv(f.M, h.map((v, i) => v / f.r[i]))), dentro: t !== cerca }
 }

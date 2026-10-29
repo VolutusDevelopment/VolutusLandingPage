@@ -2,7 +2,7 @@
 // medidas reales: el morro hacia +x, arriba +y y el ala derecha hacia +z.
 // Los patos miran también hacia +x.
 
-import { el, placa, tubo, transformar } from './tres.mjs'
+import { el, forro, placa, tubo, transformar } from './tres.mjs'
 
 export const RAMPAS = {
   verde: ['#6fe08a', '#22a04a', '#14703c', '#0b4026'],
@@ -331,9 +331,14 @@ export const DUKY = [
   ...ambos((s) => el([0.96, 0.43, s * 0.36], [0.02, 0.035, 0.03], C.blanco, { flat: '#ffffff' })),
 ]
 
-// Su asiento eyectable, solo en la cabina. En el apoyacabezas, las rayas de
-// sus victorias.
+// Su asiento eyectable, un ACES II, solo en la cabina: detrás, los rieles de
+// la catapulta y la botella verde de oxígeno; sobre el apoyacabezas, los
+// rompecúpulas, y en él, las rayas de sus victorias.
 export const DUKY_ASIENTO = [
+  ...ambos((s) => hueso([-1.62, -1.9, s * 0.7], [-1.62, 1.45, s * 0.7], 0.06, C.grisOscuro)),
+  ...ambos((s) => hueso([-1.3, 1.42, s * 0.45], [-1.15, 1.62, s * 0.45], 0.035, C.grisOscuro)),
+  hueso([-1.75, -1.2, -0.95], [-1.75, -0.35, -0.95], 0.14, C.verde),
+  el([-1.75, -0.3, -0.95], [0.06, 0.06, 0.06], C.gris),
   placa([[-1.35, -1.9, -0.95], [-1.35, -1.9, 0.95], [-1.35, 0.9, 0.95], [-1.35, 0.9, -0.95]], 0.3, C.asiento),
   el([-1.3, 1.05, 0], [0.22, 0.42, 0.75], C.asiento, {
     pinta: ([x, y, z]) => {
@@ -353,13 +358,14 @@ export const DUKY_ASIENTO = [
 
 const cabezaPiloto = (x, y, rampa, extra = []) => [el([x, y, 0], [0.32, 0.3, 0.28], rampa), el([x + 0.3, y - 0.05, 0], [0.18, 0.06, 0.12], C.pico), ...extra]
 
-// Estelas de los motores: translúcidas y con luz propia (ver tres.mjs).
-const estela = (x, y, z, largo, ancho, color, alfa, nivel = 1) =>
+// Estelas de los motores: translúcidas y con luz propia (ver tres.mjs). Las
+// de toberas planas salen con su `alto` y el exponente `e` de la boca.
+const estela = (x, y, z, largo, ancho, color, alfa, nivel = 1, alto = ancho, e = 2) =>
   tubo(
     [
-      [x, ancho, ancho, y, 2, z],
-      [x - largo * 0.15, ancho * 0.92, ancho * 0.92, y, 2, z],
-      [x - largo * 0.6, ancho * 0.55, ancho * 0.55, y, 2, z],
+      [x, ancho, alto, y, e, z],
+      [x - largo * 0.15, ancho * 0.92, alto * 0.92, y, e, z],
+      [x - largo * 0.6, ancho * 0.55, alto * 0.55, y, 2, z],
       [x - largo, 0.04, 0.04, y, 2, z],
     ],
     null,
@@ -529,49 +535,128 @@ export const CAZA_MOBY = [
   el([-8.0, 2.9, 1.7], [0.24, 0.2, 0.22], C.humo),
 ]
 
-// El F-35 de Duky es negro furtivo, con la cabina dorada del real y las
-// marcas de victorias en amarillo, lo único amarillo que le queda. Su estela
-// es la de un F135 real: azul violeta con diamantes de choque.
+// El F-22 de Duky lleva pintura de guerra: negro entero, con la cúpula
+// dorada del real y, a cada costado, un contador de bajas en amarillo que
+// va de la cabina a la cola. Su postcombustión es la de dos F119: violeta
+// por fuera, naranja y el centro claro, con los diamantes de choque.
 const FURTIVO = ['#5c636c', '#2e333a', '#1d2026', '#0c0d10']
+const BOCA = '#0c0e12'
 
-// Lockheed Martin F-35A Lightning II: 15,7 m de largo, 10,7 m de
-// envergadura. Cuerpo ancho con aristas, tomas de aire laterales tras la
-// cabina, ala trapezoidal, derivas inclinadas hacia afuera y una sola tobera.
-export const CAZA_DUKY = [
-  tubo(
-    [
-      [7.85, 0.05, 0.05, 0.05],
-      [6.9, 0.85, 0.55, 0.05, 1.6],
-      [5.2, 2.0, 1.05, 0.1, 1.6],
-      [3.2, 3.0, 1.35, 0.15, 1.7],
-      [0.5, 3.1, 1.4, 0.1, 1.8],
-      [-3, 3.0, 1.3, 0.1, 1.8],
-      [-5.8, 2.1, 1.1, 0.15, 2],
-      [-7.2, 1.3, 1.0, 0.15, 2],
-    ],
+// Lockheed Martin F-22A Raptor: 18,9 m de largo, 13,56 m de envergadura y
+// 5,08 m de alto, calcado de un plano de tres vistas. Morro con aristas,
+// tomas de aire de caret a los lados de la cabina, ala en diamante (borde de
+// ataque a 42°, el de fuga hacia adelante, 3° de caída), estabilizadores de
+// una pieza con la punta en flecha, derivas abiertas 28° y dos toberas
+// planas. Las medidas del plano van en metros desde la punta del morro (X).
+const enX = (X) => 9.45 - X
+
+// El contador: dos renglones de palotes de a cinco, los cuatro y el que los
+// cruza, a lo largo de las tomas de aire y hasta las toberas.
+const PALOTE = 0.24
+const RENGLONES = [[-0.3, -0.16], [-0.52, -0.38]]
+const contador = ([x, y, z], n) => {
+  if (x > enX(5.9) || x < enX(16) || Math.abs(z) < 1 || Math.abs(n[2]) < 0.35) return null
+  const renglon = RENGLONES.find(([a, b]) => y > a && y < b)
+  if (!renglon) return null
+  const u = (enX(5.9) - x) / PALOTE
+  const cual = Math.floor(u) % 6
+  const cruza = cual < 4 && Math.abs((u % 6) / 4 - (y - renglon[0]) / (renglon[1] - renglon[0])) < 0.1
+  return (cual < 4 && u % 1 < 0.42) || cruza ? '#f8cc1c' : null
+}
+
+// El fuselaje por secciones: el lomo al centro, el hombro, la arista (lo más
+// ancho), el bajo y la quilla, del lado derecho, en [z, y]; el izquierdo es su
+// espejo. Cada tramo se parte en cuatro, para que el sombreado siga las caras.
+const anillo = (X, arriba, hombro, arista, bajo, abajo) => {
+  const derecho = [[0, arriba], hombro, arista, bajo, [0, abajo]]
+  const vuelta = [...derecho, ...derecho.slice(1, -1).reverse().map(([z, y]) => [-z, y])]
+  return vuelta.flatMap(([z, y], i) => {
+    const [z1, y1] = vuelta[(i + 1) % vuelta.length]
+    return [0, 1, 2, 3].map((k) => [enX(X), y + ((y1 - y) * k) / 4, z + ((z1 - z) * k) / 4])
+  })
+}
+// El morro: [X, ancho de la arista, lomo, quilla, alto de la arista].
+const morro = ([X, w, arriba, abajo, y = 0]) => anillo(X, arriba, [0.6 * w, y + 0.78 * (arriba - y)], [w, y], [0.66 * w, y + 0.72 * (abajo - y)], abajo)
+const FUSELAJE = [
+  ...[[0, 0.01, 0.01, -0.01], [0.25, 0.16, 0.1, -0.1], [0.6, 0.34, 0.23, -0.23], [1.2, 0.53, 0.41, -0.38], [1.8, 0.62, 0.51, -0.45, 0.01], [2.4, 0.69, 0.6, -0.53, 0.02], [3.2, 0.78, 0.66, -0.63, 0.03], [4.0, 0.84, 0.68, -0.72, 0.04], [4.7, 0.87, 0.7, -0.77, 0.05]].map(morro),
+  // Tras la cúpula, el lomo sube y baja hasta el dorso ancho y plano.
+  anillo(5.5, 0.86, [0.5, 0.74], [0.86, 0.06], [0.7, -0.6], -0.8),
+  anillo(6.4, 1.13, [0.42, 1.0], [0.84, 0.08], [0.68, -0.62], -0.84),
+  anillo(7.2, 1.0, [0.5, 0.9], [0.86, 0.1], [0.7, -0.64], -0.88),
+  anillo(8.2, 0.87, [0.62, 0.8], [0.92, 0.1], [0.75, -0.66], -0.9),
+  anillo(10, 0.82, [0.76, 0.74], [1.0, 0.1], [0.82, -0.66], -0.9),
+  anillo(12, 0.77, [0.86, 0.7], [1.2, 0.1], [0.95, -0.66], -0.86),
+  // Los dos motores, con las derivas encima, hasta las toberas.
+  anillo(13.5, 0.62, [0.96, 0.62], [1.42, 0.1], [1.1, -0.55], -0.66),
+  anillo(15, 0.5, [0.92, 0.53], [1.36, 0.08], [1.02, -0.45], -0.48),
+  anillo(16, 0.42, [0.88, 0.45], [1.22, 0.08], [0.92, -0.33], -0.34),
+  anillo(16.4, 0.38, [0.84, 0.41], [1.14, 0.08], [0.88, -0.29], -0.3),
+]
+
+// Las tomas de aire: cada anillo va de adentro arriba a afuera arriba (la
+// arista que sigue hasta el borde de ataque del ala), afuera abajo y adentro
+// abajo, cada esquina [X, z, y]. La boca se inclina: arriba va más adelante.
+const TOMA = [
+  [[5.0, 0.74, 0.28], [4.95, 1.88, -0.02], [5.65, 1.6, -0.86], [5.7, 0.74, -0.88]],
+  [[6.5, 0.74, 0.34], [6.5, 1.98, 0.0], [6.5, 1.66, -0.9], [6.5, 0.74, -0.9]],
+  [[8.4, 0.78, 0.4], [8.4, 2.19, 0.02], [8.4, 1.7, -0.9], [8.4, 0.78, -0.9]],
+  [[10.5, 0.85, 0.42], [10.5, 2.05, 0.02], [10.5, 1.6, -0.88], [10.5, 0.85, -0.88]],
+  [[12.5, 0.9, 0.4], [12.5, 1.7, 0.05], [12.5, 1.45, -0.8], [12.5, 0.9, -0.82]],
+  [[13.8, 0.9, 0.35], [13.8, 1.45, 0.05], [13.8, 1.25, -0.6], [13.8, 0.9, -0.6]],
+]
+const tomaDeAire = (s) =>
+  forro(
+    TOMA.map((esquinas) =>
+      esquinas.flatMap(([X, z, y], i) => {
+        const [X1, z1, y1] = esquinas[(i + 1) % 4]
+        return [0, 1, 2, 3].map((k) => [enX(X + ((X1 - X) * k) / 4), y + ((y1 - y) * k) / 4, s * (z + ((z1 - z) * k) / 4)])
+      }),
+    ),
     FURTIVO,
-    {
-      pinta: ([x, y, z]) => {
-        if (x > 1.8 && x < 4.6 && y > -0.05 && y < 0.38 && Math.abs(z) > 0.5) {
-          const fila = Math.floor((y + 0.05) / 0.22)
-          return (x * 4.5) % 1 < 0.45 && ((y + 0.05) % 0.22) < 0.13 && fila < 2 ? '#f8cc1c' : null
-        }
-        return null
-      },
-    },
-  ),
-  ...ambos((s) => el([2.1, 0.35, s * 1.25], [0.08, 0.38, 0.32], C.oscuro)),
-  ...ambos((s) => el([1.6, 0.35, s * 1.25], [0.8, 0.42, 0.36], FURTIVO)),
-  el([3.9, 0.85, 0], [2.1, 0.6, 0.52], C.vidrioOro, { vidrio: true }),
-  ...cabezaPiloto(4.3, 0.8, C.hule),
-  ...ambos((s) => placa([[0.6, 0.15, s * 1.45], [-3.6, 0.15, s * 5.35], [-4.9, 0.15, s * 5.35], [-4.6, 0.15, s * 1.45]], 0.2, FURTIVO)),
-  ...ambos((s) => placa([[-5.0, 0.1, s * 1.1], [-7.0, 0.1, s * 3.4], [-7.9, 0.1, s * 3.4], [-7.6, 0.1, s * 1.1]], 0.16, FURTIVO)),
-  ...ambos((s) => placa([[-3.9, 0.6, s * 1.1], [-6.3, 2.75, s * 1.85], [-7.3, 2.75, s * 1.85], [-7.2, 0.6, s * 1.1]], 0.16, FURTIVO)),
-  el([-7.4, 0.15, 0], [0.45, 0.58, 0.58], C.grisOscuro),
-  estela(-7.75, 0.15, 0, 9, 2.0, '#7a7cff', 0.45, 0),
-  estela(-7.75, 0.15, 0, 7.5, 1.35, '#9a6cff', 0.75, 1),
-  ...[0, 1, 2, 3].map((i) => destelloMotor([-8.7 - i * 1.25, 0.15, 0], [0.48, 0.45 * (1 - i * 0.16), 0.45 * (1 - i * 0.16)], '#ffc8ff', 0.95, 2)),
-  destelloMotor([-7.95, 0.15, 0], [0.35, 0.5, 0.5], '#fff0ff', 0.95, 3),
+    // De frente, la boca es un hueco oscuro.
+    { pinta: (p, n) => (n[0] > 0.55 && p[0] > enX(5.9) ? BOCA : contador(p, n)) },
+  )
+
+// Ala, estabilizador y deriva del lado derecho, cada punto [X, y, z].
+const ALA = [[7.45, 0, 1.2], [12.83, -0.32, 6.78], [13.76, -0.32, 6.78], [16.3, 0, 1.2]]
+const ESTABILIZADOR = [[14.2, -0.12, 1.17], [17.08, -0.12, 4.49], [18.31, -0.12, 4.49], [18.95, -0.12, 2.9], [17.43, -0.12, 1.17]]
+const DERIVA = [[13.0, 0.55, 1.15], [14.3, 3.15, 2.53], [15.6, 3.15, 2.53], [16.9, 0.55, 1.15]]
+const delLado = (puntos, s) => puntos.map(([X, y, z]) => [enX(X), y, s * z])
+
+const TOBERA = { x: enX(16.75), y: 0.06, z: 0.7, ancho: 0.82, alto: 0.6 }
+const POSTCOMBUSTION = ambos((s) => {
+  const { x, y } = TOBERA
+  const z = s * TOBERA.z
+  return [
+    estela(x, y, z, 8, 0.85, '#b87ae8', 0.4, 0, 0.66, 4),
+    estela(x, y, z, 5.5, 0.72, '#ff8a2a', 0.75, 1, 0.52, 4),
+    estela(x, y, z, 2.6, 0.5, '#fff0c0', 0.9, 2, 0.36, 4),
+    ...[0, 1, 2].map((i) => destelloMotor([x - 1.6 - i * 1.3, y, z], [0.3, 0.2 * (1 - i * 0.2), 0.26 * (1 - i * 0.2)], '#ffe6f6', 0.9, 3)),
+  ]
+}).flat()
+
+// La cúpula de una pieza, sin arcos, calcada del perfil: el parabrisas muy
+// tendido y la cola larga que se mete bajo el lomo. Bajo el marco no hay
+// vidrio: abierta, se ve solo el casco de arriba.
+const MARCO = 0.5
+
+export const CAZA_DUKY = [
+  forro(FUSELAJE, FURTIVO, { pinta: contador }),
+  ...ambos(tomaDeAire),
+  ...ambos((s) => placa(delLado(ALA, s), 0.16, FURTIVO)),
+  ...ambos((s) => placa(delLado(ESTABILIZADOR, s), 0.1, FURTIVO)),
+  ...ambos((s) => placa(delLado(DERIVA, s), 0.12, FURTIVO)),
+  el([enX(4.6), 0.45, 0], [2.05, 1.0, 0.56], C.vidrioOro, { vidrio: true, dentro: 0.15, hueco: ([, y]) => y < MARCO }),
+  ...cabezaPiloto(enX(4.8), 0.95, C.hule),
+  ...ambos((s) => [
+    tubo([[enX(15.9), TOBERA.ancho + 0.1, TOBERA.alto + 0.12, TOBERA.y, 5, s * TOBERA.z], [TOBERA.x, TOBERA.ancho, TOBERA.alto, TOBERA.y, 5, s * TOBERA.z]], C.grisOscuro),
+    el([TOBERA.x + 0.02, TOBERA.y, s * TOBERA.z], [0.04, TOBERA.alto * 0.42, TOBERA.ancho * 0.42], C.oscuro, { flat: BOCA }),
+    // La luz roja en la punta del ala.
+    el([enX(13.3), -0.32, s * 6.8], [0.08, 0.05, 0.05], C.boca, { flat: '#ff2a1a', brilla: true }),
+  ]).flat(),
+  // La cola de castor, entre las toberas.
+  placa([[enX(15.6), 0.08, -0.28], [enX(15.6), 0.08, 0.28], [enX(17.45), 0.08, 0.2], [enX(17.45), 0.08, -0.2]], 0.16, FURTIVO),
+  ...POSTCOMBUSTION,
 ]
 
 export { hueso, ambos, guante, disco, dukeBase, ojosAbiertos, ojosCerrados, destello, enEstrella }

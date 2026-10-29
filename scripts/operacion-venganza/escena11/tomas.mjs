@@ -4,7 +4,7 @@
 //
 // Un marinero saca a duky de la sala de mando (escena2/reunion.mjs), choca
 // con él contra la pared de la puerta y lo lleva al hangar del Sitting Ducks
-// (escena1/lugares.mjs), donde su F-35 (hangar.mjs) espera sobre el ascensor
+// (escena1/lugares.mjs), donde su F-22 (hangar.mjs) espera sobre el ascensor
 // de popa. Lo sube a la cabina mientras la plataforma sube a la cubierta, y
 // el caza despega desde el comienzo de la pista, con la cámara siempre en
 // duky. En vuelo, la torre le habla por radio, desde la consola de radar de
@@ -13,7 +13,7 @@
 import { ASIENTOS, K as K_SALA, PUERTA, enUnidades, fase, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { EN_BRAZOS, duky, marinero } from '../escena2/patoon.mjs'
 import { el, transformar } from '../pilotos/tres.mjs'
-import { DUKY as DUKY_HULE, RAMPAS as C, ambos, hueso } from '../pilotos/modelos.mjs'
+import { DUKY as DUKY_HULE, RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukyFigura, figura, manosAndando } from '../pilotos/cuerpos.mjs'
 import { ASCENSOR, HANGAR, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
@@ -105,7 +105,7 @@ export const CUPULA_ABIERTA = 40
 
 // El marinero se para en el lomo, junto a la cabina y mirando a ella: sube
 // por una escalerilla desde el piso, con sus dos largueros y siete peldaños.
-const LOMO = { en: enCabina([0.3, -1.6, -2.6]), giro: -90 }
+const LOMO = { en: enCabina([0.3, -2.15, -2.6]), giro: -90 }
 const PIE = [LOMO.en[0], SUELO, LOMO.en[2] - 1.4]
 const CIMA = [LOMO.en[0], LOMO.en[1], LOMO.en[2] - 0.2]
 export const escalerilla = [
@@ -198,46 +198,6 @@ const despegando = (u) => {
   return transformar([0, 0, 10 * tramo(u, PISTA.sale, PISTA.sale + 0.2)], [0, 0, 0], sum(PISTA.en, [PISTA.largo * corre ** 2 + rapidez * aire, sube, 0]))
 }
 
-// ── La sonrisa ───────────────────────────────────────────────────────────
-
-// Con la cabina cerrada, a duky le cambia la cara de a poco, con `k` de 0 a
-// 1: una sonrisa sádica se le abre de mejilla a mejilla, oscura y llena de
-// colmillos, los párpados bajan en diagonal y los ojos se le encienden de
-// rojo. Sobre su cara de siempre (pilotos/modelos.mjs, de la forma 6 en
-// adelante). La boca va pegada a lo que esté más adelante: el pico al medio,
-// la cabeza en las comisuras.
-const CARA = DUKY_HULE.slice(6)
-const delante = (y, z) => {
-  const pico = 1.04 + 0.36 * Math.sqrt(Math.max(0, 1 - (z / 0.32) ** 2 - ((y - 0.1) / 0.14) ** 2))
-  const cabeza = 0.35 + 0.7 * Math.sqrt(Math.max(0, 1 - ((y - 0.2) / 0.68) ** 2 - (z / 0.66) ** 2))
-  return Math.max(pico * (Math.abs(z) < 0.3 ? 1 : 0), cabeza) + 0.01
-}
-export const caraQueSonrie = (k) => {
-  if (k < 0.08) return CARA
-  const ancho = 0.2 + 0.32 * k
-  const N = 15
-  const boca = Array.from({ length: N }, (_, i) => {
-    const z = ((i / (N - 1)) * 2 - 1) * ancho
-    const t = (z / ancho) ** 2
-    const medio = 0.05 + 0.3 * k * t
-    const abre = (0.02 + 0.1 * k) * (1 - t) + 0.015
-    const colmillo = (y, sube) => el([delante(y, z) + 0.01, y + sube * 0.025, z], [0.02, 0.035, 0.02], C.blanco, { flat: '#fffbe8', brilla: true })
-    return [
-      el([delante(medio, z), medio, z], [0.03, abre, (ancho / N) * 1.3], C.oscuro, { flat: '#2a0604', brilla: true }),
-      ...(i % 2 ? [colmillo(medio + abre - 0.02, -1)] : [colmillo(medio - abre + 0.02, 1)]),
-    ]
-  }).flat()
-  return [
-    ...CARA,
-    ...boca,
-    ...ambos((s) => [
-      el([0.92, 0.54 - 0.1 * k, s * 0.36], [0.075, 0.07, 0.15], C.hule, { rot: [s * 32 * k, 0, 0] }),
-      el([0.97, 0.37, s * 0.365], [0.02, 0.06 * k, 0.05 * k], C.boca, { flat: '#ff1a0a', brilla: true }),
-      el([0.985, 0.36, s * 0.37], [0.012, 0.02 * k, 0.018 * k], C.blanco, { flat: '#ffd0a0', brilla: true }),
-    ]).flat(),
-  ]
-}
-
 // ── La emoción ───────────────────────────────────────────────────────────
 
 // duky jadea de la emoción como lo que es, un pato de hule que alguien
@@ -246,6 +206,7 @@ export const caraQueSonrie = (k) => {
 // recupera. El pico de su cara de siempre (la forma 7 de pilotos/modelos.mjs)
 // se parte en dos. En la catapulta, en cambio, la aceleración lo pega al
 // respaldo (`pegar`, con `g` de 0 a 1): se achata contra él.
+const CARA = DUKY_HULE.slice(6)
 const PICO = DUKY_HULE[7]
 const caraQueJadea = (k) => [
   ...CARA.filter((forma) => forma !== PICO),
@@ -335,8 +296,8 @@ export const TOMAS_3D = {
       return [[-74, y + 0.9, 36.4], [-80, y + 2.4 + 0.6 * suave(u), 31.2], 60]
     },
   },
-  // De costado y adelante, bajo la cúpula, que se abre desde adelante como
-  // una tapa: lo deja en el asiento con el atardecer detrás, mientras la
+  // De costado y adelante, bajo la cúpula, que se abre desde la bisagra de
+  // atrás: lo deja en el asiento con el atardecer detrás, mientras la
   // plataforma llega a la cubierta.
   deposita: {
     escena: (u) => enElAscensor(SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
@@ -361,9 +322,11 @@ export const TOMAS_3D = {
   emocion: { escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
 
   radio: { escena: torre(false), camara: fija([RADAR.x, 2.15, -3.75], enLaPantalla(RADAR.x, RADAR.y), 56) },
-  silencio: { escena: (u) => volando(u), camara: fija(enVueloDe([3.4, 1.0, 0]), enVueloDe([0, 0.1, 0]), 85) },
+  // Mientras la torre llama, duky de perfil frente al tablero del F-22, de un
+  // lado y del otro: las pantallas encendidas y él, que no contesta.
+  silencio: { escena: (u) => volando(u), camara: fija(enVueloDe([1.2, 0.6, -1.45]), enVueloDe([1.9, -1.0, 0.7]), 96) },
   pitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.85, -3.85], enLaPantalla(...ECO), 40) },
   termina: { escena: torre(false), camara: fija([RADAR.x - 0.9, 1.9, -3.5], enLaPantalla(RADAR.x, RADAR.y), 50) },
-  calla: { escena: (u) => volando(u), camara: fija(enVueloDe([2.8, 0.8, -1.2]), enVueloDe([0, 0.1, 0.1]), 80) },
+  calla: { escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
   otroPitido: { escena: torre(true), camara: fija([RADAR.x + 0.3, 1.65, -4.05], enLaPantalla(...ECO), 32) },
 }

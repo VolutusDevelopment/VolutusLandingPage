@@ -1,4 +1,4 @@
-// El F-35 de duky (pilotos/interiores.mjs), el caza experimental de la
+// El F-22 de duky (pilotos/interiores.mjs), el caza experimental de la
 // escena 11, con su tren de aterrizaje, sus armas y la cúpula que se abre.
 // El hangar donde espera es el del Sitting Ducks (escena1/lugares.mjs).
 //
@@ -9,20 +9,13 @@ import { el } from '../pilotos/tres.mjs'
 import { RAMPAS as C, ambos, hueso } from '../pilotos/modelos.mjs'
 import { CABINAS, aCaza, avion, cabinaCon, conCupula } from '../pilotos/interiores.mjs'
 
-// La cúpula del modelo mide 4 m y la cabina por dentro, 1,2: duky quedaba en
-// la punta, con un hueco vacío detrás del asiento. Aquí la cúpula, larga y
-// baja como la de un F-35, va sobre la cabina, con su único arco sobre la
-// cabeza de duky. La cabina es una bañera cerrada hasta media cúpula, con un
-// carenado tras el asiento (`lomo`): desde dentro no se ve el caza por fuera.
-// El vidrio es polarizado: por fuera, dorado; por dentro apenas tiñe.
-const CUPULA = el([3.95, 0.82, 0], [1.6, 0.45, 0.5], C.vidrioOro, { vidrio: true, dentro: 0.15 })
-const CFG = { ...CABINAS.duky, caza: CABINAS.duky.caza.map((f) => (f.vidrio ? CUPULA : f)), cabeza: [4.0, 0.8], cabecita: CABINAS.duky.cabeza, arcos: [3.95], lomo: 3.3 }
+const CFG = { ...CABINAS.duky }
 CFG.avion = avion(CFG)
 export const K = CFG.k
 export const enCabina = (p) => aCaza(CFG, p)
 
-// Bajo las ruedas, en metros del caza.
-export const SUELO = -2.0
+// Bajo las ruedas, en metros del caza: con ellas, mide 5,08 m hasta la punta de las derivas.
+export const SUELO = -1.9
 
 // El cinturón del asiento: una correa a cada lado, del respaldo a la hebilla,
 // en unidades de la cabina. Con `tira`, de 0 a 1, alguien acerca las puntas
@@ -40,22 +33,23 @@ const cinturon = (tira) =>
     return [hueso(hombro, costado, 0.06 * K, C.grisOscuro), hueso(costado, punta, 0.06 * K, C.grisOscuro), el(punta, [0.03, 0.035, 0.035], C.gris)]
   })
 
-// Rueda de proa bajo la cabina y las dos principales bajo las alas.
+// Rueda de proa bajo la cabina y las dos principales bajo las tomas de aire.
 const TREN = [
-  hueso([5.6, -0.4, 0], [5.6, -1.7, 0], 0.07, C.grisOscuro),
-  el([5.6, -1.7, 0], [0.3, 0.3, 0.12], C.negro),
-  ...ambos((s) => [hueso([-1.0, -0.4, s * 1.4], [-1.0, -1.55, s * 1.7], 0.09, C.grisOscuro), el([-1.0, -1.55, s * 1.8], [0.45, 0.45, 0.17], C.negro)]).flat(),
+  hueso([5.25, -0.6, 0], [5.25, SUELO + 0.3, 0], 0.07, C.grisOscuro),
+  el([5.25, SUELO + 0.3, 0], [0.3, 0.3, 0.12], C.negro),
+  ...ambos((s) => [hueso([-1.75, -0.8, s * 1.35], [-1.75, SUELO + 0.42, s * 1.6], 0.09, C.grisOscuro), el([-1.75, SUELO + 0.42, s * 1.7], [0.42, 0.42, 0.16], C.negro)]).flat(),
 ]
 
 // Bajo las alas, cargado hasta el último soporte: bombas, misiles de a tres
-// y uno en cada punta. Cada uno cuelga de su soporte, a lo largo del ala.
-const BAJO_EL_ALA = 0.05
+// y uno en cada punta. Cada uno cuelga de su soporte, a 40 % de la cuerda
+// del ala en diamante, que cae hacia la punta.
+const bajoElAla = (z) => -0.08 - ((Math.abs(z) - 1.2) * 0.32) / 5.58
 const ALA = (z) => {
-  const k = (z - 1.45) / 3.9
-  const delante = 0.6 - 4.2 * k
-  return delante - (delante + 4.6 + 0.3 * k) / 2.6
+  const ataque = 2.0 - 0.964 * (z - 1.2)
+  const fuga = -6.85 + 0.455 * (z - 1.2)
+  return ataque - (ataque - fuga) * 0.4
 }
-const soporte = (x, z, alto) => hueso([x, BAJO_EL_ALA, z], [x, BAJO_EL_ALA - alto, z], 0.05, C.grisOscuro)
+const soporte = (x, z, alto) => hueso([x, bajoElAla(z), z], [x, bajoElAla(z) - alto, z], 0.05, C.grisOscuro)
 const misil = (x, y, z, largo = 1.3) => [
   hueso([x - largo, y, z], [x + largo, y, z], 0.08, C.blanco),
   el([x + largo, y, z], [0.18, 0.08, 0.08], C.boca),
@@ -67,16 +61,16 @@ const bomba = (x, y, z) => [
   ...[[0, 1], [0, -1], [1, 0], [-1, 0]].map(([dy, dz]) => hueso([x - 0.85, y, z], [x - 1.15, y + dy * 0.28, z + dz * 0.28], 0.03, C.oliva)),
 ]
 const ARMAS = ambos((s) => {
-  const estacion = (z, alto) => [ALA(z), z * s, alto]
-  const [b1, m3, b2, m2] = [estacion(2.2, 0.25), estacion(3.0, 0.15), estacion(3.8, 0.25), estacion(4.6, 0.15)]
-  const punta = [ALA(5.2) - 0.2, BAJO_EL_ALA - 0.05, 5.4 * s]
+  const estacion = (z, alto) => [ALA(z), z * s, alto, bajoElAla(z)]
+  const [b1, m3, b2, m2] = [estacion(2.6, 0.25), estacion(3.6, 0.15), estacion(4.6, 0.25), estacion(5.5, 0.15)]
+  const punta = [ALA(6.7) - 0.2, bajoElAla(6.7) - 0.1, 6.85 * s]
   return [
     ...[b1, m3, b2, m2].map(([x, z, alto]) => soporte(x, z, alto)),
-    ...bomba(b1[0], -0.45, b1[1]),
-    ...bomba(b2[0], -0.45, b2[1]),
+    ...bomba(b1[0], b1[3] - 0.5, b1[1]),
+    ...bomba(b2[0], b2[3] - 0.5, b2[1]),
     // Los de a tres: uno abajo y dos a los lados, en su riel.
-    ...[[0, -0.42], [0.2, -0.24], [-0.2, -0.24]].flatMap(([dz, y]) => misil(m3[0], y, m3[1] + dz)),
-    ...[[0.14, -0.3], [-0.14, -0.3]].flatMap(([dz, y]) => misil(m2[0], y, m2[1] + dz, 1.1)),
+    ...[[0, -0.42], [0.2, -0.24], [-0.2, -0.24]].flatMap(([dz, y]) => misil(m3[0], m3[3] + y, m3[1] + dz)),
+    ...[[0.14, -0.3], [-0.14, -0.3]].flatMap(([dz, y]) => misil(m2[0], m2[3] + y, m2[1] + dz, 1.1)),
     ...misil(...punta, 1.0),
   ]
 }).flat()
