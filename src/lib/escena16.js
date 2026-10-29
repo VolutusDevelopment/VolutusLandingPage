@@ -48,11 +48,11 @@ export const TOMAS = [
   {
     id: 'caza',
     ms: 150,
-    cuadros: 40,
+    cuadros: 64,
     unaVez: true,
     lineas: [{ texto: 'A mitad de camino, la cámara cambia otra vez: lo mira desde detrás de un caza.' }, { texto: 'Desconcertado, el almirante mira a todos lados… y descubre que la cámara estaba oculta ahí.' }],
   },
-  { id: 'persigue', ms: 100, cuadros: 16, unaVez: true, lineas: [{ texto: 'Ahora corre directo hacia la cámara…' }] },
+  { id: 'persigue', ms: 100, cuadros: 32, unaVez: true, lineas: [{ texto: 'Ahora corre directo hacia la cámara…' }] },
   { id: 'huye', ms: 100, cuadros: 32, unaVez: true, lineas: [{ texto: '…y la cámara, esta vez en primera persona, también se pone a correr.' }] },
   {
     id: 'harari',

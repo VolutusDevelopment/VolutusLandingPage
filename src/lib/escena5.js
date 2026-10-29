@@ -51,7 +51,7 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'Duck-One se marcha con la cabeza alta.' }],
   },
-  { id: 'salta', ms: 150, unaVez: true, lineas: [{ texto: 'Mirando al horizonte, salta levantando la mano con el dedo índice.' }] },
+  { id: 'salta', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Mirando al horizonte, salta levantando la mano con el dedo índice.' }] },
   { id: 'fase', ms: 150, lineas: [{ quien: DUCK_ONE, texto: '¡Preparad la siguiente fase de la operasión benganza!' }] },
 ]
 

@@ -96,7 +96,7 @@ export const TOMAS = [
   {
     id: 'tos',
     ms: 150,
-    cuadros: 24,
+    cuadros: 40,
     unaVez: true,
     lineas: [{ texto: 'Moby vuelve a sentarse.' }, { texto: 'Enciende un puro y empieza a toser descontroladamente, con los ojos llorosos.' }],
   },

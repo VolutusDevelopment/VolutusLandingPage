@@ -44,7 +44,7 @@ export const TOMAS = [
   { id: 'humo', ms: 150, lineas: [{ quien: DUKE, texto: 'Perfecto. Intenta no taparme con humo.' }] },
 
   // Lo que graba la cámara de la cabina de Duke, de frente y por su izquierda.
-  { id: 'gira', ms: 150, cuadros: 16, unaVez: true, lineas: [{ texto: 'Duke se gira hacia la cámara de su cabina y le muestra su mejor perfil y sus increíbles ojos azules.' }] },
+  { id: 'gira', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duke se gira hacia la cámara de su cabina y le muestra su mejor perfil y sus increíbles ojos azules.' }] },
   {
     id: 'presenta',
     ms: 150,

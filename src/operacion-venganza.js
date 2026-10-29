@@ -13,7 +13,7 @@
  * siguiente, o desde la última a lo que sigue.
  *
  * Cada toma se pinta en un lienzo de `LADO` × `ALTO` px, la franja del medio
- * de cada cuadro en 4:3, que el CSS agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas, y
+ * de cada cuadro en 4:3, que el CSS agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas (`leer`), y
  * «Siguiente», Enter o la barra espaciadora pasan a la siguiente. Sin movimiento, cada toma queda en un solo cuadro.
  *
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
@@ -55,7 +55,21 @@ const { ALTO, LADO, cuadrosDe, textoDe } = escena1
 const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
 const PASO = 120
 const MINIMO = 3000
-const leer = (texto) => Math.max(1100, 500 + texto.length * 40)
+// Lo que tarda leer una línea: 250 palabras por minuto, más un segundo para
+// encontrarla y ver quién habla. Cuenta las palabras como lib/lectura.js.
+const leer = (texto) => Math.max(1500, 1000 + (texto.match(/\S*[\p{L}\p{N}]\S*/gu)?.length ?? 0) * 240)
+
+// Lo que dura cada cuadro de la tira de `toma` y cada una de sus líneas. La
+// toma dura lo que tardan en leerse sus líneas, y nunca menos que su tira, y
+// las líneas se la reparten según su largo. Una tira que corre una vez se
+// estira hasta la última línea: nadie se queda quieto esperando el texto.
+function ritmoDe(toma, modo) {
+  const lecturas = toma.lineas.map((l) => leer(textoDe(l, modo)))
+  const lectura = lecturas.reduce((suma, ms) => suma + ms, 0)
+  const ms = toma.unaVez ? Math.max(toma.ms, lectura / cuadrosDe(toma)) : toma.ms
+  const dura = Math.max(lectura, cuadrosDe(toma) * ms)
+  return { ms, lineas: lecturas.map((l) => (dura * l) / lectura) }
+}
 
 export default function iniciar(raiz) {
   flecha(raiz)
@@ -173,6 +187,7 @@ function escena(raiz, guiones, tiras, modo) {
   const siguiente = raiz.querySelector('.escena-siguiente')
   const mandos = siguiente.parentElement
   const eleccion = raiz.querySelector('.escena-eleccion')
+  const ritmos = new Map([...tiras.keys()].map((toma) => [toma, ritmoDe(toma, modo)]))
 
   raiz.querySelector('.carga').hidden = true
   raiz.querySelector('.escena').hidden = false
@@ -186,7 +201,8 @@ function escena(raiz, guiones, tiras, modo) {
   let espera = 0
 
   const dibujar = (ahora) => {
-    const { ms, unaVez } = tomas[toma]
+    const { unaVez } = tomas[toma]
+    const { ms } = ritmos.get(tomas[toma])
     const cuadros = cuadrosDe(tomas[toma])
     const paso = Math.floor((ahora - desde) / ms)
     const cuadro = quieto() ? (unaVez ? cuadros - 1 : cuadros / 2) : unaVez ? Math.min(paso, cuadros - 1) : paso % cuadros
@@ -213,11 +229,11 @@ function escena(raiz, guiones, tiras, modo) {
       linea = 0
       desde = performance.now()
     } else return porElegir() ? elegir() : terminar()
-    const actual = tomas[toma].lineas[linea]
-    decir(actual)
+    decir(tomas[toma].lineas[linea])
+    const { ms, lineas: partes } = ritmos.get(tomas[toma])
     // La última línea espera, además, a que termine la tira.
-    const resta = linea >= tomas[toma].lineas.length - 1 ? desde + cuadrosDe(tomas[toma]) * tomas[toma].ms + 200 - performance.now() : 0
-    espera = setTimeout(avanzar, Math.max(actual ? leer(textoDe(actual, modo)) : 0, resta))
+    const resta = linea >= tomas[toma].lineas.length - 1 ? desde + cuadrosDe(tomas[toma]) * ms + 200 - performance.now() : 0
+    espera = setTimeout(avanzar, Math.max(partes[linea] ?? 0, resta))
   }
 
   const porElegir = () => FINALES && tomas === TOMAS
@@ -228,7 +244,7 @@ function escena(raiz, guiones, tiras, modo) {
     clearTimeout(espera)
     toma = tomas.length - 1
     linea = tomas[toma].lineas.length - 1
-    desde = performance.now() - cuadrosDe(tomas[toma]) * tomas[toma].ms
+    desde = performance.now() - cuadrosDe(tomas[toma]) * ritmos.get(tomas[toma]).ms
     decir(tomas[toma].lineas[linea])
     mandos.hidden = true
     eleccion.hidden = false
