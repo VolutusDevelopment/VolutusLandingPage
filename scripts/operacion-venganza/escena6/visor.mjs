@@ -3,7 +3,7 @@
 // cámara de la cabina de duke y la marca de quien juega en el cielo.
 
 import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
-import { FLECHA } from '../escena1/lugares.mjs'
+import { BORDE, FLECHA } from '../../../src/lib/flecha.js'
 
 const BLANCO = '#ffffff'
 const SOMBRA = '#16191e'
@@ -51,7 +51,7 @@ const HUELLA = Array.from({ length: 15 }, (_, j) =>
 // Quien juega, marcado en el cielo en `[x, y]` (al medio del cuadro, si no se
 // dice): su cursor o su huella, entre cuatro esquinas rojas que laten.
 export const objetivo = (celdas, u, modo, [x, y] = [ANCHO / 2, ALTO / 2]) => {
-  if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== '.' && poner(celdas, x - 3 + i, y - 8 + j, c === '#' ? '#0c0e12' : BLANCO)))
+  if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== ' ' && poner(celdas, x - 3 + i, y - 8 + j, c === 'X' ? BORDE : BLANCO)))
   else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, x - 5 + i, y - 7 + j, c)))
   const lado = 14 + Math.abs(Math.floor(u * 12) % 2)
   esquinas(celdas, [x - lado, y - lado, x + lado, y + lado], 5, ROJO)

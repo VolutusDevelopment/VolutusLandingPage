@@ -13,7 +13,7 @@
 import { el, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { figura, manosAndando } from '../pilotos/cuerpos.mjs'
-import { MAR, SOL, colocar, destructor, navegando, poner, portaaviones } from '../escena1/lugares.mjs'
+import { MAR, SOL, colocar, destructor, enMarcha, navegando, poner, portaaviones } from '../escena1/lugares.mjs'
 import { MANOS_ATRAS, OFICIOS, almiranteCabeza, almiranteTronco, corre, hablar, pAlmirante, silaba, suave } from '../escena1/personajes.mjs'
 import { giroHacia, girar } from '../escena2/reunion.mjs'
 import { K, SUELO, caza } from '../escena11/hangar.mjs'
@@ -36,7 +36,7 @@ const enCubierta = ([x, z]) => [x, CUBIERTA, z]
 // de él se esconde la cámara.
 const ESTACIONADO = [152, CUBIERTA - SUELO, 8]
 const CAZA = poner(caza({ armas: false }), 200, ESTACIONADO)
-const BARCO = [...portaaviones({ avion: false }), ...CAZA]
+const barco = (u) => [...portaaviones({ avion: false, ...enMarcha(u) }), ...CAZA]
 
 // ── El almirante ─────────────────────────────────────────────────────────
 
@@ -179,12 +179,14 @@ const DE_COSTADO = fija(sum(enLaProa(-4, 13), [0, 3.2, 0]), enLaProa(5.5, -20), 
 const A_SU_ENCUENTRO = fija(sum(enLaProa(-3, -6), [0, 2.4, 0]), sum(lerp(PROA, DONDE_SE_DETIENE, 0.4), [0, 0.6, 0]), 44)
 const TRES_CUARTOS = fija(sum(enLaProa(-1, 4.4), [0, 1.3, 0]), sum(enLaProa(0.2, -2), [0, 0.9, 0]), 46)
 
-// Se retira por donde vino, y la proa queda sola frente al sol.
-const SALIDA = xz(enLaProa(-3, 20))
+// Se retira por donde vino, despacio, mientras aparecen las últimas líneas:
+// sale del cuadro poco antes del final, y la proa queda sola frente al sol.
+const SALIDA = xz(enLaProa(-0.9, 6.6))
+const LARGO_DE_LA_SALIDA = Math.hypot(...xz(PROA).map((v, i) => v - SALIDA[i]))
 const seRetira = (u) => {
-  if (u < 0.15) return pato(quieto(u, { abre: 0.3 }), { en: PROA, giro: girar(MIRA_AL_SOL, giroHacia(xz(PROA), SALIDA), tramo(u, 0, 0.15)) })
-  const k = (u - 0.15) / 0.85
-  return pato(andando(pasos(k * 18)), deA(xz(PROA), SALIDA, k))
+  if (u < 0.08) return pato(quieto(u, { abre: 0.3 }), { en: PROA, giro: girar(MIRA_AL_SOL, giroHacia(xz(PROA), SALIDA), tramo(u, 0, 0.08)) })
+  const k = Math.min(1, (u - 0.08) / 0.84)
+  return pato(andando(pasos(k * LARGO_DE_LA_SALIDA)), deA(xz(PROA), SALIDA, k))
 }
 const LA_PROA = fija(sum(enLaProa(-4.5, 10), [0, 3, 0]), sum(enLaProa(0.5, -10), [0, 0.5, 0]), 50)
 
@@ -211,9 +213,9 @@ const panico = (u, carriles) =>
 const lagrima = (k) => (k <= 0 || k >= 1 ? [] : [el([0.86, 0.6 - 0.55 * k, 0.34], [0.07, 0.11, 0.07], C.vidrio, { flat: '#7ac8f4', brilla: true })])
 const llora = (u) => alm({ tronco: tronco({ abre: 0.3 }), manos: MANOS_ATRAS, salto: respira(u), extra: lagrima(tramo(u, 0.15, 0.95)) })
 const QUIETO = { en: enLaProa(0, 8), giro: MIRA_AL_SOL + 180 }
-const caos = (u) => [MAR, ...BARCO, ...pato(quieto(u, { abre: 0.3 }), QUIETO), ...panico(u, CARRILES)]
+const caos = (u) => [MAR, ...barco(u), ...pato(quieto(u, { abre: 0.3 }), QUIETO), ...panico(u, CARRILES)]
 const SOBRE_EL_CAOS = fija(sum(enLaProa(-11, 16), [0, 6, 0]), sum(enLaProa(-0.5, 7), [0, 0.3, 0]), 46)
-const lloroso = (u) => [MAR, ...BARCO, ...pato(llora(u), QUIETO), ...panico(u, [CARRILES[2], CARRILES[4]])]
+const lloroso = (u) => [MAR, ...barco(u), ...pato(llora(u), QUIETO), ...panico(u, [CARRILES[2], CARRILES[4]])]
 const SU_CARA = fija(sum(enLaProa(-0.6, 10.2), [0, 1.0, 0]), sum(enLaProa(0, 8), [0, 0.95, 0]), 36)
 
 // El barco, partido por la cuaderna `CORTE` en un borde irregular: cada
@@ -281,7 +283,7 @@ const seAlejan = (u) => [
 ]
 const TRAS_LA_FLOTA = fija(sum([0, 45, 0], esc(AL_SOL, -650)), sum([0, 20, 0], esc(AL_SOL, 1500)), 44)
 
-const conMar = (escena) => (u) => [MAR, ...BARCO, ...escena(u)]
+const conMar = (escena) => (u) => [MAR, ...barco(u), ...escena(u)]
 
 export const TOMAS_3D = {
   // Desde atrás, de costado y en alto: llega solo a la proa.
@@ -297,7 +299,6 @@ export const TOMAS_3D = {
   vuelve: { escena: conMar(vuelve), camara: A_SU_ENCUENTRO },
   dios: { escena: conMar((u) => pato(habla(u, { inclina: 4 }), { en: PROA, giro: MIRA_AL_SOL })), camara: TRES_CUARTOS },
   retira: { escena: conMar(seRetira), camara: LA_PROA },
-  destino: { escena: () => [MAR, ...BARCO], camara: LA_PROA },
 
   caos: { escena: caos, camara: SOBRE_EL_CAOS },
   // Un cuadro más, quieto, después de la lágrima.

@@ -187,6 +187,10 @@ export function marco(figura, conEstela = false) {
 // frente, -90 = su costado izquierdo), altura de la cámara (negativa = desde
 // abajo), alabeo y cabeceo del propio modelo (un caza virando o picando).
 // toma.filas: el alto del cuadro, si no es cuadrado; el campo es el del ancho.
+// Un número de 0 a 1 que depende solo de los enteros `n`.
+const azar = (...n) => (n.reduce((h, v) => Math.imul(h ^ v, 16777619), 2166136261) >>> 0) / 2 ** 32
+const TROZO_DE_ESTELA = 0.3
+
 export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado = 0.94) {
   const { giro = 0, altura = 0, alabeo = 0, cabeceo = 0 } = toma
   const M = mm(rotX(alabeo), rotZ(cabeceo))
@@ -208,6 +212,10 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   // está pintado lejos, como la vista de un ventanal).
   const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
   const filas = toma.filas ?? n
+  // toma.instante: el cuadro de la tira. Con él, las capas de afuera de las
+  // estelas se apagan a trozos que cambian de un cuadro a otro, y el chorro
+  // de los motores titila.
+  const titila = ({ nivel }, p) => toma.instante !== undefined && nivel < 2 && azar(...p.map((v) => Math.floor(v / TROZO_DE_ESTELA)), toma.instante) < 0.35
   const celdas = []
   for (let j = 0; j < filas; j++) {
     const fila = []
@@ -248,7 +256,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
         }
         celda = { ...c, t: primero.t, brilla: primero.fig.brilla, lejos: primero.fig.lejos?.(sum(o, esc(d, primero.t))) }
       }
-      const luces = golpes.filter((g) => g.fig.luz && (!primero || g.t < primero.t))
+      const luces = golpes.filter((g) => g.fig.luz && (!primero || g.t < primero.t) && !titila(g.fig.luz, sum(o, esc(d, g.t))))
       if (luces.length) {
         const { luz } = luces.reduce((a, b) => (b.fig.luz.nivel > a.fig.luz.nivel ? b : a)).fig
         celda = celda

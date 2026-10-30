@@ -1,70 +1,33 @@
 import { ALTO, ANCHO } from '../lib/escena1.js'
 import { FINALES } from '../lib/escena16.js'
 import { CARGAS } from '../lib/cargas.js'
-import * as nivel1 from '../lib/nivel1.js'
-import * as nivel2 from '../lib/nivel2.js'
-import * as nivel3 from '../lib/nivel3.js'
+import { NIVELES, PAGINAS, siguienteDe } from '../lib/juego.js'
 
-// Cada escena tiene su página; la que termina eligiendo, sus `finales`. Entre
-// ellas, en su lugar, van los niveles jugables. Es el orden del juego: al
-// terminar cada página sigue la próxima de la lista.
-const ESCENAS = {
-  '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
-  '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
-  '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
-  '/operacion-venganza/nivel-1': { nivel: 1, nombre: 'Duck-One', guion: nivel1 },
-  '/operacion-venganza/escena-5': { numero: 5, nombre: 'Regreso' },
-  '/operacion-venganza/escena-6': { numero: 6, nombre: 'Entrada' },
-  '/operacion-venganza/nivel-2': { nivel: 2, nombre: 'Moby-Duck y Duke SkyDucker', guion: nivel2 },
-  '/operacion-venganza/escena-9': { numero: 9, nombre: 'Retirada' },
-  '/operacion-venganza/escena-10': { numero: 10, nombre: 'La última opción' },
-  '/operacion-venganza/escena-11': { numero: 11, nombre: 'Preparativos' },
-  '/operacion-venganza/nivel-3': { nivel: 3, nombre: 'Duky', guion: nivel3 },
-  '/operacion-venganza/escena-13': { numero: 13, nombre: 'La sala de mando' },
-  '/operacion-venganza/escena-14': { numero: 14, nombre: 'Último ataque' },
-  '/operacion-venganza/escena-15': { numero: 15, nombre: 'El regreso del fantasma' },
-  '/operacion-venganza/escena-16': { numero: 16, nombre: 'Desolación', finales: FINALES },
-}
-
-const DUCK_ONE = '/operacion-venganza/carga-duck-one'
 const INDICE = '/operacion-venganza/indice'
 
-const ENLACES = Object.keys(ESCENAS)
-const siguienteDe = (enlace) => ENLACES[ENLACES.indexOf(enlace) + 1]
-const enlaceDe = (numero) => ENLACES.find((enlace) => ESCENAS[enlace].numero === numero)
-
-// Las escenas tras las que va un nivel.
-const ANTES_DE_UN_NIVEL = ENLACES.filter((enlace) => ESCENAS[siguienteDe(enlace)]?.nivel).map((enlace) => ESCENAS[enlace].numero)
-
-// La pantalla de carga que abre la escena `numero` y las escenas que corren
-// desde ella hasta el fin de su grupo (lib/cargas.js), o hasta la que lleva a
-// un nivel; sin grupo, duck-one y la escena sola.
-function tramoDe(numero) {
-  const [ruta, { escenas }] = Object.entries(CARGAS).find(([, { escenas }]) => escenas?.includes(numero)) ?? [DUCK_ONE, { escenas: [numero] }]
-  const desde = escenas.slice(escenas.indexOf(numero))
-  const hasta = desde.findIndex((n) => ANTES_DE_UN_NIVEL.includes(n))
-  return { carga: CARGAS[ruta], escenas: hasta < 0 ? desde : desde.slice(0, hasta + 1) }
-}
+// Los que caminan en la pantalla de carga del juego: uno al azar, que elige
+// operacion-venganza.js.
+const CAMINANTES = Object.values(CARGAS).filter(({ tira }) => tira)
 
 /**
  * Operación Venganza, el juego al que lleva el portaaviones de /nosotros.
- * Abre en la pantalla de carga de su grupo y abajo se llena la barra mientras
- * bajan las tomas. Después corren la escena de la página y las que le siguen
- * en el grupo, y al final sigue la próxima página del juego (un nivel o la
- * escena siguiente), salvo tras la 16, que lleva a Nosotros: se juega entero
- * sin pasar por el índice. Todo lo mueve src/operacion-venganza.js, que lee la
- * escena en `data-escena`; aquí está el HTML que espera.
+ * Cada escena y cada nivel (lib/juego.js) tiene su página, y en todas está el
+ * juego entero, que empieza en ella: la pantalla de carga, con uno de los
+ * personajes caminando mientras se llena la barra con todo lo del juego, las
+ * escenas y los niveles. Ya cargado, corre de una página a otra sin volver a
+ * cargar, hasta la 16, que lleva a Nosotros. Todo lo mueve
+ * src/operacion-venganza.js, que empieza en `data-desde`; aquí está el HTML
+ * que espera.
  *
- * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. La tira de
- * duck-one va además en el CSS, así que empieza a bajar con la página. Las pantallas
- * de carga (lib/cargas.js) tienen también su página, para verlas solas, y
- * desde ella se llega al índice de todo.
+ * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. Las
+ * pantallas de carga (lib/cargas.js) tienen también su página, para verlas
+ * solas, y desde ella se llega al índice de todo.
  */
 export default function OperacionVenganza({ ruta }) {
   if (ruta === INDICE) return <Indice />
   const carga = CARGAS[ruta]
   if (carga) return <PantallaDeCarga ruta={ruta} {...carga} />
-  return ESCENAS[ruta].nivel ? <Nivel ruta={ruta} /> : <Escena ruta={ruta} />
+  return <Juego ruta={ruta} />
 }
 
 /**
@@ -105,9 +68,9 @@ function PantallaDeCarga({ ruta, nombre, tira, quieto, paso, destellos, corredor
   )
 }
 
-function Pato({ tira, quieto, paso, destellos }) {
+function Pato({ tira, quieto, paso, destellos, escondido }) {
   return (
-    <div className={`carga-pato${quieto ? ' carga-quieto' : ''}`} style={{ '--tira': `url('${tira}')`, animationDuration: paso && `${paso}s` }}>
+    <div className={`carga-pato${quieto ? ' carga-quieto' : ''}`} style={{ '--tira': `url('${tira}')`, animationDuration: paso && `${paso}s` }} hidden={escondido}>
       {destellos?.map(([x, y], k) => (
         <span key={k} className="carga-destello" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `-${(k * 0.37).toFixed(2)}s` }} />
       ))}
@@ -115,70 +78,78 @@ function Pato({ tira, quieto, paso, destellos }) {
   )
 }
 
-// La escena de la página y las que le siguen en su grupo, en `data-escena`;
-// si la última termina eligiendo, sus `finales`, y si no, en `data-sigue`, la
-// página que viene después de ella, adonde se va al terminar.
-function Escena({ ruta }) {
-  const { numero, nombre } = ESCENAS[ruta]
-  const { carga, escenas } = tramoDe(numero)
-  const ultima = enlaceDe(escenas.at(-1))
-  const { finales } = ESCENAS[ultima]
-  const sigue = finales ? undefined : siguienteDe(ultima)
+// El juego desde `ruta`. En la carga están todos los que caminan, escondidos,
+// en una caja de su tamaño: el JS muestra uno y nada se mueve. Después, la
+// sección de las escenas y la de cada nivel, escondidas, se turnan.
+function Juego({ ruta }) {
+  const { numero, nivel, nombre } = PAGINAS[ruta]
   return (
-    <main id="contenido" className="venganza" data-escena={escenas.join(' ')} data-sigue={sigue}>
-      <h1 className="venganza-titulo">{`Operación Venganza, escena ${numero}: ${nombre}`}</h1>
+    <main id="contenido" className="venganza" data-desde={ruta}>
+      <h1 className="venganza-titulo">{`Operación Venganza, ${nivel ? `nivel ${nivel}` : `escena ${numero}`}: ${nombre}`}</h1>
 
-      <Carga titulo={`Cargando la escena ${numero}`}>
-        <Pato {...carga} />
+      <Carga titulo="Cargando Operación Venganza">
+        <div className="carga-caminantes">
+          {CAMINANTES.map((carga) => (
+            <Pato key={carga.tira} {...carga} escondido />
+          ))}
+        </div>
       </Carga>
 
-      <section className="escena" aria-label={`Escena ${numero}: ${nombre}`} hidden>
-        <canvas className="escena-cuadro" width={ANCHO} height={ALTO} aria-hidden="true" />
-        <div className="escena-linea" aria-live="polite">
-          <p className="escena-quien" />
-          <p className="escena-texto" />
-        </div>
-        <p className="escena-mandos">
-          <button className="escena-boton escena-saltar" type="button">
-            Saltar escena
-          </button>
-          <button className="escena-boton escena-siguiente" type="button">
-            Siguiente
-          </button>
-        </p>
-        {finales && (
-          <p className="escena-mandos escena-eleccion" hidden>
-            {Object.entries(finales).map(([final, { boton }]) => (
-              <button key={final} className="escena-boton" type="button" data-final={final}>
-                {boton}
-              </button>
-            ))}
-          </p>
-        )}
-      </section>
-
+      <Escenas />
+      {Object.entries(PAGINAS)
+        .filter(([, pagina]) => pagina.nivel)
+        .map(([enlace, pagina]) => (
+          <Nivel key={enlace} enlace={enlace} {...pagina} />
+        ))}
     </main>
+  )
+}
+
+// Las escenas, en un lienzo. Los finales de la 16, un menú sobre el cuadro.
+function Escenas() {
+  return (
+    <section className="escena" aria-label="Escenas" hidden>
+      <canvas className="escena-cuadro" width={ANCHO} height={ALTO} aria-hidden="true" />
+      <div className="escena-linea" aria-live="polite">
+        <p className="escena-quien" />
+        <p className="escena-texto" />
+      </div>
+      <p className="escena-mandos">
+        <button className="escena-boton escena-saltar" type="button">
+          Saltar escena
+        </button>
+        <button className="escena-boton escena-siguiente" type="button">
+          Siguiente
+        </button>
+      </p>
+      <div className="escena-eleccion" role="group" aria-label="El destino del Sitting Ducks" hidden>
+        {Object.entries(FINALES).map(([final, { boton }]) => (
+          <button key={final} className="escena-opcion" type="button" data-final={final}>
+            {boton}
+          </button>
+        ))}
+      </div>
+    </section>
   )
 }
 
 /**
  * Un nivel jugable: el combate de src/combate.js con el guion de `data-nivel`.
- * Se llega desde las escenas que lo preceden y, al terminar, sigue la escena
- * que viene después (`data-sigue`); también se puede saltar. El cielo se
- * pinta en el lienzo y todo lo demás flota encima: la portada, los PV, el
- * diálogo y los paneles de pausa y derrota.
+ * Llega desde las escenas que lo preceden y, al terminar, siguen las que vienen
+ * después; también se puede saltar (sin JS, el enlace lleva a la página de la
+ * escena siguiente). El cielo se pinta en el lienzo y todo lo demás flota
+ * encima: la portada, los PV, el diálogo y los paneles de pausa y derrota.
  */
-function Nivel({ ruta }) {
-  const { nivel, nombre, guion } = ESCENAS[ruta]
-  const sigue = siguienteDe(ruta)
+function Nivel({ enlace, nivel, nombre }) {
+  const guion = NIVELES[nivel]
+  const id = (parte) => `nivel-${nivel}-${parte}`
   const saltar = (
-    <a className="escena-boton" href={sigue}>
+    <a className="escena-boton" href={siguienteDe(enlace)}>
       Saltar nivel
     </a>
   )
   return (
-    <main id="contenido" className="venganza nivel" data-nivel={nivel} data-sigue={sigue}>
-      <h1 className="venganza-titulo">{`Operación Venganza, nivel ${nivel}: ${nombre}`}</h1>
+    <section className="nivel" data-nivel={nivel} aria-label={`Nivel ${nivel}: ${nombre}`} hidden>
       <canvas className="nivel-cielo" aria-hidden="true" />
       <div className="banda banda-arriba" aria-hidden="true" />
       <div className="banda banda-abajo" aria-hidden="true" />
@@ -209,9 +180,9 @@ function Nivel({ ruta }) {
       <p className="venganza-titulo nivel-leido" aria-live="polite" />
       <canvas className="nivel-jugador" width="9" height="15" aria-hidden="true" hidden />
 
-      <section className="nivel-panel nivel-portada" aria-labelledby="nivel-portada">
+      <section className="nivel-panel nivel-portada" aria-labelledby={id('portada')}>
         <p className="nivel-antetitulo">Operación Venganza</p>
-        <h2 id="nivel-portada">{`NIVEL ${nivel} — ${nombre.toUpperCase()}.`}</h2>
+        <h2 id={id('portada')}>{`NIVEL ${nivel} — ${nombre.toUpperCase()}.`}</h2>
         <p className="nivel-lema">{guion.LEMA}</p>
         <p>{guion.INTRO}</p>
         <p className="nivel-controles">
@@ -227,13 +198,10 @@ function Nivel({ ruta }) {
           </button>
           {saltar}
         </p>
-        <noscript>
-          <p>El nivel necesita JavaScript.</p>
-        </noscript>
       </section>
 
-      <section className="nivel-panel nivel-pausado" aria-labelledby="nivel-pausado" hidden>
-        <h2 id="nivel-pausado">En pausa.</h2>
+      <section className="nivel-panel nivel-pausado" aria-labelledby={id('pausado')} hidden>
+        <h2 id={id('pausado')}>En pausa.</h2>
         <p className="escena-mandos">
           <button className="boton boton-primario nivel-seguir" type="button">
             Seguir jugando
@@ -242,9 +210,9 @@ function Nivel({ ruta }) {
         </p>
       </section>
 
-      <section className="nivel-panel nivel-derrota" aria-labelledby="nivel-derrota" hidden>
+      <section className="nivel-panel nivel-derrota" aria-labelledby={id('derrota')} hidden>
         <p className="nivel-antetitulo">{nombre}</p>
-        <h2 id="nivel-derrota">{guion.TRIUNFO}</h2>
+        <h2 id={id('derrota')}>{guion.TRIUNFO}</h2>
         <p>
           Te derribaron en la vista «<span className="nivel-derrota-vista" />».
         </p>
@@ -258,7 +226,7 @@ function Nivel({ ruta }) {
           {saltar}
         </p>
       </section>
-    </main>
+    </section>
   )
 }
 
@@ -266,13 +234,13 @@ function Carga({ titulo, salir, children }) {
   return (
     <section className="carga" aria-label={titulo}>
       {children}
-      <div className="carga-barra" role="progressbar" aria-label="Cargando la escena" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div className="carga-barra" role="progressbar" aria-label="Cargando el juego" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div className="carga-llena" />
       </div>
       <p className="carga-texto">Cargando</p>
       {salir}
       <noscript>
-        <p className="carga-texto">La escena necesita JavaScript.</p>
+        <p className="carga-texto">El juego necesita JavaScript.</p>
       </noscript>
     </section>
   )
@@ -298,9 +266,9 @@ function Fin({ ruta, titulo, visible }) {
     <section className="fin" aria-label={titulo} hidden={!visible}>
       <h2 className="titular">{titulo}</h2>
       <nav className="fin-escenas" aria-label="Escenas">
-        {Object.entries(ESCENAS).map(([enlace, escena]) => (
+        {Object.entries(PAGINAS).map(([enlace, pagina]) => (
           <a key={enlace} href={enlace} aria-current={enlace === ruta ? 'page' : undefined}>
-            <span className="fin-escenas-numero">{escena.nivel ? `Nivel ${escena.nivel}` : `Escena ${escena.numero}`}</span> {escena.nombre}
+            <span className="fin-escenas-numero">{pagina.nivel ? `Nivel ${pagina.nivel}` : `Escena ${pagina.numero}`}</span> {pagina.nombre}
           </a>
         ))}
         <details className="fin-cargas" open={ruta in CARGAS}>

@@ -231,11 +231,13 @@ const audifonos = () => [
   el([0.84, 0.26, 0.42], [0.06, 0.05, 0.05], C.negro),
 ]
 
-const oficialCabeza = ({ abre = 0.55, mira = [0, 0] } = {}) =>
+// Los ojos, bien abiertos y con las pupilas algo arriba, para que se lean
+// enteros a través de las gafas.
+const oficialCabeza = ({ abre = 1, mira = [0, 0] } = {}) =>
   OF_CABEZA.formas([
     el([0.15, 0.6, 0], [0.68, 0.64, 0.62], PARDA, { pinta: ([x, y]) => (x > 0.25 && y > 0.6 && y < 0.67 ? PARDA[2] : null) }),
     ...pico(),
-    ...ambos((s) => ojo(s, { abre, plumaje: PARDA, mira })).flat(),
+    ...ambos((s) => ojo(s, { abre, plumaje: PARDA, mira: [mira[0], mira[1] + 0.03] })).flat(),
     ...gafasDePasta(),
     ...audifonos(),
     el([0.0, 1.18, 0], [0.3, 0.14, 0.2], PARDA, { rot: [0, 0, 30] }),
@@ -302,7 +304,7 @@ export const OFICIAL = {
   papel: 'Lee los informes en voz alta',
   bajada: 'Camisa caqui, tableta, audífonos y gafas de pasta',
   detalle: 'Joven, pardo y sin la menor expresión: contesta cada pregunta con la misma voz, leyendo de su tableta. Camisa caqui con bolsillos, corbata azul, gafas rectangulares de pasta y audífonos con micrófono. Cuando el almirante dice «a los cuatro que están disponibles», no le queda nada que leer: se queda callado y le cae una gota de sudor.',
-  quieto: (u) => conTableta(oficialCabeza({ abre: u > 0.8 && u < 0.92 ? 0 : 0.55, mira: [0, -0.02] }), u),
+  quieto: (u) => conTableta(oficialCabeza({ abre: u > 0.8 && u < 0.92 ? 0 : 1, mira: [0, -0.02] }), u),
   hablando: (u) => conTableta(hablar(oficialCabeza({ mira: [0, -0.02] }), silaba(u) * 0.6), u),
   gestos: [
     { nombre: 'lee el informe', pose: (u) => conTableta(hablar(oficialCabeza({ mira: [0, -0.03] }), silaba(u) * 0.6), u) },
@@ -316,7 +318,7 @@ export const OFICIAL = {
     },
     {
       nombre: 'se queda callado',
-      pose: (u) => conTableta(oficialCabeza({ abre: u > 0.45 && u < 0.6 ? 0 : 0.7, mira: [0, 0] }), u, { extra: [...tableta(LEE, 25), ...gota(suave(u / 0.9))] }),
+      pose: (u) => conTableta(oficialCabeza({ abre: u > 0.45 && u < 0.6 ? 0 : 1, mira: [0, 0] }), u, { extra: [...tableta(LEE, 25), ...gota(suave(u / 0.9))] }),
     },
     {
       nombre: 'habla por radio',
@@ -324,7 +326,7 @@ export const OFICIAL = {
       pose: (u, { abre = silaba(u) * 0.6 } = {}) => [
         ...figura(
           { ...pOficial, dobla: (s) => (s > 0 ? [0, -1, 0.6] : pOficial.dobla(s)) },
-          { sinSombra: true, tronco: hablar(oficialTronco(oficialCabeza({ abre: u > 0.62 && u < 0.7 ? 0 : 0.55, mira: [0, -0.02] })), abre), manos: { 1: AL_AUDIFONO, [-1]: LEE }, extra: tableta(LEE, 25), agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) },
+          { sinSombra: true, tronco: hablar(oficialTronco(oficialCabeza({ abre: u > 0.62 && u < 0.7 ? 0 : 1, mira: [0, -0.02] })), abre), manos: { 1: AL_AUDIFONO, [-1]: LEE }, extra: tableta(LEE, 25), agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) },
         ),
         ...SILLA,
       ],

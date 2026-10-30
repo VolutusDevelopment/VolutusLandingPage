@@ -15,10 +15,11 @@ import { EN_BRAZOS, duky, marinero } from '../escena2/patoon.mjs'
 import { el, transformar } from '../pilotos/tres.mjs'
 import { DUKY as DUKY_HULE, RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukyFigura, figura, manosAndando } from '../pilotos/cuerpos.mjs'
-import { ASCENSOR, HANGAR, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
+import { ASCENSOR, HANGAR, MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
 import { ALMIRANTE, OFICIAL, OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
 import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
 import { cic } from './cic.mjs'
+import { girosHacia, losTres } from '../escena10/tomas.mjs'
 import { EN_CABINA } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -163,9 +164,9 @@ const tirando = (tira, { suelta = 0, encoge = 0, mira = 0 } = {}) => {
 const SOBRE_EL_ASCENSOR = [(ASCENSOR.x0 + ASCENSOR.x1) / 2, (ASCENSOR.z0 + ASCENSOR.z1) / 2]
 const enAscensor = (k) => [SOBRE_EL_ASCENSOR[0], HANGAR.piso + (20.8 - HANGAR.piso) * k - SUELO, SOBRE_EL_ASCENSOR[1]]
 const delCaza = (k, [x, y, z]) => sum(enAscensor(k), [-x, y, -z])
-const enElAscensor = (k, formas) => [MAR, ...portaaviones({ ascensor: k }), ...poner(formas, 180, enAscensor(k))]
+const enElAscensor = (u, k, formas) => [MAR, ...portaaviones({ ...enMarcha(u), ascensor: k }), ...poner(formas, 180, enAscensor(k))]
 // Arriba, a ras de la cubierta, con la escalerilla puesta.
-const enLaCabina = (cupula, { cinturon, figuras }) => enElAscensor(1, [...caza({ cupula, cinturon }), ...escalerilla, ...figuras])
+const enLaCabina = (u, cupula, { cinturon, figuras }) => enElAscensor(u, 1, [...caza({ cupula, cinturon }), ...escalerilla, ...figuras])
 // Junto a la cabina, del lado de afuera del marinero, bajo la cúpula abierta.
 const JUNTO_A_LA_CABINA = { ojo: [3.0, 1.2, 7.5], mira: [-0.2, 0.0, -0.6], campo: 54 }
 const CERCA_DE_LA_CABINA = { ojo: [2.2, 1.6, 5.0], mira: [-0.1, -0.6, -0.4], campo: 52 }
@@ -260,23 +261,32 @@ const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
 const POR_RADIO = gesto(OFICIAL, 'habla por radio')
 const enLaSalaAzul = ({ habla = false, eco = false }) => cic({ oficial: habla ? POR_RADIO : (u) => POR_RADIO(u, { abre: 0 }), almirante: gesto(ALMIRANTE, 'mira las pantallas'), eco })
 
+// La sala con el marinero y duky, `figuras`, en ese orden, y los demás donde
+// terminó la escena 10, siguiendo a duky con la vista.
+const losVenIrse = (u, figuras) => {
+  const { en } = figuras[1][1]
+  const duky = [en[0], en[2]]
+  return reunion({ pantalla: PANTALLA, abre: 1, giros: girosHacia(duky), figuras: [...losTres(u, duky), ...figuras] })
+}
+
 export const TOMAS_3D = {
+  // Desde lo alto, por sobre la mesa.
   recoge: {
-    escena: (u) => reunion({ pantalla: PANTALLA, abre: 1, figuras: seLoLleva(u) }),
-    camara: fija([-2.3, 1.8, -2.2], [-2.7, 1.2, 1.2], 64),
+    escena: (u) => losVenIrse(u, seLoLleva(u)),
+    camara: fija([3.2, 2.6, -2.6], [-2.4, 1.0, 1.2], 58),
   },
   // De costado, desde la sala: se ve la puerta y la pared contra la que choca.
   choca: {
     escena: (u) => {
       const { figuras, extra } = choca(u)
-      return [...reunion({ pantalla: PANTALLA, abre: 1, figuras }), ...extra]
+      return [...losVenIrse(u, figuras), ...extra]
     },
     camara: fija([-2.4, 1.9, -0.3], [-3.5, 2.0, MEDIO_DE_LA_PUERTA], 56),
   },
   // La primera vez que se ve el caza: con la cúpula cerrada, recortado en el
   // portalón contra el atardecer. La cámara va detrás del marinero.
   hangar: {
-    escena: (u) => [...enElAscensor(0, [...caza(), ...escalerilla]), ...alPortalon(u)],
+    escena: (u) => [...enElAscensor(u, 0, [...caza(), ...escalerilla]), ...alPortalon(u)],
     camara: (u) => {
       const { en } = enElHangar(u)
       return [[en[0] + 1.6, HANGAR.piso + 1.2, en[2] - 3.4], [en[0] - 0.4, HANGAR.piso + 2.4, en[2] + 10], 58]
@@ -285,7 +295,7 @@ export const TOMAS_3D = {
   // Desde la plataforma, abajo y de contrapicado: sube con ella, y detrás el
   // costado del barco baja hasta que asoma el cielo.
   sube: {
-    escena: (u) => enElAscensor(SUBE * suave(u), [...caza({ cupula: CUPULA_ABIERTA * tramo(u, 0, 0.2) }), ...escalerilla, ...subiendo(u)]),
+    escena: (u) => enElAscensor(u, SUBE * suave(u), [...caza({ cupula: CUPULA_ABIERTA * tramo(u, 0, 0.2) }), ...escalerilla, ...subiendo(u)]),
     camara: (u) => {
       const y = HANGAR.piso + (20.8 - HANGAR.piso) * SUBE * suave(u)
       return [[-74, y + 0.9, 36.4], [-80, y + 2.4 + 0.6 * suave(u), 31.2], 60]
@@ -296,10 +306,10 @@ export const TOMAS_3D = {
   // plataforma llega a la cubierta.
   deposita: {
     abre: EN_CABINA,
-    escena: (u) => enElAscensor(SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
+    escena: (u) => enElAscensor(u, SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
     camara: (u) => alLado(SUBE + (1 - SUBE) * suave(u), JUNTO_A_LA_CABINA),
   },
-  cinturon: { abre: EN_CABINA, escena: (u) => enLaCabina(CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
+  cinturon: { abre: EN_CABINA, escena: (u) => enLaCabina(u, CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
   // Un último tirón, con fuerza: lo sostiene, se inclina a mirar la correa que
   // no cierra y la suelta. Se encoge de hombros, cierra la cabina, y duky
   // queda adentro un momento, sin cinturón.
@@ -308,13 +318,13 @@ export const TOMAS_3D = {
     escena: (u) => {
       const tira = 0.55 + 0.45 * tramo(u, 0, 0.09) * (1 - tramo(u, 0.24, 0.33))
       const mira = tramo(u, 0.15, 0.21) * (1 - tramo(u, 0.24, 0.3))
-      return enLaCabina(CUPULA_ABIERTA * (1 - tramo(u, 0.64, 0.82)), tirando(tira, { suelta: tramo(u, 0.33, 0.42), encoge: tramo(u, 0.42, 0.5) * (1 - tramo(u, 0.585, 0.64)), mira }))
+      return enLaCabina(u, CUPULA_ABIERTA * (1 - tramo(u, 0.64, 0.82)), tirando(tira, { suelta: tramo(u, 0.33, 0.42), encoge: tramo(u, 0.42, 0.5) * (1 - tramo(u, 0.585, 0.64)), mira }))
     },
     camara: () => alLado(1, JUNTO_A_LA_CABINA),
   },
   despegue: {
     abre: EN_CABINA,
-    escena: (u) => [MAR, ...portaaviones({ radar: u * 120 }), ...despegando(u).formas(conDuky({ motor: u > PISTA.lanza - 0.04, tren: u < PISTA.sale + 0.2 }, dukyDespega(u)))],
+    escena: (u) => [MAR, ...portaaviones({ ...enMarcha(u), radar: u * 120 }), ...despegando(u).formas(conDuky({ motor: u > PISTA.lanza - 0.04, tren: u < PISTA.sale + 0.2 }, dukyDespega(u)))],
     camara: (u) => {
       const { punto } = despegando(u)
       const tiembla = u > PISTA.lanza && u < PISTA.sale + 0.05 ? 0.08 * Math.sin(Math.floor(u * 30) * 2.3) : 0

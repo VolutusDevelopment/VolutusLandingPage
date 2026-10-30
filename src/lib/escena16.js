@@ -65,8 +65,15 @@ export const TOMAS = [
   },
   { id: 'vuelve', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Vuelve a la proa, pensativo.' }] },
   { id: 'dios', ms: 150, cuadros: 24, lineas: [{ quien: ALMIRANTE, texto: 'Que sea lo que Dios quiera.' }] },
-  { id: 'retira', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'El almirante se retira. La cámara se queda quieta.' }] },
-  { id: 'destino', ms: 200, cuadros: 2, lineas: [{ texto: 'Queda en tus manos el destino del portaaviones «Sitting Ducks».' }] },
+  // Se va despacio mientras aparecen las dos líneas, y la proa queda sola:
+  // ahí, sobre su último cuadro, quien juega elige el final.
+  {
+    id: 'retira',
+    ms: 150,
+    cuadros: 72,
+    unaVez: true,
+    lineas: [{ texto: 'El almirante se retira. La cámara se queda quieta.' }, { texto: 'Queda en tus manos el destino del portaaviones «Sitting Ducks».' }],
+  },
 ]
 
 export const FINALES = {

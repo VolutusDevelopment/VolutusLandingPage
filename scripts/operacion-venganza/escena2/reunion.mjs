@@ -70,7 +70,8 @@ export const fase = (s) => (s / 0.5) % 1
 export const ENTRADA = (z) => recorrido([[-5.2, z], [-0.8, z]])
 
 // Un punto justo delante de la cámara [ojo, mira, campo]: (x, y) de -1 a 1
-// cubren lo que se ve de cada cuadro, la franja del medio en 4:3.
+// cubren el cuadro en 4:3 de su campo; el de 21:9, que tiras.mjs abre más,
+// llega a x = ±ABRE.
 export const anteLaCamara = ([ojo, mira, campo]) => {
   const f = uni(res(mira, ojo))
   const derecha = uni(cruz(f, [0, 1, 0]))

@@ -7,7 +7,7 @@
 
 import { placa } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
-import { CONSOLA, ISLA, MAR, caja, colocar, portaaviones } from '../escena1/lugares.mjs'
+import { CONSOLA, ISLA, MAR, caja, colocar, enMarcha, portaaviones } from '../escena1/lugares.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -147,7 +147,7 @@ const cuarto = (t) => [
 // `oficial(u)` y `almirante(u)`, sus poses.
 export const control = ({ oficial, almirante }) => (u) => [
   MAR,
-  ...portaaviones({ control: cuarto(u), radar: u * 360 }),
+  ...portaaviones({ control: cuarto(u), ...enMarcha(u) }),
   ...colocar(oficial(u), OFICIAL_EN),
   ...colocar(almirante(u), ALMIRANTE_EN),
 ]

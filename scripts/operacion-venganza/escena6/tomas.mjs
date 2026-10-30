@@ -7,9 +7,9 @@
 // espalda. Todo se arma en la formación, con los morros hacia +x, y `VUELO`
 // la gira hacia donde vuelan. Duke va a babor de moby y más atrás.
 
-import { el, transformar } from '../pilotos/tres.mjs'
+import { el, placa, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
-import { RAMPAS as C, ambos, dukeBase, ojosAbiertos } from '../pilotos/modelos.mjs'
+import { RAMPAS as C, alaDelA10, ambos, disco, dukeBase, ojosAbiertos, pielDelA10 } from '../pilotos/modelos.mjs'
 import { ACELERADOR, PALANCA, enCabina as conMandos } from '../pilotos/interiores.mjs'
 import { PERSONAJES, dukeCerrado, figura, pDuke } from '../pilotos/cuerpos.mjs'
 import { MAR, SOL, poner } from '../escena1/lugares.mjs'
@@ -36,14 +36,26 @@ const fija = (ojo, mira, campo) => () => [VUELO.punto(ojo), VUELO.punto(mira), c
 
 // ── Los cazas ────────────────────────────────────────────────────────────
 
-// Moby: parches de metal sobre el fuselaje y las alas, agujeros de bala y,
-// bajo la cabina, una raya blanca por cada derribo.
-const PARCHES = [[2.5, 0.2, 1.8], [0, 0.7, 1.5], [-2.8, 0.1, 1.2], [1.0, -0.4, 4.5], [-0.6, -0.1, 6.8]]
-const AGUJEROS = [[3.0, -0.2, 1.85], [2.7, 0.5, 1.82], [0.5, 0.1, 1.72], [-1.6, 0.5, 1.4], [0.2, -0.32, 5.6]]
+// Moby: parches de metal sobre el fuselaje ([x, y]) y las alas ([x, z]),
+// agujeros de bala y, bajo la cabina, una raya blanca por cada derribo, todo
+// pegado a la piel del A-10 (pilotos/modelos.mjs).
+const PARCHES = [[2.5, 0.2], [0, 0.6], [-2.6, 0.2]]
+const PARCHES_ALA = [[0.7, 4.5], [-0.4, 6.8]]
+const AGUJEROS = [[3.0, -0.2], [2.7, 0.5], [0.5, 0.1], [-1.6, 0.4]]
+const AGUJERO_ALA = [0.2, 5.6]
+const sobreLaPiel = (x, y, s, alto = 0.015) => {
+  const { p, n } = pielDelA10(x, y, s)
+  return { p: sum(p, n.map((v) => v * alto)), n }
+}
+const sobreElAla = (x, z, s, alto = 0.015) => [x, alaDelA10(z) + alto, s * z]
+const ARRIBA = [0, 1, 0]
+const agujero = ({ p, n }) => disco(p, n, 0.09, 0.008, C.negro, { flat: '#101216' })
 const MARCAS = ambos((s) => [
-  ...PARCHES.map(([x, y, z]) => el([x, y, s * z], [0.5, 0.3, 0.12], C.grisOscuro)),
-  ...AGUJEROS.map(([x, y, z]) => el([x, y, s * z], [0.09, 0.09, 0.07], null, { flat: '#101216' })),
-  ...[0, 1, 2, 3, 4].map((i) => el([5.9 + i * 0.22, 0.25, s * 1.42], [0.05, 0.16, 0.04], null, { flat: '#f4f4f4' })),
+  ...PARCHES.map(([x, y]) => placa([[0.45, 0.25], [-0.45, 0.25], [-0.45, -0.25], [0.45, -0.25]].map(([dx, dy]) => sobreLaPiel(x + dx, y + dy, s).p), 0.02, C.grisOscuro)),
+  ...PARCHES_ALA.map(([x, z]) => placa([[0.45, 0.3], [-0.45, 0.3], [-0.45, -0.3], [0.45, -0.3]].map(([dx, dz]) => sobreElAla(x + dx, z + dz, s)), 0.02, C.grisOscuro)),
+  ...AGUJEROS.map(([x, y]) => agujero(sobreLaPiel(x, y, s, 0))),
+  agujero({ p: sobreElAla(...AGUJERO_ALA, s, 0), n: ARRIBA }),
+  ...[0, 1, 2, 3, 4].map((i) => el(sobreLaPiel(5.9 + i * 0.22, 0.25, s, 0.02).p, [0.05, 0.16, 0.03], null, { flat: '#f4f4f4' })),
 ]).flat()
 
 // Duke: el sol le saca destellos que van y vienen por el fuselaje y las alas.
@@ -72,14 +84,16 @@ const hablando = (quien, estado) => volando({ pilotos: { [quien]: (u) => (quien 
 
 // Desde el tablero, de tres cuartos por el lado sin humo y temblando al ritmo
 // de los gritos, como en la escena 9.
-const DEL_TABLERO = (quien) => () => [enVuelo(quien, [3.4, 1.0, 0]), enVuelo(quien, [0, 0.1, 0]), 85]
+// En el Hornet de duke, más cerrada: más abierta, asoma en las esquinas el
+// borde de su cúpula rosada.
+const DEL_TABLERO = (quien) => () => [enVuelo(quien, [3.4, 1.0, 0]), enVuelo(quien, [0, 0.1, 0]), quien === 'duke' ? 72 : 85]
 const TRES_CUARTOS = (quien, lado) => () => [enVuelo(quien, [2.8, 0.8, lado * 1.2]), enVuelo(quien, [0, 0.1, -lado * 0.1]), 80]
 const TEMBLANDO = (quien) => (u) => {
   const tiembla = 0.06 * Math.sin(Math.floor(u * 24) * 2.3)
   return [enVuelo(quien, [3.6, 0.2 + tiembla, 0.8 + tiembla]), enVuelo(quien, [0, 0.4, 0]), 80]
 }
 // La cámara de duke, adelante y a su izquierda, a la altura de los ojos.
-const SU_CAMARA = () => [enVuelo('duke', [2.7, 0.9, -0.9]), enVuelo('duke', [0.2, 0.4, 0]), 72]
+const SU_CAMARA = () => [enVuelo('duke', [2.7, 0.9, -0.9]), enVuelo('duke', [0.2, 0.6, 0]), 80]
 
 // ── duke ante su cámara ──────────────────────────────────────────────────
 

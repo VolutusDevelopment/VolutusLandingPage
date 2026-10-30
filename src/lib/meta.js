@@ -349,10 +349,10 @@ export const PAGINAS = {
   },
   '/operacion-venganza/nivel-2': {
     archivo: 'operacion-venganza/nivel-2.html',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-30',
     titulo: 'Operación Venganza, nivel 2: Moby-Duck y Duke SkyDucker — Volutus',
     descripcion:
-      'Moby ataca solo con el cañón de su A-10 y humo negro; después llega Duke con flores de estrellas. Esquívalos en el cielo del atardecer. Nivel 2, en el navegador.',
+      'Moby ataca solo con el cañón de su A-10; después llega Duke con flores de estrellas. Esquívalos en el cielo del atardecer. Nivel 2, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-9': {

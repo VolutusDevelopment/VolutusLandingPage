@@ -78,15 +78,18 @@ const cabecear = (formas, grados, [px, py] = [0.1, 0.1]) => {
 
 const guante = (muneca, dedo) => [el(muneca, [0.15, 0.13, 0.13], C.blanco), ...(dedo ? [hueso(muneca, dedo, 0.05, C.blanco)] : [])]
 
-// Gafas de aviador clásicas: gota de marco dorado, cristal verde y un reflejo.
+// Gafas de aviador clásicas: un óvalo de marco dorado por lado, ladeado como
+// una gota, con el cristal verde y un reflejo.
 const LENTE_AVIADOR = ['#7a9a84', '#2e4436', '#1e2e24', '#0e1812']
 const aviador = (s) => {
   const n = [0.75, 0.1, s * 0.65]
+  const rot = [s * 14, (Math.atan2(-n[2], n[0]) * 180) / Math.PI, (Math.asin(n[1]) * 180) / Math.PI]
   const brillo = ([, y, z]) => (Math.abs(y - 0.7 + (Math.abs(z) - 0.44) * 0.9) < 0.03 ? '#dfeee4' : null)
-  const gota = (c, r) => [disco(c, n, r + 0.035, 0.012, C.oro), disco(c.map((v, i) => v + n[i] * 0.03), n, r, 0.01, LENTE_AVIADOR, { pinta: brillo })]
+  const ovalo = (c, [alto, ancho], rampa, o) => el(c, [0.012, alto, ancho], rampa, { rot, ...o })
+  const c = [0.88, 0.62, s * 0.42]
   return [
-    ...gota([0.86, 0.66, s * 0.44], 0.21),
-    ...gota([0.9, 0.55, s * 0.38], 0.15),
+    ovalo(c, [0.27, 0.23], C.oro),
+    ovalo(c.map((v, i) => v + n[i] * 0.03), [0.235, 0.195], LENTE_AVIADOR, { pinta: brillo }),
     hueso([0.7, 0.72, s * 0.6], [0.0, 0.74, s * 0.69], 0.022, C.oro),
   ]
 }
@@ -115,7 +118,7 @@ export const DUCK_ONE_TORSO = [
   el([0.1, -0.15, 0], [0.56, 0.12, 0.58], C.blanco),
 ]
 export const GAFAS_DUCK_ONE = cabecear(
-  [...[1, -1].flatMap(aviador), hueso([1.0, 0.8, -0.28], [1.0, 0.8, 0.28], 0.025, C.oro), hueso([1.02, 0.72, -0.24], [1.02, 0.72, 0.24], 0.02, C.oro)],
+  [...[1, -1].flatMap(aviador), hueso([1.0, 0.78, -0.28], [1.0, 0.78, 0.28], 0.025, C.oro)],
   16,
 )
 export const DUCK_ONE_SIN_GORRO = [
@@ -561,22 +564,56 @@ export const POSTCOMBUSTION_HORNET = ambos((s) => {
 }).flat()
 
 // Fairchild Republic A-10 Thunderbolt II: 16,3 m de largo, 17,5 m de
-// envergadura. Ala recta y baja con góndolas del tren, dos motores altos
-// sobre el fuselaje trasero, derivas en las puntas del estabilizador y el
-// cañón GAU-8 asomando bajo el morro.
+// envergadura, calcado de un plano de tres vistas. Ala recta y baja, con
+// diedro desde las góndolas del tren; dos motores altos en góndolas
+// cilíndricas sobre el fuselaje trasero, con la boca abierta y el cono del
+// fan; derivas en las puntas del estabilizador y el cañón GAU-8 asomando
+// bajo el morro.
+
+// El fuselaje, de la punta del morro a la cola: [x, ancho, alto, y].
+const FUSELAJE_A10 = [
+  [8.1, 0.1, 0.1, 0.05],
+  [7.6, 0.9, 0.85, 0.1],
+  [6.2, 1.5, 1.6, 0.15],
+  [4.2, 1.7, 1.9, 0.2],
+  [1, 1.6, 1.75, 0.1],
+  [-2, 1.25, 1.35, 0.15],
+  [-5, 0.85, 0.85, 0.3],
+  [-7.6, 0.5, 0.5, 0.4],
+  [-8.1, 0.25, 0.25, 0.4],
+]
+// Un punto de su piel en la cuaderna `x`, a la altura `y`, del lado `s`, y su
+// normal: ahí van pegados los parches y las marcas de moby (escena6/tomas.mjs).
+export const pielDelA10 = (x, y, s) => {
+  const i = FUSELAJE_A10.findIndex(([xi]) => xi < x)
+  const [a, b] = [FUSELAJE_A10[i - 1], FUSELAJE_A10[i]]
+  const [, ancho, alto, centro] = a.map((v, j) => v + ((b[j] - v) * (a[0] - x)) / (a[0] - b[0]))
+  const [semiAncho, semiAlto] = [ancho / 2, alto / 2]
+  const dy = (y - centro) / semiAlto
+  const dz = Math.sqrt(Math.max(0, 1 - dy * dy))
+  const n = [0, dy / semiAlto, (s * dz) / semiAncho]
+  return { p: [x, y, s * semiAncho * dz], n: esc(n, 1 / Math.hypot(...n)) }
+}
+// El ala, de grosor parejo: recta y plana hasta las góndolas del tren y,
+// desde ahí, con diedro hasta la punta. `alaDelA10(z)` da su altura.
+const ALA_A10 = { y: -0.55, quiebre: 3.4, punta: 8.75, sube: 0.65, grosor: 0.3 }
+export const alaDelA10 = (z) => ALA_A10.y + (ALA_A10.sube * Math.max(0, Math.abs(z) - ALA_A10.quiebre)) / (ALA_A10.punta - ALA_A10.quiebre) + ALA_A10.grosor / 2
+// Las góndolas de los TF34, cilíndricas: adelante, la boca oscura con el cono
+// del fan; atrás, la tobera, de donde sale la llama.
+const MOTOR_A10 = { y: 1.25, z: 1.3, boca: -1.3, tobera: -5.0 }
+const gondola = (s) => {
+  const { y, boca, tobera } = MOTOR_A10
+  const z = s * MOTOR_A10.z
+  return tubo(
+    [[boca, 1.2, 1.2], [boca - 0.2, 1.36, 1.36], [-3.7, 1.36, 1.36], [-4.7, 1.02, 1.02], [tobera, 0.78, 0.78]].map(([x, w, h]) => [x, w, h, y, 2, z]),
+    C.negro,
+    { pinta: ([, py, pz], n) => (Math.abs(n[0]) < 0.9 ? null : n[0] > 0 && Math.hypot(py - y, pz - z) < 0.17 ? C.grisOscuro : '#0c0e12') },
+  )
+}
+
 export const CAZA_MOBY = [
   tubo(
-    [
-      [8.1, 0.1, 0.1, 0.05],
-      [7.6, 0.9, 0.85, 0.1],
-      [6.2, 1.5, 1.6, 0.15],
-      [4.2, 1.7, 1.9, 0.2],
-      [1, 1.6, 1.75, 0.1],
-      [-2, 1.25, 1.35, 0.15],
-      [-5, 0.85, 0.85, 0.3],
-      [-7.6, 0.5, 0.5, 0.4],
-      [-8.1, 0.25, 0.25, 0.4],
-    ],
+    FUSELAJE_A10,
     C.negro,
     {
       pinta: ([x, y]) => {
@@ -588,21 +625,22 @@ export const CAZA_MOBY = [
       },
     },
   ),
-  el([8.5, -0.45, 0], [0.75, 0.1, 0.1], C.grisOscuro),
+  hueso([7.4, -0.45, 0], [8.65, -0.45, 0], 0.12, C.grisOscuro),
   el([4.8, 0.95, 0], [1.3, 0.62, 0.55], C.vidrio, { vidrio: true }),
   ...cabezaPiloto(5.2, 0.95, ['#d8925e', '#a05a30', '#723c1e', '#40200e'], [el([5.15, 1.12, 0], [0.3, 0.16, 0.27], C.negro)]),
-  ...ambos((s) => placa([[1.7, -0.55, s * 0.8], [1.6, -0.55, s * 3.4], [-1.5, -0.55, s * 3.4], [-1.6, -0.55, s * 0.8]], 0.35, C.negro)),
-  ...ambos((s) => placa([[1.6, -0.55, s * 3.4], [0.9, 0.1, s * 8.75], [-0.6, 0.1, s * 8.75], [-1.5, -0.55, s * 3.4]], 0.25, C.negro)),
+  ...ambos((s) => {
+    const { y, quiebre, punta, sube, grosor } = ALA_A10
+    return [
+      placa([[1.7, y, s * 0.8], [1.6, y, s * quiebre], [-1.5, y, s * quiebre], [-1.6, y, s * 0.8]], grosor, C.negro),
+      placa([[1.6, y, s * quiebre], [0.9, y + sube, s * punta], [-0.6, y + sube, s * punta], [-1.5, y, s * quiebre]], grosor, C.negro),
+    ]
+  }).flat(),
   ...ambos((s) => el([1.2, -0.85, s * 2.9], [1.4, 0.35, 0.35], C.negro)),
-  ...ambos((s) => el([-3.2, 1.25, s * 1.3], [1.9, 0.68, 0.68], C.negro)),
-  ...ambos((s) => el([-1.32, 1.25, s * 1.3], [0.06, 0.55, 0.55], C.grisOscuro)),
-  ...ambos((s) => llama(-5.05, 1.25, s * 1.3, 1.4, 0.75)).flat(),
+  ...ambos(gondola),
+  ...ambos((s) => llama(MOTOR_A10.tobera, MOTOR_A10.y, s * MOTOR_A10.z, 1.4, 0.75)).flat(),
   ...ambos((s) => placa([[-2.6, 0.5, s * 0.6], [-2.6, 1.0, s * 1.0], [-4.0, 1.0, s * 1.0], [-4.0, 0.5, s * 0.6]], 0.2, C.negro)),
   placa([[-5.6, 0.4, -3.1], [-5.6, 0.4, 3.1], [-7.5, 0.4, 3.1], [-7.5, 0.4, -3.1]], 0.2, C.negro),
   ...ambos((s) => placa([[-5.3, -0.4, s * 3.1], [-5.6, 2.6, s * 3.1], [-6.4, 3.0, s * 3.1], [-7.3, 2.9, s * 3.1], [-7.7, -0.4, s * 3.1]], 0.2, C.negro)),
-  el([-5.4, 1.6, 1.4], [0.4, 0.32, 0.36], C.humo),
-  el([-6.8, 2.3, 1.6], [0.32, 0.26, 0.3], C.humo),
-  el([-8.0, 2.9, 1.7], [0.24, 0.2, 0.22], C.humo),
 ]
 
 // El F-22 de Duky lleva pintura de guerra: negro entero, con la cúpula

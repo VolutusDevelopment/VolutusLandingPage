@@ -2,7 +2,9 @@
  * El combate de Operación Venganza (paginas/OperacionVenganza.jsx, `Nivel`):
  * el guion del nivel que diga `data-nivel` (lib/nivel1.js, nivel2.js o
  * nivel3.js) contra quien juega, que es el cursor o, con el dedo, una huella.
- * Al terminar, la página sigue a `data-sigue`, las escenas que vienen.
+ * Lo corre el juego (src/operacion-venganza.js) en la misma página que las
+ * escenas, uno tras otro: cada nivel empieza de cero, y al terminar suelta lo
+ * que escuchaba, para su lienzo y le avisa al juego, que sigue con las escenas.
  *
  * El cielo es un mundo en 3D pintado pixel a pixel en un lienzo chico que el
  * CSS agranda sin suavizar: las franjas del atardecer, el sol medio hundido,
@@ -17,14 +19,10 @@
  * desde cualquier parte, o con las flechas; solo las ráfagas lo corren.
  */
 
-import * as nivel1 from './lib/nivel1.js'
-import * as nivel2 from './lib/nivel2.js'
-import * as nivel3 from './lib/nivel3.js'
+import { NIVELES } from './lib/juego.js'
 import { ALTURAS, GIROS, LADO, LLENADO, RADIO, rutaDeCaza } from './lib/cazas.js'
 import { quieto } from './lib/movimiento.js'
-import { FLECHA, escalaDe } from './lib/flecha.js'
-
-const NIVELES = { 1: nivel1, 2: nivel2, 3: nivel3 }
+import { BORDE, FLECHA, escalaDe } from './lib/flecha.js'
 
 const V = 150 // m/s, la velocidad de la cámara
 const ALT = 300 // m sobre el mar, como duky en la escena 11
@@ -309,14 +307,13 @@ function pintarNube(n, [x, y, a]) {
 // Cada caza del guion (`CAZAS`) se mueve en la pantalla (x, y) y en
 // profundidad (a, en metros) con resortes; su orientación sale de cómo se
 // mueve por el mundo, y se ladea hacia donde gira, como un avión de verdad.
-// El guion lo mueve y dispara con sus métodos (`METODOS`). Uno con `humo`
-// deja una estela negra; uno con `destellos`, brillos alrededor.
+// El guion lo mueve y dispara con sus métodos (`METODOS`). Uno con
+// `destellos` lleva brillos alrededor.
 const cazas = {}
 
-function nuevoCaza({ hoja, humo = false, destellos = false }) {
+function nuevoCaza({ hoja, destellos = false }) {
   const c = {
     hoja: Object.assign(new Image(), { src: rutaDeCaza(hoja) }),
-    humo,
     destellos,
     x: { x: -w, v: 0 },
     y: { x: -h, v: 0 },
@@ -429,18 +426,12 @@ function moverCaza(c, dt) {
     c.sx = sp[0]
     c.sy = sp[1]
   }
-  c.cola = proyectar(sum(P, esc(c.Fw, -9)))
   c.fogonazo = Math.max(0, c.fogonazo - dt)
-  // Humo por la cola y brillos alrededor, mientras se lo ve.
-  if (!c.visible || !c.cola || (c.soplo -= dt) > 0) return
-  if (c.humo) {
-    c.soplo = 0.05
-    humos.push({ x: c.cola[0], y: c.cola[1], r: k / c.cola[2], crece: (4 * k) / c.cola[2], t: 0, vida: 1.4, color: '48 46 60', alfa: 0.55 })
-  } else if (c.destellos) {
-    c.soplo = 0.22
-    const lado = (12 * k) / a
-    brillos.push({ x: c.sx + (Math.random() - 0.5) * lado, y: c.sy + (Math.random() - 0.5) * lado * 0.6, t: 0.5 })
-  }
+  // Los brillos alrededor, mientras se lo ve.
+  if (!c.visible || !c.destellos || (c.soplo -= dt) > 0) return
+  c.soplo = 0.22
+  const lado = (12 * k) / a
+  brillos.push({ x: c.sx + (Math.random() - 0.5) * lado, y: c.sy + (Math.random() - 0.5) * lado * 0.6, t: 0.5 })
 }
 
 // El cuadro de la hoja según desde dónde se lo ve, girado según su ladeo.
@@ -470,7 +461,7 @@ function pintarCaza(c, [sx, sy, a]) {
 }
 
 // ── Humo y brillos ────────────────────────────────────────────────────────
-// El humo (de Moby, de los misiles) crece, se aclara y se lo lleva el viento;
+// El humo de los misiles crece, se aclara y se lo lleva el viento;
 // va detrás de los cazas y de las balas. Los brillos de Duke parpadean.
 const humos = []
 const brillos = []
@@ -550,7 +541,7 @@ function pintarEstelas() {
 // Le pega lo que toque casi toda la flecha, sin la cola, o el centro de la huella.
 const HUELLA = ['  XXXXX  ', ' XWWWWWX ', 'XWWXXXWWX', 'XWXWWWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWWWXWWWX', ' XWWWWWX ', '  XXXXX  ']
 const FORMAS = {
-  cursor: { mapa: FLECHA, ox: 0, oy: 0, hx: 3, hy: 5, r: 4 },
+  cursor: { mapa: FLECHA, ox: 0, oy: 0, hx: 3, hy: 6, r: 4 },
   huella: { mapa: HUELLA, ox: 4, oy: 5, hx: 0, hy: 0, r: 3 },
 }
 
@@ -600,7 +591,7 @@ function pintarJugador(visible) {
     f.mapa.forEach((fila, y) => {
       for (let x = 0; x < fila.length; x++) {
         if (fila[x] === ' ') continue
-        pincel.fillStyle = fila[x] === 'X' ? '#0a1a2a' : blanco
+        pincel.fillStyle = fila[x] === 'X' ? BORDE : blanco
         pincel.fillRect(x, y, 1, 1)
       }
     })
@@ -999,9 +990,12 @@ function ganar() {
 
 // Vuelven las bandas negras de las escenas y, cuando llegan, siguen ellas.
 function salir() {
-  const sigue = () => location.assign(raiz.dataset.sigue)
+  const sigue = () => {
+    parar.abort()
+    alSalir()
+  }
   if (quieto()) return sigue()
-  raiz.querySelector('.banda').addEventListener('transitionend', sigue, { once: true })
+  raiz.querySelector('.banda').addEventListener('transitionend', sigue, { once: true, signal: parar.signal })
   raiz.classList.remove('sin-bandas')
 }
 
@@ -1080,13 +1074,16 @@ function dibujar() {
 }
 
 // ── Las manos ─────────────────────────────────────────────────────────────
+// Todo lo que escucha un nivel se suelta al terminarlo, con `parar`.
+let parar, alSalir
+const oir = (blanco, tipo, accion) => blanco.addEventListener(tipo, accion, { signal: parar.signal })
 function escuchar() {
   let arrastre = null
   const punto = (e) => {
     const caja = lienzo.getBoundingClientRect()
     return [(e.clientX - caja.left) / escala, (e.clientY - caja.top) / escala]
   }
-  lienzo.addEventListener('pointerdown', (e) => {
+  oir(lienzo, 'pointerdown', (e) => {
     if (e.pointerType === 'touch') {
       modo = 'huella'
       arrastre = { x: e.clientX, y: e.clientY, t: performance.now(), movido: 0 }
@@ -1100,13 +1097,13 @@ function escuchar() {
   // El ratón se sigue en todo el nivel, también sobre el diálogo y los
   // botones (el CSS esconde ahí el cursor del sistema), y si sale de la
   // página el juego se pausa: nunca se ven dos cursores.
-  raiz.addEventListener('pointermove', (e) => {
+  oir(raiz, 'pointermove', (e) => {
     if (e.pointerType === 'touch') return
     modo = 'cursor'
     ;[objetivo.x, objetivo.y] = punto(e)
   })
-  raiz.addEventListener('pointerleave', (e) => e.pointerType !== 'touch' && jugable() && !pausado && pausar(true))
-  lienzo.addEventListener('pointermove', (e) => {
+  oir(raiz, 'pointerleave', (e) => e.pointerType !== 'touch' && jugable() && !pausado && pausar(true))
+  oir(lienzo, 'pointermove', (e) => {
     if (e.pointerType !== 'touch' || !arrastre) return
     const dx = e.clientX - arrastre.x, dy = e.clientY - arrastre.y
     arrastre.x = e.clientX
@@ -1117,15 +1114,15 @@ function escuchar() {
     objetivo.y += dy / escala
   })
   // Un toque corto, sin arrastrar, adelanta el diálogo.
-  lienzo.addEventListener('pointerup', (e) => {
+  oir(lienzo, 'pointerup', (e) => {
     if (e.pointerType !== 'touch' || !arrastre) return
     if (arrastre.movido < 8 && performance.now() - arrastre.t < 350 && (estado === 'dialogo' || estado === 'final')) avanzar()
     arrastre = null
   })
-  lienzo.addEventListener('pointercancel', () => (arrastre = null))
+  oir(lienzo, 'pointercancel', () => (arrastre = null))
 
   const FLECHAS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']
-  addEventListener('keydown', (e) => {
+  oir(window, 'keydown', (e) => {
     if (FLECHAS.includes(e.key) && jugable()) {
       teclas.add(e.key)
       e.preventDefault()
@@ -1136,19 +1133,49 @@ function escuchar() {
     }
     if (e.key === 'Escape' && jugable()) pausar(!pausado)
   })
-  addEventListener('keyup', (e) => teclas.delete(e.key))
+  oir(window, 'keyup', (e) => teclas.delete(e.key))
 
-  caja.addEventListener('click', avanzar)
-  panel('jugar').addEventListener('click', () => jugar())
-  panel('reintentar').addEventListener('click', () => jugar(vistaActual, false))
-  panel('principio').addEventListener('click', () => jugar())
-  panel('pausa').addEventListener('click', () => jugable() && pausar(!pausado))
-  panel('seguir').addEventListener('click', () => pausar(false))
-  document.addEventListener('visibilitychange', () => document.hidden && jugable() && pausar(true))
-  new ResizeObserver(ajustar).observe(raiz)
+  oir(caja, 'click', avanzar)
+  oir(panel('jugar'), 'click', () => jugar())
+  oir(panel('reintentar'), 'click', () => jugar(vistaActual, false))
+  oir(panel('principio'), 'click', () => jugar())
+  oir(panel('pausa'), 'click', () => jugable() && pausar(!pausado))
+  oir(panel('seguir'), 'click', () => pausar(false))
+  oir(document, 'visibilitychange', () => document.hidden && jugable() && pausar(true))
+  const observador = new ResizeObserver(ajustar)
+  observador.observe(raiz)
+  parar.signal.addEventListener('abort', () => observador.disconnect(), { once: true })
 }
 
-export default function iniciar(elemento) {
+// Todo como empieza un nivel: los cazas, las nubes, las balas, la cámara,
+// quien juega y el diálogo.
+function reiniciar() {
+  w = h = 0
+  for (const nombre of Object.keys(cazas)) delete cazas[nombre]
+  for (const lista of [nubes, humos, brillos, rafagas, estelas, chispas]) lista.length = 0
+  balas = []
+  teclas.clear()
+  Object.assign(camara, { t: 1, dur: 1, x: 0, sacudida: 0, vaiven: { x: 0, v: 0 }, viento: { x: 0, v: 0 } })
+  Object.assign(viento, { x: 0, y: 0 })
+  Object.assign(jugador, { x: 0, y: 0, vx: 0, vy: 0, pv: PV_MAX, inmune: 0, golpe: 0 })
+  Object.assign(objetivo, { x: 0, y: 0 })
+  pintada = ''
+  cola = []
+  alTerminar = null
+  frase = ''
+  letras = espera = 0
+  estado = 'portada'
+  pausado = false
+  vistaActual = tAtaque = tVista = reloj = rotuloHasta = 0
+  memoria = {}
+}
+
+// Corre el nivel de `elemento` (su sección, con su `data-nivel`) y, al
+// terminarlo o saltarlo, llama a `despues`.
+export default function iniciar(elemento, despues) {
+  reiniciar()
+  parar = new AbortController()
+  alSalir = despues
   raiz = elemento
   guion = NIVELES[raiz.dataset.nivel]
   VISTAS = guion.VISTAS
@@ -1166,7 +1193,7 @@ export default function iniciar(elemento) {
   // Se van las bandas con que llega de las escenas; «Saltar nivel» las trae de vuelta.
   raiz.getBoundingClientRect()
   raiz.classList.add('sin-bandas')
-  raiz.addEventListener('click', (e) => {
+  oir(raiz, 'click', (e) => {
     if (!e.target.closest('a.escena-boton')) return
     e.preventDefault()
     salir()
@@ -1183,9 +1210,13 @@ export default function iniciar(elemento) {
     cazas[nombre].presente = true
   }
   escuchar()
+  panel('jugar').focus({ preventScroll: true })
 
+  // El primer cuadro va antes de que se vea la sección: nunca queda en negro.
+  dibujar()
   let ultimo = performance.now()
   const bucle = (ahora) => {
+    if (parar.signal.aborted) return
     const dt = Math.min(0.05, (ahora - ultimo) / 1000)
     ultimo = ahora
     if (!pausado) actualizar(dt)

@@ -1,38 +1,43 @@
 /**
- * Operación Venganza (paginas/OperacionVenganza.jsx): la pantalla de carga y
- * las escenas de la página, las que diga su `data-escena`, una tras otra, con
- * sus guiones:
- * lib/escena1.js, escena2.js, escena3.js, escena5.js, escena6.js,
- * escena9.js, escena10.js, escena11.js, escena13.js, escena14.js,
- * escena15.js o escena16.js. Las medidas de las tiras son las de la 1.
+ * Operación Venganza (paginas/OperacionVenganza.jsx): el juego entero, en una
+ * sola página, desde la escena o el nivel de su `data-desde` (lib/juego.js)
+ * hasta el final. Las escenas, con sus guiones (lib/escena1.js, escena2.js,
+ * escena3.js, escena5.js, escena6.js, escena9.js, escena10.js, escena11.js,
+ * escena13.js, escena14.js, escena15.js y escena16.js; las medidas de las
+ * tiras son las de la 1), corren seguidas como una sola, y entre ellas, en su
+ * sección, los niveles (src/combate.js).
  *
- * Mientras el pato de la carga camina (lo anima el CSS), se descargan las tiras
- * de las tomas de todas y la barra muestra cuántas ya están decodificadas, en
- * memoria, pero no se llena antes de `MINIMO`: con todo en caché la carga se
- * alcanza a ver igual. Llena, tras `PASO` empieza la primera, y «Saltar escena» pasa a la
- * siguiente, o desde la última a lo que sigue.
+ * Hay una sola pantalla de carga, al principio: camina uno de los personajes,
+ * al azar (lo anima el CSS), y bajan las tiras de todas las escenas, las
+ * hojas de los cazas y el código del combate. La barra muestra cuánto ya
+ * está, pero no se llena antes de `MINIMO`: con todo en caché la carga se
+ * alcanza a ver igual. Llena, tras `PASO` empieza el juego y ya no se
+ * detiene: de una escena a un nivel, y de vuelta, las bandas negras pasan de
+ * una sección a la otra sin cortes. Cada página que empieza queda en la barra
+ * de direcciones, y al recargar el juego sigue desde ella.
  *
  * Cada toma se pinta en un lienzo de `ANCHO` × `ALTO` px, en 21:9, que el CSS
- * agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas (`leer`), y
- * «Siguiente», Enter o la barra espaciadora pasan a la siguiente. Sin movimiento, cada toma queda en un solo cuadro.
+ * agranda sin suavizar; la tira de la siguiente se decodifica mientras corre.
+ * Sus líneas pasan solas, al ritmo de lo que tarda leerlas (`leer`), y
+ * «Siguiente», Enter o la barra espaciadora pasan a la siguiente. «Saltar
+ * escena» pasa a la siguiente escena, o desde la última a lo que sigue. Sin
+ * movimiento, cada toma queda en un solo cuadro.
  *
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
  * que flota (ratón, trackpad) es un cursor, y si no, una huella.
  *
- * Con ratón, el cursor de la página es la flecha del juego (`flecha`).
+ * Con ratón, el cursor de las escenas es la flecha del juego (`flecha`); en
+ * los niveles, quien juega.
  *
  * En la página de una pantalla de carga (lib/cargas.js, `data-carga`) no hay
- * escena: la barra se llena con las tiras de sus escenas y queda llena hasta
+ * juego: la barra se llena con las tiras de sus escenas y queda llena hasta
  * que se pide el índice, y «Ver otra vez» vuelve a la carga.
  *
- * Al acabar las tomas de la última (o al saltarlas), la página sigue a
- * `data-sigue`: un nivel jugable o la escena siguiente, con su carga. Así el
- * juego corre entero sin volver al índice.
- *
- * Si el guion de la última trae `FINALES`, al acabar sus tomas (o al saltarlas) quien juega
- * elige uno con sus botones, y corren sus tomas. Su nombre queda en la sesión,
- * en la clave `FINAL` del guion, para /nosotros (src/flota.js), adonde se va
- * sola la página al terminarlas.
+ * Al acabar la 16 (o al saltarla), quien juega elige uno de sus `FINALES` en
+ * el menú que aparece sobre el cuadro (con el ratón, el dedo o las flechas), y
+ * corren sus tomas. Su nombre queda en la sesión, en la clave `FINAL` del
+ * guion, para /nosotros (src/flota.js), adonde se va sola la página al
+ * terminarlas.
  */
 
 import * as escena1 from './lib/escena1.js'
@@ -49,7 +54,9 @@ import * as escena15 from './lib/escena15.js'
 import * as escena16 from './lib/escena16.js'
 import { quieto } from './lib/movimiento.js'
 import { CARGAS } from './lib/cargas.js'
-import { FLECHA, escalaDe } from './lib/flecha.js'
+import { rutaDeCaza } from './lib/cazas.js'
+import { BORDE, FLECHA, escalaDe } from './lib/flecha.js'
+import { NIVELES, PAGINAS, tramosDesde } from './lib/juego.js'
 
 const { ALTO, ANCHO, cuadrosDe, textoDe } = escena1
 const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
@@ -73,10 +80,55 @@ function duracionesDe(toma, modo) {
 export default function iniciar(raiz) {
   flecha(raiz)
   if ('carga' in raiz.dataset) return pantallaDeCarga(raiz)
-  const guiones = raiz.dataset.escena.split(' ').map((numero) => GUIONES[numero])
+  juego(raiz)
+}
+
+// Las hojas de los cazas de los niveles.
+const HOJAS = [...new Set(Object.values(NIVELES).flatMap(({ CAZAS }) => Object.values(CAZAS).map(({ hoja }) => rutaDeCaza(hoja))))]
+
+// Cuando ya bajó `imagen`: sin decodificarla, porque todas juntas no caben en
+// la memoria de un teléfono; cada tira se decodifica antes de su toma.
+const bajada = (imagen) =>
+  imagen.complete && imagen.naturalWidth
+    ? Promise.resolve()
+    : new Promise((listo, falla) => {
+        imagen.addEventListener('load', listo, { once: true })
+        imagen.addEventListener('error', falla, { once: true })
+      })
+
+// La carga, y después cada tramo desde `data-desde`: las escenas seguidas, en
+// su sección, y cada nivel en la suya, que al terminar le cede el lugar a lo
+// que sigue.
+function juego(raiz) {
   const modo = modoDelPuntero()
-  const tiras = tirasDe(guiones, modo)
-  cargar(raiz, [...tiras.values()], () => escena(raiz, guiones, tiras, modo))
+  const tiras = tirasDe(Object.values(GUIONES), modo)
+  const combate = import('./combate.js')
+  const caminantes = raiz.querySelectorAll('.carga-pato')
+  caminantes[Math.floor(Math.random() * caminantes.length)].hidden = false
+  cargar(raiz, [...[...tiras.values(), ...HOJAS.map(imagenDe)].map(bajada), combate], () => {
+    raiz.querySelector('.carga').hidden = true
+    raiz.classList.add('en-escena')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(raiz).backgroundColor)
+    const reproducir = reproductor(raiz, tiras, modo)
+    const tramos = tramosDesde(raiz.dataset.desde)
+    const seguir = (i) => {
+      const { escenas, nivel, enlace } = tramos[i]
+      if (escenas) return reproducir(escenas, () => seguir(i + 1))
+      history.replaceState(null, '', enlace)
+      const seccion = raiz.querySelector(`.nivel[data-nivel="${nivel}"]`)
+      combate.then(({ default: jugar }) => {
+        // En el nivel, el cursor es quien juega: la flecha se va hasta que vuelvan las escenas.
+        raiz.classList.remove('con-flecha')
+        raiz.querySelector('.venganza-flecha').hidden = true
+        seccion.hidden = false
+        jugar(seccion, () => {
+          seccion.hidden = true
+          seguir(i + 1)
+        })
+      })
+    }
+    seguir(0)
+  })
 }
 
 const modoDelPuntero = () => (matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella')
@@ -96,7 +148,7 @@ function flecha(raiz) {
   FLECHA.forEach((fila, y) => {
     for (let x = 0; x < fila.length; x++) {
       if (fila[x] === ' ') continue
-      pincel.fillStyle = fila[x] === 'X' ? '#0a1a2a' : '#ffffff'
+      pincel.fillStyle = fila[x] === 'X' ? BORDE : '#ffffff'
       pincel.fillRect(x, y, 1, 1)
     }
   })
@@ -108,7 +160,7 @@ function flecha(raiz) {
     lienzo.style.width = `${lienzo.width * px}px`
   }
   const seguir = (e) => {
-    const raton = e.pointerType !== 'touch'
+    const raton = e.pointerType !== 'touch' && !e.target.closest?.('.nivel')
     raiz.classList.toggle('con-flecha', raton)
     lienzo.hidden = !raton
     lienzo.style.translate = `${e.clientX}px ${e.clientY}px`
@@ -125,17 +177,20 @@ function flecha(raiz) {
   document.addEventListener('pointerout', (e) => e.relatedTarget || (lienzo.hidden = true))
 }
 
-// La imagen de cada toma de `guiones`, incluidas las de sus finales.
-const tirasDe = (guiones, modo) => new Map(guiones.flatMap(({ TOMAS, TODAS = TOMAS, rutaDeToma }) => TODAS.map((toma) => [toma, imagenDe(rutaDeToma(toma, modo))])))
+// Cada toma de `guiones`, incluidas las de sus finales, con la ruta de su tira.
+const tomasDe = (guiones, modo) => guiones.flatMap(({ TOMAS, TODAS = TOMAS, rutaDeToma }) => TODAS.map((toma) => [toma, rutaDeToma(toma, modo)]))
+const rutasDe = (guiones, modo) => tomasDe(guiones, modo).map(([, ruta]) => ruta)
+// La imagen de cada una.
+const tirasDe = (guiones, modo) => new Map(tomasDe(guiones, modo).map(([toma, ruta]) => [toma, imagenDe(ruta)]))
 
 function pantallaDeCarga(raiz) {
   const { tira, corredores = [], escenas = [] } = CARGAS[raiz.dataset.carga]
   const tiras = [
     ...[tira, ...corredores.map((c) => c.tira)].filter(Boolean).map(imagenDe),
-    ...tirasDe(
+    ...rutasDe(
       escenas.map((numero) => GUIONES[numero]),
       modoDelPuntero(),
-    ).values(),
+    ).map(imagenDe),
   ]
   const carga = raiz.querySelector('.carga')
   const fin = raiz.querySelector('.fin')
@@ -145,7 +200,7 @@ function pantallaDeCarga(raiz) {
     carga.hidden = !verla
     fin.hidden = verla
     raiz.classList.toggle('en-escena', !verla)
-    if (verla) parar = cargar(raiz, tiras)
+    if (verla) parar = cargar(raiz, tiras.map((imagen) => imagen.decode()))
     else fin.querySelector('.boton-primario').focus()
   }
   raiz.querySelector('.carga-salir').addEventListener('click', () => mostrar(false))
@@ -153,18 +208,19 @@ function pantallaDeCarga(raiz) {
   mostrar(true)
 }
 
-// Cada tira decodificada llena su parte de la barra, sin adelantarse a lo que
-// va de `MINIMO`; llena, `listo`. Una que falla cuenta igual: la toma queda en
-// blanco, pero la escena sigue. Devuelve con qué pararla.
-function cargar(raiz, tiras, listo) {
+// Cada tira lista (cada promesa de `cargas` cumplida) llena su parte de la
+// barra, sin adelantarse a lo que va de `MINIMO`; llena, `listo`. Una que
+// falla cuenta igual: la toma queda en blanco, pero la escena sigue. Devuelve
+// con qué pararla.
+function cargar(raiz, cargas, listo) {
   const barra = raiz.querySelector('.carga-barra')
   const bloques = Number(getComputedStyle(barra).getPropertyValue('--bloques'))
   const desde = performance.now()
   let listas = 0
-  for (const imagen of tiras) imagen.decode().catch(() => {}).finally(() => listas++)
+  for (const carga of cargas) carga.catch(() => {}).finally(() => listas++)
 
   const reloj = setInterval(() => {
-    const parte = Math.min(listas / tiras.length, (performance.now() - desde) / MINIMO)
+    const parte = Math.min(listas / cargas.length, (performance.now() - desde) / MINIMO)
     barra.style.setProperty('--llenos', Math.floor(parte * bloques))
     barra.setAttribute('aria-valuenow', Math.round(parte * 100))
     if (parte < 1) return
@@ -174,32 +230,30 @@ function cargar(raiz, tiras, listo) {
   return () => clearInterval(reloj)
 }
 
-function escena(raiz, guiones, tiras, modo) {
-  const TOMAS = guiones.flatMap((guion) => guion.TOMAS)
-  const { FINALES, FINAL } = guiones.at(-1)
-  // Dónde empieza cada escena en TOMAS.
-  const inicios = guiones.map((_, k) => guiones.slice(0, k).reduce((suma, guion) => suma + guion.TOMAS.length, 0))
-  const lienzo = raiz.querySelector('.escena-cuadro')
+// Las escenas: devuelve con qué correr las de unos enlaces, una tras otra,
+// como una sola, y al acabarlas (o al saltar la última) seguir con `despues`;
+// tras la 16, quien juega elige el final. Los botones y el lienzo se preparan
+// una vez: entre un tramo y otro, la sección espera escondida.
+function reproductor(raiz, tiras, modo) {
+  const seccion = raiz.querySelector('.escena')
+  const lienzo = seccion.querySelector('.escena-cuadro')
   const pincel = lienzo.getContext('2d')
-  const quien = raiz.querySelector('.escena-quien')
-  const texto = raiz.querySelector('.escena-texto')
-  const siguiente = raiz.querySelector('.escena-siguiente')
+  const quien = seccion.querySelector('.escena-quien')
+  const texto = seccion.querySelector('.escena-texto')
+  const siguiente = seccion.querySelector('.escena-siguiente')
   const mandos = siguiente.parentElement
-  const eleccion = raiz.querySelector('.escena-eleccion')
+  const eleccion = seccion.querySelector('.escena-eleccion')
   const duraciones = new Map([...tiras.keys()].map((toma) => [toma, duracionesDe(toma, modo)]))
 
-  raiz.querySelector('.carga').hidden = true
-  raiz.querySelector('.escena').hidden = false
-  raiz.classList.add('en-escena')
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(raiz).backgroundColor)
-
+  let TOMAS = []
+  let FINALES, FINAL, enlaces, inicios, despues
   let tomas = TOMAS
   let toma = -1
   let linea = 0
   let desde = 0
   let espera = 0
 
-  const dibujar = (ahora) => {
+  const pintar = (ahora) => {
     const { unaVez, ms } = tomas[toma]
     const cuadros = cuadrosDe(tomas[toma])
     const paso = Math.floor((ahora - desde) / ms)
@@ -207,6 +261,9 @@ function escena(raiz, guiones, tiras, modo) {
     pincel.imageSmoothingEnabled = false
     const tira = tiras.get(tomas[toma])
     if (tira.naturalWidth) pincel.drawImage(tira, cuadro * ANCHO, 0, ANCHO, ALTO, 0, 0, ANCHO, ALTO)
+  }
+  const dibujar = (ahora) => {
+    if (!seccion.hidden && toma >= 0) pintar(ahora)
     requestAnimationFrame(dibujar)
   }
 
@@ -214,6 +271,14 @@ function escena(raiz, guiones, tiras, modo) {
     quien.textContent = l?.quien ?? ''
     texto.textContent = l ? textoDe(l, modo) : ''
     texto.classList.toggle('acotacion', Boolean(l && !l.quien))
+  }
+
+  // Al empezar una escena, su página queda en la barra de direcciones; y la
+  // tira de la toma que viene se decodifica mientras corre esta.
+  const empiezaToma = () => {
+    const escena = tomas === TOMAS ? inicios.indexOf(toma) : -1
+    if (escena >= 0) history.replaceState(null, '', enlaces[escena])
+    tiras.get(tomas[toma + 1])?.decode().catch(() => {})
   }
 
   // Avanza una línea; sin más líneas, a la toma siguiente; sin más tomas, a
@@ -226,6 +291,7 @@ function escena(raiz, guiones, tiras, modo) {
       toma++
       linea = 0
       desde = performance.now()
+      empiezaToma()
     } else return porElegir() ? elegir() : terminar()
     decir(tomas[toma].lineas[linea])
     const partes = duraciones.get(tomas[toma])
@@ -236,8 +302,8 @@ function escena(raiz, guiones, tiras, modo) {
 
   const porElegir = () => FINALES && tomas === TOMAS
 
-  // La última toma queda en su último cuadro, con su última línea, y en vez de
-  // «Siguiente» están los finales.
+  // La última toma queda en su último cuadro, con su última línea, y sobre él
+  // aparece el menú de los finales; «Saltar escena» y «Siguiente» se van.
   const elegir = () => {
     clearTimeout(espera)
     toma = tomas.length - 1
@@ -249,13 +315,23 @@ function escena(raiz, guiones, tiras, modo) {
     eleccion.querySelector('button').focus()
   }
 
-  const terminar = () => (porElegir() ? elegir() : location.assign(FINALES ? '/nosotros' : raiz.dataset.sigue))
+  // Sin más escenas: elegir el final, Nosotros tras él, o lo que sigue.
+  const terminar = () => {
+    if (porElegir()) return elegir()
+    if (FINALES) return location.assign('/nosotros')
+    clearTimeout(espera)
+    seccion.hidden = true
+    toma = -1
+    despues()
+  }
 
-  // Empieza de nuevo `lista`, desde su primera toma.
+  // Empieza de nuevo `lista`, desde su primera toma, y la pinta al tiro: no
+  // queda un cuadro de lo anterior.
   const empezar = (lista) => {
     tomas = lista
     toma = -1
     avanzar()
+    pintar(performance.now())
     siguiente.focus()
   }
 
@@ -269,8 +345,16 @@ function escena(raiz, guiones, tiras, modo) {
   }
 
   siguiente.addEventListener('click', avanzar)
-  raiz.querySelector('.escena-saltar').addEventListener('click', saltar)
-  eleccion?.addEventListener('click', ({ target }) => {
+  seccion.querySelector('.escena-saltar').addEventListener('click', saltar)
+  // Como en un menú de juego, las flechas pasan de una opción a la otra.
+  eleccion.addEventListener('keydown', (e) => {
+    const paso = { ArrowDown: 1, ArrowUp: -1 }[e.key]
+    if (!paso) return
+    e.preventDefault()
+    const opciones = [...eleccion.querySelectorAll('button')]
+    opciones[(opciones.indexOf(document.activeElement) + paso + opciones.length) % opciones.length].focus()
+  })
+  eleccion.addEventListener('click', ({ target }) => {
     const { final } = target.closest('button')?.dataset ?? {}
     if (!FINALES?.[final]) return
     try {
@@ -282,7 +366,17 @@ function escena(raiz, guiones, tiras, modo) {
     mandos.hidden = false
     empezar(FINALES[final].tomas)
   })
-
-  empezar(TOMAS)
   requestAnimationFrame(dibujar)
+
+  return (lista, alTerminar) => {
+    const guiones = lista.map((enlace) => GUIONES[PAGINAS[enlace].numero])
+    TOMAS = guiones.flatMap((guion) => guion.TOMAS)
+    ;({ FINALES, FINAL } = guiones.at(-1))
+    // Dónde empieza cada escena en TOMAS.
+    inicios = guiones.map((_, k) => guiones.slice(0, k).reduce((suma, guion) => suma + guion.TOMAS.length, 0))
+    enlaces = lista
+    despues = alTerminar
+    seccion.hidden = false
+    empezar(TOMAS)
+  }
 }

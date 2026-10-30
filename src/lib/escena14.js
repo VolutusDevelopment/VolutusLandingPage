@@ -61,10 +61,11 @@ export const TOMAS = [
   { id: 'moral', ms: 150, lineas: [{ quien: DUCK_ONE, texto: segunQuien((el) => `Creo que si le atacamos con la moral y la hética, el ${el} nos dejará.`) }] },
 
   // La cámara sigue a cada uno a lo suyo y termina en una esquina de la sala.
-  { id: 'gorro', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duck-One camina hacia el ventanal. Por el camino se le cae el gorro y deja ver su pelo.' }] },
+  // En `gorro` y `sala` se ve quien juega, a lo lejos por el ventanal.
+  { id: 'gorro', segunModo: true, ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duck-One camina hacia el ventanal. Por el camino se le cae el gorro y deja ver su pelo.' }] },
   { id: 'circulos', ms: 150, cuadros: 24, lineas: [{ texto: 'Duke empieza a caminar en círculos, mirando su reflejo.' }] },
   { id: 'lagrimas', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Moby se sienta y se rompe en lágrimas.' }] },
-  { id: 'sala', ms: 150, cuadros: 32, lineas: [] },
+  { id: 'sala', segunModo: true, ms: 150, cuadros: 32, lineas: [] },
 ]
 
 export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena14/${id}${segunModo ? `-${modo}` : ''}.png`

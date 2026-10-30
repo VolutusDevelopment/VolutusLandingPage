@@ -63,8 +63,10 @@ const BLANCO = (u) => sum(ALTURA, [140, 30 + 6 * Math.sin(vuelta(u) * 2), 24 * M
 
 // Duky dispara como si supiera el futuro: cada tiro, uno por ala y por turno,
 // va a donde estará quien juega cuando llegue, y le da. `VIAJE`, lo que tarda.
-// Los cañones van en las raíces de las alas, abajo a cada lado del cuadro.
-const CANONES = [[6, 0.2, 2.2], [6, 0.2, -2.2]]
+// Los cañones van donde el F-22 lleva el suyo, sobre las tomas de aire, en
+// la raíz de cada ala (pilotos/modelos.mjs); quedan detrás de la cámara, y los
+// tiros entran por abajo a cada lado del cuadro.
+export const CANONES = [[1.85, 0.22, 1.45], [1.85, 0.22, -1.45]]
 const TIROS = 12
 const VIAJE = 0.25
 const disparos = (u, T, ojo) =>
@@ -139,40 +141,47 @@ export const radar = (t, cu, cv) => {
   return atras < 0.6 ? '#1f5a36' : '#123a24'
 }
 
+// La pantalla, monitor por monitor: `pinta(quien, cu, cv)` da el color de
+// cada uno, con (cu, cv) de 0 a 1 dentro de él; entre ellos, el bisel.
+const porMonitor = (pinta) => (u, v) => {
+  const monitor = Object.entries(MONITORES).find(([, m]) => dentro(u, m))
+  if (!monitor) return BISEL
+  const [quien, [a, b]] = monitor
+  return pinta(quien, (u - a) / (b - a), (v - 0.03) / 0.94)
+}
+
 // Prendida: la cara de duky, la cabina de `toma` y el radar. La cara abre el
 // campo hasta cubrir de alto lo que cubría el cuadro cuadrado de antes; la
 // cabina, la franja de 4:3 del medio.
 export const prendida = (toma, t, modo) => {
   const cara = grabar({ escena: CABINAS.vuela.escena, camara: SU_CARA, abre: ANCHO / ALTO }, t, modo)
   const vista = grabar(CABINAS[toma], t, modo)
-  return (u, v) => {
-    const cv = (v - 0.03) / 0.94
-    const monitor = Object.entries(MONITORES).find(([, m]) => dentro(u, m))
-    if (!monitor) return BISEL
-    const [quien, [a, b]] = monitor
-    const cu = (u - a) / (b - a)
+  return porMonitor((quien, cu, cv) => {
     if (quien === 'cara') return celda(cara, ANCHO / 2 + (cu - 0.5) * 0.78 * ALTO, (1 - cv) * ALTO)
     if (quien === 'cabina') return celda(vista, ANCHO / 2 + (cu - 0.5) * (4 / 3) * ALTO, (1 - cv) * ALTO)
     return radar(t, cu, cv)
-  }
+  })
 }
 
-// Apagada: negra, con lo que se refleja en ella visto desde `camara`. El
-// reflejo es lo que se ve desde la cámara espejada al otro lado del vidrio,
-// por el mismo punto de la pantalla.
+// Apagada: los monitores de duky, negros, con lo que se refleja en ellos visto
+// desde `camara`; el radar, que miran los demás, sigue prendido. El reflejo
+// es lo que se ve desde la cámara espejada al otro lado del vidrio, por el
+// mismo punto de la pantalla, sin el cielo de detrás.
 const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16))
 const mezcla = (a, b, k) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * k).toString(16).padStart(2, '0')).join('')
-const NEGRO = '#0b0e12'
+const NEGRO = '#06080a'
 const espejo = ([x, y, z]) => [2 * PANTALLA.x - x, y, z]
-const apagada = (formas, [ojo, mira, campo]) => {
+const apagada = (formas, [ojo, mira, campo], t) => {
   const camara = [espejo(ojo), espejo(mira), campo]
-  const reflejo = cuadro(formas, camara)
-  return (u, v) => {
-    const { y0, y1, z0, z1 } = PANTALLA
+  const distancias = []
+  const reflejo = cuadro(formas, camara, distancias)
+  const { y0, y1, z0, z1 } = PANTALLA
+  const reflejado = (u, v) => {
     const en = proyectar(camara, [PANTALLA.x, y0 + v * (y1 - y0), z0 + u * (z1 - z0)])
-    const color = en && reflejo[Math.floor(en[1])]?.[Math.floor(en[0])]
-    return color ? mezcla(NEGRO, color, 0.55) : NEGRO
+    const [x, y] = en ? en.map(Math.floor) : []
+    return en && distancias[y]?.[x] < Infinity ? mezcla(NEGRO, reflejo[y][x], 0.45) : NEGRO
   }
+  return (u, v) => porMonitor((quien, cu, cv) => (quien === 'radar' ? radar(t, cu, cv) : reflejado(u, v)))(u, v)
 }
 
 // ── Quién está y dónde ───────────────────────────────────────────────────
@@ -205,7 +214,7 @@ const ANTE_EL_REFLEJO = [[1.8, 1.55, -1.1], [PANTALLA.x, 1.3, 0.3], 56]
 const DE_CERCA = [[1.8, 1.45, -1.15], [PANTALLA.x, 1.25, 0.3], 44]
 const seRefleja = (camara, abre, apaga = 0) => (u, modo) => {
   const moby = mobyQuieto(u, abre(u))
-  const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara)
+  const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara, u)
   return reunion({ pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
 }
 // Antes de u = 0, con la pantalla aún prendida, da el paso desde donde miraba
@@ -223,7 +232,7 @@ const seAcercaYSeRefleja = (u, modo) => {
 // ── Las cámaras de la sala ───────────────────────────────────────────────
 
 // Desde la pantalla, de frente a quien está en `z`: muy cerca, con el campo abierto.
-export const DE_FRENTE = (z) => fija([3.88, 1.15, z], [FILA, 1.2, z], 86)
+export const DE_FRENTE = (z) => fija([3.88, 1.3, z], [FILA, 1.35, z], 86)
 
 export const TOMAS_3D = {
   // Desde atrás, los tres ante la pantalla.

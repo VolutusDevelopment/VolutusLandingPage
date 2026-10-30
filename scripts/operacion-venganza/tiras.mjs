@@ -91,9 +91,10 @@ export const png = (todos) => {
 // Un cuadro de ANCHO × ALTO: `formas` vistas desde `camara` ([ojo, mira, campo,
 // vertical]), con el campo abierto `abre` veces y el cielo del atardecer donde
 // no hay nada. Si viene `distancias`, se llena con la distancia a lo que se ve
-// en cada pixel.
-export const cuadro = (formas, [ojo, mira, campo, vertical], distancias, abre = ABRE) =>
-  rejilla(pixel3d(formas, { ojo, mira, campo: abrir(campo, abre), vertical, cielo, distancias, filas: ALTO }, ANCHO, 1, { c: [0, 0, 0], radio: 1 }), ANCHO, ALTO)
+// en cada pixel; `instante`, el número del cuadro en su tira, hace titilar el
+// chorro de los motores.
+export const cuadro = (formas, [ojo, mira, campo, vertical], distancias, abre = ABRE, instante) =>
+  rejilla(pixel3d(formas, { ojo, mira, campo: abrir(campo, abre), vertical, cielo, distancias, filas: ALTO, instante }, ANCHO, 1, { c: [0, 0, 0], radio: 1 }), ANCHO, ALTO)
 
 // Dónde cae `punto` en un cuadro de `camara`, como lo pinta pixel3d: [x, y]
 // en pixeles, o null si queda detrás de la cámara.
@@ -149,7 +150,7 @@ export const escribirTiras = (TOMAS, TOMAS_3D, rutaDeToma) => {
       const cuadros = Array.from({ length: cuadrosDe(toma) }, (_, k) => {
         const u = k / cuadrosDe(toma)
         const distancias = []
-        const celdas = cuadro(escena(u, modo), camara(u), distancias, abre)
+        const celdas = cuadro(escena(u, modo), camara(u), distancias, abre, k)
         encima?.(celdas, u, modo, distancias)
         return celdas
       })

@@ -5,6 +5,7 @@
 import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso, ambos, CAZA_DUKE, plegarAlas } from '../pilotos/modelos.mjs'
 import { TREN_HORNET } from '../escena9/cazas.mjs'
+import { BORDE, FLECHA } from '../../../src/lib/flecha.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -239,9 +240,10 @@ const radar = ([x, y, z], ancho, alto, giro) =>
 
 // El mástil, como el de un Nimitz: una columna enrejada que se angosta hacia
 // arriba, con tres crucetas anchas, cada una con su baranda y sus antenas,
-// domos en las puntas de la primera, una antena plana en la segunda y, en la
-// punta, la antena con su luz.
-const mastil = ([mx, mz]) => {
+// domos en las puntas de la primera, una antena plana en la segunda, que gira
+// al doble de los `giro` grados del radar grande, y, en la punta, la antena
+// con su luz.
+const mastil = ([mx, mz], giro) => {
   const pies = [[-2.5, -2], [-2.5, 2], [2.5, -2], [2.5, 2]].map(([dx, dz]) => [mx + dx, 52, mz + dz])
   const punta = [mx, 74, mz]
   const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
@@ -256,7 +258,7 @@ const mastil = ([mx, mz]) => {
     ...cruceta(64, 7),
     ...cruceta(69, 4.5),
     ...[-8.5, 8.5].map((dz) => el([mx, 59.2, mz + dz], [0.8, 0.8, 0.8], C.nube)),
-    ...radar([mx + 2.4, 66, mz], 4, 1.2, 0),
+    ...radar([mx + 2.4, 66, mz], 4, 1.2, 2 * giro),
     hueso(punta, [mx, 80, mz], 0.2, ISLA),
     el([mx, 80.2, mz], [0.35, 0.35, 0.35], C.boca, { flat: '#ff3a2a', brilla: true }),
   ]
@@ -265,9 +267,10 @@ const mastil = ([mx, mz]) => {
 // La isla, a estribor: el bloque con el 15 a los costados, el puente de mando
 // con sus ventanales y pasarelas, el control de vuelo y, encima, el mástil,
 // los domos de las antenas y las balizas de alarma. Detrás, en su propia
-// torre, el radar de búsqueda aérea gira `giro` grados. Va sobre un saliente
-// de la cubierta que un faldón une al casco, como en un Nimitz. Con `control`,
-// el control de vuelo, cerrado, cambia por esas formas (escena9/control.mjs).
+// torre, el radar de búsqueda aérea gira `giro` grados, y la antena del
+// mástil, el doble. Va sobre un saliente de la cubierta que un faldón une al
+// casco, como en un Nimitz. Con `control`, el control de vuelo, cerrado,
+// cambia por esas formas (escena9/control.mjs).
 const QUINCE = { alto: 8, x: -25 - ancho('15', 8) / 2, y: 25 }
 const isla = (alarma, giro, control) => [
   faldon([-56, 33], [-4, 33], 1),
@@ -280,7 +283,7 @@ const isla = (alarma, giro, control) => [
   caja(-43, -13, 9.5, 6, 41, 27, ISLA, { pinta: ventanales(39.6, 42.8, (x, z) => z < 22.6 || x > -13.6 || z > 31.4) }),
   pasarela(-39, -18, 23, 31, 44.3),
   ...(control ?? [caja(-37, -20, 6, 8, 48, 27, ISLA, { pinta: ventanales(46.4, 48.6) })]),
-  ...mastil([-28, 27]),
+  ...mastil([-28, 27], giro),
   el([-22, 54, 27], [2.2, 2.2, 2.2], C.nube),
   ...[23.8, 30.2].map((z) => el([-15.5, 45.3, z], [1.3, 1.3, 1.3], C.nube)),
   ...[[-36, 24], [-36, 30], [-21, 24]].map(([x, z]) => hueso([x, 52, z], [x - 1.2, 59, z + (z < 27 ? -1.2 : 1.2)], 0.07, ISLA)),
@@ -408,20 +411,26 @@ const ascensor = (k) => {
   ]
 }
 
-// `radar`: los grados que lleva girado el radar de la isla; `ascensor`: dónde
-// va la plataforma, de 0 (en el hangar) a 1 (en la cubierta); `control`, el
-// control de vuelo por dentro.
+// Lo que se mueve solo en el barco a lo largo de una tira, con u de 0 a 1: el
+// radar de la isla da una vuelta (la antena del mástil, dos), para que la tira
+// vuelva a empezar sin saltos.
+export const enMarcha = (u) => ({ radar: u * 360 })
+
+// `radar`: los grados que lleva girado el radar de la isla (enMarcha los da
+// para una tira); `ascensor`: dónde va la plataforma, de 0 (en el hangar) a 1
+// (en la cubierta); `control`, el control de vuelo por dentro.
 export const portaaviones = ({ alarma = -1, avion = true, radar = 0, ascensor: plataforma = 1, control } = {}) => [
   casco,
   ...cubierta,
   ...isla(alarma, radar, control),
   ...hangar(),
   ...ascensor(plataforma),
-  // La cubierta como la de un Nimitz: Growler en el Corral (delante de la isla), en las
-  // Rows a cada lado de las catapultas y en el Fantail; E-2D plegados en el Hummer Hole,
-  // junto a la isla, y tractores en el Junkyard. La pista, las catapultas y el Six Pack,
-  // donde paran los cazas del escuadrón, quedan libres.
-  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30], [128, 14, 30], [-6, 15, 30], [8, 15, 30], [22, 15, 30], [-154, 12, 30], [92, -15, -20], [110, -15, -20], [128, -15, -20]].flatMap(([x, z, g]) => jet(x, z, g)),
+  // La cubierta como la de un Nimitz: Growler en el Corral (delante de la isla), en la
+  // Row de estribor y en el Fantail; E-2D plegados en el Hummer Hole, junto a la isla, y
+  // tractores en el Junkyard. La pista, las catapultas y el Six Pack, donde paran los
+  // cazas del escuadrón, quedan libres: por babor de la catapulta pasan las alas del
+  // caza de duck-one cuando despega (escena 3).
+  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30], [128, 14, 30], [-6, 15, 30], [8, 15, 30], [22, 15, 30], [-154, 12, 30]].flatMap(([x, z, g]) => jet(x, z, g)),
   ...(avion ? poner(hawkeyeEnServicio(), 62, [30, 20.8, -24]) : []),
   ...[-50, -31].flatMap((x) => poner(hawkeye({ plegado: true }), 200, [x, 20.8, 13])),
   ...[[-62, 17, 80], [-68, 15, 120]].flatMap(([x, z, g]) => poner(tractor(), g, [x, 20.8, z])),
@@ -460,9 +469,6 @@ const fotoPato = (u, v, i) => {
   if (y < -0.24 && Math.abs(x) < 0.45 - (y + 0.24) * -0.4) return '#8a6a4a'
   return fondo
 }
-
-// El cursor de flecha, cuadro a cuadro: # borde, o relleno.
-export const FLECHA = ['#...........', '##..........', '#o#.........', '#oo#........', '#ooo#.......', '#oooo#......', '#ooooo#.....', '#oooooo#....', '#ooooooo#...', '#oooooooo#..', '#ooooo#####.', '#oo#oo#.....', '#o#.#oo#....', '##..#oo#....', '#....#oo#...', '.....#oo#...', '......##....']
 
 // La operación iniciada, en tres líneas al centro: su texto, su borde de abajo
 // y su color. Con 'operacion', «INICIADA» se apaga: alternadas, parpadea.
@@ -510,7 +516,7 @@ const pintaPantalla = (estado) => ([, y, z]) => {
     const i = Math.floor((cu + 0.3) / celda)
     const j = Math.floor((0.62 - cv) / celda)
     const c = FLECHA[j]?.[i]
-    return c === '#' ? '#0c0e12' : c === 'o' ? '#ffffff' : fondo
+    return c === 'X' ? BORDE : c === 'W' ? '#ffffff' : fondo
   }
   const r = Math.hypot(cu / 0.42, (cv + 0.02) / 0.58)
   if (r > 1) return fondo

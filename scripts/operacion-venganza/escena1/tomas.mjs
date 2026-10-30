@@ -7,7 +7,7 @@
 // atacante: 'cursor' o 'huella'.
 
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON, silaba, suave } from './personajes.mjs'
-import { MAR, NOMBRE, PANTALLA, portaaviones, destructor, navegando, poner, sala, colocar } from './lugares.mjs'
+import { MAR, NOMBRE, PANTALLA, enMarcha, portaaviones, destructor, navegando, poner, sala, colocar } from './lugares.mjs'
 import { DUKE, MOBY } from '../escena9/cazas.mjs'
 import { SUELO as SUELO_DUCK_ONE, caza as cazaDuckOne } from '../escena3/caza.mjs'
 import { ALAS_TOMCAT } from '../pilotos/modelos.mjs'
@@ -31,7 +31,7 @@ const ESTACIONADOS = [
   [DUKE.caza({ alas: 100 }), DUKE.suelo, -140],
 ].flatMap(([formas, suelo, x]) => poner(formas, 30, [x, 20.8 - suelo, 10]))
 // El Sitting Ducks con sus cazas, las alarmas y el radar, que da una vuelta por tira.
-const sittingDucks = (u) => [...portaaviones({ alarma: alarma(u), radar: u * 360 }), ...ESTACIONADOS]
+const sittingDucks = (u) => [...portaaviones({ alarma: alarma(u), ...enMarcha(u) }), ...ESTACIONADOS]
 
 // Lejos, a ras del agua: el mar vacío mientras se oyen los motores, y el
 // Sitting Ducks, una mancha en el horizonte, se viene acercando. Con la
@@ -164,7 +164,7 @@ export const TOMAS_3D = {
   pantalla: { escena: dentro('bajas', pregunta), camara: fija(SOBRE_EL_HOMBRO, [4, 1.55, 0.7], 58) },
   oficial: { escena: dentro('bajas', callado, gesto(OFICIAL, 'lee el informe')), camara: fija([0.3, 1.15, 0.05], [2.4, 1.05, 2.0], 44) },
   // Se quita las gafas y, con ellas en la mano, pregunta: desde su línea, a los 0,62.
-  gafas: { escena: dentro('bajas', (u) => gesto(ALMIRANTE, 'se quita las gafas')(u, { sentado: true, abrePico: u >= 0.62 ? silaba(u) * 0.8 : 0 })), camara: fija([0.9, 1.0, -0.3], [-0.55, 0.98, -0.6], 56) },
+  gafas: { escena: dentro('bajas', (u) => gesto(ALMIRANTE, 'se quita las gafas')(u, { sentado: true, abrePico: u >= 0.62 ? silaba(u) * 0.8 : 0 })), camara: fija([0.9, 1.0, -0.3], [-0.55, 1.05, -0.6], 60) },
   // El oficial, con el brazo arriba, contesta y anuncia la foto (antes de los
   // 0,23 y desde los 0,65, sus líneas); entremedio habla el almirante.
   caidos: {
@@ -172,7 +172,7 @@ export const TOMAS_3D = {
     camara: (u) => {
       const gira = tramo(u, 0.72, 0.97)
       const ojo = [1.6 - 0.7 * gira, 1.85 - 0.4 * gira, -1.7 + 3.25 * suave(u / 0.72)]
-      return [ojo, lerp([PANTALLA.x, 1.85, ojo[2]], [2.5, 0.95, 1.8], gira), 45]
+      return [ojo, lerp([PANTALLA.x, 1.85, ojo[2]], [2.5, 1.15, 1.8], gira), 45 + 7 * gira]
     },
   },
   atacante: { escena: dentro('modo', callado, gesto(OFICIAL, 'señala la pantalla')), camara: fija(SOBRE_EL_HOMBRO, [4, 1.7, 0.7], 54) },
@@ -188,5 +188,5 @@ export const TOMAS_3D = {
   },
   atardecer: { escena: dentro('modo', gesto(ALMIRANTE, 'mira el atardecer'), OFICIAL.quieto, ALM_VENTANA), camara: fija([1.4, 1.0, 1.9], [-0.1, 1.55, 5], 48) },
   cuatro: { escena: dentro('modo', gesto(ALMIRANTE, 'da la orden'), OFICIAL.quieto, ALM_VENTANA), camara: fija([-3.5, 1.4, 0.2], [1.4, 1.1, 3.2], 62) },
-  silencio: { escena: dentro('modo', gesto(ALMIRANTE, 'mira el atardecer'), gesto(OFICIAL, 'se queda callado'), ALM_VENTANA), camara: fija([1.2, 1.1, 0.9], [2.4, 1.05, 2.0], 52) },
+  silencio: { escena: dentro('modo', gesto(ALMIRANTE, 'mira el atardecer'), gesto(OFICIAL, 'se queda callado'), ALM_VENTANA), camara: fija([1.2, 1.1, 0.9], [2.4, 1.12, 2.0], 58) },
 }

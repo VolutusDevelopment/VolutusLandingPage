@@ -39,8 +39,8 @@ export const TOMAS = [
   { id: 'reunion', ms: 150, segunModo: true, lineas: [{ quien: ALMIRANTE, texto: 'Caballeros, gracias por asistir a esta reunión de extrema urgencia.' }] },
   { id: 'lagartijas', ms: 150, lineas: [{ quien: MOBY, texto: 'Estaba haciendo lagartijas a una sola mano.' }] },
   { id: 'sesion', ms: 150, lineas: [{ quien: DUKE, texto: 'A mí me interrumpieron una sesión fotográfica.' }] },
-  // Las tres fotos, una tras otra, y a la toma siguiente.
-  { id: 'fotos', ms: 1500, cuadros: 3, unaVez: true, lineas: [{ texto: 'Duke muestra las fotos de su sesión.' }] },
+  // Las tres fotos caen de a una sobre la mesa y quedan apiladas.
+  { id: 'fotos', ms: 150, cuadros: 30, unaVez: true, lineas: [{ texto: 'Duke muestra las fotos de su sesión.' }] },
   {
     id: 'autobiografias',
     ms: 150,

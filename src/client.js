@@ -317,13 +317,12 @@ function empezarSolo(boton, alternar) {
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
-// Operación Venganza baja su código solo en su página: en la de un nivel, el
-// combate; en las demás, las escenas. El índice no baja nada.
+// Operación Venganza baja su código solo en sus páginas; el combate lo baja
+// el juego mientras carga. El índice no baja nada.
 function initOperacionVenganza() {
   const raiz = document.querySelector('.venganza')
   if (!raiz || 'indice' in raiz.dataset) return
-  const juego = 'nivel' in raiz.dataset ? import('./combate.js') : import('./operacion-venganza.js')
-  juego.then((modulo) => modulo.default(raiz))
+  import('./operacion-venganza.js').then((modulo) => modulo.default(raiz))
 }
 
 // Cada parte arranca por su cuenta: si una falla en algún navegador, las demás

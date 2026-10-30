@@ -43,10 +43,11 @@
 }
 
 /* ---- La carga ----
-   duck-one de tres cuartos: la tira de ocho pasos (lib/escena1.js, `CARGA`)
-   corre de a un cuadro, sin suavizar. En la página de cada pantalla de carga
-   (lib/cargas.js) la tira llega en `--tira`; la de Duky es un solo cuadro. La barra se llena de a bloques de
-   20 px: 12 en teléfono, 18 desde L; `--llenos` lo pone el JS. */
+   Un personaje de tres cuartos: su tira de ocho pasos (lib/cargas.js), que
+   llega en `--tira`, corre de a un cuadro, sin suavizar; la de Duky es un
+   solo cuadro. En las escenas están todos, escondidos en una caja de su
+   tamaño, y el JS muestra uno. La barra se llena de a bloques de 20 px: 12 en
+   teléfono, 18 desde L; `--llenos` lo pone el JS. */
 .carga {
   --lado: 288px;
   --bloques: 12;
@@ -67,9 +68,18 @@
   position: relative;
   width: var(--lado);
   height: var(--lado);
-  background: var(--tira, url('/operacion-venganza/carga.png')) 0 0 / calc(var(--lado) * 8) var(--lado) no-repeat;
+  background: var(--tira) 0 0 / calc(var(--lado) * 8) var(--lado) no-repeat;
   image-rendering: pixelated;
   animation: carga-pasos 0.8s steps(8) infinite;
+}
+
+.carga-pato[hidden] {
+  display: none;
+}
+
+.carga-caminantes {
+  width: var(--lado);
+  height: var(--lado);
 }
 
 @keyframes carga-pasos {
@@ -211,7 +221,8 @@
    Como en el cine: el cuadro en 21:9 al medio, entre dos bandas negras de al
    menos `--banda` de alto. Abajo van los subtítulos, con su alto fijo: el texto
    cambia y nada se mueve. Arriba, en los extremos de la pantalla, «Saltar
-   escena» y «Siguiente», o los dos finales de la escena 16. */
+   escena» y «Siguiente». Los dos finales de la escena 16 son un menú de
+   juego sobre el cuadro. */
 .venganza {
   --banda: calc(7.5rem + 2 * var(--e-4));
 }
@@ -293,7 +304,7 @@
   margin: 0;
 }
 
-/* «Siguiente» y los finales de la escena 16 se turnan. */
+/* Mientras se elige el final, no están. */
 .escena-mandos[hidden] {
   display: none;
 }
@@ -312,18 +323,65 @@
   right: max(var(--e-4), env(safe-area-inset-right));
 }
 
-/* En el teléfono no caben en una fila: el segundo final baja, y sigue a la derecha. */
+/* Los finales: una caja de borde blanco, como el diálogo de los niveles,
+   al medio del cuadro. La opción bajo el ratón o con el foco se marca con
+   la flecha y en amarillo. */
 .escena-eleccion {
-  grid-row: 1;
-  align-self: start;
-  justify-content: space-between;
-  width: 100%;
-  max-width: none;
-  padding: max(var(--e-4), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) 0 max(var(--e-4), env(safe-area-inset-left));
+  grid-row: 2;
+  align-self: center;
+  display: grid;
+  max-width: calc(100% - 2 * var(--e-4));
+  padding: var(--e-1) var(--e-2);
+  border: 3px solid #ffffff;
+  background: #0a1a2a;
 }
 
-.escena-eleccion > :last-child {
-  margin-left: auto;
+.escena-eleccion[hidden] {
+  display: none;
+}
+
+.escena-opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  min-height: 44px;
+  padding: 0 var(--e-3) 0 var(--e-1);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.escena-opcion::before {
+  content: '▸';
+  visibility: hidden;
+}
+
+.escena-opcion:hover,
+.escena-opcion:focus-visible {
+  outline: none;
+  color: #f2c440;
+}
+
+.escena-opcion:hover::before,
+.escena-opcion:focus-visible::before {
+  visibility: visible;
+}
+
+@media (min-width: 1024px) {
+  .escena-eleccion {
+    padding: var(--e-2) var(--e-3);
+  }
+
+  .escena-opcion {
+    font-size: var(--texto-base);
+  }
 }
 
 .escena-boton {
@@ -463,14 +521,19 @@
 }
 
 /* ---- El nivel ----
-   El cielo del combate ocupa la vista entera: el lienzo va dentro de la
-   página y no fijo, como todo aquí, y lo demás flota encima. La portada y los
-   paneles quedan al centro; arriba, el nivel y la pausa; abajo, los PV y el
-   diálogo, en una caja de borde blanco de alto fijo. Mientras se juega no
+   Cada nivel es una sección de la página, que se turna con la de las
+   escenas. El cielo del combate ocupa la vista entera: el lienzo va dentro de
+   la sección y no fijo, como todo aquí, y lo demás flota encima. La portada y
+   los paneles quedan al centro; arriba, el nivel y la pausa; abajo, los PV y
+   el diálogo, en una caja de borde blanco de alto fijo. Mientras se juega no
    hay cursor del sistema en ninguna parte: el cursor es el personaje. */
 .nivel {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  width: 100%;
   height: 100svh;
-  min-height: 0;
   padding: max(var(--e-4), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) max(var(--e-4), env(safe-area-inset-bottom))
     max(var(--e-4), env(safe-area-inset-left));
   color: #ffffff;

@@ -2,8 +2,8 @@
  * Operación Venganza, nivel 2: «La rabia y la belleza», después de la escena 6.
  * Moby-Duck sale solo, furioso, y tras dos vistas llega Duke SkyDucker. Tiene
  * la forma de lib/nivel1.js. Moby grita en mayúsculas y dispara el cañón del
- * A-10 como una manguera, con humo negro; Duke posa y dispara flores de
- * estrellas que giran.
+ * A-10 como una manguera; Duke posa y dispara flores de estrellas que
+ * giran.
  */
 
 import { embestida, enCirculo } from './maniobras.js'
@@ -11,7 +11,7 @@ import { embestida, enCirculo } from './maniobras.js'
 const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
-export const CAZAS = { moby: { hoja: 'moby', humo: true }, duke: { hoja: 'duke', destellos: true } }
+export const CAZAS = { moby: { hoja: 'moby' }, duke: { hoja: 'duke', destellos: true } }
 
 export const LEMA = '«La rabia y la belleza».'
 export const INTRO = 'Moby-Duck sale primero, furioso y solo. Duke SkyDucker llega después, cuando hay buena luz.'

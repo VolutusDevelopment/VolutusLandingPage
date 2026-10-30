@@ -23,7 +23,7 @@ import { duckOne, sentar } from '../escena2/patoon.mjs'
 import { ASIENTOS, fase, giroHacia, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
-import { ASIENTO, BISEL, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
+import { ASIENTO, BISEL, CANONES, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
 import { enemigo } from '../escena13/visor.mjs'
 import { EN_CABINA, aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 import { aLoLejos, municion } from './visor.mjs'
@@ -101,11 +101,11 @@ const QUIETO = blanco(1)
 const NERVIOSO = blanco(2)
 const SIN_DESCANSO = blanco(4)
 
-// Cada tiro sale de un cañón hacia `destino`, el lugar al que apuntó, y sigue
-// de largo: quien juega ya se movió. Tarda `VIAJE` en llegar. Como en la
-// escena 13, cerca avanza más rápido y tiene un par de pixeles de grueso con
-// cualquier `campo`. Al salir, un fogonazo en la boca del cañón.
-const CANONES = [[6, 0.2, 2.2], [6, 0.2, -2.2]]
+// Cada tiro sale de un cañón (los de la escena 13) hacia `destino`, el lugar
+// al que apuntó, y sigue de largo: quien juega ya se movió. Tarda `VIAJE` en
+// llegar. Como en la escena 13, cerca avanza más rápido y tiene un par de
+// pixeles de grueso con cualquier `campo`. Al salir, un fogonazo en la boca
+// del cañón.
 const VIAJE = 0.25
 const trazadora = (canon, destino, s, [ojo, , campo]) => {
   const [a, b] = [lerp(canon, destino, s ** 2), lerp(canon, destino, (s + 0.18) ** 2)]
@@ -114,18 +114,18 @@ const trazadora = (canon, destino, s, [ojo, , campo]) => {
 }
 const fogonazo = (canon) => el(canon, [0.5, 0.35, 0.35], C.blanco, { flat: '#fff1a8', brilla: true })
 
-// Una ráfaga: `tiros` por vuelta, que se turnan los cañones, y `desvio(k, t)`,
+// Una ráfaga: `tiros` por vuelta, que se turnan los `canones`, y `desvio(k, t)`,
 // lo que el tiro k, disparado en el instante t, se aparta de quien juega, en
 // metros (y, z). Solo los que salen antes de `hasta` en cada vuelta, y los
 // disparados desde `desde`.
-const rafaga = ({ tiros, objetivo, desvio, hasta = 1, desde = -Infinity }) => (u, T, camara) =>
+const rafaga = ({ tiros, objetivo, desvio, hasta = 1, desde = -Infinity, canones = CANONES }) => (u, T, camara) =>
   Array.from({ length: tiros }, (_, k) => {
     const sale = k / tiros
     if (sale >= hasta) return []
     const vuela = ciclo(u - sale)
     const s = vuela / VIAJE
     if (s > 1.6 || u - vuela < desde) return []
-    const canon = T.punto(CANONES[k % 2])
+    const canon = T.punto(canones[k % canones.length])
     const destino = sum(objetivo(sale), [0, ...desvio(k, u - vuela)])
     return [trazadora(canon, destino, s, camara), ...(s < 0.15 ? [fogonazo(canon)] : [])]
   }).flat()
@@ -201,7 +201,13 @@ const ATAQUE = {
   ),
   // A su lado, dando un tonel mientras la lluvia sale hacia adelante.
   costado: afuera({ maniobra: TONEL, objetivo: NERVIOSO, dispara: RAFAGAS.lluvia, camara: fija(sum(ALTURA, [-1, 3, -18]), sum(ALTURA, [2, 4, 0]), 60) }),
-  secuencia: alargar(cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, municiones: [400, 60] }), 0, 25 / 24),
+  // De tres cuartos, el cañón de estribor queda detrás de duky, y sus tiros le
+  // saldrían de la cara: dispara solo el de babor.
+  secuencia: alargar(
+    cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: rafaga({ tiros: 36, objetivo: SIN_DESCANSO, desvio: () => [0, 0], canones: [CANONES[1]] }), municiones: [400, 60] }),
+    0,
+    25 / 24,
+  ),
   // Por detrás y arriba, siguiendo los tiros hasta quien juega.
   cola: alargar(afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46) }), -6 / 24, 1),
   cero: cabina({ maniobra: virajes(20), dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: estrella(3, 10), hasta: 0.3 }), municiones: [60, -140] }),
@@ -364,8 +370,8 @@ export const TOMAS_3D = {
 
   // De tres cuartos, desde el lado de los sillones: recoge el gorro.
   gorro: enLaSala(sala((u) => ({ duckOne: duckOneVaAlVentanal(u) })), (u) => [[-1.8, 1.9, 1.6], sum(duckOneVaAlVentanal(u)[1].en, [0, 0.75, 0]), 76]),
-  circulos: enLaSala(sala(juntos(EN_EL_VENTANAL, dukeDaVueltas)), fija([-0.6, 1.7, -2.4], [FILA, 0.8, -2.4], 46)),
-  lagrimas: enLaSala(sala(juntos(EN_EL_VENTANAL, dukeDaVueltas, mobySeSienta), giraElSillon), (u) => [[1.5, 2.0, 2.7], sum(mobySeSienta(u).moby[1].en, [0, 0.6, 0]), 62]),
+  circulos: enLaSala(sala(juntos(EN_EL_VENTANAL, dukeDaVueltas)), fija([-0.6, 1.7, -2.4], [FILA, 0.9, -2.4], 54)),
+  lagrimas: enLaSala(sala(juntos(EN_EL_VENTANAL, dukeDaVueltas, mobySeSienta), giraElSillon), (u) => [[1.5, 2.2, 2.7], sum(mobySeSienta(u).moby[1].en, [0, 0.6, 0]), 72]),
   // Desde la esquina de arriba, entre la puerta y las consolas: los tres,
   // cada uno a lo suyo, y quien juega por el ventanal.
   sala: enLaSala(sala(juntos(EN_EL_VENTANAL, dukeDaVueltas, SENTADO), SILLON_GIRADO), fija([-3.7, 2.85, -4.4], [1.0, 0.4, 1.0], 72)),
