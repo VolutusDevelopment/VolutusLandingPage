@@ -1,9 +1,11 @@
 /**
  * Operación Venganza, nivel 2: «La rabia y la belleza», después de la escena 6.
- * Moby-Duck sale solo, furioso, y tras dos vistas llega Duke SkyDucker. Tiene
- * la forma de lib/nivel1.js. Moby grita en mayúsculas y dispara el cañón del
- * A-10 como una manguera; Duke posa y dispara flores de estrellas que
- * giran.
+ * Moby-Duck sale solo, furioso, y tras tres vistas llega Duke SkyDucker. Tiene
+ * la forma de lib/nivel1.js. Moby grita en mayúsculas y dispara como un A-10
+ * de verdad: el cañón de siete tubos como una manguera, a veces sin soltar
+ * el gatillo, y cohetes sin guía, que salen derechos. Duke posa y dispara
+ * flores de estrellas que giran. Como hablan los dos, cada uno lo hace desde
+ * su esquina (`LADOS`).
  */
 
 import { embestida, enCirculo } from './maniobras.js'
@@ -12,9 +14,24 @@ const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
 export const CAZAS = { moby: { hoja: 'moby' }, duke: { hoja: 'duke', destellos: true } }
+export const LADOS = { [MOBY]: 'izquierda', [DUKE]: 'derecha' }
 
+export const FICHAS = [
+  {
+    quien: MOBY,
+    papel: 'La fuerza bruta',
+    caza: 'A-10 Thunderbolt II',
+    personalidad: 'Puro humeando y pañuelo rojo al viento. Habla a los gritos y, si llora, es el humo.',
+  },
+  {
+    quien: DUKE,
+    papel: 'El rostro del escuadrón',
+    caza: 'F/A-18C Hornet',
+    personalidad: 'Copete rubio y uniforme blanco de gala. Se peina entre destellos: vuela para la foto.',
+  },
+]
 export const LEMA = '«La rabia y la belleza».'
-export const INTRO = 'Moby-Duck sale primero, furioso y solo. Duke SkyDucker llega después, cuando hay buena luz.'
+export const INTRO = 'Moby sale primero, solo, con su cañón y sus cohetes. Duke llega cuando hay buena luz.'
 export const TRIUNFO = '¡JAJAJAJAJA! ¡ESO ES UN VERDADERO MONSTRUO!'
 
 // El cañón de Moby: ráfagas de `dura` s cada `ciclo` s, un chorro de balas
@@ -29,6 +46,13 @@ function chorro(c, t, s, j, { ciclo = 2.2, dura = 1.2, cadencia = 0.09, sigue = 
   s.mira += Math.max(-sigue * dt, Math.min(sigue * dt, d))
   if (t % ciclo < dura && j.cada(s, 'bala', cadencia, t)) c.abanico(1, 0, rapidez, s.mira, { forma: 'gruesa' })
 }
+
+// Un cohete sin guía: sale hacia donde está quien juega, apenas abierto, y no dobla.
+const cohete = (c) => c.misil({ guia: 0, abre: 0.16, rapidez: 125 })
+
+// Una rueda alrededor del blanco, como la de un A-10 antes de cada pasada: a
+// 170 m de la cámara de «Cañón», delante y arriba, ladeado hacia dentro.
+const rueda = (ang) => [120 + 80 * Math.cos(ang), 80 + 10 * Math.sin(2 * ang), -85 + 80 * Math.sin(ang)]
 
 // Fuego que camina: 7 tiros que caen en fila, uno tras otro, desde un costado
 // de quien juega hasta pasarlo. Se esquiva saliéndose de la fila.
@@ -82,11 +106,39 @@ export const VISTAS = [
     mover(t, s, j) {
       s.n = j.cazas.moby.pasada(t, 3.6, 0.68, j.h * (0.22 + 0.05 * Math.sin(1.6 * t)), 100)
     },
+    // Cerca, ráfagas de cañón; lejos, salvas de cuatro cohetes.
     disparar(t, s, j) {
       const c = j.cazas.moby
       if (!c.enPantalla(j.w * 0.05)) return
       if (s.n % 2 === 0) chorro(c, t, s, j)
-      else if (j.cada(s, 'bomba', 0.32, t)) j.disparo(c.sx, c.sy, c.svx * 0.3, 6, { ay: 30, forma: 'gruesa' })
+      else if (t % 1.8 < 0.5 && j.cada(s, 'cohete', 0.13, t)) cohete(c)
+    },
+  },
+  {
+    nombre: 'Cañón',
+    camara: { yaw: -35, pitch: 28, roll: 6 },
+    cazas: ['moby'],
+    avance: 0,
+    fondo: 0,
+    dur: 16,
+    lineas: [
+      { texto: 'Moby da vueltas en rueda, aprieta el gatillo del cañón y no lo suelta.' },
+      { quien: MOBY, texto: '¡SIETE CAÑONES! ¡TREINTA MILÍMETROS! ¡QUÉDATE QUIETO!' },
+      { quien: DUKE, texto: 'Qué ruido más vulgar.' },
+    ],
+    presenta: (j) => j.cazas.moby.ir(j.w * 0.6, j.h * 0.3, 170, 2),
+    mover(t, s, j) {
+      j.cazas.moby.enMundo(rueda(0.55 * t), 5)
+    },
+    // Fuego continuo 4 s, que sigue a quien juega sin alcanzarlo si no se
+    // detiene: hay que darle la vuelta. Mientras el cañón se enfría, tres cohetes.
+    disparar(t, s, j) {
+      const c = j.cazas.moby
+      const fase = (t + 1) % 5.5
+      if (fase < 4) {
+        chorro(c, t, s, j, { ciclo: 5.5, dura: 5.5, cadencia: 0.035, sigue: 0.8, rapidez: 105 })
+        j.sacudir(0.25)
+      } else if (fase > 4.4 && j.cada(s, 'cohete', 0.3, t)) cohete(c)
     },
   },
   {

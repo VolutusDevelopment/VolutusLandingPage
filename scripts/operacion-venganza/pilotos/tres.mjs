@@ -47,7 +47,8 @@ export const transformar = (rot, pivote = [0, 0, 0], mas = [0, 0, 0]) => {
 // ver lo que hay detrás; o.dentro, de 0 a 1, es cuánto lo tiñe visto por una
 // cámara que está dentro (una cúpula polarizada, desde la cabina; sin él, desde
 // dentro no se ve, y el cielo no se ve a través); o.pinta(p) devuelve una
-// rampa, un color o null; o.hueco(p), true donde no hay nada.
+// rampa, un color o null (recibe también la normal y el ojo de la cámara);
+// o.hueco(p), true donde no hay nada.
 export const el = (c, r, rampa, o = {}) => ({ k: 'e', c, r, M: rotacion(o.rot), rampa, ...o })
 
 const malla = (tris, rampa, o) => {
@@ -234,7 +235,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
       golpes.sort((a, b) => a.t - b.t)
       const color = (g) => {
         const p = sum(o, esc(d, g.t))
-        const pintado = g.fig.pinta?.(p, g.n)
+        const pintado = g.fig.pinta?.(p, g.n, o)
         const nc = mv(M, g.n)
         const nCam = [pto(nc, derecha), pto(nc, arriba), pto(nc, dir)]
         const rampa = Array.isArray(pintado) ? pintado : g.fig.rampa

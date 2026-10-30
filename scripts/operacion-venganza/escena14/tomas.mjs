@@ -5,7 +5,8 @@
 // en visor.mjs.
 //
 // Duky tira todo lo que tiene y no le da a quien juega: cada ráfaga va a donde
-// estaba, y quien juega ya no está. Las cámaras van dentro de la cabina, como
+// estaba, y quien juega ya no está. En la lluvia gasta además los doce
+// misiles y el arma prototipo, los racimos violeta del juego. Las cámaras van dentro de la cabina, como
 // en las láminas v15 (pilotos/cabinas.mjs), y el caza alabea y cabecea de
 // verdad. Sin balas, duky chilla como el pato de hule que es, vuelve al
 // portaaviones en una S partida y se calma: primero exhala y después inhala.
@@ -22,14 +23,17 @@ import { silaba, suave } from '../escena1/personajes.mjs'
 import { duckOne, sentar } from '../escena2/patoon.mjs'
 import { ASIENTOS, fase, giroHacia, girar, recorrido, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
-import { enCabina } from '../escena11/hangar.mjs'
-import { ASIENTO, BISEL, CANONES, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
+import { MISILES, enCabina, misil } from '../escena11/hangar.mjs'
+import { ASIENTO, BISEL, CANONES, DE_FRENTE, DONDE, FILA, LILA, MONITORES, VIOLETA, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
 import { enemigo } from '../escena13/visor.mjs'
 import { EN_CABINA, aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 import { aLoLejos, municion } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
+const esc = (a, k) => a.map((v) => v * k)
+const uni = (a) => esc(a, 1 / Math.hypot(...a))
+const aGrados = (r) => (r * 180) / Math.PI
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const entre = (a, b, k) => a + (b - a) * k
 const tramo = (u, a, b) => suave((u - a) / (b - a))
@@ -60,8 +64,9 @@ const aplastar = (formas, escala, pivote) => {
 // Desinflado en `k` (0, como siempre; 1, la mitad de alto y más ancho), sentado.
 const desinflado = (formas, k) => aplastar(formas, [1 + 0.3 * k, 1 - 0.5 * k, 1 + 0.3 * k], ASIENTO)
 
-// Sin `armas` después del ataque: las gastó todas contra quien juega.
-const enElCaza = (piloto, armas = true) => conDuky({ motor: true, tren: false, armas }, piloto).filter((f) => !f.vidrio)
+// Sin `armas` después del ataque: las gastó todas contra quien juega. Antes,
+// sin los misiles ya `disparados`.
+const enElCaza = (piloto, armas = true, disparados = 0) => conDuky({ motor: true, tren: false, armas, disparados }, piloto).filter((f) => !f.vidrio)
 // Mientras tiene balas, va feliz como en la escena 13.
 const feliz = (u) => dukyFeliz(u, 6)
 const DE_HULE = conDuky({ motor: true, tren: false, armas: false }, dukyFigura({}))
@@ -107,12 +112,13 @@ const SIN_DESCANSO = blanco(4)
 // pixeles de grueso con cualquier `campo`. Al salir, un fogonazo en la boca
 // del cañón.
 const VIAJE = 0.25
+// El grosor que se ve de un par de pixeles en `p`, desde `ojo` y con `campo`.
+const grueso = (p, ojo, campo) => (0.02 + 0.02 * Math.hypot(...res(p, ojo))) * (Math.tan((campo * Math.PI) / 360) / Math.tan(Math.PI / 4.5))
 const trazadora = (canon, destino, s, [ojo, , campo]) => {
   const [a, b] = [lerp(canon, destino, s ** 2), lerp(canon, destino, (s + 0.18) ** 2)]
-  const grosor = (0.02 + 0.02 * Math.hypot(...res(a, ojo))) * (Math.tan((campo * Math.PI) / 360) / Math.tan(Math.PI / 4.5))
-  return M.hueso(a, b, grosor, C.boca, { flat: '#ff3a2a', brilla: true })
+  return M.hueso(a, b, grueso(a, ojo, campo), C.boca, { flat: VIOLETA, brilla: true })
 }
-const fogonazo = (canon) => el(canon, [0.5, 0.35, 0.35], C.blanco, { flat: '#fff1a8', brilla: true })
+const fogonazo = (canon) => el(canon, [0.5, 0.35, 0.35], C.blanco, { flat: LILA, brilla: true })
 
 // Una ráfaga: `tiros` por vuelta, que se turnan los `canones`, y `desvio(k, t)`,
 // lo que el tiro k, disparado en el instante t, se aparta de quien juega, en
@@ -145,6 +151,69 @@ const RAFAGAS = {
   secuencia: rafaga({ tiros: 36, objetivo: SIN_DESCANSO, desvio: () => [0, 0] }),
 }
 
+// ── El derroche ──────────────────────────────────────────────────────────
+
+// Un misil que dejó su riel en `desde` hace `t` s, hacia `destino`, y sigue de
+// largo: acelera con la llama encendida y suelta humo, que el `aire` (m/s,
+// lo que corren las nubes) se lleva hacia atrás y se deshace.
+const misilEnVuelo = (desde, destino, t, aire) => {
+  const dir = uni(res(destino, desde))
+  const donde = (s) => sum(desde, esc(dir, 20 * s + 300 * s * s))
+  const cuerpo = transformar([0, aGrados(Math.atan2(-dir[2], dir[0])), aGrados(Math.asin(dir[1]))], [0, 0, 0], donde(t)).formas([
+    ...misil([0, 0, 0, 1.2]),
+    el([-1.45, 0, 0], [0.3, 0.1, 0.1], C.naranja, { flat: '#ffd59a', brilla: true }),
+  ])
+  const humo = [1, 2, 3, 4, 5, 6].map((j) => j * 0.04).filter((a) => a <= t)
+  return [...cuerpo, ...humo.map((a) => el(sum(donde(t - a), [-aire * a, 0, 0]), esc([1, 1, 1], 0.15 + 1.2 * a), C.humo))]
+}
+
+// Una toma del derroche: su `maniobra`, su `objetivo`, los `segundos` que
+// dura una vuelta, cuándo sale cada par de misiles (`salvas`, en segundos;
+// `antes`, los pares que salieron en tomas de antes) y cada `racimo`.
+const DERROCHE = {
+  lluvia: { maniobra: virajes(70, 2), objetivo: NERVIOSO, segundos: 3, salvas: [0.2, 0.7, 1.2, 1.7], antes: 0, racimos: [0.9, 2.1] },
+  costado: { maniobra: TONEL, objetivo: NERVIOSO, segundos: 1.26, salvas: [0.1, 0.4], antes: 4, racimos: [] },
+}
+const TODOS = () => MISILES.length
+const disparados = ({ segundos, salvas, antes }) => (u) => 2 * (antes + salvas.filter((sale) => sale <= u * segundos).length)
+const misiles = ({ maniobra, objetivo, segundos, salvas, antes }) => (u) =>
+  salvas.flatMap((sale, i) => {
+    const t = u * segundos - sale
+    if (t < 0 || t > 0.9) return []
+    const T = enManiobra(maniobra(sale / segundos))
+    return [0, 1].flatMap((lado) => misilEnVuelo(T.punto(MISILES[2 * (antes + i) + lado].slice(0, 3)), objetivo(sale / segundos), t, 600 / segundos))
+  })
+
+// El arma prototipo: un racimo, como en el juego (combate.js). Una bola de luz
+// violeta, que parpadea en blanco, sale del morro hacia donde estaba quien
+// juega, frena y a los `REVIENTA` s revienta en un anillo de `PUNTAS` tiros
+// que se abre, con un destello lila. Todo de un par de pixeles a lo menos.
+const MORRO = [9.7, 0, 0]
+const REVIENTA = 0.45
+const PUNTAS = 12
+const racimo = (desde, destino, t, [ojo, , campo]) => {
+  const dir = uni(res(destino, desde))
+  const centro = sum(desde, esc(dir, 90 * (1 - (1 - Math.min(1, t / REVIENTA)) ** 2)))
+  const g = grueso(centro, ojo, campo)
+  if (t < REVIENTA) return [el(centro, esc([1, 1, 1], 1.6 * g), C.blanco, { flat: Math.floor(t * 10) % 2 ? '#ffffff' : VIOLETA, brilla: true })]
+  const a = t - REVIENTA
+  const lado = uni([-dir[2], 0, dir[0]])
+  const alto = [dir[1] * lado[2], dir[2] * lado[0] - dir[0] * lado[2], -dir[1] * lado[0]]
+  const tiros = Array.from({ length: PUNTAS }, (_, i) => {
+    const ang = (i / PUNTAS) * Math.PI * 2
+    const sale = sum(esc(lado, Math.cos(ang)), esc(alto, Math.sin(ang)))
+    const p = sum(centro, sum(esc(sale, 4 + 45 * a), esc(dir, 15 * a)))
+    return M.hueso(p, sum(p, esc(sale, 3)), grueso(p, ojo, campo), C.boca, { flat: VIOLETA, brilla: true })
+  })
+  return [...tiros, ...(a < 0.12 ? [el(centro, esc([1, 1, 1], 5 * g), C.blanco, { flat: LILA, brilla: true })] : [])]
+}
+const racimos = ({ maniobra, objetivo, segundos, racimos: cuando }) => (u, T, camara) =>
+  cuando.flatMap((sale) => {
+    const t = u * segundos - sale
+    return t < 0 || t > REVIENTA + 0.6 ? [] : racimo(enManiobra(maniobra(sale / segundos)).punto(MORRO), objetivo(sale / segundos), t, camara)
+  })
+const derrocha = (cual, balas) => (u, T, camara) => [...balas(u, T, camara), ...misiles(DERROCHE[cual])(u), ...racimos(DERROCHE[cual])(u, T, camara)]
+
 // Quien juega donde lo vea `camara`, tapado por lo que tenga delante.
 const marcar = (camara, objetivo, abre) => (celdas, u, modo, distancias) => {
   const c = camara(u)
@@ -155,14 +224,14 @@ const marcar = (camara, objetivo, abre) => (celdas, u, modo, distancias) => {
 
 // Desde la cabina: la maniobra, la ráfaga, quien juega, las balas que
 // quedan, de `municiones[0]` (en u = `empieza`) a `municiones[1]` (en u = 1),
-// y el `piloto` en el instante u.
-const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], empieza = 0, piloto = feliz }) => {
+// el `piloto` en el instante u y los misiles que ya `disparo`.
+const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], empieza = 0, piloto = feliz, disparo = () => 0 }) => {
   const cam = aBordo(maniobra, CAMARAS[camara])
   return {
     abre: EN_CABINA,
     escena: (u) => {
       const T = enManiobra(maniobra(u))
-      return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u))), ...(dispara ? dispara(u, T, cam(u)) : [])]
+      return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u), true, disparo(u))), ...(dispara ? dispara(u, T, cam(u)) : [])]
     },
     camara: cam,
     encima: (celdas, u, modo, distancias) => {
@@ -174,10 +243,10 @@ const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dis
 
 // Desde afuera: el caza entero y, si hay `objetivo`, quien juega (sin él,
 // quien juega es la cámara).
-const afuera = ({ maniobra, objetivo, dispara, camara }) => ({
+const afuera = ({ maniobra, objetivo, dispara, camara, disparo = () => 0 }) => ({
   escena: (u) => {
     const T = enManiobra(maniobra(u))
-    return [MAR, ...nubes(u), ...T.formas(conDuky({ motor: true, tren: false }, feliz(u))), ...dispara(u, T, camara(u))]
+    return [MAR, ...nubes(u), ...T.formas(conDuky({ motor: true, tren: false, disparados: disparo(u) }, feliz(u))), ...dispara(u, T, camara(u))]
   },
   camara,
   encima: objetivo && marcar(camara, objetivo),
@@ -194,25 +263,35 @@ const ATAQUE = {
   ),
   // Desde donde está quien juega: el caza le viene de frente, disparándole.
   frente: afuera({ maniobra: virajes(30), dispara: RAFAGAS.patrones, camara: (u) => [QUIETO(u), sum(ALTURA, [0, 1, 0]), 11] }),
+  // Con las balas, los misiles de a pares y los racimos.
   lluvia: alargar(
-    cabina({ maniobra: virajes(70, 2), camara: 'hombro', objetivo: NERVIOSO, dispara: rafaga({ tiros: 48, objetivo: NERVIOSO, desvio: espiral, desde: -4 / 30 }), municiones: [720, 400], empieza: -4 / 30 }),
+    cabina({
+      maniobra: DERROCHE.lluvia.maniobra,
+      camara: 'hombro',
+      objetivo: NERVIOSO,
+      dispara: derrocha('lluvia', rafaga({ tiros: 48, objetivo: NERVIOSO, desvio: espiral, desde: -4 / 30 })),
+      municiones: [720, 400],
+      empieza: -4 / 30,
+      disparo: disparados(DERROCHE.lluvia),
+    }),
     -4 / 30,
     1,
   ),
-  // A su lado, dando un tonel mientras la lluvia sale hacia adelante.
-  costado: afuera({ maniobra: TONEL, objetivo: NERVIOSO, dispara: RAFAGAS.lluvia, camara: fija(sum(ALTURA, [-1, 3, -18]), sum(ALTURA, [2, 4, 0]), 60) }),
+  // A su lado, dando un tonel mientras la lluvia sale hacia adelante y se le
+  // van los últimos misiles.
+  costado: afuera({ maniobra: DERROCHE.costado.maniobra, objetivo: NERVIOSO, dispara: derrocha('costado', RAFAGAS.lluvia), camara: fija(sum(ALTURA, [-1, 3, -18]), sum(ALTURA, [2, 4, 0]), 60), disparo: disparados(DERROCHE.costado) }),
   // De tres cuartos, el cañón de estribor queda detrás de duky, y sus tiros le
   // saldrían de la cara: dispara solo el de babor.
   secuencia: alargar(
-    cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: rafaga({ tiros: 36, objetivo: SIN_DESCANSO, desvio: () => [0, 0], canones: [CANONES[1]] }), municiones: [400, 60] }),
+    cabina({ maniobra: virajes(60, 2), camara: 'tresCuartos', objetivo: SIN_DESCANSO, dispara: rafaga({ tiros: 36, objetivo: SIN_DESCANSO, desvio: () => [0, 0], canones: [CANONES[1]] }), municiones: [400, 60], disparo: TODOS }),
     0,
     25 / 24,
   ),
   // Por detrás y arriba, siguiendo los tiros hasta quien juega.
-  cola: alargar(afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46) }), -6 / 24, 1),
-  cero: cabina({ maniobra: virajes(20), dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: estrella(3, 10), hasta: 0.3 }), municiones: [60, -140] }),
+  cola: alargar(afuera({ maniobra: virajes(80, 2), objetivo: SIN_DESCANSO, dispara: RAFAGAS.secuencia, camara: fija(sum(ALTURA, [-32, 6, 4]), sum(ALTURA, [140, 16, 0]), 46), disparo: TODOS }), -6 / 24, 1),
+  cero: cabina({ maniobra: virajes(20), dispara: rafaga({ tiros: 24, objetivo: QUIETO, desvio: estrella(3, 10), hasta: 0.3 }), municiones: [60, -140], disparo: TODOS }),
   // Sin balas, se queda quieto.
-  silencio: cabina({ municiones: [0, 0], piloto: () => dukyFigura({}) }),
+  silencio: cabina({ municiones: [0, 0], piloto: () => dukyFigura({}), disparo: TODOS }),
 }
 
 // ── El chillido, la vuelta y el respiro ──────────────────────────────────
@@ -259,15 +338,16 @@ const sinSenal = (t) => (u, v) => {
 // Los tres, de pie en la fila de la escena 13.
 const reposo = (p) => ({ 1: p.reposo(1), [-1]: p.reposo(-1) })
 
-// moby se deshace: llora a chorros con el pico abierto, se agarra la cabeza
-// y los sollozos lo sacuden.
+// moby se deshace: llora con el pico abierto, se agarra la cabeza y los
+// sollozos lo sacuden. En la fila, las lágrimas le caen por la cara (`llanto`
+// 1, modelos.mjs); al sentarse se rompe en lágrimas y le saltan (2).
 const sollozo = (u) => Math.abs(Math.sin(vuelta(u) * 5))
-const llorando = (u) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, pena: 1, llanto: 1.6, abre: 0.45 + 0.45 * sollozo(u) })]
+const llorando = (u, llanto) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, pena: 1, llanto, abre: 0.45 + 0.45 * sollozo(u) })]
 const CODOS_AFUERA = { ...pMoby, dobla: (s) => [-0.2, -0.6, s] }
 const agarrandoseLaCabeza = (u) => Object.fromEntries([1, -1].map((s) => [s, [0.55, 0.75 + 0.08 * Math.sin(vuelta(u) * 5 + s), s * 1.0]]))
-const mobyDeshecho = (u) => figura(CODOS_AFUERA, { tronco: llorando(u), manos: agarrandoseLaCabeza(u), salto: 0.08 * sollozo(u), inclina: 6 + 4 * Math.sin(vuelta(u) * 5) })
+const mobyDeshecho = (u, llanto = 1) => figura(CODOS_AFUERA, { tronco: llorando(u, llanto), manos: agarrandoseLaCabeza(u), salto: 0.08 * sollozo(u), inclina: 6 + 4 * Math.sin(vuelta(u) * 5) })
 // Sentado se hunde 0,2, como moby.sentado (escena2/patoon.mjs).
-const mobySentado = (u) => sentar(pMoby, mobyDeshecho(u), 0.2)
+const mobySentado = (u) => sentar(pMoby, mobyDeshecho(u, 2), 0.2)
 
 const enFila = (u) => ({
   duckOne: [duckOne.atras(), DONDE.duckOne],
@@ -336,11 +416,12 @@ const SE_SIENTA = { camina: 0.15, gira: 0.3, cae: 0.4 }
 const mobySeSienta = (u) => {
   if (u < SE_SIENTA.camina) {
     const s = entre(LLEGANDO, AL_SILLON.largo, tramo(u, 0, SE_SIENTA.camina))
-    return { moby: [figura(pMoby, { tronco: llorando(u), manos: manosAndando(pMoby, fase(s)), fase: fase(s) }), { ...AL_SILLON.donde(s), suelo: pMoby.suelo }] }
+    return { moby: [figura(pMoby, { tronco: llorando(u, 1), manos: manosAndando(pMoby, fase(s)), fase: fase(s) }), { ...AL_SILLON.donde(s), suelo: pMoby.suelo }] }
   }
   if (u < SE_SIENTA.cae) {
     const giro = girar(AL_SILLON.donde(AL_SILLON.largo).giro, SILLON.giro, tramo(u, SE_SIENTA.camina, SE_SIENTA.gira))
-    return { moby: [mobyDeshecho(u), { en: lerp([0.5, 0, 1.45], SILLON.en, tramo(u, SE_SIENTA.gira, SE_SIENTA.cae)), giro, suelo: pMoby.suelo }] }
+    const cae = tramo(u, SE_SIENTA.gira, SE_SIENTA.cae)
+    return { moby: [mobyDeshecho(u, 1 + cae), { en: lerp([0.5, 0, 1.45], SILLON.en, cae), giro, suelo: pMoby.suelo }] }
   }
   return SENTADO(u)
 }

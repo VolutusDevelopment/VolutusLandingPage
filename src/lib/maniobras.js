@@ -6,11 +6,14 @@
  * de frente hacia donde está quien juega y se encabrita por encima de la
  * cámara. `desde` corre la primera (con 4,3 de 6 empieza encabritándose,
  * desde donde quedó tras el diálogo); `clave` guarda la vuelta en `s`, una
- * por caza. Devuelve en qué parte de la embestida va, de 0 a 1.
+ * por caza. Con `tonel`, a media aproximación da una vuelta sobre su eje,
+ * hacia un lado distinto cada vez. Devuelve en qué parte de la embestida va,
+ * de 0 a 1.
  */
-export function embestida(c, t, s, j, { periodo = 6, desde = 4.3, clave = 'vuelta' } = {}) {
+export function embestida(c, t, s, j, { periodo = 6, desde = 4.3, clave = 'vuelta', tonel = false } = {}) {
   const u = ((t + desde) % periodo) / periodo
   if (j.cruza(s, clave, u)) c.saltar(j.w * (0.3 + Math.random() * 0.4), j.h * 0.42, 1100)
+  if (tonel && u > 0.35 && u < 0.44) c.tonel(Math.random() < 0.5 ? 1 : -1)
   if (u < 0.72) {
     const q = u / 0.72
     c.ir(j.w / 2 + (j.jugador.x - j.w / 2) * 0.45, j.h * 0.4, 80 + 1000 * (1 - q) ** 1.6, 7)

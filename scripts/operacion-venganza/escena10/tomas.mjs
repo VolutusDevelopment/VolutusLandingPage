@@ -45,17 +45,17 @@ const elenco = (u, cambios = {}) => {
 }
 const sala = (cambios, extra = {}) => (u) => reunion({ pantalla: PANTALLA, figuras: elenco(u, cambios(u)), ...extra })
 
-// Después de la tos, moby se queda con el puro prendido y los ojos llorosos.
-// El humo se le ve solo en sus tomas: en las otras taparía a duke.
-const lloroso = (cambios) => (u) => ({ moby: moby.sentado(u, SIN_HUMO), ...cambios(u) })
+// Después de la tos, moby se queda con el puro prendido. El humo se le ve
+// solo en sus tomas: en las otras taparía a duke.
+const fumando = (cambios) => (u) => ({ moby: moby.sentado(u, SIN_HUMO), ...cambios(u) })
 const conLaCarpeta = (u) => duckOne.carpeta(1, 0.8 * silaba(u))
 
 // ── moby, furioso ────────────────────────────────────────────────────────
 
 // Entra con los puños sueltos, braceando más que de costumbre.
-const furioso = (fase) => figura({ ...pMoby, braceo: 0.5 }, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: fase * 8, apagado: true, llanto: 0 })], manos: manosAndando({ ...pMoby, braceo: 0.5 }, fase), fase, inclina: -6 })
+const furioso = (fase) => figura({ ...pMoby, braceo: 0.5 }, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: fase * 8, apagado: true })], manos: manosAndando({ ...pMoby, braceo: 0.5 }, fase), fase, inclina: -6 })
 // Sigue tosiendo: el tramo de las toses de la calada, una y otra vez.
-const sigueTosiendo = (u) => sentar(pMoby, calada(5.2 + 8 * u, { antes: 0 }), 0.2)
+const sigueTosiendo = (u) => sentar(pMoby, calada(5.2 + 8 * u), 0.2)
 
 // ── duke ─────────────────────────────────────────────────────────────────
 
@@ -100,19 +100,19 @@ export const TOMAS_3D = {
   evaluasion: { escena: sala((u) => ({ duckOne: conLaCarpeta(u) })), camara: A_DUCK },
   maldita: { escena: sala((u) => ({ duckOne: duckOne.carpeta(1), moby: moby.hablando(u) })), camara: A_MOBY },
   tos: { escena: sala((u) => ({ duckOne: duckOne.carpeta(1), moby: moby.tose(u) })), camara: A_MOBY },
-  indicador: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_ABIERTO },
-  pintura: { escena: sala(lloroso((u) => ({ duke: cabellera(u) }))), camara: A_DUKE },
+  indicador: { escena: sala(fumando((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_ABIERTO },
+  pintura: { escena: sala(fumando((u) => ({ duke: cabellera(u) }))), camara: A_DUKE },
   perfecto: { escena: sala((u) => ({ moby: moby.hablando(u, PRENDIDO) })), camara: A_MOBY_DE_LADO },
   sigue: { escena: sala((u) => ({ moby: sigueTosiendo(u) })), camara: A_MOBY_DE_LADO },
-  reparar: { escena: sala(lloroso((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
+  reparar: { escena: sala(fumando((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
   // De frente, a la altura de sus ojos.
-  mirada: { escena: sala(lloroso((u) => ({ duke: mirada(u) }))), camara: fija([-1.0, 1.05, 0.6], [-1.0, 1.05, -1.0], 54) },
+  mirada: { escena: sala(fumando((u) => ({ duke: mirada(u) }))), camara: fija([-1.0, 1.05, 0.6], [-1.0, 1.05, -1.0], 54) },
 
-  recurso: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_DE_CERCA },
-  nuclear: { escena: sala(lloroso((u) => ({ moby: moby.hablando(u, PRENDIDO) }))), camara: A_MOBY },
-  especializado: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK },
-  guapo: { escena: sala(lloroso((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
-  chiyar: { escena: sala(lloroso((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_ABIERTO },
+  recurso: { escena: sala(fumando((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_DE_CERCA },
+  nuclear: { escena: sala(fumando((u) => ({ moby: moby.hablando(u, PRENDIDO) }))), camara: A_MOBY },
+  especializado: { escena: sala(fumando((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK },
+  guapo: { escena: sala(fumando((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
+  chiyar: { escena: sala(fumando((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_ABIERTO },
   // Giran hacia duky en cadena: moby primero, y duke y duck-one tras él.
   miran: {
     escena: (u) => {

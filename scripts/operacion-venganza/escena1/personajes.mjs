@@ -40,16 +40,22 @@ const hablar = (tronco, abre) => {
 
 const pico = () => [el([0.95, 0.45, 0], [0.56, 0.13, 0.28], C.pico, { rot: [0, 0, -8] }), el([0.88, 0.33, 0], [0.45, 0.08, 0.22], C.pico, { rot: [0, 0, -6] })]
 
-// Ojo con párpado: `abre` de 0 (cerrado) a 1; `mira` corre la pupila.
+// Ojo con párpado: `abre` de 0 (cerrado) a 1; `mira` corre la pupila. El
+// párpado envuelve el ojo y lo cubre de arriba hasta `borde`: al cerrarse, baja.
 const ojo = (s, { abre = 0.6, plumaje, mira = [0, 0], grande = 1 }) => {
   const c = [0.75, 0.66, s * 0.33]
   const r = esc([0.08, 0.1, 0.1], grande)
+  const borde = c[1] + r[1] * (1.1 - 2.2 * (1 - abre))
   return [
     el(c, r, C.blanco, { flat: '#ffffff' }),
     el(sum(c, [0.06, mira[1] - 0.01, s * 0.01 + mira[0]]), esc([0.035, 0.05, 0.05], grande), C.blanco, { flat: '#101418' }),
-    el(sum(c, [0.015, 0.1 - 0.16 * abre, 0]), esc([0.09, 0.08, 0.115], grande), plumaje),
+    ...(abre < 1 ? [el(sum(c, [0.005 * grande, 0, 0]), esc([0.095, 0.115, 0.115], grande), plumaje, { hueco: ([, y]) => y < borde })] : []),
   ]
 }
+// Un parpadeo en el bucle: los ojos, `abiertos`, se cierran entre `desde` y
+// `hasta`, y el cuadro de antes van a medio cerrar, para que se lea el
+// párpado que baja.
+const parpadea = (u, desde, hasta, abiertos) => (u > desde && u < hasta ? 0 : u > desde - 1 / 12 && u <= desde ? abiertos / 2 : abiertos)
 
 // ── El almirante ─────────────────────────────────────────────────────────
 
@@ -146,7 +152,7 @@ export const ALMIRANTE = {
   papel: 'Comandante del Sitting Ducks',
   bajada: 'Azul marino cruzado, hombreras doradas y gorra de plato',
   detalle: 'Viejo, canoso y de pocas palabras: cejas blancas tupidas, patillas de plumas y párpados pesados de quien ya lo ha visto todo. Lleva gafas redondas de marinero, de alambre dorado, y se las quita despacio cuando algo no le cabe en la cabeza. Pasa la escena sentado en su sillón de mando, frente a la pantalla, hasta que se levanta y camina despacio a la ventana, con las manos atrás, a mirar el atardecer.',
-  quieto: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: u > 0.8 && u < 0.92 ? 0 : 0.45 })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2) }),
+  quieto: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: parpadea(u, 0.8, 0.92, 0.45) })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2) }),
   // Despacio y con las manos atrás; sin `fase`, se detiene.
   andando: (fase = null) => alm({ tronco: almiranteTronco(almiranteCabeza()), manos: MANOS_ATRAS, fase }),
   sentado: (u, extra = {}) => [...alm({ tronco: hablar(almiranteTronco(almiranteCabeza(extra)), extra.abrePico ?? 0), manos: { 1: brazosEnSillon(1), [-1]: brazosEnSillon(-1) }, agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) }), ...SILLON],
@@ -192,12 +198,12 @@ export const ALMIRANTE = {
     },
     {
       nombre: 'mira el atardecer',
-      pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: u > 0.55 && u < 0.67 ? 0 : 0.3 })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 3 }),
+      pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: parpadea(u, 0.55, 0.67, 0.3) })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 3 }),
     },
     {
       nombre: 'mira las pantallas',
       // Atento, con el ceño fruncido y las manos atrás, mientras el oficial habla por radio.
-      pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: 0.8, abre: u > 0.3 && u < 0.4 ? 0 : 0.4 })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 2 }),
+      pose: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: 0.8, abre: parpadea(u, 0.3, 0.4, 0.4) })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2), inclina: 2 }),
     },
   ],
 }
@@ -304,7 +310,7 @@ export const OFICIAL = {
   papel: 'Lee los informes en voz alta',
   bajada: 'Camisa caqui, tableta, audífonos y gafas de pasta',
   detalle: 'Joven, pardo y sin la menor expresión: contesta cada pregunta con la misma voz, leyendo de su tableta. Camisa caqui con bolsillos, corbata azul, gafas rectangulares de pasta y audífonos con micrófono. Cuando el almirante dice «a los cuatro que están disponibles», no le queda nada que leer: se queda callado y le cae una gota de sudor.',
-  quieto: (u) => conTableta(oficialCabeza({ abre: u > 0.8 && u < 0.92 ? 0 : 1, mira: [0, -0.02] }), u),
+  quieto: (u) => conTableta(oficialCabeza({ abre: parpadea(u, 0.8, 0.92, 1), mira: [0, -0.02] }), u),
   hablando: (u) => conTableta(hablar(oficialCabeza({ mira: [0, -0.02] }), silaba(u) * 0.6), u),
   gestos: [
     { nombre: 'lee el informe', pose: (u) => conTableta(hablar(oficialCabeza({ mira: [0, -0.03] }), silaba(u) * 0.6), u) },
@@ -318,7 +324,7 @@ export const OFICIAL = {
     },
     {
       nombre: 'se queda callado',
-      pose: (u) => conTableta(oficialCabeza({ abre: u > 0.45 && u < 0.6 ? 0 : 1, mira: [0, 0] }), u, { extra: [...tableta(LEE, 25), ...gota(suave(u / 0.9))] }),
+      pose: (u) => conTableta(oficialCabeza({ abre: parpadea(u, 0.45, 0.6, 1), mira: [0, 0] }), u, { extra: [...tableta(LEE, 25), ...gota(suave(u / 0.9))] }),
     },
     {
       nombre: 'habla por radio',
@@ -326,7 +332,7 @@ export const OFICIAL = {
       pose: (u, { abre = silaba(u) * 0.6 } = {}) => [
         ...figura(
           { ...pOficial, dobla: (s) => (s > 0 ? [0, -1, 0.6] : pOficial.dobla(s)) },
-          { sinSombra: true, tronco: hablar(oficialTronco(oficialCabeza({ abre: u > 0.62 && u < 0.7 ? 0 : 1, mira: [0, -0.02] })), abre), manos: { 1: AL_AUDIFONO, [-1]: LEE }, extra: tableta(LEE, 25), agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) },
+          { sinSombra: true, tronco: hablar(oficialTronco(oficialCabeza({ abre: parpadea(u, 0.62, 0.7, 1), mira: [0, -0.02] })), abre), manos: { 1: AL_AUDIFONO, [-1]: LEE }, extra: tableta(LEE, 25), agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) },
         ),
         ...SILLA,
       ],

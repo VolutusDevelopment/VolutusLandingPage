@@ -92,9 +92,8 @@ export const duckOne = {
 
 // ── moby-duck ────────────────────────────────────────────────────────────
 
-// Hasta que lo enciende, el puro va apagado y moby no llora: lo hace llorar
-// el humo. Prendido, llora lo de siempre.
-const APAGADO = { apagado: true, llanto: 0 }
+// Hasta que lo enciende, el puro va apagado.
+const APAGADO = { apagado: true }
 export const PRENDIDO = {}
 // Prendido, sin el humo, donde taparía la toma.
 export const SIN_HUMO = { humea: false }
@@ -119,7 +118,7 @@ export const moby = {
     const k = tramo(u, 0.1, 0.7)
     return figura(pMoby, { tronco: mobyTronco(u), manos: { 1: lerp(MESA_MOBY[1], pMoby.reposo(1), k), [-1]: lerp(MESA_MOBY[-1], pMoby.reposo(-1), k) }, agacha: AGACHA_MOBY * (1 - k), inclina: -12 * Math.sin(k * Math.PI) })
   },
-  tose: (u) => sentar(pMoby, calada(u * 24, { antes: 0 }), AGACHA_MOBY),
+  tose: (u) => sentar(pMoby, calada(u * 24), AGACHA_MOBY),
   // De pie, con el puño en alto y el puro ya prendido.
   grita: (u) => MOBY.hablando(u),
   andando: (fase) => MOBY.andando(fase),

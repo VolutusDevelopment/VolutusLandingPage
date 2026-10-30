@@ -233,7 +233,8 @@ export const TOMAS_3D = {
 
   aportar: { escena: sala(conPuro((u) => ({ duckOne: [conAutoridad(u), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([0.4, 1.4, 0.2], [2.75, 1.2, -1.0], 36) },
   inmovil: { escena: sala(conPuro(() => ({ duckOne: [firme(), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([-2.6, 1.25, -0.6], [-1.6, 0.95, 0.9], 46) },
-  fantasma: { escena: sala(conPuro(careo(firme, almirante.ordena))), camara: fija([3.6, 1.3, 0.4], [2.6, 1.45, 1.6], 62) },
+  // De tres cuartos, entero de la gorra a la barriga, con el ventanal detrás.
+  fantasma: { escena: sala(conPuro(careo(firme, almirante.ordena))), camara: fija([3.6, 1.35, -0.5], [2.6, 1.02, 1.6], 52) },
   expediente: { escena: sala(conPuro((u) => ({ duckOne: [duckOne.carpeta(1, 0.8 * silaba(u)), DUCK_A_LA_MESA] }))), camara: fija([1.2, 1.25, -0.9], [2.75, 1.15, -1.0], 58) },
   // Giran en cadena, desde duck-one, que leía: cada uno un cuadro después del anterior.
   miran: {

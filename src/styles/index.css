@@ -44,6 +44,17 @@
   src: url('/fonts/archivo-italica-latin.woff2') format('woff2');
 }
 
+/* La letra de pixeles de los juegos: la tabla de honor del podio y las
+   ventanas de Operación Venganza. El navegador no la descarga hasta que algo
+   la pinta. */
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/press-start-2p-latin.woff2') format('woff2');
+}
+
 /**
  * Respaldo con métricas calzadas a Geist.
  *

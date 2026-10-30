@@ -47,7 +47,7 @@ const PERSONAJES = [
     piloto: M.MOBY,
     caza: M.CAZA_MOBY,
     modelo: 'Fairchild Republic A-10 Thunderbolt II, negro',
-    detalle: 'El comando: espalda en V, trapecios que le tragan el cuello y la cabeza chica hundida entre los hombros, de brazos cruzados. Musculosa oliva, placas al cuello, pretina a rayas y pañuelo rojo con las colas al viento. Ceño de matón, el puro echando humo y el llanto que no para.',
+    detalle: 'El comando: espalda en V, trapecios que le tragan el cuello y la cabeza chica hundida entre los hombros, de brazos cruzados. Musculosa oliva, placas al cuello, pretina a rayas y pañuelo rojo con las colas al viento. Ceño de matón y el puro echando humo.',
   },
   {
     archivo: 'duke',

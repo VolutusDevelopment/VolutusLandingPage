@@ -343,7 +343,7 @@ const MOBY = {
   archivo: 'moby-duck',
   nombre: 'moby-duck',
   papel: 'La fuerza bruta · nivel 2',
-  detalle: 'Espalda en V, trapecios que le tragan el cuello y antebrazos de leñador: anda abierto de brazos y pisa tan pesado que levanta polvo, con el puro humeando y las colas del pañuelo al viento. Saca músculo, se golpea la palma con el puño y se seca el llanto con el antebrazo, que le vuelve a correr al instante. Habla a los gritos, con el puño en alto.',
+  detalle: 'Espalda en V, trapecios que le tragan el cuello y antebrazos de leñador: anda abierto de brazos y pisa tan pesado que levanta polvo, con el puro humeando y las colas del pañuelo al viento. Saca músculo, se golpea la palma con el puño y se seca las lágrimas con el antebrazo. Habla a los gritos, con el puño en alto.',
   andando: (fase) => [...figura(pMoby, { tronco: mobyVivo(fase), manos: manosAndando(pMoby, fase), fase }), ...polvo(fase)],
   sentado: (u, manos) => figura(pMoby, { tronco: mobyVivo(u), manos, salto: 0.03 * Math.sin(u * Math.PI * 4), inclina: 1.2 * Math.sin(u * Math.PI * 2) }),
   // `estado`, el de su cabeza: con el puro apagado, por ejemplo.
@@ -378,7 +378,7 @@ const MOBY = {
       pose: (u) => {
         const g = curva(u)
         const p = { ...pMoby, dobla: (s) => (s > 0 ? [-0.3, -1, 0.6] : pMoby.dobla(s)) }
-        return figura(p, { tronco: mobyVivo(u), manos: { 1: lerp(pMoby.reposo(1), [1.25, 0.45, 0.6 - 0.55 * (0.5 + 0.5 * vaiven(u, 2))], g), [-1]: pMoby.reposo(-1) }, inclina: 5 * g })
+        return figura(p, { tronco: mobyVivo(u, { llanto: 1 }), manos: { 1: lerp(pMoby.reposo(1), [1.25, 0.45, 0.6 - 0.55 * (0.5 + 0.5 * vaiven(u, 2))], g), [-1]: pMoby.reposo(-1) }, inclina: 5 * g })
       },
     },
   ],

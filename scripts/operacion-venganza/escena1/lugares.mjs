@@ -22,6 +22,7 @@ export const colocar = (formas, { k, giro = 0, en, suelo = -2.3 }) => {
   const escaladas = formas.map((f) => {
     const g = f.k === 'e' ? { ...f, c: ida(f.c), r: esc(f.r, k) } : { ...f, centro: ida(f.centro), radio: f.radio * k, tris: f.tris.map((t) => ({ ...t, a: ida(t.a), b: ida(t.b), c: ida(t.c) })) }
     if (f.pinta) g.pinta = (p, n) => f.pinta(vuelta(p), n)
+    if (f.hueco) g.hueco = (p) => f.hueco(vuelta(p))
     return g
   })
   return transformar([0, giro, 0], [0, 0, 0], en).formas(escaladas)
@@ -109,21 +110,46 @@ export const cielo = ([x, y, z]) => {
 
 // ── El mar ───────────────────────────────────────────────────────────────
 
-// El agua refleja el atardecer en tres franjas, del horizonte (0) a cerca
-// (2): el coral al fondo, el lila y el azul hondo, con sus olas. En la estela
-// del sol, las olas brillan: pareja al fondo y en destellos cerca.
-const AGUA = [['#d9967f', '#d9967f'], ['#6f6c9e', '#9a86ae'], ['#2c3f74', '#4a5a92']]
-const ESTELA = [[LUZ, LUZ], ['#d97a5e', LUZ], ['#2c3f74', '#ff8f3a']]
-const agua = (franja, ola, estela) => (estela ? ESTELA : AGUA)[franja][ola ? 1 : 0]
+// El mar del juego (src/combate.js): el agua toma el color de su franja según
+// lo hondo que se la mira, la tangente del ángulo bajo el horizonte, y sus
+// olas, uno más claro; bajo el sol, doradas. Así se ve mar hasta el
+// horizonte desde cualquier altura, sin un círculo alrededor de nadie.
+const FRANJAS_DEL_MAR = [
+  [0.018, '#c495a8', '#ecc0c0'],
+  [0.045, '#9a86b6', '#c2acd6'],
+  [0.1, '#7470ac', '#a09ad6'],
+  [Infinity, '#5c5b9e', '#8584cc'],
+]
+const BRILLO = '#ffd59a'
+const agua = (hondo, ola, sol) => {
+  const [, color, claro] = FRANJAS_DEL_MAR.find(([hasta]) => hondo <= hasta)
+  return ola ? (sol ? BRILLO : claro) : color
+}
+const azar = (a, b, c) => {
+  let n = (Math.imul(a, 374761393) + Math.imul(b, 668265263) + Math.imul(c, 1274126177)) | 0
+  n = Math.imul(n ^ (n >>> 13), 1274126177)
+  return ((n ^ (n >>> 16)) >>> 0) / 4294967296
+}
 
-// Un plano: una esfera tan grande pierde precisión al cortarla. La estela se
-// abre desde el horizonte hacia quien mira desde el centro (la llegada).
+// Un plano: una esfera tan grande pierde precisión al cortarla. pixel3d le da
+// a `pinta` el `ojo` desde donde se mira. Las olas, como en el juego, son
+// trazos cortos fijos en el mundo, más grandes a lo lejos para que no
+// titilen, y más seguidos en el camino del sol.
 export const MAR = placa([[-60000, 0, -60000], [-60000, 0, 60000], [60000, 0, 60000], [60000, 0, -60000]], 0.2, C.azul, {
-  pinta: ([x, , z]) => {
-    const lejos = Math.hypot(x, z)
-    const estela = Math.abs(Math.atan2(z, x) - RUMBO) < 0.02 + 3 / lejos
-    const ola = estela ? Math.sin(x / 2.3 + Math.sin(z / 5) * 3) * Math.sin(z / 3.1 + x / 9) > 0.35 : Math.sin(x / 7 + Math.sin(z / 19) * 2) > 0.86
-    return agua(lejos > 1100 ? 0 : lejos > 300 ? 1 : 2, ola, estela)
+  pinta: ([x, y, z], n, [ox, oy, oz]) => {
+    const lejos = Math.hypot(x - ox, z - oz)
+    const hondo = (oy - y) / lejos
+    let haciaElSol = Math.atan2(z - oz, x - ox) - RUMBO
+    haciaElSol -= Math.round(haciaElSol / (2 * Math.PI)) * 2 * Math.PI
+    const sol = Math.abs(haciaElSol) < 0.045 + hondo * 0.12
+    if (lejos >= 3600) return agua(hondo, false, sol)
+    const nivel = lejos < 320 ? 0 : lejos < 700 ? 1 : lejos < 1500 ? 2 : 3
+    const tam = 2 ** nivel
+    const iz = Math.floor(z / (3.2 * tam))
+    const fx = (x + azar(iz, 7, nivel) * 40) / (9 * tam)
+    const ix = Math.floor(fx)
+    const [cx, cz] = [fx - ix, z / (3.2 * tam) - iz]
+    return agua(hondo, cz > 0.35 && cz < 0.62 && cx > 0.12 && cx < 0.72 && azar(ix, iz, nivel) < (sol ? 0.5 : 0.2), sol)
   },
 })
 
@@ -542,10 +568,11 @@ const vista = (x, y) => {
     const d = sum(sum(esc(SOL, 5), esc(DERECHA_DEL_SOL, X_DEL_SOL - x)), [0, y - horizonte, 0])
     return cielo(esc(d, 1 / Math.hypot(...d)))
   }
+  // Mirado desde 5 m del vidrio: lo hondo es lo que baja del horizonte, en quintos.
   const bajo = horizonte - y
-  const estela = Math.abs(x - X_DEL_SOL) < 0.1 + 0.4 * bajo
-  const ola = estela ? Math.sin(x * 70 + Math.sin(y * 160) * 3) * Math.sin(y * 230 + x * 20) > 0.35 : Math.sin(x * 40 + Math.sin(y * 90) * 2) > 0.8
-  return agua(bajo < 0.03 ? 0 : bajo < 0.12 ? 1 : 2, ola, estela)
+  const sol = Math.abs(x - X_DEL_SOL) < 0.1 + 0.4 * bajo
+  const ola = sol ? Math.sin(x * 70 + Math.sin(y * 160) * 3) * Math.sin(y * 230 + x * 20) > 0.35 : Math.sin(x * 40 + Math.sin(y * 90) * 2) > 0.8
+  return agua(bajo / 5, ola, sol)
 }
 
 // Consola de babor con radar verde y pantallitas.

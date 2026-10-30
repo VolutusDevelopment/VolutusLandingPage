@@ -2,6 +2,8 @@ import { ALTO, ANCHO } from '../lib/escena1.js'
 import { FINALES } from '../lib/escena16.js'
 import { CARGAS } from '../lib/cargas.js'
 import { NIVELES, PAGINAS, siguienteDe } from '../lib/juego.js'
+import { BORDE, FLECHA, HUELLA } from '../lib/flecha.js'
+import { CUADROS_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../lib/cazas.js'
 
 const INDICE = '/operacion-venganza/indice'
 
@@ -122,9 +124,9 @@ function Escenas() {
           Siguiente
         </button>
       </p>
-      <div className="escena-eleccion" role="group" aria-label="El destino del Sitting Ducks" hidden>
+      <div className="escena-eleccion juego-ventana juego-menu" role="group" aria-label="El destino del Sitting Ducks" hidden>
         {Object.entries(FINALES).map(([final, { boton }]) => (
-          <button key={final} className="escena-opcion" type="button" data-final={final}>
+          <button key={final} className="juego-opcion" type="button" data-final={final}>
             {boton}
           </button>
         ))}
@@ -133,35 +135,63 @@ function Escenas() {
   )
 }
 
+// Una figura de pixeles de lib/flecha.js, como la que se mueve en el nivel,
+// a dos px por pixel: un trazo por color, X el borde y W el relleno.
+function Pixeles({ mapa }) {
+  const ancho = Math.max(...mapa.map((fila) => fila.length))
+  const trazo = (letra) => mapa.flatMap((fila, y) => [...fila].flatMap((c, x) => (c === letra ? [`M${x} ${y}h1v1h-1z`] : []))).join('')
+  return (
+    <svg className="nivel-figura" width={ancho * 2} height={mapa.length * 2} viewBox={`0 0 ${ancho} ${mapa.length}`} shapeRendering="crispEdges" aria-hidden="true">
+      <path fill={BORDE} d={trazo('X')} />
+      <path fill="#ffffff" d={trazo('W')} />
+    </svg>
+  )
+}
+
+// El retrato de `quien` en la hoja de lib/cazas.js; la hoja la pone el nivel.
+const Retrato = ({ quien }) => <span className="nivel-retrato" style={{ '--fila': RETRATOS.findIndex((r) => r.quien === quien) }} aria-hidden="true" />
+
 /**
  * Un nivel jugable: el combate de src/combate.js con el guion de `data-nivel`.
  * Llega desde las escenas que lo preceden y, al terminar, siguen las que vienen
  * después; también se puede saltar (sin JS, el enlace lleva a la página de la
  * escena siguiente). El cielo se pinta en el lienzo y todo lo demás flota
- * encima: la portada, los PV, el diálogo y los paneles de pausa y derrota.
+ * encima, en ventanas y menús de juego: antes de jugar, las reglas (solo en
+ * el primer nivel, con las instrucciones del dispositivo: el CSS deja las del
+ * ratón o las del dedo) y quién es cada piloto; jugando, los PV y el cuadro
+ * de comunicaciones; y los paneles de pausa y derrota.
  */
 function Nivel({ enlace, nivel, nombre }) {
   const guion = NIVELES[nivel]
   const id = (parte) => `nivel-${nivel}-${parte}`
+  const conReglas = nivel === 1
   const saltar = (
-    <a className="escena-boton" href={siguienteDe(enlace)}>
+    <a className="juego-opcion nivel-saltar" href={siguienteDe(enlace)}>
       Saltar nivel
     </a>
   )
   return (
-    <section className="nivel" data-nivel={nivel} aria-label={`Nivel ${nivel}: ${nombre}`} hidden>
+    <section
+      className="nivel"
+      data-nivel={nivel}
+      aria-label={`Nivel ${nivel}: ${nombre}`}
+      style={{ '--retratos': `url('${rutaDeRetratos}')`, '--cuadros': CUADROS_DE_RETRATO, '--filas': RETRATOS.length }}
+      hidden
+    >
       <canvas className="nivel-cielo" aria-hidden="true" />
       <div className="banda banda-arriba" aria-hidden="true" />
       <div className="banda banda-abajo" aria-hidden="true" />
+      <div className="banda banda-izquierda" aria-hidden="true" />
+      <div className="banda banda-derecha" aria-hidden="true" />
 
       <header className="nivel-arriba">
         <p className="nivel-nombre">{`Nivel ${nivel} · ${nombre}`}</p>
-        <button className="escena-boton nivel-pausa" type="button" aria-pressed="false">
+        <button className="juego-ventana nivel-pausa" type="button" aria-pressed="false">
           Pausa
         </button>
       </header>
-      <p className="nivel-rotulo" aria-live="polite" />
-      <p className="nivel-pv" hidden>
+      <p className="nivel-rotulo juego-ventana" aria-live="polite" />
+      <p className="nivel-pv juego-ventana" hidden>
         PV
         <span className="nivel-pv-barra">
           <span className="nivel-pv-lleno" />
@@ -170,61 +200,91 @@ function Nivel({ enlace, nivel, nombre }) {
       </p>
 
       <button className="nivel-dialogo" type="button" hidden>
+        <span className="nivel-retrato" aria-hidden="true" />
         <span className="nivel-quien" />
-        <span className="nivel-texto">
+        <span className="nivel-texto juego-ventana">
           <span className="nivel-dicho" />
           <span className="nivel-falta" />
         </span>
-        <span className="nivel-pista">Seguir ▸</span>
       </button>
       <p className="venganza-titulo nivel-leido" aria-live="polite" />
       <canvas className="nivel-jugador" width="9" height="15" aria-hidden="true" hidden />
 
-      <section className="nivel-panel nivel-portada" aria-labelledby={id('portada')}>
+      {conReglas && (
+        <section className="nivel-panel juego-ventana nivel-reglas" aria-labelledby={id('reglas')}>
+          <p className="nivel-antetitulo">Operación Venganza</p>
+          <h2 id={id('reglas')}>Cómo se juega</h2>
+          <p className="nivel-esquiva">¡Esquiva los ataques!</p>
+          <p>No puedes disparar: aguanta hasta que se retiren. Cada golpe te quita PV.</p>
+          <p className="nivel-instruccion solo-raton">
+            <Pixeles mapa={FLECHA} />
+            Eres el cursor. Muévelo con el ratón o con las flechas.
+          </p>
+          <p className="solo-raton">Si el cursor sale de la pestaña, el juego se pausa. Esc también.</p>
+          <p className="nivel-instruccion solo-tactil">
+            <Pixeles mapa={HUELLA} />
+            Eres la huella. Arrastra el dedo en cualquier parte.
+          </p>
+          <p className="solo-tactil">Si sueltas el dedo, el juego se pausa.</p>
+          <div className="juego-menu">
+            <button className="juego-opcion nivel-entendido" type="button">
+              Entendido
+            </button>
+            {saltar}
+          </div>
+        </section>
+      )}
+
+      <section className="nivel-panel juego-ventana nivel-portada" aria-labelledby={id('portada')} hidden={conReglas}>
         <p className="nivel-antetitulo">Operación Venganza</p>
-        <h2 id={id('portada')}>{`NIVEL ${nivel} — ${nombre.toUpperCase()}.`}</h2>
+        <h2 id={id('portada')}>{`Nivel ${nivel}: ${nombre}`}</h2>
+        {guion.FICHAS.map(({ quien, papel, caza, personalidad }) => (
+          <div key={quien} className="nivel-ficha">
+            <Retrato quien={quien} />
+            <p className="nivel-ficha-quien">
+              {quien}
+              <span>{papel}</span>
+              <span>{caza}</span>
+            </p>
+            <p className="nivel-ficha-personalidad">{personalidad}</p>
+          </div>
+        ))}
         <p className="nivel-lema">{guion.LEMA}</p>
         <p>{guion.INTRO}</p>
-        <p className="nivel-controles">
-          Ratón: mueve el cursor
-          <br />
-          Pantalla táctil: arrastra en cualquier parte
-          <br />
-          Teclado: flechas · Esc para pausar
-        </p>
-        <p className="escena-mandos">
-          <button className="boton boton-primario nivel-jugar" type="button">
+        <div className="juego-menu">
+          <button className="juego-opcion nivel-jugar" type="button">
             Jugar
           </button>
           {saltar}
-        </p>
+        </div>
       </section>
 
-      <section className="nivel-panel nivel-pausado" aria-labelledby={id('pausado')} hidden>
+      <section className="nivel-panel juego-ventana nivel-pausado" aria-labelledby={id('pausado')} hidden>
         <h2 id={id('pausado')}>En pausa.</h2>
-        <p className="escena-mandos">
-          <button className="boton boton-primario nivel-seguir" type="button">
+        <p className="solo-tactil">Apoya el dedo en la pantalla para seguir.</p>
+        <div className="juego-menu">
+          <button className="juego-opcion nivel-seguir" type="button">
             Seguir jugando
           </button>
           {saltar}
-        </p>
+        </div>
       </section>
 
-      <section className="nivel-panel nivel-derrota" aria-labelledby={id('derrota')} hidden>
+      <section className="nivel-panel juego-ventana nivel-derrota" aria-labelledby={id('derrota')} hidden>
         <p className="nivel-antetitulo">{nombre}</p>
         <h2 id={id('derrota')}>{guion.TRIUNFO}</h2>
         <p>
           Te derribaron en la vista «<span className="nivel-derrota-vista" />».
         </p>
-        <p className="escena-mandos">
-          <button className="boton boton-primario nivel-reintentar" type="button">
+        <div className="juego-menu">
+          <button className="juego-opcion nivel-reintentar" type="button">
             Reintentar esta vista
           </button>
-          <button className="escena-boton nivel-principio" type="button">
+          <button className="juego-opcion nivel-principio" type="button">
             Desde el principio
           </button>
           {saltar}
-        </p>
+        </div>
       </section>
     </section>
   )
