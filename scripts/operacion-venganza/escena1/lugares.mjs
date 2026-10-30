@@ -3,7 +3,8 @@
 // pantalla de las bajas. Proa hacia +x, arriba +y, estribor hacia +z.
 
 import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
-import { RAMPAS as C, hueso, ambos, disco } from '../pilotos/modelos.mjs'
+import { RAMPAS as C, hueso, ambos, CAZA_DUKE, plegarAlas } from '../pilotos/modelos.mjs'
+import { TREN_HORNET } from '../escena9/cazas.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -292,17 +293,69 @@ const isla = (alarma, giro, control) => [
   ...radar([-52, 51.6, 27], 7, 4.5, giro),
 ]
 
-// Caza estacionado: un dardo gris con ala en delta y deriva.
-const jet = (x, z, giro, y = 20.8) =>
-  poner(
+// ── Los aviones de servicio ──────────────────────────────────────────────
+
+const GRIS_NAVY = ['#e2e6ea', '#b4bcc4', '#88929c', '#545e68']
+const RADOMO = ['#ffffff', '#e8ecf0', '#c0c8d0', '#86909a']
+
+// E-2D Advanced Hawkeye: 17,6 m de largo, 24,6 de envergadura, el radomo de 7,3 m sobre dos patas, ala alta, dos turbohélices y cuatro derivas.
+const ventanas = ([x, y], n) => (x > 8.5 ? '#1a1d22' : x > 6 && x < 7.6 && y > 2.9 && n[1] > -0.3 ? '#22303c' : Math.abs(x - 4.6) < 0.1 ? '#c8302a' : null)
+// Las hélices quietas: ocho palas anchas, de 2 m, alrededor del cono.
+const helice = ([x, y, z]) =>
+  Array.from({ length: 8 }, (_, i) => {
+    const a = ((i + 0.5) / 8) * Math.PI * 2
+    const en = (r, d) => [x, y + r * Math.sin(a) - d * Math.cos(a), z + r * Math.cos(a) + d * Math.sin(a)]
+    return placa([en(0.3, -0.12), en(0.3, 0.12), en(1.4, 0.16), en(2.05, 0.06), en(2.05, -0.06), en(1.4, -0.16)], 0.05, C.oscuro)
+  })
+const hawkeye = ({ plegado = false } = {}) => [
+  tubo([[8.9, 0.2, 0.2, 2.1], [8.4, 1.0, 1.0, 2.2], [7.2, 2.0, 2.2, 2.45], [5.6, 2.4, 2.8, 2.55], [-3.5, 2.4, 2.8, 2.6], [-6.8, 1.4, 1.8, 3.0], [-8.4, 0.6, 0.8, 3.4]], GRIS_NAVY, { pinta: ventanas }),
+  ...ambos((s) => placa([[2.4, 3.95, s * 1.1], [2.2, 3.95, s * 4.9], [-0.6, 3.95, s * 4.9], [-0.7, 3.95, s * 1.1]], 0.3, GRIS_NAVY)),
+  // Las alas exteriores: abiertas o, plegadas, de canto junto al fuselaje con las puntas hacia la cola.
+  ...ambos((s) => placa(plegado ? [[2.2, 3.7, s * 4.9], [-8.6, 3.2, s * 4.6], [-8.6, 4.6, s * 4.6], [2.2, 5.0, s * 4.9]] : [[2.2, 3.95, s * 4.9], [1.5, 3.95, s * 12.3], [0.2, 3.95, s * 12.3], [-0.6, 3.95, s * 4.9]], 0.3, GRIS_NAVY)),
+  ...ambos((s) => [
+    tubo([[4.3, 0.5, 0.6, 3.5, 2, s * 3.9], [3.4, 1.1, 1.4, 3.5, 2, s * 3.9], [-1.4, 1.0, 1.3, 3.4, 2, s * 3.9], [-3.0, 0.3, 0.4, 3.6, 2, s * 3.9]], GRIS_NAVY),
+    el([4.5, 3.5, s * 3.9], [0.5, 0.35, 0.35], C.oscuro),
+    ...helice([4.4, 3.5, s * 3.9]),
+  ]).flat(),
+  ...ambos((s) => placa([[0.6, 3.9, s * 0.7], [-2.4, 3.9, s * 0.7], [-1.9, 5.9, s * 0.35], [-0.2, 5.9, s * 0.35]], 0.2, GRIS_NAVY)),
+  el([-1.0, 6.2, 0], [3.65, 0.42, 3.65], RADOMO),
+  placa([[-6.8, 3.6, -4.0], [-8.5, 3.6, -4.0], [-8.5, 3.6, 4.0], [-6.8, 3.6, 4.0]], 0.2, GRIS_NAVY),
+  ...[-4, -1.5, 1.5, 4].map((z) => placa([[-7.0, Math.abs(z) > 2 ? 2.4 : 3.6, z], [-8.6, Math.abs(z) > 2 ? 2.4 : 3.6, z], [-9.0, 6.0, z], [-7.9, 6.0, z]], 0.15, GRIS_NAVY)),
+  hueso([6.6, 1.5, 0], [6.6, 0.45, 0], 0.09, C.grisOscuro),
+  el([6.6, 0.45, 0], [0.45, 0.45, 0.2], C.negro),
+  ...ambos((s) => [hueso([0.3, 2.8, s * 3.9], [0.3, 0.5, s * 3.9], 0.12, C.grisOscuro), el([0.3, 0.5, s * 3.9], [0.5, 0.5, 0.25], C.negro)]).flat(),
+]
+
+// Con el capó del motor de estribor abierto, la escalera puesta y el tractor amarillo enganchado.
+const hawkeyeEnServicio = () => [
+  ...hawkeye(),
+  placa([[1.2, 4.2, 4.4], [3.6, 4.2, 4.4], [3.6, 5.6, 5.4], [1.2, 5.6, 5.4]], 0.12, GRIS_NAVY),
+  hueso([2.0, 0.2, 6.6], [2.0, 4.0, 4.7], 0.15, C.rayas),
+  hueso([3.0, 0.2, 6.6], [3.0, 4.0, 4.7], 0.15, C.rayas),
+  caja(9.6, 13.4, 2.6, 1.6, 1.0, 0, C.rayas),
+  hueso([6.6, 0.5, 0], [9.6, 0.9, 0], 0.12, C.oscuro),
+]
+
+// EA-18G Growler: el Hornet en gris, con el radomo oscuro, las góndolas ALQ-218 en las puntas, dos ALQ-99 bajo el ala, el tanque al centro y las alas plegadas.
+const GRIS_GROWLER = ['#d4dae0', '#a2acb6', '#76808c', '#48505a']
+const radomo = ([x]) => (x > 7.6 ? C.grisOscuro : null)
+const growler = () =>
+  plegarAlas(
     [
-      tubo([[-8, 1.8, 1.8, 1.8], [5, 2.0, 2.2, 2.0], [9, 0.3, 0.5, 1.8]], CASCO),
-      placa([[-6, 1.8, -6], [2, 1.8, -1], [2, 1.8, 1], [-6, 1.8, 6]], 0.3, CASCO),
-      placa([[-8, 2.4, 0], [-4, 2.4, 0], [-7, 6, 0]], 0.3, CASCO),
+      ...CAZA_DUKE.filter((f) => !f.luz && f.rampa !== C.crema && f.rampa !== C.corona && f.rampa !== C.pico).map((f, i) => (f.rampa === C.blanco ? { ...f, rampa: GRIS_GROWLER, pinta: i === 0 ? radomo : undefined } : f)),
+      ...ambos((s) => tubo([[-1.4, 0.05, 0.05, 0.45, 2, s * 5.8], [-2.0, 0.35, 0.35, 0.45, 2, s * 5.8], [-4.2, 0.35, 0.35, 0.45, 2, s * 5.8]], GRIS_GROWLER, { plegable: s })),
+      ...ambos((s) => [tubo([[1.6, 0.05, 0.05, -0.15, 2, s * 3.0], [1.0, 0.55, 0.55, -0.15, 2, s * 3.0], [-2.4, 0.55, 0.55, -0.15, 2, s * 3.0], [-2.9, 0.1, 0.1, -0.15, 2, s * 3.0]], GRIS_GROWLER), hueso([-0.4, 0.4, s * 3.0], [-0.4, 0.1, s * 3.0], 0.12, GRIS_GROWLER)]).flat(),
+      tubo([[2.6, 0.05, 0.05, -0.85], [1.8, 0.65, 0.65, -0.85], [-1.6, 0.65, 0.65, -0.85], [-2.4, 0.05, 0.05, -0.85]], GRIS_GROWLER),
+      ...TREN_HORNET,
     ],
-    giro,
-    [x, y, z],
+    100,
   )
+
+// El tractor amarillo de cubierta, suelto en el Junkyard.
+const tractor = () => [caja(-1.8, 1.8, 2.4, 1.2, 0.8, 0, C.rayas), caja(-0.6, 0.6, 1.6, 0.8, 1.7, 0, C.rayas), ...ambos((s) => [el([1.1, 0.4, s * 1.25], [0.4, 0.4, 0.2], C.negro), el([-1.1, 0.4, s * 1.25], [0.4, 0.4, 0.2], C.negro)]).flat()]
+
+// Growler estacionado, con las ruedas en la cubierta (o en `y`).
+const jet = (x, z, giro, y = 20.8) => poner(growler(), giro, [x, y + 2.0, z])
 
 // ── El hangar y el ascensor ──────────────────────────────────────────────
 
@@ -355,23 +408,6 @@ const ascensor = (k) => {
   ]
 }
 
-const AVION_BLANCO = ['#ffffff', '#e4e8ee', '#b8c0cc', '#7a8494']
-
-// El avión de mantenimiento: un turbohélice con el capó del motor abierto,
-// la escalera puesta y el tractor amarillo enganchado, atravesado en la pista.
-const mantenimiento = () => [
-  tubo([[-9, 2.6, 2.8, 2.6], [5, 3, 3.2, 2.7], [8, 1.6, 2, 2.7], [-12, 1, 1.2, 3.4]], AVION_BLANCO, { pinta: ([x]) => (Math.abs(x + 2) < 0.6 || Math.abs(x - 3) < 0.6 ? '#ff7a1a' : null) }),
-  placa([[0, 4.4, -12.5], [3, 4.4, -12.5], [3, 4.4, 12.5], [0, 4.4, 12.5]], 0.35, AVION_BLANCO, { pinta: ([, , z]) => (Math.abs(z) > 11 ? '#ff7a1a' : null) }),
-  ...ambos((s) => [el([3.2, 4, s * 4.5], [2.6, 0.8, 0.8], AVION_BLANCO), disco([5.9, 4, s * 4.5], [1, 0, 0], 2.2, 0.05, C.oscuro, { flat: '#5a626c' })]).flat(),
-  placa([[1.5, 4.9, 3.8], [4.5, 4.9, 3.8], [4.5, 6.6, 4.8], [1.5, 6.6, 4.8]], 0.15, AVION_BLANCO),
-  hueso([3.5, 0.2, 6.5], [3.4, 4.6, 4.6], 0.15, C.rayas),
-  hueso([4.5, 0.2, 6.5], [4.4, 4.6, 4.6], 0.15, C.rayas),
-  placa([[-12, 3.8, -4], [-10, 3.8, -4], [-10, 3.8, 4], [-12, 3.8, 4]], 0.25, AVION_BLANCO),
-  ...ambos((s) => placa([[-12, 3.8, s * 4], [-10, 3.8, s * 4], [-11.5, 7.5, s * 4]], 0.25, AVION_BLANCO)),
-  caja(9, 13, 2.6, 1.6, 1.0, 0, C.rayas),
-  hueso([8, 0.9, 0], [9.2, 0.9, 0], 0.15, C.oscuro),
-]
-
 // `radar`: los grados que lleva girado el radar de la isla; `ascensor`: dónde
 // va la plataforma, de 0 (en el hangar) a 1 (en la cubierta); `control`, el
 // control de vuelo por dentro.
@@ -381,8 +417,14 @@ export const portaaviones = ({ alarma = -1, avion = true, radar = 0, ascensor: p
   ...isla(alarma, radar, control),
   ...hangar(),
   ...ascensor(plataforma),
-  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30]].flatMap(([x, z, g]) => jet(x, z, g)),
-  ...(avion ? poner(mantenimiento(), 62, [30, 20.8, -24]) : []),
+  // La cubierta como la de un Nimitz: Growler en el Corral (delante de la isla), en las
+  // Rows a cada lado de las catapultas y en el Fantail; E-2D plegados en el Hummer Hole,
+  // junto a la isla, y tractores en el Junkyard. La pista, las catapultas y el Six Pack,
+  // donde paran los cazas del escuadrón, quedan libres.
+  ...[[70, 14, 30], [90, 14, 30], [110, 14, 30], [128, 14, 30], [-6, 15, 30], [8, 15, 30], [22, 15, 30], [-154, 12, 30], [92, -15, -20], [110, -15, -20], [128, -15, -20]].flatMap(([x, z, g]) => jet(x, z, g)),
+  ...(avion ? poner(hawkeyeEnServicio(), 62, [30, 20.8, -24]) : []),
+  ...[-50, -31].flatMap((x) => poner(hawkeye({ plegado: true }), 200, [x, 20.8, 13])),
+  ...[[-62, 17, 80], [-68, 15, 120]].flatMap(([x, z, g]) => poner(tractor(), g, [x, 20.8, z])),
 ]
 
 // Destructor de la escolta: casco largo y fino, superestructura y mástil.

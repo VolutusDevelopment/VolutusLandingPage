@@ -508,6 +508,7 @@ const franja = ([x, y], n) => {
   return t > 0 && t < 1 && Math.abs(n[2]) > 0.45 && y < 0.25 + 0.2 * t && y > 0.15 - 0.35 * t ? C.rosa : null
 }
 const alaRosa = ([x, , z], n) => (n[1] < -0.5 || ataque(z) - x < 0.3 ? C.rosa : null)
+const TOBERA_HORNET = { x: -8.0, y: 0.25, z: 0.5 }
 
 // Las puntas de las alas se pliegan hacia arriba por una bisagra a 4,1 m del
 // eje, como en la cubierta de un portaaviones; `plegable` dice de qué lado son.
@@ -541,10 +542,23 @@ export const CAZA_DUKE = [
   ...ambos((s) => placa([[-5.4, 0.25, s * 0.95], [-7.3, 0.25, s * 3.29], [-8.15, 0.25, s * 3.29], [-8.0, 0.25, s * 0.95]], 0.14, C.blanco, { pinta: ([x, , z]) => (x > -5.4 - (Math.abs(z) - 0.95) * 0.81 - 0.3 ? C.rosa : null) })),
   ...ambos((s) => placa([[-2.3, 0.6, s * 0.85], [-3.9, 2.66, s * 1.6], [-5.6, 2.66, s * 1.6], [-6.0, 0.6, s * 0.85]], 0.14, C.blanco, { pinta: ([, y]) => (y > 2.15 ? C.rosa : null) })),
   ...ambos((s) => el([-7.75, 0.25, s * 0.5], [0.3, 0.42, 0.42], C.grisOscuro)),
-  ...ambos((s) => llama(-8.0, 0.25, s * 0.5, 3.4, 0.8)).flat(),
+  ...ambos((s) => llama(TOBERA_HORNET.x, TOBERA_HORNET.y, s * TOBERA_HORNET.z, 3.4, 0.8)).flat(),
   el([4.3, 0.95, 0], [2.0, 0.62, 0.58], C.vidrio, { vidrio: true }),
   ...cabezaPiloto(5.0, 0.95, C.crema, [el([4.75, 1.18, 0], [0.24, 0.16, 0.18], C.corona)]),
 ]
+
+// La postcombustión de sus dos F404, para las pasadas de /patos: como la del
+// Tomcat, algo más corta.
+export const POSTCOMBUSTION_HORNET = ambos((s) => {
+  const { x, y } = TOBERA_HORNET
+  const z = s * TOBERA_HORNET.z
+  return [
+    estela(x, y, z, 6.5, 0.8, '#ff9a7a', 0.45, 0),
+    estela(x, y, z, 4.3, 0.67, '#ff8a2a', 0.75, 1),
+    estela(x, y, z, 2.1, 0.46, '#fff0c0', 0.9, 2),
+    ...[0, 1, 2].map((i) => destelloMotor([x - 1.2 - i * 1.05, y, z], [0.24, 0.19 * (1 - i * 0.2), 0.19 * (1 - i * 0.2)], '#fff2e6', 0.9, 3)),
+  ]
+}).flat()
 
 // Fairchild Republic A-10 Thunderbolt II: 16,3 m de largo, 17,5 m de
 // envergadura. Ala recta y baja con góndolas del tren, dos motores altos

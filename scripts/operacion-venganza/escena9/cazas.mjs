@@ -13,7 +13,7 @@ import { CABINAS, aCaza, avion, cabinaCon, conCupula } from '../pilotos/interior
 
 // Las dos ruedas de proa del Hornet bajo la cabina y las principales, que
 // salen de los costados bajo las tomas de aire.
-const TREN_HORNET = [
+export const TREN_HORNET = [
   hueso([4.4, -0.3, 0], [4.4, -1.74, 0], 0.07, C.grisOscuro),
   ...ambos((s) => el([4.4, -1.74, s * 0.15], [0.27, 0.27, 0.1], C.negro)),
   ...ambos((s) => [hueso([-0.8, -0.5, s * 0.95], [-1.0, -1.61, s * 1.45], 0.09, C.grisOscuro), el([-1.0, -1.61, s * 1.55], [0.4, 0.4, 0.15], C.negro)]).flat(),

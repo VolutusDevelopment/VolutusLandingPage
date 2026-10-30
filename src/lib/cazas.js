@@ -12,3 +12,12 @@ export const RADIO = 12.4
 export const LLENADO = 0.94
 
 export const rutaDeCaza = (nombre) => `/operacion-venganza/combate/${nombre}.png`
+
+// Las pasadas de /patos (src/patos.js): los mismos cazas de perfil, un poco
+// desde abajo, a `pixelesPorMetro`, uno por fila en el orden de `PASADAS`, con
+// la llama de los motores estirada a los largos de `LLAMAS`, uno por columna.
+// Los pinta scripts/operacion-venganza/combate/pasadas.mjs.
+export const PASADAS = ['duck-one', 'moby', 'duke', 'duky']
+export const PASADA = { pixelesPorMetro: 4, altura: -20 }
+export const LLAMAS = [1.25, 1.1, 1.4]
+export const rutaDePasadas = '/operacion-venganza/pasadas.png'

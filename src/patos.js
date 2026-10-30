@@ -48,6 +48,10 @@
  * con la dificultad y las burlas donde quedaron, y cada pato trae casco, así
  * que hay que darle dos veces: la primera se lo vuela.
  *
+ * Y al pasar de nivel, una vez de cada cinco, cruza el cielo a toda velocidad
+ * uno de los cazas de Operación Venganza, con la postcombustión encendida: el
+ * escuadrón de los patos (ver `pasar`). Es solo de adorno.
+ *
  * «Terminar» la corta antes. Con movimiento reducido no se ofrece, y si
  * se activa a mitad de partida, termina con el pato siguiente y la volutus
  * vuelve sin transición.
@@ -70,6 +74,7 @@ import {
   RECLAMOS_ODIO,
 } from './lib/chistes.js'
 import { ABAJO, ARRIBA, AUREOLA, CAE, CASCO, COLORES, HERIDO } from './lib/pato.js'
+import { LLAMAS, PASADAS, rutaDePasadas } from './lib/cazas.js'
 
 // A ojo. Las velocidades van en altos por segundo y los tiempos en segundos.
 const VELOCIDAD = 0.45
@@ -134,6 +139,15 @@ const LLANTO = 0.6
 const ASCENSO = 6
 const SUBIDA = 3
 const RAYO = 0.5
+// La pasada de un caza: la probabilidad en cada cambio de nivel, cuánto espera
+// desde que parte la parvada, lo que tarda en cruzar el cielo, a qué altura,
+// en fracción del cielo bajo la barra (bajo la parvada, para no taparla), y a
+// cuántos cuadros por segundo parpadea su llama.
+const PASA = 1 / 5
+const ESPERA_PASADA = 0.8
+const TRAVESIA = 1.3
+const BANDA = 0.68
+const PARPADEO = 20
 
 // Los cúmulos, como en una foto de cielo de buen tiempo: grandes, medianos y
 // jirones, repartidos por todo el cielo. Cada uno va en su franja del ancho, de
@@ -419,7 +433,19 @@ function seguir() {
   if (!parvada && !escena.odio) return finalizar()
   escena.viaje = { t0: performance.now(), parvada }
   escena.forma.pendiente = true
+  if (Math.random() < PASA) pasar()
   animar()
+}
+
+// Uno de los cazas, al azar, cruza el cielo de izquierda a derecha y adelanta
+// a la parvada. Su hoja se baja recién la primera vez que pasa uno.
+function pasar() {
+  const caza = Math.floor(Math.random() * PASADAS.length)
+  escena.hojaPasadas ??= Object.assign(new Image(), { src: rutaDePasadas })
+  escena.hojaPasadas.decode().then(() => {
+    escena.pasada = { t0: performance.now() + ESPERA_PASADA * 1000, caza }
+    animar()
+  }, () => {})
 }
 
 // Sale de un cúmulo cualquiera, donde esté ahora, aunque todavía viaje.
@@ -497,6 +523,7 @@ function paso(ahora) {
   antes = ahora
   if (pato) mover(dt)
   if (escena.chatarra) caerChatarra(dt)
+  if (escena.pasada && ahora - escena.pasada.t0 > TRAVESIA * 1000) escena.pasada = null
   if (pato?.estado === 'cae') soplar()
   if (escena.forma.pendiente) avisarForma(ahora)
   if (escena.letrero && ahora - escena.letrero.t0 > escena.letrero.dura * 1000) escena.letrero = null
@@ -505,7 +532,7 @@ function paso(ahora) {
     soltarReclamo()
   }
   pintar(ahora)
-  bucle = pato || escena.chatarra || escena.forma.pendiente || escena.letrero || escena.ascenso ? requestAnimationFrame(paso) : 0
+  bucle = pato || escena.chatarra || escena.pasada || escena.forma.pendiente || escena.letrero || escena.ascenso ? requestAnimationFrame(paso) : 0
 }
 
 function mover(dt) {
@@ -697,6 +724,7 @@ function pintar(ahora = performance.now()) {
   ctx.clearRect(0, 0, lienzo.width, lienzo.height)
   if (jugando) pintarContador()
   if (viaje) pintarParvada(viaje, ahora)
+  if (escena.pasada) pintarPasada(escena.pasada, ahora)
   if (letrero) pintarLetrero(letrero.cuadro)
   if (ascenso) pintarAscenso(ascenso, ahora)
   if (escena.chatarra) pintarChatarra()
@@ -737,6 +765,20 @@ function pintarParvada({ t0, parvada }, ahora) {
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.globalAlpha = 1
+}
+
+// El caza de la pasada, un píxel de su hoja por celda de la rejilla, y la
+// llama cambia de largo a cada cuadro.
+function pintarPasada({ t0, caza }, ahora) {
+  const { ctx, lienzo, alto, techo, celda, hojaPasadas: hoja } = escena
+  const t = (ahora - t0) / 1000
+  if (t < 0) return
+  const ancho = hoja.width / LLAMAS.length
+  const altoCuadro = hoja.height / PASADAS.length
+  const x = -ancho * celda + (t / TRAVESIA) * (lienzo.width + ancho * celda)
+  const y = techo + BANDA * (alto - techo) - (altoCuadro * celda) / 2
+  const llama = Math.floor(t * PARPADEO) % LLAMAS.length
+  ctx.drawImage(hoja, llama * ancho, caza * altoCuadro, ancho, altoCuadro, Math.round(x / celda) * celda, Math.round(y / celda) * celda, ancho * celda, altoCuadro * celda)
 }
 
 // Un rayo de luz baja del cielo y los cazados suben por él uno tras otro,
