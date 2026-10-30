@@ -25,7 +25,7 @@ import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
 import { ASIENTO, BISEL, DE_FRENTE, DONDE, FILA, MONITORES, dentro, dukyFeliz, radar } from '../escena13/tomas.mjs'
 import { enemigo } from '../escena13/visor.mjs'
-import { aSuDistancia, alargar, proyectar } from '../tiras.mjs'
+import { EN_CABINA, aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 import { aLoLejos, municion } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -146,9 +146,9 @@ const RAFAGAS = {
 }
 
 // Quien juega donde lo vea `camara`, tapado por lo que tenga delante.
-const marcar = (camara, objetivo) => (celdas, u, modo, distancias) => {
+const marcar = (camara, objetivo, abre) => (celdas, u, modo, distancias) => {
   const c = camara(u)
-  aSuDistancia(celdas, distancias, lejos(c, objetivo(u)), (cs) => enemigo(cs, u, modo, proyectar(c, objetivo(u))))
+  aSuDistancia(celdas, distancias, lejos(c, objetivo(u)), (cs) => enemigo(cs, u, modo, proyectar(c, objetivo(u), abre)))
 }
 
 // ── El ataque ────────────────────────────────────────────────────────────
@@ -159,13 +159,14 @@ const marcar = (camara, objetivo) => (celdas, u, modo, distancias) => {
 const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dispara, municiones: [desde, hasta], empieza = 0, piloto = feliz }) => {
   const cam = aBordo(maniobra, CAMARAS[camara])
   return {
+    abre: EN_CABINA,
     escena: (u) => {
       const T = enManiobra(maniobra(u))
       return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u))), ...(dispara ? dispara(u, T, cam(u)) : [])]
     },
     camara: cam,
     encima: (celdas, u, modo, distancias) => {
-      marcar(cam, objetivo)(celdas, u, modo, distancias)
+      marcar(cam, objetivo, EN_CABINA)(celdas, u, modo, distancias)
       municion(celdas, u, desde + (hasta - desde) * Math.min(1, Math.max(0, (u - empieza) / (1 - empieza))))
     },
   }
@@ -343,15 +344,15 @@ const SILLON_GIRADO = () => ({ moby: SILLON.giro })
 
 export const TOMAS_3D = {
   ...ATAQUE,
-  chillido: { escena: chilla, camara: aBordo(TEMBLOR, CAMARAS.tablero), encima: (celdas, u) => municion(celdas, u, 0) },
+  chillido: { abre: EN_CABINA, escena: chilla, camara: aBordo(TEMBLOR, CAMARAS.tablero), encima: (celdas, u) => municion(celdas, u, 0) },
   // Desde atrás y por babor: lo sigue hasta que se pierde hacia el portaaviones.
   retirada: {
     escena: (u) => [MAR, ...nubes(0.4 + 0.2 * u), ...PORTAAVIONES, ...enManiobra(S_PARTIDA(u)).formas(DE_HULE)],
     camara: (u) => [sum(ALTURA, [40, 4, -40]), lerp(sum(ALTURA, S_PARTIDA(u).en), sum(ALTURA, [-400, -40, 60]), tramo(u, 0.65, 1)), 50],
   },
-  respira: { escena: respira, camara: aBordo(NIVELADO, CAMARAS.tablero) },
+  respira: { abre: EN_CABINA, escena: respira, camara: aBordo(NIVELADO, CAMARAS.tablero) },
   // Donde estaba duky, solo quien juega y las nubes, quietas.
-  vacio: { escena: () => [MAR, ...nubes(0.4)], camara: aBordo(NIVELADO, CAMARAS.detras), encima: marcar(aBordo(NIVELADO, CAMARAS.detras), QUIETO) },
+  vacio: { abre: EN_CABINA, escena: () => [MAR, ...nubes(0.4)], camara: aBordo(NIVELADO, CAMARAS.detras), encima: marcar(aBordo(NIVELADO, CAMARAS.detras), QUIETO, EN_CABINA) },
 
   // Desde atrás, por sobre la mesa de control, los tres ante la pantalla sin señal.
   torre: enLaSala(sala(), fija([-0.6, 2.85, 0], [3.9, 1.3, 0], 62)),

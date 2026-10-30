@@ -1,5 +1,5 @@
 // Lo que la escena 13 pinta sobre los cuadros de la cabina de duky (el
-// `encima` de tiras.mjs), en pixeles del cuadro de LADO × LADO: quien juega,
+// `encima` de tiras.mjs), en pixeles del cuadro de ANCHO × ALTO: quien juega,
 // marcado como en la escena 6, y el anillo de su clic.
 
 import { objetivo, poner } from '../escena6/visor.mjs'

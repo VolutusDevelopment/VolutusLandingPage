@@ -19,7 +19,7 @@ import { ALMIRANTE, OFICIAL, suave } from '../escena1/personajes.mjs'
 import { ALTURA, nubes } from '../escena11/tomas.mjs'
 import { CONTROL, control } from './control.mjs'
 import { DUKE, MOBY } from './cazas.mjs'
-import { alargar } from '../tiras.mjs'
+import { EN_CABINA, alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
@@ -185,13 +185,13 @@ export const TOMAS_3D = {
   alarma: { escena: volando({ alarma: (u) => Math.floor(u * 6) % 2 === 0 }), camara: fija(sum(ALTURA, [24, -1, -26]), sum(ALTURA, [-5, 3, 9]), 42) },
   // Desde la consola, entre sus dos pantallas, de frente al oficial.
   regresen: { escena: RADIO, camara: fija([-27.45, PISO + 1.12, 24.2], [-27.6, PISO + 1.0, 25.75], 50) },
-  tengo: { escena: hablando('moby'), camara: DEL_TABLERO('moby') },
+  tengo: { abre: EN_CABINA, escena: hablando('moby'), camara: DEL_TABLERO('moby') },
   // Por su lado de popa, junto a los ventanales: detrás, la proa y el atardecer.
   presupuesto: { escena: RADIO, camara: fija([-30.6, PISO + 1.35, 24.3], [-27.9, PISO + 1.0, 26.7], 58) },
-  significa: { escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
-  recortado: { escena: hablando('duke'), camara: DEL_TABLERO('duke') },
-  contabilidad: { escena: hablando('moby'), camara: TEMBLANDO('moby') },
-  adicional: { escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
+  significa: { abre: EN_CABINA, escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
+  recortado: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
+  contabilidad: { abre: EN_CABINA, escena: hablando('moby'), camara: TEMBLANDO('moby') },
+  adicional: { abre: EN_CABINA, escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
 
   // Desde atrás y arriba, los dos bajan hacia la popa del barco.
   regresan: {

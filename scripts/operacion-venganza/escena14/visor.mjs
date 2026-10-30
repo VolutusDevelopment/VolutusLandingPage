@@ -1,11 +1,10 @@
 // Lo que la escena 14 pinta sobre los cuadros, en pixeles del cuadro de
-// LADO × LADO: el indicador de munición de la cabina de duky, abajo a la
+// ANCHO × ALTO: el indicador de munición de la cabina de duky, abajo a la
 // derecha, y quien juega chiquito, a lo lejos, por un ventanal de la sala.
 
 import { poner } from '../escena6/visor.mjs'
-import { ALTO, LADO } from '../../../src/lib/escena1.js'
+import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
 
-const ABAJO = (LADO + ALTO) / 2
 const SOMBRA = '#16191e'
 const AMBAR = '#ffad5c'
 const ROJO = '#ff3a2a'
@@ -36,7 +35,7 @@ export const municion = (celdas, u, quedan) => {
   const n = Math.max(0, Math.round(quedan))
   if (n === 0 && Math.floor(u * 16) % 2) return
   const color = n === 0 ? ROJO : AMBAR
-  const [x, y] = [LADO - 33, ABAJO - 16]
+  const [x, y] = [ANCHO - 33, ALTO - 16]
   dibujar(celdas, BALA, x, y, color)
   String(n).padStart(3, '0').split('').forEach((c, i) => dibujar(celdas, CIFRAS[c], x + 8 + i * 8, y, color))
 }

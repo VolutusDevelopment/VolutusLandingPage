@@ -12,8 +12,8 @@
  * alcanza a ver igual. Llena, tras `PASO` empieza la primera, y «Saltar escena» pasa a la
  * siguiente, o desde la última a lo que sigue.
  *
- * Cada toma se pinta en un lienzo de `LADO` × `ALTO` px, la franja del medio
- * de cada cuadro en 4:3, que el CSS agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas (`leer`), y
+ * Cada toma se pinta en un lienzo de `ANCHO` × `ALTO` px, en 21:9, que el CSS
+ * agranda sin suavizar. Sus líneas pasan solas, al ritmo de lo que tarda leerlas (`leer`), y
  * «Siguiente», Enter o la barra espaciadora pasan a la siguiente. Sin movimiento, cada toma queda en un solo cuadro.
  *
  * El navegador elige qué muestra la pantalla de la sala: con un puntero fino
@@ -51,7 +51,7 @@ import { quieto } from './lib/movimiento.js'
 import { CARGAS } from './lib/cargas.js'
 import { FLECHA, escalaDe } from './lib/flecha.js'
 
-const { ALTO, LADO, cuadrosDe, textoDe } = escena1
+const { ALTO, ANCHO, cuadrosDe, textoDe } = escena1
 const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
 const PASO = 120
 const MINIMO = 3000
@@ -206,7 +206,7 @@ function escena(raiz, guiones, tiras, modo) {
     const cuadro = quieto() ? (unaVez ? cuadros - 1 : cuadros / 2) : unaVez ? Math.min(paso, cuadros - 1) : paso % cuadros
     pincel.imageSmoothingEnabled = false
     const tira = tiras.get(tomas[toma])
-    if (tira.naturalWidth) pincel.drawImage(tira, cuadro * LADO, (LADO - ALTO) / 2, LADO, ALTO, 0, 0, LADO, ALTO)
+    if (tira.naturalWidth) pincel.drawImage(tira, cuadro * ANCHO, 0, ANCHO, ALTO, 0, 0, ANCHO, ALTO)
     requestAnimationFrame(dibujar)
   }
 

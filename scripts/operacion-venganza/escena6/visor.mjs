@@ -1,21 +1,16 @@
 // Lo que la escena 6 pinta sobre los cuadros (el `encima` de tiras.mjs), en
-// pixeles del cuadro de LADO × LADO: el visor de la cámara de la cabina de
-// duke y la marca de quien juega en el cielo. Solo se ve la franja del medio,
-// de ALTO pixeles (src/lib/escena1.js).
+// pixeles del cuadro de ANCHO × ALTO (src/lib/escena1.js): el visor de la
+// cámara de la cabina de duke y la marca de quien juega en el cielo.
 
-import { ALTO, LADO } from '../../../src/lib/escena1.js'
+import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
 import { FLECHA } from '../escena1/lugares.mjs'
-
-const ARRIBA = (LADO - ALTO) / 2
-const ABAJO = ARRIBA + ALTO - 1
-const MEDIO = LADO / 2
 
 const BLANCO = '#ffffff'
 const SOMBRA = '#16191e'
 const ROJO = '#e0201c'
 
 export const poner = (celdas, x, y, color) => {
-  if (y >= 0 && y < LADO && x >= 0 && x < LADO) celdas[y][x] = color
+  if (y >= 0 && y < ALTO && x >= 0 && x < ANCHO) celdas[y][x] = color
 }
 
 // Un dibujo de filas: `#` va de `color` y lleva sombra abajo a la derecha.
@@ -38,9 +33,9 @@ const PUNTO = ['.##.', '####', '####', '.##.']
 // La cámara de la cabina, grabando: el recuadro y, arriba a la izquierda, el
 // punto rojo que parpadea y «REC».
 export const grabando = (celdas, u) => {
-  esquinas(celdas, [5, ARRIBA + 5, LADO - 6, ABAJO - 5], 9, BLANCO)
-  if (Math.floor(u * 8) % 2 === 0) dibujar(celdas, PUNTO, 11, ARRIBA + 11, ROJO)
-  dibujar(celdas, REC, 17, ARRIBA + 11, BLANCO)
+  esquinas(celdas, [5, 5, ANCHO - 6, ALTO - 6], 9, BLANCO)
+  if (Math.floor(u * 8) % 2 === 0) dibujar(celdas, PUNTO, 11, 11, ROJO)
+  dibujar(celdas, REC, 17, 11, BLANCO)
 }
 
 // Una huella de 11 × 15 pixeles: surcos en óvalo, como en la pantalla de la sala.
@@ -55,7 +50,7 @@ const HUELLA = Array.from({ length: 15 }, (_, j) =>
 
 // Quien juega, marcado en el cielo en `[x, y]` (al medio del cuadro, si no se
 // dice): su cursor o su huella, entre cuatro esquinas rojas que laten.
-export const objetivo = (celdas, u, modo, [x, y] = [MEDIO, MEDIO]) => {
+export const objetivo = (celdas, u, modo, [x, y] = [ANCHO / 2, ALTO / 2]) => {
   if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== '.' && poner(celdas, x - 3 + i, y - 8 + j, c === '#' ? '#0c0e12' : BLANCO)))
   else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, x - 5 + i, y - 7 + j, c)))
   const lado = 14 + Math.abs(Math.floor(u * 12) % 2)

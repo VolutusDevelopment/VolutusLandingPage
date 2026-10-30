@@ -994,7 +994,15 @@ function perder() {
 function ganar() {
   estado = 'final'
   for (const c of Object.values(cazas)) if (c.presente) ir(c, w * 1.5, -h * 0.4, 420, 1.6)
-  decir(guion.FINAL, () => location.assign(raiz.dataset.sigue))
+  decir(guion.FINAL, salir)
+}
+
+// Vuelven las bandas negras de las escenas y, cuando llegan, siguen ellas.
+function salir() {
+  const sigue = () => location.assign(raiz.dataset.sigue)
+  if (quieto()) return sigue()
+  raiz.querySelector('.banda').addEventListener('transitionend', sigue, { once: true })
+  raiz.classList.remove('sin-bandas')
 }
 
 function pintarPV() {
@@ -1154,6 +1162,15 @@ export default function iniciar(elemento) {
   leido = raiz.querySelector('.nivel-leido')
   figura = raiz.querySelector('.nivel-jugador')
   pincel = figura.getContext('2d')
+
+  // Se van las bandas con que llega de las escenas; «Saltar nivel» las trae de vuelta.
+  raiz.getBoundingClientRect()
+  raiz.classList.add('sin-bandas')
+  raiz.addEventListener('click', (e) => {
+    if (!e.target.closest('a.escena-boton')) return
+    e.preventDefault()
+    salir()
+  })
 
   ajustar()
   camara.desde = camara.hacia = enRadianes(VISTAS[0].camara)

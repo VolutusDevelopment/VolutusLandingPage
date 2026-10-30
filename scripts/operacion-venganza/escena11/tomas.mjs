@@ -19,6 +19,7 @@ import { ASCENSOR, HANGAR, MAR, colocar, poner, portaaviones } from '../escena1/
 import { ALMIRANTE, OFICIAL, OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
 import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
 import { cic } from './cic.mjs'
+import { EN_CABINA } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -294,14 +295,16 @@ export const TOMAS_3D = {
   // atrás: lo deja en el asiento con el atardecer detrás, mientras la
   // plataforma llega a la cubierta.
   deposita: {
+    abre: EN_CABINA,
     escena: (u) => enElAscensor(SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
     camara: (u) => alLado(SUBE + (1 - SUBE) * suave(u), JUNTO_A_LA_CABINA),
   },
-  cinturon: { escena: (u) => enLaCabina(CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
+  cinturon: { abre: EN_CABINA, escena: (u) => enLaCabina(CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
   // Un último tirón, con fuerza: lo sostiene, se inclina a mirar la correa que
   // no cierra y la suelta. Se encoge de hombros, cierra la cabina, y duky
   // queda adentro un momento, sin cinturón.
   encoge: {
+    abre: EN_CABINA,
     escena: (u) => {
       const tira = 0.55 + 0.45 * tramo(u, 0, 0.09) * (1 - tramo(u, 0.24, 0.33))
       const mira = tramo(u, 0.15, 0.21) * (1 - tramo(u, 0.24, 0.3))
@@ -310,6 +313,7 @@ export const TOMAS_3D = {
     camara: () => alLado(1, JUNTO_A_LA_CABINA),
   },
   despegue: {
+    abre: EN_CABINA,
     escena: (u) => [MAR, ...portaaviones({ radar: u * 120 }), ...despegando(u).formas(conDuky({ motor: u > PISTA.lanza - 0.04, tren: u < PISTA.sale + 0.2 }, dukyDespega(u)))],
     camara: (u) => {
       const { punto } = despegando(u)
@@ -317,18 +321,18 @@ export const TOMAS_3D = {
       return [punto(enCabina(sum(TABLERO.ojo, [0, tiembla, tiembla]))), punto(enCabina(TABLERO.mira)), TABLERO.campo, res(punto([0, 1, 0]), punto([0, 0, 0]))]
     },
   },
-  emocion: { escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
+  emocion: { abre: EN_CABINA, escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
 
   // Desde su consola, junto a la pantalla, de frente al oficial; el almirante, detrás.
   radio: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.5, 1.15, 0.2], [1.0, 1.02, -0.05], 50) },
   // Mientras el oficial llama, duky de perfil frente al tablero del F-22, de un
   // lado y del otro: las pantallas encendidas y él, que no contesta.
-  silencio: { escena: (u) => volando(u), camara: fija(enVueloDe([1.2, 0.6, -1.45]), enVueloDe([1.9, -1.0, 0.7]), 96) },
+  silencio: { abre: EN_CABINA, escena: (u) => volando(u), camara: fija(enVueloDe([1.2, 0.6, -1.45]), enVueloDe([1.9, -1.0, 0.7]), 96) },
   // El radar de su consola, de cerca: aparece el eco.
   pitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([1.5, 1.2, -0.95], [2.12, 1.1, -0.5], 40) },
   // Por el lado izquierdo del oficial, el que no tapa su brazo.
   termina: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.0, 1.25, -1.2], [1.0, 1.0, 0.0], 54) },
-  calla: { escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
+  calla: { abre: EN_CABINA, escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
   // Desde el rincón del fondo, en alto, la sala entera: el almirante de
   // espaldas, el oficial en su consola y el eco otra vez en el radar grande.
   otroPitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([-3.1, 2.0, 2.3], [1.1, 1.1, -0.42], 58) },

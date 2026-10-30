@@ -9,13 +9,21 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { pixel3d } from './pilotos/tres.mjs'
 import { cielo } from './escena1/lugares.mjs'
-import { LADO, MODOS, cuadrosDe } from '../../src/lib/escena1.js'
+import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/escena1.js'
 
 const PUBLICO = fileURLToPath(new URL('../../public', import.meta.url))
 
+// Las cámaras de las tomas se pensaron para un cuadro de 4:3. En 21:9 cada una
+// abre su campo `ABRE` veces, y así se aleja un poco y no corta a nadie; la que
+// lo pida abre las suyas, `abre` en su TOMAS_3D: las de la cabina de un caza,
+// o pegadas a él, `EN_CABINA`.
+export const ABRE = 1.4
+export const EN_CABINA = 1.8
+const abrir = (campo, abre) => (360 / Math.PI) * Math.atan(abre * Math.tan((campo * Math.PI) / 360))
+
 // pixel3d entrega un SVG de tramos por color; de vuelta a una rejilla de colores.
-export const rejilla = (svg, lado) => {
-  const celdas = Array.from({ length: lado }, () => Array(lado).fill(null))
+export const rejilla = (svg, ancho, alto = ancho) => {
+  const celdas = Array.from({ length: alto }, () => Array(ancho).fill(null))
   for (const [, color, d] of svg.matchAll(/<path fill="(#[0-9a-f]{6})"(?: fill-opacity="[^"]+")? d="([^"]+)"/gi))
     for (const [, x, y, n] of d.matchAll(/M(\d+) (\d+)h(\d+)/g)) for (let i = 0; i < Number(n); i++) celdas[Number(y)][Number(x) + i] = color
   return celdas
@@ -80,15 +88,16 @@ export const png = (todos) => {
   return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), trozo('IHDR', cabecera), trozo('PLTE', rgb), trozo('tRNS', alfa), trozo('IDAT', deflateSync(filas, { level: 9 })), trozo('IEND', Buffer.alloc(0))])
 }
 
-// Un cuadro de LADO × LADO: `formas` vistas desde `camara` ([ojo, mira, campo,
-// vertical]), con el cielo del atardecer donde no hay nada. Si viene
-// `distancias`, se llena con la distancia a lo que se ve en cada pixel.
-export const cuadro = (formas, [ojo, mira, campo, vertical], distancias) =>
-  rejilla(pixel3d(formas, { ojo, mira, campo, vertical, cielo, distancias }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
+// Un cuadro de ANCHO × ALTO: `formas` vistas desde `camara` ([ojo, mira, campo,
+// vertical]), con el campo abierto `abre` veces y el cielo del atardecer donde
+// no hay nada. Si viene `distancias`, se llena con la distancia a lo que se ve
+// en cada pixel.
+export const cuadro = (formas, [ojo, mira, campo, vertical], distancias, abre = ABRE) =>
+  rejilla(pixel3d(formas, { ojo, mira, campo: abrir(campo, abre), vertical, cielo, distancias, filas: ALTO }, ANCHO, 1, { c: [0, 0, 0], radio: 1 }), ANCHO, ALTO)
 
 // Dónde cae `punto` en un cuadro de `camara`, como lo pinta pixel3d: [x, y]
 // en pixeles, o null si queda detrás de la cámara.
-export const proyectar = ([ojo, mira, campo, vertical = [0, 1, 0]], punto) => {
+export const proyectar = ([ojo, mira, campo, vertical = [0, 1, 0]], punto, abre = ABRE) => {
   const pto = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
   const cruz = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
   const uni = (a) => a.map((v) => v / Math.hypot(...a))
@@ -98,8 +107,8 @@ export const proyectar = ([ojo, mira, campo, vertical = [0, 1, 0]], punto) => {
   const v = punto.map((p, i) => p - ojo[i])
   const lejos = pto(v, f)
   if (lejos <= 0) return null
-  const abre = Math.tan((campo * Math.PI) / 360) * lejos
-  return [((pto(v, derecha) / abre + 1) * LADO) / 2, ((1 - pto(v, arriba) / abre) * LADO) / 2]
+  const medio = Math.tan((abrir(campo, abre) * Math.PI) / 360) * lejos
+  return [((pto(v, derecha) / medio + 1) * ANCHO) / 2, ALTO / 2 - (pto(v, arriba) / medio) * (ANCHO / 2)]
 }
 
 // Lo que `dibuja` pinta sobre `celdas` a `lejos` metros de la cámara, tapado
@@ -113,9 +122,10 @@ export const aSuDistancia = (celdas, distancias, lejos, dibuja) => {
 // La misma toma 3D en una tira más larga, al mismo ritmo: el u de la tira
 // nueva recorre de `desde` a `hasta` del u de la vieja. Antes de 0 queda como
 // empieza, y después de 1 como termina, o sigue su ciclo.
-export const alargar = ({ escena, camara, encima }, desde, hasta) => {
+export const alargar = ({ escena, camara, encima, abre }, desde, hasta) => {
   const viejo = (u) => desde + (hasta - desde) * u
   return {
+    abre,
     escena: (u, modo) => escena(viejo(u), modo),
     camara: (u) => camara(viejo(u)),
     encima: encima && ((celdas, u, modo, distancias) => encima(celdas, viejo(u), modo, distancias)),
@@ -134,12 +144,12 @@ export const escribir = (ruta, datos) => {
 // recibe las distancias de cada pixel para que lo de atrás quede tapado.
 export const escribirTiras = (TOMAS, TOMAS_3D, rutaDeToma) => {
   for (const toma of TOMAS) {
-    const { escena, camara, encima } = TOMAS_3D[toma.id]
+    const { escena, camara, encima, abre } = TOMAS_3D[toma.id]
     for (const modo of toma.segunModo ? MODOS : [MODOS[0]]) {
       const cuadros = Array.from({ length: cuadrosDe(toma) }, (_, k) => {
         const u = k / cuadrosDe(toma)
         const distancias = []
-        const celdas = cuadro(escena(u, modo), camara(u), distancias)
+        const celdas = cuadro(escena(u, modo), camara(u), distancias, abre)
         encima?.(celdas, u, modo, distancias)
         return celdas
       })

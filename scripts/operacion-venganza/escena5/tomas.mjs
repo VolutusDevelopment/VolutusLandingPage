@@ -15,7 +15,7 @@ import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, silaba, suave } from '../escen
 import { giroHacia } from '../escena2/reunion.mjs'
 import { ESCALA as K, RUEDAS, SUELO, caza, enCabina } from '../escena3/caza.mjs'
 import { ACELERADOR, PALANCA } from '../pilotos/interiores.mjs'
-import { alargar } from '../tiras.mjs'
+import { EN_CABINA, alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -176,6 +176,7 @@ const marinos = (u) => {
 
 export const TOMAS_3D = {
   aproximacion: {
+    abre: EN_CABINA,
     escena: (u) => [...BARCO, ...aproximacion(u)],
     // Detrás y arriba, sin mecerse con él: el barco asoma sobre el caza.
     camara: (u) => {
@@ -183,7 +184,7 @@ export const TOMAS_3D = {
       return [punto([-26, 10, 0]), punto([30, -2.9, 0]), 50]
     },
   },
-  aterrizaje: { escena: (u) => [...BARCO, ...enLaCabina(u), ...humo(u), ...marinos(u)], camara: camaraEnLaCabina },
+  aterrizaje: { abre: EN_CABINA, escena: (u) => [...BARCO, ...enLaCabina(u), ...humo(u), ...marinos(u)], camara: camaraEnLaCabina },
   pose: alargar(
     {
       escena: (u) => [...estacionado(), ...colocar(pose(u), { k: K, en: [3.2, CUBIERTA, -8.2], giro: giroHacia([3.2, -8.2], [4.6, -10.4]) })],

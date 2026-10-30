@@ -1,4 +1,4 @@
-import { ALTO, LADO } from '../lib/escena1.js'
+import { ALTO, ANCHO } from '../lib/escena1.js'
 import { FINALES } from '../lib/escena16.js'
 import { CARGAS } from '../lib/cargas.js'
 import * as nivel1 from '../lib/nivel1.js'
@@ -133,17 +133,17 @@ function Escena({ ruta }) {
       </Carga>
 
       <section className="escena" aria-label={`Escena ${numero}: ${nombre}`} hidden>
-        <canvas className="escena-cuadro" width={LADO} height={ALTO} aria-hidden="true" />
+        <canvas className="escena-cuadro" width={ANCHO} height={ALTO} aria-hidden="true" />
         <div className="escena-linea" aria-live="polite">
           <p className="escena-quien" />
           <p className="escena-texto" />
         </div>
         <p className="escena-mandos">
-          <button className="escena-boton escena-siguiente" type="button">
-            Siguiente
-          </button>
           <button className="escena-boton escena-saltar" type="button">
             Saltar escena
+          </button>
+          <button className="escena-boton escena-siguiente" type="button">
+            Siguiente
           </button>
         </p>
         {finales && (
@@ -180,6 +180,8 @@ function Nivel({ ruta }) {
     <main id="contenido" className="venganza nivel" data-nivel={nivel} data-sigue={sigue}>
       <h1 className="venganza-titulo">{`Operación Venganza, nivel ${nivel}: ${nombre}`}</h1>
       <canvas className="nivel-cielo" aria-hidden="true" />
+      <div className="banda banda-arriba" aria-hidden="true" />
+      <div className="banda banda-abajo" aria-hidden="true" />
 
       <header className="nivel-arriba">
         <p className="nivel-nombre">{`Nivel ${nivel} · ${nombre}`}</p>

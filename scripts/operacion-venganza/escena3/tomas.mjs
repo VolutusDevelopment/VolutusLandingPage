@@ -12,7 +12,7 @@ import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs
 import { FLECHA, MAR, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { curva, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { BOTON, EN_CATAPULTA, ESCALA, SUELO, caza, enCaza, enPiloto } from './caza.mjs'
-import { alargar } from '../tiras.mjs'
+import { EN_CABINA, alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)
@@ -172,21 +172,23 @@ export const TOMAS_3D = {
     },
   },
   cabina: {
+    abre: EN_CABINA,
     escena: enCabinaCon(() => sentado()),
     camara: (u) => {
       const k = suave(u)
       return [lerp(enCaza([4.4, 2.6, -3.4]), enPiloto([3.4, 1.0, 0]), k), lerp(enCaza([5.0, 1.0, 0]), enPiloto([0, 0.1, 0]), k), 50 + 35 * k]
     },
   },
-  gafas: alargar({ escena: enCabinaCon(ajustaGafas), camara: fija(enPiloto([2.9, 0.95, -1.3]), enPiloto([0.4, 0.7, -0.15]), 55) }, 0, 17 / 12),
-  medallas: { escena: enCabinaCon(revisaMedallas), camara: fija(enPiloto([2.6, 0.5, -1.15]), enPiloto([0.4, -0.15, -0.25]), 62) },
-  presentacion: { escena: enCabinaCon((u) => enCabina(() => DUCK.hablando(u))), camara: fija(enPiloto([3.2, 1.2, 0.1]), enPiloto([0.1, 0.3, 0]), 72) },
+  gafas: alargar({ abre: EN_CABINA, escena: enCabinaCon(ajustaGafas), camara: fija(enPiloto([2.9, 0.95, -1.3]), enPiloto([0.4, 0.7, -0.15]), 55) }, 0, 17 / 12),
+  medallas: { abre: EN_CABINA, escena: enCabinaCon(revisaMedallas), camara: fija(enPiloto([2.6, 0.5, -1.15]), enPiloto([0.4, -0.15, -0.25]), 62) },
+  presentacion: { abre: EN_CABINA, escena: enCabinaCon((u) => enCabina(() => DUCK.hablando(u))), camara: fija(enPiloto([3.2, 1.2, 0.1]), enPiloto([0.1, 0.3, 0]), 72) },
   advertencia: {
+    abre: EN_CABINA,
     escena: enCabinaCon((u) => enCabina(() => gesto('señala')(u, { tronco: hablar(DUCK_ONE, silaba(u)) }))),
     camara: fija(enPiloto([2.6, 0.5, -0.9]), enPiloto([0.3, 0.4, -0.3]), 72),
   },
-  instrumentos: { escena: enCabinaCon(buscaElBoton), camara: fija(enPiloto([-0.6, 1.4, -1.4]), enPiloto([1.8, -1.0, 0]), 85) },
-  boton: { escena: (u) => enCatapulta(pulsaElBoton(u)), camara: fija(enPiloto([1.2, -0.6, -1.5]), enPiloto([1.75, -1.45, -0.85]), 50) },
+  instrumentos: { abre: EN_CABINA, escena: enCabinaCon(buscaElBoton), camara: fija(enPiloto([-0.6, 1.4, -1.4]), enPiloto([1.8, -1.0, 0]), 85) },
+  boton: { abre: EN_CABINA, escena: (u) => enCatapulta(pulsaElBoton(u)), camara: fija(enPiloto([1.2, -0.6, -1.5]), enPiloto([1.75, -1.45, -0.85]), 50) },
   // Barre el parabrisas de lado a lado, y duck-one lo sigue con la cabeza.
   limpiaparabrisas: {
     escena: (u) => {
@@ -196,6 +198,7 @@ export const TOMAS_3D = {
     camara: fija(enCaza([8.6, 2.7, 0.3]), enCaza([5.9, 1.2, 0]), 34),
   },
   excelente: {
+    abre: EN_CABINA,
     escena: enCabinaCon((u) => enCabina(() => gesto('pulgar arriba')(u, { tronco: hablar(DUCK_ONE, silaba(u) * 0.8) }))),
     camara: fija(enPiloto([2.8, 0.8, -1.2]), enPiloto([0, 0.1, 0.1]), 80),
   },

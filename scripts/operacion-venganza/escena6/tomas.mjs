@@ -16,6 +16,7 @@ import { MAR, SOL, poner } from '../escena1/lugares.mjs'
 import { hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { ALTURA, nubes } from '../escena11/tomas.mjs'
 import { DUKE, MOBY } from '../escena9/cazas.mjs'
+import { EN_CABINA } from '../tiras.mjs'
 import { grabando, objetivo } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -150,37 +151,42 @@ export const TOMAS_3D = {
     camara: (u) => [VUELO.punto(sum(ALTURA, lerp([34, -2, -20], [27, -1, -14], suave(u)))), VUELO.punto(sum(ALTURA, [-11, 1, -6])), 46],
   },
 
-  monstruo: { escena: hablando('moby', { humea: false }), camara: DEL_TABLERO('moby') },
-  sensores: { escena: hablando('duke'), camara: DEL_TABLERO('duke') },
-  mejor: { escena: hablando('moby', { humea: false }), camara: TEMBLANDO('moby') },
-  camaras: { escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
-  graben: { escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
-  humo: { escena: hablando('duke'), camara: DEL_TABLERO('duke') },
+  monstruo: { abre: EN_CABINA, escena: hablando('moby', { humea: false }), camara: DEL_TABLERO('moby') },
+  sensores: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
+  mejor: { abre: EN_CABINA, escena: hablando('moby', { humea: false }), camara: TEMBLANDO('moby') },
+  camaras: { abre: EN_CABINA, escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
+  graben: { abre: EN_CABINA, escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
+  humo: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
 
   gira: {
     escena: volando({ pilotos: { duke: (u) => sentadoCon(u < 0.5 ? dukeCerrado : dukeAbierto, DE_PERFIL * tramo(u, 0.1, 0.7)) } }),
+    abre: EN_CABINA,
     camara: SU_CAMARA,
     encima: grabando,
   },
   presenta: {
     escena: volando({ pilotos: { duke: (u) => sentadoCon(hablar(dukeAbierto, silaba(u) * 0.8), DE_PERFIL) } }),
+    abre: EN_CABINA,
     camara: SU_CAMARA,
     encima: grabando,
   },
   destellos: {
     escena: volando({ pilotos: { duke: (u) => sentadoCon(dukeCerrado, DE_PERFIL, destellos(ANILLO, u, 2.2)) } }),
+    abre: EN_CABINA,
     camara: SU_CAMARA,
     encima: grabando,
   },
-  pato: { escena: hablando('moby'), camara: TEMBLANDO('moby') },
+  pato: { abre: EN_CABINA, escena: hablando('moby'), camara: TEMBLANDO('moby') },
   indescriptible: {
     escena: volando({ pilotos: { duke: (u) => sentadoCon(hablar(dukeCerrado, silaba(u) * 0.8), DE_PERFIL, destellos(ANILLO.slice(0, 3), u, 2)) } }),
+    abre: EN_CABINA,
     camara: SU_CAMARA,
     encima: grabando,
   },
 
   acelera: {
     escena: volando({ pilotos: { duke: (u) => sentadoCon(dukeAbierto, loSigue(u)) }, en: { moby: PASA } }),
+    abre: EN_CABINA,
     camara: DEL_TABLERO('duke'),
   },
   objetivo: { escena: seLanza, camara: fija(sum(ALTURA, [-22, 3, 0]), MARCA, 50), encima: objetivo },

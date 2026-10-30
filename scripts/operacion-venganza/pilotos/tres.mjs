@@ -186,6 +186,7 @@ export function marco(figura, conEstela = false) {
 // toma = { giro, altura, alabeo, cabeceo }: giro alrededor de la figura (0 = de
 // frente, -90 = su costado izquierdo), altura de la cámara (negativa = desde
 // abajo), alabeo y cabeceo del propio modelo (un caza virando o picando).
+// toma.filas: el alto del cuadro, si no es cuadrado; el campo es el del ancho.
 export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado = 0.94) {
   const { giro = 0, altura = 0, alabeo = 0, cabeceo = 0 } = toma
   const M = mm(rotX(alabeo), rotZ(cabeceo))
@@ -206,15 +207,16 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   // cada celda (Infinity para el cielo y para lo que fig.lejos(p) diga que
   // está pintado lejos, como la vista de un ventanal).
   const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
+  const filas = toma.filas ?? n
   const celdas = []
-  for (let j = 0; j < n; j++) {
+  for (let j = 0; j < filas; j++) {
     const fila = []
     for (let i = 0; i < n; i++) {
       const sx = (i + 0.5 - n / 2) * paso
-      const sy = (n / 2 - j - 0.5) * paso
+      const sy = (filas / 2 - j - 0.5) * paso
       const origenMundo = ojo ?? sum(sum(sum(encuadre.c, esc(dir, distancia)), esc(derecha, sx)), esc(arriba, sy))
       const o = sum(mv(Mt, res(origenMundo, encuadre.c)), encuadre.c)
-      const rayo = ojo ? uni(sum(f, sum(esc(derecha, ((i + 0.5 - n / 2) / (n / 2)) * abre), esc(arriba, ((n / 2 - j - 0.5) / (n / 2)) * abre)))) : f
+      const rayo = ojo ? uni(sum(f, sum(esc(derecha, ((i + 0.5 - n / 2) / (n / 2)) * abre), esc(arriba, ((filas / 2 - j - 0.5) / (n / 2)) * abre)))) : f
       const d = mv(Mt, rayo)
       const golpes = []
       for (const fig of figura) {
@@ -260,7 +262,7 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   toma.distancias?.push(...celdas.map((fila) => fila.map((v) => (!v || v.lejos ? Infinity : v.t))))
   const salto = encuadre.radio * 0.05
   const vacia = (i, j, t) => {
-    if (i < 0 || j < 0 || i >= n || j >= n) return true
+    if (i < 0 || j < 0 || i >= n || j >= filas) return true
     const v = celdas[j][i]
     return !v || v.estela || (ojo ? v.t > t * 1.12 + 0.02 : v.t > t + salto)
   }

@@ -1,6 +1,6 @@
 /* ---- Operación Venganza ----
-   Una pantalla: la carga en el azul del juego y la escena en la noche de la
-   sala. El documento toma el mismo color (ver `html` en index.css), y
+   Una pantalla: la carga en el azul del juego y la escena a oscuras, como en
+   el cine. El documento toma el mismo color (ver `html` en index.css), y
    operacion-venganza.js cambia `theme-color` al empezar la escena. Nada va
    fijo: la página ocupa la vista en el flujo, y Safari no pinta franjas. */
 :root:has(.venganza) {
@@ -8,7 +8,7 @@
 }
 
 :root:has(.en-escena) {
-  --fondo-de-arriba: #0a1a2a;
+  --fondo-de-arriba: #000000;
 }
 
 .venganza {
@@ -208,27 +208,53 @@
 }
 
 /* ---- La escena ----
-   El cuadro es 4:3 en toda pantalla, del ancho que deje libre su alto. La línea
-   tiene su alto fijo: el texto cambia y nada se mueve. */
-.escena,
-.fin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--e-6);
+   Como en el cine: el cuadro en 21:9 al medio, entre dos bandas negras de al
+   menos `--banda` de alto. Abajo van los subtítulos, con su alto fijo: el texto
+   cambia y nada se mueve. Arriba, en los extremos de la pantalla, «Saltar
+   escena» y «Siguiente», o los dos finales de la escena 16. */
+.venganza {
+  --banda: calc(7.5rem + 2 * var(--e-4));
+}
+
+@media (max-width: 359px) {
+  .venganza {
+    --banda: calc(9.375rem + 2 * var(--e-4));
+  }
+}
+
+.venganza.en-escena {
+  padding: 0;
+}
+
+.escena {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(var(--banda), 1fr) auto minmax(var(--banda), 1fr);
+  justify-items: center;
   width: 100%;
+  min-height: 100svh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.escena > * {
+  grid-column: 1;
 }
 
 .escena-cuadro {
+  grid-row: 2;
   display: block;
-  width: min(100%, calc((100svh - 17rem) * 4 / 3));
-  aspect-ratio: 4 / 3;
+  width: min(100%, calc((100svh - 2 * var(--banda)) * 21 / 9));
+  aspect-ratio: 21 / 9;
   image-rendering: pixelated;
 }
 
 .escena-linea {
+  grid-row: 3;
+  align-self: start;
   width: min(100%, 40rem);
   height: 7.5rem;
+  margin-top: var(--e-4);
+  padding-inline: var(--e-4);
   text-align: center;
 }
 
@@ -267,16 +293,37 @@
   margin: 0;
 }
 
-/* «Siguiente» y los finales de la escena 16 se turnan en el mismo lugar. */
+/* «Siguiente» y los finales de la escena 16 se turnan. */
 .escena-mandos[hidden] {
   display: none;
 }
 
-/* En el teléfono los finales van en dos filas: los mandos guardan ese alto
-   desde el principio, para que el cuadro no salte al cambiar. */
-.escena:has(.escena-eleccion) .escena-mandos {
-  align-content: flex-start;
-  min-height: calc(88px + var(--e-3));
+.escena-saltar,
+.escena-siguiente {
+  position: absolute;
+  top: max(var(--e-4), env(safe-area-inset-top));
+}
+
+.escena-saltar {
+  left: max(var(--e-4), env(safe-area-inset-left));
+}
+
+.escena-siguiente {
+  right: max(var(--e-4), env(safe-area-inset-right));
+}
+
+/* En el teléfono no caben en una fila: el segundo final baja, y sigue a la derecha. */
+.escena-eleccion {
+  grid-row: 1;
+  align-self: start;
+  justify-content: space-between;
+  width: 100%;
+  max-width: none;
+  padding: max(var(--e-4), env(safe-area-inset-top)) max(var(--e-4), env(safe-area-inset-right)) 0 max(var(--e-4), env(safe-area-inset-left));
+}
+
+.escena-eleccion > :last-child {
+  margin-left: auto;
 }
 
 .escena-boton {
@@ -297,6 +344,14 @@
 /* ---- El final ----
    El índice de las escenas construidas, una fila por escena: la que se acaba
    de ver va marcada. */
+.fin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e-6);
+  width: 100%;
+}
+
 .fin-escenas {
   display: flex;
   flex-direction: column;
@@ -448,6 +503,46 @@
 
 .nivel-jugador[hidden] {
   display: none;
+}
+
+/* Las bandas negras de las escenas, a su mismo alto: al empezar el nivel se
+   van por arriba y por abajo, lineales, y al terminarlo vuelven antes de
+   seguir a las escenas (combate.js). Sin movimiento, no se ven. */
+.banda {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: calc((100svh - min(100vw, (100svh - 2 * var(--banda)) * 21 / 9) * 9 / 21) / 2);
+  background: #000000;
+  pointer-events: none;
+  transition: translate 0.8s linear;
+}
+
+.banda-arriba {
+  top: 0;
+}
+
+.banda-abajo {
+  bottom: 0;
+}
+
+.sin-bandas .banda {
+  transition-delay: 0.2s;
+}
+
+.sin-bandas .banda-arriba {
+  translate: 0 -100%;
+}
+
+.sin-bandas .banda-abajo {
+  translate: 0 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banda {
+    display: none;
+  }
 }
 
 .nivel .escena-boton {

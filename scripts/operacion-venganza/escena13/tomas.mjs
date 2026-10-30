@@ -10,7 +10,7 @@
 // cara de duky, la cabina y el radar.
 
 import { MAR, PANTALLA, colocar } from '../escena1/lugares.mjs'
-import { el, pixel3d, transformar } from '../pilotos/tres.mjs'
+import { el, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
 import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { PERSONAJES, dukyFigura, figura, manosAndando, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
@@ -19,8 +19,8 @@ import { duckOne } from '../escena2/patoon.mjs'
 import { K, fase, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
-import { aSuDistancia, alargar, cuadro, proyectar, rejilla } from '../tiras.mjs'
-import { ALTO, LADO } from '../../../src/lib/escena1.js'
+import { EN_CABINA, aSuDistancia, alargar, cuadro, proyectar } from '../tiras.mjs'
+import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
 import { enemigo } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -85,6 +85,7 @@ const disparos = (u, T, ojo) =>
 const cabina = ({ alabeo = NIVELADO, dispara = false, blanco = BLANCO, clic = () => 0 }) => {
   const camara = detras(alabeo)
   return {
+    abre: EN_CABINA,
     escena: (u) => {
       const T = enVuelo(alabeo(u))
       return [MAR, ...nubes(u), ...T.formas(caza(u)), ...(dispara ? disparos(u, T, camara(u)[0]) : [])]
@@ -93,7 +94,7 @@ const cabina = ({ alabeo = NIVELADO, dispara = false, blanco = BLANCO, clic = ()
     // Quien juega, tapado por lo que tenga delante: la cabeza de duky, el caza.
     encima: (celdas, u, modo, distancias) => {
       const [c, en] = [camara(u), blanco(u)]
-      if (en) aSuDistancia(celdas, distancias, Math.hypot(...res(en, c[0])), (cs) => enemigo(cs, u, modo, proyectar(c, en), clic(u)))
+      if (en) aSuDistancia(celdas, distancias, Math.hypot(...res(en, c[0])), (cs) => enemigo(cs, u, modo, proyectar(c, en, EN_CABINA), clic(u)))
     },
   }
 }
@@ -112,9 +113,9 @@ const CABINAS = {
 // ── Los monitores de la sala ─────────────────────────────────────────────
 
 // Un cuadro de una toma, con lo que lleva encima.
-const grabar = ({ escena, camara, encima }, u, modo) => {
+const grabar = ({ escena, camara, encima, abre }, u, modo) => {
   const distancias = []
-  const celdas = cuadro(escena(u), camara(u), distancias)
+  const celdas = cuadro(escena(u), camara(u), distancias, abre)
   encima?.(celdas, u, modo, distancias)
   return celdas
 }
@@ -124,8 +125,7 @@ export const MONITORES = { cara: [0.015, 0.27], cabina: [0.29, 0.71], radar: [0.
 export const BISEL = '#16191e'
 const VACIO = '#0e1a2a'
 export const dentro = (u, [a, b]) => u >= a && u <= b
-const ARRIBA = (LADO - ALTO) / 2
-const celda = (celdas, x, y) => celdas[Math.min(LADO - 1, Math.floor(y))]?.[Math.min(LADO - 1, Math.floor(x))] ?? VACIO
+const celda = (celdas, x, y) => celdas[Math.min(ALTO - 1, Math.floor(y))]?.[Math.min(ANCHO - 1, Math.floor(x))] ?? VACIO
 
 // El radar: barrido verde, duky al centro y quien juega, que parpadea.
 export const radar = (t, cu, cv) => {
@@ -139,9 +139,11 @@ export const radar = (t, cu, cv) => {
   return atras < 0.6 ? '#1f5a36' : '#123a24'
 }
 
-// Prendida: la cara de duky, la cabina de `toma` y el radar.
+// Prendida: la cara de duky, la cabina de `toma` y el radar. La cara abre el
+// campo hasta cubrir de alto lo que cubría el cuadro cuadrado de antes; la
+// cabina, la franja de 4:3 del medio.
 export const prendida = (toma, t, modo) => {
-  const cara = grabar({ escena: CABINAS.vuela.escena, camara: SU_CARA }, t, modo)
+  const cara = grabar({ escena: CABINAS.vuela.escena, camara: SU_CARA, abre: ANCHO / ALTO }, t, modo)
   const vista = grabar(CABINAS[toma], t, modo)
   return (u, v) => {
     const cv = (v - 0.03) / 0.94
@@ -149,8 +151,8 @@ export const prendida = (toma, t, modo) => {
     if (!monitor) return BISEL
     const [quien, [a, b]] = monitor
     const cu = (u - a) / (b - a)
-    if (quien === 'cara') return celda(cara, (0.5 + (cu - 0.5) * 0.78) * LADO, (1 - cv) * LADO)
-    if (quien === 'cabina') return celda(vista, cu * LADO, ARRIBA + (1 - cv) * ALTO)
+    if (quien === 'cara') return celda(cara, ANCHO / 2 + (cu - 0.5) * 0.78 * ALTO, (1 - cv) * ALTO)
+    if (quien === 'cabina') return celda(vista, ANCHO / 2 + (cu - 0.5) * (4 / 3) * ALTO, (1 - cv) * ALTO)
     return radar(t, cu, cv)
   }
 }
@@ -164,7 +166,7 @@ const NEGRO = '#0b0e12'
 const espejo = ([x, y, z]) => [2 * PANTALLA.x - x, y, z]
 const apagada = (formas, [ojo, mira, campo]) => {
   const camara = [espejo(ojo), espejo(mira), campo]
-  const reflejo = rejilla(pixel3d(formas, { ojo: camara[0], mira: camara[1], campo }, LADO, 1, { c: [0, 0, 0], radio: 1 }), LADO)
+  const reflejo = cuadro(formas, camara)
   return (u, v) => {
     const { y0, y1, z0, z1 } = PANTALLA
     const en = proyectar(camara, [PANTALLA.x, y0 + v * (y1 - y0), z0 + u * (z1 - z0)])

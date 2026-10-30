@@ -3,7 +3,7 @@
  * src/operacion-venganza.js, toma por toma.
  *
  * Cada toma es una tira de `CUADROS` cuadros (o los suyos, `cuadros`) de
- * `LADO` px de lado, pintados
+ * `ANCHO` × `ALTO` px, en 21:9, pintados
  * con el motor de las láminas (scripts/operacion-venganza/escena1/sprites.mjs
  * los escribe en `public/`). `ms` es lo que dura cada cuadro; `unaVez`, que
  * la tira corre una sola vez y se queda en el último (la flota que llega, la
@@ -21,9 +21,9 @@
  */
 
 export const CUADROS = 12
-export const LADO = 144
-// Lo que se ve de cada cuadro: la franja del medio, en 4:3.
-export const ALTO = (LADO * 3) / 4
+// 21:9 a la resolución de las cinemáticas de 32 bits.
+export const ANCHO = 336
+export const ALTO = 144
 
 // La pantalla de carga: duck-one caminando, de tres cuartos.
 export const CARGA = { cuadros: 8, lado: 72, ruta: '/operacion-venganza/carga.png' }
