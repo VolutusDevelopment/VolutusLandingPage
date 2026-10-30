@@ -28,7 +28,7 @@ const TOMAS = [
   ['picado', { giro: 35, altura: 35 }],
   ['del otro lado', { giro: 40, altura: 8 }],
 ]
-// Quieto en pleno ataque de tos, con el llanto a chorros.
+// Quieto en pleno ataque de tos, con las lágrimas cayéndole por la cara.
 const QUIETO = 9
 
 const esSombra = (f) => f.flat === '#4a80e6'

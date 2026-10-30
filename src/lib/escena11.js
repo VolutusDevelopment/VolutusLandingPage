@@ -28,10 +28,16 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'Lo intenta una vez más, se rinde y cierra la cabina. Duky se queda sin cinturón.' }],
   },
-  // Desde el comienzo de la pista hasta que deja el portaaviones, en 3 s, con
-  // la cámara siempre en duky: pegado al asiento y, ya en el aire, feliz.
-  { id: 'despegue', ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: 'El avión despega.' }] },
-  { id: 'emocion', ms: 150, lineas: [{ texto: 'Duky se pone feliz: exhala e inhala rápidamente, de la emoción.' }] },
+  // Una sola toma, con la cámara siempre en duky: desde el comienzo de la
+  // pista, pegado al asiento, hasta que deja el portaaviones; ya en el aire,
+  // 2 s de calma y la segunda línea, cuando se pone feliz.
+  {
+    id: 'despegue',
+    ms: 100,
+    cuadros: 74,
+    unaVez: true,
+    lineas: [{ texto: 'El avión despega.' }, { texto: 'Duky se pone feliz: exhala e inhala rápidamente, de la emoción.', cuadro: 39 }],
+  },
 
   // La radio: el oficial, desde la sala azul, y duky en su cabina.
   { id: 'radio', ms: 150, lineas: [{ quien: OFICIAL, texto: 'Torre de control, aquí torre de control, ¿me recibe?' }] },

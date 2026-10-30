@@ -67,6 +67,9 @@ const BLANCO = (u) => sum(ALTURA, [140, 30 + 6 * Math.sin(vuelta(u) * 2), 24 * M
 // la raíz de cada ala (pilotos/modelos.mjs); quedan detrás de la cámara, y los
 // tiros entran por abajo a cada lado del cuadro.
 export const CANONES = [[1.85, 0.22, 1.45], [1.85, 0.22, -1.45]]
+// Su munición es violeta, como en el juego (combate.js), y lila en el centro.
+export const VIOLETA = '#9a6cff'
+export const LILA = '#efe6ff'
 const TIROS = 12
 const VIAJE = 0.25
 const disparos = (u, T, ojo) =>
@@ -80,7 +83,7 @@ const disparos = (u, T, ojo) =>
     const [a, b] = [lerp(canon, llega, s ** 2.5), lerp(canon, llega, Math.min(1, s + 0.2) ** 2.5)]
     // Un par de pixeles de grueso, a cualquier distancia.
     const grosor = 0.02 + 0.02 * Math.hypot(...res(a, ojo))
-    return [M.hueso(a, b, grosor, C.boca, { flat: '#ff3a2a', brilla: true })]
+    return [M.hueso(a, b, grosor, C.boca, { flat: VIOLETA, brilla: true })]
   }).flat()
 
 // Una toma de la cabina: qué hay, desde dónde y dónde va quien juega.
@@ -191,7 +194,7 @@ const apagada = (formas, [ojo, mira, campo], t) => {
 export const FILA = 2.7
 export const DONDE = { duke: { en: [FILA, 0, -1.7], giro: 0 }, moby: { en: [FILA, 0, 0], giro: 0, suelo: pMoby.suelo }, duckOne: { en: [FILA, 0, 1.7], giro: 0 } }
 const reposo = (p) => ({ 1: p.reposo(1), [-1]: p.reposo(-1) })
-export const mobyQuieto = (u, abre = 0) => figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, abre })], manos: reposo(pMoby) })
+export const mobyQuieto = (u, abre = 0, llanto = 0) => figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, abre, llanto })], manos: reposo(pMoby) })
 export const SIN_HUMO = { humea: false }
 
 const quietos = (u) => ({ duckOne: duckOne.atras(), moby: mobyQuieto(u), duke: DUKE.sentado(u, reposo(pDuke)) })
@@ -207,13 +210,14 @@ export const ante = (toma, cambios = () => ({})) => (u, modo) => reunion({ panta
 const HACIA_DUKY = { ...DONDE.moby, giro: giroHacia([FILA, 0], [PANTALLA.x, -1.85]) }
 
 // Para mirarse, moby se acerca a la pantalla; la cámara, por sobre su hombro
-// izquierdo, lo ve a él y a su reflejo. `abre`, su pico; hasta `apaga`, la
-// pantalla sigue prendida.
+// izquierdo, lo ve a él y a su reflejo. `abre`, su pico, y `llanto`, sus
+// lágrimas (modelos.mjs): no le gusta lo que ve. Hasta `apaga`, la pantalla
+// sigue prendida.
 const AL_VIDRIO = { ...DONDE.moby, en: [3.1, 0, 0] }
 const ANTE_EL_REFLEJO = [[1.8, 1.55, -1.1], [PANTALLA.x, 1.3, 0.3], 56]
 const DE_CERCA = [[1.8, 1.45, -1.15], [PANTALLA.x, 1.25, 0.3], 44]
-const seRefleja = (camara, abre, apaga = 0) => (u, modo) => {
-  const moby = mobyQuieto(u, abre(u))
+const seRefleja = (camara, { abre = () => 0, llanto, apaga = 0 }) => (u, modo) => {
+  const moby = mobyQuieto(u, abre(u), llanto(u))
   const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara, u)
   return reunion({ pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
 }
@@ -221,7 +225,7 @@ const seRefleja = (camara, abre, apaga = 0) => (u, modo) => {
 // a duky hasta el vidrio y se vuelve hacia él; poco después, se apaga.
 const ACERCA = [-0.375, -0.06]
 const seAcercaYSeRefleja = (u, modo) => {
-  if (u >= ACERCA[1]) return seRefleja(ANTE_EL_REFLEJO, () => 0, 0.1)(u, modo)
+  if (u >= ACERCA[1]) return seRefleja(ANTE_EL_REFLEJO, { llanto: (v) => tramo(v, 0.45, 0.85), apaga: 0.1 })(u, modo)
   const k = tramo(u, ...ACERCA)
   const paso = fase(0.4 * k)
   const moby = figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })], manos: manosAndando(pMoby, paso), fase: paso })
@@ -247,6 +251,6 @@ export const TOMAS_3D = {
   // Por sobre su hombro derecho, el monitor de la cara de duky.
   mira: { escena: ante('vuela', (u) => ({ moby: [mobyQuieto(u), HACIA_DUKY] })), camara: fija([2.0, 1.75, 0.8], [PANTALLA.x, 1.8, -1.6], 50) },
   reflejo: alargar({ escena: seAcercaYSeRefleja, camara: fija(...ANTE_EL_REFLEJO) }, ACERCA[0], 1),
-  nomegusta: { escena: seRefleja(DE_CERCA, silaba), camara: fija(...DE_CERCA) },
+  nomegusta: { escena: seRefleja(DE_CERCA, { abre: silaba, llanto: () => 1 }), camara: fija(...DE_CERCA) },
 }
 

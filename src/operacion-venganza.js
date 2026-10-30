@@ -54,7 +54,7 @@ import * as escena15 from './lib/escena15.js'
 import * as escena16 from './lib/escena16.js'
 import { quieto } from './lib/movimiento.js'
 import { CARGAS } from './lib/cargas.js'
-import { rutaDeCaza } from './lib/cazas.js'
+import { rutaDeCaza, rutaDeRetratos } from './lib/cazas.js'
 import { BORDE, FLECHA, escalaDe } from './lib/flecha.js'
 import { NIVELES, PAGINAS, tramosDesde } from './lib/juego.js'
 
@@ -69,12 +69,18 @@ const leer = (texto) => Math.max(1500, 1000 + (texto.match(/\S*[\p{L}\p{N}]\S*/g
 // Lo que dura cada línea de `toma`. La toma dura lo que tardan en leerse sus
 // líneas, y nunca menos que su tira, y las líneas se la reparten según su
 // largo. Las tiras corren siempre a su `ms`: la que corre una vez lleva los
-// cuadros que pida su texto, y nadie se queda quieto esperándolo.
+// cuadros que pida su texto, y nadie se queda quieto esperándolo. Si una
+// línea sale en un `cuadro` de la tira, la de antes dura hasta ahí, y ella lo
+// que tarde en leerse.
 function duracionesDe(toma, modo) {
   const lecturas = toma.lineas.map((l) => leer(textoDe(l, modo)))
   const lectura = lecturas.reduce((suma, ms) => suma + ms, 0)
   const dura = Math.max(lectura, cuadrosDe(toma) * toma.ms)
-  return lecturas.map((l) => (dura * l) / lectura)
+  return lecturas.map((l, i) => {
+    const sigue = toma.lineas[i + 1]?.cuadro
+    if (sigue !== undefined) return (sigue - (toma.lineas[i].cuadro ?? 0)) * toma.ms
+    return toma.lineas[i].cuadro === undefined ? (dura * l) / lectura : l
+  })
 }
 
 export default function iniciar(raiz) {
@@ -83,8 +89,8 @@ export default function iniciar(raiz) {
   juego(raiz)
 }
 
-// Las hojas de los cazas de los niveles.
-const HOJAS = [...new Set(Object.values(NIVELES).flatMap(({ CAZAS }) => Object.values(CAZAS).map(({ hoja }) => rutaDeCaza(hoja))))]
+// Las hojas de los cazas de los niveles y la de los retratos de quien habla.
+const HOJAS = [...new Set(Object.values(NIVELES).flatMap(({ CAZAS }) => Object.values(CAZAS).map(({ hoja }) => rutaDeCaza(hoja)))), rutaDeRetratos]
 
 // Cuando ya bajó `imagen`: sin decodificarla, porque todas juntas no caben en
 // la memoria de un teléfono; cada tira se decodifica antes de su toma.
@@ -105,7 +111,9 @@ function juego(raiz) {
   const combate = import('./combate.js')
   const caminantes = raiz.querySelectorAll('.carga-pato')
   caminantes[Math.floor(Math.random() * caminantes.length)].hidden = false
-  cargar(raiz, [...[...tiras.values(), ...HOJAS.map(imagenDe)].map(bajada), combate], () => {
+  // La letra de las ventanas del juego también, para que no cambie al verse.
+  const letra = document.fonts.load("16px 'Press Start 2P'")
+  cargar(raiz, [...[...tiras.values(), ...HOJAS.map(imagenDe)].map(bajada), combate, letra], () => {
     raiz.querySelector('.carga').hidden = true
     raiz.classList.add('en-escena')
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(raiz).backgroundColor)

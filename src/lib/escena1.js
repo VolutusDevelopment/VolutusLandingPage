@@ -17,7 +17,8 @@
  * modo, y sus líneas, `{ cursor, huella }`.
  *
  * Una línea es lo que dice alguien (`quien`) o, sin `quien`, una acotación:
- * lo que se oye o pasa, como en los subtítulos para sordos.
+ * lo que se oye o pasa, como en los subtítulos para sordos. Con `cuadro`,
+ * sale en ese cuadro de la tira, a la par de lo que se ve.
  */
 
 export const CUADROS = 12

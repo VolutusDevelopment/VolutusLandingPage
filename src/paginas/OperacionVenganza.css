@@ -186,14 +186,7 @@
 .carga-texto,
 .escena-quien,
 .escena-boton,
-.fin-escenas-numero,
-.nivel-nombre,
-.nivel-rotulo,
-.nivel-pv,
-.nivel-quien,
-.nivel-pista,
-.nivel-antetitulo,
-.nivel-controles {
+.fin-escenas-numero {
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   letter-spacing: 0.14em;
@@ -323,65 +316,117 @@
   right: max(var(--e-4), env(safe-area-inset-right));
 }
 
-/* Los finales: una caja de borde blanco, como el diálogo de los niveles,
-   al medio del cuadro. La opción bajo el ratón o con el foco se marca con
-   la flecha y en amarillo. */
+/* Los finales: un menú del juego, como los de los niveles, al medio del cuadro. */
 .escena-eleccion {
   grid-row: 2;
   align-self: center;
-  display: grid;
   max-width: calc(100% - 2 * var(--e-4));
-  padding: var(--e-1) var(--e-2);
-  border: 3px solid #ffffff;
-  background: #0a1a2a;
+  padding: var(--e-2) var(--e-4);
 }
 
 .escena-eleccion[hidden] {
   display: none;
 }
 
-.escena-opcion {
-  display: flex;
+/* ---- El estilo del juego ----
+   Las ventanas y los menús del juego, los de los niveles y la elección final
+   de la escena 16, no los de Volutus: la letra de pixeles, un marco
+   blanco de esquinas mordidas, como en una consola, y la opción elegida en
+   amarillo, con un triángulo de pixeles: la que está bajo el ratón o, si no,
+   la que tiene el foco o, si no, la primera.
+
+   Toda ventana cabe entera, sin desplazarse, en cualquier pantalla: la letra
+   va en tamaños que caen en sus pixeles, 12 px (que en pantallas de alta
+   densidad son 3 o 4 pixeles por uno de la letra), 16 px en las grandes y
+   altas y, en las bajas, 10 px y luego 8 px (y en las más bajas, el menú en
+   una fila); y con ella crecen y se achican
+   los márgenes, la separación y el retrato de los pilotos (`--retrato`). */
+.venganza {
+  --letra-juego: 12px;
+  --retrato: 72px;
+  --marco-juego: 0 -3px 0 0 #ffffff, 0 3px 0 0 #ffffff, -3px 0 0 0 #ffffff, 3px 0 0 0 #ffffff;
+}
+
+@media (max-width: 1023px) and (max-height: 759px), (max-height: 639px) {
+  .venganza {
+    --letra-juego: 10px;
+    --retrato: 48px;
+  }
+}
+
+@media (max-height: 619px) {
+  .venganza {
+    --letra-juego: 8px;
+    --retrato: 48px;
+  }
+}
+
+@media (min-width: 1024px) and (min-height: 900px) {
+  .venganza {
+    --letra-juego: 16px;
+    --retrato: 96px;
+  }
+}
+
+.juego-ventana,
+.juego-opcion,
+.nivel-nombre,
+.nivel-quien {
+  font-family: 'Press Start 2P', var(--fuente-datos);
+  font-size: var(--letra-juego);
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.juego-ventana {
+  background: rgb(10 26 42 / 0.92);
+  color: #ffffff;
+  box-shadow:
+    var(--marco-juego),
+    inset 0 0 0 2px #0a1a2a,
+    inset 0 0 0 3px #3d5a86;
+}
+
+.juego-menu {
+  display: grid;
+  justify-items: start;
+}
+
+.juego-opcion {
+  display: inline-flex;
   align-items: center;
-  gap: var(--e-2);
+  gap: 10px;
   min-height: 44px;
-  padding: 0 var(--e-3) 0 var(--e-1);
+  padding: 0 var(--e-2) 0 0;
   border: 0;
-  background: transparent;
-  color: inherit;
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
-  letter-spacing: 0.14em;
+  background: none;
+  color: #ffffff;
   text-align: left;
+  text-decoration: none;
   text-transform: uppercase;
   cursor: pointer;
   touch-action: manipulation;
 }
 
-.escena-opcion::before {
-  content: '▸';
-  visibility: hidden;
+.juego-opcion::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 14px;
+  background: currentColor;
+  clip-path: polygon(0 0, 2px 0, 2px 2px, 4px 2px, 4px 4px, 6px 4px, 6px 6px, 8px 6px, 8px 8px, 6px 8px, 6px 10px, 4px 10px, 4px 12px, 2px 12px, 2px 14px, 0 14px);
+  visibility: var(--elegida, hidden);
 }
 
-.escena-opcion:hover,
-.escena-opcion:focus-visible {
+.juego-opcion:focus {
   outline: none;
+}
+
+.juego-menu:hover > .juego-opcion:hover,
+.juego-menu:not(:hover) > .juego-opcion:focus,
+.juego-menu:not(:hover, :focus-within) > .juego-opcion:first-child {
+  --elegida: visible;
   color: #f2c440;
-}
-
-.escena-opcion:hover::before,
-.escena-opcion:focus-visible::before {
-  visibility: visible;
-}
-
-@media (min-width: 1024px) {
-  .escena-eleccion {
-    padding: var(--e-2) var(--e-3);
-  }
-
-  .escena-opcion {
-    font-size: var(--texto-base);
-  }
 }
 
 .escena-boton {
@@ -568,18 +613,31 @@
   display: none;
 }
 
-/* Las bandas negras de las escenas, a su mismo alto: al empezar el nivel se
-   van por arriba y por abajo, lineales, y al terminarlo vuelven antes de
-   seguir a las escenas (combate.js). Sin movimiento, no se ven. */
+/* Las bandas negras de las escenas, a su misma medida: tapan todo lo que
+   queda fuera del cuadro de 21:9, arriba y abajo y, en las pantallas más
+   anchas, a los lados. Al empezar el nivel se van hacia sus bordes, lineales,
+   y al terminarlo vuelven antes de seguir a las escenas (combate.js). Sin
+   movimiento, no se ven. */
 .banda {
   position: absolute;
-  left: 0;
-  right: 0;
   z-index: 3;
-  height: calc((100svh - min(100vw, (100svh - 2 * var(--banda)) * 21 / 9) * 9 / 21) / 2);
   background: #000000;
   pointer-events: none;
   transition: translate 0.8s linear;
+}
+
+.banda-arriba,
+.banda-abajo {
+  left: 0;
+  right: 0;
+  height: calc((100svh - min(100vw, (100svh - 2 * var(--banda)) * 21 / 9) * 9 / 21) / 2);
+}
+
+.banda-izquierda,
+.banda-derecha {
+  top: 0;
+  bottom: 0;
+  width: calc((100vw - min(100vw, (100svh - 2 * var(--banda)) * 21 / 9)) / 2);
 }
 
 .banda-arriba {
@@ -588,6 +646,14 @@
 
 .banda-abajo {
   bottom: 0;
+}
+
+.banda-izquierda {
+  left: 0;
+}
+
+.banda-derecha {
+  right: 0;
 }
 
 .sin-bandas .banda {
@@ -602,25 +668,18 @@
   translate: 0 100%;
 }
 
+.sin-bandas .banda-izquierda {
+  translate: -100% 0;
+}
+
+.sin-bandas .banda-derecha {
+  translate: 100% 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .banda {
     display: none;
   }
-}
-
-.nivel .escena-boton {
-  background: rgb(10 26 42 / 0.6);
-}
-
-a.escena-boton {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-/* La pausa, solo mientras se juega: pausado, sigue el panel. */
-.nivel:not(.jugando) .nivel-pausa {
-  visibility: hidden;
 }
 
 .nivel-arriba {
@@ -640,7 +699,31 @@ a.escena-boton {
 
 .nivel-nombre {
   margin: 0;
-  text-shadow: 0 1px 0 #0a1a2a;
+  text-shadow: 2px 2px 0 #0a1a2a;
+}
+
+/* Fuera del juego, la ventana que se ve ya dice el nivel. */
+.nivel:not(.jugando) .nivel-nombre {
+  visibility: hidden;
+}
+
+.nivel-pausa {
+  min-height: 44px;
+  padding: 0 var(--e-3);
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.nivel-pausa:hover,
+.nivel-pausa:focus-visible {
+  outline: none;
+  color: #f2c440;
+}
+
+/* La pausa, solo mientras se juega: pausado, sigue el panel. */
+.nivel:not(.jugando) .nivel-pausa {
+  visibility: hidden;
 }
 
 .nivel-rotulo {
@@ -648,9 +731,7 @@ a.escena-boton {
   top: calc(max(var(--e-4), env(safe-area-inset-top)) + 4rem);
   left: 50%;
   margin: 0;
-  padding: var(--e-1) var(--e-3);
-  border-radius: 999px;
-  background: rgb(10 26 42 / 0.86);
+  padding: var(--e-2) var(--e-3);
   white-space: nowrap;
   translate: -50% 0;
   opacity: 0;
@@ -670,9 +751,7 @@ a.escena-boton {
   align-items: center;
   gap: var(--e-3);
   margin: 0;
-  padding: var(--e-1) var(--e-3);
-  border-radius: 999px;
-  background: rgb(10 26 42 / 0.86);
+  padding: var(--e-2) var(--e-3);
 }
 
 .nivel-pv[hidden] {
@@ -698,38 +777,130 @@ a.escena-boton {
   font-variant-numeric: tabular-nums;
 }
 
-.nivel-dialogo {
+/* El retrato de un piloto: un cuadro de la hoja de lib/cazas.js (la ponen
+   en `--retratos` el nivel y su fila, `--fila`, quien lo usa), con las líneas
+   de un video por radio. Hablando, pasa por sus cuadros: mueve el pico. */
+.nivel-retrato {
+  position: relative;
+  width: var(--retrato);
+  aspect-ratio: 1;
+  background: var(--retratos) 0 calc(var(--fila) / (var(--filas) - 1) * 100%) / calc(var(--cuadros) * 100%) calc(var(--filas) * 100%);
+  box-shadow: var(--marco-juego);
+  image-rendering: pixelated;
+}
+
+.nivel-retrato::after {
+  content: '';
   position: absolute;
-  bottom: calc(max(var(--e-4), env(safe-area-inset-bottom)) + 3.25rem);
-  left: 50%;
+  inset: 0;
+  background: repeating-linear-gradient(transparent 0 2px, rgb(10 26 42 / 0.22) 2px 3px);
+}
+
+@keyframes hablar {
+  to {
+    background-position-x: 100%;
+  }
+}
+
+/* El cuadro de comunicaciones, sobre los PV: el nombre de quien habla y,
+   debajo, su retrato y el texto, los dos del mismo alto (`--alto-texto`):
+   el de la ventana del texto, fija, de `--renglones` renglones, para que
+   aparezca letra a letra sin mover nada. Al terminar de escribirse, un
+   triángulo que parpadea avisa que se puede seguir. Va abajo al medio o, si
+   habla uno de dos (`data-lado`), en su esquina, con el retrato hacia afuera.
+   Las acotaciones, sin retrato ni nombre. Cada vez que cambia quien habla, el
+   cuadro se abre de nuevo. */
+.nivel-dialogo {
+  --renglones: 4;
+  --letra-texto: 15px;
+  --relleno-texto: var(--e-3);
+  --alto-texto: calc(var(--renglones) * 1.4 * var(--letra-texto) + 2 * var(--relleno-texto));
+  position: absolute;
+  bottom: calc(max(var(--e-4), env(safe-area-inset-bottom)) + 3.75rem);
+  left: max(var(--e-4), env(safe-area-inset-left));
+  right: max(var(--e-4), env(safe-area-inset-right));
   display: grid;
-  gap: var(--e-1);
-  width: min(100% - 2 * var(--e-4), 40rem);
-  padding: var(--e-3) var(--e-4);
-  border: 3px solid #ffffff;
-  background: #0a1a2a;
-  color: inherit;
+  grid-template-columns: var(--alto-texto) minmax(0, 1fr);
+  gap: var(--e-2) var(--e-3);
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffffff;
   font: inherit;
   text-align: left;
-  translate: -50% 0;
+  transform-origin: 50% 100%;
   touch-action: manipulation;
+}
+
+/* Recibe el foco para que Enter lo adelante, pero el cuadro ya se ve entero. */
+.nivel-dialogo:focus {
+  outline: none;
 }
 
 .nivel-dialogo[hidden] {
   display: none;
 }
 
+.nivel-dialogo[data-lado='izquierda'] {
+  margin-left: 0;
+}
+
+.nivel-dialogo[data-lado='derecha'] {
+  grid-template-columns: minmax(0, 1fr) var(--alto-texto);
+  margin-right: 0;
+}
+
+.nivel-dialogo:not(.con-retrato) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.nivel-dialogo .nivel-retrato {
+  grid-column: 1;
+  grid-row: 2;
+  width: var(--alto-texto);
+}
+
+.nivel-dialogo[data-lado='derecha'] .nivel-retrato {
+  grid-column: 2;
+}
+
+.nivel-dialogo:not(.con-retrato) .nivel-retrato {
+  display: none;
+}
+
 .nivel-quien {
-  min-height: 1.5em;
+  grid-column: -2;
+  justify-self: start;
+  padding: var(--e-1) var(--e-2);
+  background: rgb(10 26 42 / 0.92);
   color: #9fc0ff;
 }
 
-/* Cuatro renglones fijos: el texto aparece letra a letra sin mover nada. */
+.nivel-quien:empty {
+  display: none;
+}
+
+.nivel-dialogo[data-lado='derecha'] .nivel-quien {
+  justify-self: end;
+}
+
 .nivel-texto {
-  height: 6em;
+  position: relative;
+  grid-column: -2;
+  grid-row: 2;
+  height: var(--alto-texto);
   overflow: hidden;
-  font-size: var(--texto-base);
-  line-height: 1.5;
+  padding: var(--relleno-texto) var(--e-4);
+  font-family: var(--fuente-texto);
+  font-size: var(--letra-texto);
+  line-height: 1.4;
+}
+
+.nivel-dialogo[data-lado='derecha'] .nivel-quien,
+.nivel-dialogo[data-lado='derecha'] .nivel-texto {
+  grid-column: 1;
 }
 
 .nivel-texto.acotacion {
@@ -741,21 +912,81 @@ a.escena-boton {
   visibility: hidden;
 }
 
-.nivel-pista {
-  justify-self: end;
-  opacity: 0.7;
+.nivel-texto::after {
+  content: '';
+  position: absolute;
+  right: var(--e-2);
+  bottom: var(--e-2);
+  width: 10px;
+  height: 6px;
+  background: #f2c440;
+  clip-path: polygon(0 0, 10px 0, 10px 2px, 8px 2px, 8px 4px, 6px 4px, 6px 6px, 4px 6px, 4px 4px, 2px 4px, 2px 2px, 0 2px);
+}
+
+.nivel-dialogo.escribiendo .nivel-texto::after {
+  visibility: hidden;
+}
+
+.nivel-dialogo.escribiendo .nivel-retrato {
+  animation: hablar 1.8s steps(var(--cuadros), jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nivel-dialogo.abre {
+    animation: abre 140ms var(--ease-out);
+  }
+
+  .nivel-texto::after {
+    animation: parpadea 0.8s steps(2, jump-none) infinite;
+  }
+}
+
+@keyframes abre {
+  from {
+    opacity: 0;
+    scale: 1 0.5;
+  }
+}
+
+@keyframes parpadea {
+  to {
+    opacity: 0;
+  }
+}
+
+/* En los teléfonos, el retrato del alto del texto le quita ancho: las
+   frases largas de duck-one y los gritos de moby caben en cinco renglones
+   de letra un poco más chica, y en seis en los más angostos. */
+@media (max-width: 399px) {
+  .nivel-dialogo {
+    --renglones: 5;
+    --letra-texto: 14px;
+    --relleno-texto: var(--e-2);
+    column-gap: var(--e-2);
+  }
+
+  .nivel-texto {
+    padding-inline: var(--e-3);
+  }
+}
+
+@media (max-width: 359px) {
+  .nivel-dialogo {
+    --renglones: 6;
+    --letra-texto: 13px;
+  }
 }
 
 .nivel-panel {
+  --relleno: calc(2 * var(--letra-juego));
   position: relative;
   display: grid;
   justify-items: start;
-  gap: var(--e-3);
-  width: min(100%, 30rem);
+  gap: var(--letra-juego);
+  width: min(100%, 32rem);
   max-height: 100%;
   overflow: auto;
-  padding: var(--e-6);
-  border: 3px solid #ffffff;
+  padding: var(--relleno) calc(0.75 * var(--relleno));
   background: #0a1a2a;
 }
 
@@ -765,8 +996,9 @@ a.escena-boton {
 
 .nivel-panel h2 {
   margin: 0;
-  font-size: var(--texto-bloque);
-  line-height: 1.2;
+  font-size: calc(var(--letra-juego) * 1.5);
+  font-weight: 400;
+  line-height: 1.4;
   text-wrap: balance;
 }
 
@@ -774,31 +1006,113 @@ a.escena-boton {
   margin: 0;
 }
 
-.nivel-panel .escena-mandos {
-  justify-content: flex-start;
-  margin-top: var(--e-2);
+/* Si aun así la ventana no cabe y se desplaza, el menú queda siempre a la
+   vista, abajo, sin tapar el marco. */
+.nivel-panel .juego-menu {
+  position: sticky;
+  bottom: calc(3px - var(--relleno));
+  justify-self: stretch;
+  margin: var(--e-2) 0 calc(3px - var(--relleno));
+  padding-bottom: calc(var(--relleno) - 3px);
+  background: #0a1a2a;
 }
 
-.nivel-antetitulo {
+/* En las pantallas más bajas, los bloques van más juntos y las opciones,
+   una al lado de la otra. */
+@media (max-height: 519px) {
+  .nivel-panel {
+    gap: calc(0.75 * var(--letra-juego));
+  }
+
+  .nivel-panel .juego-menu {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: calc(2 * var(--letra-juego));
+  }
+}
+
+.nivel-antetitulo,
+.nivel-lema {
   color: #9fc0ff;
 }
 
-.nivel-lema {
-  font-size: var(--texto-lg);
+/* Quién es cada piloto: su retrato, que habla solo, su nombre, su papel y
+   su caza, y debajo cómo es. */
+.nivel-ficha {
+  display: grid;
+  grid-template-columns: var(--retrato) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--letra-juego) calc(1.25 * var(--letra-juego));
 }
 
-.nivel-controles {
-  line-height: 1.8;
-  opacity: 0.75;
+.nivel-ficha .nivel-retrato {
+  margin: 3px;
+}
+
+.nivel-ficha-quien {
+  display: grid;
+  gap: var(--e-1);
+  color: #f2c440;
+}
+
+.nivel-ficha-quien span {
+  color: #9fc0ff;
+}
+
+.nivel-ficha-quien span + span {
+  color: #c8d6ea;
+}
+
+.nivel-ficha-personalidad {
+  grid-column: 1 / -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nivel-ficha .nivel-retrato {
+    animation: hablar 1.8s steps(var(--cuadros), jump-none) infinite;
+  }
+}
+
+/* Lo que más se confundía: aquí no se ataca, se esquiva. */
+.nivel-esquiva {
+  font-size: calc(var(--letra-juego) * 1.5);
+  line-height: 1.4;
+  color: #f2c440;
+  text-shadow: 2px 2px 0 #8a2a2a;
+}
+
+.nivel-instruccion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.nivel-figura {
+  flex: none;
+}
+
+/* Las instrucciones del dispositivo que se usa: con ratón, las del cursor;
+   con el dedo, las de la huella. */
+@media (hover: hover) and (pointer: fine) {
+  .nivel .solo-tactil {
+    display: none;
+  }
+}
+
+@media not all and (hover: hover) and (pointer: fine) {
+  .nivel .solo-raton {
+    display: none;
+  }
 }
 
 @media (min-width: 1024px) {
-  .nivel-texto {
-    font-size: var(--texto-lg);
+  .nivel-dialogo {
+    --renglones: 3;
+    --letra-texto: var(--texto-lg);
   }
 
   .nivel-panel {
-    padding: var(--e-8);
+    width: min(100%, 40rem);
   }
 }
 

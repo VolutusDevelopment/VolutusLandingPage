@@ -21,6 +21,7 @@ import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
 import { cic } from './cic.mjs'
 import { girosHacia, losTres } from '../escena10/tomas.mjs'
 import { EN_CABINA } from '../tiras.mjs'
+import { TOMAS } from '../../../src/lib/escena11.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -116,12 +117,14 @@ export const escalerilla = [
   ...Array.from({ length: 7 }, (_, i) => lerp(PIE, CIMA, (i + 1) / 8)).map((p) => hueso(sum(p, [-0.25, 0, 0]), sum(p, [0.25, 0, 0]), 0.03, C.rayas)),
 ]
 const enSusManos = (p) => enUnidades(p, { ...LOMO, k: K })
-const elMarinero = (cfg) => colocar(figura(pMar, { tronco: marineroTronco(VERDE), ...cfg }), { k: K, ...LOMO })
+// Sobre el lomo del caza, sin la sombra que figura() le pone en el piso.
+const elMarinero = (cfg) => colocar(figura(pMar, { tronco: marineroTronco(VERDE), sinSombra: true, ...cfg }), { k: K, ...LOMO })
 
 // duky, un modelo aparte del caza: siempre con sus patas, sin su sombra.
 const SOMBRA = '#4a80e6'
+const sinSombra = (f) => f.flat !== SOMBRA
 const SENTADO = { en: enCabina([0, -2.2, 0]), giro: 0, suelo: -2.2 }
-const dukyEn = (donde, formas = DUKY.sentado(0)) => colocar(formas.filter((f) => f.flat !== SOMBRA), { k: K, ...donde })
+const dukyEn = (donde, formas = DUKY.sentado(0)) => colocar(formas.filter(sinSombra), { k: K, ...donde })
 // El marinero con duky sobre la cabeza; con `paso`, caminando.
 const conLaCarga = (donde, paso = null) => [...colocar(marinero(paso, ARRIBA), { k: K, ...donde }), ...dukyEn(sobreLaCabeza(donde, K), duky.enBrazos())]
 
@@ -181,25 +184,33 @@ const enElHangar = (u) => {
 const alPortalon = (u) => conLaCarga(enElHangar(u), fase(AL_PORTALON.largo * u))
 
 // Sube por la escalerilla mientras se abre la cúpula y la plataforma
-// arranca; después lo deposita y la plataforma termina de subir.
+// arranca; después lo deposita y la plataforma termina de subir. En los
+// peldaños no lleva sombra.
 const SUBE = 0.4
 const subiendo = (u) => {
   const s = tramo(u, 0.2, 0.85)
-  return conLaCarga({ en: lerp([PIE[0], SUELO, PIE[2] - 0.35], LOMO.en, s), giro: LOMO.giro }, s > 0 && s < 1 ? (s * 5) % 1 : null)
+  const carga = conLaCarga({ en: lerp([PIE[0], SUELO, PIE[2] - 0.35], LOMO.en, s), giro: LOMO.giro }, s > 0 && s < 1 ? (s * 5) % 1 : null)
+  return s > 0 ? carga.filter(sinSombra) : carga
 }
 
 // ── El despegue ──────────────────────────────────────────────────────────
 
-// Desde el comienzo de la catapulta de babor: quieto un instante, la
-// catapulta lo lanza hasta la proa y, ya en el aire, sube con el morro
-// arriba. La cámara va en el tablero, mirando a duky todo el tiempo.
-const PISTA = { en: [40, 20.8 - SUELO, -6], lanza: 0.12, sale: 0.62, largo: 127 }
-const despegando = (u) => {
-  const corre = Math.min(1, Math.max(0, (u - PISTA.lanza) / (PISTA.sale - PISTA.lanza)))
-  const aire = Math.max(0, u - PISTA.sale)
+// Una sola toma, en segundos, desde el comienzo de la catapulta de babor:
+// quieto un instante, la catapulta lo lanza hasta la proa y, ya en el aire,
+// sube con el morro arriba. Dos segundos después se pone feliz, cuando sale
+// la segunda línea de la toma (src/lib/escena11.js). La cámara va en el
+// tablero, mirando a duky todo el tiempo.
+const DESPEGUE = TOMAS.find(({ id }) => id === 'despegue')
+const segundos = (cuadros) => (cuadros * DESPEGUE.ms) / 1000
+const PISTA = { en: [40, 20.8 - SUELO, -6], lanza: 0.36, sale: 1.86, largo: 127, dura: segundos(DESPEGUE.cuadros), feliz: segundos(DESPEGUE.lineas[1].cuadro) }
+// Los primeros 35 m los sube en curva, en `CURVA` s, y después sigue derecho.
+const CURVA = 1.14
+const despegando = (s) => {
+  const corre = Math.min(1, Math.max(0, (s - PISTA.lanza) / (PISTA.sale - PISTA.lanza)))
+  const aire = Math.max(0, s - PISTA.sale)
   const rapidez = (2 * PISTA.largo) / (PISTA.sale - PISTA.lanza)
-  const sube = 35 * (aire / (1 - PISTA.sale)) ** 1.6
-  return transformar([0, 0, 10 * tramo(u, PISTA.sale, PISTA.sale + 0.2)], [0, 0, 0], sum(PISTA.en, [PISTA.largo * corre ** 2 + rapidez * aire, sube, 0]))
+  const sube = aire < CURVA ? 35 * (aire / CURVA) ** 1.6 : 35 + ((35 * 1.6) / CURVA) * (aire - CURVA)
+  return transformar([0, 0, 10 * tramo(s, PISTA.sale, PISTA.sale + 0.6)], [0, 0, 0], sum(PISTA.en, [PISTA.largo * corre ** 2 + rapidez * aire, sube, 0]))
 }
 
 // ── La emoción ───────────────────────────────────────────────────────────
@@ -229,13 +240,13 @@ const aplastar = (formas, k) => deformar(formas, [0, -1.9, 0], [1 + 0.14 * k, 1 
 const [, , ...OJOS] = CARA
 const caraPegada = (g) => CARA.filter((f, i) => g < 0.5 || i < 4).map((f) => (OJOS.includes(f) ? { ...f, r: [f.r[0], f.r[1] * (1 - 0.75 * g), f.r[2] * (1 + 0.3 * g)] } : f))
 const pegar = (formas, g) => deformar(formas, [-1.2, -1.9, 0], [1 - 0.35 * g, 1 - 0.14 * g, 1 + 0.24 * g])
-// Jadea `veces` por bucle, con fuerza `fuerza` (de 0 a 1).
-const jadea = (u, veces, fuerza = 1) => fuerza * (0.5 - 0.5 * Math.cos(u * Math.PI * 2 * veces))
-const jadeando = (u, veces) => aplastar(dukyFigura({ cara: caraQueJadea(jadea(u, veces)) }), jadea(u, veces))
-// En la pista va pegado al asiento; recién en el aire se suelta y empieza a jadear.
-const dukyDespega = (u) => {
-  const g = tramo(u, PISTA.lanza, PISTA.lanza + 0.05) * (1 - tramo(u, PISTA.sale + 0.02, PISTA.sale + 0.14))
-  const k = jadea(u, 10, tramo(u, PISTA.sale + 0.14, 0.95))
+// Jadea `veces` por segundo, con fuerza `fuerza` (de 0 a 1).
+const jadea = (s, veces, fuerza = 1) => fuerza * (0.5 - 0.5 * Math.cos(s * Math.PI * 2 * veces))
+// En la pista va pegado al asiento; en el aire se suelta, se queda quieto y,
+// a su hora, jadea de la emoción: una vez cada 0,4 s.
+const dukyDespega = (s) => {
+  const g = tramo(s, PISTA.lanza, PISTA.lanza + 0.15) * (1 - tramo(s, PISTA.sale + 0.06, PISTA.sale + 0.42))
+  const k = jadea(Math.max(0, s - PISTA.feliz), 2.5, tramo(s, PISTA.feliz, PISTA.feliz + 0.4))
   return pegar(aplastar(dukyFigura({ cara: g > 0.05 ? caraPegada(g) : caraQueJadea(k) }), k), g)
 }
 
@@ -324,14 +335,17 @@ export const TOMAS_3D = {
   },
   despegue: {
     abre: EN_CABINA,
-    escena: (u) => [MAR, ...portaaviones({ ...enMarcha(u), radar: u * 120 }), ...despegando(u).formas(conDuky({ motor: u > PISTA.lanza - 0.04, tren: u < PISTA.sale + 0.2 }, dukyDespega(u)))],
+    escena: (u) => {
+      const s = u * PISTA.dura
+      return [MAR, ...portaaviones({ radar: s * 40 }), ...despegando(s).formas(conDuky({ motor: s > PISTA.lanza - 0.12, tren: s < PISTA.sale + 0.6 }, dukyDespega(s)))]
+    },
     camara: (u) => {
-      const { punto } = despegando(u)
-      const tiembla = u > PISTA.lanza && u < PISTA.sale + 0.05 ? 0.08 * Math.sin(Math.floor(u * 30) * 2.3) : 0
+      const s = u * PISTA.dura
+      const { punto } = despegando(s)
+      const tiembla = s > PISTA.lanza && s < PISTA.sale + 0.15 ? 0.08 * Math.sin(Math.floor(s * 10) * 2.3) : 0
       return [punto(enCabina(sum(TABLERO.ojo, [0, tiembla, tiembla]))), punto(enCabina(TABLERO.mira)), TABLERO.campo, res(punto([0, 1, 0]), punto([0, 0, 0]))]
     },
   },
-  emocion: { abre: EN_CABINA, escena: (u) => volando(u, jadeando(u, 8)), camara: fija(enVueloDe(TABLERO.ojo), enVueloDe(TABLERO.mira), TABLERO.campo) },
 
   // Desde su consola, junto a la pantalla, de frente al oficial; el almirante, detrás.
   radio: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.5, 1.15, 0.2], [1.0, 1.02, -0.05], 50) },

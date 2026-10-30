@@ -170,7 +170,7 @@ export const DUCK_ONE = [...DUCK_ONE_SIN_GORRO, ...ponerGorro(GORRO_PUESTO)]
 // V, trapecios que le tragan el cuello y la cabeza chica hundida entre los
 // hombros. Musculosa oliva que le cubre el pecho entero, placas al cuello,
 // pretina a rayas y un pañuelo rojo con dos colas largas. Fuma para parecer
-// duro: el puro le hace toser y llorar a chorros.
+// duro: el puro le hace toser hasta las lágrimas.
 const LAGRIMA = '#4aa8ec'
 const CAMISETA = ['#8a9460', '#5a6438', '#3e4626', '#22280f']
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -213,16 +213,20 @@ const panuelo = (t) => {
 }
 
 // La cabeza en un instante t (cuadros). `abre` baja el pico; `pena` da vuelta
-// el ceño, de 0 (furia) a 1 (las cejas suben al centro); `llanto` va de un
-// hilo por la mejilla a chorros en arco hacia los lados (en 0, nada). `apagado`:
-// el puro en el pico, sin brasa ni humo; sin `humea`, prendido y sin humo.
-export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico = true, apagado = false, humea = true } = {}) => {
+// el ceño, de 0 (furia) a 1 (las cejas suben al centro). `llanto`, en dos
+// fases: hasta 1, las lágrimas le caen por las mejillas, cada vez más abajo;
+// pasado 1, además le saltan de la cara en arco, más lejos hasta 2. En 0 no
+// llora. `apagado`: el puro en el pico, sin brasa ni humo; sin `humea`,
+// prendido y sin humo.
+export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0, puroEnPico = true, apagado = false, humea = true } = {}) => {
+  // Hasta dónde le moja la mejilla: de bajo el ojo a la quijada.
+  const mojado = 0.1 - 0.56 * Math.min(1, llanto)
   const [abajo] = transformar([0, 0, -34 * abre], enCabeza([0.4, -0.3, 0])).formas([el(enCabeza([0.83, -0.3, 0]), [0.5, 0.09, 0.34], C.pico)])
   const formas = [
     el(MOBY_H, [0.72, 0.64, 0.68], C.pardo, {
       pinta: (p) => {
         const [x, y, z] = res(p, MOBY_H)
-        return llanto > 0.3 && x > 0.17 && y < 0.1 && y > -0.62 && Math.abs(Math.abs(z) - 0.48) < 0.08 ? LAGRIMA : null
+        return llanto > 0 && x > 0.17 && y < 0.1 && y > mojado && Math.abs(Math.abs(z) - 0.48) < 0.08 ? LAGRIMA : null
       },
     }),
     el(enCabeza([0.95, -0.14, 0]), [0.62, 0.17, 0.4], C.pico, { rot: [0, 0, -6] }),
@@ -232,11 +236,22 @@ export const mobyCabeza = ({ t = 0, abre = 0, pena = 0, llanto = 0.4, puroEnPico
     ...ambos((s) => el(enCabeza([0.61, 0.3 + 0.05 * pena, s * 0.38]), [0.34, 0.085, 0.2], C.oscuro, { flat: '#14100c', rot: [s * (62 * pena - 30), 0, -8] })),
     ...panuelo(t),
   ]
-  // Gotas en arco hacia afuera, una cada 0,4 cuadros; con más llanto llegan más lejos.
+  // Por cada mejilla bajan dos gotas pegadas a la cara, cada 4 cuadros, hasta
+  // donde está mojada; en la quijada se sueltan y caen.
+  const mejilla = (y) => 0.72 * Math.sqrt(Math.max(0, 0.5 - (y / 0.64) ** 2)) + 0.03
+  for (const s of [1, -1])
+    for (let j = 0; j < 2; j++) {
+      const k = ((t + 2 * j) % 4) / 4
+      const y = k < 0.7 ? 0.06 - 0.5 * (k / 0.7) : -0.44 - 1.6 * (k - 0.7) ** 2
+      const en = Math.max(y, -0.44)
+      if (en < mojado) continue
+      formas.push(el(enCabeza([mejilla(en), y, s * 0.5]), [0.05, 0.08, 0.06], C.vidrio, { flat: LAGRIMA }))
+    }
+  // Pasado 1, le saltan en arco hacia afuera, una cada 0,4 cuadros.
   for (const s of [1, -1])
     for (let j = 0; j < 6; j++) {
       const a = (t % 0.4) + j * 0.4
-      if (a >= 2.4 * llanto) continue
+      if (a >= 2.4 * (llanto - 1)) continue
       formas.push(el(sum(enCabeza([0.72, 0.1, s * 0.55]), [0.2 * a, 0.32 * a - 0.16 * a * a, s * 0.5 * a]), [0.08, 0.1, 0.08], C.vidrio, { flat: LAGRIMA }))
     }
   if (puroEnPico) {
@@ -645,8 +660,7 @@ export const CAZA_MOBY = [
 
 // El F-22 de Duky lleva pintura de guerra: negro entero, con la cúpula
 // dorada del real y, a cada costado, un contador de bajas en amarillo que
-// va de la cabina a la cola. Su postcombustión es la de dos F119: violeta
-// por fuera, naranja y el centro claro, con los diamantes de choque.
+// va de la cabina a la cola.
 const FURTIVO = ['#5c636c', '#2e333a', '#1d2026', '#0c0d10']
 const BOCA = '#0c0e12'
 
@@ -730,15 +744,48 @@ const ESTABILIZADOR = [[14.2, -0.12, 1.17], [17.08, -0.12, 4.49], [18.31, -0.12,
 const DERIVA = [[13.0, 0.55, 1.15], [14.3, 3.15, 2.53], [15.6, 3.15, 2.53], [16.9, 0.55, 1.15]]
 const delLado = (puntos, s) => puntos.map(([X, y, z]) => [enX(X), y, s * z])
 
-const TOBERA = { x: enX(16.75), y: 0.06, z: 0.7, ancho: 0.82, alto: 0.6 }
+// Las toberas de vector de empuje en dos dimensiones: un cajón rectangular
+// del que salen hacia atrás dos aletas, la de arriba más larga, que se cierran
+// sobre el chorro; las dos con el borde de fuga en sierra y, a los lados, sus
+// paredes. Por la ranura que dejan se ve el fuego de adentro.
+const TOBERA = { X: 16.9, y: 0.06, z: 0.7, ancho: 0.88, alto: 0.6 }
+// Cada aleta: dónde termina (X en las esquinas y en la punta de la sierra) y
+// a qué alto, desde su borde del cajón.
+const ALETAS = { arriba: { X: 17.75, punta: 18.05, y: 0.22 }, abajo: { X: 17.5, punta: 17.75, y: -0.1 } }
+const aleta = ({ X, punta, y }, desde, s) => {
+  const z = s * TOBERA.z
+  const w = TOBERA.ancho / 2
+  const alto = (x) => desde + ((y - desde) * (x - TOBERA.X)) / (X - TOBERA.X)
+  return placa([[enX(TOBERA.X), desde, z - w], [enX(TOBERA.X), desde, z + w], [enX(X), y, z + w], [enX(punta), alto(punta), z], [enX(X), y, z - w]], 0.05, C.grisOscuro)
+}
+const tobera = (s) => {
+  const { X, y, z: zc, ancho, alto } = TOBERA
+  const z = s * zc
+  const [techo, piso] = [y + alto / 2, y - alto / 2]
+  const fondo = (dx, w, h, o) => placa([[enX(X) - dx, y - h / 2, z - w / 2], [enX(X) - dx, y - h / 2, z + w / 2], [enX(X) - dx, y + h / 2, z + w / 2], [enX(X) - dx, y + h / 2, z - w / 2]], 0.02, C.oscuro, o)
+  return [
+    tubo([[enX(15.9), ancho + 0.1, alto + 0.12, y, 10, z], [enX(X), ancho, alto, y, 10, z]], C.grisOscuro),
+    aleta(ALETAS.arriba, techo, s),
+    aleta(ALETAS.abajo, piso, s),
+    ...[-1, 1].map((lado) =>
+      placa([[enX(X), techo, z + (lado * ancho) / 2], [enX(X), piso, z + (lado * ancho) / 2], [enX(ALETAS.abajo.X), ALETAS.abajo.y, z + (lado * ancho) / 2], [enX(ALETAS.arriba.X), ALETAS.arriba.y, z + (lado * ancho) / 2]], 0.04, C.grisOscuro),
+    ),
+    // Apagada, la boca es un hueco oscuro; encendida, arde naranja con el centro claro.
+    fondo(0.01, ancho - 0.04, alto - 0.04, { flat: BOCA }),
+    fondo(0.03, ancho - 0.06, alto - 0.06, { luz: { color: '#ff9a32', alfa: 1, nivel: 4 } }),
+    fondo(0.04, ancho * 0.6, alto * 0.45, { luz: { color: '#ffe0a0', alfa: 1, nivel: 5 } }),
+  ]
+}
+// El chorro es plano, como la ranura: naranja, el centro claro y los diamantes de choque.
 const POSTCOMBUSTION = ambos((s) => {
-  const { x, y } = TOBERA
+  const x = enX(TOBERA.X + 0.05)
+  const { y } = TOBERA
   const z = s * TOBERA.z
   return [
-    estela(x, y, z, 8, 0.85, '#b87ae8', 0.4, 0, 0.66, 4),
-    estela(x, y, z, 5.5, 0.72, '#ff8a2a', 0.75, 1, 0.52, 4),
-    estela(x, y, z, 2.6, 0.5, '#fff0c0', 0.9, 2, 0.36, 4),
-    ...[0, 1, 2].map((i) => destelloMotor([x - 1.6 - i * 1.3, y, z], [0.3, 0.2 * (1 - i * 0.2), 0.26 * (1 - i * 0.2)], '#ffe6f6', 0.9, 3)),
+    estela(x, y, z, 7, 0.84, '#ff7a1a', 0.6, 0, 0.42, 5),
+    estela(x, y, z, 4.6, 0.72, '#ffac3a', 0.8, 1, 0.34, 5),
+    estela(x, y, z, 2.4, 0.52, '#fff0c0', 0.9, 2, 0.24, 4),
+    ...[0, 1, 2].map((i) => destelloMotor([x - 1.9 - i * 1.15, y, z], [0.3, 0.07 * (1 - i * 0.2), 0.16 * (1 - i * 0.2)], '#fff6dc', 0.9, 3)),
   ]
 }).flat()
 
@@ -755,14 +802,11 @@ export const CAZA_DUKY = [
   ...ambos((s) => placa(delLado(DERIVA, s), 0.12, FURTIVO)),
   el([enX(4.6), 0.45, 0], [2.05, 1.0, 0.56], C.vidrioOro, { vidrio: true, dentro: 0.15, hueco: ([, y]) => y < MARCO }),
   ...cabezaPiloto(enX(4.8), 0.95, C.hule),
-  ...ambos((s) => [
-    tubo([[enX(15.9), TOBERA.ancho + 0.1, TOBERA.alto + 0.12, TOBERA.y, 5, s * TOBERA.z], [TOBERA.x, TOBERA.ancho, TOBERA.alto, TOBERA.y, 5, s * TOBERA.z]], C.grisOscuro),
-    el([TOBERA.x + 0.02, TOBERA.y, s * TOBERA.z], [0.04, TOBERA.alto * 0.42, TOBERA.ancho * 0.42], C.oscuro, { flat: BOCA }),
-    // La luz roja en la punta del ala.
-    el([enX(13.3), -0.32, s * 6.8], [0.08, 0.05, 0.05], C.boca, { flat: '#ff2a1a', brilla: true }),
-  ]).flat(),
-  // La cola de castor, entre las toberas.
-  placa([[enX(15.6), 0.08, -0.28], [enX(15.6), 0.08, 0.28], [enX(17.45), 0.08, 0.2], [enX(17.45), 0.08, -0.2]], 0.16, FURTIVO),
+  ...ambos(tobera).flat(),
+  // La luz roja en la punta de cada ala.
+  ...ambos((s) => el([enX(13.3), -0.32, s * 6.8], [0.08, 0.05, 0.05], C.boca, { flat: '#ff2a1a', brilla: true })),
+  // Entre las toberas, la cola de castor termina en punta.
+  tubo([[enX(15.6), 0.5, 0.36, 0.06, 1.4], [enX(17.2), 0.34, 0.24, 0.05, 1.4], [enX(18.1), 0.04, 0.04, 0.04, 1.4]], FURTIVO),
   ...POSTCOMBUSTION,
 ]
 

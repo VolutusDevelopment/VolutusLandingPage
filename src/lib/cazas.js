@@ -21,3 +21,18 @@ export const PASADAS = ['duck-one', 'moby', 'duke', 'duky']
 export const PASADA = { pixelesPorMetro: 4, altura: -20 }
 export const LLAMAS = [1.25, 1.1, 1.4]
 export const rutaDePasadas = '/operacion-venganza/pasadas.png'
+
+// Los retratos del cuadro de comunicaciones: quien habla en los niveles, una
+// fila por cada uno en este orden, con `CUADROS_DE_RETRATO` cuadros de
+// `LADO_DE_RETRATO` px hablando (el primero, callado). Los pinta
+// scripts/operacion-venganza/combate/retratos.mjs.
+export const RETRATOS = [
+  { quien: 'Duck-One', retrato: 'duck-one' },
+  { quien: 'Moby-Duck', retrato: 'moby' },
+  { quien: 'Duke SkyDucker', retrato: 'duke' },
+  { quien: 'Duky', retrato: 'duky' },
+  { quien: 'Torre de control', retrato: 'torre' },
+]
+export const LADO_DE_RETRATO = 48
+export const CUADROS_DE_RETRATO = 12
+export const rutaDeRetratos = '/operacion-venganza/combate/retratos.png'

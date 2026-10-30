@@ -1,8 +1,8 @@
 // moby-duck y el puro: da una calada sacando pecho para hacerse el duro, el
 // puro le gana: tose sin control, el ceño se le da vuelta y llora a chorros.
 // Se seca con el antebrazo, vuelve a sacar pecho y otra calada. La usan la
-// lámina v17 (puro.mjs) y la escena 2, donde no llora `antes` de la calada:
-// después le queda el llanto de siempre.
+// lámina v17 (puro.mjs) y las escenas 2 y 10. De la tos le caen lágrimas por
+// la cara (la primera fase del llanto, modelos.mjs) hasta que se seca.
 
 import { el } from './tres.mjs'
 import { RAMPAS as C, MOBY_H, MOBY_TORSO, hueso, humareda, mobyCabeza } from './modelos.mjs'
@@ -27,10 +27,10 @@ const MANO_EN_PICO = sum(enCabeza([1.2, -0.32, -0.15]), esc(DIR_PICO, 0.3))
 const BOCA = enCabeza([1.2, -0.62, 0.5])
 
 // La escena en cuadros de 0 a 24.
-export const calada = (t, { antes = 0.4 } = {}) => {
+export const calada = (t) => {
   const tos = tramo(t, 4.6, 5.2) * (1 - tramo(t, 14, 16))
   const pena = tramo(t, 5, 7) * (1 - tramo(t, 18, 21))
-  const llanto = antes + (1 - antes) * tramo(t, 5.5, 7.5) - 0.6 * tramo(t, 17, 21)
+  const llanto = tramo(t, 5.5, 7.5) * (1 - tramo(t, 16.5, 19))
   const g = golpe(t)
   const enPico = suave(1 - tramo(t, 3, 4.6) + tramo(t, 21, 23.5))
   // Al secarse pasa el antebrazo por los ojos, de un lado al otro.

@@ -134,7 +134,8 @@ const loDeja = (u) => {
 
 // Cada uno en su lugar de la fila (`lado`, en metros a la derecha de duky),
 // de pie, con su cuerpo de siempre y las manos donde se le diga.
-const mobyTronco = (u) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })]
+// En «Es una escena muy bonita», a moby se le caen las lágrimas (`llanto`, modelos.mjs).
+const mobyTronco = (u, llanto) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, llanto })]
 const ESCUADRON = {
   moby: { lado: -2.2, p: pMoby, suelo: pMoby.suelo, tronco: mobyTronco },
   duckOne: { lado: -1.05, p: pDuckOne, suelo: pDuckOne.suelo, tronco: () => M.DUCK_ONE },
@@ -153,15 +154,15 @@ const TOMADAS = {
   duke: { [-1]: ALA(1) },
 }
 // De pie en la fila; `toma`, de 0 a 1, lleva sus manos a las del vecino.
-const enLaFilaDe = (quien, u, toma = 0) => {
+const enLaFilaDe = (quien, u, toma = 0, llanto = 0) => {
   const { p, tronco } = ESCUADRON[quien]
   const donde = dondeDe(quien)
   const manos = Object.fromEntries([1, -1].map((s) => [s, TOMADAS[quien][s] ? lerp(p.reposo(s), enUnidades(TOMADAS[quien][s], { ...donde, k: K }), toma) : p.reposo(s)]))
-  return pato(figura(p, { tronco: tronco(u), manos, salto: 0.015 * Math.sin(vuelta(u)) }), donde)
+  return pato(figura(p, { tronco: tronco(u, llanto), manos, salto: 0.015 * Math.sin(vuelta(u)) }), donde)
 }
-const juntos = (u, toma = 0) => Object.keys(ESCUADRON).flatMap((quien) => enLaFilaDe(quien, u, toma))
+const juntos = (u, toma = 0, llanto = 0) => Object.keys(ESCUADRON).flatMap((quien) => enLaFilaDe(quien, u, toma, llanto))
 const dukyQuieto = (u) => pato(dukyFigura({ salto: 0.02 * Math.sin(vuelta(u)) }), DUKY_EN_EL_BORDE)
-const fila = (toma = () => 0) => (u) => [...barco(u), ...juntos(u, toma(u)), ...dukyQuieto(u)]
+const fila = (toma = () => 0, llanto = 0) => (u) => [...barco(u), ...juntos(u, toma(u), llanto), ...dukyQuieto(u)]
 
 // Llegan por detrás, cada uno por su carril y desde más o menos lejos.
 const DESDE = { moby: 6.5, duckOne: 5, duke: 5.8 }
@@ -407,7 +408,7 @@ export const TOMAS_3D = {
   acercan: { escena: seAcercan, camara: DE_CARA(8, 2.6, 46) },
   atardecer: conQuienJuega(fila(), DETRAS),
   manos: conQuienJuega(fila((u) => tramo(u, 0.15, 0.8)), MAS_CERCA),
-  bonito: { escena: fila(() => 1), camara: DE_CARA(4.6, 0.9, 50) },
+  bonito: { escena: fila(() => 1, 1), camara: DE_CARA(4.6, 0.9, 50) },
 
   recoge: { escena: loRecoge, camara: DESDE_ARRIBA },
   // Desde atrás y arriba, a estribor: se ve el fondo de la caja.

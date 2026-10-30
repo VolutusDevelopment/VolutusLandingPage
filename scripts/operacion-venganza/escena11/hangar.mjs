@@ -50,7 +50,8 @@ const ALA = (z) => {
   return ataque - (ataque - fuga) * 0.4
 }
 const soporte = (x, z, alto) => hueso([x, bajoElAla(z), z], [x, bajoElAla(z) - alto, z], 0.05, C.grisOscuro)
-const misil = (x, y, z, largo = 1.3) => [
+// Un misil con la punta hacia +x, en [x, y, z]; escena14/tomas.mjs lo dispara.
+export const misil = ([x, y, z, largo]) => [
   hueso([x - largo, y, z], [x + largo, y, z], 0.08, C.blanco),
   el([x + largo, y, z], [0.18, 0.08, 0.08], C.boca),
   ...[[0, 1], [0, -1], [1, 0], [-1, 0]].map(([dy, dz]) => hueso([x - largo + 0.15, y, z], [x - largo + 0.05, y + dy * 0.18, z + dz * 0.18], 0.025, C.gris)),
@@ -60,28 +61,32 @@ const bomba = (x, y, z) => [
   el([x + 0.75, y, z], [0.12, 0.17, 0.17], C.oro),
   ...[[0, 1], [0, -1], [1, 0], [-1, 0]].map(([dy, dz]) => hueso([x - 0.85, y, z], [x - 1.15, y + dy * 0.28, z + dz * 0.28], 0.03, C.oliva)),
 ]
-const ARMAS = ambos((s) => {
+const LADOS = ambos((s) => {
   const estacion = (z, alto) => [ALA(z), z * s, alto, bajoElAla(z)]
   const [b1, m3, b2, m2] = [estacion(2.6, 0.25), estacion(3.6, 0.15), estacion(4.6, 0.25), estacion(5.5, 0.15)]
-  const punta = [ALA(6.7) - 0.2, bajoElAla(6.7) - 0.1, 6.85 * s]
-  return [
-    ...[b1, m3, b2, m2].map(([x, z, alto]) => soporte(x, z, alto)),
-    ...bomba(b1[0], b1[3] - 0.5, b1[1]),
-    ...bomba(b2[0], b2[3] - 0.5, b2[1]),
-    // Los de a tres: uno abajo y dos a los lados, en su riel.
-    ...[[0, -0.42], [0.2, -0.24], [-0.2, -0.24]].flatMap(([dz, y]) => misil(m3[0], m3[3] + y, m3[1] + dz)),
-    ...[[0.14, -0.3], [-0.14, -0.3]].flatMap(([dz, y]) => misil(m2[0], m2[3] + y, m2[1] + dz, 1.1)),
-    ...misil(...punta, 1.0),
-  ]
-}).flat()
+  return {
+    fijo: [...[b1, m3, b2, m2].map(([x, z, alto]) => soporte(x, z, alto)), ...bomba(b1[0], b1[3] - 0.5, b1[1]), ...bomba(b2[0], b2[3] - 0.5, b2[1])],
+    // Cada misil [x, y, z, largo], de afuera hacia adentro: el de la punta,
+    // los de a dos y los de a tres (uno abajo y dos a los lados, en su riel).
+    misiles: [
+      [ALA(6.7) - 0.2, bajoElAla(6.7) - 0.1, 6.85 * s, 1.0],
+      ...[[0.14, -0.3], [-0.14, -0.3]].map(([dz, y]) => [m2[0], m2[3] + y, m2[1] + dz, 1.1]),
+      ...[[0, -0.42], [0.2, -0.24], [-0.2, -0.24]].map(([dz, y]) => [m3[0], m3[3] + y, m3[1] + dz, 1.3]),
+    ],
+  }
+})
+const SOPORTES_Y_BOMBAS = LADOS.flatMap(({ fijo }) => fijo)
+// Los doce misiles de a pares, uno de cada ala, en el orden en que los dispara.
+export const MISILES = LADOS[0].misiles.flatMap((m, i) => [m, LADOS[1].misiles[i]])
 
 // El caza en sus metros, sin duky, que va aparte con sus patas: la cúpula
 // abierta `cupula` grados, el cinturón tirado `cinturon` (suelto, si no),
 // sin `motor`, con la tobera apagada (las estelas son las formas con luz
-// propia), y sin `armas` cuando ya las gastó contra quien juega.
-export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true, armas = true } = {}) => [
+// propia), sin los primeros `disparados` misiles y sin `armas` cuando ya las
+// gastó contra quien juega.
+export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true, armas = true, disparados = 0 } = {}) => [
   ...cabinaCon(conCupula(CFG, cupula), []).filter((f) => motor || !f.luz),
   ...cinturon(tira),
-  ...(armas ? ARMAS : []),
+  ...(armas ? [...SOPORTES_Y_BOMBAS, ...MISILES.slice(disparados).flatMap(misil)] : []),
   ...(tren ? TREN : []),
 ]

@@ -10,17 +10,6 @@
  * temas: es un objeto, no una superficie.
  * ========================================================================= */
 
-/* La letra de la tabla de honor. Solo la usa la tabla, así que el navegador
-   no la descarga hasta que la tabla se pinta. No trae «Ó» ni «°»: los textos
-   de la tabla van sin tilde, y el grado sale de la letra de datos. */
-@font-face {
-  font-family: 'Press Start 2P';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/press-start-2p-latin.woff2') format('woff2');
-}
-
 .podio {
   --contorno: #2a1d3d;
   --oro: #ffcc33;
