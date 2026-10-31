@@ -14,6 +14,11 @@ export default defineConfig({
     // descuenta parte del ayudante que Vite agrega por el `import()` del juego
     // de la 404 (src/client.js).
     modulePreload: { polyfill: false },
+    // Un solo CSS, que el prerender incrusta en cada página y borra. Dividido,
+    // Vite lo pediría también al cargar cada `import()` que comparte código
+    // con la entrada (el combate, en Operación Venganza), y al no estar el
+    // archivo, el `import()` fallaría.
+    cssCodeSplit: false,
   },
   esbuild: {
     legalComments: 'none',
