@@ -14,6 +14,7 @@ import { calada } from '../pilotos/calada.mjs'
 import { hablar, silaba, suave } from '../escena1/personajes.mjs'
 
 const tramo = (u, a, b) => suave((u - a) / (b - a))
+const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 const xz = ({ en }) => [en[0], en[2]]
 
@@ -43,7 +44,7 @@ const elenco = (u, cambios = {}) => {
     .filter(([, v]) => v)
     .map(([quien, v]) => (Array.isArray(v[0]) ? v : [v, de[quien][1]]))
 }
-const sala = (cambios, extra = {}) => (u) => reunion({ pantalla: PANTALLA, figuras: elenco(u, cambios(u)), ...extra })
+const sala = (cambios, extra = {}) => (u) => reunion({ u, pantalla: PANTALLA, figuras: elenco(u, cambios(u)), ...extra })
 
 // Después de la tos, moby se queda con el puro prendido. El humo se le ve
 // solo en sus tomas: en las otras taparía a duke.
@@ -81,7 +82,8 @@ const A_DUCK_ABIERTO = fija([0.4, 1.2, -0.9], [2.75, 1.1, -1.0], 50)
 const A_DUCK_DE_CERCA = fija([0.6, 1.5, 0.6], [2.75, 1.3, -1.0], 38)
 const A_MOBY = fija([0.4, 1.05, -0.8], [-0.3, 1.0, 1.1], 52)
 const A_MOBY_DE_LADO = fija([-0.2, 1.45, -0.6], [-0.1, 1.0, 1.1], 58)
-const A_DUKE = fija([-0.9, 1.05, 0.9], [-1.0, 0.95, -1.0], 58)
+const A_DUKE = fija([-1.0, 1.05, 0.7], [-1.6, 0.95, -1.0], 58)
+const CALLA = 17 / 40
 
 // Los tres mirando a duky, en su sillón o en `punto`, y los sillones girados
 // con ellos. Así terminan la escena, y así lo siguen con la vista en la 11
@@ -104,9 +106,16 @@ export const TOMAS_3D = {
   pintura: { escena: sala(fumando((u) => ({ duke: cabellera(u) }))), camara: A_DUKE },
   perfecto: { escena: sala((u) => ({ moby: moby.hablando(u, PRENDIDO) })), camara: A_MOBY_DE_LADO },
   sigue: { escena: sala((u) => ({ moby: sigueTosiendo(u) })), camara: A_MOBY_DE_LADO },
-  reparar: { escena: sala(fumando((u) => ({ duke: duke.hablando(u) }))), camara: A_DUKE },
+  // Desde que deja de hablar (en el cuadro 17 de 40), la cámara se le acerca
+  // despacio y él abre los ojos para mirarla fijo.
+  reparar: {
+    escena: sala(fumando((u) => ({ duke: u < CALLA ? duke.hablando(u) : mirada(u) }))),
+    camara: (u) => {
+      const k = tramo(u, CALLA, 0.65)
+      return [lerp([-1.0, 1.05, 0.7], [-1.1, 1.05, 0.42], k), lerp([-1.6, 0.95, -1.0], [-1.6, 1.05, -1.0], k), 58 - 4 * k]
+    },
+  },
   // De frente, a la altura de sus ojos.
-  mirada: { escena: sala(fumando((u) => ({ duke: mirada(u) }))), camara: fija([-1.0, 1.05, 0.6], [-1.0, 1.05, -1.0], 54) },
 
   recurso: { escena: sala(fumando((u) => ({ duckOne: conLaCarpeta(u) }))), camara: A_DUCK_DE_CERCA },
   nuclear: { escena: sala(fumando((u) => ({ moby: moby.hablando(u, PRENDIDO) }))), camara: A_MOBY },
@@ -119,7 +128,7 @@ export const TOMAS_3D = {
       const [k, tras] = [tramo(u, 0.08, 0.4), tramo(u, 0.23, 0.55)]
       const giros = { moby: aDuky(ASIENTOS.moby, k).giro, duke: aDuky(ASIENTOS.duke, tras).giro }
       const figuras = elenco(u, { duckOne: [duckOne.carpeta(0), aDuky(DUCK_ONE, tras)], moby: [moby.sentado(u, SIN_HUMO), aDuky(ASIENTOS.moby, k)], duke: [duke.sentado(u), aDuky(ASIENTOS.duke, tras)] })
-      return reunion({ pantalla: PANTALLA, giros, figuras })
+      return reunion({ u, pantalla: PANTALLA, giros, figuras })
     },
     camara: fija([-1.0, 2.9, -2.4], [-1.0, 0.5, 0.6], 60),
   },
@@ -127,5 +136,5 @@ export const TOMAS_3D = {
   eficacia: { escena: mirandoADuky((u) => ({ duckOne: [conLaCarpeta(u), aDuky(DUCK_ONE)] })), camara: A_DUCK },
   // Como en la escena 2, los mira a los tres, pero esta vez le toca a él:
   // resopla de la emoción.
-  noot: { escena: mirandoADuky((u) => ({ duky: duky.resopla(u, AL_EQUIPO) })), camara: fija([-1.75, 1.35, -1.6], [-1.6, 0.9, 0.95], 44) },
+  noot: { escena: mirandoADuky((u) => ({ duky: duky.resopla(u, AL_EQUIPO) })), camara: fija([-0.45, 1.35, -1.5], [-1.75, 0.9, 0.95], 38) },
 }

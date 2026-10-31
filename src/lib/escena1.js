@@ -50,8 +50,6 @@ export const TOMAS = [
     unaVez: true,
     lineas: [{ texto: 'El más cercano, el Sitting Ducks, se aproxima lentamente.' }],
   },
-  // Y sigue en panorámica por el costado, hasta su nombre.
-  { id: 'nombre', ms: 200, cuadros: 24, unaVez: true, lineas: [] },
   {
     id: 'cubierta',
     ms: 90,
@@ -129,7 +127,7 @@ export const TOMAS = [
   {
     id: 'ventana',
     ms: 150,
-    cuadros: 40,
+    cuadros: 48,
     unaVez: true,
     segunModo: true,
     lineas: [{ texto: 'Camina despacio hasta la ventana.' }],

@@ -319,7 +319,9 @@ const ojosCerrados = [
   ...ambos((s) => el([0.78, 0.6, s * 0.48], [0.025, 0.02, 0.08], C.blanco, { flat: '#14161e', rot: [s * 35, 0, 0] })),
 ]
 
-const destello = (c) => [el(c, [0.02, 0.17, 0.02], C.blanco, { flat: '#ffffff', brilla: true }), el(c, [0.15, 0.02, 0.02], C.blanco, { flat: '#ffffff', brilla: true, rot: [0, 40, 0] })]
+// Un destello: una cruz de luz. Su brazo horizontal va girado `giro` grados
+// desde el frente: de través a la cámara, la cruz se le ve entera.
+const destello = (c, giro = 40) => [el(c, [0.02, 0.17, 0.02], C.blanco, { flat: '#ffffff', brilla: true }), el(c, [0.15, 0.02, 0.02], C.blanco, { flat: '#ffffff', brilla: true, rot: [0, giro, 0] })]
 
 // B · El peinado: mentón arriba, ojos cerrados de gusto, pasándose un peine
 // de oro por el copete.
@@ -626,21 +628,49 @@ const gondola = (s) => {
   )
 }
 
+// La cara de tiburón de moby, a cada lado del morro, como la de los A-10 de
+// los Flying Tigers: la boca abierta de punta a punta del morro, roja por
+// dentro y más honda hacia atrás, con colmillos blancos arriba y abajo que
+// crecen hacia la punta; la comisura sube en una mueca. Sobre ella, el ojo
+// rasgado y caído hacia el frente, con la ceja negra encima. En (x, y), por
+// el costado.
+const DIENTES = '#f4f4f4'
+const NEGRO_CARA = '#0c0e12'
+const BOCA_A10 = { atras: 5.0, punta: 8.05 }
+const labios = (t) => [0.02 + 0.16 * t + 0.1 * (1 - t) ** 3, -0.04 - 0.34 * t ** 0.7]
+const OJO_A10 = { x: 5.8, y: 0.47, largo: 0.44, alto: 0.18, giro: -0.36 }
+const caraDeTiburon = ([x, y, z]) => {
+  if (Math.abs(z) < 0.08) return null
+  // El ojo: una almendra girada, con el iris rojo y la pupila hacia el
+  // frente, y la ceja negra y gruesa encima.
+  const { largo, alto, giro } = OJO_A10
+  const [dx, dy] = [x - OJO_A10.x, y - OJO_A10.y]
+  const [u, v] = [(dx * Math.cos(giro) + dy * Math.sin(giro)) / largo, (-dx * Math.sin(giro) + dy * Math.cos(giro)) / alto]
+  const almendra = Math.abs(v) - (1 - Math.abs(u) ** 1.6)
+  if (almendra < 0 && Math.abs(u) < 1) {
+    const iris = Math.hypot(u - 0.3, v * 0.5)
+    return iris < 0.2 ? NEGRO_CARA : iris < 0.4 ? C.boca[1] : DIENTES
+  }
+  if (Math.abs(u) < 1.3 && v > 0 && v < 1.3 + 1.2 * (1 - Math.abs(u))) return NEGRO_CARA
+  if (almendra < 0.4 && Math.abs(u) < 1.2) return NEGRO_CARA
+  // La boca.
+  const t = (x - BOCA_A10.atras) / (BOCA_A10.punta - BOCA_A10.atras)
+  if (t < 0 || t > 1) return null
+  const [arriba, abajo] = labios(t)
+  if (y > arriba + 0.05 || y < abajo - 0.05) return null
+  if (y > arriba || y < abajo) return NEGRO_CARA
+  const largoDiente = Math.min(0.06 + 0.1 * t, (arriba - abajo) * 0.38)
+  const diente = (fase) => 1 - Math.abs(((((x * 2.6 + fase) % 1) + 1) % 1) * 2 - 1)
+  if (arriba - y < largoDiente * diente(0)) return DIENTES
+  if (y - abajo < largoDiente * diente(0.5)) return DIENTES
+  return t < 0.3 ? C.boca[3] : C.boca[2]
+}
+
 export const CAZA_MOBY = [
-  tubo(
-    FUSELAJE_A10,
-    C.negro,
-    {
-      pinta: ([x, y]) => {
-        if (x < 5.4 || x > 7.9) return null
-        const borde = -0.25 - (x - 5.4) * 0.12
-        const diente = Math.abs(((x * 3) % 1) - 0.5) * 0.3
-        if (y < borde && y > borde - 0.35) return y > borde - 0.08 - diente ? '#f4f4f4' : C.boca
-        return null
-      },
-    },
-  ),
-  hueso([7.4, -0.45, 0], [8.65, -0.45, 0], 0.12, C.grisOscuro),
+  tubo(FUSELAJE_A10, C.negro, { pinta: caraDeTiburon }),
+  // El cañón sale del mentón por un carenado pegado a la panza del morro.
+  el([7.0, -0.3, 0], [1.1, 0.2, 0.24], C.negro),
+  hueso([6.6, -0.36, 0], [8.65, -0.36, 0], 0.12, C.grisOscuro),
   el([4.8, 0.95, 0], [1.3, 0.62, 0.55], C.vidrio, { vidrio: true }),
   ...cabezaPiloto(5.2, 0.95, ['#d8925e', '#a05a30', '#723c1e', '#40200e'], [el([5.15, 1.12, 0], [0.3, 0.16, 0.27], C.negro)]),
   ...ambos((s) => {

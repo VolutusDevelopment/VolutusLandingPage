@@ -35,8 +35,11 @@ export const enPanel = (s, z) => [PANEL.abajo[0] + (PANEL.arriba[0] - PANEL.abaj
 const panelInclinado = (z0, z1, pinta) =>
   placa([[PANEL.abajo[0], PANEL.abajo[1], z0], [PANEL.abajo[0], PANEL.abajo[1], z1], [PANEL.arriba[0], PANEL.arriba[1], z1], [PANEL.arriba[0], PANEL.arriba[1], z0]], 0.05, C.oscuro, { pinta: ([, y, z]) => pinta((y - PANEL.abajo[1]) / (PANEL.arriba[1] - PANEL.abajo[1]), z) })
 
-// Reloj redondo con su aguja, apoyado en el panel.
-const reloj = (s, z, r, ang) => {
+// Reloj redondo con su aguja, apoyado en el panel: esfera clara y aguja
+// roja o, con `negro`, esfera negra y aguja blanca, como los del A-10. La
+// aguja va y viene alrededor de `ang` en el instante `t` de la toma.
+const reloj = (s, z, r, ang0, negro = false, t = 0) => {
+  const ang = ang0 + 0.3 * Math.sin(2 * Math.PI * (t + ang0))
   const c = sum(enPanel(s, z), esc(NORMAL, 0.04))
   return disco(c, NORMAL, r, 0.03, C.nube, {
     pinta: (p) => {
@@ -45,51 +48,26 @@ const reloj = (s, z, r, ang) => {
       if (Math.hypot(u, w) > r * 0.88) return '#16181c'
       const a = u * Math.cos(ang) + w * Math.sin(ang)
       const b = Math.abs(-u * Math.sin(ang) + w * Math.cos(ang))
-      return a > -0.02 && a < r * 0.8 && b < 0.025 ? '#d8282c' : '#f4f4ec'
+      if (a > -0.02 && a < r * 0.8 && b < 0.025) return negro ? '#f4f4ec' : '#d8282c'
+      return negro ? '#1a1d22' : '#f4f4ec'
     },
   })
 }
 
-// Pantallas de un tablero moderno: bordes oscuros, divisiones y un horizonte artificial al medio.
-const pantallas = (z0, z1, { borde, fondo, linea, columnas }) => (s, z) => {
-  const u = (z - z0) / (z1 - z0)
-  const k = Math.min(columnas - 1, Math.floor(u * columnas))
-  const uu = u * columnas - k
-  if (u < 0 || u > 1 || s < 0.06 || s > 0.94 || uu < 0.03 || uu > 0.97) return borde
-  if (columnas === 3 && k === 1) return s > 0.5 ? (Math.abs(s - 0.5) < 0.03 ? '#ffffff' : '#3d7be0') : '#7a5428'
-  return Math.floor(s * 9) % 2 === 0 ? fondo : Math.floor(uu * 9) % 3 === 0 ? linea : '#14281f'
-}
-
 const mira = (c, n, r, marco, cristal) => [disco(c, n, r + 0.05, 0.03, marco), disco(sum(c, esc(n, 0.05)), n, r, 0.02, cristal)]
 
-// El tablero del Hornet de duke: arriba, las dos pantallas DDI con sus
-// botones en el bisel y, al medio, el teclado del UFC; abajo al centro, la
-// pantalla MPCD, con un corazón. Todo en rosa sobre un tablero perla.
-const ROSA_TABLERO = { bisel: '#7a2848', fondo: '#d8629a', linea: '#fff0f6', tablero: '#f4e6ee' }
-const corazon = (u, v) => (u * u + v * v - 1) ** 3 - u * u * v ** 3 < 0
-const tableroHornet = (s, z) => {
-  const { bisel, fondo, linea, tablero } = ROSA_TABLERO
-  for (const zc of [-0.85, 0.85]) {
-    const [du, ds] = [Math.abs(z - zc), Math.abs(s - 0.64)]
-    if (du > 0.4 || ds > 0.32) continue
-    if (du > 0.32 || ds > 0.25) return Math.floor((z + s) * 14) % 3 === 0 ? linea : bisel
-    return Math.floor(s * 12) % 3 === 0 ? linea : fondo
-  }
-  if (Math.abs(z) < 0.36 && s > 0.04 && s < 0.56) return Math.abs(z) > 0.3 || s < 0.09 || s > 0.51 ? bisel : corazon(z / 0.2, (s - 0.3) / 0.17) ? linea : fondo
-  if (Math.abs(z) < 0.3 && s > 0.64 && s < 0.96) return (Math.floor(z * 12) + Math.floor(s * 14)) % 2 ? linea : bisel
-  return tablero
-}
 const VIDRIO_ROSA = ['#ffe0ee', '#f8b0d0', '#d880aa', '#a05078']
 
 // ── La cabina del F-22 de duky ───────────────────────────────────────────
 
 // Una cara rectangular de centro `c`, ejes `u` (a lo ancho) y `v` (hacia
-// arriba) y medias medidas a y b, con la imagen de pantallas.mjs encima.
+// arriba) y medias medidas a y b, con la imagen de pantallas.mjs encima en
+// el instante `t` de la toma.
 const Z = [0, 0, 1]
-const cara = (c, u, v, a, b, imagen, grosor = 0.03) => {
+const cara = (c, u, v, a, b, imagen, { grosor = 0.03, t = 0 } = {}) => {
   const esquina = (su, sv) => sum(c, sum(esc(u, su * a), esc(v, sv * b)))
   return placa([esquina(-1, -1), esquina(1, -1), esquina(1, 1), esquina(-1, 1)], grosor, C.oscuro, {
-    pinta: (p) => imagen(pto(res(p, c), u) / a, pto(res(p, c), v) / b),
+    pinta: (p) => imagen(pto(res(p, c), u) / a, pto(res(p, c), v) / b, t),
   })
 }
 const OSCURO = () => '#14171c'
@@ -102,12 +80,12 @@ const enArriba = (s, z) => sum([ARRIBA.abajo[0] + (ARRIBA.arriba[0] - ARRIBA.aba
 const ALTO_ARRIBA = Math.hypot(0.17, 0.5)
 // Sobre la fila de pantallas, la pantalla de `ancho` × `alto` (medias) en s, z del panel.
 const PANEL_ARRIBA = [...TANGENTE, 0]
-const enFila = (s, z, ancho, alto, imagen) => cara(sum(enPanel(s, z), esc(NORMAL, 0.035)), Z, PANEL_ARRIBA, ancho, alto, imagen)
+const enFila = (s, z, ancho, alto, imagen, t) => cara(sum(enPanel(s, z), esc(NORMAL, 0.035)), Z, PANEL_ARRIBA, ancho, alto, imagen, { t })
 
 // El HUD: el visor sobre su caja, entre dos postes, con la escalera de
 // cabeceo, el vector de vuelo y la cinta de rumbo en verde.
 const VIDRIO_HUD = ['#f4fff6', '#d4f4e0', '#a8d8bc', '#78a890']
-const hud = () => {
+const hud = (vidrio = VIDRIO_HUD) => {
   const [pie, tope] = [[2.32, -0.55], [2.2, -0.05]]
   const enVidrio = (s, z) => [pie[0] + (tope[0] - pie[0]) * s - 0.02, pie[1] + (tope[1] - pie[1]) * s, z]
   const vector = (a) => enVidrio(0.5 + 0.07 * Math.cos(a), 0.035 * Math.sin(a))
@@ -116,7 +94,7 @@ const hud = () => {
     caja(2.17, 2.75, 0.8, 0.14, -0.5, 0, C.oscuro),
     ...ambos((s) => hueso([...pie, s * 0.34], [...tope, s * 0.34], 0.04, C.oscuro)),
     hueso([...tope, -0.34], [...tope, 0.34], 0.04, C.oscuro),
-    placa([[...pie, -0.3], [...pie, 0.3], [...tope, 0.3], [...tope, -0.3]], 0.015, VIDRIO_HUD, { vidrio: true }),
+    placa([[...pie, -0.3], [...pie, 0.3], [...tope, 0.3], [...tope, -0.3]], 0.015, vidrio, { vidrio: true }),
     ...[0.28, 0.72].flatMap((s) => ambos((l) => [simbolo(enVidrio(s, l * 0.06), enVidrio(s, l * 0.21)), simbolo(enVidrio(s, l * 0.21), enVidrio(s - 0.05, l * 0.21))]).flat()),
     ...Array.from({ length: 8 }, (_, i) => simbolo(vector((i / 8) * Math.PI * 2), vector(((i + 1) / 8) * Math.PI * 2))),
     ...ambos((l) => simbolo(enVidrio(0.5, l * 0.035), enVidrio(0.5, l * 0.09))),
@@ -136,27 +114,26 @@ const visera = () => [
 // El tablero del F-22, como el real: abajo, las dos SMFD de 6,25 pulgadas a
 // los lados de la PMFD de 8; arriba, el ICP entre las dos UFD y el HUD
 // encima; la cuarta SMFD, entre las rodillas, y el piso bajo los pies.
-const tableroF22 = () => [
-  enFila(0.5, 0, 0.41, 0.4, pantalla(tactica, 5)),
-  ...ambos((s) => enFila(0.56, s * 0.86, 0.32, 0.31, pantalla(s > 0 ? radar : actitud, 4))),
+const tableroF22 = (t) => [
+  enFila(0.5, 0, 0.41, 0.4, pantalla(tactica, 5), t),
+  ...ambos((s) => enFila(0.56, s * 0.86, 0.32, 0.31, pantalla(s > 0 ? radar : actitud, 4), t)),
   ...visera(),
-  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.4, icp),
-  ...ambos((s) => cara(enArriba(0.45, s * 0.72), Z, T_ARRIBA, 0.27, ALTO_ARRIBA * 0.36, pantalla(ufd, 3))),
+  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.4, icp, { t }),
+  ...ambos((s) => cara(enArriba(0.45, s * 0.72), Z, T_ARRIBA, 0.27, ALTO_ARRIBA * 0.36, pantalla(ufd, 3), { t })),
   ...hud(),
-  cara(sum([1.48, -2.22, 0], esc(NORMAL, 0.08)), Z, PANEL_ARRIBA, 0.3, 0.3, pantalla(armas, 4), 0.04),
+  cara(sum([1.48, -2.22, 0], esc(NORMAL, 0.08)), Z, PANEL_ARRIBA, 0.3, 0.3, pantalla(armas, 4), { grosor: 0.04, t }),
   placa([[1.62, -1.95, -0.36], [1.62, -1.95, 0.36], [1.34, -2.5, 0.36], [1.34, -2.5, -0.36]], 0.1, C.oscuro, { pinta: OSCURO }),
   placa([[-1.5, -3.0, -1.55], [1.6, -3.0, -1.55], [1.6, -3.0, 1.55], [-1.5, -3.0, 1.55]], 0.06, C.oscuro),
 ]
 
-// Las consolas, más juntas que en los otros: la cúpula del F-22 es angosta.
-// Sus tapas, paneles negros con sus interruptores.
-const ANCHO_F22 = 2.0
-const CONSOLA_F22 = ANCHO_F22 - 0.23
-const tapas = () =>
-  ambos((s) =>
-    placa([[-0.9, BASE + 0.01, s * (CONSOLA_F22 - 0.2)], [1.8, BASE + 0.01, s * (CONSOLA_F22 - 0.2)], [1.8, BASE + 0.01, s * (CONSOLA_F22 + 0.2)], [-0.9, BASE + 0.01, s * (CONSOLA_F22 + 0.2)]], 0.02, C.oscuro, {
+// Las tapas de las consolas de una cabina de `ancho`: paneles negros con sus
+// interruptores, de a filas.
+const tapas = (ancho) => {
+  const consola = ancho - 0.23
+  return ambos((s) =>
+    placa([[-0.9, BASE + 0.01, s * (consola - 0.2)], [1.8, BASE + 0.01, s * (consola - 0.2)], [1.8, BASE + 0.01, s * (consola + 0.2)], [-0.9, BASE + 0.01, s * (consola + 0.2)]], 0.02, C.oscuro, {
       pinta: ([x, , z]) => {
-        const [u, v] = [(x + 0.9) / 0.3, (s * z - CONSOLA_F22 + 0.2) / 0.13]
+        const [u, v] = [(x + 0.9) / 0.3, (s * z - consola + 0.2) / 0.13]
         const [i, j, fu, fv] = [Math.floor(u), Math.floor(v), u % 1, v % 1]
         if (fu < 0.08 || (i * 7 + j * 3) % 5 === 0) return '#2a2e35'
         if (fu > 0.3 && fu < 0.55 && fv > 0.3 && fv < 0.7) return (i + j * 2) % 7 === 0 ? '#e8402c' : (i * j) % 4 === 1 ? '#f4c430' : '#d8dde4'
@@ -164,6 +141,10 @@ const tapas = () =>
       },
     }),
   )
+}
+// Las consolas del F-22, más juntas que en los otros: su cúpula es angosta.
+const ANCHO_F22 = 2.0
+const CONSOLA_F22 = ANCHO_F22 - 0.23
 
 // La palanca lateral a la derecha, con su gatillo, y los dos aceleradores
 // juntos bajo una empuñadura, a la izquierda. Se mueven con la mano.
@@ -200,17 +181,53 @@ const proa = (cfg) => {
 // de las alas; la visera sigue, oscura, hasta el parabrisas. Abajo a la
 // izquierda queda su botón (escena3/caza.mjs).
 const GRIS_TABLERO = () => '#30353c'
-const tableroTomcat = () => [
-  enFila(0.52, 0, 0.34, 0.36, pantalla(vdi, 3)),
-  reloj(0.74, -0.62, 0.18, 0.6),
-  reloj(0.74, -1.08, 0.18, 2.2),
-  reloj(0.28, -0.62, 0.18, 1.4),
-  ...[[0.74, 0.62, adi], [0.28, 0.62, hsi], [0.74, 1.08, rwr]].map(([s, z, imagen]) => enFila(s, z, 0.18, 0.18, redondo(imagen))),
-  enFila(0.28, 1.08, 0.18, 0.12, radio),
+const tableroTomcat = (t) => [
+  enFila(0.52, 0, 0.34, 0.36, pantalla(vdi, 3), t),
+  reloj(0.74, -0.62, 0.18, 0.6, false, t),
+  reloj(0.74, -1.08, 0.18, 2.2, false, t),
+  reloj(0.28, -0.62, 0.18, 1.4, false, t),
+  ...[[0.74, 0.62, adi], [0.28, 0.62, hsi], [0.74, 1.08, rwr]].map(([s, z, imagen]) => enFila(s, z, 0.18, 0.18, redondo(imagen), t)),
+  enFila(0.28, 1.08, 0.18, 0.12, radio, t),
   ...visera(),
   placa([[3.3, -0.58, -1.8], [3.3, -0.58, 1.8], [3.4, -0.08, 1.8], [3.4, -0.08, -1.8]], 0.06, C.oscuro),
-  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.42, acm),
-  ...ambos((s) => cara(enArriba(0.45, s * 0.62), Z, T_ARRIBA, 0.1, ALTO_ARRIBA * 0.4, s > 0 ? barrido : indexador)),
+  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.42, acm, { t }),
+  ...ambos((s) => cara(enArriba(0.45, s * 0.62), Z, T_ARRIBA, 0.1, ALTO_ARRIBA * 0.4, s > 0 ? barrido : indexador, { t })),
+  ...hud(),
+]
+
+// El tablero del Hornet, como el del F/A-18C: arriba a cada lado una DDI,
+// con sus botones en el bisel (las armas y el radar); al medio y abajo, la
+// MPCD con el mapa; a la izquierda, los relojes de respaldo, y a la derecha
+// el radar de alerta. Bajo el HUD, el UFC, con el indicador de ángulo de
+// ataque a su izquierda. El cristal del HUD de duke es rosa.
+const tableroHornet = (t) => [
+  ...ambos((s) => enFila(0.63, s * 0.82, 0.34, 0.3, pantalla(s > 0 ? radar : armas, 5), t)),
+  enFila(0.27, 0, 0.3, 0.22, pantalla(tactica, 5), t),
+  reloj(0.13, -0.72, 0.1, 1.1, false, t),
+  reloj(0.13, -1.0, 0.1, 2.3, false, t),
+  enFila(0.13, 0.86, 0.11, 0.11, redondo(rwr), t),
+  ...visera(),
+  placa([[3.3, -0.58, -1.8], [3.3, -0.58, 1.8], [3.4, -0.08, 1.8], [3.4, -0.08, -1.8]], 0.06, C.oscuro),
+  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.42, icp, { t }),
+  cara(enArriba(0.45, -0.62), Z, T_ARRIBA, 0.1, ALTO_ARRIBA * 0.4, indexador, { t }),
+  ...hud(VIDRIO_ROSA),
+]
+
+// El tablero del A-10C: al centro el horizonte artificial (ADI) y, debajo,
+// el rumbo (HSI); a sus lados, dos columnas de relojes de aguja por lado
+// (velocidad, altura, motores) y, más afuera, una MFCD a cada lado, con el
+// mapa y las armas; abajo, los relojes chicos de los motores. Bajo el HUD,
+// el UFC, entre el indicador de ángulo de ataque y el radar de alerta.
+const tableroA10 = (t) => [
+  enFila(0.72, 0, 0.2, 0.2, redondo(adi), t),
+  enFila(0.24, 0, 0.18, 0.18, redondo(hsi), t),
+  ...ambos((s) => enFila(0.6, s * 1.38, 0.3, 0.3, pantalla(s > 0 ? tactica : armas, 5), t)),
+  ...ambos((s) => [0.75, 0.45, 0.16].flatMap((f, i) => [reloj(f, s * 0.48, 0.12, 0.6 + i + s, true, t), reloj(f, s * 0.8, 0.12, 2 + i - s, true, t)])).flat(),
+  ...ambos((s) => [1.2, 1.5].map((z, i) => reloj(0.12, s * z, 0.09, 1.5 + i * s, true, t))).flat(),
+  ...visera(),
+  placa([[3.3, -0.58, -1.8], [3.3, -0.58, 1.8], [3.4, -0.08, 1.8], [3.4, -0.08, -1.8]], 0.06, C.oscuro),
+  cara(enArriba(0.45, 0), Z, T_ARRIBA, 0.36, ALTO_ARRIBA * 0.42, icp, { t }),
+  ...ambos((s) => cara(enArriba(0.45, s * 0.62), Z, T_ARRIBA, 0.1, ALTO_ARRIBA * 0.4, s > 0 ? redondo(rwr) : indexador, { t })),
   ...hud(),
 ]
 
@@ -267,24 +284,24 @@ export const CABINAS = {
     panel: [-1.3, 1.3, GRIS_TABLERO],
     // Su asiento, verde oliva como el uniforme, con la estrella del líder.
     asiento: { rampa: C.oliva, cabecera: (v, u) => (enEstrella(u, v, 0.32) ? C.oro : null) },
-    delante: (cfg) => [...tableroTomcat(), ...espejoTomcat(cfg.medalla)],
+    delante: (cfg) => [...tableroTomcat(cfg.t), ...espejoTomcat(cfg.medalla)],
   },
   duke: {
     caza: M.CAZA_DUKE, cabeza: [5.0, 0.95], cabezaU: [0.15, 0.6], k: 0.28, alto: 1.1, arcos: [5.75, 4.5], lomo: 4.5, frente: 1.58,
     ancho: 2.4, marco: C.rosa,
-    consola: C.rosa, tablero: C.perla, xAsiento: -1.05, pata: C.pico, cadera: -1.45,
-    panel: [-1.3, 1.3, tableroHornet],
+    consola: C.grisOscuro, tablero: C.grisOscuro, xAsiento: -1.05, pata: C.pico, cadera: -1.45,
+    panel: [-1.3, 1.3, GRIS_TABLERO],
     // Su asiento es un trono: capitoné rosa con ribete de oro y una corona encima.
     asiento: {
       rampa: C.rosa,
       cabecera: (v, u) => (Math.hypot(v / 0.45, u / 0.8) > 0.8 ? C.oro : Math.hypot(((v + 0.6) % 0.24) - 0.12, ((u + 0.6) % 0.24) - 0.12) < 0.03 ? C.blanco : null),
       remate: [[[0.05, 1.5, 0], [0.14, 0.08, 0.34], C.oro], ...[-0.25, 0, 0.25].map((z) => [[0.05, 1.63, z], [0.06, 0.11, 0.06], C.oro]), [[0.14, 1.5, 0], [0.07, 0.06, 0.07], C.boca]],
     },
-    // El HUD con el cristal rosa y, colgado del arco del parabrisas, un
-    // espejo de belleza con bombillas, de lado sobre el tablero, para mirarse.
-    delante: () => [
-      placa([[2.3, -1.0, -0.34], [2.3, -1.0, 0.34], [2.15, -0.4, 0.34], [2.15, -0.4, -0.34]], 0.02, VIDRIO_ROSA, { vidrio: true }),
-      ...ambos((s) => hueso([2.3, -1.0, s * 0.37], [2.15, -0.4, s * 0.37], 0.03, C.oro)),
+    // Y, colgado del arco del parabrisas, un espejo de belleza con
+    // bombillas, de lado sobre el tablero, para mirarse.
+    delante: (cfg) => [
+      ...tableroHornet(cfg.t),
+      ...tapas(2.4),
       ...mira([3.7, 0.4, 0.55], uni([-1, -0.2, -0.35]), 0.28, C.oro, C.vidrio),
       ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => el([3.67, 0.4 + 0.36 * Math.sin((i / 8) * Math.PI * 2), 0.55 + 0.36 * Math.cos((i / 8) * Math.PI * 2)], [0.035, 0.035, 0.035], C.blanco, { flat: '#fff8d0', brilla: true })),
     ],
@@ -293,17 +310,17 @@ export const CABINAS = {
     caza: M.CAZA_MOBY, cabeza: [4.9, 0.95], cabecita: [5.2, 0.95], izquierda: [0.3, 0.95, -1.5], cabezaU: [0.32, 0.28], k: 0.25, alto: 1.1, arcos: [5.6, 4.1], frente: 1.9,
     ancho: 2.8, marco: C.negro,
     consola: C.negro, tablero: C.negro, xAsiento: -1.05, pata: C.naranja, cadera: -1.75,
-    panel: [-1.9, 1.9, { borde: '#0a0a0c', fondo: '#26262c', linea: '#d8282c', columnas: 2 }],
+    panel: [-1.9, 1.9, GRIS_TABLERO],
     // Su asiento de cuero gastado, con el apoyacabezas parchado con cinta en cruz.
     asiento: { rampa: C.cuero, cabecera: (v, u) => (Math.abs(Math.abs(v) - Math.abs(u) * 0.8) < 0.07 ? C.gris : null) },
-    // Relojes de aguja y un cenicero con colillas. Su cámara izquierda va más atrás: el humo del puro sale por ese lado.
-    delante: () => [
-      ...[-1.55, -1.05, -0.55].flatMap((z, i) => [reloj(0.28, z, 0.2, 0.6 + i), reloj(0.72, z, 0.2, 2 + i)]),
-      ...[0.55, 1.05, 1.55].flatMap((z, i) => [reloj(0.28, z, 0.2, 1.2 + i), reloj(0.72, z, 0.2, 3.4 + i)]),
-      el([2.1, -0.95, -1.5], [0.28, 0.05, 0.22], C.negro),
-      hueso([2.0, -0.9, -1.55], [2.2, -0.85, -1.4], 0.04, C.puro),
-      hueso([2.15, -0.9, -1.35], [2.0, -0.85, -1.5], 0.04, C.puro),
-      el([2.1, -0.82, -1.45], [0.06, 0.06, 0.06], C.naranja, { flat: '#ff7a2a', brilla: true }),
+    // Y su cenicero con colillas, sobre la visera. Su cámara izquierda va más atrás: el humo del puro sale por ese lado.
+    delante: (cfg) => [
+      ...tableroA10(cfg.t),
+      ...tapas(2.8),
+      el([2.4, -0.55, -0.9], [0.28, 0.05, 0.22], C.negro),
+      hueso([2.3, -0.5, -0.95], [2.5, -0.45, -0.8], 0.04, C.puro),
+      hueso([2.45, -0.5, -0.75], [2.3, -0.45, -0.9], 0.04, C.puro),
+      el([2.4, -0.42, -0.85], [0.06, 0.06, 0.06], C.naranja, { flat: '#ff7a2a', brilla: true }),
     ],
   },
   duky: {
@@ -315,7 +332,7 @@ export const CABINAS = {
     // arcos, se abre desde la bisagra de atrás.
     panel: [-1.3, 1.3, OSCURO],
     mandos: mandosF22,
-    delante: (cfg) => [...tableroF22(), ...tapas(), ...M.DUKY_ASIENTO, proa(cfg)],
+    delante: (cfg) => [...tableroF22(cfg.t), ...tapas(ANCHO_F22), ...M.DUKY_ASIENTO, proa(cfg)],
   },
 }
 
@@ -329,7 +346,7 @@ const interior = (cfg) => {
     caja(1.6, 3.0, 2 * (a - 0.46), 1.2, -2.4, 0, cfg.tablero),
     caja(2.0, 3.0, 2 * (a - 0.46), 0.8, -1.4, 0, cfg.tablero),
     placa([[2.0, -1.05, -a + 0.46], [3.0, -1.0, -a + 0.46], [3.0, -1.0, a - 0.46], [2.0, -1.05, a - 0.46]], 0.1, cfg.tablero),
-    panelInclinado(z0, z1, typeof estilo === 'function' ? estilo : pantallas(z0, z1, estilo)),
+    panelInclinado(z0, z1, estilo),
     ...(cfg.asiento ? asiento(cfg.xAsiento, cfg.asiento) : []),
     ...cfg.delante(cfg),
   ]

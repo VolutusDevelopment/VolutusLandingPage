@@ -225,7 +225,7 @@ function Nivel({ enlace, nivel, nombre }) {
             <Pixeles mapa={HUELLA} />
             Eres la huella. Arrastra el dedo en cualquier parte.
           </p>
-          <p className="solo-tactil">Si sueltas el dedo, el juego se pausa.</p>
+          <p className="solo-tactil">Mantenlo en la pantalla todo el rato: si lo sueltas, el juego se pausa.</p>
           <div className="juego-menu">
             <button className="juego-opcion nivel-entendido" type="button">
               Entendido
@@ -263,7 +263,7 @@ function Nivel({ enlace, nivel, nombre }) {
         <h2 id={id('pausado')}>En pausa.</h2>
         <p className="solo-tactil">Apoya el dedo en la pantalla para seguir.</p>
         <div className="juego-menu">
-          <button className="juego-opcion nivel-seguir" type="button">
+          <button className="juego-opcion nivel-seguir solo-raton" type="button">
             Seguir jugando
           </button>
           {saltar}

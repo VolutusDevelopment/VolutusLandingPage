@@ -151,11 +151,12 @@ export const ALMIRANTE = {
   nombre: 'El almirante',
   papel: 'Comandante del Sitting Ducks',
   bajada: 'Azul marino cruzado, hombreras doradas y gorra de plato',
-  detalle: 'Viejo, canoso y de pocas palabras: cejas blancas tupidas, patillas de plumas y párpados pesados de quien ya lo ha visto todo. Lleva gafas redondas de marinero, de alambre dorado, y se las quita despacio cuando algo no le cabe en la cabeza. Pasa la escena sentado en su sillón de mando, frente a la pantalla, hasta que se levanta y camina despacio a la ventana, con las manos atrás, a mirar el atardecer.',
+  detalle: 'Viejo, canoso y de pocas palabras: cejas blancas tupidas, patillas de plumas y párpados pesados de quien ya lo ha visto todo. Lleva gafas redondas de marinero, de alambre dorado, y se las quita despacio cuando algo no le cabe en la cabeza. Pasa la escena sentado a la cabecera de la mesa, frente a la pantalla, hasta que gira el sillón, se levanta y camina despacio a la ventana, con las manos atrás, a mirar el atardecer.',
   quieto: (u) => alm({ tronco: almiranteTronco(almiranteCabeza({ abre: parpadea(u, 0.8, 0.92, 0.45) })), manos: MANOS_ATRAS, salto: 0.015 * Math.sin(u * Math.PI * 2) }),
   // Despacio y con las manos atrás; sin `fase`, se detiene.
   andando: (fase = null) => alm({ tronco: almiranteTronco(almiranteCabeza()), manos: MANOS_ATRAS, fase }),
-  sentado: (u, extra = {}) => [...alm({ tronco: hablar(almiranteTronco(almiranteCabeza(extra)), extra.abrePico ?? 0), manos: { 1: brazosEnSillon(1), [-1]: brazosEnSillon(-1) }, agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) }), ...SILLON],
+  // Sentado, sin el sillón: lo pone la sala (escena2/reunion.mjs).
+  sentado: (u, extra = {}) => alm({ tronco: hablar(almiranteTronco(almiranteCabeza(extra)), extra.abrePico ?? 0), manos: { 1: brazosEnSillon(1), [-1]: brazosEnSillon(-1) }, agacha: SENTADO, salto: 0.012 * Math.sin(u * Math.PI * 2) }),
   gestos: [
     {
       nombre: 'pregunta',
@@ -175,8 +176,7 @@ export const ALMIRANTE = {
         const mano = lerp(lerp([0.08, -1.2, 1.32], lentes, sube), pecho, baja)
         const gafas = u > 0.38 ? transformar([0, 0, -50 * baja], PUENTE_GAFAS, res(mano, lentes)).formas(GAFAS_PUESTAS) : []
         const otra = sentado ? brazosEnSillon(-1) : [0.08, -1.2, -1.32]
-        const figura = alm({ tronco: hablar(almiranteTronco(almiranteCabeza({ gafas: u <= 0.38, abre: baja > 0.5 ? 0.25 : 0.45, ceño: baja })), abrePico), manos: { 1: mano, [-1]: otra }, extra: gafas, agacha: sentado ? SENTADO : 0, inclina: 3 * baja })
-        return sentado ? [...figura, ...SILLON] : figura
+        return alm({ tronco: hablar(almiranteTronco(almiranteCabeza({ gafas: u <= 0.38, ceño: baja })), abrePico), manos: { 1: mano, [-1]: otra }, extra: gafas, agacha: sentado ? SENTADO : 0, inclina: 3 * baja })
       },
     },
     {
@@ -186,7 +186,7 @@ export const ALMIRANTE = {
         const k = suave((u - 0.15) / 0.55)
         const empuje = Math.sin(k * Math.PI)
         const mano = (s) => lerp(lerp(brazosEnSillon(s), [0.2, -1.2, s * 1.3], k), MANOS_ATRAS[s], atras)
-        return [...alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: k })), manos: { 1: mano(1), [-1]: mano(-1) }, agacha: SENTADO * (1 - k), inclina: -14 * empuje }), ...SILLON]
+        return alm({ tronco: almiranteTronco(almiranteCabeza({ ceño: k })), manos: { 1: mano(1), [-1]: mano(-1) }, agacha: SENTADO * (1 - k), inclina: -14 * empuje })
       },
     },
     {

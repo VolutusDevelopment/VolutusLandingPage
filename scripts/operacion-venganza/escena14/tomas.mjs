@@ -66,7 +66,7 @@ const desinflado = (formas, k) => aplastar(formas, [1 + 0.3 * k, 1 - 0.5 * k, 1 
 
 // Sin `armas` después del ataque: las gastó todas contra quien juega. Antes,
 // sin los misiles ya `disparados`.
-const enElCaza = (piloto, armas = true, disparados = 0) => conDuky({ motor: true, tren: false, armas, disparados }, piloto).filter((f) => !f.vidrio)
+const enElCaza = (piloto, armas = true, disparados = 0, t = 0) => conDuky({ motor: true, tren: false, armas, disparados, t }, piloto).filter((f) => !f.vidrio)
 // Mientras tiene balas, va feliz como en la escena 13.
 const feliz = (u) => dukyFeliz(u, 6)
 const DE_HULE = conDuky({ motor: true, tren: false, armas: false }, dukyFigura({}))
@@ -231,7 +231,7 @@ const cabina = ({ maniobra = NIVELADO, camara = 'detras', objetivo = QUIETO, dis
     abre: EN_CABINA,
     escena: (u) => {
       const T = enManiobra(maniobra(u))
-      return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u), true, disparo(u))), ...(dispara ? dispara(u, T, cam(u)) : [])]
+      return [MAR, ...nubes(u), ...T.formas(enElCaza(piloto(u), true, disparo(u), u)), ...(dispara ? dispara(u, T, cam(u)) : [])]
     },
     camara: cam,
     encima: (celdas, u, modo, distancias) => {
@@ -301,7 +301,7 @@ const ATAQUE = {
 const chilla = (u) => {
   const aprieta = Math.abs(Math.sin(vuelta(u) * 4)) ** 3
   const piloto = desinflado(dukyFigura({ inclina: 6 * Math.sin(Math.floor(u * 48) * 1.7) }), 0.45 * aprieta)
-  return [MAR, ...nubes(u), ...enManiobra(TEMBLOR(u)).formas(enElCaza(piloto, false))]
+  return [MAR, ...nubes(u), ...enManiobra(TEMBLOR(u)).formas(enElCaza(piloto, false, 0, u))]
 }
 
 // Una S partida: se pone de espaldas, tira del morro hasta quedar al revés de
@@ -317,7 +317,7 @@ const S_PARTIDA = (u) => {
 // inhala hasta quedar como estaba.
 const respira = (u) => {
   const k = tramo(u, 0.1, 0.45) - tramo(u, 0.6, 0.9)
-  return [MAR, ...nubes(u * 0.5), ...enManiobra({}).formas(enElCaza(desinflado(dukyFigura({}), k), false))]
+  return [MAR, ...nubes(u * 0.5), ...enManiobra({}).formas(enElCaza(desinflado(dukyFigura({}), k), false, 0, u))]
 }
 
 // ── La sala ──────────────────────────────────────────────────────────────
@@ -359,7 +359,7 @@ const habla = (quien, cuerpo) => (u) => ({ [quien]: [cuerpo(u), DONDE[quien]] })
 
 // La sala sin señal con los tres en fila; `cambios(u)` mueve a quien diga y
 // `giros(u)`, los sillones.
-const sala = (cambios = () => ({}), giros = () => ({})) => (u) => reunion({ pantalla: sinSenal(u), giros: giros(u), figuras: Object.values({ ...enFila(u), ...cambios(u) }) })
+const sala = (cambios = () => ({}), giros = () => ({})) => (u) => reunion({ u, pantalla: sinSenal(u), giros: giros(u), figuras: Object.values({ ...enFila(u), ...cambios(u) }) })
 
 // Por el ventanal, a lo lejos, sigue quien juega: en el cielo del tercer
 // panel, tapado por lo que tenga delante.

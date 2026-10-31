@@ -53,7 +53,7 @@ const elenco = (u, cambios = {}) => {
 }
 
 // La reunión con la pantalla de quien juega y el elenco.
-const sala = (cambios, extra = {}) => (u, modo) => reunion({ pantalla: modo, figuras: elenco(u, cambios(u)), ...extra })
+const sala = (cambios, extra = {}) => (u, modo) => reunion({ u, pantalla: modo, figuras: elenco(u, cambios(u)), ...extra })
 // Desde que lo enciende, moby fuma el puro.
 const conPuro = (cambios) => (u) => ({ moby: moby.sentado(u, PRENDIDO), ...cambios(u) })
 
@@ -81,7 +81,7 @@ const MEDIO = (PUERTA.z0 + PUERTA.z1) / 2
 const puerta = (u, modo) => {
   const abre = tramo(u, 0, 0.6)
   const figuras = SILUETAS.filter(([, [, z], ancho]) => huecoDePuerta(abre) > Math.abs(z - MEDIO) + ancho).map(([pose, [x, z], , suelo]) => [silueta(pose()), { en: [x, 0, z], giro: 0, suelo }])
-  return reunion({ pantalla: modo, abre, figuras })
+  return reunion({ u, pantalla: modo, abre, figuras })
 }
 
 // ── duky llega en brazos ─────────────────────────────────────────────────
@@ -126,7 +126,7 @@ const AL_EQUIPO = [ASIENTOS.duke, FRENTE, ASIENTOS.moby].map(desdeDuky)
 const anteDuky = (cambios) =>
   sala((u) => ({ duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, 1)], moby: [moby.sentado(u, PRENDIDO), aDuky('moby', 1)], duke: [duke.sentado(u), aDuky('duke', 1)], ...cambios(u) }), { giros: { moby: aDuky('moby', 1).giro, duke: aDuky('duke', 1).giro } })
 // Duky de frente, por sobre la mesa.
-const A_DUKY = fija([-1.75, 1.3, -1.6], [-1.6, 0.8, 0.95], 44)
+const A_DUKY = fija([-0.45, 1.3, -1.5], [-1.75, 0.85, 0.95], 38)
 
 // ── Se van ───────────────────────────────────────────────────────────────
 
@@ -135,7 +135,7 @@ const A_DUKY = fija([-1.75, 1.3, -1.6], [-1.6, 0.8, 0.95], 44)
 const SALIDAS = [
   [(f) => moby.andando(f), recorrido([[-0.4, 1.45], [-0.6, 2.4], [-5.0, 2.7]]), 0, ASIENTOS.moby.suelo],
   [(f) => duckOne.andando(f), recorrido([[2.75, -1.0], [2.2, 2.4], [-5.0, 2.8]]), 0.1],
-  [(f) => duke.alPiso(f), recorrido([[-1.0, -1.0], [-1.6, -1.75], [-3.5, -1.5], [-3.55, 2.2], [-5.0, 2.9]]), 0.05],
+  [(f) => duke.alPiso(f), recorrido([[-1.6, -1.0], [-2.2, -1.75], [-3.5, -1.5], [-3.55, 2.2], [-5.0, 2.9]]), 0.05],
   [(f) => almirante.andando(f), recorrido([[2.6, 1.6], [1.9, 2.6], [-5.0, 2.9]]), 0.3],
 ]
 const seVan = (u) =>
@@ -153,7 +153,7 @@ const careo = (duck, alm = almirante.quieto) => (u) => ({ duckOne: [duck(u), DUC
 const A_DUCK = fija([3.4, 1.35, 0.9], [2.75, 1.2, -1.0], 54)
 const AL_ALMIRANTE = fija([2.2, 1.5, -2.1], [2.6, 1.3, 1.6], 42)
 const DUCK_DE_CERCA = fija([2.6, 1.3, 0.4], [2.75, 1.35, -1.0], 62)
-const LOS_DOS = fija([0.4, 1.45, 0.3], [2.7, 1.2, 0.3], 66)
+const LOS_DOS = fija([0.4, 1.9, 0.3], [2.7, 1.3, 0.3], 66)
 
 // ── La alarma ────────────────────────────────────────────────────────────
 
@@ -163,7 +163,7 @@ const ALARMA = [-3.5, 2.3, 4.2]
 const CAMARA_DE_LA_ALARMA = [ALARMA, [2.5, 1.0, -2.0], 72]
 const velo = (prendida) => {
   const p = anteLaCamara(CAMARA_DE_LA_ALARMA)
-  return prendida ? [placa([p(-2, -2), p(2, -2), p(2, 2), p(-2, 2)], 0.001, null, { luz: { color: '#ff2a1a', alfa: 0.22, nivel: 1 } })] : []
+  return prendida ? [placa([p(-2, -2), p(2, -2), p(2, 2), p(-2, 2)], 0.001, null, { luz: { color: '#ff2a1a', alfa: 0.22, nivel: 2 } })] : []
 }
 
 // ── Las tomas ────────────────────────────────────────────────────────────
@@ -182,7 +182,7 @@ export const TOMAS_3D = {
   // el marinero lo suelta y se endereza.
   duky: alargar(
     {
-      escena: (u, modo) => reunion({ pantalla: modo, abre: 1, figuras: [...elenco(u, { duky: null }), ...traeADuky(u)] }),
+      escena: (u, modo) => reunion({ u, pantalla: modo, abre: 1, figuras: [...elenco(u, { duky: null }), ...traeADuky(u)] }),
       camara: fija([-3.6, 2.7, -2.4], [-1.4, 0.5, 1.2], 62),
     },
     0,
@@ -191,9 +191,9 @@ export const TOMAS_3D = {
 
   reunion: { escena: sala((u) => ({ almirante: almirante.habla(u) })), camara: fija([-3.7, 2.4, -2.6], [2.4, 0.8, 1.2], 58) },
   lagartijas: { escena: sala((u) => ({ moby: moby.hablando(u) })), camara: fija([-0.3, 1.05, -0.9], [-0.4, 0.95, 1.05], 56) },
-  sesion: { escena: sala((u) => ({ duke: duke.hablando(u) })), camara: fija([-0.9, 1.05, 0.9], [-1.0, 0.95, -1.0], 58) },
+  sesion: { escena: sala((u) => ({ duke: duke.hablando(u) })), camara: fija([-1.0, 1.05, 0.7], [-1.6, 0.95, -1.0], 58) },
   fotos: FOTOS_3D,
-  autobiografias: { escena: sala((u) => ({ duckOne: duckOne.sentadoHablando(u) })), camara: fija([-1.0, 1.25, -0.5], [-2.8, 1.0, 0], 54) },
+  autobiografias: { escena: sala((u) => ({ duckOne: duckOne.sentadoHablando(u) })), camara: fija([-0.9, 1.25, -0.2], [-2.8, 1.0, 0], 54) },
   // Uno frente al otro, a lo largo de la mesa.
   cuantas: { escena: sala((u) => ({ moby: moby.hablando(u) })), camara: fija([-2.0, 1.25, -0.5], [-0.4, 1.05, 1.1], 52) },
   ocho: { escena: sala((u) => ({ duckOne: duckOne.sentadoHablando(u) })), camara: fija([0.2, 1.3, 0.5], [-2.8, 1.0, 0], 38) },
@@ -212,7 +212,7 @@ export const TOMAS_3D = {
   desbentaja: { escena: sala(careo(duckOne.hablando)), camara: DUCK_DE_CERCA },
 
   despegamos: { escena: sala((u) => ({ duckOne: [firme(), DUCK_A_LA_MESA], moby: moby.inclinado(u) })), camara: fija([-0.1, 1.35, -1.3], [-0.4, 0.8, 1.0], 55) },
-  exposicion: { escena: sala((u) => ({ duckOne: [duckOne.hablando(u), DUCK_A_LA_MESA], moby: moby.inclinado(0) })), camara: fija([0.4, 1.35, 0.6], [2.75, 1.15, -1.0], 38) },
+  exposicion: { escena: sala((u) => ({ duckOne: [duckOne.hablando(u), DUCK_A_LA_MESA], moby: moby.inclinado(0) })), camara: fija([0.4, 1.6, 0.6], [2.75, 1.25, -1.0], 38) },
   cuanto: { escena: sala((u) => ({ duckOne: [firme(), DUCK_A_LA_MESA], moby: moby.inclinado(u) })), camara: fija([1.3, 1.4, -0.9], [-0.4, 1.0, 1.1], 46) },
   diapositivas: { escena: sala((u) => ({ duckOne: [duckOne.pulgar(u), DUCK_A_LA_MESA] })), camara: fija([0.4, 1.2, -0.9], [2.75, 1.1, -1.0], 50) },
   // moby gira el sillón hacia la pantalla.
@@ -231,7 +231,7 @@ export const TOMAS_3D = {
   },
   tos: { escena: sala((u) => ({ duckOne: [firme(), FRENTE], moby: moby.tose(u) })), camara: fija([-0.3, 1.05, -0.9], [-0.4, 0.95, 1.05], 56) },
 
-  aportar: { escena: sala(conPuro((u) => ({ duckOne: [conAutoridad(u), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([0.4, 1.4, 0.2], [2.75, 1.2, -1.0], 36) },
+  aportar: { escena: sala(conPuro((u) => ({ duckOne: [conAutoridad(u), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([0.4, 1.65, 0.2], [2.75, 1.3, -1.0], 36) },
   inmovil: { escena: sala(conPuro(() => ({ duckOne: [firme(), hacia(DUCK_A_LA_MESA, 1)] }))), camara: fija([-2.6, 1.25, -0.6], [-1.6, 0.95, 0.9], 46) },
   // De tres cuartos, entero de la gorra a la barriga, con el ventanal detrás.
   fantasma: { escena: sala(conPuro(careo(firme, almirante.ordena))), camara: fija([3.6, 1.35, -0.5], [2.6, 1.02, 1.6], 52) },
@@ -240,14 +240,15 @@ export const TOMAS_3D = {
   miran: {
     escena: (u, modo) => {
       const k = Object.fromEntries(['duckOne', 'moby', 'duke', 'almirante'].map((quien, i) => [quien, tramo(u, 0.07 * (i + 1), 0.07 * (i + 1) + 0.34)]))
-      const giros = Object.fromEntries(['duckOne', 'duke', 'moby'].map((quien) => [quien, aDuky(quien, k[quien]).giro]))
+      // Giran los sillones de los que están sentados; el de duck-one, que está de pie, se queda.
+      const giros = Object.fromEntries(['duke', 'moby'].map((quien) => [quien, aDuky(quien, k[quien]).giro]))
       const figuras = elenco(u, {
         duckOne: [duckOne.carpeta(1), hacia(DUCK_A_LA_MESA, k.duckOne)],
         duke: [duke.sentado(u), aDuky('duke', k.duke)],
         moby: [moby.sentado(u, PRENDIDO), aDuky('moby', k.moby)],
         almirante: [almirante.quieto(u), hacia(ALMIRANTE, k.almirante)],
       })
-      return reunion({ pantalla: modo, giros, figuras })
+      return reunion({ u, pantalla: modo, giros, figuras })
     },
     camara: fija([1.1, 1.7, -0.6], [-1.8, 0.7, 0.4], 68),
   },
@@ -262,7 +263,7 @@ export const TOMAS_3D = {
     {
       escena: (u, modo) => {
         const prendida = Math.floor(u * 8) % 2 === 0
-        return [...reunion({ pantalla: modo, alarma: prendida, figuras: elenco(u, { duckOne: [duckOne.carpeta(1), DUCK_A_LA_MESA], moby: moby.sentado(u, PRENDIDO), duky: duky.seInfla(u) }) }), ...velo(prendida)]
+        return [...reunion({ u, pantalla: modo, alarma: prendida, figuras: elenco(u, { duckOne: [duckOne.carpeta(1), DUCK_A_LA_MESA], moby: moby.sentado(u, PRENDIDO), duky: duky.seInfla(u) }) }), ...velo(prendida)]
       },
       camara: () => CAMARA_DE_LA_ALARMA,
     },
@@ -291,17 +292,17 @@ export const TOMAS_3D = {
   puestos: { escena: sala(conPuro((u) => ({ duckOne: [duckOne.señala(u), DUCK_A_LA_MESA] }))), camara: AL_ESCUADRON },
   porfin: { escena: sala((u) => ({ duckOne: [firme(), DUCK_A_LA_MESA], moby: [moby.grita(u), { ...ASIENTOS.moby, en: [-0.4, 0, 1.45] }] })), camara: fija([-0.5, 1.1, -0.9], [-0.4, 1.2, 1.2], 55) },
   // El humo del puro de moby pasaría por delante de duke.
-  perfil: { escena: sala((u) => ({ moby: moby.sentado(u, SIN_HUMO), duckOne: [firme(), DUCK_A_LA_MESA], duke: duke.alEspejo(u) })), camara: fija([-1.0, 1.1, 0.6], [-1.0, 1.15, -1.0], 58) },
+  perfil: { escena: sala((u) => ({ moby: moby.sentado(u, SIN_HUMO), duckOne: [firme(), DUCK_A_LA_MESA], duke: duke.alEspejo(u) })), camara: fija([-1.2, 1.1, 0.55], [-1.6, 1.15, -1.0], 58) },
   solo: {
     escena: (u, modo) => {
       const figuras = seVan(u).filter(([, { en }]) => en[0] > -3.9)
-      return reunion({ pantalla: modo, abre: 1, figuras: [...figuras, [duky.sentado(Math.floor(tramo(u, 0.55, 0.95) * 3.99)), ASIENTOS.duky]] })
+      return reunion({ u, pantalla: modo, abre: 1, figuras: [...figuras, [duky.sentado(Math.floor(tramo(u, 0.55, 0.95) * 3.99)), ASIENTOS.duky]] })
     },
     camara: fija([2.6, 1.9, -2.6], [-3.4, 0.8, 1.9], 64),
   },
   // La pantalla dice la operación, con «INICIADA» parpadeando.
   iniciada: {
-    escena: (u) => reunion({ pantalla: Math.floor(u * 4) % 2 ? 'operacion' : 'iniciada', abre: 1, figuras: [[duky.sentado(3), ASIENTOS.duky]] }),
+    escena: (u) => reunion({ u, pantalla: Math.floor(u * 4) % 2 ? 'operacion' : 'iniciada', abre: 1, figuras: [[duky.sentado(3), ASIENTOS.duky]] }),
     camara: fija([0.9, 1.75, 0], [3.94, 1.85, 0], 70),
   },
 }

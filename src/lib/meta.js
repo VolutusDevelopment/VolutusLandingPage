@@ -25,8 +25,12 @@ import { CARGAS } from './cargas.js'
  * indexable la lleva; si falta, el prerender falla.
  *
  * `tarjetaAlt` es para la página cuya tarjeta para compartir no es la de
- * siempre, el logotipo con el título: la de /patos es el pato del juego (ver
+ * siempre, el logotipo con el título: la de /patos es el pato del juego, y las
+ * de /operacion-venganza y sus niveles 2 y 3, afiches de sus pilotos (ver
  * scripts/tarjetas-og.mjs).
+ *
+ * `tarjeta` es la ruta de otra página cuya tarjeta se comparte en vez de una
+ * propia: las escenas y el nivel 1 del juego llevan la del juego.
  */
 
 export const ORIGEN = 'https://volutus.cl'
@@ -303,11 +307,13 @@ export const PAGINAS = {
     titulo: 'Operación Venganza — Volutus',
     descripcion:
       'Cazaste quince patos en Nosotros y la armada quiere a los responsables. Escena 1: llega el portaaviones Sitting Ducks. Se juega en el navegador.',
+    tarjetaAlt: 'Un afiche en píxeles: duck-one, el pato piloto cubierto de medallas, señala a quien mira junto al texto «Se buzca: hadbersario».',
     fondo: '#5c94fc',
   },
   // Cada escena que sigue va en su propia página.
   '/operacion-venganza/escena-2': {
     archivo: 'operacion-venganza/escena-2.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 2: Patoon-4 — Volutus',
     descripcion:
@@ -316,6 +322,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-3': {
     archivo: 'operacion-venganza/escena-3.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-29',
     titulo: 'Operación Venganza, escena 3: Despegue — Volutus',
     descripcion:
@@ -325,6 +332,7 @@ export const PAGINAS = {
   // Los niveles jugables, entre un grupo de escenas y el siguiente.
   '/operacion-venganza/nivel-1': {
     archivo: 'operacion-venganza/nivel-1.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-29',
     titulo: 'Operación Venganza, nivel 1: Duck-One — Volutus',
     descripcion:
@@ -333,6 +341,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-5': {
     archivo: 'operacion-venganza/escena-5.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-29',
     titulo: 'Operación Venganza, escena 5: Regreso — Volutus',
     descripcion:
@@ -341,6 +350,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-6': {
     archivo: 'operacion-venganza/escena-6.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 6: Entrada — Volutus',
     descripcion:
@@ -353,10 +363,12 @@ export const PAGINAS = {
     titulo: 'Operación Venganza, nivel 2: Moby-Duck y Duke SkyDucker — Volutus',
     descripcion:
       'Moby ataca solo con el cañón de su A-10; después llega Duke con flores de estrellas. Esquívalos en el cielo del atardecer. Nivel 2, en el navegador.',
+    tarjetaAlt: 'Un afiche en píxeles: Moby-Duck saca músculo y Duke SkyDucker saluda junto al texto «La rabia y la belleza».',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-9': {
     archivo: 'operacion-venganza/escena-9.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 9: Retirada — Volutus',
     descripcion:
@@ -365,6 +377,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-10': {
     archivo: 'operacion-venganza/escena-10.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 10: La última opción — Volutus',
     descripcion:
@@ -373,6 +386,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-11': {
     archivo: 'operacion-venganza/escena-11.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-26',
     titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
     descripcion:
@@ -385,10 +399,12 @@ export const PAGINAS = {
     titulo: 'Operación Venganza, nivel 3: Duky — Volutus',
     descripcion:
       'El Fantasma Amarillo dispara adonde vas a estar, con rayos prototipo, racimos y misiles de seguimiento. El nivel difícil de Operación Venganza, en el navegador.',
+    tarjetaAlt: 'Un afiche en píxeles: Duky, el pato de hule gigante, aletea junto al texto «El fantasma amarillo».',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/escena-13': {
     archivo: 'operacion-venganza/escena-13.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-27',
     titulo: 'Operación Venganza, escena 13: La sala de mando — Volutus',
     descripcion:
@@ -397,6 +413,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-14': {
     archivo: 'operacion-venganza/escena-14.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-27',
     titulo: 'Operación Venganza, escena 14: Último ataque — Volutus',
     descripcion:
@@ -405,6 +422,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-15': {
     archivo: 'operacion-venganza/escena-15.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-27',
     titulo: 'Operación Venganza, escena 15: El regreso del fantasma — Volutus',
     descripcion:
@@ -413,6 +431,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/escena-16': {
     archivo: 'operacion-venganza/escena-16.html',
+    tarjeta: '/operacion-venganza',
     actualizada: '2026-10-27',
     titulo: 'Operación Venganza, escena 16: Desolación — Volutus',
     descripcion:

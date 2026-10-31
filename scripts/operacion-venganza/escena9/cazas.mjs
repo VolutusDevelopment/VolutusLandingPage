@@ -43,9 +43,10 @@ const armar = (nombre, tren, suelo) => {
     enCabina,
     // `piloto`, la figura sentada; `cupula`, los grados que tiene abierta;
     // `alas`, los grados que tiene plegadas; sin `motor`, con las toberas
-    // apagadas (las estelas son las formas con luz).
-    caza: ({ piloto = [], cupula: abre = 0, alas = 0, motor = false, tren: conTren = !motor, alarma: prendida = false, hueco } = {}) => [
-      ...plegarAlas(conHueco(cabinaCon(conCupula(cfg, abre), piloto), hueco), alas).filter((f) => motor || !f.luz),
+    // apagadas (las estelas son las formas con luz); `t`, el instante de la
+    // toma, que mueve el tablero.
+    caza: ({ piloto = [], cupula: abre = 0, alas = 0, motor = false, tren: conTren = !motor, alarma: prendida = false, hueco, t = 0 } = {}) => [
+      ...plegarAlas(conHueco(cabinaCon({ ...conCupula(cfg, abre), t }, piloto), hueco), alas).filter((f) => motor || !f.luz),
       ...(conTren ? tren : []),
       ...(prendida ? [alarma] : []),
     ],

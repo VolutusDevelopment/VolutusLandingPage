@@ -20,7 +20,7 @@ import { almirante } from '../escena2/patoon.mjs'
 import { enUnidades, giroHacia, girar, recorrido } from '../escena2/reunion.mjs'
 import { K, SUELO, caza, enCabina } from '../escena11/hangar.mjs'
 import { ARRIBA, CUPULA_ABIERTA, conDuky, deposita, escalerilla, sobreLaCabeza } from '../escena11/tomas.mjs'
-import { enPista } from '../escena9/tomas.mjs'
+import { enPista, humoDeRuedas } from '../escena9/tomas.mjs'
 import { aLoLejos } from '../escena14/visor.mjs'
 import { aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 
@@ -49,7 +49,7 @@ const enElAire = (formas) => formas.filter((f) => f.flat !== SOMBRA)
 const PARADA = [0, CUBIERTA - SUELO, -6]
 const aterriza = (u) => {
   const { aire, en } = enPista(u, PARADA)
-  return [...barco(u), ...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(conDuky({ motor: aire > 0 || u < 0.5, armas: false }, dukyFigura({})))]
+  return [...barco(u), ...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(conDuky({ motor: aire > 0 || u < 0.5, armas: false }, dukyFigura({}))), ...humoDeRuedas(u, PARADA, [-1.75, 1.7])]
 }
 
 // El marinero lo saca como lo metió en el hangar (escena11/tomas.mjs): la

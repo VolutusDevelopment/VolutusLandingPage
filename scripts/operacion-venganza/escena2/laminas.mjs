@@ -109,7 +109,7 @@ lamina('E2-tomas-llegada', {
   papel: 'Escena 2 · tomas 1 a 5',
   nombre: 'La llegada',
   bajada: 'El escuadrón Patoon-4 entra a la sala de mando',
-  detalle: 'La misma sala de la escena 1, al atardecer, con una mesa baja al medio y cuatro sillones. La puerta doble del fondo se corre y entra la luz del pasillo: cuatro siluetas. Entran de a uno, cada uno en su toma y una sola vez: duck-one con el pecho tapizado de medallas, moby-duck de brazos cruzados y con el puro apagado, duke mirándose en el piso pulido, que lo refleja. A duky lo trae un marinero en brazos, sin ver por dónde va, y lo deja en su sillón.',
+  detalle: 'La misma sala de la escena 1, al atardecer, con la mesa baja al medio y sus seis sillones. La puerta doble del fondo se corre y entra la luz del pasillo: cuatro siluetas. Entran de a uno, cada uno en su toma y una sola vez: duck-one con el pecho tapizado de medallas, moby-duck de brazos cruzados y con el puro apagado, duke mirándose en el piso pulido, que lo refleja. A duky lo trae un marinero en brazos, sin ver por dónde va, y lo deja en su sillón.',
   filas: [fila('Por la puerta', ['puerta', 'medallas', 'puro'].map(celda), 3), fila('Los últimos', ['reflejo', 'duky'].map(celda), 3)],
 })
 

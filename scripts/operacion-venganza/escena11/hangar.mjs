@@ -82,10 +82,10 @@ export const MISILES = LADOS[0].misiles.flatMap((m, i) => [m, LADOS[1].misiles[i
 // El caza en sus metros, sin duky, que va aparte con sus patas: la cúpula
 // abierta `cupula` grados, el cinturón tirado `cinturon` (suelto, si no),
 // sin `motor`, con la tobera apagada (las estelas son las formas con luz
-// propia), sin los primeros `disparados` misiles y sin `armas` cuando ya las
-// gastó contra quien juega.
-export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true, armas = true, disparados = 0 } = {}) => [
-  ...cabinaCon(conCupula(CFG, cupula), []).filter((f) => motor || !f.luz),
+// propia), sin los primeros `disparados` misiles, sin `armas` cuando ya las
+// gastó contra quien juega, y con el tablero en el instante `t` de la toma.
+export const caza = ({ cupula = 0, cinturon: tira = 0, motor = false, tren = true, armas = true, disparados = 0, t = 0 } = {}) => [
+  ...cabinaCon({ ...conCupula(CFG, cupula), t }, []).filter((f) => motor || !f.luz),
   ...cinturon(tira),
   ...(armas ? [...SOPORTES_Y_BOMBAS, ...MISILES.slice(disparados).flatMap(misil)] : []),
   ...(tren ? TREN : []),

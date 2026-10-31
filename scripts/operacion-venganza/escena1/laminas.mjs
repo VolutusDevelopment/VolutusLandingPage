@@ -8,7 +8,7 @@
 
 import { pixel3d, marco } from '../pilotos/tres.mjs'
 import { pagina, mono } from '../pilotos/tablero.mjs'
-import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS } from './personajes.mjs'
+import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON } from './personajes.mjs'
 import { salaCon, TOMAS_3D } from './tomas.mjs'
 import { cielo } from './lugares.mjs'
 import { TOMAS as GUION, textoDe } from '../../../src/lib/escena1.js'
@@ -106,7 +106,8 @@ const filaPerspectivas = (titulo, figs, clase = 'p8', quieto = 0) => fila(titulo
   const quieto = quietoDe(ALMIRANTE)
   laminaPersonaje('E1-almirante', ALMIRANTE, [
     filaPerspectivas('De pie, con las manos atrás', quieto),
-    fila('En la escena', [...ALMIRANTE.gestos, { nombre: 'camina', pose: (u) => ALMIRANTE.andando(u * 2) }].map((g) => cuadrada(g.nombre, anota(retrato(cuadros('g12', g.pose), TRES_CUARTOS), 6), 'g12', 6)), 4),
+    // Se levanta de su sillón, que en la escena pone la sala.
+    fila('En la escena', [...ALMIRANTE.gestos, { nombre: 'camina', pose: (u) => ALMIRANTE.andando(u * 2) }].map((g) => cuadrada(g.nombre, anota(retrato(cuadros('g12', g.nombre === 'se levanta' ? (u) => [...g.pose(u), ...SILLON] : g.pose), TRES_CUARTOS), 6), 'g12', 6)), 4),
   ], 1340)
 }
 {
@@ -139,7 +140,7 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
     papel: 'Escena 1 · el interior',
     nombre: 'La sala de mando',
     bajada: 'Bajo el puente del Sitting Ducks, a estribor de la isla',
-    detalle: 'Una sala de acero gris claro: al frente la pantalla de las bajas, a estribor los ventanales con el atardecer y la escolta en el horizonte, a babor las consolas de radar y al fondo la puerta y la carta náutica. El sillón de cuero del almirante mira a la pantalla, con un pupitre bajo delante. La baliza roja del techo gira mientras dura la alarma.',
+    detalle: 'Una sala de acero gris claro: al frente la pantalla de las bajas, a estribor los ventanales con el atardecer y la escolta en el horizonte, a babor las consolas de radar y al fondo la puerta y la carta náutica. Al medio, la mesa de reuniones con seis sillones de cuero: el del almirante, en la cabecera, mira a la pantalla. La baliza roja del techo gira mientras dura la alarma.',
     filas: [
       fila(
         'Tres miradas a la sala',
@@ -170,7 +171,7 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
 // Cada celda dice su toma y sus líneas, del guion del juego (src/lib/escena1.js).
 const NOMBRES = {
   llegada: 'llegan los barcos',
-  nombre: 'el Sitting Ducks',
+  orbita: 'el Sitting Ducks',
   cubierta: 'la cubierta',
   subida: 'sube a la sala de mando',
   sala: 'la sala de mando',
@@ -201,8 +202,8 @@ lamina('E1-tomas-llegada', {
   papel: 'Escena 1 · tomas 1 a 4',
   nombre: 'La llegada',
   bajada: 'Del mar vacío al puente del Sitting Ducks',
-  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar, al atardecer: el sol a medio ponerse, como lo deja Nosotros. Cuatro tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, el costado del Sitting Ducks con su nombre, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
-  filas: [fila('Fuera', ['llegada', 'nombre', 'cubierta', 'subida'].map((id) => celdaDeToma(id)), 3)],
+  detalle: 'Después de la última bala en Nosotros el escenario queda vacío y aparece el mar, al atardecer: el sol a medio ponerse, como lo deja Nosotros. Cuatro tomas exteriores, de lejos a cerca: la flota que llega desde todas las direcciones, la vuelta al Sitting Ducks, la cubierta en alarma y la subida por la isla hasta la sala de mando.',
+  filas: [fila('Fuera', ['llegada', 'orbita', 'cubierta', 'subida'].map((id) => celdaDeToma(id)), 3)],
   alto: 1100,
   vistas: tomarVistas(),
 })

@@ -8,6 +8,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { pixel3d } from './pilotos/tres.mjs'
+import { candidatosGpu, cerrarGpu } from './pilotos/gpu.mjs'
 import { cielo } from './escena1/lugares.mjs'
 import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/escena1.js'
 
@@ -92,9 +93,16 @@ export const png = (todos) => {
 // vertical]), con el campo abierto `abre` veces y el cielo del atardecer donde
 // no hay nada. Si viene `distancias`, se llena con la distancia a lo que se ve
 // en cada pixel; `instante`, el número del cuadro en su tira, hace titilar el
-// chorro de los motores.
-export const cuadro = (formas, [ojo, mira, campo, vertical], distancias, abre = ABRE, instante) =>
-  rejilla(pixel3d(formas, { ojo, mira, campo: abrir(campo, abre), vertical, cielo, distancias, filas: ALTO, instante }, ANCHO, 1, { c: [0, 0, 0], radio: 1 }), ANCHO, ALTO)
+// chorro de los motores. cuadroGpu() pinta el mismo cuadro con la ayuda de la
+// GPU (pilotos/gpu.mjs).
+const ENCUADRE = { c: [0, 0, 0], radio: 1 }
+const tomaDe = ([ojo, mira, campo, vertical], distancias, abre, instante) => ({ ojo, mira, campo: abrir(campo, abre), vertical, cielo, distancias, filas: ALTO, instante })
+export const cuadro = (formas, camara, distancias, abre = ABRE, instante) => rejilla(pixel3d(formas, tomaDe(camara, distancias, abre, instante), ANCHO, 1, ENCUADRE), ANCHO, ALTO)
+export const cuadroGpu = async (formas, camara, distancias, abre = ABRE, instante) => {
+  const toma = tomaDe(camara, distancias, abre, instante)
+  toma.candidatos = await candidatosGpu(formas, toma, ANCHO, ENCUADRE)
+  return rejilla(pixel3d(formas, toma, ANCHO, 1, ENCUADRE), ANCHO, ALTO)
+}
 
 // Dónde cae `punto` en un cuadro de `camara`, como lo pinta pixel3d: [x, y]
 // en pixeles, o null si queda detrás de la cámara.
@@ -142,19 +150,22 @@ export const escribir = (ruta, datos) => {
 // Una tira por toma del guion, con la escena 3D de `TOMAS_3D`; las que van
 // `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta sobre los
 // cuadros lo que va en la pantalla y no en la escena (un visor, una marca), y
-// recibe las distancias de cada pixel para que lo de atrás quede tapado.
-export const escribirTiras = (TOMAS, TOMAS_3D, rutaDeToma) => {
+// recibe las distancias de cada pixel para que lo de atrás quede tapado. Se
+// pintan con la GPU, si la hay.
+export const escribirTiras = async (TOMAS, TOMAS_3D, rutaDeToma) => {
   for (const toma of TOMAS) {
     const { escena, camara, encima, abre } = TOMAS_3D[toma.id]
     for (const modo of toma.segunModo ? MODOS : [MODOS[0]]) {
-      const cuadros = Array.from({ length: cuadrosDe(toma) }, (_, k) => {
+      const cuadros = []
+      for (let k = 0; k < cuadrosDe(toma); k++) {
         const u = k / cuadrosDe(toma)
         const distancias = []
-        const celdas = cuadro(escena(u, modo), camara(u), distancias, abre, k)
+        const celdas = await cuadroGpu(escena(u, modo), camara(u), distancias, abre, k)
         encima?.(celdas, u, modo, distancias)
-        return celdas
-      })
+        cuadros.push(celdas)
+      }
       escribir(rutaDeToma(toma, modo), png(cuadros))
     }
   }
+  await cerrarGpu()
 }

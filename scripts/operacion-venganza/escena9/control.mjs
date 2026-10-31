@@ -1,13 +1,16 @@
 // El control de vuelo por dentro: el último piso de la isla del Sitting Ducks
 // (escena1/lugares.mjs), con ventanales a babor, a proa y a popa que dan a
-// la cubierta, la consola bajo los de babor y pantallas colgadas del techo.
-// Desde aquí el oficial de inteligencia les habla por radio a los pilotos,
-// sentado a la consola, y el almirante, de pie detrás de él, mira las
-// pantallas. En metros del barco.
+// la cubierta, la consola bajo los de babor, una fila de escritorios a
+// estribor y pantallas colgadas del techo. Desde aquí el oficial de
+// inteligencia les habla por radio a los pilotos, sentado a la consola; el
+// almirante, de pie detrás de él, mira las pantallas, y los marinos teclean
+// en las suyas. En metros del barco.
 
 import { placa } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { CONSOLA, ISLA, MAR, caja, colocar, enMarcha, portaaviones } from '../escena1/lugares.mjs'
+import { OFICIOS, SENTADO, SILLA, marineroTronco, pMarinero } from '../escena1/personajes.mjs'
+import { figura } from '../pilotos/cuerpos.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -122,6 +125,38 @@ const colgada = (x, dibujo) => {
 const OFICIAL_EN = { k: 0.42, en: [-27.5, piso, 25.75], giro: 90 }
 const ALMIRANTE_EN ={ k: 0.42, en: [-28.7, piso, 27.6], giro: 90 }
 
+// A estribor, entre la pizarra y la puerta, dos escritorios de cara a la
+// pared, con dos pantallas cada uno. Quedan a los lados del almirante, para
+// que nadie tape a nadie desde la consola.
+const ESTRIBOR_Z = z1 - 0.6
+const escritorio = (x, dibujos) => {
+  const y = piso + ALTO_CONSOLA + 0.08
+  const z = ESTRIBOR_Z + 0.15
+  return [
+    caja(x - 0.75, x + 0.75, 0.7, ALTO_CONSOLA, piso + ALTO_CONSOLA / 2, ESTRIBOR_Z, CONSOLA),
+    ...dibujos.flatMap((dibujo, i) => {
+      const cx = x + (i - 0.5) * 0.7
+      return [hueso([cx, y - 0.08, z], [cx, y + 0.1, z + 0.05], 0.03, C.oscuro), pantalla([[cx + 0.3, y, z], [cx - 0.3, y, z], [cx + 0.3, y + 0.42, z + 0.05]], dibujo)]
+    }),
+  ]
+}
+// Los marinos del control, sentados a sus pantallas, tecleando: cada mano
+// golpea seis veces por tira, a destiempo de la otra.
+export const teclea = (oficio, t, i) => {
+  const golpe = (s) => 0.06 * Math.max(0, Math.sin((t * 6 + i * 0.3 + (s > 0 ? 0 : 0.5)) * Math.PI * 2))
+  const manos = { 1: [0.9, -0.8 + golpe(1), 0.45], [-1]: [0.9, -0.8 + golpe(-1), -0.45] }
+  return [...figura(pMarinero(oficio.color), { tronco: marineroTronco(oficio.color), manos, agacha: SENTADO, sinSombra: true }), ...SILLA]
+}
+// [x, z, giro]: dos a estribor, de espaldas a la sala, y dos en la consola de
+// babor, entre sus pantallas.
+const MARINOS = [
+  [OFICIOS.amarillo, -30.6, ESTRIBOR_Z - 0.75, -90],
+  [OFICIOS.verde, -25.4, ESTRIBOR_Z - 0.75, -90],
+  [OFICIOS.morado, -32.5, CONSOLA_Z + 0.95, 90],
+  [OFICIOS.rojo, -22.7, CONSOLA_Z + 0.95, 90],
+]
+const marinos = (t) => MARINOS.flatMap(([oficio, x, z, giro], i) => colocar(teclea(oficio, t, i), { k: 0.42, en: [x, piso, z], giro }))
+
 const cuarto = (t) => [
   placa([[x0, piso - 0.05, z0], [x0, piso - 0.05, z1], [x1, piso - 0.05, z1], [x1, piso - 0.05, z0]], 0.1, SUELO),
   techoConLuces,
@@ -141,6 +176,9 @@ const cuarto = (t) => [
   ...colgada(-27.8, combustible(t)),
   ...colgada(-25, renglones(t + 0.5, 1)),
   ...colgada(-22.2, radar(t + 0.25, PATOON, 1.1, 0.55)),
+  ...escritorio(-30.6, [renglones(t + 0.1, 3), radar(t + 0.5, PATOON, 0.6, 0.42)]),
+  ...escritorio(-25.4, [combustible(t), renglones(t + 0.7)]),
+  ...marinos(t),
 ]
 
 // El barco entero con el control de vuelo abierto, y en él a los dos:

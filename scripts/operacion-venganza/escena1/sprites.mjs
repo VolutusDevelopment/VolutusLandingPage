@@ -19,4 +19,4 @@ const pasos = Array.from({ length: CARGA.cuadros }, (_, k) => duckOne.andando(k 
 const encuadre = ((m) => ({ c: m.c, radio: m.radio * 0.9 }))(marco(pasos[0]))
 escribir(CARGA.ruta, png(pasos.map((f) => rejilla(pixel3d(f, { giro: -40, altura: 8 }, CARGA.lado, 1, encuadre), CARGA.lado))))
 
-escribirTiras(TOMAS, TOMAS_3D, rutaDeToma)
+await escribirTiras(TOMAS, TOMAS_3D, rutaDeToma)

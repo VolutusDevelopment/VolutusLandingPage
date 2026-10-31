@@ -23,9 +23,25 @@ export const FLECHA = [
 ]
 export const BORDE = '#0c0e12'
 
-// La huella del dedo, con el mismo código: el personaje del combate en las
-// pantallas táctiles.
-export const HUELLA = ['  XXXXX  ', ' XWWWWWX ', 'XWWXXXWWX', 'XWXWWWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWXWXWXWX', 'XWWWXWWWX', ' XWWWWWX ', '  XXXXX  ']
+// La huella del dedo, con el mismo código: la yema y sus surcos en lazo,
+// arcos sobre el núcleo que bajan hasta el borde. Es el personaje del combate
+// en las pantallas táctiles y quien juega con el dedo en las escenas.
+export const HUELLA = [
+  '    XXX    ',
+  '  XXWWWXX  ',
+  ' XWWXXXWWX ',
+  ' XWXXXXXWX ',
+  'XWXXWWWXXWX',
+  'XWXWXXXWXWX',
+  'XWXWXWXWXWX',
+  'XWXWXWXWXWX',
+  'XWXWXWXWXWX',
+  'XWXWXWXWXWX',
+  ' XXWXWXWXX ',
+  ' XXWXWXWXX ',
+  '  XXXWXXX  ',
+  '    XXX    ',
+]
 
 // Cuántos px de pantalla mide un pixel del juego en una vista de `ancho` × `alto`.
 export const escalaDe = (ancho, alto) => Math.max(2, Math.ceil(Math.sqrt((ancho * alto) / 62000)))
