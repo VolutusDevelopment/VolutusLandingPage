@@ -135,7 +135,7 @@ const ATACANTE = { sale: 0.68, celda: 10, lejos: [2710, 827, 986] }
 const atacante = (modo, u, { d, a }) => {
   if (u < ATACANTE.sale) return []
   const dibujo = modo === 'cursor' ? FLECHA : HUELLA
-  const centro = modo === 'cursor' ? [0, 0] : [5, 7]
+  const centro = modo === 'cursor' ? [0, 0] : [6, 9]
   const k = ATACANTE.celda * tramo(u, ATACANTE.sale, ATACANTE.sale + 0.05)
   return dibujo.flatMap((fila, j) =>
     [...fila].flatMap((c, i) => {

@@ -538,7 +538,7 @@ const pintaPantalla = (estado) => ([, y, z]) => {
   const ruido = grano(Math.round(cu * 30), Math.round(cv * 30))
   const fondo = ruido > 0.6 ? '#9aa8a0' : ruido > 0.25 ? '#7e8c84' : '#6a7870'
   // El cursor o la huella de quien juega, los mismos del combate, al centro.
-  const [dibujo, celda, desde] = estado === 'cursor' ? [FLECHA, 0.075, [-0.3, 0.62]] : [HUELLA, 0.085, [-0.47, 0.6]]
+  const [dibujo, celda, desde] = estado === 'cursor' ? [FLECHA, 0.075, [-0.3, 0.62]] : [HUELLA, 0.07, [-0.455, 0.665]]
   const c = dibujo[Math.floor((desde[1] - cv) / celda)]?.[Math.floor((cu - desde[0]) / celda)]
   return c === 'X' ? BORDE : c === 'W' ? '#ffffff' : fondo
 }

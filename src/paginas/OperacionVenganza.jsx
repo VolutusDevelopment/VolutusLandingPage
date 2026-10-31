@@ -208,7 +208,7 @@ function Nivel({ enlace, nivel, nombre }) {
         </span>
       </button>
       <p className="venganza-titulo nivel-leido" aria-live="polite" />
-      <canvas className="nivel-jugador" width="9" height="15" aria-hidden="true" hidden />
+      <canvas className="nivel-jugador" aria-hidden="true" hidden />
 
       {conReglas && (
         <section className="nivel-panel juego-ventana nivel-reglas" aria-labelledby={id('reglas')}>

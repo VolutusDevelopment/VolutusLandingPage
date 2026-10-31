@@ -7,9 +7,10 @@
 //
 // Se corre a mano cuando cambia un caza, como sprites.mjs.
 
-import { marco, pixel3d } from '../pilotos/tres.mjs'
+import { marco } from '../pilotos/tres.mjs'
+import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { ALAS_TOMCAT, CAZA_DUCK_ONE, CAZA_DUKE, CAZA_DUKY, CAZA_MOBY, POSTCOMBUSTION_HORNET, POSTCOMBUSTION_TOMCAT, barrerAlas } from '../pilotos/modelos.mjs'
-import { escribir, png, rejilla } from '../tiras.mjs'
+import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
 import { LLAMAS, PASADA, PASADAS, rutaDePasadas } from '../../../src/lib/cazas.js'
 
 const sinLlama = (caza) => caza.filter((f) => !f.luz)
@@ -40,10 +41,11 @@ const estirar = (formas, k) => {
 // izquierda; al final se recorta lo que sobra alrededor de todos los cuadros.
 const RADIO = 20
 const N = Math.round((2 * RADIO * PASADA.pixelesPorMetro) / 0.94)
-const cuadros = CAZAS.flatMap((caza) => {
+const cuadros = []
+for (const caza of CAZAS) {
   const encuadre = { c: marco(caza).c, radio: RADIO }
-  return LLAMAS.map((k) => rejilla(pixel3d(estirar(caza, k), { giro: 90, altura: PASADA.altura }, N, 1, encuadre), N))
-})
+  for (const k of LLAMAS) cuadros.push(rejilla(await pixel3dGpu(estirar(caza, k), { giro: 90, altura: PASADA.altura }, N, encuadre), N))
+}
 const lleno = (eje) => cuadros.flatMap((c) => c.flatMap((fila, y) => fila.flatMap((color, x) => (color ? [eje ? y : x] : []))))
 const [x0, x1, y0, y1] = [Math.min(...lleno(0)), Math.max(...lleno(0)), Math.min(...lleno(1)), Math.max(...lleno(1))]
 const recortados = cuadros.map((c) => c.slice(y0, y1 + 1).map((fila) => fila.slice(x0, x1 + 1)))
@@ -51,3 +53,5 @@ const recortados = cuadros.map((c) => c.slice(y0, y1 + 1).map((fila) => fila.sli
 const hoja = []
 CAZAS.forEach((_, fila) => recortados[0].forEach((_, y) => hoja.push(LLAMAS.flatMap((_, k) => recortados[fila * LLAMAS.length + k][y]))))
 escribir(rutaDePasadas, png([hoja]))
+
+await cerrarGpu()

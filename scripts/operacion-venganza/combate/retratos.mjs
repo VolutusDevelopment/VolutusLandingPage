@@ -9,12 +9,13 @@
 // Se corre a mano cuando cambia un piloto, y la imagen se commitea en
 // public/operacion-venganza: pintarla tarda y no entra al build.
 
-import { pixel3d, transformar } from '../pilotos/tres.mjs'
+import { transformar } from '../pilotos/tres.mjs'
+import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { PERSONAJES, cabina } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, CABINAS, PALANCA, aCaza, avion, cabinaCon } from '../pilotos/interiores.mjs'
 import { MAR, cielo } from '../escena1/lugares.mjs'
 import { TOMAS_3D } from '../escena11/tomas.mjs'
-import { escribir, png, rejilla } from '../tiras.mjs'
+import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
 import { CUADROS_DE_RETRATO, LADO_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../../../src/lib/cazas.js'
 
 const N = LADO_DE_RETRATO
@@ -47,11 +48,16 @@ const QUIENES = {
   torre,
 }
 
-const cuadros = RETRATOS.map(({ retrato }) =>
-  Array.from({ length: CUADROS_DE_RETRATO }, (_, k) => {
+const cuadros = []
+for (const { retrato } of RETRATOS) {
+  const fila = []
+  for (let k = 0; k < CUADROS_DE_RETRATO; k++) {
     const [figura, camara] = QUIENES[retrato](k / CUADROS_DE_RETRATO)
-    return rejilla(pixel3d(figura, { ...camara, cielo, instante: k }, N, 1, { c: [0, 0, 0], radio: 1 }), N)
-  }),
-)
+    fila.push(rejilla(await pixel3dGpu(figura, { ...camara, cielo, instante: k }, N, { c: [0, 0, 0], radio: 1 }), N))
+  }
+  cuadros.push(fila)
+}
 const hoja = Array.from({ length: N * RETRATOS.length }, (_, y) => cuadros[Math.floor(y / N)].flatMap((cuadro) => cuadro[y % N]))
 escribir(rutaDeRetratos, png([hoja]))
+
+await cerrarGpu()

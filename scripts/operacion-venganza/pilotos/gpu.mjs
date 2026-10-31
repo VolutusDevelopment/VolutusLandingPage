@@ -9,13 +9,13 @@
 // WebGPU sobre Metal. Si no hay, candidatosGpu() devuelve undefined y
 // pixel3d prueba todas las figuras, como antes.
 
+import { createServer } from 'node:http'
 import { chromium } from 'playwright'
 import { camaraDe } from './tres.mjs'
 
 // Los cortes que se guardan por celda, los más cercanos. Si el rayo corta
 // más, lo que haya detrás del último no se sabe (ver pixel3d).
 const K = 16
-const ORIGEN = 'https://gpu.operacion-venganza'
 
 const SHADER = /* wgsl */ `
 struct Datos { elipsoides: u32, mallas: u32, celdas: u32, k: u32 }
@@ -34,15 +34,18 @@ const HOLGURA = 1e-3;
 fn main(@builtin(global_invocation_id) g: vec3u) {
   let celda = g.x;
   if (celda >= datos.celdas) { return; }
-  // Todo va relativo al origen del rayo, que queda en 0.
-  let d = vec3f(rayos[celda * 3u], rayos[celda * 3u + 1u], rayos[celda * 3u + 2u]);
+  // Todo va relativo al origen de referencia: el primer rayo. Cada celda trae
+  // el suyo (en perspectiva es el mismo) y su dirección.
+  let rayo = celda * 6u;
+  let o = vec3f(rayos[rayo], rayos[rayo + 1u], rayos[rayo + 2u]);
+  let d = vec3f(rayos[rayo + 3u], rayos[rayo + 4u], rayos[rayo + 5u]);
   var ts: array<f32, K>;
   var ids: array<u32, K>;
   var n = 0u;
   var total = 0u;
   for (var e = 0u; e < datos.elipsoides; e++) {
     let b = e * 12u;
-    let q = -vec3f(elipsoides[b], elipsoides[b + 1u], elipsoides[b + 2u]);
+    let q = o - vec3f(elipsoides[b], elipsoides[b + 1u], elipsoides[b + 2u]);
     let f0 = vec3f(elipsoides[b + 3u], elipsoides[b + 4u], elipsoides[b + 5u]);
     let f1 = vec3f(elipsoides[b + 6u], elipsoides[b + 7u], elipsoides[b + 8u]);
     let f2 = vec3f(elipsoides[b + 9u], elipsoides[b + 10u], elipsoides[b + 11u]);
@@ -67,7 +70,7 @@ fn main(@builtin(global_invocation_id) g: vec3u) {
   }
   for (var m = 0u; m < datos.mallas; m++) {
     let b = m * 6u;
-    let oc = -vec3f(mallas[b], mallas[b + 1u], mallas[b + 2u]);
+    let oc = o - vec3f(mallas[b], mallas[b + 1u], mallas[b + 2u]);
     let radio = mallas[b + 3u] * 1.001 + 0.01;
     let bb = dot(oc, d);
     if (bb * bb - (dot(oc, oc) - radio * radio) < 0.0) { continue; }
@@ -81,7 +84,7 @@ fn main(@builtin(global_invocation_id) g: vec3u) {
       let pv = cross(d, e2);
       let det = dot(e1, pv);
       if (abs(det) < 1e-20) { continue; }
-      let sv = -va;
+      let sv = o - va;
       let u = dot(sv, pv) / det;
       if (u < -HOLGURA || u > 1.0 + HOLGURA) { continue; }
       let qv = cross(sv, e1);
@@ -120,7 +123,7 @@ window.trazar = async () => {
   const datos = await (await fetch('/entrada')).arrayBuffer()
   const cabecera = new Uint32Array(datos, 0, 8)
   const [elipsoides, triangulos, mallas, celdas] = cabecera
-  const tramos = [elipsoides * 12, triangulos * 9, mallas * 6, celdas * 3]
+  const tramos = [elipsoides * 12, triangulos * 9, mallas * 6, celdas * 6]
   let desde = 32
   const buffers = tramos.map((largo) => {
     const bytes = Math.max(16, largo * 4)
@@ -154,28 +157,50 @@ window.trazar = async () => {
 
 let abierta
 
+// La página y los datos van por un servidor local, no por el enrutador de
+// Playwright: cada cuadro mueve varios MB y el ida y vuelta por CDP costaba
+// más que la propia GPU. En 127.0.0.1 la página sigue siendo un contexto
+// seguro, así que WebGPU está disponible.
 const abrir = async () => {
+  let servidor
   try {
-    const navegador = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--use-angle=metal', '--enable-gpu'] })
-    const pagina = await navegador.newPage()
-    const io = { entrada: null, salida: null }
-    await pagina.route(`${ORIGEN}/**`, (ruta) => {
-      const camino = new URL(ruta.request().url()).pathname
-      if (camino === '/entrada') return ruta.fulfill({ body: io.entrada, contentType: 'application/octet-stream' })
-      if (camino === '/salida') {
-        io.salida = ruta.request().postDataBuffer()
-        return ruta.fulfill({ body: '' })
+    const io = { entrada: Buffer.alloc(0), salida: null, listo: null }
+    servidor = createServer((peticion, respuesta) => {
+      const camino = new URL(peticion.url, 'http://127.0.0.1').pathname
+      if (camino === '/entrada') {
+        respuesta.writeHead(200, { 'content-type': 'application/octet-stream', 'content-length': io.entrada.length })
+        respuesta.end(io.entrada)
+        return
       }
-      return ruta.fulfill({ body: PAGINA, contentType: 'text/html' })
+      if (camino === '/salida') {
+        const trozos = []
+        peticion.on('data', (trozo) => trozos.push(trozo))
+        peticion.on('end', () => {
+          io.salida = Buffer.concat(trozos)
+          respuesta.end('ok')
+          io.listo?.()
+        })
+        return
+      }
+      respuesta.writeHead(200, { 'content-type': 'text/html' })
+      respuesta.end(PAGINA)
     })
-    await pagina.goto(`${ORIGEN}/`)
-    const hay = await pagina.evaluate(async () => Boolean(await navigator.gpu?.requestAdapter()))
+    await new Promise((listo, falla) => {
+      servidor.once('error', falla)
+      servidor.listen(0, '127.0.0.1', listo)
+    })
+    const pagina = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--use-angle=metal', '--enable-gpu'] })
+    const pestana = await pagina.newPage()
+    await pestana.goto(`http://127.0.0.1:${servidor.address().port}/`)
+    const hay = await pestana.evaluate(async () => Boolean(await navigator.gpu?.requestAdapter()))
     if (!hay) {
-      await navegador.close()
+      await pagina.close()
+      servidor.close()
       return null
     }
-    return { navegador, pagina, io }
+    return { navegador: pagina, pagina: pestana, io, servidor }
   } catch {
+    servidor?.close()
     return null
   }
 }
@@ -183,15 +208,14 @@ const abrir = async () => {
 // Las celdas de la toma, ya con los cortes de la GPU: una función que, por
 // celda (j · n + i), da `figuras`, las que pueden cortar su rayo, cada una
 // con sus triángulos (undefined en los elipsoides), y `hasta`: la distancia
-// hasta donde se sabe que no corta nada más (Infinity si están todos). Solo
-// para cámaras en perspectiva; sin GPU, undefined.
-export const candidatosGpu = async (figura, toma, n, encuadre) => {
-  if (!toma.ojo) return undefined
+// hasta donde se sabe que no corta nada más (Infinity si están todos). Sirve
+// para cámaras en perspectiva y ortográficas; sin GPU, undefined.
+export const candidatosGpu = async (figura, toma, n, encuadre, llenado = 0.94) => {
   abierta ??= abrir()
   const gpu = await abierta
   if (!gpu) return undefined
 
-  const camara = camaraDe(toma, n, encuadre)
+  const camara = camaraDe(toma, n, encuadre, llenado)
   const celdas = n * camara.filas
   const { o } = camara.rayo(0, 0)
   const desde = (p) => [p[0] - o[0], p[1] - o[1], p[2] - o[2]]
@@ -199,7 +223,7 @@ export const candidatosGpu = async (figura, toma, n, encuadre) => {
   const mallas = figura.filter((f) => f.k === 'm')
   const triangulos = mallas.flatMap((f) => f.tris.map((tri) => [f, tri]))
 
-  const flotantes = new Float32Array(elipsoides.length * 12 + triangulos.length * 9 + mallas.length * 6 + celdas * 3)
+  const flotantes = new Float32Array(elipsoides.length * 12 + triangulos.length * 9 + mallas.length * 6 + celdas * 6)
   let k = 0
   const poner = (...valores) => {
     for (const v of valores) flotantes[k++] = v
@@ -219,10 +243,20 @@ export const candidatosGpu = async (figura, toma, n, encuadre) => {
     enteros[k++] = f.tris.length
     primero += f.tris.length
   }
-  for (let j = 0; j < camara.filas; j++) for (let i = 0; i < n; i++) poner(...camara.rayo(i, j).d)
+  // El rayo de cada celda: su origen y su dirección, relativos al primero.
+  for (let j = 0; j < camara.filas; j++)
+    for (let i = 0; i < n; i++) {
+      const rayo = camara.rayo(i, j)
+      poner(...desde(rayo.o), ...rayo.d)
+    }
 
   gpu.io.entrada = Buffer.concat([Buffer.from(new Uint32Array([elipsoides.length, triangulos.length, mallas.length, celdas, 0, 0, 0, 0]).buffer), Buffer.from(flotantes.buffer)])
+  const listo = new Promise((ok) => {
+    gpu.io.listo = ok
+  })
   await gpu.pagina.evaluate(() => window.trazar())
+  await listo
+  gpu.io.listo = null
   const salida = new Uint32Array(gpu.io.salida.buffer, gpu.io.salida.byteOffset, gpu.io.salida.byteLength / 4)
   const distancias = new Float32Array(salida.buffer, salida.byteOffset, salida.length)
 
@@ -251,4 +285,5 @@ export const cerrarGpu = async () => {
   const gpu = await abierta
   abierta = undefined
   await gpu?.navegador.close()
+  gpu?.servidor.close()
 }

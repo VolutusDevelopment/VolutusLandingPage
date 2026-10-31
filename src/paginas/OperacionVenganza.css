@@ -210,6 +210,46 @@
   background: var(--fondo-de-arriba);
 }
 
+/* En un teléfono apaisado, uno sobre otro no caben y la página se desplazaba:
+   el personaje va a la izquierda, a tres px por pixel, y la barra, el texto
+   y el botón a su derecha, al medio de su alto. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .carga {
+    --lado: 216px;
+    display: grid;
+    grid-template-areas:
+      'pato .'
+      'pato barra'
+      'pato texto'
+      'pato salir'
+      'pato .';
+    grid-template-rows: 1fr auto auto auto 1fr;
+    place-items: center;
+    gap: 0;
+  }
+
+  .carga-caminantes,
+  .carga > .carga-pato:not(.carga-cruza) {
+    grid-area: pato;
+    margin-right: var(--e-8);
+  }
+
+  .carga-barra {
+    grid-area: barra;
+    margin-top: 0;
+  }
+
+  .carga > .carga-texto {
+    grid-area: texto;
+    margin-top: var(--e-4);
+  }
+
+  .carga-salir {
+    grid-area: salir;
+    margin-top: var(--e-4);
+  }
+}
+
 /* ---- La escena ----
    Como en el cine: el cuadro en 21:9 al medio, entre dos bandas negras de al
    menos `--banda` de alto. Abajo van los subtítulos, con su alto fijo: el texto
@@ -291,6 +331,56 @@
   font-size: var(--texto-base);
   font-style: italic;
   color: #c8d6ea;
+}
+
+/* En un teléfono apaisado las bandas se comían casi todo el alto y el cuadro
+   quedaba chico: ahí ocupa la pantalla entera y los subtítulos y los botones
+   van encima, como en el cine. Sin bandas, el nivel calza igual. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .venganza {
+    --banda: 0px;
+  }
+
+  .escena-linea {
+    grid-row: 2;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-self: end;
+    margin: 0;
+    padding-bottom: var(--e-3);
+    text-shadow:
+      0 0 3px #000000,
+      0 1px 2px #000000;
+    pointer-events: none;
+  }
+
+  /* El nombre, chico, se perdía en la imagen, también con sombra o borde:
+     va en una placa oscura, como los botones. Sin nombre, la placa no está. */
+  .escena-quien {
+    align-self: center;
+    margin-bottom: var(--e-1);
+    padding: var(--e-1) var(--e-2);
+    background: rgb(0 0 0 / 0.75);
+    text-shadow: none;
+  }
+
+  .escena-quien:empty {
+    visibility: hidden;
+  }
+
+  .escena-texto {
+    font-size: var(--texto-base);
+  }
+
+  .escena-texto.acotacion {
+    font-size: var(--texto-sm);
+  }
+
+  .escena .escena-boton {
+    background: rgb(0 0 0 / 0.55);
+  }
 }
 
 .escena-mandos {

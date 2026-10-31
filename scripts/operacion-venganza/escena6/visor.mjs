@@ -41,7 +41,7 @@ export const grabando = (celdas, u) => {
 // Quien juega, marcado en el cielo en `[x, y]` (al medio del cuadro, si no se
 // dice): su cursor o su huella, entre cuatro esquinas rojas que laten.
 export const objetivo = (celdas, u, modo, [x, y] = [ANCHO / 2, ALTO / 2]) => {
-  const [dibujo, dx, dy] = modo === 'cursor' ? [FLECHA, 3, 8] : [HUELLA, 5, 7]
+  const [dibujo, dx, dy] = modo === 'cursor' ? [FLECHA, 3, 8] : [HUELLA, 6, 9]
   dibujo.forEach((fila, j) => [...fila].forEach((c, i) => c !== ' ' && poner(celdas, x - dx + i, y - dy + j, c === 'X' ? BORDE : BLANCO)))
   const lado = 14 + Math.abs(Math.floor(u * 12) % 2)
   esquinas(celdas, [x - lado, y - lado, x + lado, y + lado], 5, ROJO)

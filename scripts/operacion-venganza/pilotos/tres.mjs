@@ -120,23 +120,43 @@ export const forro = (anillos, rampa, o = {}) => {
 
 // ── Intersección ─────────────────────────────────────────────────────────
 
+// Las cuentas van con las componentes sueltas: es la función que más se llama
+// (una por figura candidata y celda) y cada array de más se nota.
 const cortaElipsoide = (f, o, d) => {
-  const Mt = tr(f.M)
-  const lo = mv(Mt, res(o, f.c)).map((v, i) => v / f.r[i])
-  const ld = mv(Mt, d).map((v, i) => v / f.r[i])
-  const a = pto(ld, ld)
-  const b = 2 * pto(lo, ld)
-  const c = pto(lo, lo) - 1
+  const M = f.M
+  const [r0, r1, r2] = f.r
+  const [cx, cy, cz] = f.c
+  const qx = o[0] - cx
+  const qy = o[1] - cy
+  const qz = o[2] - cz
+  // tr(M) · q, dividido por cada radio: el rayo en la esfera unitaria.
+  const loX = (M[0][0] * qx + M[1][0] * qy + M[2][0] * qz) / r0
+  const loY = (M[0][1] * qx + M[1][1] * qy + M[2][1] * qz) / r1
+  const loZ = (M[0][2] * qx + M[1][2] * qy + M[2][2] * qz) / r2
+  const ldX = (M[0][0] * d[0] + M[1][0] * d[1] + M[2][0] * d[2]) / r0
+  const ldY = (M[0][1] * d[0] + M[1][1] * d[1] + M[2][1] * d[2]) / r1
+  const ldZ = (M[0][2] * d[0] + M[1][2] * d[1] + M[2][2] * d[2]) / r2
+  const a = ldX * ldX + ldY * ldY + ldZ * ldZ
+  const b = 2 * (loX * ldX + loY * ldY + loZ * ldZ)
+  const c = loX * loX + loY * loY + loZ * loZ - 1
   const disc = b * b - 4 * a * c
   if (disc < 0) return null
-  const cerca = (-b - Math.sqrt(disc)) / (2 * a)
-  const lejos = (-b + Math.sqrt(disc)) / (2 * a)
+  const raiz = Math.sqrt(disc)
+  const cerca = (-b - raiz) / (2 * a)
+  const lejos = (-b + raiz) / (2 * a)
   // Lo que cae en o.hueco no está: se ve la cara de atrás (una cúpula abierta, por debajo del marco).
   const falta = (t) => f.hueco?.(sum(o, esc(d, t)))
   const t = (cerca < 0 && f.dentro !== undefined) || (cerca >= 0 && falta(cerca)) ? lejos : cerca
   if (t < 0 || falta(t)) return null
-  const h = sum(lo, esc(ld, t))
-  return { t, n: uni(mv(f.M, h.map((v, i) => v / f.r[i]))), dentro: t !== cerca }
+  const hx = loX + ldX * t
+  const hy = loY + ldY * t
+  const hz = loZ + ldZ * t
+  // M · (h / r), como antes; la normal queda en las coordenadas de la figura.
+  const nX = (M[0][0] * hx) / r0 + (M[0][1] * hy) / r1 + (M[0][2] * hz) / r2
+  const nY = (M[1][0] * hx) / r0 + (M[1][1] * hy) / r1 + (M[1][2] * hz) / r2
+  const nZ = (M[2][0] * hx) / r0 + (M[2][1] * hy) / r1 + (M[2][2] * hz) / r2
+  const largo = Math.hypot(nX, nY, nZ)
+  return { t, n: [nX / largo, nY / largo, nZ / largo], dentro: t !== cerca }
 }
 
 // `tris`, si vienen, son los únicos que pueden cortar el rayo (gpu.mjs).

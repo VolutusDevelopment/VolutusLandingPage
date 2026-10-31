@@ -614,7 +614,7 @@ const forma = (mapa, ox, oy) => ({
   alto: mapa.length,
   pixeles: mapa.flatMap((fila, y) => [...fila].flatMap((c, x) => (c === ' ' ? [] : [[x, y]]))),
 })
-const FORMAS = { cursor: forma(FLECHA, 0, 0), huella: forma(HUELLA, 5, 7) }
+const FORMAS = { cursor: forma(FLECHA, 0, 0), huella: forma(HUELLA, 6, 9) }
 
 let modo = matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella'
 // `vx` y `vy`: cómo se viene moviendo, para quien dispara adonde va a estar.
@@ -1357,6 +1357,9 @@ export default function iniciar(elemento, despues) {
   falta = raiz.querySelector('.nivel-falta')
   leido = raiz.querySelector('.nivel-leido')
   figura = raiz.querySelector('.nivel-jugador')
+  // Del tamaño de la figura más grande, para que ninguna se corte.
+  figura.width = Math.max(...Object.values(FORMAS).map((f) => f.ancho))
+  figura.height = Math.max(...Object.values(FORMAS).map((f) => f.alto))
   pincel = figura.getContext('2d')
 
   // Se van las bandas con que llega de las escenas; «Saltar nivel» las trae de vuelta.

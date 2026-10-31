@@ -23,24 +23,31 @@ export const FLECHA = [
 ]
 export const BORDE = '#0c0e12'
 
-// La huella del dedo, con el mismo código: la yema y sus surcos en lazo,
-// arcos sobre el núcleo que bajan hasta el borde. Es el personaje del combate
-// en las pantallas táctiles y quien juega con el dedo en las escenas.
+// La huella del dedo, con el mismo código: X los surcos y W la piel, sin
+// borde, como en el dibujo de una huella. Arriba, arcos cortados; abajo, el
+// lazo con su tallo y los surcos que bajan hasta la punta. Es el personaje
+// del combate en las pantallas táctiles y quien juega con el dedo en las
+// escenas.
 export const HUELLA = [
-  '    XXX    ',
-  '  XXWWWXX  ',
-  ' XWWXXXWWX ',
-  ' XWXXXXXWX ',
-  'XWXXWWWXXWX',
-  'XWXWXXXWXWX',
-  'XWXWXWXWXWX',
-  'XWXWXWXWXWX',
-  'XWXWXWXWXWX',
-  'XWXWXWXWXWX',
-  ' XXWXWXWXX ',
-  ' XXWXWXWXX ',
-  '  XXXWXXX  ',
-  '    XXX    ',
+  '    XXXXX    ',
+  '   WWWWWWW   ',
+  '   XXWXXXXXX ',
+  '  WWWWWWWWWWX',
+  ' XWWXXXXXXWWW',
+  'XWWXWWWWWWWXW',
+  'WWXWWXXXXXWWX',
+  'WXWWXWWWWWWWW',
+  'XWWXWWXXXWWXW',
+  'XWXWWXWWWXWWX',
+  'XWXWXWWXWWXWX',
+  'WWXWXWXWXWXWX',
+  'XWXWXWWXWWXWX',
+  ' WXWXWWXWWXW ',
+  ' WXWXWWXWXWW ',
+  ' WWWWXWXWXWW ',
+  '  WXWXWXWXW  ',
+  '   XWXWXWW   ',
+  '    WXWXW    ',
 ]
 
 // Cuántos px de pantalla mide un pixel del juego en una vista de `ancho` × `alto`.
