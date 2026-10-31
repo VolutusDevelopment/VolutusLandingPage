@@ -22,11 +22,13 @@ Ubicación: residimos en Santiago de Chile. Las reuniones son preferentemente te
 - [Proyectos](https://volutus.cl/#proyectos): la obra, con su enlace o su repositorio
 - [Servicios](https://volutus.cl/servicios): los ocho servicios en una rejilla, cada uno con el enlace a su página
 - [Contacto](https://volutus.cl/#contacto): el formulario
-- [Quiénes somos](https://volutus.cl/nosotros): quiénes somos y de dónde viene el nombre
+- [Quiénes somos](https://volutus.cl/nosotros): quiénes somos, de dónde viene el nombre y la entrada secreta a Operación Venganza
 - [Artículos](https://volutus.cl/articulos): guías cortas para decidir qué software necesita un negocio
+- [Opiniones](https://volutus.cl/articulos/opiniones): lo que pensamos sobre el software y la inteligencia artificial, cada una firmada por quien la escribe
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 - [Ley 21.719](https://volutus.cl/ley21719): qué cambia con la nueva ley de datos personales y qué tiene que hacer un negocio para cumplirla
 - [Caza de patos](https://volutus.cl/patos): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
+- [Operación Venganza](https://volutus.cl/operacion-venganza): nuestro juego en pixel art para el navegador; más abajo, su sección
 
 ## Proyectos
 
@@ -82,7 +84,7 @@ respuesta llega pronto, pero no es la cotización.
 
 ## Opiniones
 
-Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firmado por quien lo escribe. Todas en https://volutus.cl/articulos/opiniones.
+Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firmado por quien lo escribe. Tienen su propia página, aparte de las guías: https://volutus.cl/articulos/opiniones.
 
 - [Lo que la IA cambia, y lo que no debería cambiar](https://volutus.cl/articulos/lo-que-la-ia-cambia), de Diego Peña y Lillo Lührs
 
@@ -90,4 +92,30 @@ Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firma
 
 - Encargos urgentes para el día siguiente
 - Procesos de proveedor de empresa grande
+
+## Operación Venganza
+
+Un juego de Volutus para el navegador, gratis y sin instalar nada: doce
+escenas en pixel art y tres niveles en que no se dispara, solo se esquivan
+los ataques de los pilotos de una armada de patos. En el computador se juega
+con el ratón o las flechas; en la tablet o el celular, arrastrando el dedo.
+Al final se elige entre hundir el portaaviones Sitting Ducks o dejarlos vivir.
+
+Es un secreto de Quiénes somos: después de las tarjetas del equipo cruzan
+quince patos sobre el atardecer y, si se cazan todos, llega el portaaviones.
+Tocarlo empieza el juego. También se entra directo por su dirección.
+
+Lo hicimos entero en Volutus. Los personajes y los aviones son modelos 3D
+hechos en código y pintados en pixel art desde cada ángulo, y el cielo de los
+niveles es un mundo en 3D dibujado pixel a pixel en un lienzo. Corre en
+JavaScript, sin motor de juego ni librerías. Las faltas de ortografía de
+duck-one son a propósito: así escribe él.
+
+- [Escena 1: El portaaviones](https://volutus.cl/operacion-venganza): el principio; desde ahí el juego sigue solo hasta el final
+- [Nivel 1: Duck-One](https://volutus.cl/operacion-venganza/nivel-1): el líder del escuadrón Patoon-4, en un F-14 Tomcat; vuela a tirones y apunta mal
+- [Nivel 2: Moby-Duck y Duke SkyDucker](https://volutus.cl/operacion-venganza/nivel-2): la fuerza bruta, en un A-10 Thunderbolt II, y el rostro del escuadrón, en un F/A-18C Hornet
+- [Nivel 3: Duky](https://volutus.cl/operacion-venganza/nivel-3): el fantasma amarillo, un pato de hule gigante en un F-22A Raptor; el nivel difícil
+
+Cada escena tiene también su página, de /operacion-venganza/escena-2 a
+/operacion-venganza/escena-16, y el juego empieza en la que se abra.
 

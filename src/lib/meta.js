@@ -115,21 +115,21 @@ export const PAGINAS = {
   // nuevo al más viejo. Son de dos tipos. Las guías no llevan `autor`: las
   // firma Volutus. `servicios` dice en qué páginas de servicio se sugieren, y
   // una sin `servicios` se sugiere en todas. Las opiniones llevan `autor`, el
-  // `id` del socio que la firma (data/socios.js), y no se sugieren en los
-  // servicios.
+  // `id` del socio que la firma (data/socios.js), no se sugieren en los
+  // servicios y tienen su propio índice, aparte del de las guías.
   '/articulos': {
     archivo: 'articulos.html',
     actualizada: '2026-10-31',
     titulo: 'Artículos sobre software para negocios — Volutus',
     descripcion:
-      'Guías cortas y sin jerga para decidir qué software necesita tu negocio, y lo que pensamos en Volutus sobre el software y la inteligencia artificial.',
+      'Guías cortas y sin jerga para decidir qué software necesita tu negocio: páginas web, tiendas online, agentes de IA, automatizaciones y sistemas de gestión.',
   },
   '/articulos/opiniones': {
     archivo: 'articulos/opiniones.html',
     actualizada: '2026-10-31',
     titulo: 'Opiniones sobre software e inteligencia artificial — Volutus',
     descripcion:
-      'Lo que pensamos en Volutus sobre el software, la inteligencia artificial y el oficio de construirlos, firmado por quien lo escribe.',
+      'Opiniones de Volutus sobre el software, la inteligencia artificial y el oficio de construirlos, cada una firmada por quien la escribe.',
   },
   '/articulos/lo-que-la-ia-cambia': {
     archivo: 'articulos/lo-que-la-ia-cambia.html',
@@ -306,7 +306,7 @@ export const PAGINAS = {
   // su pantalla de carga, para `theme-color`.
   '/operacion-venganza': {
     archivo: 'operacion-venganza.html',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza — Volutus',
     descripcion:
       'Cazaste quince patos en Nosotros y la armada quiere a los responsables. Escena 1: llega el portaaviones Sitting Ducks. Se juega en el navegador.',
@@ -317,7 +317,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-2': {
     archivo: 'operacion-venganza/escena-2.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 2: Patoon-4 — Volutus',
     descripcion:
       'El escuadrón Patoon-4 llega a la sala de mando del Sitting Ducks: medallas, un puro apagado y un pato de hule con 112 victorias. Escena 2, en el navegador.',
@@ -326,7 +326,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-3': {
     archivo: 'operacion-venganza/escena-3.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-29',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 3: Despegue — Volutus',
     descripcion:
       'duck-one sube a su F-14 en el Sitting Ducks, prueba los sistemas y la catapulta lo lanza al atardecer. Escena 3 de Operación Venganza, en el navegador.',
@@ -336,7 +336,7 @@ export const PAGINAS = {
   '/operacion-venganza/nivel-1': {
     archivo: 'operacion-venganza/nivel-1.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-29',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, nivel 1: Duck-One — Volutus',
     descripcion:
       'duck-one ataca a quien juega: esquiva las balas de su F-14 mientras el cielo del atardecer cambia de vista, con ráfagas de viento. Nivel 1, en el navegador.',
@@ -345,7 +345,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-5': {
     archivo: 'operacion-venganza/escena-5.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-29',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 5: Regreso — Volutus',
     descripcion:
       'duck-one aterriza su F-14 en el Sitting Ducks como puede, casi atropella a los marinos y le rinde cuentas a moby y a duke. Escena 5, en el navegador.',
@@ -354,7 +354,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-6': {
     archivo: 'operacion-venganza/escena-6.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 6: Entrada — Volutus',
     descripcion:
       'Moby y Duke llegan con el sol a la espalda. Moby amenaza, Duke se presenta ante su cámara y Moby se lanza contra quien juega. Escena 6, en el navegador.',
@@ -362,7 +362,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/nivel-2': {
     archivo: 'operacion-venganza/nivel-2.html',
-    actualizada: '2026-10-30',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, nivel 2: Moby-Duck y Duke SkyDucker — Volutus',
     descripcion:
       'Moby ataca solo con el cañón de su A-10; después llega Duke con flores de estrellas. Esquívalos en el cielo del atardecer. Nivel 2, en el navegador.',
@@ -372,7 +372,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-9': {
     archivo: 'operacion-venganza/escena-9.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 9: Retirada — Volutus',
     descripcion:
       'La torre llama de vuelta a Moby y a Duke: ya no queda presupuesto. Duke se mira en el fuselaje y Moby abolla su avión. Escena 9, en el navegador.',
@@ -381,7 +381,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-10': {
     archivo: 'operacion-venganza/escena-10.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 10: La última opción — Volutus',
     descripcion:
       'Nada ha funcionado y duck-one propone una medida extraordinal. Moby tose, Duke quiere pintura nueva y todos miran a Duky. Escena 10, en el navegador.',
@@ -390,7 +390,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-11': {
     archivo: 'operacion-venganza/escena-11.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-26',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
     descripcion:
       'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-22 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
@@ -398,7 +398,7 @@ export const PAGINAS = {
   },
   '/operacion-venganza/nivel-3': {
     archivo: 'operacion-venganza/nivel-3.html',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, nivel 3: Duky — Volutus',
     descripcion:
       'El Fantasma Amarillo dispara adonde vas a estar, con rayos prototipo, racimos y misiles de seguimiento. El nivel difícil de Operación Venganza, en el navegador.',
@@ -408,7 +408,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-13': {
     archivo: 'operacion-venganza/escena-13.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 13: La sala de mando — Volutus',
     descripcion:
       'Duck-One, Moby y Duke miran en los monitores cómo Duky dispara como si viera el futuro. Moby se mira en la pantalla apagada. Escena 13, en el navegador.',
@@ -417,7 +417,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-14': {
     archivo: 'operacion-venganza/escena-14.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 14: Último ataque — Volutus',
     descripcion:
       'Duky gasta toda su munición y no le da a nadie. Chilla de rabia, vuelve al portaaviones y Moby llora en la sala de mando. Escena 14, en el navegador.',
@@ -426,7 +426,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-15': {
     archivo: 'operacion-venganza/escena-15.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 15: El regreso del fantasma — Volutus',
     descripcion:
       'Duky vuelve al Sitting Ducks y el escuadrón Patoon-4 mira con él el atardecer. Después, una caja clasificada rumbo a Myanmar. Escena 15, en el navegador.',
@@ -435,7 +435,7 @@ export const PAGINAS = {
   '/operacion-venganza/escena-16': {
     archivo: 'operacion-venganza/escena-16.html',
     tarjeta: '/operacion-venganza',
-    actualizada: '2026-10-27',
+    actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 16: Desolación — Volutus',
     descripcion:
       'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 16, en el navegador.',
@@ -475,14 +475,13 @@ export const canonicalDe = (ruta) => (ruta === '/' ? `${ORIGEN}/` : `${ORIGEN}${
 export const tituloCorto = (titulo) => titulo.replace(/ — Volutus$/, '')
 
 /**
- * La fecha `actualizada` de una página (o la que diga `campo`, como
- * `publicada`) como se lee en ella: «13 de octubre de 2026». En UTC porque
- * `new Date('2026-10-13')` es la medianoche UTC, que en Chile todavía es el
- * día 12.
+ * La fecha `actualizada` de una página como se lee en ella: «13 de octubre de
+ * 2026». En UTC porque `new Date('2026-10-13')` es la medianoche UTC, que en
+ * Chile todavía es el día 12.
  */
-export const fechaDe = (ruta, campo = 'actualizada') =>
+export const fechaDe = (ruta) =>
   new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
-    new Date(PAGINAS[ruta][campo])
+    new Date(PAGINAS[ruta].actualizada)
   )
 
 /** Los artículos, del más nuevo al más viejo: las páginas con `publicada`. */
@@ -500,13 +499,14 @@ export const articulosDe = (servicio) =>
   GUIAS.filter(({ servicios }) => !servicios || servicios.includes(servicio))
 
 /**
- * Los tres artículos que más se parecen a `ruta`: los que comparten más
- * servicios con él. A igual parecido gana el más nuevo (ARTICULOS ya viene así
- * y el orden es estable).
+ * Los tres artículos de su tipo, guías u opiniones, que más se parecen a
+ * `ruta`: los que comparten más servicios con él. A igual parecido gana el más
+ * nuevo (GUIAS y OPINIONES ya vienen así y el orden es estable).
  */
 export const relacionadosDe = (ruta) => {
-  const { servicios = [] } = PAGINAS[ruta]
-  return ARTICULOS.filter((articulo) => articulo.ruta !== ruta)
+  const { servicios = [], autor } = PAGINAS[ruta]
+  return (autor ? OPINIONES : GUIAS)
+    .filter((articulo) => articulo.ruta !== ruta)
     .map((articulo) => ({
       articulo,
       comunes: (articulo.servicios ?? []).filter((servicio) => servicios.includes(servicio)).length,
@@ -517,17 +517,21 @@ export const relacionadosDe = (ruta) => {
 }
 
 /**
- * Las guías del índice van de a doce por página. La primera es /articulos y
- * las demás, /articulos/pagina/2 en adelante: cada una es una página más, con
- * su título y su descripción, que se prerenderiza y entra al sitemap. Publicar
- * la guía trece abre sola la segunda. Las opiniones van todas en
+ * Las guías del índice van de a doce por página, una rejilla par: de a dos
+ * desde M, sin una fila coja. La más nueva no cuenta, porque va aparte, en su
+ * lámina sobre la rejilla de la primera. La primera es /articulos y las demás,
+ * /articulos/pagina/2 en adelante: cada una es una página más, con su título
+ * y su descripción, que se prerenderiza y entra al sitemap. Publicar la guía
+ * catorce abre sola la segunda. Las opiniones van todas en su propio índice,
  * /articulos/opiniones.
  */
-export const POR_PAGINA = 12
-export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil(GUIAS.length / POR_PAGINA))
+const POR_PAGINA = 12
+export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil((GUIAS.length - 1) / POR_PAGINA))
 export const rutaDePagina = (n) => (n === 1 ? '/articulos' : `/articulos/pagina/${n}`)
 export const numeroDePagina = (ruta) => (ruta === '/articulos' ? 1 : Number(ruta.split('/').at(-1)))
-export const articulosDePagina = (n) => GUIAS.slice((n - 1) * POR_PAGINA, n * POR_PAGINA)
+/** Cuántas guías van antes de la página `n`: la primera abre con la más nueva. */
+export const inicioDePagina = (n) => (n === 1 ? 0 : (n - 1) * POR_PAGINA + 1)
+export const articulosDePagina = (n) => GUIAS.slice(inicioDePagina(n), n * POR_PAGINA + 1)
 
 for (let n = 2; n <= PAGINAS_DEL_INDICE; n++) {
   const { actualizada, descripcion } = PAGINAS['/articulos']

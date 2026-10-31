@@ -1,9 +1,13 @@
 import Icono from './Icono.jsx'
 import Marca from './Marca.jsx'
+import { PAGINAS } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
 
 // Los que tienen página propia: los de la lista de servicios de la barra.
 const CON_PAGINA = SERVICIOS.filter(({ ruta }) => ruta)
+
+// El índice de las opiniones (paginas/Opiniones.jsx).
+const OPINIONES = '/articulos/opiniones'
 
 /**
  * La lente de la cápsula: el bisel del vidrio desvía lo que hay detrás.
@@ -94,9 +98,9 @@ function Lente() {
  * cartel que persigue al visitante. Va de contorno y no relleno: la cápsula
  * nunca pesa más que el titular, y el botón relleno de la portada es el que
  * manda. En S se retira y quedan los enlaces, que caben desde 360 px. Antes
- * que él, desde M, se retira «Artículos», que sigue en el pie.
+ * que él, desde M, se retiran «Artículos» y «Opiniones», que siguen en el pie.
  *
- * Sin hamburguesa: son tres enlaces y un botón. Lo único que se despliega es
+ * Sin hamburguesa: son cuatro enlaces y un botón. Lo único que se despliega es
  * la lista de servicios: en S y M, «Servicios» la abre (menu-servicios.js) en
  * vez de ir a /servicios, para saltar de un servicio a otro sin recorrer el
  * índice. Sin JavaScript, y desde L, el enlace lleva a /servicios.
@@ -108,8 +112,14 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
   // enterarse. Desde otra página los anclas se cuelgan de la raíz.
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
   // En una página hija (un servicio, un artículo, otra página del índice) el
-  // indicador descansa en su madre.
-  const actual = (destino) => (ruta === destino ? 'page' : ruta?.startsWith(`${destino}/`) ? 'true' : undefined)
+  // indicador descansa en su madre. Las opiniones viven bajo /articulos, pero
+  // su madre es su propio índice y no el de las guías.
+  const enOpiniones = ruta === OPINIONES || Boolean(PAGINAS[ruta]?.autor)
+  const actual = (destino) => {
+    if (ruta === destino) return 'page'
+    const dentro = destino === OPINIONES ? enOpiniones : !enOpiniones && ruta?.startsWith(`${destino}/`)
+    return dentro ? 'true' : undefined
+  }
 
   return (
     <header className={`barra zona-cielo hora-${hora}`} style={estilo}>
@@ -141,6 +151,11 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
           <li className="barra-articulos">
             <a href="/articulos" aria-current={actual('/articulos')}>
               Artículos
+            </a>
+          </li>
+          <li className="barra-articulos">
+            <a href={OPINIONES} aria-current={actual(OPINIONES)}>
+              Opiniones
             </a>
           </li>
           <li className="barra-contacto">

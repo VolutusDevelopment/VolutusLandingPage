@@ -150,23 +150,29 @@ export const escribir = (ruta, datos) => {
   console.log(`sprites: ${ruta} (${(datos.length / 1024).toFixed(1)} KB)`)
 }
 
-// Una tira por toma del guion, con la escena 3D de `TOMAS_3D`; las que van
-// `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta sobre los
-// cuadros lo que va en la pantalla y no en la escena (un visor, una marca), y
-// recibe las distancias de cada pixel para que lo de atrás quede tapado. Se
-// pintan con la GPU, si la hay. TOMAS_DESDE/TOMAS_HASTA acotan las tomas para
-// repartir una escena entre varios procesos (renderizar.py).
+// Una tira por toma del guion, con la escena 3D de `TOMAS_3D` (que puede ser
+// async, si pinta otro cuadro adentro, como los monitores de la escena 13);
+// las que van `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta
+// sobre los cuadros lo que va en la pantalla y no en la escena (un visor, una
+// marca), y recibe las distancias de cada pixel para que lo de atrás quede
+// tapado. Se pintan con la GPU, si la hay. Con TOMAS_PARTE=k/n se pintan solo
+// la toma k y las que le siguen de n en n: así renderizar.py reparte una
+// escena entre n procesos. Antes de empezar dice cuántas tiras va a escribir,
+// para su barra.
+const [PARTE, PARTES] = (process.env.TOMAS_PARTE ?? '1/1').split('/').map(Number)
+if (!(PARTE >= 1 && PARTE <= PARTES)) throw new Error(`TOMAS_PARTE no válida: ${process.env.TOMAS_PARTE}`)
+export const primeraParte = PARTE === 1
 export const escribirTiras = async (TOMAS, TOMAS_3D, rutaDeToma) => {
-  const desde = Number(process.env.TOMAS_DESDE ?? 0)
-  const hasta = Number(process.env.TOMAS_HASTA ?? TOMAS.length)
-  for (const toma of TOMAS.slice(desde, hasta)) {
+  const mias = TOMAS.filter((_, i) => i % PARTES === PARTE - 1)
+  console.log(`tiras: ${mias.reduce((n, toma) => n + (toma.segunModo ? MODOS.length : 1), 0)}`)
+  for (const toma of mias) {
     const { escena, camara, encima, abre } = TOMAS_3D[toma.id]
     for (const modo of toma.segunModo ? MODOS : [MODOS[0]]) {
       const cuadros = []
       for (let k = 0; k < cuadrosDe(toma); k++) {
         const u = k / cuadrosDe(toma)
         const distancias = []
-        const celdas = await cuadroGpu(escena(u, modo), camara(u), distancias, abre, k)
+        const celdas = await cuadroGpu(await escena(u, modo), camara(u), distancias, abre, k)
         encima?.(celdas, u, modo, distancias)
         cuadros.push(celdas)
       }

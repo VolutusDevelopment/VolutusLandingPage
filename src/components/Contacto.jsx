@@ -70,8 +70,11 @@ export default function Contacto({ marcado }) {
           </div>
         </div>
 
+        {/* `zona-cielo`, aunque ya lo es la sección: el formulario se monta
+            sobre la tarjeta oscura, y así la barra lo lee como fondo claro
+            (barra.js). */}
         <form
-          className="formulario tarjeta"
+          className="formulario tarjeta zona-cielo"
           method="post"
           action="/api/contacto"
           noValidate

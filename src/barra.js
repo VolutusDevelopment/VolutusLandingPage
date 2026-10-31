@@ -30,17 +30,15 @@
 
 // Recuerda TODOS los elementos dentro de la franja, también los que salen:
 // bajando despacio el scroll retrocede a veces unos píxeles, y si solo se
-// atendiera a los que entran, se quedaría con uno que ya se fue. El Set guarda
-// el orden de entrada, así que el último es el que acaba de asomar.
+// atendiera a los que entran, se quedaría con uno que ya se fue.
 //
-// Pero manda el más hondo: lo que está dentro de otro se pinta encima. Una
-// tarjeta puede asomar antes que su sección —las cards de /servicios suben
-// sobre el fundido de la cabecera— y la sección, al entrar después, no puede
-// quitarle la barra.
-function masHondo(elementos) {
-  return elementos.filter((elemento) => !elementos.some((otro) => otro !== elemento && elemento.contains(otro))).at(-1)
-}
-
+// De los que están, manda el que se pinta encima: el último en el orden del
+// documento, en el que llegan los `elementos`. Lo que está dentro de otro va
+// después de él —las cards de /servicios suben sobre el fundido de la
+// cabecera—, y de dos hermanos que se montan, el segundo tapa al primero: el
+// formulario claro del contacto sobre el borde de su tarjeta oscura. Por orden
+// de llegada mandaba la tarjeta al subir, que asoma después, y la barra iba en
+// blanco sobre el formulario blanco.
 function vigilarFranja(elementos, rootMargin, alCambiar) {
   const enLaFranja = new Set()
   const observador = new IntersectionObserver(
@@ -49,7 +47,7 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
         if (isIntersecting) enLaFranja.add(target)
         else enLaFranja.delete(target)
       })
-      alCambiar(masHondo([...enLaFranja]))
+      alCambiar([...elementos].findLast((elemento) => enLaFranja.has(elemento)))
     },
     { rootMargin }
   )
@@ -176,7 +174,9 @@ export default function initBarra() {
     .querySelectorAll('.cabecera-cielo')
     .forEach((cabecera) => cabecera.append(Object.assign(document.createElement('div'), { className: 'cabecera-fundido' })))
 
-  const fondos = document.querySelectorAll('.seccion, .seccion :is(.zona-plano, .hora-dia, .cabecera-fundido), .pie')
+  const fondos = document.querySelectorAll(
+    '.seccion, .seccion :is(.zona-plano, .zona-cielo, .hora-dia, .cabecera-fundido), .pie'
+  )
   barra
     .querySelectorAll('.barra-marca, .barra-capsula, .barra-enlaces a')
     .forEach((pieza) => vigilarDetras(pieza, fondos))

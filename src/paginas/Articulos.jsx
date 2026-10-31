@@ -4,39 +4,30 @@ import FilaDeArticulo from '../components/FilaDeArticulo.jsx'
 import Icono from '../components/Icono.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 import {
-  GUIAS,
-  OPINIONES,
   PAGINAS,
   PAGINAS_DEL_INDICE,
-  POR_PAGINA,
   articulosDePagina,
+  inicioDePagina,
   numeroDePagina,
   rutaDePagina,
 } from '../lib/meta.js'
-
-// Las opiniones que caben en la tira; las demás, en /articulos/opiniones.
-const EN_LA_TIRA = 5
 
 // Las baldosas de la cabecera: tres servicios, en su color.
 const EMBLEMA = ['web', 'agente', 'tienda'].map((id) => SERVICIOS.find((servicio) => servicio.id === id))
 
 /**
- * El índice de artículos. La lista sale sola de PAGINAS (todo lo que lleva
- * `publicada`, ver lib/meta.js), del más nuevo al más viejo, así que publicar
- * un artículo no toca esta página.
+ * El índice de las guías. La lista sale sola de PAGINAS (todo lo que lleva
+ * `publicada` y no `autor`, ver lib/meta.js), de la más nueva a la más vieja,
+ * así que publicar una guía no toca esta página. Las opiniones tienen su
+ * propia página (paginas/Opiniones.jsx).
  *
- * La cabecera dice lo que hay, guías y opiniones, con tres baldosas de
- * servicios a la derecha que hacen su gesto al cargar. En la primera página,
- * debajo, un salto a cada sección con cuántas hay.
- *
- * En la primera página van primero las opiniones: las cinco más nuevas en una
- * tira que se desliza de lado y, al final, la entrada a todas
- * (paginas/Opiniones.jsx). Después, las guías, un sumario de a doce por página
- * (`ruta` dice cuál), con los números de las demás al pie: la más nueva en una
- * lámina oscura a todo el ancho y las demás en filas
+ * La cabecera lleva tres baldosas de servicios a la derecha que hacen su
+ * gesto al cargar. Debajo, un sumario de a doce por página (`ruta` dice cuál),
+ * con los números de las demás al pie; la primera abre además con la más
+ * nueva, en una lámina oscura a todo el ancho. Las demás van en filas
  * (components/FilaDeArticulo.jsx). Cada guía lleva el glifo del servicio del
- * que habla en una baldosa de su color, con su nombre y la fecha: el índice se
- * lee también por servicio. Termina en el formulario de contacto.
+ * que habla en una baldosa de su color, con su nombre: el índice se lee
+ * también por servicio. Termina en el formulario de contacto.
  */
 export default function Articulos({ ruta }) {
   const { descripcion } = PAGINAS['/articulos']
@@ -54,54 +45,16 @@ export default function Articulos({ ruta }) {
               </span>
             ))}
           </div>
-          <h1>
-            <span>Guías para decidir,</span> <span>opiniones para pensar</span>
-          </h1>
+          <h1>Guías para decidir</h1>
           <p className="entradilla articulo-entradilla">{descripcion}</p>
-          {pagina === 1 && (
-            <p className="articulos-saltos">
-              <a className="boton" href="#guias-titulo">
-                {GUIAS.length} guías <span aria-hidden="true">↓</span>
-              </a>
-              {OPINIONES.length > 0 && (
-                <a className="boton" href="#opiniones-titulo">
-                  {OPINIONES.length === 1 ? '1 opinión' : `${OPINIONES.length} opiniones`}{' '}
-                  <span aria-hidden="true">↓</span>
-                </a>
-              )}
-            </p>
-          )}
         </div>
       </section>
 
-      {pagina === 1 && OPINIONES.length > 0 && (
-        <section className="seccion zona-cielo" aria-labelledby="opiniones-titulo">
-          <div className="contenedor">
-            <h2 id="opiniones-titulo" className="titular entra">
-              Opiniones
-            </h2>
-            <ul className="articulos opiniones-tira">
-              {OPINIONES.slice(0, EN_LA_TIRA).map((articulo) => (
-                <FilaDeArticulo key={articulo.ruta} articulo={articulo} nivel="h3" />
-              ))}
-              <li className="opiniones-todas">
-                <a className="boton boton-secundario" href="/articulos/opiniones">
-                  Todas las opiniones <span aria-hidden="true">→</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </section>
-      )}
-
-      <section className="seccion zona-cielo" aria-labelledby="guias-titulo">
+      <section className="seccion zona-cielo" aria-label={`Guías, página ${pagina} de ${PAGINAS_DEL_INDICE}`}>
         <div className="contenedor">
-          <h2 id="guias-titulo" className="titular entra">
-            Guías
-          </h2>
-          <ol className="articulos articulos-indice" start={(pagina - 1) * POR_PAGINA + 1}>
+          <ol className="articulos articulos-indice" start={inicioDePagina(pagina) + 1}>
             {articulosDePagina(pagina).map((articulo, i) => (
-              <FilaDeArticulo key={articulo.ruta} articulo={articulo} destacado={pagina === 1 && i === 0} nivel="h3" />
+              <FilaDeArticulo key={articulo.ruta} articulo={articulo} destacado={pagina === 1 && i === 0} />
             ))}
           </ol>
           {PAGINAS_DEL_INDICE > 1 && (

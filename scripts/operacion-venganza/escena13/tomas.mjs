@@ -19,7 +19,7 @@ import { duckOne } from '../escena2/patoon.mjs'
 import { K, fase, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
-import { EN_CABINA, aSuDistancia, alargar, cuadro, proyectar } from '../tiras.mjs'
+import { EN_CABINA, aSuDistancia, alargar, cuadroGpu, proyectar } from '../tiras.mjs'
 import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
 import { enemigo } from './visor.mjs'
 
@@ -118,9 +118,9 @@ const CABINAS = {
 // ── Los monitores de la sala ─────────────────────────────────────────────
 
 // Un cuadro de una toma, con lo que lleva encima.
-const grabar = ({ escena, camara, encima, abre }, u, modo) => {
+const grabar = async ({ escena, camara, encima, abre }, u, modo) => {
   const distancias = []
-  const celdas = cuadro(escena(u), camara(u), distancias, abre)
+  const celdas = await cuadroGpu(escena(u), camara(u), distancias, abre)
   encima?.(celdas, u, modo, distancias)
   return celdas
 }
@@ -156,9 +156,9 @@ const porMonitor = (pinta) => (u, v) => {
 // Prendida: la cara de duky, la cabina de `toma` y el radar. La cara abre el
 // campo hasta cubrir de alto lo que cubría el cuadro cuadrado de antes; la
 // cabina, la franja de 4:3 del medio.
-export const prendida = (toma, t, modo) => {
-  const cara = grabar({ escena: CABINAS.vuela.escena, camara: SU_CARA, abre: ANCHO / ALTO }, t, modo)
-  const vista = grabar(CABINAS[toma], t, modo)
+export const prendida = async (toma, t, modo) => {
+  const cara = await grabar({ escena: CABINAS.vuela.escena, camara: SU_CARA, abre: ANCHO / ALTO }, t, modo)
+  const vista = await grabar(CABINAS[toma], t, modo)
   return porMonitor((quien, cu, cv) => {
     if (quien === 'cara') return celda(cara, ANCHO / 2 + (cu - 0.5) * 0.78 * ALTO, (1 - cv) * ALTO)
     if (quien === 'cabina') return celda(vista, ANCHO / 2 + (cu - 0.5) * (4 / 3) * ALTO, (1 - cv) * ALTO)
@@ -174,10 +174,10 @@ const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16))
 const mezcla = (a, b, k) => '#' + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * k).toString(16).padStart(2, '0')).join('')
 const NEGRO = '#06080a'
 const espejo = ([x, y, z]) => [2 * PANTALLA.x - x, y, z]
-const apagada = (formas, [ojo, mira, campo], t) => {
+const apagada = async (formas, [ojo, mira, campo], t) => {
   const camara = [espejo(ojo), espejo(mira), campo]
   const distancias = []
-  const reflejo = cuadro(formas, camara, distancias)
+  const reflejo = await cuadroGpu(formas, camara, distancias)
   const { y0, y1, z0, z1 } = PANTALLA
   const reflejado = (u, v) => {
     const en = proyectar(camara, [PANTALLA.x, y0 + v * (y1 - y0), z0 + u * (z1 - z0)])
@@ -204,7 +204,7 @@ export const figuras = (u, cambios) =>
     .map(([quien, v]) => (Array.isArray(v[0]) ? v : [v, DONDE[quien]]))
 
 // La sala con los tres y la pantalla prendida en la cabina de `toma`.
-export const ante = (toma, cambios = () => ({})) => (u, modo) => reunion({ u, pantalla: prendida(toma, u, modo), figuras: figuras(u, cambios(u)) })
+export const ante = (toma, cambios = () => ({})) => async (u, modo) => reunion({ u, pantalla: await prendida(toma, u, modo), figuras: figuras(u, cambios(u)) })
 
 // moby se vuelve hacia el monitor de la cara de duky.
 const HACIA_DUKY = { ...DONDE.moby, giro: giroHacia([FILA, 0], [PANTALLA.x, -1.85]) }
@@ -216,21 +216,21 @@ const HACIA_DUKY = { ...DONDE.moby, giro: giroHacia([FILA, 0], [PANTALLA.x, -1.8
 const AL_VIDRIO = { ...DONDE.moby, en: [3.1, 0, 0] }
 const ANTE_EL_REFLEJO = [[1.8, 1.55, -1.1], [PANTALLA.x, 1.3, 0.3], 56]
 const DE_CERCA = [[1.8, 1.45, -1.15], [PANTALLA.x, 1.25, 0.3], 44]
-const seRefleja = (camara, { abre = () => 0, llanto, apaga = 0 }) => (u, modo) => {
+const seRefleja = (camara, { abre = () => 0, llanto, apaga = 0 }) => async (u, modo) => {
   const moby = mobyQuieto(u, abre(u), llanto(u))
-  const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara, u)
+  const pantalla = await (u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara, u))
   return reunion({ u, pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
 }
 // Antes de u = 0, con la pantalla aún prendida, da el paso desde donde miraba
 // a duky hasta el vidrio y se vuelve hacia él; poco después, se apaga.
 const ACERCA = [-0.375, -0.06]
-const seAcercaYSeRefleja = (u, modo) => {
+const seAcercaYSeRefleja = async (u, modo) => {
   if (u >= ACERCA[1]) return seRefleja(ANTE_EL_REFLEJO, { llanto: (v) => tramo(v, 0.45, 0.85), apaga: 0.1 })(u, modo)
   const k = tramo(u, ...ACERCA)
   const paso = fase(0.4 * k)
   const moby = figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })], manos: manosAndando(pMoby, paso), fase: paso })
   const donde = { ...AL_VIDRIO, en: lerp(HACIA_DUKY.en, AL_VIDRIO.en, k), giro: girar(HACIA_DUKY.giro, AL_VIDRIO.giro, k) }
-  return reunion({ u, pantalla: prendida('vuela', u, modo), figuras: figuras(u, { moby: [moby, donde] }) })
+  return reunion({ u, pantalla: await prendida('vuela', u, modo), figuras: figuras(u, { moby: [moby, donde] }) })
 }
 
 // ── Las cámaras de la sala ───────────────────────────────────────────────

@@ -152,9 +152,12 @@ const cortaElipsoide = (f, o, d) => {
   const hy = loY + ldY * t
   const hz = loZ + ldZ * t
   // M · (h / r), como antes; la normal queda en las coordenadas de la figura.
-  const nX = (M[0][0] * hx) / r0 + (M[0][1] * hy) / r1 + (M[0][2] * hz) / r2
-  const nY = (M[1][0] * hx) / r0 + (M[1][1] * hy) / r1 + (M[1][2] * hz) / r2
-  const nZ = (M[2][0] * hx) / r0 + (M[2][1] * hy) / r1 + (M[2][2] * hz) / r2
+  const hX = hx / r0
+  const hY = hy / r1
+  const hZ = hz / r2
+  const nX = M[0][0] * hX + M[0][1] * hY + M[0][2] * hZ
+  const nY = M[1][0] * hX + M[1][1] * hY + M[1][2] * hZ
+  const nZ = M[2][0] * hX + M[2][1] * hY + M[2][2] * hZ
   const largo = Math.hypot(nX, nY, nZ)
   return { t, n: [nX / largo, nY / largo, nZ / largo], dentro: t !== cerca }
 }

@@ -411,8 +411,9 @@
   }
 }
 
-/* Por debajo de 1024 px los cuatro enlaces quedan pegados al logotipo: se
-   retira «Artículos», el primero en irse, que sigue a mano en el pie. */
+/* Por debajo de 1024 px los enlaces quedan pegados al logotipo: se retiran
+   «Artículos» y «Opiniones», los primeros en irse, que siguen a mano en el
+   pie. */
 @media (max-width: 1023px) {
   .barra-articulos {
     display: none;

@@ -28,9 +28,9 @@ import {
   ORIGEN,
   PAGINAS,
   PAGINAS_DEL_INDICE,
-  POR_PAGINA,
   articulosDePagina,
   canonicalDe,
+  inicioDePagina,
   rutaDePagina,
   tarjetaDe,
   tituloCorto,
@@ -48,6 +48,7 @@ import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
 import { PROYECTOS } from '../src/data/proyectos.js'
 import { SOCIOS, socioDe } from '../src/data/socios.js'
 import { ESTIMADOS, desde } from '../src/lib/precios.js'
+import { NIVELES, PAGINAS as PARTES_DEL_JUEGO } from '../src/lib/juego.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
@@ -55,6 +56,9 @@ const dist = `${root}dist/`
 const { render, faviconDe } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const ORGANIZACION = `${ORIGEN}/#organizacion`
+// Con su tipo y su nombre donde se la nombra fuera de la portada: un `@id`
+// solo se lee como `Thing`, y un buscador no lo sigue hasta otra página.
+const VOLUTUS = { '@type': 'Organization', '@id': ORGANIZACION, name: 'Volutus' }
 
 // Un servicio con página la tiene que tener de verdad: si no, la rueda y el
 // pie enlazarían a la 404.
@@ -101,9 +105,7 @@ function personaDe(socio) {
     familyName: apellidos,
     image: `${ORIGEN}${foto}`,
     jobTitle: rol,
-    // Con su tipo: /nosotros no declara la Organization, y un `@id` solo se
-    // lee como `Thing`, que `worksFor` no acepta.
-    worksFor: { '@type': 'Organization', '@id': ORGANIZACION, name: 'Volutus' },
+    worksFor: VOLUTUS,
     alumniOf: { '@type': 'CollegeOrUniversity', name: institucion.nombre, url: institucion.url },
     award: premiosDe(socio),
     sameAs: Object.values(perfiles),
@@ -129,6 +131,45 @@ function ofertaDe(id) {
       priceCurrency: 'CLF',
       valueAddedTaxIncluded: false,
     },
+  }
+}
+
+/**
+ * Operación Venganza (lib/juego.js) se declara en su primera página como un
+ * `VideoGame`, con los pilotos de sus niveles, y cada escena y nivel dice que
+ * es parte de él. Solo `VideoGame`: Google no le da resultado enriquecido, y
+ * con otro tipo de app pediría valoraciones, que el juego no tiene.
+ */
+const JUEGO = '/operacion-venganza'
+const VIDEOJUEGO = { '@type': 'VideoGame', '@id': `${canonicalDe(JUEGO)}#juego`, name: 'Operación Venganza', url: canonicalDe(JUEGO) }
+
+/** Una escena o un nivel como se nombra en el índice del juego: «Nivel 1: Duck-One». */
+const nombreDeParte = ({ numero, nivel, nombre }) => `${nivel ? `Nivel ${nivel}` : `Escena ${numero}`}: ${nombre}`
+
+function videojuego() {
+  return {
+    ...VIDEOJUEGO,
+    description:
+      'Un juego de Volutus para el navegador: doce escenas en pixel art y tres niveles en que no se dispara, solo se esquivan los ataques de los pilotos de una armada de patos. Gratis y sin instalar nada, con ratón, teclado o el dedo.',
+    image: `${ORIGEN}${tarjetaDe(PAGINAS[JUEGO].archivo)}`,
+    inLanguage: 'es-CL',
+    genre: 'Bullet hell',
+    gamePlatform: 'Navegador web',
+    playMode: 'SinglePlayer',
+    isAccessibleForFree: true,
+    author: VOLUTUS,
+    character: Object.values(NIVELES).flatMap(({ FICHAS }) =>
+      FICHAS.map(({ quien, papel, caza, personalidad }) => ({
+        '@type': 'Person',
+        name: quien,
+        description: `${papel}, en un ${caza}. ${personalidad}`,
+      }))
+    ),
+    hasPart: Object.entries(PARTES_DEL_JUEGO).map(([ruta, parte]) => ({
+      '@type': 'WebPage',
+      name: nombreDeParte(parte),
+      url: canonicalDe(ruta),
+    })),
   }
 }
 
@@ -194,8 +235,20 @@ function datosEstructurados(ruta, canonical, datos) {
       },
       migas([
         ['Inicio', '/'],
-        ['Artículos', '/articulos'],
+        autor ? ['Opiniones', '/articulos/opiniones'] : ['Artículos', '/articulos'],
         [tituloCorto(titulo), ruta],
+      ]),
+    ])
+  }
+  const parte = PARTES_DEL_JUEGO[ruta]
+  if (ruta === JUEGO) return ldJson([videojuego(), { '@type': 'WebPage', ...pagina, mainEntity: { '@id': VIDEOJUEGO['@id'] } }])
+  if (parte) {
+    return ldJson([
+      { '@type': 'WebPage', ...pagina, isPartOf: VIDEOJUEGO },
+      migas([
+        ['Inicio', '/'],
+        ['Operación Venganza', JUEGO],
+        [nombreDeParte(parte), ruta],
       ]),
     ])
   }
@@ -204,7 +257,7 @@ function datosEstructurados(ruta, canonical, datos) {
   const indice = Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => i + 1).find((n) => rutaDePagina(n) === ruta)
   if (indice) {
     return ldJson([
-      { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(articulosDePagina(indice), (indice - 1) * POR_PAGINA) },
+      { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(articulosDePagina(indice), inicioDePagina(indice)) },
     ])
   }
   const grafo = {
@@ -256,7 +309,6 @@ function datosEstructurados(ruta, canonical, datos) {
       { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(OPINIONES) },
       migas([
         ['Inicio', '/'],
-        ['Artículos', '/articulos'],
         ['Opiniones', '/articulos/opiniones'],
       ]),
     ],

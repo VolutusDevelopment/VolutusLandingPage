@@ -154,6 +154,9 @@ async function medirAnchos(ruta) {
 /** Recorre la página con el tabulador y comprueba que cada parada se ve. */
 async function medirFoco(ruta) {
   const pagina = await abrir(chrome, ruta, ESCRITORIO)
+  // Mientras carga, el juego no tiene nada que enfocar, y la carga dura lo
+  // que tarda cada equipo (y al menos `MINIMO`): se cuenta ya empezado.
+  await pagina.waitForFunction(() => !document.querySelector('.venganza[data-desde]:not(.en-escena)'))
   await recorrer(pagina)
   await pagina.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
   await pagina.waitForTimeout(400)
@@ -172,7 +175,10 @@ async function medirFoco(ruta) {
         const s = getComputedStyle(el, pseudo)
         return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2
       }
-      return { conAnillo: conAnillo(e) || conAnillo(e, '::before') || conAnillo(e.parentElement) }
+      // En los menús del juego la marca es su cursor de pixeles, `--elegida`
+      // (OperacionVenganza.css), y no un anillo.
+      const conCursor = getComputedStyle(e).getPropertyValue('--elegida').trim() === 'visible'
+      return { conAnillo: conAnillo(e) || conAnillo(e, '::before') || conAnillo(e.parentElement) || conCursor }
     })
     if (!estado) break
     paradas++
