@@ -24,6 +24,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
+  OPINIONES,
   ORIGEN,
   PAGINAS,
   PAGINAS_DEL_INDICE,
@@ -198,24 +199,12 @@ function datosEstructurados(ruta, canonical, datos) {
       ]),
     ])
   }
-  // Cada página del índice de artículos lista los suyos, con su lugar en el
+  // Cada página del índice de artículos lista sus guías, con su lugar en el
   // índice entero.
   const indice = Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => i + 1).find((n) => rutaDePagina(n) === ruta)
   if (indice) {
     return ldJson([
-      {
-        '@type': 'CollectionPage',
-        ...pagina,
-        mainEntity: {
-          '@type': 'ItemList',
-          itemListElement: articulosDePagina(indice).map((articulo, i) => ({
-            '@type': 'ListItem',
-            position: (indice - 1) * POR_PAGINA + i + 1,
-            name: tituloCorto(articulo.titulo),
-            url: canonicalDe(articulo.ruta),
-          })),
-        },
-      },
+      { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(articulosDePagina(indice), (indice - 1) * POR_PAGINA) },
     ])
   }
   const grafo = {
@@ -263,6 +252,14 @@ function datosEstructurados(ruta, canonical, datos) {
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }, ...SOCIOS.map(personaDe)],
+    '/articulos/opiniones': [
+      { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(OPINIONES) },
+      migas([
+        ['Inicio', '/'],
+        ['Artículos', '/articulos'],
+        ['Opiniones', '/articulos/opiniones'],
+      ]),
+    ],
     '/servicios': [
       {
         '@type': 'CollectionPage',
@@ -292,6 +289,19 @@ function migas(camino) {
       position: i + 1,
       name,
       item: canonicalDe(destino),
+    })),
+  }
+}
+
+/** Unos artículos como lista, numerada desde `desde + 1`. */
+function listaDe(articulos, desde = 0) {
+  return {
+    '@type': 'ItemList',
+    itemListElement: articulos.map((articulo, i) => ({
+      '@type': 'ListItem',
+      position: desde + i + 1,
+      name: tituloCorto(articulo.titulo),
+      url: canonicalDe(articulo.ruta),
     })),
   }
 }

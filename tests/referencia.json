@@ -582,65 +582,123 @@
     },
     "/articulos": {
       "S": {
-        "alto": 5119,
+        "alto": 5727,
         "desborda": false,
-        "h1": 86.375,
-        "bloquesQueEntran": 13,
+        "h1": 172.75,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5119,
+        "alto": 5727,
         "desborda": false,
-        "h1": 86.375,
-        "bloquesQueEntran": 13,
+        "h1": 172.75,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3564,
+        "alto": 4205,
         "desborda": false,
-        "h1": 61.984375,
-        "bloquesQueEntran": 13,
+        "h1": 185.953125,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3564,
+        "alto": 4205,
         "desborda": false,
-        "h1": 61.96875,
-        "bloquesQueEntran": 13,
+        "h1": 185.90625,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3640,
+        "alto": 4469,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 13,
+        "h1": 328.3125,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3640,
+        "alto": 4469,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 13,
+        "h1": 328.3125,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3711,
+        "alto": 4572,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 13,
+        "h1": 328.3125,
+        "bloquesQueEntran": 16,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
     },
-    "/articulos/que-es-un-agente-de-ia": {
+    "/articulos/opiniones": {
       "S": {
-        "alto": 6424,
+        "alto": 2209,
+        "desborda": false,
+        "h1": 43.1875,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 2209,
+        "desborda": false,
+        "h1": 43.1875,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 2017,
+        "desborda": false,
+        "h1": 61.984375,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 2017,
+        "desborda": false,
+        "h1": 61.96875,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 2174,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 2174,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 2239,
+        "desborda": false,
+        "h1": 82.078125,
+        "bloquesQueEntran": 2,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/lo-que-la-ia-cambia": {
+      "S": {
+        "alto": 5675,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -648,7 +706,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 6424,
+        "alto": 5675,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -656,7 +714,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4809,
+        "alto": 4246,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -664,7 +722,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4809,
+        "alto": 4246,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -672,7 +730,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4559,
+        "alto": 4029,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -680,7 +738,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4559,
+        "alto": 4028,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -688,7 +746,65 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4652,
+        "alto": 4112,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      }
+    },
+    "/articulos/que-es-un-agente-de-ia": {
+      "S": {
+        "alto": 6349,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "S webkit": {
+        "alto": 6349,
+        "desborda": false,
+        "h1": 106.078125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M": {
+        "alto": 4734,
+        "desborda": false,
+        "h1": 92.09375,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "M webkit": {
+        "alto": 4734,
+        "desborda": false,
+        "h1": 92.0625,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L": {
+        "alto": 4484,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "L webkit": {
+        "alto": 4484,
+        "desborda": false,
+        "h1": 124.78125,
+        "bloquesQueEntran": 5,
+        "ocultosTrasRecorrer": 0,
+        "ocultosAlImprimir": 0
+      },
+      "XL": {
+        "alto": 4577,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -698,7 +814,7 @@
     },
     "/articulos/pagina-web-o-tienda-online": {
       "S": {
-        "alto": 5710,
+        "alto": 5635,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -706,7 +822,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5710,
+        "alto": 5635,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -714,7 +830,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4371,
+        "alto": 4296,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -722,7 +838,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4371,
+        "alto": 4296,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -730,7 +846,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4119,
+        "alto": 4044,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -738,7 +854,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4119,
+        "alto": 4044,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -746,7 +862,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4207,
+        "alto": 4132,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -756,7 +872,7 @@
     },
     "/articulos/software-a-medida-o-ya-hecho": {
       "S": {
-        "alto": 5640,
+        "alto": 5565,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -764,7 +880,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5640,
+        "alto": 5565,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -772,7 +888,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4373,
+        "alto": 4298,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -780,7 +896,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4373,
+        "alto": 4298,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -788,7 +904,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4121,
+        "alto": 4046,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -796,7 +912,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4121,
+        "alto": 4046,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -804,7 +920,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4209,
+        "alto": 4134,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -814,7 +930,7 @@
     },
     "/articulos/planilla-o-sistema-de-gestion": {
       "S": {
-        "alto": 5114,
+        "alto": 5038,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -822,7 +938,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5114,
+        "alto": 5038,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -830,7 +946,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4030,
+        "alto": 3955,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -838,7 +954,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4030,
+        "alto": 3955,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -846,7 +962,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3782,
+        "alto": 3707,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -854,7 +970,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3782,
+        "alto": 3707,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -862,7 +978,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3861,
+        "alto": 3786,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -872,7 +988,7 @@
     },
     "/articulos/que-automatizar-primero": {
       "S": {
-        "alto": 5244,
+        "alto": 5169,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -880,7 +996,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5244,
+        "alto": 5169,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -888,7 +1004,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4160,
+        "alto": 4085,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -896,7 +1012,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4160,
+        "alto": 4085,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -904,7 +1020,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3882,
+        "alto": 3807,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -912,7 +1028,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3882,
+        "alto": 3807,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -920,7 +1036,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3966,
+        "alto": 3891,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -930,7 +1046,7 @@
     },
     "/articulos/que-preparar-antes-de-cotizar": {
       "S": {
-        "alto": 5537,
+        "alto": 5461,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -938,7 +1054,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5537,
+        "alto": 5461,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -946,7 +1062,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4422,
+        "alto": 4347,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -954,7 +1070,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4422,
+        "alto": 4347,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -962,7 +1078,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4211,
+        "alto": 4136,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -970,7 +1086,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4211,
+        "alto": 4136,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -978,7 +1094,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4314,
+        "alto": 4239,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -988,7 +1104,7 @@
     },
     "/articulos/dos-formas-de-trabajar": {
       "S": {
-        "alto": 5350,
+        "alto": 5275,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -996,7 +1112,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5350,
+        "alto": 5275,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1004,7 +1120,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4159,
+        "alto": 4084,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1012,7 +1128,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4159,
+        "alto": 4084,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1020,7 +1136,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3905,
+        "alto": 3830,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1028,7 +1144,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3905,
+        "alto": 3830,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1036,7 +1152,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3989,
+        "alto": 3914,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1046,7 +1162,7 @@
     },
     "/articulos/datos-de-tus-clientes-y-la-ley": {
       "S": {
-        "alto": 5428,
+        "alto": 5353,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1054,7 +1170,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5428,
+        "alto": 5353,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1062,7 +1178,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4213,
+        "alto": 4138,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1070,7 +1186,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4213,
+        "alto": 4138,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1078,7 +1194,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3961,
+        "alto": 3886,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1086,7 +1202,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3961,
+        "alto": 3886,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1094,7 +1210,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4049,
+        "alto": 3974,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1104,7 +1220,7 @@
     },
     "/articulos/por-que-no-te-sirvio-la-herramienta": {
       "S": {
-        "alto": 4804,
+        "alto": 4729,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1112,7 +1228,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4804,
+        "alto": 4729,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1120,7 +1236,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3864,
+        "alto": 3789,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1128,7 +1244,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3864,
+        "alto": 3789,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1136,7 +1252,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3641,
+        "alto": 3565,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1144,7 +1260,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3641,
+        "alto": 3565,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1152,7 +1268,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3719,
+        "alto": 3644,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1162,7 +1278,7 @@
     },
     "/articulos/conectar-con-lo-que-ya-usas": {
       "S": {
-        "alto": 4963,
+        "alto": 4888,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1170,7 +1286,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4963,
+        "alto": 4888,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1178,7 +1294,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3988,
+        "alto": 3912,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1186,7 +1302,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3988,
+        "alto": 3912,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1194,7 +1310,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3734,
+        "alto": 3659,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1202,7 +1318,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3734,
+        "alto": 3659,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1210,7 +1326,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3817,
+        "alto": 3742,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1220,7 +1336,7 @@
     },
     "/articulos/boleta-factura-y-sii": {
       "S": {
-        "alto": 5012,
+        "alto": 4937,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1228,7 +1344,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5012,
+        "alto": 4937,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1236,7 +1352,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3905,
+        "alto": 3829,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1244,7 +1360,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3905,
+        "alto": 3829,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1252,7 +1368,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3683,
+        "alto": 3608,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1260,7 +1376,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3683,
+        "alto": 3608,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1268,7 +1384,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3766,
+        "alto": 3691,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1278,7 +1394,7 @@
     },
     "/articulos/como-se-paga-en-linea": {
       "S": {
-        "alto": 5193,
+        "alto": 5118,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1286,7 +1402,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5193,
+        "alto": 5118,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1294,7 +1410,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4050,
+        "alto": 3975,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1302,7 +1418,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4050,
+        "alto": 3975,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1310,7 +1426,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3796,
+        "alto": 3721,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1318,7 +1434,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3796,
+        "alto": 3721,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1326,7 +1442,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3880,
+        "alto": 3805,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1336,7 +1452,7 @@
     },
     "/articulos/casos-para-un-agente-de-ia": {
       "S": {
-        "alto": 5422,
+        "alto": 5347,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1344,7 +1460,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5422,
+        "alto": 5347,
         "desborda": false,
         "h1": 106.078125,
         "bloquesQueEntran": 5,
@@ -1352,7 +1468,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4152,
+        "alto": 4076,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1360,7 +1476,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4152,
+        "alto": 4076,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1368,7 +1484,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3931,
+        "alto": 3856,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1376,7 +1492,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3931,
+        "alto": 3856,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1384,7 +1500,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4020,
+        "alto": 3945,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1394,7 +1510,7 @@
     },
     "/articulos/como-trabajamos": {
       "S": {
-        "alto": 5500,
+        "alto": 5425,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1402,7 +1518,7 @@
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 5500,
+        "alto": 5425,
         "desborda": false,
         "h1": 141.4375,
         "bloquesQueEntran": 5,
@@ -1410,7 +1526,7 @@
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 4332,
+        "alto": 4257,
         "desborda": false,
         "h1": 92.09375,
         "bloquesQueEntran": 5,
@@ -1418,7 +1534,7 @@
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 4332,
+        "alto": 4257,
         "desborda": false,
         "h1": 92.0625,
         "bloquesQueEntran": 5,
@@ -1426,7 +1542,7 @@
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 4062,
+        "alto": 3987,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1434,7 +1550,7 @@
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 4062,
+        "alto": 3986,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -1442,7 +1558,7 @@
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 4164,
+        "alto": 4089,
         "desborda": false,
         "h1": 124.78125,
         "bloquesQueEntran": 5,
@@ -2496,58 +2612,58 @@
     },
     "/articulos/pagina/2": {
       "S": {
-        "alto": 2789,
+        "alto": 2935,
         "desborda": false,
-        "h1": 86.375,
-        "bloquesQueEntran": 4,
+        "h1": 172.75,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 2789,
+        "alto": 2935,
         "desborda": false,
-        "h1": 86.375,
-        "bloquesQueEntran": 4,
+        "h1": 172.75,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 2338,
+        "alto": 2548,
         "desborda": false,
-        "h1": 61.984375,
-        "bloquesQueEntran": 4,
+        "h1": 185.953125,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 2338,
+        "alto": 2548,
         "desborda": false,
-        "h1": 61.96875,
-        "bloquesQueEntran": 4,
+        "h1": 185.90625,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 2444,
+        "alto": 2776,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 4,
+        "h1": 328.3125,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 2444,
+        "alto": 2776,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 4,
+        "h1": 328.3125,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 2508,
+        "alto": 2873,
         "desborda": false,
-        "h1": 82.078125,
-        "bloquesQueEntran": 4,
+        "h1": 328.3125,
+        "bloquesQueEntran": 5,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       }
@@ -2653,63 +2769,71 @@
       "sinAnillo": 0
     },
     "/articulos": {
-      "paradas": 41,
+      "paradas": 45,
       "sinAnillo": 0
     },
-    "/articulos/que-es-un-agente-de-ia": {
-      "paradas": 41,
+    "/articulos/opiniones": {
+      "paradas": 28,
       "sinAnillo": 0
     },
-    "/articulos/pagina-web-o-tienda-online": {
-      "paradas": 39,
-      "sinAnillo": 0
-    },
-    "/articulos/software-a-medida-o-ya-hecho": {
-      "paradas": 38,
-      "sinAnillo": 0
-    },
-    "/articulos/planilla-o-sistema-de-gestion": {
-      "paradas": 36,
-      "sinAnillo": 0
-    },
-    "/articulos/que-automatizar-primero": {
-      "paradas": 37,
-      "sinAnillo": 0
-    },
-    "/articulos/que-preparar-antes-de-cotizar": {
-      "paradas": 40,
-      "sinAnillo": 0
-    },
-    "/articulos/dos-formas-de-trabajar": {
-      "paradas": 36,
-      "sinAnillo": 0
-    },
-    "/articulos/datos-de-tus-clientes-y-la-ley": {
-      "paradas": 38,
-      "sinAnillo": 0
-    },
-    "/articulos/por-que-no-te-sirvio-la-herramienta": {
-      "paradas": 37,
-      "sinAnillo": 0
-    },
-    "/articulos/conectar-con-lo-que-ya-usas": {
-      "paradas": 37,
-      "sinAnillo": 0
-    },
-    "/articulos/boleta-factura-y-sii": {
-      "paradas": 37,
-      "sinAnillo": 0
-    },
-    "/articulos/como-se-paga-en-linea": {
+    "/articulos/lo-que-la-ia-cambia": {
       "paradas": 35,
       "sinAnillo": 0
     },
-    "/articulos/casos-para-un-agente-de-ia": {
+    "/articulos/que-es-un-agente-de-ia": {
+      "paradas": 40,
+      "sinAnillo": 0
+    },
+    "/articulos/pagina-web-o-tienda-online": {
       "paradas": 38,
       "sinAnillo": 0
     },
+    "/articulos/software-a-medida-o-ya-hecho": {
+      "paradas": 37,
+      "sinAnillo": 0
+    },
+    "/articulos/planilla-o-sistema-de-gestion": {
+      "paradas": 35,
+      "sinAnillo": 0
+    },
+    "/articulos/que-automatizar-primero": {
+      "paradas": 36,
+      "sinAnillo": 0
+    },
+    "/articulos/que-preparar-antes-de-cotizar": {
+      "paradas": 39,
+      "sinAnillo": 0
+    },
+    "/articulos/dos-formas-de-trabajar": {
+      "paradas": 35,
+      "sinAnillo": 0
+    },
+    "/articulos/datos-de-tus-clientes-y-la-ley": {
+      "paradas": 37,
+      "sinAnillo": 0
+    },
+    "/articulos/por-que-no-te-sirvio-la-herramienta": {
+      "paradas": 36,
+      "sinAnillo": 0
+    },
+    "/articulos/conectar-con-lo-que-ya-usas": {
+      "paradas": 36,
+      "sinAnillo": 0
+    },
+    "/articulos/boleta-factura-y-sii": {
+      "paradas": 36,
+      "sinAnillo": 0
+    },
+    "/articulos/como-se-paga-en-linea": {
+      "paradas": 34,
+      "sinAnillo": 0
+    },
+    "/articulos/casos-para-un-agente-de-ia": {
+      "paradas": 37,
+      "sinAnillo": 0
+    },
     "/articulos/como-trabajamos": {
-      "paradas": 43,
+      "paradas": 42,
       "sinAnillo": 0
     },
     "/privacidad": {

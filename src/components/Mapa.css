@@ -5,27 +5,41 @@
    halo; los que faltan, huecos. El tramo de cada apartado mide en proporción
    a sus palabras (`--peso`), con un mínimo para que los puntos no se pisen.
 
-   En S y M, una barra horizontal al comienzo del texto, que se va con él al
-   bajar: pegada arriba, Safari en iOS pintaba las franjas de la hora y de su
-   barra en vez de dejar ver el texto (ver Barra.css). Arriba, el título del
-   apartado actual, en una línea y con su alto fijo, y los minutos; debajo,
-   los puntos. */
+   En S y M, una píldora al comienzo del texto que se queda pegada bajo la
+   barra del sitio mientras dura el texto. Mide 22rem como mucho, como la
+   barra del estimado (Estimado.css): a todo el ancho, Safari en iOS la tomaba
+   por una barra y pintaba de su color las franjas de la hora y de abajo en
+   vez de dejar ver el texto (ver Barra.css). Arriba, el título del apartado
+   actual, en una línea y con su alto fijo, y los minutos; debajo, los puntos.
+   Al saltar a un apartado, su subtítulo cae bajo la píldora. */
 html:has(.mapa) {
   --mapa-alto: 68px;
 }
 
 .mapa {
   --mapa-punto: 12px;
+  position: sticky;
+  top: calc(var(--barra-alto) + var(--e-1));
+  z-index: 3;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: 24px 1fr;
   grid-template-areas: 'actual minutos' 'puntos puntos';
   align-items: center;
   column-gap: var(--e-4);
+  width: 100%;
+  max-width: 22rem;
   height: var(--mapa-alto);
-  margin: 0 calc(-1 * var(--margen-lateral)) var(--e-8);
-  padding: var(--e-2) var(--margen-lateral) 0;
-  border-bottom: 1px solid var(--linea);
+  margin: 0 auto var(--e-8);
+  padding: var(--e-2) var(--e-4) 0;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--superficie);
+  box-shadow: 0 8px 24px rgb(10 26 42 / 0.12);
+}
+
+.prosa h2 {
+  scroll-margin-top: calc(var(--e-1) + var(--mapa-alto));
 }
 
 .mapa p {
@@ -146,13 +160,18 @@ html:has(.mapa) {
    su título. */
 @media (min-width: 1024px) {
   .mapa {
-    position: sticky;
     top: calc(var(--barra-alto) + var(--e-6));
     display: block;
     height: auto;
     margin: 0;
     padding: 0;
     border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .prosa h2 {
+    scroll-margin-top: 0;
   }
 
   .mapa-actual {

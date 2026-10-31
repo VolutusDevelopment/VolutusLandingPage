@@ -2,19 +2,21 @@ import Pagina from './Pagina.jsx'
 import Contacto from './Contacto.jsx'
 import FilaDeArticulo from './FilaDeArticulo.jsx'
 import Mapa from './Mapa.jsx'
+import Volver from './Volver.jsx'
 import { socioDe } from '../data/socios.js'
 import { leer } from '../lib/lectura.js'
 import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
 import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 
 /**
- * El marco de un artículo (paginas/articulos/). El título, la entradilla, el
- * autor y la fecha salen de PAGINAS (lib/meta.js), así que el `<head>`, la
- * página y el índice de /articulos dicen lo mismo; el artículo solo escribe su
- * cuerpo.
+ * El marco de un artículo (paginas/articulos/), guía u opinión. El título, la
+ * entradilla, el autor y la fecha salen de PAGINAS (lib/meta.js), así que el
+ * `<head>`, la página y el índice de /articulos dicen lo mismo; el artículo
+ * solo escribe su cuerpo.
  *
- * Bajo la entradilla va la firma del socio que lo escribió (decisión 58 del
- * brief): su cara, su nombre, que lleva a su tarjeta en /nosotros, y su rol.
+ * Una opinión lleva bajo la entradilla la firma del socio que la escribió
+ * (decisiones 58 y 66 del brief): su cara, su nombre, que lleva a su tarjeta
+ * en /nosotros, y su rol. Las guías no llevan firma: las firma Volutus.
  * Debajo, solo la fecha de la última actualización; la de publicación queda
  * en el grafo y en el índice.
  *
@@ -28,7 +30,7 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 export default function Articulo({ ruta, children }) {
   const { titulo, descripcion, actualizada, autor, servicios = [] } = PAGINAS[ruta]
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
-  const firma = socioDe(autor)
+  const firma = autor && socioDe(autor)
   const { cuerpo, apartados, minutos } = leer(children)
 
   return (
@@ -42,26 +44,18 @@ export default function Articulo({ ruta, children }) {
       <article>
         <header className="seccion zona-cielo hora-dia cabecera-cielo">
           <div className="contenedor">
-            <p className="antetitulo">
-              <a
-                className="articulo-volver"
-                href="/articulos"
-                aria-label="Volver a los artículos"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19 12H5M11 6l-6 6 6 6" />
-                </svg>
-              </a>
-            </p>
+            <Volver />
             <h1 className="titular-largo">{tituloCorto(titulo)}</h1>
             <p className="entradilla articulo-entradilla">{descripcion}</p>
-            <p className="articulo-firma">
-              <img src={firma.avatar} alt="" width={48} height={48} decoding="async" />
-              <span>
-                <a href={`/nosotros#${firma.id}`}>{`${firma.nombre} ${firma.apellidos}`}</a>
-                <small>{firma.rol}</small>
-              </span>
-            </p>
+            {firma && (
+              <p className="articulo-firma">
+                <img src={firma.avatar} alt="" width={48} height={48} decoding="async" />
+                <span>
+                  <a href={`/nosotros#${firma.id}`}>{`${firma.nombre} ${firma.apellidos}`}</a>
+                  <small>{firma.rol}</small>
+                </span>
+              </p>
+            )}
             <p className="articulo-fecha dato">
               Actualizado el <time dateTime={actualizada}>{fechaDe(ruta)}</time>
             </p>
