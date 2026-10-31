@@ -614,7 +614,7 @@ const forma = (mapa, ox, oy) => ({
   alto: mapa.length,
   pixeles: mapa.flatMap((fila, y) => [...fila].flatMap((c, x) => (c === ' ' ? [] : [[x, y]]))),
 })
-const FORMAS = { cursor: forma(FLECHA, 0, 0), huella: forma(HUELLA, 4, 5) }
+const FORMAS = { cursor: forma(FLECHA, 0, 0), huella: forma(HUELLA, 5, 7) }
 
 let modo = matchMedia('(hover: hover) and (pointer: fine)').matches ? 'cursor' : 'huella'
 // `vx` y `vy`: cómo se viene moviendo, para quien dispara adonde va a estar.
@@ -1063,6 +1063,9 @@ function avanzar() {
 // ── El juego ──────────────────────────────────────────────────────────────
 let estado = 'portada' // portada · dialogo · ataque · final · derrota
 let pausado = false
+// El dedo apoyado (dónde y desde cuándo), o null. Con el dedo se juega
+// apoyándolo todo el rato: mientras hay nivel en juego y no está, se pausa.
+let arrastre = null
 let vistaActual = 0, tAtaque = 0, tVista = 0, memoria = {}, reloj = 0, rotuloHasta = 0
 const panel = (nombre) => raiz.querySelector(`.nivel-${nombre}`)
 
@@ -1112,6 +1115,8 @@ function jugar(desde = 0, conDialogo = true) {
     objetivo.y = h * 0.7
   }
   empezarVista(desde, conDialogo)
+  // Se pulsó «Jugar» con el dedo, que ya no está: empieza al apoyarlo.
+  if (modo === 'huella' && !arrastre) pausar(true)
 }
 
 function perder() {
@@ -1228,20 +1233,22 @@ function dibujar() {
 let parar, alSalir
 const oir = (blanco, tipo, accion) => blanco.addEventListener(tipo, accion, { signal: parar.signal })
 function escuchar() {
-  let arrastre = null
   const punto = (e) => {
     const caja = lienzo.getBoundingClientRect()
     return [(e.clientX - caja.left) / escala, (e.clientY - caja.top) / escala]
   }
-  oir(lienzo, 'pointerdown', (e) => {
+  // El dedo vale en cualquier parte, también sobre el diálogo y las ventanas,
+  // salvo en sus botones y enlaces. En pausa, volver a apoyarlo sigue el juego.
+  oir(raiz, 'pointerdown', (e) => {
     if (e.pointerType === 'touch') {
+      if (e.target.closest('a, button:not(.nivel-dialogo)')) return
       modo = 'huella'
-      arrastre = { x: e.clientX, y: e.clientY, t: performance.now(), movido: 0 }
-      // En pausa, volver a apoyar el dedo sigue el juego.
-      if (pausado) pausar(false)
-      lienzo.setPointerCapture(e.pointerId)
+      arrastre = { x: e.clientX, y: e.clientY }
+      if (pausado && jugable()) pausar(false)
+      raiz.setPointerCapture(e.pointerId)
       return
     }
+    if (e.target !== lienzo) return
     modo = 'cursor'
     ;[objetivo.x, objetivo.y] = punto(e)
     if (estado === 'dialogo' || estado === 'final') avanzar()
@@ -1255,26 +1262,23 @@ function escuchar() {
     ;[objetivo.x, objetivo.y] = punto(e)
   })
   oir(raiz, 'pointerleave', (e) => e.pointerType !== 'touch' && jugable() && !pausado && pausar(true))
-  oir(lienzo, 'pointermove', (e) => {
+  oir(raiz, 'pointermove', (e) => {
     if (e.pointerType !== 'touch' || !arrastre) return
     const dx = e.clientX - arrastre.x, dy = e.clientY - arrastre.y
     arrastre.x = e.clientX
     arrastre.y = e.clientY
-    arrastre.movido += Math.abs(dx) + Math.abs(dy)
-    if (!jugable()) return
+    if (!jugable() || pausado) return
     objetivo.x += dx / escala
     objetivo.y += dy / escala
   })
-  // Un toque corto, sin arrastrar, adelanta el diálogo; soltar el dedo
-  // mientras atacan pausa el juego.
+  // Soltar el dedo pausa el juego, también en los diálogos, que siguen solos.
   const soltar = (e) => {
     if (e.pointerType !== 'touch' || !arrastre) return
-    if (arrastre.movido < 8 && performance.now() - arrastre.t < 350 && (estado === 'dialogo' || estado === 'final')) avanzar()
     arrastre = null
-    if (estado === 'ataque' && !pausado) pausar(true)
+    if (jugable() && !pausado) pausar(true)
   }
-  oir(lienzo, 'pointerup', soltar)
-  oir(lienzo, 'pointercancel', soltar)
+  oir(raiz, 'pointerup', soltar)
+  oir(raiz, 'pointercancel', soltar)
 
   const FLECHAS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']
   oir(window, 'keydown', (e) => {
@@ -1290,7 +1294,8 @@ function escuchar() {
   })
   oir(window, 'keyup', (e) => teclas.delete(e.key))
 
-  oir(caja, 'click', avanzar)
+  // Con el dedo, el diálogo no se toca: sigue solo, y soltarlo pausa.
+  oir(caja, 'click', () => modo === 'cursor' && avanzar())
   if (panel('reglas'))
     oir(panel('entendido'), 'click', () => {
       panel('reglas').hidden = true
@@ -1328,6 +1333,7 @@ function reiniciar() {
   letras = espera = 0
   estado = 'portada'
   pausado = false
+  arrastre = null
   vistaActual = tAtaque = tVista = reloj = rotuloHasta = 0
   memoria = {}
 }

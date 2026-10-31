@@ -46,7 +46,7 @@ export const dukyFeliz = (u, saltos = 4) => {
 
 // El caza, alabeado `alabeo` grados, con duky feliz y sin el vidrio de la
 // cúpula: la cámara va adentro y vira con él.
-const caza = (u) => conDuky({ motor: true, tren: false }, dukyFeliz(u)).filter((f) => !f.vidrio)
+const caza = (u) => conDuky({ motor: true, tren: false, t: u }, dukyFeliz(u)).filter((f) => !f.vidrio)
 export const enVuelo = (alabeo) => transformar([alabeo, 0, 0], [0, 0, 0], ALTURA)
 const desdeElCaza = (alabeo, ojo, mira, campo) => (u) => {
   const T = enVuelo(alabeo(u))
@@ -204,7 +204,7 @@ export const figuras = (u, cambios) =>
     .map(([quien, v]) => (Array.isArray(v[0]) ? v : [v, DONDE[quien]]))
 
 // La sala con los tres y la pantalla prendida en la cabina de `toma`.
-export const ante = (toma, cambios = () => ({})) => (u, modo) => reunion({ pantalla: prendida(toma, u, modo), figuras: figuras(u, cambios(u)) })
+export const ante = (toma, cambios = () => ({})) => (u, modo) => reunion({ u, pantalla: prendida(toma, u, modo), figuras: figuras(u, cambios(u)) })
 
 // moby se vuelve hacia el monitor de la cara de duky.
 const HACIA_DUKY = { ...DONDE.moby, giro: giroHacia([FILA, 0], [PANTALLA.x, -1.85]) }
@@ -219,7 +219,7 @@ const DE_CERCA = [[1.8, 1.45, -1.15], [PANTALLA.x, 1.25, 0.3], 44]
 const seRefleja = (camara, { abre = () => 0, llanto, apaga = 0 }) => (u, modo) => {
   const moby = mobyQuieto(u, abre(u), llanto(u))
   const pantalla = u < apaga ? prendida('vuela', u, modo) : apagada(colocar(moby.filter((f) => !f.pata), { k: K, ...AL_VIDRIO }), camara, u)
-  return reunion({ pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
+  return reunion({ u, pantalla, figuras: figuras(u, { moby: [moby, AL_VIDRIO] }) })
 }
 // Antes de u = 0, con la pantalla aún prendida, da el paso desde donde miraba
 // a duky hasta el vidrio y se vuelve hacia él; poco después, se apaga.
@@ -230,26 +230,29 @@ const seAcercaYSeRefleja = (u, modo) => {
   const paso = fase(0.4 * k)
   const moby = figura(pMoby, { tronco: [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })], manos: manosAndando(pMoby, paso), fase: paso })
   const donde = { ...AL_VIDRIO, en: lerp(HACIA_DUKY.en, AL_VIDRIO.en, k), giro: girar(HACIA_DUKY.giro, AL_VIDRIO.giro, k) }
-  return reunion({ pantalla: prendida('vuela', u, modo), figuras: figuras(u, { moby: [moby, donde] }) })
+  return reunion({ u, pantalla: prendida('vuela', u, modo), figuras: figuras(u, { moby: [moby, donde] }) })
 }
 
 // ── Las cámaras de la sala ───────────────────────────────────────────────
 
 // Desde la pantalla, de frente a quien está en `z`: muy cerca, con el campo abierto.
 export const DE_FRENTE = (z) => fija([3.88, 1.3, z], [FILA, 1.35, z], 86)
+// Moby, más alto, desde más abajo: a la altura de los otros, el pico le tapa la cara.
+export const A_MOBY = fija([3.88, 1.0, DONDE.moby.en[2]], [FILA, 1.2, DONDE.moby.en[2]], 86)
 
 export const TOMAS_3D = {
   // Desde atrás, los tres ante la pantalla.
   monitores: { escena: ante('vuela'), camara: fija([-1.6, 2.5, 0], [PANTALLA.x, 1.8, 0], 58) },
   ...CABINAS,
 
-  pasando: { escena: ante('ataca', (u) => ({ moby: mobyQuieto(u, silaba(u)) })), camara: DE_FRENTE(0) },
+  pasando: { escena: ante('ataca', (u) => ({ moby: mobyQuieto(u, silaba(u)) })), camara: A_MOBY },
   metodologia: { escena: ante('ataca', (u) => ({ duckOne: duckOne.atras(null, silaba(u)) })), camara: DE_FRENTE(DONDE.duckOne.en[2]) },
-  futuro: { escena: ante('ataca', (u) => ({ moby: MOBY.hablando(u, SIN_HUMO) })), camara: DE_FRENTE(0) },
+  futuro: { escena: ante('ataca', (u) => ({ moby: MOBY.hablando(u, SIN_HUMO) })), camara: A_MOBY },
   antes: { escena: ante('ataca', (u) => ({ duke: DUKE.hablando(u) })), camara: DE_FRENTE(DONDE.duke.en[2]) },
 
-  // Por sobre su hombro derecho, el monitor de la cara de duky.
-  mira: { escena: ante('vuela', (u) => ({ moby: [mobyQuieto(u), HACIA_DUKY] })), camara: fija([2.0, 1.75, 0.8], [PANTALLA.x, 1.8, -1.6], 50) },
+  // Desde arriba, por sobre su hombro derecho: moby mira el monitor de la cara
+  // de duky, y duke, a su lado, queda entero.
+  mira: { escena: ante('vuela', (u) => ({ moby: [mobyQuieto(u), HACIA_DUKY] })), camara: fija([1.45, 2.4, 0.85], [PANTALLA.x, 1.3, -1.0], 62) },
   reflejo: alargar({ escena: seAcercaYSeRefleja, camara: fija(...ANTE_EL_REFLEJO) }, ACERCA[0], 1),
   nomegusta: { escena: seRefleja(DE_CERCA, { abre: silaba, llanto: () => 1 }), camara: fija(...DE_CERCA) },
 }

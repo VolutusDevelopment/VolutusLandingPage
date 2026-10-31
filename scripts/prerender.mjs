@@ -304,7 +304,7 @@ function ldJson(grafo) {
 }
 
 function cabecera(ruta, pagina) {
-  const { archivo, titulo, descripcion, publicada, actualizada, indexar = true, tarjetaAlt } = pagina
+  const { titulo, descripcion, publicada, actualizada, indexar = true } = pagina
   const t = atributo(titulo)
   const d = atributo(descripcion)
   const basicas = [`<title>${t}</title>`, `<meta name="description" content="${d}" />`]
@@ -315,8 +315,9 @@ function cabecera(ruta, pagina) {
   if (!indexar) return [...basicas, `<meta name="robots" content="noindex" />`].join('\n    ')
 
   const canonical = canonicalDe(ruta)
-  const imagen = `${ORIGEN}${tarjetaDe(archivo)}`
-  const alt = atributo(tarjetaAlt ?? `El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(titulo)}».`)
+  const conTarjeta = PAGINAS[pagina.tarjeta] ?? pagina
+  const imagen = `${ORIGEN}${tarjetaDe(conTarjeta.archivo)}`
+  const alt = atributo(conTarjeta.tarjetaAlt ?? `El logotipo de Volutus sobre fondo blanco y el título «${tituloCorto(conTarjeta.titulo)}».`)
   // Una página con `publicada` es un artículo también para quien la comparte:
   // con sus fechas y, si la firma un socio, su autor.
   const autor = publicada && autorDe(ruta, pagina)

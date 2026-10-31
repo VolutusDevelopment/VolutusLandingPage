@@ -139,12 +139,13 @@ const cortaElipsoide = (f, o, d) => {
   return { t, n: uni(mv(f.M, h.map((v, i) => v / f.r[i]))), dentro: t !== cerca }
 }
 
-const cortaMalla = (f, o, d) => {
+// `tris`, si vienen, son los únicos que pueden cortar el rayo (gpu.mjs).
+const cortaMalla = (f, o, d, tris = f.tris) => {
   const oc = res(o, f.centro)
   const b = pto(oc, d)
   if (b * b - (pto(oc, oc) - f.radio * f.radio) < 0) return null
   let mejor = null
-  for (const tri of f.tris) {
+  for (const tri of tris) {
     const e1 = res(tri.b, tri.a)
     const e2 = res(tri.c, tri.a)
     const p = cruz(d, e2)
@@ -165,7 +166,7 @@ const cortaMalla = (f, o, d) => {
   return mejor
 }
 
-const corta = (f, o, d) => (f.k === 'e' ? cortaElipsoide(f, o, d) : cortaMalla(f, o, d))
+const corta = (f, o, d, tris) => (f.k === 'e' ? cortaElipsoide(f, o, d) : cortaMalla(f, o, d, tris))
 
 // ── Cámara y pintura ─────────────────────────────────────────────────────
 
@@ -192,7 +193,11 @@ export function marco(figura, conEstela = false) {
 const azar = (...n) => (n.reduce((h, v) => Math.imul(h ^ v, 16777619), 2166136261) >>> 0) / 2 ** 32
 const TROZO_DE_ESTELA = 0.3
 
-export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado = 0.94) {
+// La cámara de la toma: `rayo(i, j)` da el rayo de la celda, con su origen
+// `o` y su dirección `d` en las coordenadas de la figura, y `rayo`, la
+// dirección en las de la cámara. La usan pixel3d y gpu.mjs, que traza los
+// mismos rayos.
+export function camaraDe(toma, n, encuadre, llenado = 0.94) {
   const { giro = 0, altura = 0, alabeo = 0, cabeceo = 0 } = toma
   const M = mm(rotX(alabeo), rotZ(cabeceo))
   const Mt = tr(M)
@@ -207,32 +212,53 @@ export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado 
   const arriba = cruz(derecha, f)
   const paso = (2 * encuadre.radio) / (n * llenado)
   // toma.por: punto por el que pasa la cámara. Lo que quede entre ella y la figura se corta (la pared de una cabina, el tablero).
+  const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
+  const filas = toma.filas ?? n
+  const rayo = (i, j) => {
+    const sx = (i + 0.5 - n / 2) * paso
+    const sy = (filas / 2 - j - 0.5) * paso
+    const origenMundo = ojo ?? sum(sum(sum(encuadre.c, esc(dir, distancia)), esc(derecha, sx)), esc(arriba, sy))
+    const o = sum(mv(Mt, res(origenMundo, encuadre.c)), encuadre.c)
+    const r = ojo ? uni(sum(f, sum(esc(derecha, ((i + 0.5 - n / 2) / (n / 2)) * abre), esc(arriba, ((filas / 2 - j - 0.5) / (n / 2)) * abre)))) : f
+    return { o, d: mv(Mt, r), rayo: r }
+  }
+  return { M, dir, derecha, arriba, ojo, filas, rayo }
+}
+
+export function pixel3d(figura, toma, n, tam, encuadre = marco(figura), llenado = 0.94) {
+  const { M, dir, derecha, arriba, ojo, filas, rayo: rayoDe } = camaraDe(toma, n, encuadre, llenado)
   // toma.cielo(rayo): el color de lo que no choca con nada; sin él, queda vacío.
   // toma.distancias: si viene, se llena con la distancia a lo que se ve en
   // cada celda (Infinity para el cielo y para lo que fig.lejos(p) diga que
   // está pintado lejos, como la vista de un ventanal).
-  const distancia = toma.por ? pto(res(toma.por, encuadre.c), dir) : encuadre.radio * 4
-  const filas = toma.filas ?? n
   // toma.instante: el cuadro de la tira. Con él, las capas de afuera de las
   // estelas se apagan a trozos que cambian de un cuadro a otro, y el chorro
   // de los motores titila.
   const titila = ({ nivel }, p) => toma.instante !== undefined && nivel < 2 && azar(...p.map((v) => Math.floor(v / TROZO_DE_ESTELA)), toma.instante) < 0.35
+  // toma.candidatos(celda), si viene (gpu.mjs): las únicas figuras, con sus
+  // triángulos, que pueden cortar el rayo de la celda j · n + i antes de
+  // `hasta`. Si lo primero opaco que se ve (o, tras un vidrio, lo que hay
+  // detrás) queda antes, el resultado es el mismo que probándolas todas; si
+  // no, se prueban todas.
   const celdas = []
   for (let j = 0; j < filas; j++) {
     const fila = []
     for (let i = 0; i < n; i++) {
-      const sx = (i + 0.5 - n / 2) * paso
-      const sy = (filas / 2 - j - 0.5) * paso
-      const origenMundo = ojo ?? sum(sum(sum(encuadre.c, esc(dir, distancia)), esc(derecha, sx)), esc(arriba, sy))
-      const o = sum(mv(Mt, res(origenMundo, encuadre.c)), encuadre.c)
-      const rayo = ojo ? uni(sum(f, sum(esc(derecha, ((i + 0.5 - n / 2) / (n / 2)) * abre), esc(arriba, ((filas / 2 - j - 0.5) / (n / 2)) * abre)))) : f
-      const d = mv(Mt, rayo)
+      const { o, d, rayo } = rayoDe(i, j)
       const golpes = []
-      for (const fig of figura) {
-        const g = corta(fig, o, d)
+      const prueba = (fig, tris) => {
+        const g = corta(fig, o, d, tris)
         if (g) golpes.push({ ...g, fig })
       }
+      const candidatos = toma.candidatos?.(j * n + i)
+      if (candidatos) for (const [fig, tris] of candidatos.figuras) prueba(fig, tris)
       golpes.sort((a, b) => a.t - b.t)
+      const opaco = golpes.find((g) => !g.fig.luz && !g.fig.vidrio)
+      if (!candidatos || (candidatos.hasta < Infinity && !(opaco?.t < candidatos.hasta))) {
+        golpes.length = 0
+        for (const fig of figura) prueba(fig)
+        golpes.sort((a, b) => a.t - b.t)
+      }
       const color = (g) => {
         const p = sum(o, esc(d, g.t))
         const pintado = g.fig.pinta?.(p, g.n, o)

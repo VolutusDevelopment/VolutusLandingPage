@@ -13,7 +13,7 @@ import { PERSONAJES, figura, pDuckOne, pMoby, pDuke, dukeCerrado } from '../pilo
 import { MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
 import { MANOS_ATRAS, MARINEROS, OFICIOS, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { giroHacia } from '../escena2/reunion.mjs'
-import { ESCALA as K, RUEDAS, SUELO, caza, enCabina } from '../escena3/caza.mjs'
+import { EN_CATAPULTA, ESCALA as K, RUEDAS, SUELO, caza, enCabina } from '../escena3/caza.mjs'
 import { ACELERADOR, PALANCA } from '../pilotos/interiores.mjs'
 import { EN_CABINA, alargar } from '../tiras.mjs'
 
@@ -30,9 +30,9 @@ const CUBIERTA = 20.8
 
 // ── El caza, detenido en la pista ────────────────────────────────────────
 
-// Frena en el eje de la catapulta de babor, más a popa: caza.mjs lo deja en
-// EN_CATAPULTA, así que aquí se corre a `PARADA`.
-const PARADA = [0, CUBIERTA - SUELO, -6]
+// Frena en el eje de la catapulta de babor, justo donde ella lo tomó para
+// despegar en la escena 3.
+const PARADA = EN_CATAPULTA
 const barco = (u) => [MAR, ...portaaviones(enMarcha(u))]
 const CUPULA_ABIERTA = 40
 // Detenido, con las alas barridas al máximo, para ocupar menos cubierta.
@@ -146,7 +146,7 @@ const medalla = (u) => {
 // cámara va un poco detrás y arriba de ellos, para que se vea más de la cabina
 // y de la cubierta.
 const OJOS = [0.3, 1.25, 0]
-const enLaCabina = (u) => enVuelo(bandazos(u)).formas(caza({ gancho: 1, medalla: medalla(u) }))
+const enLaCabina = (u) => enVuelo(bandazos(u)).formas(caza({ gancho: 1, medalla: medalla(u), t: u }))
 const camaraEnLaCabina = (u) => {
   const { punto } = enVuelo(bandazos(u))
   const tiembla = u > POV.toca ? 0.12 * Math.exp(-(u - POV.toca) * 25) * Math.sin(Math.floor(u * 44) * 2.3) : 0
@@ -160,21 +160,37 @@ const humo = (u) => {
   return [RUEDAS.principal(1), RUEDAS.principal(-1), RUEDAS.proa].map((rueda) => el(sum(rueda, [TOCA, CUBIERTA - SUELO + 0.3 + 1.2 * k, PARADA[2]]), esc([1.2, 0.8, 1.0], 0.8 + 2 * k), C.humo))
 }
 
-// Los marinos esperan en la pista, delante de donde frena, escapan a un lado
-// cuando el caza se les viene encima y, ya a salvo, se quedan quietos.
+// Los marinos de la pista: esperan y, al ver venir el caza bamboleándose,
+// corren por sus vidas con los brazos en alto, cada uno de `desde` a `hasta`
+// ([x, z]) a partir de `sale`, a 6 m/s (la toma dura 4,4 s); ya a salvo, se
+// quedan quietos. Unos se apartan de la pista, otros huyen hacia la proa.
+const CORRE = 6 * 4.4
 const MARINOS = [
-  { oficio: OFICIOS.amarillo, x: 16, z: -5.4, lado: 1, desfase: 0 },
-  { oficio: OFICIOS.morado, x: 22, z: -6.6, lado: -1, desfase: 0.3 },
-  { oficio: OFICIOS.rojo, x: 28, z: -5.8, lado: 1, desfase: 0.6 },
+  [OFICIOS.rojo, [-45, -5], [-44, 8], 0.42],
+  [OFICIOS.verde, [-30, -8], [-28, -24], 0.48],
+  [OFICIOS.amarillo, [-20, -3], [-16, 10], 0.5],
+  [OFICIOS.morado, [-10, -10], [-6, -22], 0.53],
+  [OFICIOS.verde, [-2, -1], [10, 12], 0.56],
+  [OFICIOS.rojo, [10, -12], [14, -20], 0.6],
+  [OFICIOS.amarillo, [12, 0], [16, 9], 0.62],
+  [OFICIOS.morado, [18, -12], [24, -17], 0.64],
+  [OFICIOS.verde, [20, 1], [27, 10], 0.6],
+  [OFICIOS.amarillo, [26, -13], [40, -17], 0.62],
+  [OFICIOS.rojo, [28, 2], [44, 8], 0.66],
+  [OFICIOS.verde, [38, 3], [56, 6], 0.7],
+  [OFICIOS.morado, [44, -13], [64, -15], 0.64],
+  [OFICIOS.rojo, [50, 1], [70, 3], 0.68],
+  [OFICIOS.amarillo, [56, -11], [74, -12], 0.72],
 ]
-const marinos = (u) => {
-  const nariz = bandazos(u).x + 9.45
-  return MARINOS.flatMap(({ oficio, x, z, lado, desfase }) => {
-    const huye = tramo(nariz, x - 28, x - 8)
-    const figuraM = huye > 0 && huye < 1 ? MARINEROS.corre(oficio, (u * 8 + desfase) % 1) : MARINEROS.corre(oficio, 0, { fase: null })
-    return colocar(figuraM, { k: K, giro: lado > 0 ? -90 : 90, en: [x, CUBIERTA, z + lado * 6 * huye] })
+const marinos = (u) =>
+  MARINOS.flatMap(([oficio, desde, hasta, sale], i) => {
+    const largo = Math.hypot(hasta[0] - desde[0], hasta[1] - desde[1])
+    const k = Math.min(1, Math.max(0, ((u - sale) * CORRE) / largo))
+    const [x, z] = lerp(desde, hasta, k)
+    const giro = (Math.atan2(desde[1] - hasta[1], hasta[0] - desde[0]) * 180) / Math.PI
+    const figuraM = k > 0 && k < 1 ? MARINEROS.corre(oficio, (u * 8 + i * 0.37) % 1) : MARINEROS.corre(oficio, 0, { fase: null })
+    return colocar(figuraM, { k: K, giro, en: [x, CUBIERTA, z] })
   })
-}
 
 export const TOMAS_3D = {
   aproximacion: {

@@ -21,8 +21,10 @@ CFG.avion = avion(CFG)
 export const ESCALA = CFG.k
 
 // Bajo las ruedas, en metros del caza; la cubierta del barco está a 20,8 m.
+// La catapulta de babor lo toma al principio de su vía amarilla, en medio
+// barco, a 166 m de la proa.
 export const SUELO = -2.2
-export const EN_CATAPULTA = [70, 20.8 - SUELO, -6]
+export const EN_CATAPULTA = [0, 20.8 - SUELO, -6]
 
 export const enCaza = (p) => sum(p, EN_CATAPULTA)
 export const enPiloto = (p) => enCaza(aCaza(CFG, p))
@@ -74,12 +76,12 @@ const boton = (pulsado) => [
 // El caza en sus metros: `piloto` es la figura de duck-one sentado, o nada;
 // `cupula`, los grados que tiene abierta la cúpula (escena 5); `alas`, los
 // grados de su barrido; `barra`, si está enganchado a la catapulta;
-// `gancho`, de 0 a 1, cuánto lo baja, y `medalla`, los grados que se
-// balancea la del espejo.
-export const caza = ({ piloto = [], palanca, acelerador, limpia = LIMPIA_QUIETO, pulsado = false, tren = true, cupula = 0, alas = ALAS_TOMCAT.abiertas, barra = false, gancho: baja = 0, medalla = 0 } = {}) =>
+// `gancho`, de 0 a 1, cuánto lo baja; `medalla`, los grados que se
+// balancea la del espejo, y `t`, el instante de la toma, que mueve el tablero.
+export const caza = ({ piloto = [], palanca, acelerador, limpia = LIMPIA_QUIETO, pulsado = false, tren = true, cupula = 0, alas = ALAS_TOMCAT.abiertas, barra = false, gancho: baja = 0, medalla = 0, t = 0 } = {}) =>
   barrerAlas(
     [
-      ...cabinaCon({ ...conCupula(CFG, cupula), medalla }, [...piloto, ...boton(pulsado)], palanca, acelerador),
+      ...cabinaCon({ ...conCupula(CFG, cupula), medalla, t }, [...piloto, ...boton(pulsado)], palanca, acelerador),
       ...limpiaparabrisas(limpia),
       ...(tren ? TREN : []),
       ...(tren && barra ? [BARRA] : []),

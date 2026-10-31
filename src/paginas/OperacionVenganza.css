@@ -270,9 +270,13 @@
   }
 }
 
+/* Centrado en la pantalla: con su letra chica, la medida de lectura de los
+   párrafos lo dejaba más angosto que la línea, y pegado a su izquierda. La
+   sangría compensa el espaciado que queda tras la última letra. */
 .escena-quien {
   min-height: 1.5em;
-  margin: 0 0 var(--e-2);
+  margin: 0 auto var(--e-2);
+  text-indent: 0.14em;
   color: #9fc0ff;
 }
 
@@ -584,6 +588,8 @@
   color: #ffffff;
   -webkit-user-select: none;
   user-select: none;
+  /* El dedo se arrastra desde cualquier parte, sin mover la página. */
+  touch-action: none;
 }
 
 .nivel.jugando,
@@ -596,7 +602,6 @@
   top: 0;
   left: 0;
   image-rendering: pixelated;
-  touch-action: none;
 }
 
 /* Quien juega va encima de todo, también del diálogo, y no se interpone. */

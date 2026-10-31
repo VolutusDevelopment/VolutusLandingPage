@@ -40,8 +40,17 @@ export const TOMAS = [
   { id: 'pintura', ms: 150, lineas: [{ quien: DUKE, texto: 'Mi avión necesita pintura nueva.' }] },
   { id: 'perfecto', ms: 150, lineas: [{ quien: MOBY, texto: '¡TU AVIÓN ESTÁ PERFECTO!' }] },
   { id: 'sigue', ms: 150, lineas: [{ texto: 'Moby sigue tosiendo.' }] },
-  { id: 'reparar', ms: 150, lineas: [{ quien: DUKE, texto: 'Entonces no debería ser difícil repararlo.' }] },
-  { id: 'mirada', ms: 150, lineas: [{ texto: 'Duke mira fijamente a la cámara, con sus ojos muy azules.' }] },
+  // Una sola toma: lo dice y, sin corte, la cámara se le acerca y él la mira fijo.
+  {
+    id: 'reparar',
+    ms: 150,
+    cuadros: 40,
+    unaVez: true,
+    lineas: [
+      { quien: DUKE, texto: 'Entonces no debería ser difícil repararlo.' },
+      { texto: 'Duke mira fijamente a la cámara, con sus ojos muy azules.', cuadro: 17 },
+    ],
+  },
   { id: 'recurso', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Ha llegado el momento de recurrir a nuestro último recurso.' }] },
   { id: 'nuclear', ms: 150, lineas: [{ quien: MOBY, texto: '¿Bomba nuclear?' }] },
   { id: 'especializado', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Algo mucho más especializado.' }] },

@@ -1,5 +1,5 @@
 // La reunión de la escena 2, en la sala de mando de la escena 1
-// (escena1/lugares.mjs): una mesa baja al medio, cuatro sillones de mando y
+// (escena1/lugares.mjs): una mesa baja al medio, seis sillones de mando y
 // una puerta doble al fondo, que se abre a contraluz. En metros de la sala:
 // la pantalla al frente (x = 4), los ventanales a estribor (z = 5) y la
 // puerta al fondo (x = -4).
@@ -23,12 +23,15 @@ export const K = 0.42
 // a qué altura de sus unidades pisa: moby es más alto de piernas cortas y
 // duky pisa en sus patas de juguete. duky es más largo que el asiento: su
 // sillón (`sillon`) va más atrás, para que la cola no atraviese el respaldo.
+// La cabecera de la puerta, la de duck-one, es la del almirante en la escena 1.
 export const ASIENTOS = {
   duckOne: { en: [-2.8, 0, 0], giro: 0, suelo: -2.3 },
-  duke: { en: [-1.0, 0, -1.0], giro: -90, suelo: -2.3 },
+  duke: { en: [-1.6, 0, -1.0], giro: -90, suelo: -2.3 },
   duky: { en: [-1.6, 0, 1.0], giro: 90, suelo: -2.2, sillon: [-1.6, 0, 1.23] },
   moby: { en: [-0.4, 0, 1.1], giro: 90, suelo: -2.55 },
 }
+// Los otros dos sillones, vacíos: la mesa tiene uno en cada cabecera y dos por lado.
+const VACIOS = { cabecera: { en: [1.0, 0, 0], giro: 180 }, babor: { en: [-0.4, 0, -1.0], giro: -90 } }
 
 // Hacia dónde mira, en grados como colocar, quien está en `de` y mira a `a` ([x, z]).
 export const giroHacia = ([x0, z0], [x1, z1]) => (Math.atan2(z0 - z1, x1 - x0) * 180) / Math.PI
@@ -113,7 +116,7 @@ const puerta = (abre) => {
       return y > 1.0 && y < 1.12 ? '#f2c440' : '#5c6874'
     },
   })
-  const charco = placa([[-3.9, 0.01, MEDIO - hueco], [-3.9, 0.01, MEDIO + hueco], [-1.4, 0.01, MEDIO + hueco * 1.7], [-1.4, 0.01, MEDIO - hueco * 1.7]], 0.01, null, { luz: { color: '#ffe0a0', alfa: 0.3, nivel: 1 } })
+  const charco = placa([[-3.9, 0.01, MEDIO - hueco], [-3.9, 0.01, MEDIO + hueco], [-1.4, 0.01, MEDIO + hueco * 1.7], [-1.4, 0.01, MEDIO - hueco * 1.7]], 0.01, null, { luz: { color: '#ffe0a0', alfa: 0.3, nivel: 2 } })
   return abre > 0.05 ? [hojas, charco] : [hojas]
 }
 
@@ -126,13 +129,13 @@ const SOMBRA = '#4a80e6'
 // quien esté: cada figura va en unidades de pato con su `donde`
 // ({ en, giro, suelo }), y con `reflejo`, también de cabeza bajo el piso
 // pulido.
-export const reunion = ({ pantalla = 'cursor', alarma = false, pulido = false, abre = 0, giros = {}, figuras = [] }) => {
+export const reunion = ({ pantalla = 'cursor', alarma = false, pulido = false, abre = 0, giros = {}, figuras = [], u = 0 }) => {
   const patos = figuras.flatMap(([formas, donde]) => colocar(formas.filter((f) => f.flat !== SOMBRA), { k: K, ...donde }))
   return [
-    ...sala({ pantalla, alarma, pulido }),
+    ...sala({ pantalla, alarma, pulido, u }),
     ...mesa,
     ...puerta(abre),
-    ...Object.entries(ASIENTOS).flatMap(([quien, { en, giro, sillon = en }]) => colocar(SILLON, { k: K, en: sillon, giro: giros[quien] ?? giro })),
+    ...Object.entries({ ...ASIENTOS, ...VACIOS }).flatMap(([quien, { en, giro, sillon = en }]) => colocar(SILLON, { k: K, en: sillon, giro: giros[quien] ?? giro })),
     ...patos,
     ...(pulido ? reflejar(patos) : []),
   ]
@@ -154,7 +157,7 @@ const reflejar = (formas) =>
 export const entra = (pose, camino, camara, { quienes = () => [], desde = 1.5, hasta = 3.7, suelo, ...extra } = {}) => {
   const s = (u) => desde + (hasta - desde) * u
   return {
-    escena: (u, modo) => reunion({ pantalla: modo, abre: 1, ...extra, figuras: [...quienes(u), [pose(fase(s(u))), { ...camino.donde(s(u)), suelo }]] }),
+    escena: (u, modo) => reunion({ u, pantalla: modo, abre: 1, ...extra, figuras: [...quienes(u), [pose(fase(s(u))), { ...camino.donde(s(u)), suelo }]] }),
     camara: (u) => camara(camino.donde(s(u)).en[0]),
   }
 }

@@ -10,4 +10,4 @@ import { TOMAS_3D } from './tomas.mjs'
 import { escribirTiras } from '../tiras.mjs'
 import { TODAS, rutaDeToma } from '../../../src/lib/escena16.js'
 
-escribirTiras(TODAS, TOMAS_3D, rutaDeToma)
+await escribirTiras(TODAS, TOMAS_3D, rutaDeToma)

@@ -169,7 +169,7 @@ const enAscensor = (k) => [SOBRE_EL_ASCENSOR[0], HANGAR.piso + (20.8 - HANGAR.pi
 const delCaza = (k, [x, y, z]) => sum(enAscensor(k), [-x, y, -z])
 const enElAscensor = (u, k, formas) => [MAR, ...portaaviones({ ...enMarcha(u), ascensor: k }), ...poner(formas, 180, enAscensor(k))]
 // Arriba, a ras de la cubierta, con la escalerilla puesta.
-const enLaCabina = (u, cupula, { cinturon, figuras }) => enElAscensor(u, 1, [...caza({ cupula, cinturon }), ...escalerilla, ...figuras])
+const enLaCabina = (u, cupula, { cinturon, figuras }) => enElAscensor(u, 1, [...caza({ cupula, cinturon, t: u }), ...escalerilla, ...figuras])
 // Junto a la cabina, del lado de afuera del marinero, bajo la cúpula abierta.
 const JUNTO_A_LA_CABINA = { ojo: [3.0, 1.2, 7.5], mira: [-0.2, 0.0, -0.6], campo: 54 }
 const CERCA_DE_LA_CABINA = { ojo: [2.2, 1.6, 5.0], mira: [-0.1, -0.6, -0.4], campo: 52 }
@@ -261,7 +261,7 @@ const TABLERO = { ojo: [3.6, 0.55, 0], mira: [-0.4, -0.5, 0], campo: 72 }
 export const ALTURA = [0, 300, 0]
 const NUBES = [[-80, -30, 120, 40], [60, -50, 200, 55], [200, -20, 90, 35], [330, -45, 160, 60], [470, -25, 110, 45]]
 export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((((x - 600 * u + 900) % 600) + 600) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
-const volando = (u, piloto = DUKY.sentado(0)) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false }, piloto), 0, ALTURA)]
+const volando = (u, piloto = DUKY.sentado(0)) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false, t: u }, piloto), 0, ALTURA)]
 const enVueloDe = (p) => sum(enCabina(p), ALTURA)
 
 // ── La radio ─────────────────────────────────────────────────────────────
@@ -277,7 +277,7 @@ const enLaSalaAzul = ({ habla = false, eco = false }) => cic({ oficial: habla ? 
 const losVenIrse = (u, figuras) => {
   const { en } = figuras[1][1]
   const duky = [en[0], en[2]]
-  return reunion({ pantalla: PANTALLA, abre: 1, giros: girosHacia(duky), figuras: [...losTres(u, duky), ...figuras] })
+  return reunion({ u, pantalla: PANTALLA, abre: 1, giros: girosHacia(duky), figuras: [...losTres(u, duky), ...figuras] })
 }
 
 export const TOMAS_3D = {
@@ -337,7 +337,7 @@ export const TOMAS_3D = {
     abre: EN_CABINA,
     escena: (u) => {
       const s = u * PISTA.dura
-      return [MAR, ...portaaviones({ radar: s * 40 }), ...despegando(s).formas(conDuky({ motor: s > PISTA.lanza - 0.12, tren: s < PISTA.sale + 0.6 }, dukyDespega(s)))]
+      return [MAR, ...portaaviones({ radar: s * 40 }), ...despegando(s).formas(conDuky({ motor: s > PISTA.lanza - 0.12, tren: s < PISTA.sale + 0.6, t: u }, dukyDespega(s)))]
     },
     camara: (u) => {
       const s = u * PISTA.dura
@@ -357,7 +357,7 @@ export const TOMAS_3D = {
   // Por el lado izquierdo del oficial, el que no tapa su brazo.
   termina: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.0, 1.25, -1.2], [1.0, 1.0, 0.0], 54) },
   calla: { abre: EN_CABINA, escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
-  // Desde el rincón del fondo, en alto, la sala entera: el almirante de
+  // Desde el fondo del pasillo, en alto, la sala entera: el almirante de
   // espaldas, el oficial en su consola y el eco otra vez en el radar grande.
-  otroPitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([-3.1, 2.0, 2.3], [1.1, 1.1, -0.42], 58) },
+  otroPitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([-8.4, 2.9, 0.5], [1.0, 1.2, -0.42], 54) },
 }

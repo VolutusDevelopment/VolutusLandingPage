@@ -5,7 +5,7 @@
 import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso, ambos, CAZA_DUKE, plegarAlas } from '../pilotos/modelos.mjs'
 import { TREN_HORNET } from '../escena9/cazas.mjs'
-import { BORDE, FLECHA } from '../../../src/lib/flecha.js'
+import { BORDE, FLECHA, HUELLA } from '../../../src/lib/flecha.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -233,7 +233,7 @@ const pintaCubierta = ([x, y, z]) => {
   const d = (x + 150) * 0.156 + (z + 12) * 0.988
   if (x < 70 && Math.abs(d) < 0.5 && Math.floor(x / 8) % 2 === 0) return '#f4f4ee'
   if (x < 70 && x > -150 && Math.abs(Math.abs(d) - 12) < 0.4) return '#f4f4ee'
-  if (x > 40 && (Math.abs(z - 8) < 0.35 || Math.abs(z + 6) < 0.35)) return AMARILLO
+  if (x > -6 && (Math.abs(z - 8) < 0.35 || Math.abs(z + 6) < 0.35)) return AMARILLO
   if (x > 126 && x < 150 && Math.abs(z) < 9 && enTexto('15', z + 9, 150 - x, 10)) return '#f4f4ee'
   return null
 }
@@ -537,18 +537,10 @@ const pintaPantalla = (estado) => ([, y, z]) => {
   }
   const ruido = grano(Math.round(cu * 30), Math.round(cv * 30))
   const fondo = ruido > 0.6 ? '#9aa8a0' : ruido > 0.25 ? '#7e8c84' : '#6a7870'
-  if (estado === 'cursor') {
-    const celda = 0.075
-    const i = Math.floor((cu + 0.3) / celda)
-    const j = Math.floor((0.62 - cv) / celda)
-    const c = FLECHA[j]?.[i]
-    return c === 'X' ? BORDE : c === 'W' ? '#ffffff' : fondo
-  }
-  const r = Math.hypot(cu / 0.42, (cv + 0.02) / 0.58)
-  if (r > 1) return fondo
-  const giro = Math.atan2(cv, cu)
-  const surco = Math.sin(r * 34 + Math.sin(giro * 2 + r * 3) * 1.4)
-  return surco > 0.15 ? '#2a1e18' : '#c8bca8'
+  // El cursor o la huella de quien juega, los mismos del combate, al centro.
+  const [dibujo, celda, desde] = estado === 'cursor' ? [FLECHA, 0.075, [-0.3, 0.62]] : [HUELLA, 0.085, [-0.47, 0.6]]
+  const c = dibujo[Math.floor((desde[1] - cv) / celda)]?.[Math.floor((cu - desde[0]) / celda)]
+  return c === 'X' ? BORDE : c === 'W' ? '#ffffff' : fondo
 }
 
 // La vista por los ventanales: el atardecer de afuera, con el sol en el panel
@@ -575,15 +567,65 @@ const vista = (x, y) => {
   return agua(bajo / 5, ola, sol)
 }
 
-// Consola de babor con radar verde y pantallitas.
-const consola = (x0, x1) => [
+// Las consolas de babor, cada una con su oficio (el radar está en la pantalla
+// grande): la mesa «ouija» del control de cubierta, la carta de navegación y
+// la radio. Pinta cada una con (s, t) de 0 a 1 en su panel, de izquierda a
+// derecha y de abajo arriba; lo que se mueve da vueltas enteras por tira,
+// para que vuelva a empezar sin saltos.
+const ondea = (u, vueltas, fase) => (1 - Math.cos(2 * Math.PI * (u * vueltas + fase))) / 2
+
+// La ouija: el plano de la cubierta, con la pista en ángulo y la isla, y sus
+// avioncitos de juguete, que se mueven a mano para ordenar los aviones. Uno
+// va hasta la catapulta y vuelve.
+const AVIONCITOS = [[[0.2, 0.36], '#f8d020'], [[0.3, 0.36], '#6a7a3a'], [[0.4, 0.36], '#eef0f4'], [[0.74, 0.62], '#9050d8'], [[0.84, 0.62], '#d8282c']]
+const ouija = (s, t, u) => {
+  const mueve = ondea(u, 1, 0)
+  const piezas = [...AVIONCITOS, [[0.5 + 0.3 * mueve, 0.5 + 0.08 * mueve], '#ffad5c']]
+  const pieza = piezas.find(([[ps, pt]]) => Math.abs(s - ps) < 0.035 && Math.abs(t - pt) < 0.05)
+  if (pieza) return pieza[1]
+  if (s > 0.55 && s < 0.65 && t > 0.24 && t < 0.31) return '#20252b'
+  const enAngulo = s < 0.55 && t > 0.68 && t < 0.68 + (0.55 - s) * 0.6 && s > 0.08
+  if ((s > 0.08 && s < 0.94 && t > 0.3 && t < 0.68) || enAngulo) return Math.abs(t - 0.5 - (0.5 - s) * 0.3) < 0.015 && s < 0.55 ? '#eef0f4' : '#8a96a4'
+  return '#1a3a5a'
+}
+
+// La carta: el mar, la costa al este, el rumbo de la flota a puntos y su
+// posición, que parpadea. Arriba a la izquierda, la rosa de los vientos.
+const carta = (s, t, u) => {
+  if (s > 0.78 + 0.06 * Math.sin(t * 11)) return '#d8c89a'
+  if (Math.hypot(s - 0.62, (t - 0.66) * 0.7) < 0.04) return Math.floor(u * 6) % 2 ? '#e0201c' : '#7a1a14'
+  const rumbo = (t - 0.2) / 0.46
+  if (rumbo > 0 && rumbo < 1 && Math.abs(s - 0.18 - 0.44 * rumbo) < 0.02 && Math.floor(rumbo * 9) % 2 === 0) return '#e0201c'
+  const r = Math.hypot(s - 0.2, (t - 0.76) * 0.7)
+  if (r < 0.1) return r > 0.085 || Math.abs(s - 0.2) < 0.012 || Math.abs(t - 0.76) < 0.02 ? '#2c4cb0' : '#bcd8e8'
+  return (s * 10) % 2 < 0.08 || (t * 6) % 2 < 0.08 ? '#9ec4e8' : '#bcd8e8'
+}
+
+// La radio: las frecuencias en verde, los medidores de señal que suben y
+// bajan, y las luces de los canales.
+const radio = (s, t, u) => {
+  if (t > 0.72 && t < 0.9) return s > 0.08 && s < 0.92 && (s * 12) % 1 < 0.7 && (s * 12) % 4 < 3.5 ? '#7dffa0' : '#0e1a12'
+  if (t > 0.22 && t < 0.62) {
+    const i = Math.floor(s * 8)
+    if ((s * 8) % 1 < 0.25 || i < 1 || i > 6) return '#16191e'
+    const alto = 0.25 + 0.7 * ondea(u, 2, i * 0.37)
+    const k = (t - 0.22) / 0.4
+    return k < alto ? (k > 0.75 ? '#f8d020' : '#3ad070') : '#123a24'
+  }
+  if (t > 0.06 && t < 0.16) {
+    const i = Math.floor(s * 6)
+    if ((s * 6) % 1 < 0.35 || i < 1 || i > 4) return '#16191e'
+    return Math.floor(u * 6 + i * 5) % 3 ? '#3a7ad8' : '#1a2a4a'
+  }
+  return '#16191e'
+}
+
+const consola = (x0, x1, pinta, u) => [
   caja(x0, x1, 0.8, 1.0, 0.5, -4.55, CONSOLA),
   placa([[x0, 1.0, -4.15], [x1, 1.0, -4.15], [x1, 1.6, -4.85], [x0, 1.6, -4.85]], 0.06, CONSOLA, {
     pinta: ([x, y]) => {
-      const cx = (x0 + x1) / 2
-      const r = Math.hypot((x - cx) / 0.6, (y - 1.3) / 0.22)
-      if (r < 1) return r > 0.92 || Math.abs(x - cx) < 0.02 ? '#7dffa0' : r < 0.3 && x > cx ? '#3ad070' : '#123a24'
-      return Math.abs(x - cx) > 0.7 && Math.abs(x - cx) < 0.95 && y > 1.12 && y < 1.5 ? (Math.floor(y * 30) % 2 ? '#3a7ad8' : '#1a2a4a') : null
+      const [s, t] = [(x - x0) / (x1 - x0), (y - 1.0) / 0.6]
+      return s < 0.04 || s > 0.96 || t < 0.06 || t > 0.94 ? null : pinta((s - 0.04) / 0.92, (t - 0.06) / 0.88, u)
     },
   }),
 ]
@@ -593,7 +635,7 @@ const baliza = (prendida) => [hueso([3.2, 3.0, -4.3], [3.2, 2.82, -4.3], 0.08, C
 
 // Con `pulido`, el piso refleja lo que se ponga bajo él, de cabeza (escena 2).
 // Su cara de arriba queda en y = 0, donde pisan los patos.
-export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false } = {}) => [
+export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false, u = 0 } = {}) => [
   placa([[-4, -0.05, -5], [-4, -0.05, 5], [4, -0.05, 5], [4, -0.05, -5]], 0.1, SUELO, { pinta: ([x, , z]) => (Math.abs(((x + 40) % 1) - 0.5) > 0.48 || Math.abs(((z + 50) % 1) - 0.5) > 0.48 ? SUELO[2] : null), vidrio: pulido }),
   placa([[-4, 3, -5], [-4, 3, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA, { pinta: ([x, , z]) => (Math.abs(z) < 3.5 && [-2, 0.5, 3].some((cx) => Math.abs(x - cx) < 0.25) ? '#fbfcf4' : null) }),
   placa([[4, 0, -5], [4, 0, 5], [4, 3, 5], [4, 3, -5]], 0.1, SALA),
@@ -607,8 +649,8 @@ export const sala = ({ pantalla = 'bajas', alarma = false, pulido = false } = {}
       return null
     },
   }),
-  ...consola(-2.6, -0.6),
-  ...consola(0.2, 2.2),
-  caja(1.3, 1.75, 2.6, 0.85, 0.42, -0.6, CONSOLA, { pinta: ([, y]) => (y > 0.83 ? '#1a2a4a' : null) }),
+  ...consola(-2.7, -1.3, ouija, u),
+  ...consola(-0.95, 0.45, carta, u),
+  ...consola(0.8, 2.2, radio, u),
   ...baliza(alarma),
 ]

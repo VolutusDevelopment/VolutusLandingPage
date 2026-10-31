@@ -3,7 +3,7 @@
 // cámara de la cabina de duke y la marca de quien juega en el cielo.
 
 import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
-import { BORDE, FLECHA } from '../../../src/lib/flecha.js'
+import { BORDE, FLECHA, HUELLA } from '../../../src/lib/flecha.js'
 
 const BLANCO = '#ffffff'
 const SOMBRA = '#16191e'
@@ -38,21 +38,11 @@ export const grabando = (celdas, u) => {
   dibujar(celdas, REC, 17, 11, BLANCO)
 }
 
-// Una huella de 11 × 15 pixeles: surcos en óvalo, como en la pantalla de la sala.
-const HUELLA = Array.from({ length: 15 }, (_, j) =>
-  Array.from({ length: 11 }, (_, i) => {
-    const [x, y] = [(i - 5) / 5.5, (j - 7) / 7.5]
-    const r = Math.hypot(x, y)
-    if (r > 1) return null
-    return Math.sin(r * 9 + Math.sin(Math.atan2(y, x) * 2 + r * 3) * 1.2) > 0.1 ? '#2a1e18' : '#c8bca8'
-  }),
-)
-
 // Quien juega, marcado en el cielo en `[x, y]` (al medio del cuadro, si no se
 // dice): su cursor o su huella, entre cuatro esquinas rojas que laten.
 export const objetivo = (celdas, u, modo, [x, y] = [ANCHO / 2, ALTO / 2]) => {
-  if (modo === 'cursor') FLECHA.forEach((fila, j) => [...fila].forEach((c, i) => c !== ' ' && poner(celdas, x - 3 + i, y - 8 + j, c === 'X' ? BORDE : BLANCO)))
-  else HUELLA.forEach((fila, j) => fila.forEach((c, i) => c && poner(celdas, x - 5 + i, y - 7 + j, c)))
+  const [dibujo, dx, dy] = modo === 'cursor' ? [FLECHA, 3, 8] : [HUELLA, 5, 7]
+  dibujo.forEach((fila, j) => [...fila].forEach((c, i) => c !== ' ' && poner(celdas, x - dx + i, y - dy + j, c === 'X' ? BORDE : BLANCO)))
   const lado = 14 + Math.abs(Math.floor(u * 12) % 2)
   esquinas(celdas, [x - lado, y - lado, x + lado, y + lado], 5, ROJO)
 }

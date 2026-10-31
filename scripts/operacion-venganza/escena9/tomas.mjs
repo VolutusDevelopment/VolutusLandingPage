@@ -9,7 +9,7 @@
 // la catapulta de babor. Duke sale de un saltito mientras su Hornet pliega
 // las alas, como en la vida real. Todo en metros del barco.
 
-import { placa, transformar } from '../pilotos/tres.mjs'
+import { el, placa, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
 import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { ACELERADOR, PALANCA, enCabina as conMandos } from '../pilotos/interiores.mjs'
@@ -47,8 +47,8 @@ const volando = ({ pilotos = {}, alarma = () => false } = {}) => (u) => {
   return [
     MAR,
     ...nubes(u),
-    ...poner(DUKE.caza({ motor: true, piloto: conMandos(() => pose.duke(u)), alarma: alarma(u) }), 0, EN.duke),
-    ...poner(MOBY.caza({ motor: true, piloto: conMandos(() => pose.moby(u)), alarma: alarma(u) }), 0, EN.moby),
+    ...poner(DUKE.caza({ motor: true, piloto: conMandos(() => pose.duke(u)), alarma: alarma(u), t: u }), 0, EN.duke),
+    ...poner(MOBY.caza({ motor: true, piloto: conMandos(() => pose.moby(u)), alarma: alarma(u), t: u }), 0, EN.moby),
   ]
 }
 const hablando = (quien) => volando({ pilotos: { [quien]: (u) => (quien === 'duke' ? DUKE_P : MOBY_P).hablando(u) } })
@@ -84,17 +84,36 @@ const PLEGADAS = 100
 const enCubierta = (quien, p) => sum((quien === 'duke' ? DUKE : MOBY).enCabina(p), PARADA[quien])
 
 // Llegan por la popa, tocan la cubierta y frenan hasta su parada, con el
-// morro arriba mientras están en el aire (escena5/tomas.mjs).
+// morro arriba mientras están en el aire (escena5/tomas.mjs). Antes de k = 0
+// vienen de más lejos, por la misma senda, en línea recta.
 const LLEGA = { largo: 170, toca: 0.3, hasta: 0.75 }
 export const enPista = (k, parada) => {
+  if (k < 0) {
+    const { aire, en } = enPista(0, parada)
+    const vuelo = [(2 * LLEGA.largo) / LLEGA.hasta, -(16 * 1.5) / (LLEGA.toca * LLEGA.hasta), 0]
+    return { aire, en: sum(en, vuelo.map((v) => v * k)) }
+  }
   const corrido = Math.min(1, k / LLEGA.hasta)
   const aire = Math.max(0, 1 - corrido / LLEGA.toca)
   return { aire, en: sum(parada, [-LLEGA.largo * (1 - corrido) ** 2, 16 * aire ** 1.5, 0]) }
 }
+// Al tocar la cubierta, las ruedas principales (`ruedas`, [x, z] en metros
+// del caza) patinan y echan humo: tres nubes por rueda en los primeros metros,
+// que quedan atrás, crecen, suben y se deshacen.
+const TOCA = LLEGA.toca * LLEGA.hasta
+export const humoDeRuedas = (k, parada, [x, z]) =>
+  [0, 0.015, 0.03].flatMap((tarde) => {
+    const t = (k - TOCA - tarde) / 0.35
+    if (t < 0 || t > 1) return []
+    const [px, , pz] = enPista(TOCA + tarde, parada).en
+    const tam = (0.6 + 2.2 * t) * (1 - t ** 3)
+    return [1, -1].map((s) => el([px + x, CUBIERTA + 0.4 + 1.5 * t, pz + s * z], [1.3 * tam, 0.8 * tam, tam], C.humo))
+  })
+const PRINCIPALES = { duke: [-1.0, 1.55], moby: [1.2, 2.9] }
 const aterriza = (quien, k) => {
   const c = quien === 'duke' ? DUKE : MOBY
   const { aire, en } = enPista(k, PARADA[quien])
-  return transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, c.suelo, 0], en).formas(c.caza({ motor: aire > 0 || k < 0.5, tren: true }))
+  return [...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, c.suelo, 0], en).formas(c.caza({ motor: aire > 0 || k < 0.5, tren: true })), ...humoDeRuedas(k, PARADA[quien], PRINCIPALES[quien])]
 }
 
 // Los dos cazas detenidos, duke ya sin su piloto; `duke`, sus opciones.
@@ -206,10 +225,13 @@ export const TOMAS_3D = {
       return [sum(en, [-80, 18, 0]), [-150, CUBIERTA, 0], 36]
     },
   },
-  // Desde babor, con la isla al fondo: primero duke y, detrás, moby.
+  // Desde la cubierta, a babor y hacia proa de donde tocan, mirando a popa:
+  // los dos vienen llegando por el aire, primero duke y detrás moby, que se
+  // acerca desde lejos por la misma senda; tocan la cubierta con el humo de
+  // las ruedas y pasan rodando junto a la cámara.
   aterrizan: {
-    escena: (u) => [...barco(u), ...aterriza('duke', Math.min(1, u / 0.5)), ...aterriza('moby', Math.max(0, (u - 0.4) / 0.55))],
-    camara: fija([-14, 34, -42], [-14, 23, -6], 64),
+    escena: (u) => [...barco(u), ...aterriza('duke', Math.min(1, u / 0.5)), ...aterriza('moby', (u - 0.4) / 0.55)],
+    camara: fija([-50, 25, -24], [-160, 28, -6], 38),
   },
   // De frente y desde abajo, a la altura de la rueda de proa.
   saltito: { escena: (u) => [...estacionados(u, { alas: PLEGADAS * tramo(u, 0.35, 0.9) }), ...saltito(u)], camara: fija([13, 21.3, -8], [0, 23.2, -6], 50) },

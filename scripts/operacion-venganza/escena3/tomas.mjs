@@ -10,7 +10,7 @@ import { ALAS_TOMCAT, RAMPAS as C, CABEZA, DUCK_ONE, DUCK_ONE_TORSO, GAFAS_DUCK_
 import { PERSONAJES, figura, manosAndando, pDuckOne } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs'
 import { MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
-import { FLECHA } from '../../../src/lib/flecha.js'
+import { FLECHA, HUELLA } from '../../../src/lib/flecha.js'
 import { curva, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { BOTON, EN_CATAPULTA, ESCALA, SUELO, caza, enCaza, enPiloto } from './caza.mjs'
 import { EN_CABINA, alargar } from '../tiras.mjs'
@@ -82,10 +82,10 @@ const pulsaElBoton = (u) => {
 
 // Detrás del caza, el deflector levantado, para que el chorro de los motores
 // salga hacia arriba.
-const DEFLECTOR = placa([[56.4, 20.8, -10], [56.4, 20.8, -2], [54.2, 23.5, -2], [54.2, 23.5, -10]], 0.3, C.grisOscuro)
+const DEFLECTOR = placa([[-13.6, 20.8, -10], [-13.6, 20.8, -2], [-15.8, 23.5, -2], [-15.8, 23.5, -10]].map(([x, y, z]) => [EN_CATAPULTA[0] + x, y, z]), 0.3, C.grisOscuro)
 const barco = (u) => [MAR, ...portaaviones(enMarcha(u)), DEFLECTOR]
 // El caza enganchado a la catapulta, con duck-one en la cabina en la pose `piloto`.
-const enCatapulta = (u, opciones) => [...barco(u), ...poner(caza({ barra: true, ...opciones }), 0, EN_CATAPULTA)]
+const enCatapulta = (u, opciones) => [...barco(u), ...poner(caza({ barra: true, t: u, ...opciones }), 0, EN_CATAPULTA)]
 const enCabinaCon = (pose) => (u) => enCatapulta(u, { piloto: pose(u) })
 
 // Cruza la cubierta hacia el caza, por babor, hasta quedar bajo la cabina.
@@ -96,7 +96,7 @@ const caminando = (u) => sum(PASOS.desde, [0, 0, PASOS.largo * u])
 // proa y, apenas deja la cubierta, barre las alas hacia atrás, a la posición
 // de combate; sube con el morro arriba y recoge el tren. El vapor queda atrás,
 // deshaciéndose.
-const CARRERA = { enciende: 0.06, desde: 0.15, hasta: 0.55, largo: 96 }
+const CARRERA = { enciende: 0.06, desde: 0.15, hasta: 0.55, largo: 166 }
 const corrido = (u) => CARRERA.largo * Math.min(1, Math.max(0, (u - CARRERA.desde) / (CARRERA.hasta - CARRERA.desde))) ** 2
 const enVuelo = (u) => {
   const vuelo = Math.max(0, (u - CARRERA.hasta) / (1 - CARRERA.hasta))
@@ -114,12 +114,12 @@ const despega = (u) => {
 // catapulta, delante del caza; después, la lanzadera deja nubes a su paso.
 const vapor = (u) => [
   ...(u < CARRERA.desde
-    ? [10, 25, 40, 55, 70, 85].map((x, i) => {
+    ? [10, 40, 70, 100, 130, 160].map((x, i) => {
         const k = (u * 4 + i * 0.37) % 1
         return el(sum(EN_CATAPULTA, [x, SUELO + 0.2 + 0.9 * k, 0]), [0.9 + k, 0.35 + 0.3 * k, 0.5 + 0.4 * k], C.nube)
       })
     : []),
-  ...[4, 24, 44, 64].flatMap((x) => {
+  ...[4, 40, 80, 120, 160].flatMap((x) => {
     const paso = CARRERA.desde + (CARRERA.hasta - CARRERA.desde) * Math.sqrt(x / CARRERA.largo)
     const k = (u - paso) / 0.45
     return k > 0 && k < 1 ? [el(sum(EN_CATAPULTA, [x, SUELO + 0.6 + 1.5 * k, 0]), esc([2.4, 1.1, 1.6], 1 - k * 0.7), C.nube)] : []
@@ -132,16 +132,10 @@ const vapor = (u) => [
 // cámara lo encuentra hacia el final. Es un cursor, o una huella donde se juega
 // con el dedo, de cuadritos de 10 m que miran hacia donde termina la cámara.
 const ATACANTE = { sale: 0.68, celda: 10, lejos: [2710, 827, 986] }
-const huella = Array.from({ length: 19 }, (_, j) =>
-  Array.from({ length: 15 }, (_, i) => {
-    const r = Math.hypot((i - 7) / 7.5, (j - 9) / 9.5)
-    return r > 1 ? ' ' : Math.sin(r * 17 + Math.sin(Math.atan2(j - 9, i - 7) * 2 + r * 3) * 1.4) > 0.15 ? 'X' : 'W'
-  }).join(''),
-)
 const atacante = (modo, u, { d, a }) => {
   if (u < ATACANTE.sale) return []
-  const dibujo = modo === 'cursor' ? FLECHA : huella
-  const centro = modo === 'cursor' ? [0, 0] : [7, 9]
+  const dibujo = modo === 'cursor' ? FLECHA : HUELLA
+  const centro = modo === 'cursor' ? [0, 0] : [5, 7]
   const k = ATACANTE.celda * tramo(u, ATACANTE.sale, ATACANTE.sale + 0.05)
   return dibujo.flatMap((fila, j) =>
     [...fila].flatMap((c, i) => {
@@ -151,13 +145,14 @@ const atacante = (modo, u, { d, a }) => {
   )
 }
 
-// Desde un helicóptero por babor, detrás del caza y por sobre el deflector:
-// ve encenderse la postcombustión, lo sigue por la cubierta, se queda en la
-// proa y lo deja irse hacia el sol, mirando hacia el atacante.
+// Desde un helicóptero detrás del caza, apenas a babor y por sobre el
+// deflector, con la vía de la catapulta por delante: ve encenderse la
+// postcombustión, lo sigue por la cubierta, se queda en la proa (a x = 145) y
+// lo deja irse hacia el sol, mirando hacia el atacante.
 const camaraDespegue = (u) => {
   const { en } = enVuelo(u)
-  const avanza = Math.min(en[0] - EN_CATAPULTA[0], 110)
-  return [sum(EN_CATAPULTA, [-24 + 0.9 * avanza, 5 + 0.04 * avanza, -12]), lerp(sum(en, [6, 1, 0]), ATACANTE.lejos, 0.04 * tramo(u, 0.65, 0.9)), 46]
+  const avanza = Math.min(en[0] - EN_CATAPULTA[0], (145 + 26 - EN_CATAPULTA[0]) / 0.9)
+  return [sum(EN_CATAPULTA, [-26 + 0.9 * avanza, 7.5 + 0.04 * avanza, -3]), lerp(sum(en, [6, 1, 0]), ATACANTE.lejos, 0.04 * tramo(u, 0.65, 0.9)), 46]
 }
 const haciaLaCamara = (() => {
   const [ojo, mira] = camaraDespegue(0.85)
