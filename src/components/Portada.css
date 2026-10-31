@@ -320,7 +320,7 @@
    lo que queda fuera de la pantalla, y Safari solo pinta ahí lo que se
    desplaza con la página. En esas franjas la escena sigue en su reflejo, como
    el telón de /nosotros: el cielo entero hacia abajo y el lienzo, que pinta
-   arriba el cielo de la cámara, hacia arriba.
+   arriba el cielo de la cámara, hacia arriba (ver «los reflejos», abajo).
 
    Lo pegado no lleva fondo: con fondo, Safari pinta esas franjas de su color
    hasta el final de la página, aunque Proyectos lo tape, y no deja ver lo que
@@ -334,7 +334,6 @@
   z-index: -1;
   height: 100lvh;
   margin: calc(-1 * var(--barra-alto)) 0 -100lvh;
-  -webkit-box-reflect: below;
 }
 
 .portada-degradado {
@@ -344,21 +343,32 @@
   height: 100%;
 }
 
-/* El reflejo de arriba cubre solo la franja de la hora (hasta 62 px en un
-   iPhone) y se funde: entero era la nube al revés, y al rebotar el scroll en la
-   cima asomaba una segunda nube sobre la página. Más arriba queda el azul del
-   documento (`html`, index.css). */
-.portada-cielo .nubes {
-  -webkit-box-reflect: above 0 linear-gradient(#000 4rem, transparent 8rem);
-}
+/* ---- los reflejos ----
+   Solo en iOS, el único que pinta esas franjas (`-webkit-touch-callout` solo
+   existe en su WebKit). En Chrome el reflejo del lienzo, que pinta un worker,
+   se recompone en cada fotograma de scroll: en un Android la portada perdía
+   dos de cada tres al bajar. */
+@supports (-webkit-touch-callout: none) {
+  .portada-cielo {
+    -webkit-box-reflect: below;
+  }
 
-/* Al terminar `main` el cielo queda detrás del contacto, y su reflejo de abajo
-   se pasaba del final de la página: al rebotar, bajo el mar asomaba un cuadro
-   de cielo. `main` no pinta más abajo de su final, como el telón de /nosotros
-   (Nosotros.css); arriba deja una pantalla para el reflejo de la nube bajo la
-   hora. */
-main:has(> .portada-cielo) {
-  clip-path: inset(-100lvh 0 0);
+  /* El reflejo de arriba cubre solo la franja de la hora (hasta 62 px en un
+     iPhone) y se funde: entero era la nube al revés, y al rebotar el scroll en
+     la cima asomaba una segunda nube sobre la página. Más arriba queda el azul
+     del documento (`html`, index.css). */
+  .portada-cielo .nubes {
+    -webkit-box-reflect: above 0 linear-gradient(#000 4rem, transparent 8rem);
+  }
+
+  /* Al terminar `main` el cielo queda detrás del contacto, y su reflejo de
+     abajo se pasaba del final de la página: al rebotar, bajo el mar asomaba un
+     cuadro de cielo. `main` no pinta más abajo de su final, como el telón de
+     /nosotros (Nosotros.css); arriba deja una pantalla para el reflejo de la
+     nube bajo la hora. */
+  main:has(> .portada-cielo) {
+    clip-path: inset(-100lvh 0 0);
+  }
 }
 
 :root .portada,
