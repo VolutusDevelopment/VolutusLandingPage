@@ -111,22 +111,38 @@ export const PAGINAS = {
     descripcion:
       'Encontramos los negocios del rubro y la zona que elijas, solo con datos públicos: nombre, correo, valoración en Google y sitio web, en una planilla lista para ofrecerles lo tuyo.',
   },
-  // Los artículos (paginas/articulos/). Los que llevan `publicada` entran al
-  // índice de /articulos, del más nuevo al más viejo; `servicios` dice en qué
-  // páginas de servicio se sugieren, y uno sin `servicios` se sugiere en
-  // todas. `autor` es el `id` del socio que lo firma (data/socios.js); sin
-  // él, como la guía de la Ley 21.719, firma Volutus.
+  // Los artículos (paginas/articulos/): los que llevan `publicada`, del más
+  // nuevo al más viejo. Son de dos tipos. Las guías no llevan `autor`: las
+  // firma Volutus. `servicios` dice en qué páginas de servicio se sugieren, y
+  // una sin `servicios` se sugiere en todas. Las opiniones llevan `autor`, el
+  // `id` del socio que la firma (data/socios.js), y no se sugieren en los
+  // servicios.
   '/articulos': {
     archivo: 'articulos.html',
-    actualizada: '2026-10-17',
+    actualizada: '2026-10-31',
     titulo: 'Artículos sobre software para negocios — Volutus',
     descripcion:
-      'Guías cortas y sin jerga para decidir qué software necesita tu negocio: páginas web, tiendas online, agentes de IA, automatizaciones y sistemas de gestión.',
+      'Guías cortas y sin jerga para decidir qué software necesita tu negocio, y lo que pensamos en Volutus sobre el software y la inteligencia artificial.',
+  },
+  '/articulos/opiniones': {
+    archivo: 'articulos/opiniones.html',
+    actualizada: '2026-10-31',
+    titulo: 'Opiniones sobre software e inteligencia artificial — Volutus',
+    descripcion:
+      'Lo que pensamos en Volutus sobre el software, la inteligencia artificial y el oficio de construirlos, firmado por quien lo escribe.',
+  },
+  '/articulos/lo-que-la-ia-cambia': {
+    archivo: 'articulos/lo-que-la-ia-cambia.html',
+    publicada: '2026-10-31',
+    autor: 'diego',
+    actualizada: '2026-10-31',
+    titulo: 'Lo que la IA cambia, y lo que no debería cambiar — Volutus',
+    descripcion:
+      'Hacia dónde va el software con la inteligencia artificial: qué se vuelve barato, qué se vuelve escaso y por qué entender el problema sigue siendo el trabajo.',
   },
   '/articulos/que-es-un-agente-de-ia': {
     archivo: 'articulos/que-es-un-agente-de-ia.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['agente', 'automatizacion'],
     titulo: 'Qué es un agente de IA y cuándo le sirve a tu negocio — Volutus',
@@ -136,7 +152,6 @@ export const PAGINAS = {
   '/articulos/pagina-web-o-tienda-online': {
     archivo: 'articulos/pagina-web-o-tienda-online.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['web', 'tienda'],
     titulo: 'Página web o tienda online: cuál necesita tu negocio — Volutus',
@@ -146,7 +161,6 @@ export const PAGINAS = {
   '/articulos/software-a-medida-o-ya-hecho': {
     archivo: 'articulos/software-a-medida-o-ya-hecho.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['app', 'gestion'],
     titulo: 'Software a medida o uno ya hecho: cómo decidir — Volutus',
@@ -156,7 +170,6 @@ export const PAGINAS = {
   '/articulos/planilla-o-sistema-de-gestion': {
     archivo: 'articulos/planilla-o-sistema-de-gestion.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['gestion'],
     titulo: 'Planilla o sistema de gestión: cuándo dar el paso — Volutus',
@@ -166,7 +179,6 @@ export const PAGINAS = {
   '/articulos/que-automatizar-primero': {
     archivo: 'articulos/que-automatizar-primero.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['automatizacion'],
     titulo: 'Qué tareas automatizar primero en tu negocio — Volutus',
@@ -176,7 +188,6 @@ export const PAGINAS = {
   '/articulos/que-preparar-antes-de-cotizar': {
     archivo: 'articulos/que-preparar-antes-de-cotizar.html',
     publicada: '2026-10-14',
-    autor: 'diego',
     actualizada: '2026-10-17',
     titulo: 'Qué preparar antes de pedir una cotización de software — Volutus',
     descripcion:
@@ -185,7 +196,6 @@ export const PAGINAS = {
   '/articulos/dos-formas-de-trabajar': {
     archivo: 'articulos/dos-formas-de-trabajar.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['web', 'tienda', 'app', 'gestion', 'agente', 'automatizacion', 'prospeccion'],
     titulo: 'Comprar el producto o pagarlo en cuotas: cómo elegir — Volutus',
@@ -195,7 +205,6 @@ export const PAGINAS = {
   '/articulos/datos-de-tus-clientes-y-la-ley': {
     archivo: 'articulos/datos-de-tus-clientes-y-la-ley.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['datos', 'gestion', 'agente', 'prospeccion'],
     titulo: 'Qué datos guardas sin saberlo, antes de la Ley 21.719 — Volutus',
@@ -205,7 +214,6 @@ export const PAGINAS = {
   '/articulos/por-que-no-te-sirvio-la-herramienta': {
     archivo: 'articulos/por-que-no-te-sirvio-la-herramienta.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['app', 'gestion', 'automatizacion'],
     titulo: 'Por qué no te sirvió la herramienta que probaste — Volutus',
@@ -215,7 +223,6 @@ export const PAGINAS = {
   '/articulos/conectar-con-lo-que-ya-usas': {
     archivo: 'articulos/conectar-con-lo-que-ya-usas.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['automatizacion', 'gestion', 'tienda'],
     titulo: 'Conectar lo que ya usas: correo, planillas y facturación — Volutus',
@@ -225,7 +232,6 @@ export const PAGINAS = {
   '/articulos/boleta-factura-y-sii': {
     archivo: 'articulos/boleta-factura-y-sii.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['tienda', 'gestion'],
     titulo: 'Boleta, factura y SII: qué preguntar a cualquier proveedor — Volutus',
@@ -235,7 +241,6 @@ export const PAGINAS = {
   '/articulos/como-se-paga-en-linea': {
     archivo: 'articulos/como-se-paga-en-linea.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['tienda', 'web', 'app'],
     titulo: 'Cómo se paga en línea: pasarelas, transferencias y comisiones — Volutus',
@@ -245,7 +250,6 @@ export const PAGINAS = {
   '/articulos/casos-para-un-agente-de-ia': {
     archivo: 'articulos/casos-para-un-agente-de-ia.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-17',
     servicios: ['agente', 'automatizacion'],
     titulo: 'Casos para un agente de IA: dónde sirve y dónde no — Volutus',
@@ -255,7 +259,6 @@ export const PAGINAS = {
   '/articulos/como-trabajamos': {
     archivo: 'articulos/como-trabajamos.html',
     publicada: '2026-10-17',
-    autor: 'diego',
     actualizada: '2026-10-18',
     servicios: ['web', 'tienda', 'app', 'gestion', 'agente', 'automatizacion', 'prospeccion'],
     titulo: 'Cómo trabajamos: lo que conviene saber antes de escribirnos — Volutus',
@@ -488,9 +491,13 @@ export const ARTICULOS = Object.entries(PAGINAS)
   .map(([ruta, pagina]) => ({ ruta, ...pagina }))
   .sort((a, b) => b.publicada.localeCompare(a.publicada))
 
-/** Los artículos que se sugieren en la página de un servicio. */
+/** Las guías y las opiniones, cada una en su orden (ver el comentario de PAGINAS). */
+export const GUIAS = ARTICULOS.filter(({ autor }) => !autor)
+export const OPINIONES = ARTICULOS.filter(({ autor }) => autor)
+
+/** Las guías que se sugieren en la página de un servicio. */
 export const articulosDe = (servicio) =>
-  ARTICULOS.filter(({ servicios }) => !servicios || servicios.includes(servicio))
+  GUIAS.filter(({ servicios }) => !servicios || servicios.includes(servicio))
 
 /**
  * Los tres artículos que más se parecen a `ruta`: los que comparten más
@@ -510,16 +517,17 @@ export const relacionadosDe = (ruta) => {
 }
 
 /**
- * El índice de artículos va de a doce por página. La primera es /articulos y
+ * Las guías del índice van de a doce por página. La primera es /articulos y
  * las demás, /articulos/pagina/2 en adelante: cada una es una página más, con
  * su título y su descripción, que se prerenderiza y entra al sitemap. Publicar
- * el artículo trece abre sola la segunda.
+ * la guía trece abre sola la segunda. Las opiniones van todas en
+ * /articulos/opiniones.
  */
 export const POR_PAGINA = 12
-export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil(ARTICULOS.length / POR_PAGINA))
+export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil(GUIAS.length / POR_PAGINA))
 export const rutaDePagina = (n) => (n === 1 ? '/articulos' : `/articulos/pagina/${n}`)
 export const numeroDePagina = (ruta) => (ruta === '/articulos' ? 1 : Number(ruta.split('/').at(-1)))
-export const articulosDePagina = (n) => ARTICULOS.slice((n - 1) * POR_PAGINA, n * POR_PAGINA)
+export const articulosDePagina = (n) => GUIAS.slice((n - 1) * POR_PAGINA, n * POR_PAGINA)
 
 for (let n = 2; n <= PAGINAS_DEL_INDICE; n++) {
   const { actualizada, descripcion } = PAGINAS['/articulos']

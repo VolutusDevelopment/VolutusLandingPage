@@ -25,8 +25,12 @@ export default function initMapa() {
   const subtitulos = enlaces.map((enlace) => document.getElementById(enlace.hash.slice(1)))
   const actual = mapa.querySelector('.mapa-actual')
   const rotulo = actual.textContent
-  // La raya: el respiro del ancla, igual en todo ancho, más la holgura.
-  const linea = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) + HOLGURA
+  // La raya: donde cae un subtítulo al saltar a él (el respiro del ancla, igual
+  // en todo ancho, y en S y M lo que tapa el mapa), más la holgura.
+  const linea =
+    parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) +
+    parseFloat(getComputedStyle(subtitulos[0]).scrollMarginTop) +
+    HOLGURA
   let marcado
   let pendiente = false
 

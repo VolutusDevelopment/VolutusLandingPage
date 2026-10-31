@@ -7,6 +7,7 @@ import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
 import Articulos from './Articulos.jsx'
+import Opiniones from './Opiniones.jsx'
 import QueEsUnAgenteDeIa from './articulos/QueEsUnAgenteDeIa.jsx'
 import PaginaWebOTiendaOnline from './articulos/PaginaWebOTiendaOnline.jsx'
 import SoftwareAMedidaOYaHecho from './articulos/SoftwareAMedidaOYaHecho.jsx'
@@ -21,6 +22,7 @@ import BoletaFacturaYSii from './articulos/BoletaFacturaYSii.jsx'
 import ComoSePagaEnLinea from './articulos/ComoSePagaEnLinea.jsx'
 import CasosParaUnAgenteDeIa from './articulos/CasosParaUnAgenteDeIa.jsx'
 import ComoTrabajamos from './articulos/ComoTrabajamos.jsx'
+import LoQueLaIaCambia from './articulos/LoQueLaIaCambia.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DEL_INDICE, rutaDePagina } from '../lib/meta.js'
@@ -38,6 +40,8 @@ export const COMPONENTES = {
   '/servicios': IndiceDeServicios,
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
   ...Object.fromEntries(Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => [rutaDePagina(i + 1), Articulos])),
+  '/articulos/opiniones': Opiniones,
+  '/articulos/lo-que-la-ia-cambia': LoQueLaIaCambia,
   '/articulos/que-es-un-agente-de-ia': QueEsUnAgenteDeIa,
   '/articulos/pagina-web-o-tienda-online': PaginaWebOTiendaOnline,
   '/articulos/software-a-medida-o-ya-hecho': SoftwareAMedidaOYaHecho,

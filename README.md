@@ -52,11 +52,14 @@ piezas que comparten (`Bloques.jsx`). El contenido va en
 color de su card en la rueda y termina en el formulario, con el servicio ya
 marcado.
 
-Los artículos viven en `/articulos/…` y su índice en `/articulos`. Publicar uno
-es: su entrada en `PAGINAS` con `publicada` (y `servicios`, para sugerirlo en
-esas páginas de servicio), su cuerpo en `src/paginas/articulos/` envuelto en
-`<Articulo>`, su línea en `COMPONENTES`, su tarjeta con `pnpm og` y su enlace en
-`public/llms.txt`. El índice, el sitemap y los datos estructurados salen solos.
+Los artículos viven en `/articulos/…` y su índice en `/articulos`. Son guías,
+que firma Volutus, u opiniones, que firma un socio y que tienen además su
+página en `/articulos/opiniones`. Publicar uno es: su entrada en `PAGINAS` con
+`publicada` (y `servicios`, para sugerir una guía en esas páginas de servicio,
+o `autor`, si es una opinión), su cuerpo en `src/paginas/articulos/` envuelto
+en `<Articulo>`, su línea en `COMPONENTES`, su tarjeta con `pnpm og` y su
+enlace en `public/llms.txt`. El índice, el sitemap y los datos estructurados
+salen solos.
 
 **La página de los 5xx no se sirve todavía.** Cloudflare sirve el sitio y el
 Worker solo atiende `/api/*`, así que un 5xx que vea un visitante lo genera

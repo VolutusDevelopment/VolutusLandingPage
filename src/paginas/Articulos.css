@@ -10,6 +10,112 @@
   --tramo: var(--e-2);
 }
 
+/* ---- la cabecera del índice ----
+   El titular dice lo que hay y, a su derecha, tres baldosas de servicios
+   montadas e inclinadas, que hacen su gesto al cargar (Icono.css). En S y M
+   van chicas, en la línea del antetítulo; desde L, grandes, al costado del
+   texto. Debajo, el salto a cada sección, en contorno blanco. */
+.articulos-cabecera {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'ante emblema' 'titulo titulo' 'entradilla entradilla' 'saltos saltos';
+  align-items: center;
+  column-gap: var(--e-4);
+}
+
+.articulos-cabecera > .antetitulo {
+  grid-area: ante;
+  margin: 0;
+}
+
+.articulos-cabecera > h1 {
+  grid-area: titulo;
+  margin-top: var(--e-4);
+}
+
+.articulos-cabecera h1 > span {
+  display: block;
+}
+
+.articulos-cabecera > .entradilla {
+  grid-area: entradilla;
+}
+
+.articulos-emblema {
+  grid-area: emblema;
+  display: flex;
+  font-size: 3.5rem;
+}
+
+.articulos-emblema > span {
+  width: 1em;
+  border-radius: 22%;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85);
+}
+
+.articulos-emblema > * + * {
+  margin-left: -0.28em;
+}
+
+.articulos-emblema > :nth-child(1) {
+  rotate: -8deg;
+}
+
+.articulos-emblema > :nth-child(2) {
+  rotate: 5deg;
+}
+
+.articulos-emblema > :nth-child(3) {
+  rotate: -3deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .articulos-emblema .gesto {
+    animation: var(--gesto);
+    animation-delay: calc(500ms + var(--n, 0) * 90ms);
+  }
+}
+
+.articulos-saltos {
+  grid-area: saltos;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+  margin: var(--e-8) 0 0;
+}
+
+.articulos-saltos .boton {
+  border-color: rgb(255 255 255 / 0.55);
+  color: inherit;
+}
+
+@media (min-width: 640px) {
+  .articulos-emblema {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .articulos-cabecera {
+    grid-template-areas: 'ante emblema' 'titulo emblema' 'entradilla emblema' 'saltos emblema';
+    column-gap: var(--e-16);
+  }
+
+  .articulos-emblema {
+    font-size: 7.5rem;
+  }
+
+  .articulos-emblema > span {
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 0.85);
+  }
+}
+
+@media (min-width: 1280px) {
+  .articulos-emblema {
+    font-size: 9.5rem;
+  }
+}
+
 /* La flecha sobre el título: la vuelta al índice. El área táctil mide 44 px
    aunque la flecha mida 24. */
 .articulo-volver {
@@ -102,8 +208,9 @@
    Un sumario: el más nuevo en una lámina oscura a todo el ancho y los demás en
    filas con su filete, de a dos desde M. Cada fila lleva la baldosa de su
    servicio, su nombre y la fecha, el título y el resumen en dos líneas (entero
-   en el HTML). La fila entera lleva al artículo. Las filas son las mismas al
-   pie de cada artículo, en los relacionados (FilaDeArticulo.jsx). */
+   en el HTML). La fila entera lleva al artículo. Las filas son las mismas en
+   las opiniones y al pie de cada artículo, en los relacionados
+   (FilaDeArticulo.jsx). */
 .articulos {
   list-style: none;
   display: grid;
@@ -141,21 +248,26 @@
 }
 
 /* La baldosa: el glifo del servicio sobre su color, con la trama de la
-   marca, como la pieza de su página en chico. */
-.articulos-tapa {
-  grid-area: tapa;
+   marca, como la pieza de su página en chico. Las de la cabecera son las
+   mismas. */
+.articulos-tapa,
+.articulos-emblema > span {
   display: grid;
   place-items: center;
-  width: 3rem;
   aspect-ratio: 1;
-  border-radius: var(--radio-tarjeta);
   color: #fff;
   background-color: var(--tinte);
   background-image: radial-gradient(circle, rgb(255 255 255 / 0.18) 1px, transparent 1.6px);
   background-size: 8px 8px;
 }
 
-.articulos-tapa svg {
+.articulos-tapa {
+  grid-area: tapa;
+  width: 3rem;
+  border-radius: var(--radio-tarjeta);
+}
+
+:is(.articulos-tapa, .articulos-emblema) svg {
   width: 58%;
   height: auto;
 }
@@ -177,8 +289,8 @@
   text-transform: uppercase;
 }
 
-/* Nivel 4, el elemento: cada artículo es un ítem de la lista. En el índice su
-   título es un h2 y en los relacionados, un h3. */
+/* Nivel 4, el elemento: cada artículo es un ítem de la lista. Bajo el
+   titular de una sección su título es un h3; en las opiniones, un h2. */
 .articulos :is(h2, h3) {
   grid-area: titulo;
   margin-top: var(--e-4);
@@ -254,22 +366,74 @@
     flex-wrap: wrap;
   }
 
-  .articulos-indice > li:not(.articulos-destacado) h2 {
+  .articulos-indice > li:not(.articulos-destacado) :is(h2, h3) {
     margin-top: var(--e-2);
   }
+}
+
+/* Bajo el titular de su sección: las opiniones, las guías y los
+   relacionados. */
+.titular + .articulos {
+  margin-top: var(--e-8);
+}
+
+/* La cara de quien firma una opinión, en vez del glifo, con el filo blanco
+   de la firma del artículo. */
+.articulos-cara {
+  width: 72%;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.8);
 }
 
 /* ---- los relacionados ----
    Tres filas del índice al pie de cada artículo, como en el índice en S: una
    bajo otra hasta M y, desde L, las tres lado a lado. */
-.articulos-relacionados {
-  margin-top: var(--e-8);
-}
-
 @media (min-width: 1024px) {
   .articulos-relacionados {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* ---- las opiniones del índice ----
+   Las cinco más nuevas en una tira que se desliza de lado, cada una en su
+   tarjeta, y al final la entrada a todas (Articulos.jsx): la única tira así
+   del sitio (decisión 66). En S y M llega al borde de la pantalla, y la
+   tarjeta siguiente asoma. El relleno de arriba deja ver el anillo del foco,
+   que la tira recortaría. Las tarjetas no hacen la entrada al bajar: dentro
+   de la tira se mediría contra la tira y no contra la página, y la tira
+   entera a medio entrar al cargar dejaba su texto bajo 4.5:1. */
+.opiniones-tira {
+  display: flex;
+  gap: var(--e-4);
+  margin-inline: calc(-1 * var(--margen-lateral));
+  padding: var(--e-1) var(--margen-lateral) var(--e-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--margen-lateral);
+}
+
+.opiniones-tira > li {
+  flex: 0 0 min(22rem, 85%);
+  padding: var(--e-6);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-panel);
+  background: var(--superficie);
+  scroll-snap-align: start;
+  animation: none;
+}
+
+.opiniones-tira h3 a:focus-visible::before {
+  border-radius: var(--radio-panel);
+}
+
+.opiniones-tira > .opiniones-todas {
+  display: flex;
+  flex-basis: auto;
+  align-items: center;
+  border-style: dashed;
+  background: none;
 }
 
 /* ---- el más nuevo ----
@@ -312,7 +476,7 @@
   filter: drop-shadow(0 12px 18px rgb(0 0 0 / 0.3));
 }
 
-.articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+.articulos-destacado :is(.articulos-meta, h3, .articulos-resumen) {
   padding-inline: var(--e-3);
 }
 
@@ -320,13 +484,13 @@
   color: var(--texto);
 }
 
-.articulos-destacado h2 {
+.articulos-destacado h3 {
   margin-top: var(--e-3);
   font-size: var(--texto-bloque);
   letter-spacing: -0.02em;
 }
 
-.articulos-destacado h2 a:focus-visible::before {
+.articulos-destacado h3 a:focus-visible::before {
   border-radius: var(--radio-panel);
 }
 
@@ -363,7 +527,7 @@
     align-self: start;
   }
 
-  .articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+  .articulos-destacado :is(.articulos-meta, h3, .articulos-resumen) {
     padding-inline: var(--e-6) 0;
   }
 }
@@ -378,7 +542,7 @@
     aspect-ratio: 16 / 10;
   }
 
-  .articulos-destacado :is(.articulos-meta, h2, .articulos-resumen) {
+  .articulos-destacado :is(.articulos-meta, h3, .articulos-resumen) {
     padding-left: var(--e-8);
   }
 }

@@ -80,6 +80,12 @@ respuesta llega pronto, pero no es la cotización.
 - [Cómo trabajamos: lo que conviene saber antes de escribirnos](https://volutus.cl/articulos/como-trabajamos)
 - [La Ley 21.719, en simple](https://volutus.cl/ley21719)
 
+## Opiniones
+
+Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firmado por quien lo escribe. Todas en https://volutus.cl/articulos/opiniones.
+
+- [Lo que la IA cambia, y lo que no debería cambiar](https://volutus.cl/articulos/lo-que-la-ia-cambia), de Diego Peña y Lillo Lührs
+
 ## Qué no tomamos
 
 - Encargos urgentes para el día siguiente
