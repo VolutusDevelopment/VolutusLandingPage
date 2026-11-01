@@ -344,7 +344,7 @@ export default function IaEnLaFormula1({ ruta }) {
         el que piense mejor. En el cockpit, que gane el que maneje mejor.
       </p>
       <p>
-        Creo que esta problemática puede trasladarse a cualquier área de trabajo del futuro, y es ahí mismo donde
+        Creo que esta problemática puede trasladarse a cualquier área de trabajo del futuro, y es aquí mismo donde
         encontramos la solución: lo humano perdura por el desafío que implica. Sin desafío, ¿qué nos queda? Por eso
         Mónaco sigue siendo la joya de la F1: entre esos muros no hay simulación que te salve si fallas por diez
         centímetros. El día que eso deje de ser cierto, la F1 habrá ganado eficiencia y perdido lo único que la hacía
