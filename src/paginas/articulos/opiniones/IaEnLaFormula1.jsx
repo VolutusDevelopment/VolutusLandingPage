@@ -287,7 +287,7 @@ export default function IaEnLaFormula1({ ruta }) {
         Pero hay tres cosas que me preocupan, y ninguna tiene que ver con que la IA sea demasiado inteligente.
       </p>
       <p>
-        La primera es un problema de base: el equilibrio energético. Con 350 kW eléctricos en juego, la batería se
+        La primera es un problema de base del nuevo reglamento técnico: el equilibrio energético. Con 350 kW eléctricos en juego, la batería se
         volvió el verdadero límite del auto. Cuando se agota, la potencia eléctrica cae y el auto pierde velocidad al
         final de las rectas aunque el piloto vaya a fondo. Hamilton llegó a describir 600 metros levantando el
         pie<Nota fuente="hamilton" /> en una vuelta de clasificación en Barcelona solo para recargar, y la FIA tuvo que
@@ -344,9 +344,11 @@ export default function IaEnLaFormula1({ ruta }) {
         el que piense mejor. En el cockpit, que gane el que maneje mejor.
       </p>
       <p>
-        Mónaco sigue siendo la joya de la F1 por una razón: entre esos muros no hay simulación que te salve si fallas
-        por diez centímetros. El día que eso deje de ser cierto, la F1 habrá ganado eficiencia y perdido lo único que la
-        hacía distinta.
+        Creo que esta problemática puede trasladarse a cualquier área de trabajo del futuro, y es ahí mismo donde
+        encontramos la solución: lo humano perdura por el desafío que implica. Sin desafío, ¿qué nos queda? Por eso
+        Mónaco sigue siendo la joya de la F1: entre esos muros no hay simulación que te salve si fallas por diez
+        centímetros. El día que eso deje de ser cierto, la F1 habrá ganado eficiencia y perdido lo único que la hacía
+        distinta.
       </p>
       <Foto
         nombre="monaco-2025"
@@ -355,7 +357,7 @@ export default function IaEnLaFormula1({ ruta }) {
         alt="Desde lo alto, un Ferrari y un McLaren doblan por una curva de Mónaco, entre rejas, carteles de Louis Vuitton y público bajo un quitasol."
         fuente="monaco2025"
       >
-        Un Ferrari y un McLaren en el Gran Premio de Mónaco de 2025. Foto: Wyatt Simpson.
+        Charles Leclerc y Lando Norris en el Gran Premio de Mónaco de 2025. Foto: Wyatt Simpson.
       </Foto>
 
       <h2>Notas</h2>
@@ -377,6 +379,12 @@ export default function IaEnLaFormula1({ ruta }) {
           </li>
         ))}
       </ol>
-    </Articulo>
+
+        <p>
+          Declaración de uso de IA: se utilizó inteligencia artificial únicamente para mejorar la redacción y la
+          legibilidad del texto. Las ideas, la investigación y las conclusiones son de autoría propia; la IA no se
+          empleó para generar contenido ni para investigar.
+        </p>
+  </Articulo>
   )
 }
