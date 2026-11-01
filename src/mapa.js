@@ -4,7 +4,7 @@
 // la raya, que va un poco más abajo de donde queda un subtítulo al saltar a él
 // (`scroll-padding-top`): así, al tocar un punto se marca ese y no el que
 // sigue, aunque su apartado sea corto.
-// Los anteriores quedan leídos. En S y M, el título del actual sube al mapa.
+// Los anteriores quedan leídos. En S y M, el título del actual pasa al mapa.
 //
 // La línea avanza al ritmo del scroll, sin saltos: el tramo del apartado
 // actual se llena en la proporción que va leída de él (`--avance`), del
@@ -25,8 +25,8 @@ export default function initMapa() {
   const subtitulos = enlaces.map((enlace) => document.getElementById(enlace.hash.slice(1)))
   const actual = mapa.querySelector('.mapa-actual')
   const rotulo = actual.textContent
-  // La raya: donde cae un subtítulo al saltar a él (el respiro del ancla, igual
-  // en todo ancho, y en S y M lo que tapa el mapa), más la holgura.
+  // La raya: donde cae un subtítulo al saltar a él (el respiro del ancla), más
+  // la holgura.
   const linea =
     parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) +
     parseFloat(getComputedStyle(subtitulos[0]).scrollMarginTop) +

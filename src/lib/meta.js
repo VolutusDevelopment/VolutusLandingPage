@@ -138,7 +138,7 @@ export const PAGINAS = {
     actualizada: '2026-11-01',
     titulo: 'IA en la Fórmula 1 — Volutus',
     descripcion:
-      'Cómo usa la Fórmula 1 la inteligencia artificial en el diseño, la estrategia y la carrera, y por qué el auto lo debería seguir manejando el piloto.',
+      'Breve historia de la fórmula 1 y como esta llegó a adoptar la IA.',
   },
   '/articulos/que-es-un-agente-de-ia': {
     archivo: 'articulos/que-es-un-agente-de-ia.html',

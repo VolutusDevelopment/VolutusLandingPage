@@ -5,13 +5,14 @@
    halo; los que faltan, huecos. El tramo de cada apartado mide en proporción
    a sus palabras (`--peso`), con un mínimo para que los puntos no se pisen.
 
-   En S y M, una píldora al comienzo del texto que se queda pegada bajo la
-   barra del sitio mientras dura el texto. Mide 22rem como mucho, como la
+   En S y M, una píldora que se queda pegada al pie de la pantalla mientras
+   dura el texto, para no tapar la lectura. Mide 22rem como mucho, como la
    barra del estimado (Estimado.css): a todo el ancho, Safari en iOS la tomaba
    por una barra y pintaba de su color las franjas de la hora y de abajo en
    vez de dejar ver el texto (ver Barra.css). Arriba, el título del apartado
    actual, en una línea y con su alto fijo, y los minutos; debajo, los puntos.
-   Al saltar a un apartado, su subtítulo cae bajo la píldora. */
+   Su sitio en el texto no ocupa alto (el margen negativo): la píldora se
+   despega de ahí y baja al pie. */
 html:has(.mapa) {
   --mapa-alto: 68px;
 }
@@ -19,7 +20,7 @@ html:has(.mapa) {
 .mapa {
   --mapa-punto: 12px;
   position: sticky;
-  top: calc(var(--barra-alto) + var(--e-1));
+  top: calc(100dvh - var(--mapa-alto) - 8px - env(safe-area-inset-bottom));
   z-index: 3;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -30,16 +31,12 @@ html:has(.mapa) {
   width: 100%;
   max-width: 22rem;
   height: var(--mapa-alto);
-  margin: 0 auto var(--e-8);
+  margin: 0 auto calc(-1 * var(--mapa-alto));
   padding: var(--e-2) var(--e-4) 0;
   border: 1px solid var(--linea);
   border-radius: var(--radio-panel);
   background: var(--superficie);
   box-shadow: 0 8px 24px rgb(10 26 42 / 0.12);
-}
-
-.prosa :is(h2, .notas li) {
-  scroll-margin-top: calc(var(--e-1) + var(--mapa-alto));
 }
 
 .mapa p {
@@ -168,10 +165,6 @@ html:has(.mapa) {
     border: 0;
     background: none;
     box-shadow: none;
-  }
-
-  .prosa :is(h2, .notas li) {
-    scroll-margin-top: 0;
   }
 
   .mapa-actual {
