@@ -501,6 +501,9 @@ writeFileSync(
 const traslados = SERVICIOS.filter(({ ruta }) => ruta).map(
   ({ ruta }) => `${ruta.replace(/^\/servicios/, '')} ${ruta} 301`
 )
+// La primera opinión de /articulos/opiniones la reemplazó otra, con su propia
+// dirección: quien llegue por el enlace viejo cae en la que tomó su lugar.
+traslados.push('/articulos/lo-que-la-ia-cambia /articulos/ia-en-la-formula-1 301')
 // La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
 // a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
 // `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare

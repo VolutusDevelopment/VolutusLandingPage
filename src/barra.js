@@ -7,20 +7,19 @@
  * debajo; el color lo resuelven los tokens de `.zona-cielo`, `.zona-plano` y
  * `.hora-*`, así que la barra no conoce ningún color.
  *
- * Tres preguntas, cada una con su franja:
+ * Cuatro preguntas, cada una con su franja:
  *
  * - **La barra**, una franja fina a la altura de la cápsula y a todo lo ancho:
  *   la sección que pasa por debajo da el tono al velo.
- * - **El logo, la cápsula y cada enlace**, cada uno lo que tiene detrás: un
- *   punto en su centro, a la altura de las letras. Dentro de una sección
- *   clara pasan tarjetas oscuras, y cada pieza tiene que reaccionar a su
- *   propio fondo, no a la sección: con el canto de una tarjeta cruzando la
- *   cápsula, «Nosotros» puede ir en blanco y «Servicios» en tinta. La cápsula
- *   solo tiñe su indicador; las letras son de cada enlace. Manda el centro y
- *   no un canto: el canto cambiaba el color en cuanto el fondo nuevo asomaba,
- *   y si la página se detenía ahí, las letras quedaban en el color de un
- *   fondo que aún no tenían detrás (blanco sobre blanco, bajo la cabecera de
- *   un artículo).
+ * - **El logo y la cápsula**, cada uno lo que tiene detrás: un punto en su
+ *   centro, a la altura de las letras. Dentro de una sección clara pasan
+ *   tarjetas oscuras, y cada pieza tiene que reaccionar a su propio fondo, no
+ *   a la sección. Manda el centro y no un canto: el canto cambiaba el color en
+ *   cuanto el fondo nuevo asomaba, y si la página se detenía ahí, la pieza
+ *   quedaba en el color de un fondo que aún no tenía detrás.
+ * - **Las letras de la cápsula**, columna a columna (ver `initLectura`): cada
+ *   letra toma el color que pide lo que tiene detrás, aunque cambie a mitad
+ *   de una palabra, y el vidrio se aclara u oscurece bajo ella.
  * - **La sección actual**, a un tercio de la pantalla, para `aria-current`.
  *   Detrás del vidrio no sirve: al saltar a un ancla, `scroll-padding` deja
  *   el final de la sección anterior bajo la barra y se marcaría el enlace
@@ -47,7 +46,10 @@ function vigilarFranja(elementos, rootMargin, alCambiar) {
         if (isIntersecting) enLaFranja.add(target)
         else enLaFranja.delete(target)
       })
-      alCambiar([...elementos].findLast((elemento) => enLaFranja.has(elemento)))
+      alCambiar(
+        [...elementos].findLast((elemento) => enLaFranja.has(elemento)),
+        enLaFranja
+      )
     },
     { rootMargin }
   )
@@ -100,7 +102,7 @@ function vigilarDetras(pieza, fondos) {
 // Aquí solo se mide: la cápsula recibe los bordes del enlace y hacia dónde
 // viaja, y el CSS hace el resto. Con el dedo no viaja: un toque no señala, y
 // la gota iría y volvería con cada roce al desplazar.
-function initGota(capsula) {
+function initGota(capsula, alMover) {
   const enlaces = [...capsula.querySelectorAll('.barra-enlaces a')]
   let donde
   let bajoElCursor
@@ -118,6 +120,7 @@ function initGota(capsula) {
     if (!enlace?.offsetWidth) {
       capsula.dataset.gota = 'oculta'
       donde = undefined
+      alMover()
       return
     }
     // Viaja solo de un enlace a otro: si estaba apagada, aparece en su sitio.
@@ -128,7 +131,9 @@ function initGota(capsula) {
     capsula.style.setProperty('--gota-izq', `${enlace.offsetLeft}px`)
     capsula.style.setProperty('--gota-der', `${capsula.clientWidth - enlace.offsetLeft - enlace.offsetWidth}px`)
     capsula.dataset.gota = 'visible'
+    capsula.dataset.gotaEn = enlaces.indexOf(enlace)
     donde = enlace
+    alMover()
   }
 
   const reposar = () => ir(bajoElCursor ?? capsula.querySelector('a:focus-visible') ?? actual())
@@ -154,12 +159,210 @@ function initGota(capsula) {
   return reposar
 }
 
+// ---- la lectura ----
+// Las letras de la cápsula no llevan un color por enlace: cada una toma el
+// que pide lo que tiene detrás, y el vidrio ayuda bajo ella, más claro tras
+// las letras oscuras y más oscuro tras las blancas. Así detrás del texto nunca
+// queda un gris medio, donde ni el blanco ni la tinta se leen. Pasa sobre la
+// nube de la portada, blanca a manchas sobre el cielo, y sobre las tarjetas de
+// los proyectos, con capturas claras dentro de una lámina oscura.
+//
+// Se lee una franja a la altura de las letras, en columnas de `COLUMNA` px.
+// Cada columna toma lo que se pinta encima en su centro, el último en el orden
+// del documento, como `vigilarFranja`:
+//
+// - Una zona, su tono: el mismo que tomaría la barra sobre ella (`tomarZona`),
+//   leído de una sonda.
+// - Una imagen con `data-fondo`, su luz en ese punto: se mide una sola vez, en
+//   una rejilla chica (`REJILLA`), dentro de lo que deja ver su lámina.
+// - La sección sobre el cielo de la portada (`data-barra`), la nube: su pintor
+//   lee la franja (`nube-linea`, nubes.js). Hasta que responde, manda el tono
+//   de la sección, el del cielo. Si deja de pintar (`null`: lo que se ve es su
+//   grabación), la columna es clara: letras oscuras sobre el vidrio aclarado
+//   se leen sobre el cielo y sobre la nube.
+//
+// La luz medida cambia de tono con histéresis, para que una columna en el
+// borde no parpadee, y un tramo de menos de `TRAMO` columnas se suma a su
+// vecino: una letra suelta que se da vuelta se lee como ruido. Los colores van
+// en Barra.css (`--letra-*`, `--vidrio-*`): aquí solo se arman los degradados.
+const COLUMNA = 8
+const TRAMO = 6
+const REJILLA = [32, 20]
+
+const luminancia = (r, g, b) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+const letra = (clara) => (clara ? 'var(--letra-oscura)' : 'var(--letra-clara)')
+const tinte = (clara) => (clara ? 'var(--vidrio-claro)' : 'var(--vidrio-oscuro)')
+
+// De izquierda a derecha, `ancho` px desde `x0`: cada cambio de tono se funde
+// en 10 px.
+function degradado(claras, x0, ancho, color) {
+  const desde = Math.floor(x0 / COLUMNA)
+  const hasta = Math.min(claras.length, Math.ceil((x0 + ancho) / COLUMNA))
+  const paradas = [`${color(claras[desde])} 0px`]
+  for (let c = desde + 1; c < hasta; c++) {
+    if (claras[c] === claras[c - 1]) continue
+    const x = Math.round(c * COLUMNA - x0)
+    paradas.push(`${color(claras[c - 1])} ${x - 5}px`, `${color(claras[c])} ${x + 5}px`)
+  }
+  return paradas.length > 1 ? `linear-gradient(to right, ${paradas.join(', ')})` : `linear-gradient(${paradas[0]} 0)`
+}
+
+function suavizar(claras) {
+  for (let c = 0; c < claras.length; ) {
+    let fin = c
+    while (fin < claras.length && claras[fin] === claras[c]) fin++
+    if (fin - c < TRAMO && fin - c < claras.length) claras.fill(c ? claras[c - 1] : claras[fin], c, fin)
+    c = fin
+  }
+}
+
+function initLectura(barra, fondos) {
+  const capsula = barra.querySelector('.barra-capsula')
+  const enlaces = [...capsula.querySelectorAll('.barra-enlaces a')]
+  const tonos = new WeakMap()
+  const luces = new WeakMap()
+  const sonda = Object.assign(document.createElement('span'), { hidden: true })
+  sonda.style.color = 'var(--texto)'
+  barra.append(sonda)
+  let presentes = new Set()
+  let observador
+  let nube
+  let previas = []
+  let firma = ''
+  let pedido = 0
+
+  const pedir = () => {
+    pedido ||= requestAnimationFrame(leer)
+  }
+
+  // Una zona es clara si la barra, sobre ella, escribiría en tinta.
+  const zonaClara = (fondo) => {
+    if (!tonos.has(fondo)) {
+      tomarZona(sonda, fondo)
+      const [r, g, b] = getComputedStyle(sonda).color.match(/[\d.]+/g).map(Number)
+      tonos.set(fondo, luminancia(r, g, b) < 0.5)
+    }
+    return tonos.get(fondo)
+  }
+
+  // La luz de una imagen: pintada una vez en un lienzo diminuto, que promedia
+  // como el desenfoque del vidrio. Lo que se ve de ella es lo que deja su
+  // lámina, el primer ancestro que recorta.
+  const luzDe = (imagen) => {
+    if (luces.has(imagen)) return luces.get(imagen)
+    if (!imagen.complete || !imagen.naturalWidth) {
+      imagen.addEventListener('load', pedir, { once: true })
+      return null
+    }
+    const [ancho, alto] = REJILLA
+    const lienzo = Object.assign(document.createElement('canvas'), { width: ancho, height: alto })
+    const pincel = lienzo.getContext('2d', { willReadFrequently: true })
+    pincel.drawImage(imagen, 0, 0, ancho, alto)
+    const datos = pincel.getImageData(0, 0, ancho, alto).data
+    const luz = Float32Array.from({ length: ancho * alto }, (_, i) => luminancia(datos[i * 4], datos[i * 4 + 1], datos[i * 4 + 2]))
+    let marco = imagen.parentElement
+    while (marco && getComputedStyle(marco).overflow === 'visible') marco = marco.parentElement
+    const medida = { luz, marco }
+    luces.set(imagen, medida)
+    return medida
+  }
+
+  const conHisteresis = (c, luz) => (previas[c] === undefined ? luz > 0.5 : previas[c] ? luz > 0.45 : luz > 0.56)
+
+  function leer() {
+    pedido = 0
+    const caja = capsula.getBoundingClientRect()
+    if (!caja.width) return
+    const y = (caja.top + caja.bottom) / 2
+    const encima = fondos
+      .filter((fondo) => presentes.has(fondo))
+      .map((fondo) => {
+        const rect = fondo.getBoundingClientRect()
+        // Una imagen que aún no llega no cuenta: manda lo que tiene debajo.
+        const imagen = 'fondo' in fondo.dataset ? luzDe(fondo) : undefined
+        const marco = imagen?.marco?.getBoundingClientRect()
+        if (imagen === null || (marco && (y < marco.top || y >= marco.bottom))) return null
+        return { fondo, rect, imagen, izq: Math.max(rect.left, marco?.left ?? -Infinity), der: Math.min(rect.right, marco?.right ?? Infinity) }
+      })
+      .filter(Boolean)
+
+    const claras = []
+    for (let c = 0; c < Math.ceil(caja.width / COLUMNA); c++) {
+      const x = caja.left + (c + 0.5) * COLUMNA
+      const debajo = encima.findLast(({ izq, der }) => x >= izq && x < der)
+      if (debajo?.imagen) {
+        const [ancho, alto] = REJILLA
+        const { rect, imagen } = debajo
+        const cx = Math.min(ancho - 1, Math.floor(((x - rect.left) / rect.width) * ancho))
+        const cy = Math.min(alto - 1, Math.max(0, Math.floor(((y - rect.top) / rect.height) * alto)))
+        claras.push(conHisteresis(c, imagen.luz[cy * ancho + cx]))
+      } else if (debajo?.fondo.hasAttribute('data-barra') && nube !== undefined) {
+        claras.push(nube?.[c] === undefined ? true : conHisteresis(c, nube[c] / 255))
+      } else {
+        claras.push(debajo ? zonaClara(debajo.fondo) : (previas[c] ?? true))
+      }
+    }
+    previas = claras.slice()
+    suavizar(claras)
+
+    // La gota es una capa más de vidrio, de un solo tono: clara salvo que todo
+    // su enlace esté sobre oscuro. Sus letras van en el que contrasta con ella.
+    const gotaEn = capsula.dataset.gota === 'visible' ? Number(capsula.dataset.gotaEn) : -1
+    let gotaClara = capsula.dataset.gotaTono !== 'oscura'
+    const letras = enlaces.map((enlace, i) => {
+      const { offsetLeft: x0, offsetWidth: ancho } = enlace
+      if (!ancho) return null
+      const suyas = claras.slice(Math.floor(x0 / COLUMNA), Math.ceil((x0 + ancho) / COLUMNA))
+      if (i !== gotaEn) return [degradado(claras, x0, ancho, letra), letra(suyas[suyas.length >> 1])]
+      gotaClara = suyas.some(Boolean)
+      return [degradado([gotaClara], 0, 1, letra), letra(gotaClara)]
+    })
+    const tinteNuevo = degradado(claras, 0, caja.width, tinte)
+    const estado = [tinteNuevo, gotaClara, ...letras.flat()].join('|')
+    if (estado === firma) return
+    firma = estado
+    capsula.style.setProperty('--vidrio-tinte', tinteNuevo)
+    capsula.dataset.gotaTono = gotaClara ? 'clara' : 'oscura'
+    letras.forEach((par, i) => {
+      if (!par) return
+      enlaces[i].style.setProperty('--letras', par[0])
+      enlaces[i].style.setProperty('--tinta', par[1])
+    })
+    capsula.dataset.lectura = ''
+  }
+
+  // La franja es la línea de las letras. El pintor de la nube la recibe en
+  // `barra-linea`, y la pide de nuevo (`nube-lista`) cuando monta su lienzo.
+  const medir = () => {
+    observador?.disconnect()
+    const caja = capsula.getBoundingClientRect()
+    if (!caja.width) return
+    const y = Math.round((caja.top + caja.bottom) / 2)
+    const linea = `${-y}px 0px ${y + 1 - document.documentElement.clientHeight}px 0px`
+    observador = vigilarFranja(fondos, linea, (_, enLaLinea) => {
+      presentes = enLaLinea
+      pedir()
+    })
+    document.dispatchEvent(
+      new CustomEvent('barra-linea', { detail: { x: caja.left, y: y - COLUMNA, ancho: caja.width, alto: 2 * COLUMNA, columna: COLUMNA } })
+    )
+  }
+
+  addEventListener('scroll', pedir, { passive: true })
+  addEventListener('resize', medir)
+  new ResizeObserver(medir).observe(capsula)
+  document.addEventListener('nube-lista', medir)
+  document.addEventListener('nube-linea', ({ detail }) => {
+    nube = detail
+    pedir()
+  })
+  return pedir
+}
+
 export default function initBarra() {
   const barra = document.querySelector('.barra')
   const zonas = document.querySelectorAll('.seccion, .pie')
   if (!barra || !zonas.length) return
-
-  const reposarGota = initGota(barra.querySelector('.barra-capsula'))
 
   // La lente (Barra.jsx) va en `backdrop-filter`, y un filtro SVG ahí solo lo
   // pinta Chromium. CSS no puede preguntarlo —`@supports` dice que sí también
@@ -174,12 +377,11 @@ export default function initBarra() {
     .querySelectorAll('.cabecera-cielo')
     .forEach((cabecera) => cabecera.append(Object.assign(document.createElement('div'), { className: 'cabecera-fundido' })))
 
-  const fondos = document.querySelectorAll(
-    '.seccion, .seccion :is(.zona-plano, .zona-cielo, .hora-dia, .cabecera-fundido), .pie'
-  )
-  barra
-    .querySelectorAll('.barra-marca, .barra-capsula, .barra-enlaces a')
-    .forEach((pieza) => vigilarDetras(pieza, fondos))
+  const zonasDetras = '.seccion, .seccion :is(.zona-plano, .zona-cielo, .hora-dia, .cabecera-fundido), .pie'
+  const fondos = document.querySelectorAll(zonasDetras)
+  barra.querySelectorAll('.barra-marca, .barra-capsula').forEach((pieza) => vigilarDetras(pieza, fondos))
+  const leerLetras = initLectura(barra, [...document.querySelectorAll(`${zonasDetras}, [data-fondo]`)])
+  const reposarGota = initGota(barra.querySelector('.barra-capsula'), leerLetras)
 
   // Solo las secciones que tienen enlace: fuera de ellas no se marca ninguno.
   // El enlace a otra página no es una sección: su `aria-current` viene del HTML.

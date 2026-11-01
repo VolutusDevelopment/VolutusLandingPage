@@ -1,4 +1,4 @@
-import Articulo from '../../components/Articulo.jsx'
+import Articulo from '../../../components/Articulo.jsx'
 
 export default function SoftwareAMedidaOYaHecho({ ruta }) {
   return (

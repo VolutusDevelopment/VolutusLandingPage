@@ -696,59 +696,59 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/articulos/lo-que-la-ia-cambia": {
+    "/articulos/ia-en-la-formula-1": {
       "S": {
-        "alto": 4822,
+        "alto": 11542,
         "desborda": false,
-        "h1": 106.078125,
+        "h1": 35.359375,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "S webkit": {
-        "alto": 4822,
+        "alto": 11542,
         "desborda": false,
-        "h1": 106.078125,
+        "h1": 35.359375,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M": {
-        "alto": 3454,
+        "alto": 8224,
         "desborda": false,
-        "h1": 92.09375,
+        "h1": 46.046875,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "M webkit": {
-        "alto": 3454,
+        "alto": 8224,
         "desborda": false,
-        "h1": 92.0625,
+        "h1": 46.03125,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L": {
-        "alto": 3485,
+        "alto": 8314,
         "desborda": false,
-        "h1": 124.78125,
+        "h1": 62.390625,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "L webkit": {
-        "alto": 3485,
+        "alto": 8314,
         "desborda": false,
-        "h1": 124.78125,
+        "h1": 62.390625,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
       },
       "XL": {
-        "alto": 3569,
+        "alto": 8407,
         "desborda": false,
-        "h1": 124.78125,
+        "h1": 62.390625,
         "bloquesQueEntran": 1,
         "ocultosTrasRecorrer": 0,
         "ocultosAlImprimir": 0
@@ -2776,8 +2776,8 @@
       "paradas": 29,
       "sinAnillo": 0
     },
-    "/articulos/lo-que-la-ia-cambia": {
-      "paradas": 34,
+    "/articulos/ia-en-la-formula-1": {
+      "paradas": 89,
       "sinAnillo": 0
     },
     "/articulos/que-es-un-agente-de-ia": {

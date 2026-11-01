@@ -1,5 +1,5 @@
-import Articulo from '../../components/Articulo.jsx'
-import { RAZON_SOCIAL, RUT } from '../../lib/contacto.js'
+import Articulo from '../../../components/Articulo.jsx'
+import { RAZON_SOCIAL, RUT } from '../../../lib/contacto.js'
 
 export default function ComoTrabajamos({ ruta }) {
   return (

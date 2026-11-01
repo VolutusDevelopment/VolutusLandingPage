@@ -8,21 +8,21 @@ import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
 import Articulos from './Articulos.jsx'
 import Opiniones from './Opiniones.jsx'
-import QueEsUnAgenteDeIa from './articulos/QueEsUnAgenteDeIa.jsx'
-import PaginaWebOTiendaOnline from './articulos/PaginaWebOTiendaOnline.jsx'
-import SoftwareAMedidaOYaHecho from './articulos/SoftwareAMedidaOYaHecho.jsx'
-import PlanillaOSistemaDeGestion from './articulos/PlanillaOSistemaDeGestion.jsx'
-import QueAutomatizarPrimero from './articulos/QueAutomatizarPrimero.jsx'
-import QuePrepararAntesDeCotizar from './articulos/QuePrepararAntesDeCotizar.jsx'
-import DosFormasDeTrabajar from './articulos/DosFormasDeTrabajar.jsx'
-import DatosDeTusClientesYLaLey from './articulos/DatosDeTusClientesYLaLey.jsx'
-import PorQueNoTeSirvioLaHerramienta from './articulos/PorQueNoTeSirvioLaHerramienta.jsx'
-import ConectarConLoQueYaUsas from './articulos/ConectarConLoQueYaUsas.jsx'
-import BoletaFacturaYSii from './articulos/BoletaFacturaYSii.jsx'
-import ComoSePagaEnLinea from './articulos/ComoSePagaEnLinea.jsx'
-import CasosParaUnAgenteDeIa from './articulos/CasosParaUnAgenteDeIa.jsx'
-import ComoTrabajamos from './articulos/ComoTrabajamos.jsx'
-import LoQueLaIaCambia from './articulos/LoQueLaIaCambia.jsx'
+import QueEsUnAgenteDeIa from './articulos/guias/QueEsUnAgenteDeIa.jsx'
+import PaginaWebOTiendaOnline from './articulos/guias/PaginaWebOTiendaOnline.jsx'
+import SoftwareAMedidaOYaHecho from './articulos/guias/SoftwareAMedidaOYaHecho.jsx'
+import PlanillaOSistemaDeGestion from './articulos/guias/PlanillaOSistemaDeGestion.jsx'
+import QueAutomatizarPrimero from './articulos/guias/QueAutomatizarPrimero.jsx'
+import QuePrepararAntesDeCotizar from './articulos/guias/QuePrepararAntesDeCotizar.jsx'
+import DosFormasDeTrabajar from './articulos/guias/DosFormasDeTrabajar.jsx'
+import DatosDeTusClientesYLaLey from './articulos/guias/DatosDeTusClientesYLaLey.jsx'
+import PorQueNoTeSirvioLaHerramienta from './articulos/guias/PorQueNoTeSirvioLaHerramienta.jsx'
+import ConectarConLoQueYaUsas from './articulos/guias/ConectarConLoQueYaUsas.jsx'
+import BoletaFacturaYSii from './articulos/guias/BoletaFacturaYSii.jsx'
+import ComoSePagaEnLinea from './articulos/guias/ComoSePagaEnLinea.jsx'
+import CasosParaUnAgenteDeIa from './articulos/guias/CasosParaUnAgenteDeIa.jsx'
+import ComoTrabajamos from './articulos/guias/ComoTrabajamos.jsx'
+import IaEnLaFormula1 from './articulos/opiniones/IaEnLaFormula1.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DEL_INDICE, rutaDePagina } from '../lib/meta.js'
@@ -41,7 +41,7 @@ export const COMPONENTES = {
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
   ...Object.fromEntries(Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => [rutaDePagina(i + 1), Articulos])),
   '/articulos/opiniones': Opiniones,
-  '/articulos/lo-que-la-ia-cambia': LoQueLaIaCambia,
+  '/articulos/ia-en-la-formula-1': IaEnLaFormula1,
   '/articulos/que-es-un-agente-de-ia': QueEsUnAgenteDeIa,
   '/articulos/pagina-web-o-tienda-online': PaginaWebOTiendaOnline,
   '/articulos/software-a-medida-o-ya-hecho': SoftwareAMedidaOYaHecho,

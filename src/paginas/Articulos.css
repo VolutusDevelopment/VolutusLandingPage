@@ -22,6 +22,36 @@
   }
 }
 
+/* La foto de portada (Articulo.jsx) reemplaza el cielo: va detrás del texto y
+   se apaga para que el blanco se lea sobre sus partes más claras (con el
+   brillo al 45 %, el blanco puro baja a un gris que da 4.8:1). En el fundido,
+   bajo el texto, la foto misma se desvanece en el blanco de la página, sin
+   pasar por el azul, y la sección siguiente ya parte en blanco. */
+.cabecera-cielo.con-portada {
+  isolation: isolate;
+  background: #f6f9fc;
+}
+
+.con-portada + .seccion {
+  background: var(--fondo);
+}
+
+.articulo-portada {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.45);
+  mask-image: linear-gradient(
+    #000 calc(100% - var(--fundido)),
+    rgb(0 0 0 / 0.5) calc(100% - var(--fundido) / 2),
+    transparent
+  );
+}
+
 /* ---- la cabecera del índice ----
    El titular dice lo que hay y, a su derecha, tres baldosas de servicios
    montadas e inclinadas, que hacen su gesto al cargar (Icono.css). En S y M
@@ -550,6 +580,7 @@
 
 .prosa h3 {
   margin-top: var(--e-8);
+  font-size: 19px;
 }
 
 .prosa h2 + *,
@@ -574,6 +605,34 @@
 
 .prosa strong {
   font-weight: 800;
+}
+
+/* Las notas del final se consultan, no se leen de corrido: van al tamaño de
+   los créditos de las fotos. */
+.prosa .notas {
+  font-size: var(--texto-sm);
+}
+
+/* Una foto en el texto, a lo ancho de la columna y con su crédito debajo. Su
+   alto lo reserva la proporción que dicen width y height, para que el texto no
+   salte cuando llega. El radio es el mínimo: así se ve entera, con los bordes de
+   la placa si es una de vidrio. */
+.prosa figure {
+  margin: var(--e-8) 0;
+}
+
+.prosa figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radio);
+  background: var(--linea);
+}
+
+.prosa figcaption {
+  margin-top: var(--e-3);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
 }
 
 /* La idea que hay que llevarse, sin caja: una marca corta del color de la

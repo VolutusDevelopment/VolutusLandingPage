@@ -1,4 +1,4 @@
-import Articulo from '../../components/Articulo.jsx'
+import Articulo from '../../../components/Articulo.jsx'
 
 // La comparación, fila por fila: una tabla porque se lee de lado a lado.
 const COMPARACION = [

@@ -72,22 +72,20 @@
 /* Más baja que la franja de la barra y con el botón de contorno: es una
    herramienta a mano, no un segundo titular. Cápsula de 52 px, y el indicador
    y el botón de 44 px a 4 px del canto: las tres curvas son concéntricas. */
-/* El vidrio de la cápsula es uno solo: no tiene modo claro ni oscuro. Es un
-   cristal casi incoloro que deja ver la zona que pasa por detrás, y lo único
-   que cambia al pasar de un fondo a otro es el color de las letras: cada
-   enlace toma la zona de lo que tiene justo detrás (barra.js), igual que el
-   logo toma la del suyo. La lista de servicios es del mismo vidrio. */
-.barra-capsula,
-.menu-servicios {
-  --cristal: rgb(255 255 255 / 0.22);
-  --cristal-reflejo: #fff;
-  --cristal-interior: rgb(0 0 0 / 0.12);
-  --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 28px -12px rgb(0 0 0 / 0.25);
-  --cristal-bisel: color-mix(in srgb, var(--cristal) 35%, transparent);
-  --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
-}
-
 .barra-capsula {
+  /* Hacia dónde mira la luz (`--luz`), para los brillos de dentro. */
+  --lx: sin(var(--luz));
+  --ly: calc(-1 * cos(var(--luz)));
+  /* El color de cada letra y el del vidrio bajo ella (barra.js, ver
+     `initLectura`): tinta sobre lo claro, blanco sobre lo oscuro. */
+  --letra-oscura: #0a1a2a;
+  --letra-clara: #fff;
+  --vidrio-claro: rgb(255 255 255 / 0.3);
+  --vidrio-oscuro: rgb(10 26 42 / 0.24);
+  /* Sin barra.js el vidrio se tiñe parejo con el fondo de la zona de la
+     cápsula, y las letras van en su color. */
+  --vidrio-tinte: linear-gradient(color-mix(in srgb, var(--fondo) 30%, transparent) 0 0);
+  --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
   right: var(--orilla);
   display: flex;
   align-items: center;
@@ -97,7 +95,95 @@
   border-radius: 999px;
 }
 
-/* ---- el vidrio ----
+/* ---- el vidrio de la cápsula ----
+   Poco esmerilado, como el de iOS: deja ver la forma de lo que pasa detrás.
+   Lo hacen sus capas, como las de los íconos de Liquid Glass:
+
+   - El tinte que arma barra.js bajo las letras: más claro tras la tinta y más
+     oscuro tras el blanco. Con este esmerilado el fondo se sigue viendo, y sin
+     el tinte un gris medio dejaba las letras sin contraste.
+   - Una cara que va de más clara a más tenue en la dirección de la luz.
+   - Los cantos por dentro: el del lado de la luz brilla, y el de enfrente
+     también, más tenue, con la luz que cruza el vidrio y sale por ahí.
+   - Una sombra neutra que lo levanta de la página.
+
+   El canto de afuera es `.barra-brillo`. Nada lleva color propio: el vidrio
+   es neutro y lo que tiñe es lo que pasa detrás. */
+.barra-capsula::before {
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--vidrio-tinte), linear-gradient(var(--luz), rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05));
+  box-shadow:
+    inset calc(var(--lx) * 2px) calc(var(--ly) * 2px) 2px -1px rgb(255 255 255 / 0.6),
+    inset calc(var(--lx) * -1.5px) calc(var(--ly) * -1.5px) 2px -1px rgb(255 255 255 / 0.28),
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.18),
+    0 1px 2px rgb(0 0 0 / 0.08),
+    0 10px 26px -12px rgb(0 0 0 / 0.26);
+  backdrop-filter: blur(6px) saturate(1.2) brightness(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.2) brightness(1.05);
+}
+
+/* El canto: un filo de 1.5 px que brilla del lado de la luz y, más tenue, en
+   el de enfrente. Va en su propia pieza porque es un anillo: un degradado
+   recortado por una máscara que deja solo el borde. */
+.barra-brillo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(
+    var(--luz),
+    #fff,
+    rgb(255 255 255 / 0.55) 6%,
+    rgb(255 255 255 / 0.12) 22%,
+    rgb(255 255 255 / 0.05) 50%,
+    rgb(255 255 255 / 0.12) 78%,
+    rgb(255 255 255 / 0.55) 95%,
+    rgb(255 255 255 / 0.8)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* ---- la luz ----
+   Va y viene por el canto con el scroll, como la de los íconos de iOS al
+   inclinar el teléfono: tres vaivenes a lo largo de la página, de 125° a
+   165° y a 85°. Registrada, para que se anime; la lleva el propio scroll, sin
+   JavaScript. Sin `animation-timeline`, o con movimiento reducido, queda
+   quieta arriba a la izquierda. */
+@property --luz {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 125deg;
+}
+
+@keyframes barra-luz {
+  25% {
+    --luz: 165deg;
+  }
+
+  75% {
+    --luz: 85deg;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .barra-capsula {
+      animation: barra-luz linear 3 both;
+      animation-timeline: scroll();
+    }
+  }
+}
+
+/* ---- el vidrio de la lista de servicios ----
    Ningún reflejo está puesto a ojo: salen de la óptica de una losa de vidrio
    (n = 1.5) con un bisel redondeado de b = 12 px en todo el contorno. A una
    distancia d del canto, la superficie se inclina un ángulo θ con
@@ -131,11 +217,8 @@
    sobre la página, que es el mismo pase lo que pase por detrás. El
    desenfoque es la dispersión del vidrio esmerilado.
 
-   Solo la cara está esmerilada: el bisel está pulido, y por eso es más claro
-   en sus 12 px y deja ver el fondo que refracta (la lente de Barra.jsx). El
-   texto nunca entra en esa franja, así que su contraste lo sigue sosteniendo
-   el esmerilado de la cara. */
-.barra-capsula::before,
+   Solo la cara está esmerilada: el bisel está pulido. El texto nunca entra en
+   esa franja, así que su contraste lo sostiene el esmerilado de la cara. */
 .menu-servicios::before {
   inset: 0;
   border-radius: inherit;
@@ -167,36 +250,16 @@
   -webkit-backdrop-filter: blur(44px) saturate(1.8);
 }
 
-/* La refracción del bisel (el filtro `#lente` de Barra.jsx). Solo Chromium
-   acepta un filtro SVG en `backdrop-filter`, y CSS no tiene forma de
-   preguntarlo: `barra.js` pone la clase. Con la lente el desenfoque baja a
-   28 px: un esmerilado de 44 px no deja nada que se pueda ver torcerse, y por
-   debajo de 28 un titular que cruza por detrás compite con las letras. Sin
-   ella, el vidrio de arriba queda tal cual. */
+/* La refracción del bisel (el filtro `#lente` de Barra.jsx): lo de detrás se
+   curva al llegar al canto. Solo Chromium acepta un filtro SVG en
+   `backdrop-filter`, y CSS no tiene forma de preguntarlo: `barra.js` pone la
+   clase. Sin ella, el vidrio de arriba queda tal cual. */
 .barra-lente {
   position: absolute;
 }
 
 .barra-refracta .barra-capsula::before {
-  backdrop-filter: url(#lente) blur(28px) saturate(1.8);
-}
-
-/* El vidrio se condensa con el scroll. Arriba del todo, sobre la portada, la
-   cápsula casi se funde con el cielo y el titular manda; en los primeros
-   48 px recupera el cuerpo que necesita para leerse sobre contenido. Lo lleva
-   el propio scroll, sin JavaScript. */
-@keyframes vidrio-condensar {
-  from {
-    opacity: 0.65;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  .barra-capsula::before {
-    animation: vidrio-condensar linear both;
-    animation-timeline: scroll();
-    animation-range: 0 48px;
-  }
+  backdrop-filter: url(#lente) blur(6px) saturate(1.2) brightness(1.05);
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -207,9 +270,9 @@
   .barra-capsula::before,
   .barra-refracta .barra-capsula::before,
   .menu-servicios::before {
+    background-image: none;
     background-color: var(--fondo);
     backdrop-filter: none;
-    animation: none;
   }
 }
 
@@ -247,18 +310,8 @@
 
 /* Sobre un fondo oscuro, el logo y las letras van en blanco puro y no en el
    claro de la zona: sobre el cristal, el claro se lee gris. */
-:root :is(.barra-marca, .barra-capsula, .barra-enlaces a).zona-plano {
+:root :is(.barra-marca, .barra-capsula).zona-plano {
   --texto: #fff;
-}
-
-/* Sin transparencia la cápsula es opaca y tapa lo que cada enlace tenía
-   detrás: las letras vuelven a la zona de la cápsula. */
-@media (prefers-reduced-transparency: reduce) {
-  :root .barra-enlaces a:is(.zona-cielo, .zona-plano) {
-    --texto: inherit;
-    --fondo: inherit;
-    --foco: inherit;
-  }
 }
 
 /* El aire entre enlaces es su propio relleno: así el indicador cubre el
@@ -286,6 +339,26 @@
     transform var(--t-pulsar) var(--ease-out);
 }
 
+/* Letra a letra (barra.js, `initLectura`): cada enlace lleva un degradado con
+   el color que pide lo que tiene detrás, recortado a sus letras. `--tinta` es
+   el de su centro, para la gotita y el foco. Sin transparencia la cápsula es
+   opaca, y las letras vuelven al color de su zona. */
+.barra-capsula[data-lectura] .barra-enlaces a {
+  color: var(--tinta);
+  background-image: var(--letras);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .barra-capsula[data-lectura] .barra-enlaces a {
+    color: var(--texto);
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
 /* ---- la gota ----
    Marca dónde estás: descansa en el enlace de la página o la sección actual
    (`aria-current`), viaja al que se señala con el cursor o el teclado y
@@ -297,6 +370,11 @@
    alcanza después y con algo de masa, así que se estira por el camino y se
    asienta al llegar. `data-hacia` dice cuál es cada borde. Aparece y se va en
    su sitio, sin venir de ninguna parte.
+
+   Es una capa más de vidrio, con sus cantos y su sombra, iluminada por la
+   misma luz que la cápsula. Clara, salvo que todo su enlace pase sobre oscuro
+   (`data-gota-tono`, barra.js): entonces es un vidrio apenas blanco, y sus
+   letras van en blanco.
 
    Nace cuando barra.js pone `data-gota`, y lo que nace no tiene de dónde
    transicionar: aparece quieta justo donde estaba el fondo del enlace. Hasta
@@ -314,7 +392,11 @@
   left: var(--gota-izq);
   right: var(--gota-der);
   border-radius: 999px;
-  background-color: var(--indicador);
+  background-image: linear-gradient(var(--luz), rgb(255 255 255 / 0.88), rgb(255 255 255 / 0.66));
+  box-shadow:
+    inset calc(var(--lx) * 1.5px) calc(var(--ly) * 1.5px) 1px -0.5px rgb(255 255 255 / 0.75),
+    inset calc(var(--lx) * -1px) calc(var(--ly) * -1px) 1px -0.5px rgb(255 255 255 / 0.3),
+    0 1px 3px rgb(0 0 0 / 0.16);
   pointer-events: none;
   opacity: 0;
   transition:
@@ -324,6 +406,18 @@
 
 .barra-capsula[data-gota='visible']::after {
   opacity: 1;
+}
+
+.barra-capsula[data-gota-tono='oscura']::after {
+  background-image: linear-gradient(var(--luz), rgb(255 255 255 / 0.24), rgb(255 255 255 / 0.1));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .barra-capsula[data-gota]::after {
+    background-image: none;
+    background-color: var(--indicador);
+    box-shadow: none;
+  }
 }
 
 /* La gotita: mientras la gota está en otro enlace, deja un punto bajo el del
@@ -405,12 +499,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .barra-capsula::before {
-    animation: none;
-  }
-}
-
 /* Por debajo de 1024 px los enlaces quedan pegados al logotipo: se retiran
    «Artículos» y «Opiniones», los primeros en irse, que siguen a mano en el
    pie. */
@@ -477,16 +565,18 @@
 /* ---- la lista de servicios (S y M) ----
    «Servicios» la abre (menu-servicios.js): los siete, cada uno con su glifo en
    calcomanía como en la portada, el actual con el fondo de la gota, y al final
-   el enlace al índice. Es del vidrio de la cápsula y cuelga de ella, alineada
-   a su derecha, pero más cuajado: una lista se lee encima de cualquier cosa.
-   Sin el bisel claro de la cápsula, que en un panel alto se veía como una
+   el enlace al índice. Cuelga de la cápsula, alineada a su derecha, pero su
+   vidrio es otro (el de arriba), mucho más cuajado: una lista se lee encima de
+   cualquier cosa. Sin bisel claro, que en un panel alto se veía como una
    mancha del color de atrás en los cantos. Va en su propia zona de cielo,
    clara aunque la barra pase sobre un fondo oscuro. */
 .menu-servicios {
   --cristal: rgb(255 255 255 / 0.74);
+  --cristal-reflejo: #fff;
   --cristal-bisel: var(--cristal);
   --cristal-interior: rgb(0 0 0 / 0.05);
   --cristal-sombra: 0 1px 2px rgb(0 0 0 / 0.06), 0 24px 48px -20px rgb(10 26 42 / 0.45);
+  --indicador: color-mix(in srgb, var(--texto) 8%, transparent);
   display: none;
 }
 

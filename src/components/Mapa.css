@@ -38,7 +38,7 @@ html:has(.mapa) {
   box-shadow: 0 8px 24px rgb(10 26 42 / 0.12);
 }
 
-.prosa h2 {
+.prosa :is(h2, .notas li) {
   scroll-margin-top: calc(var(--e-1) + var(--mapa-alto));
 }
 
@@ -170,7 +170,7 @@ html:has(.mapa) {
     box-shadow: none;
   }
 
-  .prosa h2 {
+  .prosa :is(h2, .notas li) {
     scroll-margin-top: 0;
   }
 

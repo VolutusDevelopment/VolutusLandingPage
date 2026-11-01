@@ -1034,6 +1034,7 @@ function estrenar(escena, ahora) {
     pintar(escena, inicio + QUIETO_EN)
   }
   escena.vivo = true
+  if (escena.linea && fija(escena)) leerLinea(escena)
   postMessage({ tipo: 'vivo', id: escena.id })
 }
 
@@ -1203,6 +1204,49 @@ function pintar(escena, ahora, conAire = true) {
   gl.useProgram(trama.programa)
   if (sol) gl.uniform3fv(trama.sol, sol)
   gl.drawArrays(gl.TRIANGLES, 0, 3)
+  if (escena.linea && escena.vivo) leerLinea(escena)
+}
+
+// La franja de las letras de la barra (ver `initLectura` en barra.js): qué tan
+// clara se ve la nube en cada columna, para que cada letra tome el color que
+// se lee sobre ella. Se lee justo después de pintar, antes de que el
+// fotograma salga, y en una escena que se mueve no más seguido que
+// `LEER_CADA`: leer espera a que la GPU termine. Donde la nube no cubre se ve
+// el cielo de la portada, el azul de su borde de arriba (`CIELO`, #1976cc en
+// Portada.jsx). El lienzo compone premultiplicado: lo que se ve es su color
+// más lo que deja pasar del cielo.
+const LEER_CADA = 150
+const CIELO = 0.4
+
+function leerLinea(escena) {
+  const { gl, linea } = escena
+  const ahora = performance.now()
+  if (!fija(escena) && ahora - (escena.leida ?? -Infinity) < LEER_CADA) return
+  escena.leida = ahora
+  const x = Math.max(0, Math.round(linea.x))
+  const ancho = Math.min(gl.canvas.width, Math.round(linea.x + linea.ancho)) - x
+  const alto = Math.round(linea.alto)
+  const y = gl.canvas.height - Math.round(linea.y) - alto
+  if (ancho <= 0 || alto <= 0 || y < 0) return
+  if (escena.franja?.length !== ancho * alto * 4) escena.franja = new Uint8Array(ancho * alto * 4)
+  const px = escena.franja
+  gl.readPixels(x, y, ancho, alto, gl.RGBA, gl.UNSIGNED_BYTE, px)
+  // Un punto por px CSS basta: la columna se promedia igual.
+  const paso = Math.max(1, Math.round(linea.densidad))
+  const luz = new Uint8Array(Math.ceil(ancho / linea.columna))
+  luz.forEach((_, c) => {
+    let suma = 0
+    let n = 0
+    for (let fila = 0; fila < alto; fila += paso) {
+      for (let i = Math.floor(c * linea.columna); i < Math.min(ancho, (c + 1) * linea.columna); i += paso) {
+        const j = (fila * ancho + i) * 4
+        suma += Math.min(255, 0.2126 * px[j] + 0.7152 * px[j + 1] + 0.0722 * px[j + 2] + (255 - px[j + 3]) * CIELO)
+        n++
+      }
+    }
+    luz[c] = n ? suma / n : 0
+  })
+  postMessage({ tipo: 'linea', id: escena.id, luz }, [luz.buffer])
 }
 
 // El campo calculado en vivo: `CAMPO`, `MAR` o el del atardecer, listo para
@@ -1583,6 +1627,8 @@ onmessage = ({ data }) => {
     escena.cuadro = data.cuadro
   }
   if (escena && data.tipo === 'sin-campo') pasarASoftware(escena)
+  // La franja de la barra, en px del lienzo (ver `leerLinea`).
+  if (escena && data.tipo === 'linea') escena.linea = data
 
   // Cambiar el tamaño borra el lienzo, y una escena fija nadie más la repinta:
   // cualquier mensaje ensucia su escena y despierta un fotograma.

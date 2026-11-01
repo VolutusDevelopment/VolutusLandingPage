@@ -126,19 +126,19 @@ export const PAGINAS = {
   },
   '/articulos/opiniones': {
     archivo: 'articulos/opiniones.html',
-    actualizada: '2026-10-31',
+    actualizada: '2026-11-01',
     titulo: 'Opiniones sobre software e inteligencia artificial — Volutus',
     descripcion:
       'Opiniones de Volutus sobre el software, la inteligencia artificial y el oficio de construirlos, cada una firmada por quien la escribe.',
   },
-  '/articulos/lo-que-la-ia-cambia': {
-    archivo: 'articulos/lo-que-la-ia-cambia.html',
-    publicada: '2026-10-31',
+  '/articulos/ia-en-la-formula-1': {
+    archivo: 'articulos/ia-en-la-formula-1.html',
+    publicada: '2026-11-01',
     autor: 'diego',
-    actualizada: '2026-10-31',
-    titulo: 'Lo que la IA cambia, y lo que no debería cambiar — Volutus',
+    actualizada: '2026-11-01',
+    titulo: 'IA en la Fórmula 1 — Volutus',
     descripcion:
-      'Hacia dónde va el software con la inteligencia artificial: qué se vuelve barato, qué se vuelve escaso y por qué entender el problema sigue siendo el trabajo.',
+      'Cómo usa la Fórmula 1 la inteligencia artificial en el diseño, la estrategia y la carrera, y por qué el auto lo debería seguir manejando el piloto.',
   },
   '/articulos/que-es-un-agente-de-ia': {
     archivo: 'articulos/que-es-un-agente-de-ia.html',
@@ -475,13 +475,13 @@ export const canonicalDe = (ruta) => (ruta === '/' ? `${ORIGEN}/` : `${ORIGEN}${
 export const tituloCorto = (titulo) => titulo.replace(/ — Volutus$/, '')
 
 /**
- * La fecha `actualizada` de una página como se lee en ella: «13 de octubre de
- * 2026». En UTC porque `new Date('2026-10-13')` es la medianoche UTC, que en
- * Chile todavía es el día 12.
+ * Una fecha de una página, `actualizada` o `publicada`, como se lee en ella:
+ * «13 de octubre de 2026». En UTC porque `new Date('2026-10-13')` es la
+ * medianoche UTC, que en Chile todavía es el día 12.
  */
-export const fechaDe = (ruta) =>
+export const fechaDe = (ruta, cual = 'actualizada') =>
   new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
-    new Date(PAGINAS[ruta].actualizada)
+    new Date(PAGINAS[ruta][cual])
   )
 
 /** Los artículos, del más nuevo al más viejo: las páginas con `publicada`. */

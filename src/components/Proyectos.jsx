@@ -51,10 +51,11 @@ function Enlaces({ sitio, repositorio, publicacion, nombre }) {
 
 const tieneFicha = (proyecto) => Boolean(proyecto.vistas || proyecto.pasos)
 
-function Captura({ imagen, sizes = imagen.sizes, className }) {
+function Captura({ imagen, sizes = imagen.sizes, className, fondo = false }) {
   return (
     <img
       className={className}
+      data-fondo={fondo ? '' : undefined}
       src={imagen.src}
       srcSet={imagen.srcSet}
       sizes={sizes}
@@ -72,14 +73,21 @@ function Captura({ imagen, sizes = imagen.sizes, className }) {
  * ve el cliente. Los dos suben desde el borde de abajo y se salen de él, así
  * que la lámina los recorta. Son las mismas imágenes de la ficha: abrirla
  * después no descarga nada nuevo.
+ *
+ * Pasan bajo la barra con su luz propia, clara y oscura a trozos: la barra la
+ * lee en cada punto (`data-fondo`, ver `initLectura` en barra.js).
  */
 function Vitrina({ vistas }) {
   const pantalla = vistas.find((vista) => vista.forma === 'pantalla')
   const telefono = vistas.find((vista) => vista.forma === 'telefono')
   return (
     <div className="vitrina">
-      {pantalla && <Captura imagen={pantalla.imagen} sizes="(min-width: 1024px) 40rem, 75vw" className="vitrina-pantalla" />}
-      {telefono && <Captura imagen={telefono.imagen} sizes="(min-width: 1024px) 10rem, 30vw" className="vitrina-telefono" />}
+      {pantalla && (
+        <Captura imagen={pantalla.imagen} sizes="(min-width: 1024px) 40rem, 75vw" className="vitrina-pantalla" fondo />
+      )}
+      {telefono && (
+        <Captura imagen={telefono.imagen} sizes="(min-width: 1024px) 10rem, 30vw" className="vitrina-telefono" fondo />
+      )}
     </div>
   )
 }

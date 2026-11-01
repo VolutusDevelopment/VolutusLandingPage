@@ -1,5 +1,5 @@
-import Articulo from '../../components/Articulo.jsx'
-import { PROYECTOS } from '../../data/proyectos.js'
+import Articulo from '../../../components/Articulo.jsx'
+import { PROYECTOS } from '../../../data/proyectos.js'
 
 const HACKATHON = PROYECTOS.find(({ id }) => id === 'hackathon')
 

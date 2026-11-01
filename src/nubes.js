@@ -301,6 +301,32 @@ function montar(pintor, lienzo, id) {
     enviar()
   }
 
+  // La barra lee qué tan clara pinta la nube bajo sus letras (barra.js): le
+  // pasa al pintor su franja, de px de la pantalla a px del lienzo, y el
+  // pintor responde (`linea`). Se pide de nuevo al montar: la barra la avisó
+  // antes de que hubiera lienzo.
+  function prestarLinea() {
+    document.addEventListener(
+      'barra-linea',
+      ({ detail: { x, y, ancho, alto, columna } }) => {
+        const caja = lienzo.getBoundingClientRect()
+        const px = (n) => n * escala
+        pintor.postMessage({
+          tipo: 'linea',
+          id,
+          x: px(x - caja.left),
+          y: px(y - caja.top),
+          ancho: px(ancho),
+          alto: px(alto),
+          columna: px(columna),
+          densidad: escala,
+        })
+      },
+      { signal },
+    )
+    document.dispatchEvent(new Event('nube-lista'))
+  }
+
   const offscreen = lienzo.transferControlToOffscreen()
   const { perspectiva } = lienzo.dataset
   // `juego`: los cúmulos del juego de la 404 solo se compilan donde se juega.
@@ -320,7 +346,10 @@ function montar(pintor, lienzo, id) {
     )
   } else {
     if (!calma) seguirCursor()
-    if (tapa) recorrer()
+    if (tapa) {
+      recorrer()
+      prestarLinea()
+    }
     if (atardecer) ponerSol()
     lienzo.addEventListener(
       'soplo',
@@ -539,6 +568,12 @@ export default function initNubes() {
     let hablo = false
     nuevo.onmessage = ({ data }) => {
       hablo = true
+      if (data.tipo === 'linea') return document.dispatchEvent(new CustomEvent('nube-linea', { detail: data.luz }))
+      // Si el cielo de la portada deja de pintar, la barra ya no sabe qué nube
+      // tiene detrás: lo que se ve es la grabación, o nada.
+      if (['software', 'sin-gl'].includes(data.tipo) && lienzos[data.id]?.dataset.recorrido) {
+        document.dispatchEvent(new CustomEvent('nube-linea', { detail: null }))
+      }
       if (data.tipo === 'sin-gl') return soltar(data.id, data.motivo)
       if (data.tipo === 'software') {
         porSoftware.add(data.id)

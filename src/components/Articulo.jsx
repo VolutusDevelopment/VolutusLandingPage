@@ -4,7 +4,7 @@ import FilaDeArticulo from './FilaDeArticulo.jsx'
 import Mapa from './Mapa.jsx'
 import { socioDe } from '../data/socios.js'
 import { leer } from '../lib/lectura.js'
-import { PAGINAS, relacionadosDe, tituloCorto } from '../lib/meta.js'
+import { PAGINAS, fechaDe, relacionadosDe, tituloCorto } from '../lib/meta.js'
 import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
 
 /**
@@ -15,9 +15,9 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
  *
  * Una opinión lleva bajo la entradilla la firma del socio que la escribió
  * (decisiones 58 y 66 del brief): su cara, su nombre, que lleva a su tarjeta
- * en /nosotros, y su rol. Las guías no llevan firma: las firma Volutus.
- * No se muestra fecha: la de publicación y la de la última actualización
- * quedan en el grafo y en el sitemap.
+ * en /nosotros, su rol y el día en que se publicó. Las guías no llevan firma
+ * ni fecha: las firma Volutus, y sus fechas quedan en el grafo y en el
+ * sitemap.
  *
  * Abre en el cielo del día de las páginas internas, con una flecha que vuelve
  * a su índice: el de las guías o el de las opiniones. Se lee en blanco, a la
@@ -26,9 +26,12 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
  * su tipo, en las filas del índice, y cierra con el formulario de contacto en
  * la caída, con el servicio del que habla ya marcado. En S y M, bajo la
  * entradilla, el servicio queda a un toque.
+ *
+ * `portada` cambia el cielo de la cabecera por una foto de public/image (su
+ * nombre, a 800 y 1600 px), que se desvanece en el blanco de la página.
  */
-export default function Articulo({ ruta, children }) {
-  const { titulo, descripcion, autor, servicios = [] } = PAGINAS[ruta]
+export default function Articulo({ ruta, portada, children }) {
+  const { titulo, descripcion, autor, publicada, servicios = [] } = PAGINAS[ruta]
   const servicio = SERVICIOS.find(({ id, ruta }) => ruta && servicios.includes(id))
   const firma = autor && socioDe(autor)
   const { cuerpo, apartados, minutos } = leer(children)
@@ -43,7 +46,17 @@ export default function Articulo({ ruta, children }) {
       cierre={<Contacto marcado={servicioDeArticulo(PAGINAS[ruta])?.opcion} />}
     >
       <article>
-        <header className="seccion zona-cielo hora-dia cabecera-cielo">
+        <header className={`seccion zona-cielo hora-dia cabecera-cielo${portada ? ' con-portada' : ''}`}>
+          {portada && (
+            <img
+              className="articulo-portada"
+              src={`/image/${portada}-800.webp`}
+              srcSet={`/image/${portada}-800.webp 800w, /image/${portada}-1600.webp 1600w`}
+              sizes="100vw"
+              alt=""
+              fetchPriority="high"
+            />
+          )}
           <div className="contenedor">
             <p className="antetitulo">
               <a
@@ -64,6 +77,9 @@ export default function Articulo({ ruta, children }) {
                 <span>
                   <a href={`/nosotros#${firma.id}`}>{`${firma.nombre} ${firma.apellidos}`}</a>
                   <small>{firma.rol}</small>
+                  <small>
+                    <time dateTime={publicada}>{fechaDe(ruta, 'publicada')}</time>
+                  </small>
                 </span>
               </p>
             )}

@@ -12,7 +12,7 @@ const OPINIONES = '/articulos/opiniones'
 /**
  * La lente de la cápsula: el bisel del vidrio desvía lo que hay detrás.
  *
- * La misma losa que describe Barra.css (n = 1.5, bisel de 12 px) tiene, a
+ * Una losa de vidrio (n = 1.5) con un bisel redondeado de 12 px tiene, a
  * una distancia d del canto, la superficie inclinada un ángulo θ con
  * sin θ = (b − d)/b. Un rayo que la cruza se tuerce según Snell,
  * sin θ = n · sin θr, y sale desviado δ = θ − θr: a través de un vidrio de
@@ -88,10 +88,12 @@ function Lente() {
  * de la cápsula no cambia, solo el color del logo y el de cada enlace, por
  * separado.
  *
- * La cápsula se nota por cómo se comporta, no por su adorno: el vidrio se
- * condensa con el scroll, y una gota viaja entre los enlaces y descansa en el
- * de la página o la sección actual: marca dónde estás (Barra.css y
- * `barra.js`). En Chromium, además, el bisel refracta el fondo (ver `Lente`).
+ * La cápsula se nota por cómo se comporta, no por su adorno: la luz recorre
+ * su canto con el scroll, como la de los íconos de iOS al inclinar el
+ * teléfono (`barra-brillo`); cada letra toma el color que pide lo que tiene
+ * detrás; y una gota de vidrio viaja entre los enlaces y descansa en el de la
+ * página o la sección actual: marca dónde estás (Barra.css y `barra.js`). En
+ * Chromium, además, el bisel refracta el fondo (ver `Lente`).
  *
  * Lleva la acción principal porque la cápsula la hace discreta: un botón
  * pequeño dentro de un objeto que ya existe, siempre a mano, no un segundo
@@ -135,6 +137,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
       </a>
 
       <nav className="barra-capsula" aria-label="Secciones">
+        <span className="barra-brillo" aria-hidden="true" />
         <ul className="barra-enlaces">
           <li>
             {/* Páginas y no secciones: en ellas el indicador descansa
