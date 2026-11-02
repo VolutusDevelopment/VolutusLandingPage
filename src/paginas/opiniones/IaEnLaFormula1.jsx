@@ -139,11 +139,11 @@ const FUENTES = {
     licencia: { nombre: 'Licencia Unsplash', url: 'https://unsplash.com/license' },
     url: 'https://unsplash.com/es/fotos/los-coches-de-carreras-de-formula-1-aceleran-en-una-esquina-4GvTOGqNzu0',
   },
-  antonelliChina2026: {
-    titulo: '2026 Chinese GP - Mercedes - Kimi Antonelli - Post Race Celebration',
-    medio: 'Liauzh, Wikimedia Commons',
-    licencia: { nombre: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0' },
-    url: 'https://commons.wikimedia.org/wiki/File:2026_Chinese_GP_-_Mercedes_-_Kimi_Antonelli_-_Post_Race_Celebration.jpg',
+  antonelliMexico2026: {
+    titulo: 'Podio del Gran Premio de México 2026',
+    idioma: 'es',
+    medio: 'Rutamotor',
+    url: 'https://www.rutamotor.com/wp-content/uploads/2026/11/2303041347-mexico.jpg',
   },
 }
 
@@ -367,23 +367,23 @@ export default function IaEnLaFormula1({ ruta }) {
       </p>
       <h2>El que supo manejar al límite</h2>
       <p>
-        No podía dejar de lado a Andrea Kimi Antonelli, que hoy, con apenas 20 años, se corona como el nuevo campeón de la Fórmula 1. El reglamento técnico tendrá sus puntos débiles, pero fue él quien exprimió cada carrera de la temporada y nunca dio nada por sentado.
+        No podía dejar de lado a Andrea Kimi Antonelli, que el día de hoy, con apenas 20 años, se corona como el nuevo campeón de la Fórmula 1. El reglamento técnico tendrá sus puntos débiles, pero fue él quien exprimió cada carrera de la temporada y nunca dio nada por sentado.
       </p>
 
       <p>
-        En sus primeros entrenamientos libres, en el Gran Premio de Italia de 2024 en Monza, se intuía que tenía algo especial. Lo confirmó en su debut en Australia en 2025: en pleno mojado, firmó varios adelantamientos impecables que dejaron clara su valía. Su primera victoria llegó este año en China, y lo que consiguió hoy en el Gran Premio de México ya es historia.
+        En sus primeros entrenamientos libres, en el Gran Premio de Italia de 2024 en Monza, se intuía que tenía algo especial. Lo confirmó en su debut en Australia en 2025: en pleno mojado, firmó varios adelantamientos impecables que dejaron clara su valía. Este año ganó su primera carrera en China y, en el Gran Premio de Italia, partió desde el puesto 19 y remontó con adelantamientos espectaculares. Lo que consiguió hoy en el Gran Premio de México ya es historia.
       </p>
 
       <p>Pilotos como Andrea Kimi Antonelli nos hacen creer que el futuro de la fórmula 1 queda en buenas manos</p>
 
       <Foto
-        nombre="antonelli-china-2026"
+        nombre="antonelli-mexico-2026"
         ancho={1600}
         alto={1067}
-        alt="De pie sobre su Mercedes negro y turquesa, con el casco puesto y el puño en alto, Antonelli celebra ante las rejas del circuito."
-        fuente="antonelliChina2026"
+        alt="En el podio del Gran Premio de México, Antonelli, con el casco puesto y el puño en alto, va a hombros de Hamilton. A la izquierda, Verstappen saluda con la medalla al cuello."
+        fuente="antonelliMexico2026"
       >
-        Kimi Antonelli celebra sobre su Mercedes tras ganar el Gran Premio de China de 2026. Foto: Liauzh.
+        Kimi Antonelli en el podio del Gran Premio de México de 2026, a hombros de Lewis Hamilton y Max Verstappen.
       </Foto>
 
        
