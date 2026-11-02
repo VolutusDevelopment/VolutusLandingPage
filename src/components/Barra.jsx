@@ -1,13 +1,9 @@
 import Icono from './Icono.jsx'
 import Marca from './Marca.jsx'
-import { PAGINAS } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
 
 // Los que tienen página propia: los de la lista de servicios de la barra.
 const CON_PAGINA = SERVICIOS.filter(({ ruta }) => ruta)
-
-// El índice de las opiniones (paginas/Opiniones.jsx).
-const OPINIONES = '/articulos/opiniones'
 
 /**
  * La lente de la cápsula: el bisel del vidrio desvía lo que hay detrás.
@@ -114,13 +110,10 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
   // enterarse. Desde otra página los anclas se cuelgan de la raíz.
   const ancla = (id) => (enHome ? `#${id}` : `/#${id}`)
   // En una página hija (un servicio, un artículo, otra página del índice) el
-  // indicador descansa en su madre. Las opiniones viven bajo /articulos, pero
-  // su madre es su propio índice y no el de las guías.
-  const enOpiniones = ruta === OPINIONES || Boolean(PAGINAS[ruta]?.autor)
+  // indicador descansa en su madre.
   const actual = (destino) => {
     if (ruta === destino) return 'page'
-    const dentro = destino === OPINIONES ? enOpiniones : !enOpiniones && ruta?.startsWith(`${destino}/`)
-    return dentro ? 'true' : undefined
+    return ruta?.startsWith(`${destino}/`) ? 'true' : undefined
   }
 
   return (
@@ -157,7 +150,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
             </a>
           </li>
           <li className="barra-articulos">
-            <a href={OPINIONES} aria-current={actual(OPINIONES)}>
+            <a href="/opiniones" aria-current={actual('/opiniones')}>
               Opiniones
             </a>
           </li>
@@ -177,11 +170,7 @@ export default function Barra({ enHome = true, ruta, hora = 'manana', estilo, co
               </a>
             </li>
           ))}
-          <li className="menu-servicios-todos" style={{ '--fila': CON_PAGINA.length }}>
-            <a href="/servicios">
-              Todos los servicios <span aria-hidden="true">→</span>
-            </a>
-          </li>
+
         </ul>
       </div>
       <Lente />

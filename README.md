@@ -52,9 +52,9 @@ piezas que comparten (`Bloques.jsx`). El contenido va en
 color de su card en la rueda y termina en el formulario, con el servicio ya
 marcado.
 
-Los artículos viven en `/articulos/…`. Son guías, que firma Volutus y tienen
-su índice en `/articulos`, u opiniones, que firma un socio y tienen el suyo,
-aparte, en `/articulos/opiniones`. Publicar uno es: su entrada en `PAGINAS` con
+Las guías viven en `/articulos/…`, las firma Volutus y tienen su índice en
+`/articulos`. Las opiniones, que firma un socio, son otra sección: su índice
+es `/opiniones` y cada una vive en `/opiniones/…`. Publicar una de las dos es: su entrada en `PAGINAS` con
 `publicada` (y `servicios`, para sugerir una guía en esas páginas de servicio,
 o `autor`, si es una opinión), su cuerpo en `src/paginas/articulos/` envuelto
 en `<Articulo>`, su línea en `COMPONENTES`, su tarjeta con `pnpm og` y su

@@ -638,7 +638,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/articulos/opiniones": {
+    "/opiniones": {
       "S": {
         "alto": 2168,
         "desborda": false,
@@ -696,7 +696,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/articulos/ia-en-la-formula-1": {
+    "/opiniones/ia-en-la-formula-1": {
       "S": {
         "alto": 11542,
         "desborda": false,
@@ -2772,11 +2772,11 @@
       "paradas": 43,
       "sinAnillo": 0
     },
-    "/articulos/opiniones": {
+    "/opiniones": {
       "paradas": 29,
       "sinAnillo": 0
     },
-    "/articulos/ia-en-la-formula-1": {
+    "/opiniones/ia-en-la-formula-1": {
       "paradas": 89,
       "sinAnillo": 0
     },

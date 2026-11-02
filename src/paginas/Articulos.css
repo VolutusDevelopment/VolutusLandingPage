@@ -141,28 +141,6 @@
   }
 }
 
-/* La flecha sobre el título: la vuelta al índice. El área táctil mide 44 px
-   aunque la flecha mida 24. */
-.articulo-volver {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-left: -10px;
-  color: inherit;
-}
-
-.articulo-volver svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 /* La firma: la cara en un círculo con un filo blanco, que la despega del
    cielo, y a su lado el nombre sobre el rol. Mide lo mismo antes y después de
    cargar la foto. */
@@ -390,6 +368,72 @@
   height: auto;
   border-radius: 50%;
   box-shadow: 0 0 0 2px rgb(255 255 255 / 0.8);
+}
+
+/* ---- el diario ----
+   El índice de opiniones: una columna, la foto de portada de cada artículo y,
+   junto a ella, el título, el resumen y, debajo, la firma (cara, nombre y día). En S
+   la foto va arriba, a todo el ancho. */
+.articulos-diario > li {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'foto' 'titulo' 'resumen' 'meta';
+  padding-block: var(--e-8);
+}
+
+.articulos-diario > li:first-child {
+  border-top: 0;
+}
+
+.articulos-foto {
+  grid-area: foto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  margin-bottom: var(--e-4);
+  object-fit: cover;
+  border-radius: var(--radio-tarjeta);
+}
+
+.articulos-diario .articulos-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  margin-top: var(--e-4);
+}
+
+.articulos-diario .articulos-cara {
+  width: 2.25rem;
+  box-shadow: none;
+}
+
+.articulos-diario time {
+  font-size: var(--texto-sm);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--texto-suave);
+}
+
+.articulos-diario h2 {
+  font-size: clamp(26px, 3.4vw, 38px);
+  line-height: 1.12;
+}
+
+.articulos-diario .articulos-resumen {
+  font-size: var(--texto-base);
+}
+
+@media (min-width: 640px) {
+  .articulos-diario > li {
+    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-areas: 'foto titulo' 'foto resumen' 'foto meta';
+    align-items: start;
+    column-gap: var(--e-8);
+  }
+
+  .articulos-foto {
+    margin-bottom: 0;
+  }
 }
 
 /* ---- los relacionados ----

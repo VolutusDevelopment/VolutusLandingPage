@@ -22,7 +22,7 @@ import BoletaFacturaYSii from './articulos/guias/BoletaFacturaYSii.jsx'
 import ComoSePagaEnLinea from './articulos/guias/ComoSePagaEnLinea.jsx'
 import CasosParaUnAgenteDeIa from './articulos/guias/CasosParaUnAgenteDeIa.jsx'
 import ComoTrabajamos from './articulos/guias/ComoTrabajamos.jsx'
-import IaEnLaFormula1 from './articulos/opiniones/IaEnLaFormula1.jsx'
+import IaEnLaFormula1 from './opiniones/IaEnLaFormula1.jsx'
 import { CazaDePatos, ErrorDelServidor, NoEncontrada } from './PaginaDeError.jsx'
 import { SERVICIOS } from '../lib/servicios.js'
 import { PAGINAS_DEL_INDICE, rutaDePagina } from '../lib/meta.js'
@@ -40,8 +40,8 @@ export const COMPONENTES = {
   '/servicios': IndiceDeServicios,
   ...Object.fromEntries(SERVICIOS.filter(({ ruta }) => ruta).map(({ ruta }) => [ruta, Servicio])),
   ...Object.fromEntries(Array.from({ length: PAGINAS_DEL_INDICE }, (_, i) => [rutaDePagina(i + 1), Articulos])),
-  '/articulos/opiniones': Opiniones,
-  '/articulos/ia-en-la-formula-1': IaEnLaFormula1,
+  '/opiniones': Opiniones,
+  '/opiniones/ia-en-la-formula-1': IaEnLaFormula1,
   '/articulos/que-es-un-agente-de-ia': QueEsUnAgenteDeIa,
   '/articulos/pagina-web-o-tienda-online': PaginaWebOTiendaOnline,
   '/articulos/software-a-medida-o-ya-hecho': SoftwareAMedidaOYaHecho,

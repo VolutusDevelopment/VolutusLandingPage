@@ -77,8 +77,27 @@ const idDeServicio = (ruta) => `${canonicalDe(ruta)}#servicio`
  */
 const idDePersona = (id) => `${canonicalDe('/nosotros')}#${id}`
 
-function firmaDe({ id, nombre, apellidos }) {
-  return { '@type': 'Person', '@id': idDePersona(id), name: `${nombre} ${apellidos}`, url: idDePersona(id) }
+const nombreDe = ({ nombre, apellidos }) => `${nombre} ${apellidos}`
+
+function firmaDe(socio) {
+  return { '@type': 'Person', '@id': idDePersona(socio.id), name: nombreDe(socio), url: idDePersona(socio.id) }
+}
+
+/**
+ * El autor de un artículo, con lo que un buscador necesita para reconocerlo
+ * sin salir de la página: quién es, qué hace y dónde más aparece. Es la misma
+ * persona que declara /nosotros (`personaDe`), así que comparte su `@id`.
+ */
+function autorDeArticulo(socio) {
+  const { titulo, rol, foto, perfiles } = socio
+  return {
+    ...firmaDe(socio),
+    image: `${ORIGEN}${foto}`,
+    jobTitle: rol,
+    description: titulo,
+    worksFor: VOLUTUS,
+    sameAs: Object.values(perfiles),
+  }
 }
 
 /** El socio que firma una página, o ninguno: sin `autor`, firma Volutus. */
@@ -230,12 +249,12 @@ function datosEstructurados(ruta, canonical, datos) {
         inLanguage: 'es-CL',
         datePublished: publicada,
         dateModified: actualizada,
-        author: autor ? firmaDe(autor) : { '@id': ORGANIZACION },
+        author: autor ? autorDeArticulo(autor) : { '@id': ORGANIZACION },
         publisher: { '@id': ORGANIZACION },
       },
       migas([
         ['Inicio', '/'],
-        autor ? ['Opiniones', '/articulos/opiniones'] : ['Artículos', '/articulos'],
+        autor ? ['Opiniones', '/opiniones'] : ['Artículos', '/articulos'],
         [tituloCorto(titulo), ruta],
       ]),
     ])
@@ -305,11 +324,11 @@ function datosEstructurados(ruta, canonical, datos) {
       },
     ],
     '/nosotros': [{ '@type': 'AboutPage', ...pagina, about: { '@id': ORGANIZACION } }, ...SOCIOS.map(personaDe)],
-    '/articulos/opiniones': [
+    '/opiniones': [
       { '@type': 'CollectionPage', ...pagina, mainEntity: listaDe(OPINIONES) },
       migas([
         ['Inicio', '/'],
-        ['Opiniones', '/articulos/opiniones'],
+        ['Opiniones', '/opiniones'],
       ]),
     ],
     '/servicios': [
@@ -388,7 +407,14 @@ function cabecera(ruta, pagina) {
         `<meta property="og:type" content="article" />`,
         `<meta property="article:published_time" content="${publicada}" />`,
         `<meta property="article:modified_time" content="${actualizada}" />`,
-        ...(autor ? [`<meta property="article:author" content="${idDePersona(autor.id)}" />`] : []),
+        ...(autor
+          ? [
+              `<meta name="author" content="${atributo(nombreDe(autor))}" />`,
+              `<meta property="article:author" content="${idDePersona(autor.id)}" />`,
+              `<meta name="twitter:label1" content="Escrito por" />`,
+              `<meta name="twitter:data1" content="${atributo(nombreDe(autor))}" />`,
+            ]
+          : []),
       ]
     : [`<meta property="og:type" content="website" />`]
   return [
@@ -501,9 +527,14 @@ writeFileSync(
 const traslados = SERVICIOS.filter(({ ruta }) => ruta).map(
   ({ ruta }) => `${ruta.replace(/^\/servicios/, '')} ${ruta} 301`
 )
-// La primera opinión de /articulos/opiniones la reemplazó otra, con su propia
-// dirección: quien llegue por el enlace viejo cae en la que tomó su lugar.
-traslados.push('/articulos/lo-que-la-ia-cambia /articulos/ia-en-la-formula-1 301')
+// Las opiniones vivían bajo /articulos y pasaron a /opiniones. La primera la
+// reemplazó otra, con su propia dirección: quien llegue por el enlace viejo
+// cae en la que tomó su lugar.
+traslados.push(
+  '/articulos/opiniones /opiniones 301',
+  '/articulos/ia-en-la-formula-1 /opiniones/ia-en-la-formula-1 301',
+  '/articulos/lo-que-la-ia-cambia /opiniones/ia-en-la-formula-1 301'
+)
 // La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
 // a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
 // `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare

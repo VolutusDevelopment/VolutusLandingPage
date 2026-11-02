@@ -72,7 +72,7 @@ export default function Pie({ dia = false }) {
               <a href="/articulos">Artículos</a>
             </li>
             <li>
-              <a href="/articulos/opiniones">Opiniones</a>
+              <a href="/opiniones">Opiniones</a>
             </li>
             <li>
               <a href="/privacidad">Privacidad</a>

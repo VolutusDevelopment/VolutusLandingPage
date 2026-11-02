@@ -1,4 +1,4 @@
-import Articulo from '../../../components/Articulo.jsx'
+import Articulo from '../../components/Articulo.jsx'
 
 // Las fuentes, en el orden en que el texto las cita por primera vez: ese orden
 // es su número en las notas del final.
@@ -186,7 +186,7 @@ function Foto({ nombre, ancho, alto, alt, fuente, children }) {
 
 export default function IaEnLaFormula1({ ruta }) {
   return (
-    <Articulo ruta={ruta} portada="fw14b-1992">
+    <Articulo ruta={ruta}>
       <h2>Una categoría que siempre negoció con la máquina</h2>
       <p>
         El Campeonato Mundial de Fórmula 1 arrancó en 1950, con un reglamento común para ordenar un automovilismo de

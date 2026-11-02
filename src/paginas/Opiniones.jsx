@@ -5,9 +5,9 @@ import { OPINIONES, PAGINAS } from '../lib/meta.js'
 
 /**
  * Las opiniones, aparte de las guías de /articulos (paginas/Articulos.jsx):
- * todas, de la más nueva a la más vieja, en las filas del índice. Cada una
- * lleva la cara y el nombre de quien la firma. Termina en el formulario de
- * contacto.
+ * todas, de la más nueva a la más vieja, en una columna de diario: la foto de
+ * portada de cada una y, junto a su título y su resumen, la cara, el nombre y el día de
+ * quien la firma. Termina en el formulario de contacto.
  */
 export default function Opiniones({ ruta }) {
   const { descripcion } = PAGINAS[ruta]
@@ -24,9 +24,9 @@ export default function Opiniones({ ruta }) {
 
       <section className="seccion zona-cielo" aria-label="Todas las opiniones">
         <div className="contenedor">
-          <ol className="articulos articulos-indice">
+          <ol className="articulos articulos-diario">
             {OPINIONES.map((articulo) => (
-              <FilaDeArticulo key={articulo.ruta} articulo={articulo} />
+              <FilaDeArticulo key={articulo.ruta} articulo={articulo} diario />
             ))}
           </ol>
         </div>

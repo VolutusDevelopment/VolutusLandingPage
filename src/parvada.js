@@ -15,7 +15,9 @@
 // si el puntero da en un pato que se vea: fuera de la lámina, recortado, o
 // detrás de las tarjetas de los socios, no se caza. La sección siguiente se
 // monta sobre la lámina, así que el puntero se escucha en toda la página
-// mientras vuelan. Cuando la parvada sale de la pantalla, se quita. Con
+// mientras vuelan. El cruce corre solo mientras la parvada está a la vista
+// (`.lejos` lo detiene): así nadie se lo pierde por irse de la lámina antes.
+// Una vez cruzada, se quita: no vuelve hasta recargar. Con
 // movimiento reducido no está, ni si ya se eligió un final en la escena 16 de
 // Operación Venganza: los quince patos ya cayeron (src/flota.js).
 
@@ -31,6 +33,7 @@ export default function initParvada() {
   const telon = parvada.parentElement
   const patos = [...parvada.querySelectorAll('.pato')]
   const caza = new AbortController()
+  const vista = new IntersectionObserver(([{ isIntersecting }]) => parvada.classList.toggle('lejos', !isIntersecting))
 
   const cazar = ({ clientX: x, clientY: y, target }, holgura) => {
     if (target.closest('.socio')) return
@@ -53,6 +56,7 @@ export default function initParvada() {
       if (boundingClientRect.top > rootBounds.bottom) return
       salida.disconnect()
       parvada.classList.add('vuela')
+      vista.observe(parvada)
       const opciones = { passive: true, signal: caza.signal }
       addEventListener('pointermove', (evento) => evento.pointerType === 'mouse' && cazar(evento, 0), opciones)
       addEventListener('pointerup', (evento) => evento.pointerType !== 'mouse' && cazar(evento, DEDO), opciones)
@@ -63,6 +67,7 @@ export default function initParvada() {
 
   parvada.addEventListener('animationend', ({ animationName }) => {
     if (animationName !== 'cruzar') return
+    vista.disconnect()
     parvada.remove()
     caza.abort()
   })

@@ -24,7 +24,7 @@ Ubicación: residimos en Santiago de Chile. Las reuniones son preferentemente te
 - [Contacto](https://volutus.cl/#contacto): el formulario
 - [Quiénes somos](https://volutus.cl/nosotros): quiénes somos, de dónde viene el nombre y la entrada secreta a Operación Venganza
 - [Artículos](https://volutus.cl/articulos): guías cortas para decidir qué software necesita un negocio
-- [Opiniones](https://volutus.cl/articulos/opiniones): lo que pensamos sobre el software y la inteligencia artificial, cada una firmada por quien la escribe
+- [Opiniones](https://volutus.cl/opiniones): lo que pensamos sobre el software y la inteligencia artificial, cada una firmada por quien la escribe
 - [Privacidad](https://volutus.cl/privacidad): qué datos tratamos, con quién se comparten y cómo ejercer tus derechos
 - [Ley 21.719](https://volutus.cl/ley21719): qué cambia con la nueva ley de datos personales y qué tiene que hacer un negocio para cumplirla
 - [Caza de patos](https://volutus.cl/patos): un Duck Hunt hecho con la nube de Volutus, para jugar en el navegador
@@ -84,9 +84,9 @@ respuesta llega pronto, pero no es la cotización.
 
 ## Opiniones
 
-Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firmado por quien lo escribe. Tienen su propia página, aparte de las guías: https://volutus.cl/articulos/opiniones.
+Lo que pensamos en Volutus sobre el software y la inteligencia artificial, firmado por quien lo escribe. Tienen su propia página, aparte de las guías: https://volutus.cl/opiniones.
 
-- [IA en la Fórmula 1](https://volutus.cl/articulos/ia-en-la-formula-1), de Diego Peña y Lillo Lührs
+- [IA en la Fórmula 1](https://volutus.cl/opiniones/ia-en-la-formula-1), de Diego Peña y Lillo Lührs
 
 ## Qué no tomamos
 

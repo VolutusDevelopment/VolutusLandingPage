@@ -3,6 +3,7 @@ import Contacto from '../components/Contacto.jsx'
 import Estimado from '../components/Estimado.jsx'
 import Pieza from '../components/Pieza.jsx'
 import Guia from '../components/Guia.jsx'
+import Volver from '../components/Volver.jsx'
 import { ListaDeArticulos } from '../components/Sugerencias.jsx'
 import { articulosDe } from '../lib/meta.js'
 import { SERVICIOS } from '../lib/servicios.js'
@@ -24,6 +25,9 @@ import Prospeccion from './servicios/Prospeccion.jsx'
  * pieza propia (Pieza.jsx) dibuja en él lo que hace el servicio. Al final, el
  * recorrido de las páginas internas: otras lecturas y la caída con el
  * formulario —con el servicio ya marcado— y el pie de día.
+ *
+ * La flecha sobre el titular vuelve al índice de servicios, como la de los
+ * artículos a su índice.
  *
  * Lo de en medio es de cada servicio (servicios/): cuenta lo que incluye con
  * la forma de lo que entrega y ordena a su manera las piezas que comparten
@@ -72,6 +76,7 @@ export default function Servicio({ ruta }) {
       <section className="seccion zona-cielo hora-dia cabecera-cielo servicio-cabecera">
         <div className="contenedor servicio-portada">
           <div>
+            <Volver href="/servicios" etiqueta="Volver a los servicios" />
             <h1>{pagina.titular}</h1>
             <p className="entradilla servicio-entradilla">{pagina.entradilla}</p>
             <p className="servicio-acciones">

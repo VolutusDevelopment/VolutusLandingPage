@@ -116,7 +116,9 @@ export const PAGINAS = {
   // firma Volutus. `servicios` dice en qué páginas de servicio se sugieren, y
   // una sin `servicios` se sugiere en todas. Las opiniones llevan `autor`, el
   // `id` del socio que la firma (data/socios.js), no se sugieren en los
-  // servicios y tienen su propio índice, aparte del de las guías.
+  // servicios y tienen su propio índice, aparte del de las guías. `portada` es
+  // el nombre de una foto de public/image (a 800 y 1600 px): abre la cabecera
+  // del artículo y es la carátula de su fila en el índice de opiniones.
   '/articulos': {
     archivo: 'articulos.html',
     actualizada: '2026-10-31',
@@ -124,21 +126,22 @@ export const PAGINAS = {
     descripcion:
       'Guías cortas y sin jerga para decidir qué software necesita tu negocio: páginas web, tiendas online, agentes de IA, automatizaciones y sistemas de gestión.',
   },
-  '/articulos/opiniones': {
-    archivo: 'articulos/opiniones.html',
+  '/opiniones': {
+    archivo: 'opiniones.html',
     actualizada: '2026-11-01',
     titulo: 'Opiniones sobre software e inteligencia artificial — Volutus',
     descripcion:
-      'Opiniones de Volutus sobre el software, la inteligencia artificial y el oficio de construirlos, cada una firmada por quien la escribe.',
+      'Nuestras opiniones respecto a los temas que nos apasionan.',
   },
-  '/articulos/ia-en-la-formula-1': {
-    archivo: 'articulos/ia-en-la-formula-1.html',
+  '/opiniones/ia-en-la-formula-1': {
+    archivo: 'opiniones/ia-en-la-formula-1.html',
     publicada: '2026-11-01',
     autor: 'diego',
+    portada: 'fw14b-1992',
     actualizada: '2026-11-01',
     titulo: 'IA en la Fórmula 1 — Volutus',
     descripcion:
-      'Breve historia de la fórmula 1 y como esta llegó a adoptar la IA.',
+      'Breve historia de la fórmula 1 y cómo esta llegó a adoptar la IA.',
   },
   '/articulos/que-es-un-agente-de-ia': {
     archivo: 'articulos/que-es-un-agente-de-ia.html',
@@ -523,7 +526,7 @@ export const relacionadosDe = (ruta) => {
  * /articulos/pagina/2 en adelante: cada una es una página más, con su título
  * y su descripción, que se prerenderiza y entra al sitemap. Publicar la guía
  * catorce abre sola la segunda. Las opiniones van todas en su propio índice,
- * /articulos/opiniones.
+ * /opiniones.
  */
 const POR_PAGINA = 12
 export const PAGINAS_DEL_INDICE = Math.max(1, Math.ceil((GUIAS.length - 1) / POR_PAGINA))

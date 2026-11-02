@@ -1,6 +1,6 @@
 import Icono from './Icono.jsx'
 import { socioDe } from '../data/socios.js'
-import { tituloCorto } from '../lib/meta.js'
+import { fechaDe, tituloCorto } from '../lib/meta.js'
 import { servicioDeArticulo } from '../lib/servicios.js'
 
 /**
@@ -13,10 +13,12 @@ import { servicioDeArticulo } from '../lib/servicios.js'
  * los datos estructurados. La fila entera lleva al artículo (Articulos.css).
  *
  * `destacado` es la guía más nueva del índice, en una lámina oscura; `nivel`,
- * la etiqueta de su título según dónde va la fila.
+ * la etiqueta de su título según dónde va la fila. `diario` es la entrada del
+ * índice de opiniones: la foto de portada del artículo en vez del glifo, y en
+ * la línea de la firma la cara, el nombre y el día en que se publicó, bajo el resumen.
  */
-export default function FilaDeArticulo({ articulo, destacado = false, nivel: Titulo = 'h2' }) {
-  const { ruta, titulo, descripcion, autor } = articulo
+export default function FilaDeArticulo({ articulo, destacado = false, diario = false, nivel: Titulo = 'h2' }) {
+  const { ruta, titulo, descripcion, autor, portada } = articulo
   const servicio = servicioDeArticulo(articulo)
   const firma = autor && socioDe(autor)
 
@@ -25,15 +27,31 @@ export default function FilaDeArticulo({ articulo, destacado = false, nivel: Tit
       className={destacado ? 'articulos-destacado zona-plano entra' : 'entra'}
       style={servicio && { '--tinte': servicio.color }}
     >
-      <div className="articulos-tapa">
-        {firma ? (
-          <img className="articulos-cara" src={firma.avatar} alt="" width={120} height={120} decoding="async" />
-        ) : (
-          <Icono id={servicio?.id ?? 'guia'} />
-        )}
-      </div>
+      {diario ? (
+        <img
+          className="articulos-foto"
+          src={`/image/${portada}-800.webp`}
+          srcSet={`/image/${portada}-800.webp 800w, /image/${portada}-1600.webp 1600w`}
+          sizes="(min-width: 640px) 260px, 100vw"
+          alt=""
+          width={800}
+          height={500}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div className="articulos-tapa">
+          {firma ? (
+            <img className="articulos-cara" src={firma.avatar} alt="" width={120} height={120} decoding="async" />
+          ) : (
+            <Icono id={servicio?.id ?? 'guia'} />
+          )}
+        </div>
+      )}
       <p className="articulos-meta dato">
+        {diario && <img className="articulos-cara" src={firma.avatar} alt="" width={36} height={36} decoding="async" />}
         {firma ? `${firma.nombre} ${firma.apellidos}` : (servicio?.nombre ?? 'Todos los servicios')}
+        {diario && <time dateTime={articulo.publicada}>{fechaDe(ruta, 'publicada')}</time>}
       </p>
       <Titulo>
         <a href={ruta}>{tituloCorto(titulo)}</a>

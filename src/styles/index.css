@@ -852,6 +852,29 @@ svg {
   margin: 0 0 var(--e-4);
 }
 
+/* La vuelta al índice: la flecha y «Volver». El área táctil mide 44 px de
+   alto aunque la flecha mida 24. */
+.volver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  min-height: 44px;
+  padding-inline: 10px;
+  margin-left: -10px;
+  color: inherit;
+}
+
+.volver svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .entradilla {
   font-size: var(--texto-lg);
   line-height: 1.45;

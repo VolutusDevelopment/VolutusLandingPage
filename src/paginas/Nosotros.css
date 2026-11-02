@@ -147,6 +147,10 @@
   animation-play-state: running;
 }
 
+.lejos .parvada-v {
+  animation-play-state: paused;
+}
+
 .pato {
   position: absolute;
   left: calc(var(--fila) * -1.3 * var(--ancho));
