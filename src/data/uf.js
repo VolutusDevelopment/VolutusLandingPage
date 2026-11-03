@@ -1,2 +1,2 @@
 // Lo escribe scripts/uf.mjs cada día. No se edita a mano.
-export const UF = { valor: 41258.26, fecha: '2026-11-02' }
+export const UF = { valor: 41263.57, fecha: '2026-11-03' }
