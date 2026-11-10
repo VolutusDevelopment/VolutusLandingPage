@@ -1,8 +1,9 @@
 // ESLint: las reglas recomendadas, con los globales de cada lugar donde corre
-// el código. El sitio va en el navegador, salvo el pintor de las nubes, que
-// es un Web Worker; el formulario, en un Worker de Cloudflare, y los scripts
-// de compilación, en Node, aunque las funciones que le pasan a Playwright
-// corren en la página.
+// el código. El sitio va en el navegador, con los scripts sueltos de public/
+// (los bocetos del brief), salvo el pintor de las nubes, que es un Web
+// Worker; el formulario, en un Worker de Cloudflare, y los scripts de
+// compilación, en Node, aunque las funciones que le pasan a Playwright corren
+// en la página.
 import js from '@eslint/js'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
@@ -15,7 +16,7 @@ export default defineConfig([
     languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
   },
   {
-    files: ['src/**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}', 'public/**/*.js'],
     languageOptions: { globals: globals.browser },
   },
   {

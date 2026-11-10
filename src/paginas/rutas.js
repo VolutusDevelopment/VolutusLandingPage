@@ -7,6 +7,7 @@ import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
 import Articulos from './Articulos.jsx'
+import Brief from './Brief.jsx'
 import Opiniones from './Opiniones.jsx'
 import QueEsUnAgenteDeIa from './articulos/guias/QueEsUnAgenteDeIa.jsx'
 import PaginaWebOTiendaOnline from './articulos/guias/PaginaWebOTiendaOnline.jsx'
@@ -76,6 +77,7 @@ export const COMPONENTES = {
   ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
+  '/brief': Brief,
   '/404': NoEncontrada,
   '/500': ErrorDelServidor,
   '/patos': CazaDePatos,

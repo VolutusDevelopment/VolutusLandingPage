@@ -26,7 +26,9 @@ Las páginas son `/`, `/nosotros`, `/privacidad`, `/ley21719` (la Ley 21.719
 explicada para un negocio), las de error —la 404 y la de los 5xx, en `/500`— y
 `/patos`, el juego al que lleva el pato que sale a nadar en el mar del pie al
 minuto de visita. `/404` y `/500` llevan `noindex`; `/patos` es indexable y
-aparece en el sitemap. En las páginas de error el juego se carga al pulsar
+aparece en el sitemap. `/brief` es el brief de marca y sitio web que Volutus
+le manda por link a un cliente: lleva `noindex`, no va al sitemap ni se enlaza
+desde el sitio. En las páginas de error el juego se carga al pulsar
 «Jugar»; en `/patos` comienza automáticamente. La portada se compone de
 Portada, Servicios, Proyectos y Contacto; no tiene sección de métricas. Agregar
 una página es una entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES`
@@ -82,6 +84,20 @@ envía a
 acepta cinco envíos por minuto por IP (binding `LIMITE_CONTACTO` en
 [wrangler.jsonc](wrangler.jsonc)); el sexto recibe 429 con el correo directo.
 
+El brief ([src/paginas/Brief.jsx](src/paginas/Brief.jsx), preguntas en
+[src/lib/brief/](src/lib/brief/)) es un solo formulario partido en pantallas
+por ancla (`#paso-1`…): el CSS muestra la del ancla con `:target`, así que el
+«atrás» del navegador retrocede un paso. [src/brief.js](src/brief.js), que solo
+baja en esa página, guarda las respuestas en el navegador mientras se llenan,
+pide nombre y un contacto, arma la revisión y envía a `POST /api/brief`
+([worker/brief.js](worker/brief.js)). El Worker valida cada respuesta según su
+pregunta, manda el brief a contacto@volutus.cl con los datos del envío (IP,
+lugar, navegador, pantalla, id al azar del navegador y tiempo de llenado) y,
+si se pidió y Turnstile se verificó, una copia al cliente. Defensas: Turnstile
+con su propia acción, trampa, menos de 8 s descarta en silencio y dos envíos
+por minuto por IP (`LIMITE_BRIEF`). Lo que comparten los dos formularios del
+Worker vive en [worker/comun.js](worker/comun.js).
+
 Las cabeceras de seguridad viven en [src/lib/seguridad.js](src/lib/seguridad.js):
 el prerender las escribe en `dist/_headers` y el Worker las pone en sus
 respuestas.
@@ -121,7 +137,9 @@ src/
   styles/               # tokens y base (index.css) + orden de la cascada (main.css)
   main.js, client.js    # entrada y comportamiento en el navegador
 worker/
-  index.js              # POST /api/contacto
+  index.js              # POST /api/contacto y el enrutado
+  brief.js              # POST /api/brief
+  comun.js              # lo que comparten los dos formularios
 public/
   fonts/, image/        # Geist, Geist Mono, Archivo itálica y recursos webp
   robots.txt, llms.txt, .well-known/security.txt
@@ -133,7 +151,7 @@ public/
 - Meta description, canonical, Open Graph, Twitter Card y JSON-LD por página,
   desde [src/lib/meta.js](src/lib/meta.js): cada servicio es un `Service` con
   su `FAQPage`, y cada artículo un `Article` con su `BreadcrumbList`.
-- `sitemap.xml` contiene las páginas indexables; `/404` y `/500` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
+- `sitemap.xml` contiene las páginas indexables; `/404`, `/500` y `/brief` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
   Cada URL lleva `<lastmod>` desde `actualizada` en meta.js: hay que moverla
   al cambiar el contenido de la página.
 - `robots.txt` deja leer, citar y entrenar a buscadores y agentes de IA

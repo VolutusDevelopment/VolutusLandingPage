@@ -1,0 +1,1751 @@
+/* El brief para clientes (paginas/Brief.jsx).
+ *
+ * Los campos, las pastillas y los botones son los del contacto y los de
+ * index.css. Aquí va lo propio del brief: la página blanca, las dos áreas con
+ * su color y su figura, la guía con su índice, las preguntas en columnas, las
+ * tarjetas, la escala, las tablas y la revisión. Las muestras de «Cómo se ve»
+ * (estilos, tipografías, portada de muestra y bocetos) van aparte, en
+ * public/brief/muestras.css: solo las usa esta página y este CSS va dentro de
+ * todas.
+ *
+ * Lo que se mueve, se mueve poco y solo con `transform` y `opacity`, y nada se
+ * mueve con el movimiento reducido. */
+
+/* Lo que brief.js esconde con `hidden` tiene `display` propio: sin esto el
+   atributo no lo escondería. */
+.brief[hidden],
+.brief-aviso[hidden],
+.brief-fallo[hidden],
+.brief-enviado[hidden],
+.brief-aviso-acciones[hidden],
+.brief-donde-area[hidden] {
+  display: none;
+}
+
+/* ---- La página ----
+ *
+ * Blanca de punta a punta: lo que tiene color es el formulario. Arriba, al
+ * rebotar el scroll, también blanco (`--fondo-de-arriba`, index.css). */
+html:has(.brief-pagina) {
+  --fondo-de-arriba: #ffffff;
+}
+
+.brief-pagina .zona-cielo {
+  --fondo: #ffffff;
+}
+
+/* Los colores del brief, cada uno con una sola función. Las dos áreas (su
+   índice, su número, la marca de lo respondido), lo obligatorio, la ayuda que
+   alivia, lo que más nos sirve y lo listo. Todos dan 5.5:1 o más con el
+   blanco. */
+.brief-pagina {
+  --obligatorio: #b8342c;
+  --ayuda: #007192;
+  --clave: #905500;
+  --listo: #007156;
+}
+
+.brief-area-marca {
+  --area: #00588d;
+}
+
+.brief-area-diseno {
+  --area: #af4000;
+}
+
+/* El brief usa más ancho que el resto del sitio: es una herramienta, no una
+   lectura, y en una pantalla grande las opciones caben en menos filas. */
+.brief-contenedor {
+  max-width: 1400px;
+}
+
+/* La figura de cada área: un círculo o un cuadrado de puntos, como la ola. */
+.brief-figura {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 6.2;
+}
+
+/* ---- La portada: el título y sus datos, y el formulario enseguida ---- */
+.brief-portada {
+  padding-block: var(--e-12) var(--e-6);
+}
+
+.brief-portada h1 {
+  font-size: clamp(34px, 5vw, 60px);
+}
+
+.brief-portada-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-1) var(--e-4);
+  margin: var(--e-4) 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.brief-portada-datos li + li::before {
+  content: '·';
+  margin-right: var(--e-4);
+}
+
+.brief-portada + .brief-seccion {
+  padding-top: var(--e-6);
+}
+
+@media (min-width: 1024px) {
+  .brief {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: var(--e-12);
+    align-items: start;
+  }
+}
+
+/* La flecha de avanzar se adelanta un poco al pasar por encima. */
+.brief-siguiente span {
+  transition: transform 180ms var(--ease-out);
+}
+
+.brief-siguiente:hover span {
+  transform: translateX(4px);
+}
+
+/* ---- Las pantallas ----
+ *
+ * Se ve la del ancla de la dirección; sin ancla (o con una que no es de una
+ * pantalla), el recorrido. Sin `:has()` (Safari antes de 15.4) se ven todas,
+ * una tras otra, y el índice sigue llevando a cada una. */
+@supports selector(:has(*)) {
+  .brief-pantalla {
+    display: none;
+  }
+
+  .brief-pantalla:target,
+  .brief:not(:has(.brief-pantalla:target)) #inicio {
+    display: block;
+  }
+}
+
+.brief-pantalla + .brief-pantalla {
+  margin-top: var(--e-16);
+}
+
+/* Cada paso entra subiendo apenas: se nota que algo cambió sin que la página
+   salte. */
+@media (prefers-reduced-motion: no-preference) {
+  .brief-pantalla:target {
+    animation: brief-entra 480ms var(--ease-out) both;
+  }
+}
+
+@keyframes brief-entra {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.brief-pantalla-cabeza {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--e-6);
+  align-items: center;
+  margin-bottom: var(--e-8);
+  padding-bottom: var(--e-6);
+  border-bottom: 2px dotted var(--linea);
+}
+
+.brief-pantalla-cabeza > :not(.brief-numero) {
+  grid-column: 2;
+}
+
+#inicio .brief-pantalla-cabeza > *,
+#revisar .brief-pantalla-cabeza > * {
+  grid-column: 1 / -1;
+}
+
+/* El número de la parte dentro de la figura de su área. */
+.brief-numero {
+  grid-row: span 3;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 8vw, 96px);
+  aspect-ratio: 1;
+  color: var(--area);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-style: italic;
+  font-weight: 800;
+  user-select: none;
+}
+
+.brief-numero .brief-figura {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brief-pantalla:target .brief-numero .brief-figura {
+    animation: brief-gira 1.2s var(--ease-out) both;
+  }
+}
+
+@keyframes brief-gira {
+  from {
+    transform: rotate(-60deg);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 559px) {
+  .brief-pantalla-cabeza {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brief-pantalla-cabeza > :not(.brief-numero) {
+    grid-column: 1;
+  }
+
+  .brief-numero {
+    grid-row: auto;
+    width: 56px;
+    margin-bottom: var(--e-3);
+  }
+}
+
+.brief-pantalla h2 {
+  font-size: clamp(30px, 3.6vw, 46px);
+  margin-bottom: var(--e-3);
+}
+
+/* El título recibe el foco al llegar (brief.js), para que el lector de
+   pantalla empiece por él. No es un control: no lleva anillo. */
+.brief-pantalla h2:focus {
+  outline: none;
+}
+
+.brief-pantalla-dato {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--area, var(--accion));
+  margin-bottom: var(--e-2);
+}
+
+.brief-pantalla-entrada {
+  max-width: 62ch;
+  font-size: var(--texto-lg);
+  line-height: 1.45;
+  color: var(--texto-suave);
+}
+
+/* ---- La guía: dónde estoy, cuánto falta y que está guardado ----
+ *
+ * En S y M, una franja que se queda arriba al bajar por un paso largo. Desde
+ * L, al costado y fija, con el índice entero en un cuadro por área. */
+.brief-guia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  margin-bottom: var(--e-8);
+}
+
+@media (max-width: 1023px) {
+  .brief-guia {
+    position: sticky;
+    top: calc(var(--barra-alto) + var(--e-1));
+    z-index: 2;
+    margin-inline: calc(-1 * var(--e-3));
+    padding: var(--e-2) var(--e-3) var(--e-3);
+    border-radius: var(--radio-tarjeta);
+    background: color-mix(in srgb, var(--fondo) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  /* La franja queda arriba de la pantalla al saltar a ella. */
+  .brief-pantalla {
+    scroll-margin-top: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brief-guia {
+    position: sticky;
+    top: var(--bajo-barra);
+    margin: 0;
+  }
+
+  .brief-avance {
+    padding: var(--e-3) var(--e-4);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-tarjeta);
+  }
+}
+
+.brief-avance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.brief-guia-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+.brief-donde {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  min-width: 0;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.brief-donde-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* El área en que se está, en una etiqueta de su color. */
+.brief-donde-area {
+  flex: none;
+  padding: 3px 6px;
+  border-radius: var(--radio);
+  background: var(--area);
+  color: #ffffff;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.brief-guardado {
+  flex: none;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  transition: color 200ms var(--ease-out);
+}
+
+.brief-guardado.recien {
+  color: var(--listo);
+}
+
+/* La barra: cuánto de la parte en que se está ya pasó por la pantalla
+   (brief.js). Vuelve a cero en la siguiente. */
+.brief-progreso {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--linea);
+  overflow: hidden;
+}
+
+.brief-progreso-relleno {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--area, var(--accion));
+  transform-origin: left;
+  transform: scaleX(var(--avance, 0));
+}
+
+.brief-indice,
+.brief-guia-nota {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .brief-indice {
+    display: flex;
+    flex-direction: column;
+    gap: var(--e-3);
+  }
+
+  .brief-guia-nota {
+    display: block;
+    font-size: var(--texto-xs);
+    color: var(--texto-suave);
+  }
+}
+
+/* Cada área es un cuadro con su nombre vertical en el lomo. */
+.brief-grupo {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  border: 1px solid color-mix(in srgb, var(--area) 28%, var(--linea));
+  border-radius: var(--radio-tarjeta);
+  overflow: hidden;
+}
+
+.brief-grupo-lomo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  margin: 0;
+  padding: var(--e-3) 0;
+  background: var(--area);
+  color: #ffffff;
+}
+
+.brief-grupo-lomo .brief-figura {
+  width: 18px;
+  height: 18px;
+}
+
+.brief-grupo-lomo span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.brief-grupo ol {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  padding: var(--e-1);
+  list-style: none;
+}
+
+.brief-indice a {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  gap: var(--e-2);
+  align-items: center;
+  min-height: 40px;
+  padding: var(--e-1) var(--e-2);
+  border-radius: var(--radio);
+  font-size: var(--texto-sm);
+  line-height: 1.25;
+  color: var(--texto-suave);
+  text-decoration: none;
+  transition:
+    background-color 140ms var(--ease-out),
+    color 140ms var(--ease-out);
+}
+
+.brief-indice a:hover {
+  color: var(--texto);
+  background: color-mix(in srgb, var(--area, var(--texto)) 7%, transparent);
+}
+
+.brief-indice a[aria-current] {
+  color: var(--texto);
+  font-weight: 800;
+  background: color-mix(in srgb, var(--area, var(--listo)) 11%, transparent);
+}
+
+/* La marca de cada parte: la figura de su área, vacía; llena si ya tiene
+   algo respondido. */
+.brief-indice-marca {
+  width: 12px;
+  height: 12px;
+  justify-self: center;
+  border: 1.5px solid var(--area, var(--listo));
+  border-radius: 50%;
+  transition:
+    background-color 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.brief-area-diseno .brief-indice-marca {
+  border-radius: 2px;
+}
+
+.brief-indice a.respondido .brief-indice-marca {
+  background: var(--area);
+}
+
+.brief-indice a[aria-current] .brief-indice-marca {
+  transform: scale(1.25);
+}
+
+.brief-indice-revisar {
+  border: 1px dashed var(--linea);
+}
+
+.brief-indice-revisar .brief-indice-marca {
+  border-style: dashed;
+}
+
+/* ---- El recorrido ---- */
+.brief-recorrido-area + .brief-recorrido-area {
+  margin-top: var(--e-8);
+}
+
+.brief-recorrido-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  margin-bottom: var(--e-3);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--area);
+}
+
+.brief-recorrido-titulo .brief-figura {
+  width: 18px;
+  height: 18px;
+}
+
+.brief-recorrido {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--e-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.brief-recorrido a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  column-gap: var(--e-4);
+  height: 100%;
+  padding: var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+  color: var(--texto);
+  text-decoration: none;
+  transition:
+    border-color 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+}
+
+.brief-recorrido a:hover {
+  border-color: var(--area);
+}
+
+.brief-recorrido-n {
+  grid-row: span 3;
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: 34px;
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--area);
+}
+
+.brief-recorrido-nombre {
+  font-weight: 800;
+}
+
+.brief-recorrido-resumen {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-recorrido-tiempo {
+  margin-top: var(--e-2);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.brief-empezar {
+  max-width: none;
+  margin-top: var(--e-12);
+}
+
+/* ---- Las preguntas ----
+ *
+ * Una columna, y las cortas en dos columnas por tema desde M (`columnas` en
+ * preguntas.js). Cada columna es una pila que crece por su lado: si un cuadro
+ * de texto se agranda, solo baja lo que está debajo de él. Las etiquetas son
+ * preguntas enteras: van en texto y en negrita, no en la mono chica de las
+ * etiquetas del contacto, que en una frase larga cuesta leer. */
+.brief-preguntas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+
+.brief-columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--e-8) var(--e-8);
+  align-items: start;
+}
+
+@media (min-width: 720px) {
+  .brief-columnas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.brief-columna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+  min-width: 0;
+}
+
+.brief-columna-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2);
+  min-height: 24px;
+  margin-bottom: calc(-1 * var(--e-4));
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+/* En línea y no en flex: Safari no deja que una `<legend>` sea flex, y la
+   marca y las pastillas tienen que fluir igual en las dos. */
+.brief .campo > label,
+.brief .opciones > legend {
+  display: block;
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  text-transform: none;
+  color: var(--texto);
+}
+
+.brief .opciones > legend {
+  margin-bottom: var(--e-3);
+}
+
+/* La marca de cada pregunta: la figura de su área, vacía, que se llena con su
+   color cuando ya tiene respuesta. */
+.brief .brief-pregunta > :is(label, legend)::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: var(--e-3);
+  vertical-align: 0.05em;
+  border: 1.5px solid var(--area, var(--accion));
+  border-radius: 50%;
+  transition:
+    background-color 200ms var(--ease-out),
+    transform 260ms var(--ease-masa);
+}
+
+.brief-area-diseno .brief-pregunta > :is(label, legend)::before {
+  border-radius: 2px;
+}
+
+.brief-pregunta:has(
+    input:not([type='radio'], [type='checkbox'], [type='color']):not(:placeholder-shown),
+    textarea:not(:placeholder-shown),
+    input:checked
+  )
+  > :is(label, legend)::before {
+  background: var(--area, var(--accion));
+  transform: scale(1.15);
+}
+
+/* Las pastillas que destacan: obligatorio, la ayuda que alivia, lo que más
+   nos sirve y el contador de «elige hasta 3». */
+.brief-pastilla {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-family: var(--fuente-datos);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: 0.15em;
+}
+
+:is(label, legend) > .brief-pastilla {
+  margin-left: var(--e-2);
+}
+
+.brief-pastilla-obligatorio {
+  color: var(--obligatorio);
+  background: color-mix(in srgb, var(--obligatorio) 10%, transparent);
+}
+
+.brief-pastilla-ayuda {
+  color: var(--ayuda);
+  background: color-mix(in srgb, var(--ayuda) 11%, transparent);
+}
+
+.brief-pastilla-clave {
+  color: var(--clave);
+  background: color-mix(in srgb, var(--clave) 11%, transparent);
+}
+
+.brief-cuenta {
+  border: 1px solid var(--linea);
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+  transition:
+    color 200ms var(--ease-out),
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out);
+}
+
+.brief-cuenta.lleno {
+  border-color: transparent;
+  color: var(--listo);
+  background: color-mix(in srgb, var(--listo) 11%, transparent);
+}
+
+.brief .campo textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* El cuadro crece con lo que se escribe, donde se puede. */
+@supports (field-sizing: content) {
+  .brief .campo textarea {
+    field-sizing: content;
+    min-height: 5.5rem;
+  }
+}
+
+.brief-ayuda {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+  margin-bottom: var(--e-2);
+}
+
+.brief-ejemplo {
+  margin-top: var(--e-1);
+  padding: var(--e-2) var(--e-3);
+  border: 1px dashed var(--linea);
+  border-radius: var(--radio);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-ejemplo-marca {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--area, var(--accion));
+}
+
+/* Los comienzos de frase del texto largo (brief.js los suma al cuadro). */
+.brief-guias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  margin-bottom: var(--e-3);
+}
+
+.brief-guia-frase {
+  min-height: 40px;
+  padding: 0 var(--e-3);
+  border: 1px dashed color-mix(in srgb, var(--area) 50%, var(--linea));
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto);
+  font: inherit;
+  font-size: var(--texto-sm);
+  cursor: pointer;
+  transition: background-color 140ms var(--ease-out);
+}
+
+.brief-guia-frase::before {
+  content: '+ ';
+  color: var(--area);
+}
+
+.brief-guia-frase:hover {
+  background: color-mix(in srgb, var(--area) 8%, transparent);
+}
+
+.brief-consejo {
+  max-width: none;
+  padding: var(--e-4) var(--e-6);
+  border-left: 3px solid var(--area, var(--accion));
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--area, var(--accion)) 7%, var(--superficie));
+}
+
+/* «Así no / así sí»: lo genérico contra lo concreto. */
+.brief-comparar {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  font-size: var(--texto-sm);
+}
+
+.brief-comparar th {
+  padding: var(--e-2) var(--e-4);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--obligatorio);
+  border-bottom: 1px solid var(--linea);
+}
+
+.brief-comparar th + th {
+  color: var(--listo);
+}
+
+.brief-comparar td {
+  padding: var(--e-3) var(--e-4);
+  vertical-align: top;
+  border-bottom: 1px solid var(--linea);
+}
+
+.brief-comparar td + td,
+.brief-comparar th + th {
+  border-left: 1px solid var(--linea);
+}
+
+/* ---- Lo que se marca ----
+ *
+ * Al marcar, la marca aparece con un salto corto: confirma el toque. Lo
+ * elegido toma el color de su área. */
+@keyframes brief-salta {
+  0% {
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+}
+
+.brief .chip {
+  font-size: var(--texto-sm);
+}
+
+/* Las de una empresa se visten como ella (public/brief/muestras.css). */
+.brief .chip:not(.brief-marca):has(input:checked) {
+  border-color: var(--area, var(--accion));
+  background: color-mix(in srgb, var(--area, var(--accion)) 10%, var(--superficie));
+  color: var(--texto);
+}
+
+.brief .chip:has(input:checked)::before {
+  display: inline-block;
+  color: var(--area, var(--accion));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brief .chip:has(input:checked)::before,
+  .brief-opcion:has(input:checked) .brief-opcion-texto::before {
+    animation: brief-salta 280ms var(--ease-out);
+  }
+}
+
+@media (min-width: 560px) {
+  .brief-chips {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+/* Al llegar al tope de «elige hasta 3», las que quedan se apagan (brief.js). */
+.chip:has(input:disabled),
+.brief-tarjeta:has(.brief-opcion input:disabled) {
+  opacity: 0.45;
+}
+
+.chip:has(input:disabled),
+.brief-opcion:has(input:disabled),
+.brief-opcion input:disabled {
+  cursor: not-allowed;
+}
+
+.brief-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: var(--e-2);
+}
+
+.brief-tarjetas:has(.con-imagen) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+}
+
+.brief-tarjeta {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+  transition:
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.brief-tarjeta:hover {
+  border-color: color-mix(in srgb, var(--area, var(--accion)) 45%, var(--linea));
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .brief-tarjeta:hover,
+  .brief-recorrido a:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.brief-tarjeta:has(.brief-opcion input:checked) {
+  border-color: var(--area, var(--accion));
+  background: color-mix(in srgb, var(--area, var(--accion)) 6%, var(--superficie));
+}
+
+.brief-tarjeta:has(.brief-opcion input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* La casilla nativa cubre la tarjeta, transparente: el clic, el foco y la
+   barra espaciadora siguen siendo suyos, como en las pastillas. */
+.brief-opcion {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.brief .brief-opcion input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.brief-opcion img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-bottom: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+}
+
+.brief-tarjeta:has(.brief-opcion input:checked) img {
+  border-bottom-color: var(--area, var(--accion));
+}
+
+.brief-muestra-color {
+  display: block;
+  height: 2.75rem;
+  margin: var(--e-3) var(--e-3) 0;
+  border-radius: var(--radio);
+}
+
+/* La marca de elegido: cuadro para «varias», círculo para «una». Marcada se
+   rellena y suma el ✓: el estado no se dice solo con color. */
+.brief-opcion-texto {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  column-gap: var(--e-3);
+  padding: var(--e-3);
+  line-height: 1.35;
+}
+
+.brief-opcion-texto::before {
+  content: '';
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 1px;
+  border: 1.5px solid color-mix(in srgb, var(--texto) 35%, transparent);
+  border-radius: var(--radio);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.brief-opcion:has(input[type='radio']) .brief-opcion-texto::before {
+  border-radius: 50%;
+}
+
+.brief-opcion:has(input:checked) .brief-opcion-texto::before {
+  content: '✓';
+  background: var(--area, var(--accion));
+  border-color: var(--area, var(--accion));
+  color: #ffffff;
+}
+
+.brief-opcion-nombre {
+  font-weight: 800;
+  font-size: var(--texto-sm);
+}
+
+.brief-opcion-detalle {
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+/* «★ Imprescindible», una pastilla más dentro de la tarjeta, en el color de
+   lo que más nos sirve. */
+.brief-estrella {
+  position: relative;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1);
+  min-height: 32px;
+  margin: 0 var(--e-3) var(--e-3);
+  padding: 0 var(--e-3);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    color 160ms var(--ease-out);
+}
+
+.brief .brief-estrella input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.brief-estrella span {
+  transition: transform 260ms var(--ease-masa);
+}
+
+.brief-estrella:hover {
+  border-color: var(--clave);
+}
+
+.brief-estrella:has(input:checked) {
+  background: color-mix(in srgb, var(--clave) 10%, var(--superficie));
+  border-color: var(--clave);
+  color: var(--clave);
+}
+
+.brief-estrella:has(input:checked) span {
+  transform: rotate(72deg) scale(1.2);
+}
+
+.brief-estrella:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.brief-otro {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  margin-top: var(--e-3);
+}
+
+.brief-otro label {
+  flex: none;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+/* ---- La escala: cinco puntos entre dos extremos ----
+ *
+ * Los extremos arriba y los puntos debajo; donde la caja da, los tres en una
+ * fila. El extremo hacia el que se marca toma el color del área. */
+.brief-escala {
+  container-type: inline-size;
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.brief-escala-fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--e-3) var(--e-4);
+  align-items: center;
+}
+
+.brief-puntos {
+  grid-row: 2;
+  grid-column: 1 / -1;
+}
+
+.brief-extremo-derecho {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+}
+
+@container (min-width: 520px) {
+  .brief-escala-fila {
+    grid-template-columns: 8rem minmax(0, 1fr) 8rem;
+  }
+
+  .brief-puntos,
+  .brief-extremo-derecho {
+    grid-row: auto;
+    grid-column: auto;
+  }
+}
+
+.brief-extremo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.brief-extremo-nombre {
+  font-weight: 800;
+  font-size: var(--texto-sm);
+  transition: color 160ms var(--ease-out);
+}
+
+.brief-extremo-detalle {
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.brief-escala:has(input[value='1']:checked, input[value='2']:checked) .brief-extremo:first-child .brief-extremo-nombre,
+.brief-escala:has(input[value='4']:checked, input[value='5']:checked) .brief-extremo-derecho .brief-extremo-nombre {
+  color: var(--area, var(--accion));
+}
+
+.brief-puntos {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.brief-puntos::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: calc(50% - 1px);
+  border-top: 2px dotted var(--linea);
+}
+
+.brief-punto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.brief-punto::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border: 2px solid color-mix(in srgb, var(--texto) 30%, transparent);
+  border-radius: 50%;
+  background: var(--superficie);
+  transition:
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.brief-punto:hover::before {
+  border-color: var(--area, var(--accion));
+  transform: scale(1.1);
+}
+
+.brief-punto:has(input:checked)::before {
+  background: var(--area, var(--accion));
+  border-color: var(--area, var(--accion));
+  outline: 5px solid color-mix(in srgb, var(--area, var(--accion)) 18%, transparent);
+  transform: scale(1.2);
+}
+
+.brief-punto:has(input:focus-visible)::before {
+  outline: 2px solid var(--foco);
+  outline-offset: 3px;
+}
+
+.brief .brief-punto input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* ---- Tablas: filas numeradas ----
+ *
+ * En S cada fila apila sus columnas, y los textos de ejemplo dicen qué va en
+ * cada una. */
+.brief-tabla {
+  display: grid;
+  gap: var(--e-2);
+}
+
+.brief-tabla-cabeza,
+.brief-tabla-fila {
+  display: grid;
+  grid-template-columns: 2rem repeat(var(--columnas), minmax(0, 1fr));
+  gap: var(--e-2);
+  align-items: center;
+}
+
+.brief-tabla-cabeza {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.brief-tabla-n {
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  color: var(--area, var(--accion));
+}
+
+@media (max-width: 559px) {
+  .brief-tabla-cabeza {
+    display: none;
+  }
+
+  .brief-tabla-fila {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--e-1);
+  }
+
+  .brief-tabla-fila + .brief-tabla-fila {
+    margin-top: var(--e-3);
+  }
+}
+
+/* ---- La frase con huecos ---- */
+.brief-frase {
+  max-width: none;
+  padding: var(--e-4) var(--e-6);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+  font-size: var(--texto-lg);
+  line-height: 1.5;
+}
+
+.brief-hueco {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: bottom;
+  max-width: 100%;
+  margin: var(--e-2) var(--e-1);
+}
+
+.brief-hueco-nombre {
+  font-family: var(--fuente-datos);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--area, var(--accion));
+  line-height: 1.4;
+}
+
+.brief .brief-hueco input {
+  width: 14rem;
+  max-width: 100%;
+}
+
+/* ---- Los colores: código o nombre, con su selector ---- */
+.brief-colores {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+  gap: var(--e-3);
+}
+
+.brief-color label {
+  display: block;
+  margin-bottom: var(--e-1);
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.brief-color-caja {
+  display: flex;
+  gap: var(--e-2);
+}
+
+.brief .brief-color-caja input[type='color'] {
+  flex: none;
+  width: 44px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+/* ---- Navegación entre pasos ---- */
+.brief-nav,
+.brief-envio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  margin-top: var(--e-12);
+  padding-top: var(--e-6);
+  border-top: 2px dotted var(--linea);
+}
+
+.brief-nav-nota {
+  flex: 1 1 12rem;
+  text-align: center;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+@media (max-width: 559px) {
+  .brief-nav-nota {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .brief-nav .boton,
+  .brief-envio .boton {
+    flex: 1;
+  }
+}
+
+/* El ancho de «Enviar brief», reservado: al pasar a «Enviando…» no encoge. */
+.brief-enviar {
+  min-width: 12rem;
+  min-height: 52px;
+  font-size: var(--texto-lg);
+}
+
+/* ---- Recuperado y revisión ---- */
+.brief-aviso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-4);
+  margin-bottom: var(--e-8);
+  padding: var(--e-4) var(--e-6);
+  border: 1px solid color-mix(in srgb, var(--accion) 30%, var(--linea));
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in srgb, var(--accion) 7%, var(--superficie));
+}
+
+.brief-aviso-acciones,
+.brief-fallo-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+}
+
+/* Cuánto hay en cada área y si están los obligatorios: la figura de cada una
+   se llena con lo respondido (brief.js). */
+.brief-medidores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--e-3);
+  margin-bottom: var(--e-6);
+}
+
+.brief-medidor {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--e-4);
+  align-items: center;
+  padding: var(--e-4);
+  border: 1px solid color-mix(in srgb, var(--area) 28%, var(--linea));
+  border-radius: var(--radio-tarjeta);
+}
+
+.brief-medidor-listo {
+  --area: var(--listo);
+}
+
+.brief-medidor-falta {
+  --area: var(--obligatorio);
+}
+
+/* La figura del área dos veces: gris debajo y, encima, la de color, que se
+   descubre como un reloj hasta la parte respondida (`--lleno`). */
+.brief-medidor-figura {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  color: var(--area);
+}
+
+.brief-medidor-figura .brief-figura {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke-width: 3;
+}
+
+.brief-medidor-figura .base {
+  color: var(--linea);
+}
+
+.brief-medidor-figura .llena {
+  -webkit-mask: conic-gradient(#000 calc(var(--lleno) * 1turn), transparent 0);
+  mask: conic-gradient(#000 calc(var(--lleno) * 1turn), transparent 0);
+}
+
+.brief-medidor-marca {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  justify-self: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--area) 12%, transparent);
+  color: var(--area);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.brief-medidor b {
+  display: block;
+  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 800;
+  color: var(--area);
+  font-variant-numeric: tabular-nums;
+}
+
+.brief-medidor span {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-alertas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--e-4);
+  align-items: start;
+  margin-bottom: var(--e-8);
+}
+
+.brief-alertas:empty {
+  display: none;
+}
+
+.brief-alerta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  padding: var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+.brief-alerta h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2);
+  font-size: var(--texto-base);
+}
+
+.brief-alerta ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Lo que más nos sirve y está vacío: cada uno lleva a su pregunta. */
+.brief-falta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  padding: var(--e-2) var(--e-3);
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--area) 6%, var(--superficie));
+  font-size: var(--texto-sm);
+}
+
+.brief-falta small {
+  display: block;
+  color: var(--texto-suave);
+  font-size: var(--texto-xs);
+}
+
+.brief-falta a,
+.brief-ojo a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--texto-sm);
+}
+
+/* Lo que no calza entre respuestas: se arregla o se deja así. */
+.brief-ojo {
+  padding: var(--e-3) var(--e-4);
+  border-left: 3px solid var(--clave);
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--clave) 7%, var(--superficie));
+  font-size: var(--texto-sm);
+}
+
+.brief-ojo p {
+  color: var(--texto-suave);
+}
+
+.brief-ojo-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-4);
+}
+
+.brief-ojo button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto-suave);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* El resumen: solo lo respondido, parte por parte, y lo vacío plegado. */
+.brief-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+  gap: var(--e-4);
+  align-items: start;
+}
+
+.brief-resumen-parte {
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.brief-resumen-cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  padding: var(--e-2) var(--e-4);
+  border-bottom: 1px solid var(--linea);
+}
+
+.brief-resumen-cabeza .brief-figura {
+  width: 18px;
+  height: 18px;
+  color: var(--area);
+}
+
+.brief-resumen-cabeza h3 {
+  font-size: var(--texto-base);
+}
+
+.brief-resumen-avance {
+  margin-left: auto;
+}
+
+.brief-resumen-editar {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--texto-sm);
+}
+
+.brief-resumen dl {
+  margin: 0;
+  padding: var(--e-1) var(--e-4) var(--e-3);
+}
+
+.brief-resumen dt {
+  padding-top: var(--e-3);
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.brief-resumen dd {
+  margin: 0;
+  padding-bottom: var(--e-3);
+  border-bottom: 1px solid var(--linea);
+  font-size: var(--texto-sm);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.brief-resumen dd:last-child {
+  border-bottom: 0;
+}
+
+/* La escala, en puntos: dónde quedó el marcado. */
+.brief-resumen-escala {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: var(--e-2);
+  vertical-align: middle;
+}
+
+.brief-resumen-escala i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--linea);
+}
+
+.brief-resumen-escala i.marcado {
+  background: var(--area);
+  transform: scale(1.3);
+}
+
+.brief-resumen-color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--e-1);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  vertical-align: -3px;
+}
+
+.brief-vacias {
+  padding: 0 var(--e-4) var(--e-3);
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-vacias summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.brief-vacias ul {
+  margin: 0;
+  padding-left: var(--e-6);
+}
+
+.brief-copia {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  margin-top: var(--e-8);
+  cursor: pointer;
+}
+
+.brief-copia input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 3px 0 0;
+  accent-color: var(--accion);
+}
+
+.brief-copia-detalle {
+  display: block;
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+.brief-fallo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  margin-top: var(--e-6);
+  padding: var(--e-6);
+  border: 1px solid var(--error);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in srgb, var(--error) 5%, var(--superficie));
+}
+
+.brief-fallo-correo {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+/* Enviado: las dos figuras, completas. */
+.brief-enviado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e-4);
+  padding: var(--e-16) var(--e-6);
+  text-align: center;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.brief-enviado:focus {
+  outline: none;
+}
+
+.brief-enviado .antetitulo {
+  margin: 0;
+}
+
+.brief-enviado-figuras {
+  display: flex;
+  gap: var(--e-3);
+}
+
+.brief-enviado-figuras .brief-figura {
+  width: 48px;
+  height: 48px;
+  color: #00588d;
+}
+
+.brief-enviado-figuras .brief-figura + .brief-figura {
+  color: #af4000;
+}
+
+.brief-enviado-texto {
+  font-size: var(--texto-lg);
+}

@@ -243,8 +243,10 @@
 /* El cuadro visible. En el mensaje no lo dibuja el textarea sino el composer
    que lo envuelve junto con su barra (ver más abajo). El campo es un hueco en
    la tarjeta, no otra tarjeta encima. Blanco sobre blanco no se ve: se tiñe
-   levemente con el color de texto. */
+   levemente con el color de texto. Un textarea suelto (los briefs) dibuja el
+   suyo, como un input. */
 .campo input,
+.campo > textarea,
 .composer {
   background: color-mix(in srgb, var(--texto) 4%, transparent);
   border: 1px solid var(--linea);
@@ -263,12 +265,14 @@
 /* Al escribir, el campo se aclara y el borde se tiñe: dice cuál está activo
    sin recurrir a una sombra. */
 .campo input:focus,
+.campo > textarea:focus,
 .composer:has(textarea:focus) {
   background: var(--superficie);
   border-color: var(--accion);
 }
 
 .campo input:hover,
+.campo > textarea:hover,
 .composer:hover {
   border-color: color-mix(in srgb, var(--accion) 40%, var(--linea));
 }

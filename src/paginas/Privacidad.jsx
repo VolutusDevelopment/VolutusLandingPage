@@ -19,8 +19,10 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * **Describe lo que el sitio hace de verdad, no lo que suele decir una
  * política.** Volutus no vende por la web, no tiene cuentas, no perfila y no
  * mide nada: el único dato personal que entra es el del formulario, y la IP con
- * que Cloudflare frena a los robots. Lo único que se guarda en el navegador es
- * el modo desbloqueado del juego de los patos (lib/odio.js), y también se dice.
+ * que Cloudflare frena a los robots. El brief para clientes (/brief), que se
+ * manda por link, suma lo que identifica el envío (worker/brief.js). En el
+ * navegador se guardan el modo desbloqueado del juego de los patos
+ * (lib/odio.js) y, en el brief, las respuestas a medio llenar; también se dice.
  *
  * **Cubre lo que la ley pide publicar.** Es el art. 14 ter de la Ley 19.628,
  * en la redacción que le da la 21.719 desde el 1 de diciembre de 2026:
@@ -29,7 +31,7 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * protegen, los derechos y el reclamo ante la Agencia, con versión y fecha.
  */
 
-const VERSION = 4
+const VERSION = 5
 const ACTUALIZADO = fechaDe('/privacidad')
 
 const CORREO = `[${CORREO_DE_CONTACTO}](mailto:${CORREO_DE_CONTACTO})`
@@ -67,6 +69,21 @@ const APARTADOS = [
     ],
   },
   {
+    id: 'brief',
+    titulo: 'Si llenas nuestro brief',
+    cuerpo: [
+      'Si te mandamos el link del **brief**, el cuestionario de marca y sitio web, lo que respondes nos llega por correo y, si lo pides, te llega una copia a ti. Lo usamos para preparar tu propuesta y la conversación.',
+      'Para saber que lo envía una persona y no un robot, y reconocer un envío repetido, el correo que nos llega suma datos del envío:',
+      [
+        '**Tu dirección IP**, y el lugar y el proveedor de internet que Cloudflare deduce de ella.',
+        '**Tu navegador y tu sistema**, la medida de tu pantalla, tu zona horaria y tu idioma.',
+        '**Un número al azar** que se guarda en tu navegador para saber si dos briefs vienen del mismo equipo. No dice quién eres ni te sigue fuera de esta página.',
+        '**Cuánto tardaste** en llenarlo.',
+      ],
+      'Mientras lo llenas, tus respuestas se guardan **solo en tu navegador**, para que no se pierdan si cierras la página, y se borran de ahí al enviarlo. La copia que te llega no lleva los datos del envío. La base legal es la misma del formulario, más nuestro interés legítimo en protegerlo de abusos.',
+    ],
+  },
+  {
     id: 'lo-que-no-hacemos',
     titulo: 'Lo que no hacemos con ellos',
     cuerpo: [
@@ -83,7 +100,7 @@ const APARTADOS = [
     titulo: 'Esta página no te rastrea',
     cuerpo: [
       'No hay analítica, ni píxeles de seguimiento, ni botones de redes sociales que informen de tu visita. **No usamos cookies**, así que no hay aviso que aceptar.',
-      'Lo único que se guarda en tu navegador es si terminaste una partida de la [caza de patos](/patos), para desbloquear un modo del juego. No dice nada de ti y no sale de tu equipo.',
+      'En tu navegador se guarda si terminaste una partida de la [caza de patos](/patos), para desbloquear un modo del juego, y, si llenas nuestro brief, tus respuestas mientras lo llenas y su número al azar (ver arriba). Nada de eso sale de tu equipo hasta que envías el brief.',
       'Como cualquier servidor, Cloudflare registra datos técnicos de cada visita, como tu dirección IP, por seguridad.',
     ],
   },
