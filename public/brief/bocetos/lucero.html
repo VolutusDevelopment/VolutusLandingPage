@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pista Lucero · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Pista Lucero, pista de patinaje y disco en Viña del Mar desde 1977, para mostrar el estilo Retro.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/shrikhand.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Pista Lucero · retro. Inspiración: Moxi (moxiskates.com). Se toma: 1) los
+   patines como objeto de deseo, recortados en un círculo; 2) una letra
+   gruesa y redonda para los títulos, con botones de píldora; 3) la energía de
+   la comunidad de pista, contada por noches. La paleta se va a los setenta
+   cálidos de la ficha. La idea propia: una noche de pista de los setenta. El
+   fondo es la pista a oscuras, una cinta de franjas cruza la página en curva,
+   la luz de la bola pasa despacio y la página sigue el camino de quien llega
+   por primera vez: qué hay esta semana, cómo empezar, cómo venir en grupo y,
+   al final, la historia. */
+@font-face { font-family: 'Shrikhand'; src: url('/fonts/bocetos/shrikhand.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Josefin Sans'; src: url('/fonts/bocetos/josefin-sans.woff2') format('woff2'); font-weight: 100 700; font-display: swap; }
+
+:root {
+  --noche: #24140c;
+  --pista: #3a2216;
+  --crema: #f3e1bf;
+  --claro: #fbf0da;
+  --naranja: #e8742a;
+  --mostaza: #e0a526;
+  --rosa: #d9677a;
+  --cafe: #5a3520;
+  --suave: #d9c3a0;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.45, 0, 0.55, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--noche); scroll-behavior: smooth; }
+body { margin: 0; background: var(--noche); color: var(--crema); font: 400 19px/1.55 'Josefin Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 3px solid var(--mostaza); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Shrikhand', Georgia, serif; font-weight: 400; line-height: 1.02; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { font-size: 15px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mostaza); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.seccion { position: relative; padding-block: clamp(88px, 11vw, 150px); }
+.titulo { margin-top: 12px; font-size: clamp(42px, 5.4vw, 76px); color: var(--crema); text-shadow: 4px 4px 0 var(--naranja); }
+.boton { display: inline-flex; align-items: center; min-height: 54px; padding: 4px 30px 0; border: 0; border-radius: 999px; background: var(--mostaza); color: var(--noche); font: 700 17px/1 'Josefin Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background-color 500ms var(--curva); }
+.boton:hover { background: #efbd4c; }
+.enlace { font-weight: 700; text-underline-offset: 7px; text-decoration-thickness: 2px; text-decoration-color: var(--rosa); }
+
+/* La cinta: cuatro franjas que corren juntas, en curva. */
+.cinta { position: absolute; left: -5%; width: 110%; height: auto; pointer-events: none; fill: none; stroke-linecap: round; }
+.cinta path:nth-child(1) { stroke: var(--rosa); stroke-width: 112; }
+.cinta path:nth-child(2) { stroke: var(--naranja); stroke-width: 80; }
+.cinta path:nth-child(3) { stroke: var(--mostaza); stroke-width: 48; }
+.cinta path:nth-child(4) { stroke: var(--crema); stroke-width: 16; }
+
+/* ---- Cabecera ---- */
+.cabecera { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo svg { width: 28px; height: 28px; color: var(--rosa); }
+.logo b { font: 400 30px/1 'Shrikhand', serif; color: var(--mostaza); }
+.cabecera nav ul { display: flex; gap: 30px; margin: 0; padding: 0; list-style: none; font-size: 15px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.cabecera nav a { text-decoration: none; transition: color 400ms var(--curva); }
+.cabecera nav a:hover { color: var(--mostaza); }
+
+/* ---- Portada: el afiche de la noche ---- */
+.portada-marco { position: relative; overflow: hidden; }
+.portada { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: center; min-height: calc(100svh - 170px); padding-block: 24px clamp(150px, 16vw, 230px); }
+.portada-texto { display: grid; gap: 22px; justify-items: start; }
+.portada h1 { margin-left: -0.04em; font-size: clamp(88px, 10.4vw, 156px); line-height: 0.86; color: var(--crema); text-shadow: 6px 6px 0 var(--naranja), 12px 12px 0 var(--rosa); rotate: -4deg; }
+.portada-texto > .bajada { max-width: 30ch; font-size: 22px; color: var(--suave); }
+.esta-noche { display: grid; max-width: 100%; grid-template-columns: auto minmax(0, 1fr); gap: 2px 16px; align-items: center; padding: 12px 24px 10px 12px; border: 2px solid var(--mostaza); border-radius: 999px; }
+.esta-noche span { grid-row: 1 / 3; display: grid; place-items: center; width: 54px; height: 54px; padding-top: 4px; border-radius: 50%; background: var(--mostaza); color: var(--noche); font: 400 19px/1 'Shrikhand', serif; }
+.esta-noche b { font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
+.esta-noche small { font-size: 16px; color: var(--suave); }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 30px; }
+.disco { position: relative; justify-self: center; width: min(100% - 64px, 26rem); aspect-ratio: 1; }
+.disco::before { content: ''; position: absolute; inset: -22%; border-radius: 50%; background: repeating-conic-gradient(rgb(243 225 191 / 0.07) 0 6deg, transparent 6deg 18deg); }
+.disco img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%; border-radius: 50%; box-shadow: 0 0 0 14px var(--mostaza), 0 0 0 28px var(--naranja), 0 0 0 42px var(--rosa), 0 0 0 56px var(--cafe); }
+.portada-marco .cinta { bottom: -4%; }
+.luces { position: absolute; inset: 0; pointer-events: none; }
+.luces i { position: absolute; width: 30vw; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgb(243 225 191 / 0.1), rgb(243 225 191 / 0)); }
+.luces i:nth-child(1) { left: -8vw; top: 4%; }
+.luces i:nth-child(2) { left: 26vw; top: 46%; width: 22vw; }
+.luces i:nth-child(3) { left: 54vw; top: -10%; width: 26vw; }
+
+/* ---- La semana: el cartel ---- */
+.cartel-grilla { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 56px clamp(32px, 5vw, 80px); align-items: start; margin-top: clamp(40px, 5vw, 64px); }
+.cartel { display: grid; margin: 0; padding: 0; list-style: none; }
+.noche { position: relative; isolation: isolate; display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) auto; gap: 4px 24px; align-items: center; padding-block: 18px; border-bottom: 2px dotted rgb(243 225 191 / 0.3); }
+.noche::before { content: ''; position: absolute; inset: 6px -16px; z-index: -1; border-radius: 18px; background: var(--pista); scale: 0 1; transform-origin: left; transition: scale 600ms var(--curva); }
+.noche:hover::before { scale: 1 1; }
+.noche abbr { font: 400 clamp(40px, 4.4vw, 60px)/1 'Shrikhand', serif; text-decoration: none; }
+.noche:nth-child(3n + 1) abbr { color: var(--mostaza); }
+.noche:nth-child(3n + 2) abbr { color: var(--naranja); }
+.noche:nth-child(3n) abbr { color: var(--rosa); }
+.noche b { display: block; font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
+.noche span { font-size: 17px; color: var(--suave); }
+.noche .precio { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.noche.destacada b { font: 400 clamp(32px, 3.2vw, 44px)/1.05 'Shrikhand', serif; letter-spacing: 0; text-transform: none; color: var(--mostaza); }
+.cartel-grilla figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 26px; box-shadow: 0 0 0 10px var(--noche), 0 0 0 16px var(--mostaza); }
+.cartel-grilla figcaption { margin-top: 28px; font-size: 16px; color: var(--suave); }
+
+/* ---- Primera vez: tres pasos ---- */
+.primera { background: var(--crema); color: var(--cafe); }
+.primera .titulo { color: var(--cafe); text-shadow: 4px 4px 0 var(--mostaza); }
+.primera .rotulo { color: #9b4a1c; }
+.pasos { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(24px, 4vw, 56px); margin: clamp(48px, 6vw, 72px) 0 0; padding: 0; list-style: none; }
+.pasos::before { content: ''; position: absolute; left: 32px; right: 32px; top: 30px; height: 18px; border-radius: 9px; background: linear-gradient(var(--rosa) 0 33.3%, var(--naranja) 33.3% 66.6%, var(--mostaza) 66.6%); }
+.paso { position: relative; display: grid; gap: 12px; align-content: start; }
+.paso > span { display: grid; place-items: center; width: 78px; height: 78px; padding-top: 6px; border: 6px solid var(--crema); border-radius: 50%; background: var(--cafe); color: var(--mostaza); font: 400 34px/1 'Shrikhand', serif; }
+.paso img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; margin-block: 10px 6px; border-radius: 22px; }
+.paso h3 { font-size: clamp(28px, 2.6vw, 36px); }
+.paso .precio { font-weight: 700; font-size: 20px; }
+.tallas { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
+.tallas li { display: grid; place-items: center; min-width: 2.5rem; height: 2.1rem; padding-top: 3px; border: 2px solid var(--cafe); border-radius: 999px; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---- Grupos: el plano y la entrada ---- */
+.grupos { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 6vw, 96px); align-items: start; }
+.grupos-texto { display: grid; gap: 20px; }
+.grupos-texto > p:not(.rotulo) { max-width: 38ch; color: var(--suave); }
+.plano svg { width: 100%; height: auto; margin-top: 12px; }
+.plano svg text { font: 700 16px 'Josefin Sans', sans-serif; letter-spacing: 0.1em; fill: var(--suave); text-transform: uppercase; }
+.patinador-quieto { display: none; }
+.formulario { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 36px) clamp(24px, 3vw, 36px) calc(84px + clamp(24px, 3vw, 36px)); border-radius: 18px; background: var(--claro); color: var(--cafe); }
+.formulario h3 { grid-column: 1 / -1; font-size: 30px; color: var(--cafe); }
+.talon { position: absolute; inset: 0 auto 0 0; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 84px; margin: 0; padding: 24px 0; border-right: 3px dashed var(--noche); border-radius: 18px 0 0 18px; background: var(--mostaza); color: var(--noche); writing-mode: vertical-rl; font-size: 14px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.talon b { font: 400 22px/1 'Shrikhand', serif; letter-spacing: 0.04em; text-transform: none; }
+.talon::before, .talon::after { content: ''; position: absolute; right: -15px; width: 28px; height: 28px; border-radius: 50%; background: var(--noche); }
+.talon::before { top: -14px; }
+.talon::after { bottom: -14px; }
+.formulario label { display: grid; gap: 8px; font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select { width: 100%; min-height: 52px; padding: 12px 18px 8px; border: 2px solid var(--cafe); border-radius: 999px; background: #fffaf0; color: var(--cafe); font: 400 19px/1.2 'Josefin Sans', sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; }
+.formulario select { padding-right: 44px; background: #fffaf0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%235a3520' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") right 20px center / 14px 9px no-repeat; }
+.formulario :is(input, select):focus-visible { outline: 3px solid var(--naranja); outline-offset: 2px; }
+.formulario .boton { justify-self: start; background: var(--cafe); color: var(--claro); }
+.formulario .boton:hover { background: #7a4a2e; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- La historia: fundas de disco ---- */
+.historia { background: var(--pista); }
+.discos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 48px clamp(20px, 3vw, 36px); margin: clamp(40px, 5vw, 64px) 0 0; padding: 0; list-style: none; }
+.discos li { position: relative; isolation: isolate; display: grid; gap: 8px; align-content: start; }
+.discos li::before { content: ''; position: absolute; top: 3%; right: -7%; z-index: -1; width: 90%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, var(--naranja) 0 13%, #120a06 13.5% 15%, transparent 15.5%), repeating-radial-gradient(#120a06 0 2px, #22150e 2px 4px); transition: translate 700ms var(--curva); }
+.discos li:hover::before { translate: 10% 0; }
+.funda { position: relative; display: grid; place-items: end start; aspect-ratio: 1; margin-bottom: 14px; padding: 12px 14px; overflow: hidden; border-radius: 6px; box-shadow: 0 16px 24px -16px rgb(0 0 0 / 0.7); }
+.funda img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.funda b { position: relative; font: 400 clamp(34px, 3.4vw, 48px)/1 'Shrikhand', serif; color: var(--claro); text-shadow: 3px 3px 0 var(--cafe); }
+.f2 { background: repeating-linear-gradient(var(--naranja) 0 18%, var(--mostaza) 18% 36%, var(--rosa) 36% 54%, var(--crema) 54% 72%); }
+.f3 { background: repeating-conic-gradient(from 0deg at 50% 100%, var(--mostaza) 0 10deg, var(--naranja) 10deg 20deg); }
+.f4 { background: repeating-radial-gradient(circle at 50% 50%, var(--rosa) 0 14px, var(--cafe) 14px 28px); }
+.discos h3 { font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.04em; }
+.discos p { font-size: 17px; color: var(--suave); }
+
+/* ---- Pie ---- */
+.pie { position: relative; overflow: hidden; padding-block: clamp(150px, 16vw, 210px) 40px; }
+.pie .cinta { top: -2%; }
+.pie-adios { position: relative; font: 400 clamp(52px, 8vw, 116px)/0.95 'Shrikhand', serif; color: var(--crema); text-shadow: 5px 5px 0 var(--naranja); }
+.pie-fila { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 36px; font-size: 16px; color: var(--suave); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera nav { display: none; }
+  .portada, .cartel-grilla, .grupos { grid-template-columns: minmax(0, 1fr); }
+  .portada { min-height: 0; padding-bottom: clamp(140px, 30vw, 220px); }
+  .disco { width: min(100% - 112px, 24rem); margin-top: 40px; }
+  .cartel-grilla figure { width: min(80%, 22rem); justify-self: end; }
+  .pasos { grid-template-columns: minmax(0, 1fr); }
+  .pasos::before { left: 30px; right: auto; top: 40px; bottom: 40px; width: 18px; height: auto; background: linear-gradient(90deg, var(--rosa) 0 33.3%, var(--naranja) 33.3% 66.6%, var(--mostaza) 66.6%); }
+  .paso { grid-template-columns: 78px minmax(0, 1fr); column-gap: 20px; }
+  .paso > :not(span) { grid-column: 2; }
+  .paso > span { grid-row: 1 / 3; }
+  .discos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .logo b { font-size: 26px; }
+  .cabecera .boton { min-height: 46px; padding: 3px 18px 0; font-size: 15px; }
+  .portada h1 { font-size: 21vw; }
+  .esta-noche { justify-self: stretch; border-radius: 28px; }
+  .noche { grid-template-columns: 4.4rem minmax(0, 1fr); }
+  .noche .precio { grid-column: 2; }
+  .paso { grid-template-columns: 64px minmax(0, 1fr); }
+  .paso > span { width: 64px; height: 64px; font-size: 28px; }
+  .pasos::before { left: 23px; }
+  .plano svg text { display: none; }
+  .formulario { grid-template-columns: minmax(0, 1fr); padding-left: calc(56px + 20px); }
+  .talon { width: 56px; font-size: 12px; }
+  .talon b { font-size: 18px; }
+  .discos { gap: 36px 16px; }
+}
+
+/* ---- Movimiento: una noche en la pista ----
+   La cinta de franjas se mece apenas, de ida y vuelta. La luz de la bola
+   pasa despacio en tres manchas tenues, cada una a su ritmo, y detrás de la
+   foto los rayos de la bola giran a velocidad constante, una vuelta por
+   minuto. En el plano, alguien da vueltas a la pista sin parar (SVG, con su
+   propia animación: con el movimiento reducido se ve quieto en la curva).
+   Al pasar el cursor por una noche, una franja de pista la subraya; al pasar
+   por una funda, el disco asoma un poco más. */
+[data-aparece] { --entrada: lucero-sube; --tramo: 34svh; --duracion: 1200ms; }
+@keyframes lucero-sube { from { opacity: 0; translate: 0 24px; } }
+@keyframes lucero-mece { from { translate: 0 -6px; rotate: -0.6deg; } to { translate: 0 6px; rotate: 0.6deg; } }
+@keyframes lucero-cruza { to { translate: 44vw 10vh; } }
+@keyframes lucero-enciende { from { opacity: 0; } }
+@keyframes lucero-gira { to { rotate: 1turn; } }
+@keyframes lucero-entra { from { opacity: 0; scale: 0.92; } }
+@media (prefers-reduced-motion: reduce) {
+  .patinador { display: none; }
+  .patinador-quieto { display: inline; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .portada-texto > * { animation: lucero-sube 1200ms var(--curva) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 120ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 240ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 360ms; }
+  .portada-texto > :nth-child(5) { animation-delay: 480ms; }
+  .disco { animation: lucero-entra 1600ms var(--curva) 200ms both; }
+  .disco::before { animation: lucero-enciende 2000ms var(--curva) 800ms both, lucero-gira 60s linear infinite; }
+  .cinta { animation: lucero-mece 10s var(--curva) infinite alternate; }
+  .luces { animation: lucero-enciende 2400ms var(--curva) 600ms both; }
+  .luces i:nth-child(1) { animation: lucero-cruza 19s var(--curva) infinite alternate; }
+  .luces i:nth-child(2) { animation: lucero-cruza 25s var(--curva) -8s infinite alternate-reverse; }
+  .luces i:nth-child(3) { animation: lucero-cruza 31s var(--curva) -14s infinite alternate; }
+}
+</style>
+</head>
+<body data-boceto="lucero">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Pista Lucero</b> es una marca inventada por Volutus para mostrarte el estilo <b>Retro</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="estrella" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z"/></symbol></svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#estrella"/></svg><b>Lucero</b></a>
+  <nav aria-label="Secciones"><ul><li><a href="#semana">La semana</a></li><li><a href="#primera-vez">Primera vez</a></li><li><a href="#grupos">Grupos</a></li><li><a href="#historia">Historia</a></li></ul></nav>
+  <a class="boton" href="#grupos">Reservar</a>
+</header>
+
+<main>
+  <div class="portada-marco">
+    <div class="luces" aria-hidden="true"><i></i><i></i><i></i></div>
+    <svg class="cinta" viewBox="0 0 1600 420" aria-hidden="true"><path d="M-40 380C260 380 420 120 760 150S1180 330 1640 90"/><path d="M-40 380C260 380 420 120 760 150S1180 330 1640 90"/><path d="M-40 380C260 380 420 120 760 150S1180 330 1640 90"/><path d="M-40 380C260 380 420 120 760 150S1180 330 1640 90"/></svg>
+    <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+      <div class="portada-texto">
+        <p class="rotulo">Viña del Mar · desde 1977</p>
+        <h1 id="titulo">Lucero</h1>
+        <p class="bajada">Pista de patinaje y disco. Ruedas, vinilos y la misma bola de espejos de siempre.</p>
+        <p class="esta-noche"><span aria-hidden="true">vie</span><b>Este viernes: Disco</b><small>21:00 a 01:00 · vinilos de 1975 a 1985 · $7.000</small></p>
+        <div class="acciones"><a class="enlace" href="#semana">Ver la semana</a><a class="enlace" href="#primera-vez">Es mi primera vez</a></div>
+      </div>
+      <figure class="disco"><img src="/image/bocetos/lucero/portada-900.webp" srcset="/image/bocetos/lucero/portada-600.webp 600w, /image/bocetos/lucero/portada-900.webp 900w" sizes="(min-width: 900px) 26rem, 78vw" width="900" height="1200" alt="Patines blancos de cuatro ruedas con cordones de colores, sobre un piso de madera clara" fetchpriority="high"></figure>
+    </section>
+  </div>
+
+  <section class="seccion" id="semana" aria-labelledby="semana-titulo">
+    <div class="ancho">
+      <p class="rotulo" data-aparece>La semana en Lucero</p>
+      <h2 class="titulo" id="semana-titulo" data-aparece>Cada noche suena distinto</h2>
+      <div class="cartel-grilla">
+        <ul class="cartel">
+          <li class="noche" data-aparece><abbr title="Lunes">Lun</abbr><p><b>Clases para empezar</b><span>19:00 a 20:30 · patines incluidos</span></p><p class="precio">$8.000</p></li>
+          <li class="noche" data-aparece><abbr title="Miércoles">Mié</abbr><p><b>Noche de parejas</b><span>20:00 a 23:00 · baladas y lentos</span></p><p class="precio">$6.000</p></li>
+          <li class="noche destacada" data-aparece><abbr title="Viernes">Vie</abbr><p><b>Disco</b><span>21:00 a 01:00 · vinilos de 1975 a 1985</span></p><p class="precio">$7.000</p></li>
+          <li class="noche" data-aparece><abbr title="Sábado">Sáb</abbr><p><b>Pista libre</b><span>16:00 a 20:00 · todas las edades</span></p><p class="precio">$5.000</p></li>
+          <li class="noche" data-aparece><abbr title="Domingo">Dom</abbr><p><b>Familiar</b><span>11:00 a 19:00 · niños a mitad de precio</span></p><p class="precio">$5.000</p></li>
+        </ul>
+        <figure data-aparece>
+          <img src="/image/bocetos/lucero/noche-1200.webp" srcset="/image/bocetos/lucero/noche-700.webp 700w, /image/bocetos/lucero/noche-1200.webp 1200w" sizes="(min-width: 900px) 30vw, 80vw" width="1200" height="800" loading="lazy" alt="Una pista de patinaje en penumbra con luces cálidas que se reflejan en el piso y gente patinando al fondo">
+          <figcaption>Viernes, once de la noche. La bola gira a cuatro vueltas por minuto.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion primera" id="primera-vez" aria-labelledby="primera-titulo">
+    <div class="ancho">
+      <p class="rotulo" data-aparece>Primera vez</p>
+      <h2 class="titulo" id="primera-titulo" data-aparece>¿Primera vez sobre ruedas?</h2>
+      <ol class="pasos">
+        <li class="paso" data-aparece>
+          <span aria-hidden="true">1</span>
+          <img src="/image/bocetos/lucero/arriendo-500.webp" srcset="/image/bocetos/lucero/arriendo-500.webp 500w, /image/bocetos/lucero/arriendo-800.webp 800w" sizes="(min-width: 900px) 26vw, 80vw" width="800" height="1000" loading="lazy" alt="Muchos patines de cuatro ruedas de colores apilados unos sobre otros">
+          <h3>Arrienda tus patines</h3>
+          <p>No necesitas traer nada. Los revisamos cada semana, y si se te olvidaron los calcetines, los vendemos a $1.500.</p>
+          <p class="precio">$3.000 la sesión</p>
+          <ul class="tallas" aria-label="Tallas disponibles"><li>28</li><li>30</li><li>32</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>46</li></ul>
+        </li>
+        <li class="paso" data-aparece style="--orden: 1">
+          <span aria-hidden="true">2</span>
+          <img src="/image/bocetos/lucero/clases-500.webp" srcset="/image/bocetos/lucero/clases-500.webp 500w, /image/bocetos/lucero/clases-800.webp 800w" sizes="(min-width: 900px) 26vw, 80vw" width="800" height="1000" loading="lazy" alt="Unos pies con patines turquesa de cuatro ruedas, listos para empezar">
+          <h3>Aprende un lunes</h3>
+          <p>Cuatro clases para frenar, girar y patinar hacia atrás, con la profe Marisol. Desde los 6 años y sin límite de edad.</p>
+          <p class="precio">$28.000 el curso · $8.000 la clase</p>
+        </li>
+        <li class="paso" data-aparece style="--orden: 2">
+          <span aria-hidden="true">3</span>
+          <img src="/image/bocetos/lucero/bola-500.webp" srcset="/image/bocetos/lucero/bola-500.webp 500w, /image/bocetos/lucero/bola-800.webp 800w" sizes="(min-width: 900px) 26vw, 80vw" width="800" height="1000" loading="lazy" alt="Una bola de espejos cuelga de una cadena sobre un fondo color durazno">
+          <h3>Vuelve el viernes</h3>
+          <p>Con los brazos sueltos, a la noche de disco. La primera entrada después del curso va por la casa.</p>
+          <p class="precio">$7.000 la noche</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion" id="grupos" aria-labelledby="grupos-titulo">
+    <div class="ancho grupos">
+      <div class="grupos-texto" data-aparece>
+        <p class="rotulo">Cumpleaños, cursos y empresas</p>
+        <h2 class="titulo" id="grupos-titulo">La pista para tu grupo</h2>
+        <p>Dos horas para ustedes solos, el sábado en la mañana: hasta 25 personas, con patines y la bola encendida, por $180.000. Para colegios y empresas armamos el horario.</p>
+        <div class="plano">
+          <svg viewBox="0 0 600 330" role="img" aria-label="Plano de la pista: un óvalo de parqué de cuarenta por veinte metros, con la bola de espejos al centro, la cabina del DJ arriba, el arriendo de patines abajo y alguien patinando alrededor">
+            <path d="M160 40H440A120 120 0 0 1 440 280H160A120 120 0 0 1 160 40Z" fill="#e0a526" fill-opacity="0.16" stroke="#e0a526" stroke-width="4"/>
+            <g stroke="#f3e1bf" stroke-opacity="0.12" stroke-width="2"><path d="M60 80H540M44 120H556M40 160H560M44 200H556M60 240H540"/></g>
+            <path id="vuelta" d="M160 72H440A88 88 0 0 1 440 248H160A88 88 0 0 1 160 72Z" fill="none" stroke="#d9677a" stroke-width="2" stroke-dasharray="2 10" stroke-linecap="round"/>
+            <g transform="translate(300 160)"><circle r="22" fill="#3a2216" stroke="#f3e1bf" stroke-width="3"/><path d="M-22 0H22M-19-11H19M-19 11H19M0-22V22M-11-19V19M11-19V19" stroke="#f3e1bf" stroke-width="1.5"/></g>
+            <text x="300" y="26" text-anchor="middle">Cabina del DJ</text>
+            <text x="300" y="312" text-anchor="middle">Arriendo de patines · entrada</text>
+            <text x="300" y="206" text-anchor="middle">Parqué de raulí · 40 × 20 m</text>
+            <g class="patinador"><path d="M0-11C.9-3 3-.9 11 0C3 .9.9 3 0 11C-.9 3-3 .9-11 0C-3-.9-.9-3 0-11Z" fill="#e8742a" stroke="#f3e1bf" stroke-width="1.5"><animateMotion dur="14s" repeatCount="indefinite" rotate="auto"><mpath href="#vuelta" xlink:href="#vuelta"/></animateMotion></path></g>
+            <g class="patinador-quieto"><path transform="translate(528 160)" d="M0-11C.9-3 3-.9 11 0C3 .9.9 3 0 11C-.9 3-3 .9-11 0C-3-.9-.9-3 0-11Z" fill="#e8742a" stroke="#f3e1bf" stroke-width="1.5"/></g>
+          </svg>
+        </div>
+      </div>
+      <form class="formulario" data-muestra data-aparece toolname="reservar_pista" tooldescription="Pide reservar la pista de patinaje de Pista Lucero para un grupo: cumpleaños, colegio o empresa. Pista Lucero es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+        <p class="talon" aria-hidden="true"><span>Entrada · Pista Lucero</span><b>Nº 001977</b></p>
+        <h3>Reserva tu entrada</h3>
+        <label>Nombre<input name="nombre" autocomplete="name" required></label>
+        <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+        <label class="todo">Ocasión<select name="ocasion" toolparamdescription="Para qué es la reserva: cumpleaños, colegio o curso, empresa u otra"><option>Cumpleaños</option><option>Colegio o curso</option><option>Empresa</option><option>Otra</option></select></label>
+        <label>Fecha<input type="date" name="fecha" min="2026-11-12" toolparamdescription="El día que quieren la pista"></label>
+        <label>Personas<input type="number" name="personas" min="5" max="120" value="20" inputmode="numeric" toolparamdescription="Cuántas personas vienen, de 5 a 120"></label>
+        <button class="boton todo" type="submit">Pedir la pista</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="seccion historia" id="historia" aria-labelledby="historia-titulo">
+    <div class="ancho">
+      <p class="rotulo" data-aparece>Desde 1977</p>
+      <h2 class="titulo" id="historia-titulo" data-aparece>El mismo parqué, cuatro discos</h2>
+      <ol class="discos">
+        <li data-aparece><div class="funda f1"><img src="/image/bocetos/lucero/historia-500.webp" srcset="/image/bocetos/lucero/historia-500.webp 500w, /image/bocetos/lucero/historia-800.webp 800w" sizes="(min-width: 900px) 22vw, 45vw" width="800" height="1000" loading="lazy" alt="Un par de patines antiguos de madera y fierro colgados en una pared de tablas"><b aria-hidden="true">1977</b></div><h3><span class="oculto">1977: </span>Abre la pista</h3><p>Hernán Lucero convierte la bodega de su padre en una pista de patinaje. La primera noche entran 300 personas.</p></li>
+        <li data-aparece style="--orden: 1"><div class="funda f2"><b aria-hidden="true">1983</b></div><h3><span class="oculto">1983: </span>Llega la bola</h3><p>La traen desde Buenos Aires en un bus. Es la misma que cuelga hoy sobre la pista.</p></li>
+        <li data-aparece style="--orden: 2"><div class="funda f3"><b aria-hidden="true">1999</b></div><h3><span class="oculto">1999: </span>Casi cierra</h3><p>Los patinadores juntan 4.000 firmas y el municipio no da el permiso para demoler.</p></li>
+        <li data-aparece style="--orden: 3"><div class="funda f4"><b aria-hidden="true">2014</b></div><h3><span class="oculto">2014: </span>Vuelve a abrir</h3><p>Paula, su hija, lija el parqué original, rescata los vinilos y abre los viernes de disco.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <svg class="cinta" viewBox="0 0 1600 420" aria-hidden="true"><path d="M-40 300C300 300 520 60 860 90S1260 260 1640 40"/><path d="M-40 300C300 300 520 60 860 90S1260 260 1640 40"/><path d="M-40 300C300 300 520 60 860 90S1260 260 1640 40"/><path d="M-40 300C300 300 520 60 860 90S1260 260 1640 40"/></svg>
+  <div class="ancho">
+    <p class="pie-adios">Nos vemos en la pista</p>
+    <div class="pie-fila"><span>Calle Quinta 377, Viña del Mar · martes a domingo · hola@pistalucero.cl</span><span>Boceto de Volutus · marca inventada</span></div>
+  </div>
+</footer>
+</body>
+</html>

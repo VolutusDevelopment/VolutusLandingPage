@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pelusa · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Pelusa, guardería de día y peluquería de perros en Ñuñoa, para mostrar el estilo Lúdico.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/pelusa/portada-1000.webp" imagesrcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" imagesizes="(min-width: 900px) 40vw, 82vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Pelusa · lúdico. Inspiración: Wild One (wildone.com), del mismo mundo. Se
+   toma: 1) los perros como protagonistas de cada foto, en primer plano; 2) el
+   color plano en bloques y una letra redonda que no infantiliza; 3) el humor
+   puesto en lo que dicen los textos, no en el dibujo. La idea propia: cada
+   perro es un personaje con su placa, su nombre, su edad y su manía. */
+@font-face { font-family: 'Fredoka'; src: url('/fonts/bocetos/fredoka.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Nunito Sans'; src: url('/fonts/bocetos/nunito-sans.woff2') format('woff2'); font-weight: 200 1000; font-display: swap; }
+
+:root {
+  --crema: #fff6e6;
+  --amarillo: #ffd34d;
+  --cielo: #6cc4ff;
+  --coral: #ff7a59;
+  --tinta: #2a1f1a;
+  --gris: #66574d;
+  --blanco: #ffffff;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.6, 0, 0.25, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--crema); scroll-behavior: smooth; }
+body { margin: 0; background: var(--crema); color: var(--tinta); font: 400 18px/1.6 'Nunito Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Fredoka', system-ui, sans-serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.05; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { font: 600 15px/1.3 'Fredoka', sans-serif; color: var(--gris); }
+.suave { color: var(--gris); }
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.cabeza { display: grid; gap: 14px; max-width: 40rem; margin-bottom: clamp(40px, 6vw, 72px); }
+.cabeza h2 { font-size: clamp(36px, 4.6vw, 60px); }
+.boton { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--coral); color: var(--tinta); font: 600 18px/1 'Fredoka', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva), translate 400ms var(--curva); }
+.boton:hover { background: #ff9073; translate: 0 -2px; }
+.boton-oscuro { background: var(--tinta); color: var(--crema); }
+.boton-oscuro:hover { background: #45352c; }
+.enlace { font: 600 18px 'Fredoka', sans-serif; text-underline-offset: 6px; text-decoration-thickness: 2px; text-decoration-color: var(--coral); }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 20px; }
+.logo { display: inline-flex; align-items: center; gap: 8px; font: 600 30px/1 'Fredoka', sans-serif; letter-spacing: -0.02em; text-decoration: none; }
+.logo svg { width: 34px; height: 34px; color: var(--coral); rotate: -14deg; }
+.cabecera nav ul { display: flex; gap: 10px; margin: 0; padding: 0; list-style: none; font: 500 16px 'Fredoka', sans-serif; }
+.cabecera nav a { display: block; padding: 8px 16px; border-radius: 999px; text-decoration: none; transition: rotate 400ms var(--curva); }
+.cabecera nav li:nth-child(1) a { background: var(--cielo); rotate: -3deg; }
+.cabecera nav li:nth-child(2) a { background: var(--amarillo); rotate: 2deg; }
+.cabecera nav li:nth-child(3) a { background: #ffb39f; rotate: -1deg; }
+.cabecera nav li:nth-child(4) a { background: var(--blanco); rotate: 3deg; }
+.cabecera nav a:hover { rotate: 0deg; }
+
+/* ---- Portada ---- */
+.portada-bloque { background: var(--amarillo); }
+.portada { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(24px, 4vw, 56px) clamp(80px, 10vw, 140px); }
+.portada-texto { display: grid; gap: 24px; justify-items: start; }
+.portada h1 { font-size: clamp(46px, 6.4vw, 96px); }
+.portada-texto > p.suave { max-width: 34ch; font-size: 20px; color: #4a3b31; }
+.portada .rotulo { color: #4a3b31; }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.escena { position: relative; aspect-ratio: 1; }
+.escena .forma { position: absolute; }
+.f-cielo { left: -6%; bottom: 4%; width: 34%; aspect-ratio: 1; border-radius: 50%; background: var(--cielo); }
+.f-coral { right: -4%; bottom: 12%; width: 26%; aspect-ratio: 1; border-radius: 28%; background: var(--coral); rotate: 14deg; }
+.f-pildora { left: 4%; top: 2%; width: 30%; height: 11%; border-radius: 999px; background: var(--tinta); rotate: -18deg; }
+.foto-perro { position: absolute; inset: 7%; overflow: hidden; border: 10px solid var(--blanco); border-radius: 50%; background: var(--amarillo); }
+.globo { position: absolute; right: -2%; top: -4%; z-index: 1; max-width: 13rem; padding: 14px 18px; border-radius: 24px 24px 24px 4px; background: var(--blanco); font: 600 19px/1.2 'Fredoka', sans-serif; box-shadow: 0 12px 24px -16px rgb(42 31 26 / 0.5); }
+.foto-perro img { width: 100%; height: 100%; object-fit: cover; }
+.placa { position: absolute; left: 2%; bottom: 2%; display: grid; gap: 2px; width: min(15rem, 62%); padding: 14px 18px 16px; border-radius: 22px; background: var(--blanco); box-shadow: 0 14px 30px -18px rgb(42 31 26 / 0.45); transform-origin: 50% -14px; }
+.placa::before { content: ''; position: absolute; left: calc(50% - 7px); top: -12px; width: 14px; height: 14px; border: 3px solid var(--tinta); border-radius: 50%; background: var(--crema); }
+.placa b { font: 600 22px/1.1 'Fredoka', sans-serif; }
+.placa span { font-size: 15px; line-height: 1.4; color: var(--gris); }
+
+/* ---- Un día en Pelusa: el camino de huellas ---- */
+.dia { background: var(--blanco); }
+.camino { display: grid; margin: 0; padding: 0; list-style: none; }
+.parada { display: grid; grid-template-columns: minmax(0, 2fr) 72px minmax(0, 7fr); gap: 0 clamp(16px, 3vw, 40px); }
+.hora { padding-top: 6px; font: 600 clamp(32px, 4vw, 52px)/1 'Fredoka', sans-serif; text-align: right; font-variant-numeric: tabular-nums; }
+.rastro { display: grid; justify-items: center; align-content: start; gap: 18px; padding-block: 14px 26px; }
+.rastro svg { width: 26px; height: 26px; color: var(--coral); }
+.rastro svg:nth-child(odd) { translate: -12px 0; rotate: -8deg; }
+.rastro svg:nth-child(even) { translate: 12px 0; rotate: 8deg; }
+.parada-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 32px; align-items: start; padding-bottom: clamp(32px, 4vw, 56px); }
+.parada-cuerpo h3 { font-size: clamp(26px, 2.6vw, 34px); margin-bottom: 8px; }
+.parada-cuerpo p { max-width: 38ch; color: var(--gris); }
+.parada-foto { width: clamp(140px, 18vw, 220px); overflow: hidden; border-radius: 38% 62% 52% 48% / 46% 44% 56% 54%; background: var(--crema); }
+.parada:nth-child(even) .parada-foto { border-radius: 58% 42% 40% 60% / 50% 58% 42% 50%; }
+.parada-foto img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+/* ---- Servicios y precios ---- */
+.precios { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
+.tabla { overflow-x: auto; border-radius: 28px; background: var(--blanco); }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 16px 18px; text-align: left; border-bottom: 2px solid var(--crema); }
+thead th { vertical-align: bottom; font: 600 16px/1.2 'Fredoka', sans-serif; text-align: center; }
+thead th:first-child { text-align: left; }
+thead svg { display: block; margin: 0 auto 6px; color: var(--tinta); }
+thead small { display: block; font: 400 13px 'Nunito Sans', sans-serif; color: var(--gris); }
+tbody th { font: 600 18px/1.2 'Fredoka', sans-serif; }
+tbody th small { display: block; margin-top: 2px; font: 400 14px 'Nunito Sans', sans-serif; color: var(--gris); }
+td { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr:last-child > * { border-bottom: 0; }
+.precios figure { overflow: hidden; border-radius: 50% 50% 46% 54% / 56% 56% 44% 44%; background: var(--cielo); }
+.precios figure img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+/* ---- La pandilla ---- */
+.corcho { padding: clamp(28px, 5vw, 64px); border-radius: 28px; background: #c9935a radial-gradient(rgb(90 55 25 / 0.22) 1px, transparent 1.6px) 0 0 / 9px 9px; box-shadow: inset 0 0 0 12px #8a5a2e; }
+.pandilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(20px, 3vw, 40px); margin: 0; padding: 0; list-style: none; }
+.perro { position: relative; display: grid; gap: 10px; padding: 12px 12px 18px; background: var(--blanco); box-shadow: 0 16px 24px -16px rgb(42 31 26 / 0.6); transform-origin: 50% 4px; }
+.perro::before { content: ''; position: absolute; left: calc(50% - 9px); top: -7px; z-index: 1; width: 18px; height: 18px; border-radius: 50%; background: var(--coral); box-shadow: 0 3px 3px rgb(42 31 26 / 0.35); }
+.perro:nth-child(2)::before { background: var(--cielo); }
+.perro:nth-child(3)::before { background: var(--amarillo); }
+.perro:nth-child(1) { rotate: -3deg; }
+.perro:nth-child(2) { rotate: 2deg; margin-top: 28px; }
+.perro:nth-child(3) { rotate: -1.5deg; }
+.perro:nth-child(4) { rotate: 3deg; margin-top: 18px; }
+.perro img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.perro b { font: 600 22px/1.1 'Fredoka', sans-serif; }
+.perro span { font-size: 15px; line-height: 1.4; color: var(--gris); }
+@keyframes pelusa-mece { 0% { transform: rotate(0deg); } 7% { transform: rotate(7deg); } 14% { transform: rotate(-4.5deg); } 21% { transform: rotate(2.5deg); } 27% { transform: rotate(-1deg); } 32%, 100% { transform: rotate(0deg); } }
+
+/* ---- Reglas de la casa ---- */
+.reglas-marco { border-radius: 40px; background: var(--amarillo); padding: clamp(32px, 6vw, 80px); }
+.reglas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(32px, 5vw, 64px); margin: 0; padding: 0; list-style: none; counter-reset: regla; }
+.reglas li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; counter-increment: regla; }
+.reglas li::before { content: counter(regla); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--crema); font: 600 26px/1 'Fredoka', sans-serif; }
+.reglas h3 { font-size: 24px; margin-bottom: 4px; }
+.reglas p { color: #4a3b31; }
+
+/* ---- Reservar ---- */
+.reservar { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px clamp(32px, 6vw, 96px); }
+.reservar h2 { font-size: clamp(36px, 4.6vw, 60px); margin-block: 12px 18px; }
+.datos { display: grid; gap: 14px; margin-top: 32px; }
+.datos b { display: block; font: 600 15px 'Fredoka', sans-serif; color: var(--gris); }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; padding: 0 clamp(20px, 3vw, 36px) clamp(24px, 3vw, 36px); overflow: hidden; border: 3px solid var(--tinta); border-radius: 28px; background: var(--blanco); }
+.carnet-cabeza { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; white-space: nowrap; margin: 0 calc(-1 * clamp(20px, 3vw, 36px)); padding: 14px clamp(20px, 3vw, 36px); background: var(--coral); font: 600 clamp(14px, 4vw, 18px)/1 'Fredoka', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
+.carnet-cabeza svg { width: 24px; height: 24px; }
+.carnet-cabeza span { margin-left: auto; font-variant-numeric: tabular-nums; }
+.carnet-foto { grid-column: 1 / -1; display: grid; place-items: center; width: 110px; height: 110px; justify-self: start; padding: 12px; border: 2px dashed #d8c7a8; border-radius: 50%; font-size: 13px; line-height: 1.3; text-align: center; color: var(--gris); }
+.formulario label, .formulario legend { display: grid; gap: 8px; font: 600 16px 'Fredoka', sans-serif; }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario fieldset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; border: 0; }
+.formulario legend { margin-bottom: 8px; }
+.tamano { display: grid !important; justify-items: center; gap: 4px !important; padding: 12px 8px; border: 2px solid #f1e4cc; border-radius: 22px; cursor: pointer; text-align: center; transition: border-color 400ms var(--curva), background-color 400ms var(--curva); }
+.tamano:has(input:checked) { border-color: var(--tinta); background: var(--crema); }
+.tamano:has(input:focus-visible) { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.tamano input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tamano small { font: 400 13px 'Nunito Sans', sans-serif; color: var(--gris); }
+.formulario input:not([type="radio"]), .formulario select { width: 100%; min-height: 52px; padding: 10px 18px; border: 2px solid #f1e4cc; border-radius: 18px; background: var(--blanco); color: var(--tinta); font: 400 18px/1.3 'Nunito Sans', sans-serif; -webkit-appearance: none; appearance: none; transition: border-color 400ms var(--curva); }
+.formulario select { padding-right: 44px; background: var(--blanco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%232a1f1a' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") right 18px center / 14px 9px no-repeat; }
+.formulario :is(input, select):focus-visible { outline: none; border-color: var(--tinta); }
+.formulario button { justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- Pie ---- */
+.pie { padding-block: 56px 40px; }
+.pie-marca { display: block; font: 600 clamp(80px, 18vw, 260px)/0.85 'Fredoka', sans-serif; letter-spacing: -0.03em; color: #de5634; }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 28px; font-size: 15px; color: var(--gris); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera nav { display: none; }
+  .portada, .precios, .reservar { grid-template-columns: minmax(0, 1fr); }
+  .escena { width: min(100% - 32px, 30rem); justify-self: center; }
+  .pandilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .precios figure { width: min(60%, 18rem); justify-self: end; margin-top: -24px; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .logo { font-size: 26px; }
+  .cabecera .boton { min-height: 44px; padding: 0 18px; font-size: 16px; }
+  .parada { grid-template-columns: 44px minmax(0, 1fr); }
+  .hora { grid-column: 2; grid-row: 1; text-align: left; font-size: 30px; }
+  .rastro { grid-column: 1; grid-row: 1 / 3; }
+  .parada-cuerpo { grid-column: 2; grid-template-columns: minmax(0, 1fr); padding-top: 10px; }
+  .parada-foto { width: 150px; }
+  .pandilla { column-gap: 16px; row-gap: 32px; }
+  .perro { padding: 8px 8px 12px; }
+  .perro b { font-size: 18px; }
+  .perro span { font-size: 14px; }
+  .reglas { grid-template-columns: minmax(0, 1fr); }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+  th, td { padding: 12px 4px; }
+  th:first-child { padding-left: 14px; }
+  td { font-size: 15px; }
+  tbody th { font-size: 15px; }
+  tbody th small, thead small { font-size: 12px; }
+  thead th { font-size: 14px; }
+  thead svg { width: 30px; }
+}
+
+/* ---- Movimiento: llegan y se acomodan ----
+   Las formas de la portada llegan desde afuera y se acomodan frenando, sin
+   rebote, y después flotan de ida y vuelta, cada una a su ritmo. Las huellas
+   del día aparecen una tras otra al bajar, como si alguien caminara. Al pasar
+   el cursor por una foto de la pandilla, se mece colgada de su chinche de ida y vuelta hasta quedar
+   quieta; si el cursor se va antes, la placa se detiene donde estaba, sin
+   saltar. */
+[data-aparece] { --entrada: pelusa-llega; --tramo: 34svh; --duracion: 1200ms; }
+.rastro svg { --entrada: pelusa-huella; }
+@keyframes pelusa-llega { from { opacity: 0; translate: 0 28px; } }
+@keyframes pelusa-huella { from { opacity: 0; scale: 0.4; } }
+@keyframes pelusa-entra-a { from { opacity: 0; translate: -60px 40px; } }
+@keyframes pelusa-entra-b { from { opacity: 0; translate: 50px 60px; } }
+@keyframes pelusa-entra-c { from { opacity: 0; translate: 40px -50px; } }
+@keyframes pelusa-foto { from { opacity: 0; scale: 0.9; } }
+@keyframes pelusa-flota { to { translate: 0 -10px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .portada-texto > * { animation: pelusa-llega 1200ms var(--curva) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 120ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 240ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 360ms; }
+  .foto-perro { animation: pelusa-foto 1400ms var(--curva) both; }
+  .f-cielo { animation: pelusa-entra-a 1500ms var(--curva) 200ms both, pelusa-flota 7s var(--curva) 1700ms infinite alternate; }
+  .f-coral { animation: pelusa-entra-b 1500ms var(--curva) 350ms both, pelusa-flota 9s var(--curva) 1850ms infinite alternate; }
+  .f-pildora { animation: pelusa-entra-c 1500ms var(--curva) 500ms both, pelusa-flota 8s var(--curva) 2000ms infinite alternate; }
+  .portada .placa { animation: pelusa-llega 1400ms var(--curva) 700ms both; }
+  .perro { animation: pelusa-mece 6s var(--curva) infinite paused; }
+  .perro:hover { animation-play-state: running; }
+}
+</style>
+</head>
+<body data-boceto="pelusa">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Pelusa</b> es una marca inventada por Volutus para mostrarte el estilo <b>Lúdico</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="huella" viewBox="0 0 24 24"><g fill="currentColor"><ellipse cx="12" cy="16.2" rx="5.6" ry="4.6"/><ellipse cx="5" cy="10" rx="2.2" ry="2.8"/><ellipse cx="9.3" cy="5.8" rx="2.3" ry="3"/><ellipse cx="14.7" cy="5.8" rx="2.3" ry="3"/><ellipse cx="19" cy="10" rx="2.2" ry="2.8"/></g></symbol>
+  <symbol id="perro" viewBox="0 0 64 48"><g fill="currentColor"><path d="M9 9c-3 6-1 11 5 13" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><rect x="11" y="19" width="38" height="16" rx="8"/><circle cx="50" cy="17" r="9.5"/><path d="M43 9c-4 3-5 9-1 13l6-10z"/><rect x="14" y="29" width="7" height="16" rx="3.5"/><rect x="38" y="29" width="7" height="16" rx="3.5"/><circle cx="59.5" cy="19.5" r="2.8"/></g></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#huella"/></svg>pelusa</a>
+  <nav aria-label="Secciones"><ul><li><a href="#dia">Un día aquí</a></li><li><a href="#precios">Precios</a></li><li><a href="#pandilla">La pandilla</a></li><li><a href="#reglas">Reglas</a></li></ul></nav>
+  <a class="boton boton-oscuro" href="#reservar">Reservar</a>
+</header>
+
+<main>
+  <div class="portada-bloque">
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <div class="portada-texto">
+      <p class="rotulo">Guardería de día y peluquería de perros · Ñuñoa</p>
+      <h1 id="titulo">Aquí tu perro tiene más vida social que tú</h1>
+      <p class="suave">Lo pasamos a buscar en la mañana, juega con su grupo, duerme siesta y vuelve bañado si le toca. A ti te llegan las fotos.</p>
+      <div class="acciones"><a class="boton" href="#reservar">Reservar un día de prueba</a><a class="enlace" href="#precios">Ver precios</a></div>
+    </div>
+    <div class="escena">
+      <span class="forma f-cielo" aria-hidden="true"></span>
+      <span class="forma f-pildora" aria-hidden="true"></span>
+      <span class="forma f-coral" aria-hidden="true"></span>
+      <figure class="foto-perro"><img src="/image/bocetos/pelusa/portada-1000.webp" srcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 82vw" width="1000" height="1000" alt="Un perro blanco y negro sonríe con la boca abierta frente a un fondo amarillo" fetchpriority="high"></figure>
+      <p class="globo" aria-hidden="true">¿Me vienes a buscar a las seis?</p>
+      <p class="placa"><b>Canela, 4 años</b><span>Vino por un baño y se quedó a almorzar.</span></p>
+    </div>
+  </section>
+  </div>
+
+  <section class="seccion dia" id="dia" aria-labelledby="dia-titulo">
+    <div class="ancho">
+      <div class="cabeza" data-aparece>
+        <p class="rotulo">Un día en Pelusa</p>
+        <h2 id="dia-titulo">De 8 a 6, sin aburrirse ni un rato</h2>
+      </div>
+      <ol class="camino">
+        <li class="parada">
+          <p class="hora" data-aparece>8:00</p>
+          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
+          <div class="parada-cuerpo" data-aparece><div><h3>Llegada</h3><p>Lo buscamos en la furgoneta o lo dejas tú. Lo primero es saludar y olfatear a todo el grupo.</p></div></div>
+        </li>
+        <li class="parada">
+          <p class="hora" data-aparece>10:00</p>
+          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
+          <div class="parada-cuerpo" data-aparece><div><h3>Patio</h3><p>Jugamos en grupos por tamaño y por carácter. Los tímidos parten de a poco y con un amigo.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/juego-500.webp" srcset="/image/bocetos/pelusa/juego-500.webp 500w, /image/bocetos/pelusa/juego-800.webp 800w" sizes="220px" width="800" height="600" loading="lazy" alt="Dos perros de pelo crespo café corren por el pasto"></figure></div>
+        </li>
+        <li class="parada">
+          <p class="hora" data-aparece>13:00</p>
+          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
+          <div class="parada-cuerpo" data-aparece><div><h3>Siesta</h3><p>Colchonetas, luz baja y música suave durante una hora y media. Roncar está permitido.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/siesta-500.webp" srcset="/image/bocetos/pelusa/siesta-500.webp 500w, /image/bocetos/pelusa/siesta-800.webp 800w" sizes="220px" width="800" height="600" loading="lazy" alt="Un perro café duerme tapado con una manta tejida naranja"></figure></div>
+        </li>
+        <li class="parada">
+          <p class="hora" data-aparece>15:00</p>
+          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
+          <div class="parada-cuerpo" data-aparece><div><h3>Baño, si le toca</h3><p>Champú según su pelo y secado sin apuro. El perfume va solo si lo pides, y casi nadie lo pide.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/bano-360.webp" srcset="/image/bocetos/pelusa/bano-360.webp 360w, /image/bocetos/pelusa/bano-600.webp 600w" sizes="220px" width="600" height="600" loading="lazy" alt="Un perro pequeño envuelto en una toalla azul, con cara de satisfecho"></figure></div>
+        </li>
+        <li class="parada">
+          <p class="hora" data-aparece>18:00</p>
+          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg></div>
+          <div class="parada-cuerpo" data-aparece><div><h3>De vuelta a casa</h3><p>Llega cansado y con un reporte: con quién jugó, si comió todo y cuántas siestas durmió.</p></div></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="precios" aria-labelledby="precios-titulo">
+    <div class="cabeza" data-aparece>
+      <p class="rotulo">Servicios y precios</p>
+      <h2 id="precios-titulo">El precio depende del tamaño, no de la raza</h2>
+    </div>
+    <div class="precios">
+      <div class="tabla" data-aparece>
+        <table>
+          <thead><tr><th scope="col">Servicio</th><th scope="col"><svg width="34" height="26" aria-hidden="true"><use href="#perro"/></svg>Chico<small>hasta 10 kg</small></th><th scope="col"><svg width="44" height="33" aria-hidden="true"><use href="#perro"/></svg>Mediano<small>10 a 25 kg</small></th><th scope="col"><svg width="56" height="42" aria-hidden="true"><use href="#perro"/></svg>Grande<small>más de 25 kg</small></th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Baño<small>Champú, secado y uñas</small></th><td>$14.000</td><td>$18.000</td><td>$24.000</td></tr>
+            <tr><th scope="row">Baño y corte<small>Con tijera o máquina</small></th><td>$22.000</td><td>$28.000</td><td>$36.000</td></tr>
+            <tr><th scope="row">Guardería, un día<small>De 8:00 a 18:00</small></th><td>$16.000</td><td>$16.000</td><td>$18.000</td></tr>
+            <tr><th scope="row">Guardería, un mes<small>20 días, con furgoneta</small></th><td>$240.000</td><td>$240.000</td><td>$270.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure data-aparece><img src="/image/bocetos/pelusa/peluqueria-600.webp" srcset="/image/bocetos/pelusa/peluqueria-360.webp 360w, /image/bocetos/pelusa/peluqueria-600.webp 600w" sizes="(min-width: 900px) 30vw, 60vw" width="600" height="600" loading="lazy" alt="Un pomerania con una toalla rosada en la cabeza mientras lo peinan"></figure>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="pandilla" style="padding-top: 0" aria-labelledby="pandilla-titulo">
+    <div class="cabeza" data-aparece>
+      <p class="rotulo">La pandilla</p>
+      <h2 id="pandilla-titulo">Los de siempre</h2>
+      <p class="suave">Vienen de lunes a viernes y ya tienen su foto en el corcho de la entrada. Pasa el cursor para saludarlos.</p>
+    </div>
+    <div class="corcho" data-aparece>
+    <ul class="pandilla">
+      <li class="perro"><img src="/image/bocetos/pelusa/mostaza-600.webp" srcset="/image/bocetos/pelusa/mostaza-360.webp 360w, /image/bocetos/pelusa/mostaza-600.webp 600w" sizes="(min-width: 900px) 22vw, 45vw" width="600" height="600" loading="lazy" alt="Un golden retriever sentado en un campo de flores amarillas"><p><b>Mostaza, 3 años</b><br><span>Le gusta robar calcetines. Los devuelve, pero mojados.</span></p></li>
+      <li class="perro" style="--orden: 1"><img src="/image/bocetos/pelusa/tuerca-600.webp" srcset="/image/bocetos/pelusa/tuerca-360.webp 360w, /image/bocetos/pelusa/tuerca-600.webp 600w" sizes="(min-width: 900px) 22vw, 45vw" width="600" height="600" loading="lazy" alt="Un bulldog francés beige con la boca abierta, muy de cerca"><p><b>Tuerca, 2 años</b><br><span>Ronca en la siesta y despierta a todos. Nadie se ha quejado.</span></p></li>
+      <li class="perro" style="--orden: 2"><img src="/image/bocetos/pelusa/pimienta-600.webp" srcset="/image/bocetos/pelusa/pimienta-360.webp 360w, /image/bocetos/pelusa/pimienta-600.webp 600w" sizes="(min-width: 900px) 22vw, 45vw" width="600" height="600" loading="lazy" alt="Un pastor australiano blanco, negro y café con la lengua afuera"><p><b>Pimienta, 5 años</b><br><span>Ordena al grupo en el patio. Nadie se lo pidió.</span></p></li>
+      <li class="perro" style="--orden: 3"><img src="/image/bocetos/pelusa/charqui-600.webp" srcset="/image/bocetos/pelusa/charqui-360.webp 360w, /image/bocetos/pelusa/charqui-600.webp 600w" sizes="(min-width: 900px) 22vw, 45vw" width="600" height="600" loading="lazy" alt="Un perro de pelo rojizo sentado en el pasto, mirando atento"><p><b>Charqui, 4 años</b><br><span>El primero en la puerta cuando suena la furgoneta.</span></p></li>
+    </ul>
+    </div>
+  </section>
+
+  <section class="ancho" id="reglas" aria-labelledby="reglas-titulo">
+    <div class="reglas-marco" data-aparece>
+      <div class="cabeza" style="margin-bottom: 40px">
+        <p class="rotulo" style="color: #4a3b31">Las reglas de la casa</p>
+        <h2 id="reglas-titulo">Pocas, pero se cumplen</h2>
+      </div>
+      <ol class="reglas">
+        <li><div><h3>Vacunas al día</h3><p>Antirrábica y óctuple, con el carnet a la vista el primer día.</p></div></li>
+        <li><div><h3>Primero, un día de prueba</h3><p>Dos horas, gratis, para conocernos y ver con qué grupo juega mejor.</p></div></li>
+        <li><div><h3>Antipulgas al día</h3><p>Por el bien de todos, y de nuestras alfombras.</p></div></li>
+        <li><div><h3>Si muerde, conversamos</h3><p>No lo echamos a la primera: buscamos otro grupo y te contamos qué pasó.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ancho seccion reservar" id="reservar" aria-labelledby="reservar-titulo">
+    <div data-aparece>
+      <p class="rotulo">Reservar</p>
+      <h2 id="reservar-titulo">Cuéntanos quién viene</h2>
+      <p class="suave" style="max-width: 34ch">Te confirmamos por correo el mismo día. El día de prueba no se cobra.</p>
+      <div class="datos">
+        <p><b>Dónde</b>Av. Irarrázaval 3180, Ñuñoa</p>
+        <p><b>Horario</b>Lunes a viernes, 7:30 a 19:30</p>
+        <p><b>Correo</b>hola@pelusaguarderia.cl</p>
+      </div>
+    </div>
+    <form class="formulario carnet" data-muestra data-aparece toolname="reservar_visita" tooldescription="Reserva un día de prueba, guardería o peluquería en Pelusa para un perro. Pelusa es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+      <p class="carnet-cabeza" aria-hidden="true"><svg><use href="#huella"/></svg>Carnet de ingreso <span>Nº 0412</span></p>
+      <p class="carnet-foto" aria-hidden="true">Su foto la sacamos el primer día</p>
+      <label>Tu nombre<input name="nombre" autocomplete="name" required></label>
+      <label>Nombre de tu perro<input name="perro" required toolparamdescription="Cómo se llama el perro"></label>
+      <label class="todo">Tu correo<input type="email" name="correo" autocomplete="email" required></label>
+      <fieldset class="todo" toolparamdescription="Tamaño del perro: chico (hasta 10 kg), mediano (10 a 25 kg) o grande (más de 25 kg)">
+        <legend>Tamaño</legend>
+        <label class="tamano"><input type="radio" name="tamano" value="chico"><svg width="34" height="26" aria-hidden="true"><use href="#perro"/></svg>Chico<small>hasta 10 kg</small></label>
+        <label class="tamano"><input type="radio" name="tamano" value="mediano" checked><svg width="44" height="33" aria-hidden="true"><use href="#perro"/></svg>Mediano<small>10 a 25 kg</small></label>
+        <label class="tamano"><input type="radio" name="tamano" value="grande"><svg width="56" height="42" aria-hidden="true"><use href="#perro"/></svg>Grande<small>más de 25 kg</small></label>
+      </fieldset>
+      <label>Servicio<select name="servicio" toolparamdescription="Qué servicio quiere: día de prueba, guardería por un día, guardería por un mes, baño, o baño y corte"><option>Día de prueba (gratis)</option><option>Guardería, un día</option><option>Guardería, un mes</option><option>Baño</option><option>Baño y corte</option></select></label>
+      <label>Fecha<input type="date" name="fecha" min="2026-11-12" toolparamdescription="El día que quiere venir"></label>
+      <button class="boton todo" type="submit">Reservar</button>
+    </form>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <span class="pie-marca" aria-hidden="true">pelusa</span>
+  <div class="pie-fila"><span>Av. Irarrázaval 3180, Ñuñoa · hola@pelusaguarderia.cl</span><span>Boceto de Volutus · marca inventada</span></div>
+</footer>
+</body>
+</html>

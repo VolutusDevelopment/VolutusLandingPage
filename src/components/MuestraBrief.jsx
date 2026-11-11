@@ -14,6 +14,17 @@
  * ninguna otra.
  */
 
+// La huella de Pelusa (lúdico): en su arte y en su sello.
+const HUELLA = (
+  <>
+    <ellipse cx="12" cy="16.2" rx="5.6" ry="4.6" />
+    <ellipse cx="5" cy="10" rx="2.2" ry="2.8" />
+    <ellipse cx="9.3" cy="5.8" rx="2.3" ry="3" />
+    <ellipse cx="14.7" cy="5.8" rx="2.3" ry="3" />
+    <ellipse cx="19" cy="10" rx="2.2" ry="2.8" />
+  </>
+)
+
 // El arte de cada estilo y su marca de elegido. Todo es decorado: la tarjeta
 // se llama por la leyenda de su estilo.
 const ESTILOS = {
@@ -27,32 +38,64 @@ const ESTILOS = {
   corporativo: [
     <>
       <span className="banda">
-        <i />
-        GRUPO TU MARCA
+        <svg viewBox="0 0 34 26">
+          <rect x="1" y="3" width="32" height="4" rx="1" />
+          <rect className="hueco" x="6" y="10" width="7" height="8" rx="1.5" />
+          <rect className="hueco" x="21" y="10" width="7" height="8" rx="1.5" />
+          <rect x="1" y="21" width="32" height="2" />
+        </svg>
+        BASAL INGENIERÍA
       </span>
-      <span className="cols">
-        {[25, 12, 3].map((n) => (
-          <span key={n}>
-            <b>{n}</b>
-            <i />
-            <i />
+      <svg className="corte" viewBox="0 -8 240 112" preserveAspectRatio="xMidYMax meet">
+        <g className="suelo">
+          <path className="tierra" d="M-60 90H300V110H-60Z" />
+          <path className="raya" d="M-60 90H300" />
+        </g>
+        <g className="edificio">
+          <rect x="84" y="12" width="72" height="60" />
+          <path d="M84 27H156M84 42H156M84 57H156M108 12V72M132 12V72" />
+          <rect className="losa" x="78" y="72" width="84" height="5" />
+          {[90, 120, 150].map((x) => (
+            <rect key={x} className="ais" x={x - 7} y="77" width="14" height="13" rx="2" />
+          ))}
+        </g>
+      </svg>
+    </>,
+    <svg viewBox="0 0 30 30">
+      <rect x="5" y="6" width="20" height="3" />
+      <rect className="goma" x="7" y="9" width="16" height="12" rx="2" />
+      <rect x="5" y="21" width="20" height="3" />
+    </svg>,
+  ],
+  editorial: [
+    <>
+      <span className="tapa">
+        <b>LADERA</b>
+        <span className="numero">
+          <span>Nº 12</span>
+          <span>Vendimia</span>
+        </span>
+        <svg className="cerros" viewBox="0 0 92 64" preserveAspectRatio="none">
+          <path d="M0 30Q30 10 60 26T92 20V64H0Z" fill="#7a7a4a" />
+          <path d="M0 44Q40 26 92 40V64H0Z" fill="#b4694a" />
+          <path d="M0 54Q50 44 92 52V64H0Z" fill="#6b1f2a" />
+        </svg>
+        <i>Un año en la ladera</i>
+      </span>
+      <span className="sumario">
+        {[
+          ['p. 3', 'Carta'],
+          ['p. 6', 'Reportaje'],
+          ['p. 18', 'Los vinos'],
+        ].map(([folio, titulo]) => (
+          <span key={folio}>
+            <small>{folio}</small>
+            {titulo}
           </span>
         ))}
       </span>
     </>,
-    <span>OK</span>,
-  ],
-  editorial: [
-    <>
-      <span className="folio">
-        <span>Nº 07</span>
-        <span>Otoño</span>
-      </span>
-      <span className="titular">La calma de lo bien hecho</span>
-      <span className="parrafo">Hay oficios que se aprenden mirando. Este es uno de ellos.</span>
-      <span className="parrafo">Treinta años detrás del mismo mesón, y cada día distinto.</span>
-    </>,
-    <span>Elegido</span>,
+    <span>Nº 12</span>,
   ],
   calido: [
     <>
@@ -67,12 +110,15 @@ const ESTILOS = {
   audaz: [<span className="rot">SÍ.</span>, <span>!</span>],
   ludico: [
     <>
-      <span className="p p1" />
-      <span className="p p2" />
-      <span className="p p3" />
-      <span className="p p4" />
+      <span className="f f1" />
+      <span className="f f2" />
+      <span className="f f3" />
+      <svg className="huella" viewBox="0 0 24 24">
+        {HUELLA}
+      </svg>
+      <span className="rot">pelusa</span>
     </>,
-    <span>¡Este!</span>,
+    <svg viewBox="0 0 24 24">{HUELLA}</svg>,
   ],
   brutalista: [
     <>
@@ -82,11 +128,22 @@ const ESTILOS = {
   ],
   retro: [
     <>
-      <span className="sol" />
-      <span className="rayas" />
-      <span className="rot">Groovy</span>
+      <svg className="cinta" viewBox="0 0 300 150" preserveAspectRatio="none">
+        {[0, 1, 2, 3].map((franja) => (
+          <path key={franja} d="M-20 150C60 150 100 84 170 92S250 132 320 70" />
+        ))}
+      </svg>
+      <span className="rot">Lucero</span>
+      <span className="disco">
+        <svg viewBox="0 0 40 34">
+          <path className="bota" d="M11 3h10l1 15h8c3 0 5 2 5 5v3H9z" />
+          <path className="cordon" d="M14 8h6M14 12h6" />
+          <circle cx="14" cy="30" r="3.5" />
+          <circle cx="30" cy="30" r="3.5" />
+        </svg>
+      </span>
     </>,
-    <Trazo d="M15 0l2.6 9.7L26 4l-5.7 8.4L30 15l-9.7 2.6L26 26l-8.4-5.7L15 30l-2.6-9.7L4 26l5.7-8.4L0 15l9.7-2.6L4 4l8.4 5.7z" caja="0 0 30 30" />,
+    <Trazo d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" caja="0 0 24 24" />,
   ],
   suizo: [
     <>
@@ -98,14 +155,31 @@ const ESTILOS = {
   ],
   natural: [
     <>
-      <span className="hoja" />
-      <span className="hoja h2" />
-      <span className="rot">
-        de la tierra
-        <br />a tu mesa
+      <span className="tierra" />
+      <svg className="rama" viewBox="0 0 120 130">
+        <path d="M18 124C34 96 52 70 98 14" />
+        {[
+          [30, 104, -40],
+          [30, 104, 200],
+          [46, 82, -46],
+          [46, 82, 206],
+          [64, 58, -52],
+          [64, 58, 212],
+          [82, 36, -58],
+          [82, 36, 216],
+          [98, 14, -52],
+        ].map(([x, y, giro]) => (
+          <path key={`${x}${giro}`} d="M0 0Q9-7 19 0Q9 7 0 0ZM3 0H16" transform={`translate(${x} ${y}) rotate(${giro})`} />
+        ))}
+      </svg>
+      <span className="jabon">
+        <b>quillay</b>
       </span>
+      <span className="rot">quillay</span>
     </>,
-    <span />,
+    <svg viewBox="0 0 30 30">
+      <path d="M4 26C4 14 12 6 26 4C24 18 16 26 4 26Z" />
+    </svg>,
   ],
   futurista: [<span className="vidrio">NEXT/26</span>, <span />],
   artesanal: [
@@ -195,15 +269,17 @@ const ESTILOS = {
   ],
   clinico: [
     <>
-      <svg viewBox="0 0 300 50" preserveAspectRatio="none">
-        <path d="M0 25H110L122 8L136 44L148 18L156 25H300" />
-      </svg>
-      <span className="tarjeta">
+      <span className="marca">
         <i />
-        Hora disponible · mañana 10:30
+        Iris
+      </span>
+      <span className="tabla">
+        <b className="f1">E</b>
+        <b className="f2">F P</b>
+        <b className="f3">T O Z</b>
       </span>
     </>,
-    <span>✓</span>,
+    <span />,
   ],
 }
 

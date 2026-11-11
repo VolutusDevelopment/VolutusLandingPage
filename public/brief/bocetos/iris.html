@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Iris Centro Visual · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Iris Centro Visual, de oftalmología y óptica en Providencia, para mostrar el estilo Clínico / limpio.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Iris Centro Visual · clínico / limpio. Inspiración: Warby Parker
+   (warbyparker.com), del mismo rubro. Se toma: 1) la portada partida en foto
+   grande y texto, con agendar a un paso; 2) una letra de buen tono y un solo
+   azul de acción sobre mucho blanco, con paneles de un color suave; 3) los
+   seguros y convenios contados sin letra chica. La idea propia: el enfoque.
+   La portada es la tabla de Snellen, con sus letras que achican fila por
+   fila: es el índice de los servicios y se enfoca al cargar. */
+@font-face { font-family: 'Plus Jakarta Sans'; src: url('/fonts/bocetos/plus-jakarta-sans.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+
+:root {
+  --blanco: #ffffff;
+  --tinta: #0f1c2b;
+  --azul: #1e6fd9;
+  --menta: #e6f5f1;
+  --gris: #5b6b7a;
+  --linea: #e1e7ec;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--blanco); scroll-behavior: smooth; }
+body { margin: 0; background: var(--blanco); color: var(--tinta); font: 400 17px/1.6 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--azul); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { font-size: 14px; font-weight: 700; color: var(--azul); }
+.suave { color: var(--gris); }
+.boton { display: inline-flex; white-space: nowrap; align-items: center; justify-content: center; min-height: 50px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--azul); color: var(--blanco); font: 700 16px/1 'Plus Jakarta Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva); }
+.boton:hover { background: #1557b0; }
+.enlace { font-weight: 700; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 6px; transition: text-decoration-color 400ms var(--curva); }
+.enlace:hover { text-decoration-color: currentColor; }
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.cabeza { display: grid; gap: 14px; max-width: 40rem; margin-bottom: clamp(40px, 6vw, 72px); }
+.cabeza h2 { font-size: clamp(32px, 4vw, 52px); }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 20px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 20px; }
+.logo svg { width: 28px; height: 28px; }
+.logo b { font-weight: 800; letter-spacing: -0.02em; }
+.logo span { font-weight: 400; color: var(--gris); }
+.telefono { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+.telefono span { font-weight: 400; color: var(--gris); }
+
+/* ---- Portada: la tabla de Snellen ---- */
+.portada { padding-block: clamp(24px, 4vw, 56px) clamp(72px, 9vw, 120px); background: var(--menta); }
+.portada-cabeza { display: grid; justify-items: center; gap: 16px; max-width: 46rem; margin: 0 auto clamp(32px, 4vw, 48px); padding-top: clamp(24px, 3vw, 40px); text-align: center; }
+.portada h1 { font-size: clamp(38px, 5vw, 68px); }
+.portada-cabeza p { max-width: 44ch; font-size: 18px; }
+.disponible { display: flex; justify-content: center; align-items: center; gap: 10px; width: fit-content; margin: 28px auto 0; padding: 10px 18px; border-radius: 999px; background: var(--blanco); font-size: 15px; font-weight: 600; }
+.disponible i { width: 9px; height: 9px; border-radius: 50%; background: #128067; }
+.snellen { --escala: 6.2cqi; container-type: inline-size; margin: 0; padding: clamp(24px, 4vw, 56px) 0; list-style: none; border-radius: 28px; background: var(--blanco); box-shadow: 0 1px 2px rgb(15 28 43 / 0.06); }
+.snellen a { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr) 4.5rem; gap: 8px 32px; align-items: center; padding: 14px clamp(20px, 4vw, 56px); text-decoration: none; transition: background-color 500ms var(--curva); }
+.snellen a:hover { background: #f4f9fd; }
+.snellen li + li a { border-top: 1px solid var(--linea); }
+.letras { font-size: calc(var(--escala) * var(--k)); font-weight: 700; line-height: 1; letter-spacing: 0.2em; text-align: center; transition: color 500ms var(--curva); }
+.snellen a:hover .letras { color: var(--azul); }
+.detalle { display: grid; gap: 2px; font-size: 15px; color: var(--gris); }
+.detalle b { font-size: 17px; color: var(--tinta); }
+.agudeza { justify-self: end; font-size: 14px; font-weight: 600; color: var(--gris); font-variant-numeric: tabular-nums; }
+
+/* ---- Equipo: la agenda de la semana ---- */
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.agenda-marco { overflow-x: auto; border: 1px solid var(--linea); border-radius: 28px; }
+.agenda { width: 100%; border-collapse: collapse; }
+.agenda th, .agenda td { padding: 14px 12px; border-bottom: 1px solid var(--linea); text-align: center; }
+.agenda thead th { font-size: 14px; color: var(--gris); }
+.agenda abbr { text-decoration: none; }
+.agenda tbody th { display: flex; align-items: center; gap: 16px; padding-left: clamp(16px, 3vw, 32px); text-align: left; font-weight: 400; }
+.agenda thead th:first-child { padding-left: clamp(16px, 3vw, 32px); text-align: left; }
+.agenda img { width: 64px; height: 64px; flex: none; border-radius: 50%; object-fit: cover; object-position: 50% 20%; }
+.agenda b { display: block; font-size: 18px; }
+.agenda small { font-size: 14px; color: var(--gris); }
+.agenda td.si::before { content: ''; display: inline-block; width: 30px; height: 30px; border-radius: 50%; background: var(--azul); }
+.agenda td:not(.si)::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--linea); }
+.agenda tbody tr:last-child > * { border-bottom: 0; }
+
+/* ---- Primera consulta ---- */
+.consulta { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.reloj { display: grid; gap: 18px; }
+.barra-tiempo { display: grid; grid-template-columns: 5fr 10fr 15fr 15fr; gap: 3px; height: 14px; }
+.barra-tiempo i { border-radius: 4px; background: var(--azul); transform-origin: left center; }
+.barra-tiempo i:nth-child(2) { background: #4f8fe3; }
+.barra-tiempo i:nth-child(3) { background: #9ec0ef; }
+.barra-tiempo i:nth-child(4) { background: var(--tinta); }
+.marcas { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--gris); font-variant-numeric: tabular-nums; }
+.pasos { display: grid; margin: 8px 0 0; padding: 0; list-style: none; counter-reset: paso; }
+.pasos li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 16px; align-items: start; padding-block: 16px; border-top: 1px solid var(--linea); }
+.pasos li::before { content: ''; width: 12px; height: 12px; margin-top: 6px; border-radius: 3px; background: var(--azul); }
+.pasos li:nth-child(2)::before { background: #4f8fe3; }
+.pasos li:nth-child(3)::before { background: #9ec0ef; }
+.pasos li:nth-child(4)::before { background: var(--tinta); }
+.pasos h3 { font-size: 18px; letter-spacing: -0.01em; }
+.pasos p { font-size: 15px; color: var(--gris); }
+.pasos .min { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.traer { margin-top: 8px; padding: 18px 20px; border-radius: 16px; background: var(--menta); font-size: 15px; }
+.fotos-consulta { display: grid; gap: 16px; }
+.fotos-consulta img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 20px; }
+.fotos-consulta figure:last-child { width: 78%; justify-self: end; margin-top: -18%; border: 8px solid var(--blanco); border-radius: 28px; }
+
+/* ---- Convenios y precios ---- */
+.precios-grilla { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; }
+.tabla-marco { overflow-x: auto; border: 1px solid var(--linea); border-radius: 20px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+caption { padding: 18px 20px 0; text-align: left; font-size: 14px; color: var(--gris); }
+th, td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--linea); vertical-align: top; }
+thead th { font-size: 13px; font-weight: 700; color: var(--gris); }
+tbody th { font-weight: 600; }
+td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr:last-child > * { border-bottom: 0; }
+.convenios { display: grid; gap: 14px; }
+.convenios h3 { font-size: 20px; }
+.convenios ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.convenios li { padding: 7px 14px; border: 1px solid var(--linea); border-radius: 999px; font-size: 14px; font-weight: 600; }
+.optica { overflow: hidden; margin-top: 10px; border-radius: 20px; background: var(--menta); }
+.optica img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.optica figcaption { padding: 14px 18px 18px; font-size: 15px; }
+
+/* ---- Dónde estamos ---- */
+.lugar { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; }
+.lugar img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 28px; }
+.horario { display: grid; gap: 0; margin: 20px 0 0; border-top: 1px solid var(--linea); }
+.horario div { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-bottom: 1px solid var(--linea); font-size: 15px; }
+.horario dt { color: var(--gris); }
+.horario dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---- Agendar ---- */
+.agendar { background: var(--tinta); color: var(--blanco); }
+.agendar-grilla { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px clamp(32px, 6vw, 96px); }
+.agendar h2 { font-size: clamp(32px, 4vw, 52px); margin-block: 12px 18px; }
+.agendar .rotulo { color: #8fbaf2; }
+.agendar .suave { color: #b8c4d0; }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: clamp(24px, 3vw, 40px); border-radius: 28px; background: var(--blanco); color: var(--tinta); }
+.formulario label { display: grid; gap: 8px; font-size: 14px; font-weight: 700; }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select { width: 100%; min-height: 50px; padding: 10px 14px; border: 1px solid #c9d3dc; border-radius: 12px; background: var(--blanco); color: var(--tinta); font: 400 17px/1.3 'Plus Jakarta Sans', sans-serif; -webkit-appearance: none; appearance: none; transition: border-color 300ms var(--curva); }
+.formulario select { padding-right: 40px; background: var(--blanco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230f1c2b' stroke-width='1.6'/%3E%3C/svg%3E") right 16px center / 12px 8px no-repeat; }
+.formulario input:focus-visible, .formulario select:focus-visible { outline: 3px solid color-mix(in srgb, var(--azul) 30%, transparent); outline-offset: 0; border-color: var(--azul); }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+.chips { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; border: 0; }
+.chips legend { margin-bottom: 8px; padding: 0; font-size: 14px; font-weight: 700; }
+.chips label { display: block; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chips span { display: grid; place-items: center; gap: 2px; min-height: 50px; padding: 8px 4px; border: 1px solid #c9d3dc; border-radius: 12px; font-size: 14px; color: var(--gris); cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color 300ms var(--curva), color 300ms var(--curva), border-color 300ms var(--curva); }
+.chips b { font-size: 20px; color: var(--tinta); }
+.chips.horas span { font-size: 16px; font-weight: 700; color: var(--tinta); }
+.chips input:checked + span { border-color: var(--azul); background: var(--azul); color: var(--blanco); }
+.chips input:checked + span b { color: var(--blanco); }
+.chips input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--azul) 35%, transparent); outline-offset: 2px; }
+
+/* ---- Pie ---- */
+.pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; padding-block: 36px; font-size: 14px; color: var(--gris); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .telefono span { display: none; }
+  .consulta, .precios-grilla, .lugar, .agendar-grilla { grid-template-columns: minmax(0, 1fr); }
+  .snellen a { grid-template-columns: minmax(0, 1fr) auto; }
+  .snellen { --escala: 11.4cqi; }
+  .letras { grid-column: 1 / -1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera .boton { min-height: 44px; padding: 0 16px; font-size: 15px; }
+  .telefono { display: none; }
+  .logo span { display: none; }
+  .letras { letter-spacing: 0.12em; }
+  .agenda th, .agenda td { padding: 10px 4px; }
+  .agenda img { width: 40px; height: 40px; }
+  .agenda tbody th { gap: 10px; padding-left: 14px; }
+  .agenda b { font-size: 15px; }
+  .agenda small { font-size: 12px; }
+  .agenda td.si::before { width: 20px; height: 20px; }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+  .chips { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  th, td { padding: 12px; white-space: normal; }
+  caption { padding: 14px 12px 0; }
+}
+
+/* ---- Movimiento: el enfoque ----
+   Al cargar, las filas de la tabla de la portada parten desenfocadas y se
+   enfocan una tras otra, de la letra más grande a la más chica. Al bajar,
+   cada sección se aclara. Las barras del tiempo de la consulta se
+   llenan de izquierda a derecha. */
+[data-aparece] { --entrada: iris-aclara; --tramo: 30svh; --duracion: 1100ms; }
+.barra-tiempo[data-aparece] { --entrada: none; }
+.barra-tiempo i { --entrada: iris-llena; }
+@keyframes iris-aclara { from { opacity: 0; filter: blur(4px); } }
+@keyframes iris-enfoca { from { filter: blur(7px); } }
+@keyframes iris-llena { from { scale: 0 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .portada-cabeza > * { animation: iris-aclara 1100ms var(--curva) both; }
+  .portada-cabeza > :nth-child(2) { animation-delay: 150ms; }
+  .portada .snellen li { animation: iris-enfoca 1400ms var(--curva) both; }
+  .portada .snellen li:nth-child(2) { animation-delay: 220ms; }
+  .portada .snellen li:nth-child(3) { animation-delay: 440ms; }
+  .portada .snellen li:nth-child(4) { animation-delay: 660ms; }
+  .portada .snellen li:nth-child(5) { animation-delay: 880ms; }
+}
+</style>
+</head>
+<body data-boceto="iris">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Iris Centro Visual</b> es una marca inventada por Volutus para mostrarte el estilo <b>Clínico / limpio</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="anillo" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10.5" fill="none" stroke="#1e6fd9" stroke-width="4"/><circle cx="17.5" cy="10.5" r="2.4" fill="#0f1c2b"/></symbol></svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#anillo"/></svg><b>Iris</b><span>Centro Visual</span></a>
+  <p class="telefono">+56 2 2946 3180 <span>· lunes a sábado</span></p>
+  <a class="boton" href="#agendar">Agendar hora</a>
+</header>
+
+<main>
+  <section class="portada" id="inicio" aria-labelledby="titulo">
+    <div class="ancho">
+      <div class="portada-cabeza">
+        <h1 id="titulo">Todo para ver bien, en un mismo piso</h1>
+        <p class="suave">Cada línea es uno de nuestros servicios. Si lees la última sin esfuerzo, igual te recomendamos un control al año.</p>
+      </div>
+      <ol class="snellen">
+        <li><a href="#agendar" style="--k: 1"><span class="letras" aria-hidden="true">CONSULTA</span><span class="detalle"><b>Consulta oftalmológica</b>Examen completo de la vista, 45 minutos.</span><span class="agudeza" aria-hidden="true">6/60</span></a></li>
+        <li><a href="#agendar" style="--k: 0.78"><span class="letras" aria-hidden="true">LÁSER</span><span class="detalle"><b>Cirugía láser</b>Para dejar los lentes. Evaluación previa sin costo.</span><span class="agudeza" aria-hidden="true">6/36</span></a></li>
+        <li><a href="#agendar" style="--k: 0.58"><span class="letras" aria-hidden="true">CONTACTO</span><span class="detalle"><b>Lentes de contacto</b>Adaptación, prueba y control a los 30 días.</span><span class="agudeza" aria-hidden="true">6/24</span></a></li>
+        <li><a href="#agendar" style="--k: 0.42"><span class="letras" aria-hidden="true">NIÑOS</span><span class="detalle"><b>Oftalmología infantil</b>Desde los 3 años, con juegos en vez de letras.</span><span class="agudeza" aria-hidden="true">6/18</span></a></li>
+        <li><a href="#precios" style="--k: 0.31"><span class="letras" aria-hidden="true">ÓPTICA</span><span class="detalle"><b>Óptica</b>Más de 600 marcos. Tus lentes, listos en 48 horas.</span><span class="agudeza" aria-hidden="true">6/12</span></a></li>
+      </ol>
+      <p class="disponible"><i aria-hidden="true"></i>Próxima hora disponible: mañana a las 10:30</p>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="equipo" aria-labelledby="equipo-titulo">
+    <div class="cabeza" data-aparece>
+      <h2 id="equipo-titulo">¿Quién te atiende?</h2>
+      <p class="suave">Siempre la misma persona: si vuelves a control, te ve quien te vio la primera vez. Eso evita repetir exámenes y explicar todo de nuevo.</p>
+    </div>
+    <div class="agenda-marco" data-aparece>
+      <table class="agenda">
+        <caption class="oculto">Qué días atiende cada persona del equipo</caption>
+        <thead><tr><th scope="col">Equipo</th><th scope="col"><abbr title="Lunes">Lun</abbr></th><th scope="col"><abbr title="Martes">Mar</abbr></th><th scope="col"><abbr title="Miércoles">Mié</abbr></th><th scope="col"><abbr title="Jueves">Jue</abbr></th><th scope="col"><abbr title="Viernes">Vie</abbr></th><th scope="col"><abbr title="Sábado">Sáb</abbr></th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><img src="/image/bocetos/iris/soto-320.webp" srcset="/image/bocetos/iris/soto-320.webp 320w, /image/bocetos/iris/soto-520.webp 520w" sizes="64px" width="320" height="400" loading="lazy" alt="Retrato de una mujer de pelo rubio y lentes de marco grueso"><span><b>Dra. Valentina Soto</b><small>Oftalmóloga · córnea y cirugía láser</small></span></th><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td></tr>
+          <tr><th scope="row"><img src="/image/bocetos/iris/herrera-320.webp" srcset="/image/bocetos/iris/herrera-320.webp 320w, /image/bocetos/iris/herrera-520.webp 520w" sizes="64px" width="320" height="400" loading="lazy" alt="Retrato de un médico con barba, lentes y estetoscopio"><span><b>Dr. Martín Herrera</b><small>Oftalmólogo · niños y estrabismo</small></span></th><td><span class="oculto">No atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td><td class="si"><span class="oculto">Atiende</span></td></tr>
+          <tr><th scope="row"><img src="/image/bocetos/iris/pino-320.webp" srcset="/image/bocetos/iris/pino-320.webp 320w, /image/bocetos/iris/pino-520.webp 520w" sizes="64px" width="320" height="400" loading="lazy" alt="Retrato de una mujer joven con delantal blanco"><span><b>Camila Pino</b><small>Tecnóloga médica · lentes de contacto</small></span></th><td class="si"><span class="oculto">Atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td class="si"><span class="oculto">Atiende</span></td><td><span class="oculto">No atiende</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ancho seccion" style="padding-top: 0" aria-labelledby="consulta-titulo">
+    <div class="consulta">
+      <div class="reloj">
+        <div class="cabeza" style="margin-bottom: 8px" data-aparece>
+          <h2 id="consulta-titulo">¿Cuánto dura la primera consulta?</h2>
+          <p class="suave">Cuarenta y cinco minutos, en cuatro pasos.</p>
+        </div>
+        <div class="barra-tiempo" data-aparece aria-hidden="true"><i data-sigue></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i></div>
+        <p class="marcas" aria-hidden="true"><span>0 min</span><span>15</span><span>30</span><span>45</span></p>
+        <ol class="pasos">
+          <li data-aparece><div><h3>Recepción</h3><p>Confirmamos tus datos y tu previsión.</p></div><span class="min">5 min</span></li>
+          <li data-aparece><div><h3>Agudeza y presión ocular</h3><p>Con la tecnóloga: la tabla de letras, la presión del ojo y la medida de tus lentes actuales.</p></div><span class="min">10 min</span></li>
+          <li data-aparece><div><h3>Dilatación, si hace falta</h3><p>Unas gotas agrandan la pupila para ver el fondo del ojo. Esperas en la sala.</p></div><span class="min">15 min</span></li>
+          <li data-aparece><div><h3>Examen con el oftalmólogo</h3><p>Revisa, te explica lo que encontró y te entrega la receta.</p></div><span class="min">15 min</span></li>
+        </ol>
+        <p class="traer" data-aparece><b>Qué traer:</b> tus lentes actuales, la última receta y la lista de remedios que tomas. Si te dilatan, no manejes durante cuatro horas.</p>
+      </div>
+      <div class="fotos-consulta">
+        <figure data-aparece><img src="/image/bocetos/iris/consulta-1000.webp" srcset="/image/bocetos/iris/consulta-600.webp 600w, /image/bocetos/iris/consulta-1000.webp 1000w" sizes="(min-width: 900px) 42vw, 100vw" width="1000" height="667" loading="lazy" alt="Un oftalmólogo examina los ojos de una paciente con una lámpara de hendidura"></figure>
+        <figure data-aparece><img src="/image/bocetos/iris/conversa-1000.webp" srcset="/image/bocetos/iris/conversa-600.webp 600w, /image/bocetos/iris/conversa-1000.webp 1000w" sizes="(min-width: 900px) 33vw, 78vw" width="1000" height="667" loading="lazy" alt="Una doctora de delantal blanco conversa sonriendo con una paciente"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="precios" style="padding-top: 0" aria-labelledby="precios-titulo">
+    <div class="cabeza" data-aparece>
+      <h2 id="precios-titulo">¿Cuánto cuesta?</h2>
+      <p class="suave">Antes de venir, y sin letra chica.</p>
+    </div>
+    <div class="precios-grilla">
+      <div class="tabla-marco" data-aparece>
+        <table>
+          <caption>Precios de referencia de noviembre de 2026, en pesos.</caption>
+          <thead><tr><th scope="col">Prestación</th><th scope="col">Particular</th><th scope="col">Fonasa</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Consulta oftalmológica</th><td>$38.000</td><td>Bono nivel 3</td></tr>
+            <tr><th scope="row">Consulta infantil</th><td>$38.000</td><td>Bono nivel 3</td></tr>
+            <tr><th scope="row">Adaptación de lentes de contacto</th><td>$45.000</td><td>No aplica</td></tr>
+            <tr><th scope="row">Evaluación para cirugía láser</th><td>Sin costo</td><td>Sin costo</td></tr>
+            <tr><th scope="row">Cirugía láser, ambos ojos</th><td>Desde $1.290.000</td><td>No aplica</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="convenios" data-aparece>
+        <h3>Isapres con convenio</h3>
+        <ul><li>Banmédica</li><li>Colmena</li><li>Consalud</li><li>Cruz Blanca</li><li>Esencial</li><li>Nueva Masvida</li><li>Vida Tres</li></ul>
+        <p class="suave" style="font-size: 15px">Con isapre pagas el copago de tu plan. Te lo calculamos al agendar.</p>
+        <figure class="optica">
+          <img src="/image/bocetos/iris/portada-1000.webp" srcset="/image/bocetos/iris/portada-600.webp 600w, /image/bocetos/iris/portada-1000.webp 1000w" sizes="(min-width: 900px) 34vw, 100vw" width="1000" height="1250" loading="lazy" alt="Una mujer sonriente se acomoda unos lentes nuevos en una óptica, con una pared de marcos detrás">
+          <figcaption><b>Óptica:</b> marco y cristales monofocales desde $29.990.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion lugar" id="lugar" style="padding-top: 0" aria-labelledby="lugar-titulo">
+    <figure data-aparece><img src="/image/bocetos/iris/sala-1400.webp" srcset="/image/bocetos/iris/sala-800.webp 800w, /image/bocetos/iris/sala-1400.webp 1400w" sizes="(min-width: 900px) 56vw, 100vw" width="1400" height="788" loading="lazy" alt="Una sala de espera luminosa y vacía, con sillas junto a la ventana y el sol sobre el piso"></figure>
+    <div data-aparece>
+      <h2 id="lugar-titulo" style="font-size: clamp(28px, 3vw, 40px)">¿Dónde estamos?</h2>
+      <p style="margin-top: 12px; font-weight: 700">Av. Nueva Providencia 2155, piso 4</p>
+      <p class="suave" style="margin-top: 12px">A tres cuadras del Metro Los Leones. El edificio tiene estacionamiento: las dos primeras horas van por nuestra cuenta.</p>
+      <dl class="horario">
+        <div><dt>Lunes a viernes</dt><dd>8:30 a 19:30</dd></div>
+        <div><dt>Sábado</dt><dd>9:00 a 14:00</dd></div>
+        <div><dt>Teléfono</dt><dd>+56 2 2946 3180</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="seccion agendar" id="agendar" aria-labelledby="agendar-titulo">
+    <div class="ancho agendar-grilla">
+      <div data-aparece>
+        <p class="rotulo">Agendar hora</p>
+        <h2 id="agendar-titulo">Elige el día y te confirmamos la hora</h2>
+        <p class="suave">Te escribimos en menos de una hora hábil con la hora confirmada y lo que tienes que traer.</p>
+      </div>
+      <form class="formulario" data-muestra data-aparece toolname="agendar_hora" tooldescription="Pide una hora en Iris Centro Visual, de oftalmología y óptica. Iris es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+        <label>Especialidad<select name="especialidad" toolparamdescription="Qué necesita: consulta oftalmológica, cirugía láser, lentes de contacto, oftalmología infantil u óptica"><option>Consulta oftalmológica</option><option>Cirugía láser</option><option>Lentes de contacto</option><option>Oftalmología infantil</option><option>Óptica</option></select></label>
+        <label>Previsión<select name="prevision" toolparamdescription="Previsión de salud: Fonasa, isapre o particular"><option>Fonasa</option><option>Isapre</option><option>Particular</option></select></label>
+        <fieldset class="todo chips" toolparamdescription="Día de la hora, entre los próximos días con horas libres (fecha AAAA-MM-DD)"><legend>Día</legend><label><input type="radio" name="dia" value="2026-11-12" checked><span>Jue<b>12</b></span></label><label><input type="radio" name="dia" value="2026-11-13"><span>Vie<b>13</b></span></label><label><input type="radio" name="dia" value="2026-11-14"><span>Sáb<b>14</b></span></label><label><input type="radio" name="dia" value="2026-11-16"><span>Lun<b>16</b></span></label><label><input type="radio" name="dia" value="2026-11-17"><span>Mar<b>17</b></span></label><label><input type="radio" name="dia" value="2026-11-18"><span>Mié<b>18</b></span></label></fieldset>
+        <fieldset class="todo chips horas" toolparamdescription="Hora de la atención, entre las horas libres"><legend>Hora</legend><label><input type="radio" name="hora" value="9:00"><span>9:00</span></label><label><input type="radio" name="hora" value="10:30" checked><span>10:30</span></label><label><input type="radio" name="hora" value="12:00"><span>12:00</span></label><label><input type="radio" name="hora" value="15:30"><span>15:30</span></label><label><input type="radio" name="hora" value="17:00"><span>17:00</span></label><label><input type="radio" name="hora" value="18:30"><span>18:30</span></label></fieldset>
+        <label>Nombre<input name="nombre" autocomplete="name" required></label>
+        <label>RUT<input name="rut" inputmode="text" maxlength="12" placeholder="12.345.678-9" pattern="[0-9.]{7,10}-[0-9kK]" required toolparamdescription="RUT chileno de quien se atiende, con puntos opcionales, guion y dígito verificador"></label>
+        <label class="todo">Correo<input type="email" name="correo" autocomplete="email" required></label>
+        <button class="boton todo" type="submit">Pedir hora</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#anillo"/></svg><b>Iris</b><span>Centro Visual</span></a>
+  <span>Av. Nueva Providencia 2155, piso 4 · hola@iriscentrovisual.cl</span>
+  <span>Boceto de Volutus · marca inventada</span>
+</footer>
+</body>
+</html>
