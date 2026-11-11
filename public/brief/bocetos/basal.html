@@ -10,6 +10,7 @@
 <link rel="preload" href="/fonts/bocetos/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/basal.js" type="module"></script>
 <style>
 /* Basal · corporativo. Inspiración: Arup (arup.com). Se toma: 1) la
    composición de sectores que llevan a proyectos, cada uno contado con su
@@ -17,7 +18,11 @@
    institución, con el color de acento reservado para una sola cosa; 3) las
    fotos que se destapan al llegar, sin adornos. La idea propia: la prueba de
    lo que venden. El corte del edificio sobre sus aisladores queda quieto a la
-   derecha mientras se lee, y al bajar el suelo se mece y se amortigua. */
+   derecha mientras se lee, y al bajar el suelo se mece y se amortigua.
+   Segunda vuelta, desde Awwwards: la cabecera pegada con el logo que reacciona
+   al scroll (como los «sticky header» de Petro.Design o Aqtos) y el indicador
+   que sigue la sección activa; del dibujo técnico, la deformada punteada que
+   compara el edificio con y sin aislación. */
 @font-face { font-family: 'Manrope'; src: url('/fonts/bocetos/manrope.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
 
 :root {
@@ -31,9 +36,11 @@
   --ancho: 1280px;
   --margen: clamp(20px, 4vw, 56px);
   --curva: cubic-bezier(0.65, 0, 0.35, 1);
+  --alto-cabecera: 72px;
+  --arriba: calc(var(--alto-barra, 0px) + var(--alto-cabecera));
 }
 * { box-sizing: border-box; }
-html { background: var(--blanco); scroll-behavior: smooth; }
+html { background: var(--blanco); scroll-behavior: smooth; scroll-padding-top: var(--arriba); }
 body { margin: 0; background: var(--blanco); color: var(--marino); font: 400 17px/1.6 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 img { display: block; max-width: 100%; height: auto; }
 figure, dl, dd { margin: 0; }
@@ -53,15 +60,27 @@ main { counter-reset: seccion; }
 .boton-borde:hover { background: var(--marino); color: var(--blanco); }
 .enlace { font-weight: 700; font-size: 15px; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 
-/* ---- Cabecera ---- */
-.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; border-bottom: 1px solid var(--linea); }
+/* ---- Cabecera: pegada arriba, bajo la barra del boceto ----
+   El logo es un ensayo en miniatura: al bajar, su línea de suelo se corre con
+   la velocidad del scroll y los dos aisladores se inclinan, mientras la losa
+   de arriba no se mueve. Al soltar, el suelo vuelve a su sitio frenando
+   (basal.js). Al pasar el cursor, se mece una vez y se calma. */
+.cabecera { position: sticky; top: var(--alto-barra, 0px); z-index: 50; background: var(--blanco); border-bottom: 1px solid var(--linea); transition: box-shadow 500ms var(--curva); }
+.cabecera.pegada { box-shadow: 0 10px 30px -22px rgb(15 42 68 / 0.45); }
+.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--alto-cabecera); }
 .logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-size: 19px; letter-spacing: -0.01em; }
 .logo svg { width: 34px; height: 26px; flex: none; }
 .logo b { font-weight: 800; }
 .logo span span { font-weight: 400; color: var(--acero); }
-.cabecera nav ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 15px; font-weight: 600; }
-.cabecera nav a { text-decoration: none; color: var(--acero); transition: color 300ms; }
-.cabecera nav a:hover { color: var(--marino); }
+.cabecera nav ul { position: relative; display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 15px; font-weight: 600; }
+.cabecera nav a { display: block; padding-block: 8px; text-decoration: none; color: var(--acero); transition: color 400ms var(--curva); }
+.cabecera nav a:hover, .cabecera nav a[aria-current] { color: var(--marino); }
+.cabecera nav ul::after { content: ''; position: absolute; left: 0; bottom: 0; width: var(--ancho-marca, 0px); height: 2px; background: var(--azul); translate: var(--x-marca, 0px) 0; opacity: var(--ve-marca, 0); transition: translate 600ms var(--curva), width 600ms var(--curva), opacity 400ms var(--curva); }
+.logo-vivo svg { overflow: visible; }
+.logo-suelo { translate: calc(var(--suelo, 0) * 1px) 0; }
+.logo-aislador { transform-box: fill-box; transform-origin: 50% 0; transform: skewX(calc(var(--inclina, 0) * 1deg)); }
+@keyframes basal-logo-suelo { 0%, 100% { translate: 0 0; } 15% { translate: 2.4px 0; } 35% { translate: -1.6px 0; } 55% { translate: 0.9px 0; } 75% { translate: -0.4px 0; } }
+@keyframes basal-logo-aislador { 0%, 100% { transform: skewX(0deg); } 15% { transform: skewX(16.7deg); } 35% { transform: skewX(-11.3deg); } 55% { transform: skewX(6.4deg); } 75% { transform: skewX(-2.9deg); } }
 
 /* ---- Portada y ensayo: el corte queda quieto a la derecha ---- */
 .bloque { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(32px, 5vw, 80px); }
@@ -75,7 +94,7 @@ main { counter-reset: seccion; }
 .cifra { font-size: clamp(56px, 6vw, 88px); font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .cifra small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; color: var(--acero); }
 .escena-col { grid-column: 2; grid-row: 1 / span 2; }
-.escena { position: sticky; top: 0; display: grid; align-content: start; gap: 20px; height: 100svh; padding-block: 88px 24px; }
+.escena { position: sticky; top: var(--arriba); display: grid; align-content: start; gap: 20px; height: calc(100svh - var(--arriba)); padding-block: clamp(24px, 7svh, 72px) 24px; }
 .corte { width: 100%; height: auto; max-height: 52svh; overflow: visible; }
 .corte .nota text { paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
 .corte text { font: 600 13px 'Manrope', sans-serif; fill: var(--acero); }
@@ -83,6 +102,11 @@ main { counter-reset: seccion; }
 .registro { display: grid; gap: 10px; padding: 16px 18px 12px; border: 1px solid var(--linea); border-radius: 4px; background: var(--niebla); }
 .registro-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 18px; font-size: 13px; font-weight: 700; }
 .registro-cabeza span:first-child { letter-spacing: 0.08em; text-transform: uppercase; }
+.lectura { display: none; flex-wrap: wrap; gap: 4px 20px; font-size: 13px; color: var(--acero); font-variant-numeric: tabular-nums; }
+.lectura b { display: inline-block; min-width: 5.5ch; color: var(--marino); text-align: right; }
+.leyenda .deformada i { height: 0; border-top: 2px dashed var(--ambar); background: none; }
+.deformada-dibujo { fill: none; stroke: var(--ambar); stroke-width: 1.6; stroke-dasharray: 6 5; opacity: 0; }
+.pluma { fill: var(--blanco); stroke-width: 2; opacity: 0; }
 .leyenda { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--acero); }
 .leyenda i { display: inline-block; width: 18px; height: 3px; margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--ambar); }
 .leyenda .edificio i { background: var(--marino); }
@@ -181,6 +205,7 @@ main { counter-reset: seccion; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
+  :root { --alto-cabecera: 64px; }
   .logo { font-size: 17px; }
   .cabecera .boton { min-height: 44px; padding: 0 14px; font-size: 14px; }
   .corte .nota { display: none; }
@@ -189,26 +214,26 @@ main { counter-reset: seccion; }
 }
 
 /* ---- Movimiento: el ensayo ----
-   El suelo se mece de un lado a otro y se amortigua hasta quedar quieto: cada
-   tramo va de un extremo al siguiente con una curva suave, así que frena en
-   cada vuelta como un péndulo. Los aisladores se inclinan lo que el suelo se
-   corre bajo ellos y el edificio casi no se mueve. En escritorio va atado al
-   scroll mientras se leen los tres pasos; en teléfono, mientras el corte está
-   a la vista. Donde el navegador no ata animaciones al scroll, el ensayo dura
-   8 s y empieza al llegar al primer paso (o al corte, en teléfono). */
+   basal.js lleva el ensayo con un modelo y no con keyframes: el suelo se mece
+   con una envolvente que arranca y termina con velocidad cero, el edificio
+   se corre una décima de eso y los aisladores toman la diferencia. La
+   deformada punteada es el mismo edificio sin aislación, que se dobla con el
+   suelo. Avanza con el scroll, pero no salta con él: el tiempo del ensayo
+   sigue al scroll con un resorte, así que la rueda del mouse no lo mueve a
+   tirones. En escritorio corre mientras se leen los tres pasos; en teléfono,
+   mientras el corte está a la vista. Sin JavaScript o con el movimiento
+   reducido, el corte queda en reposo y el registro, dibujado entero. */
 [data-aparece] { --entrada: basal-sube; --tramo: 34svh; --duracion: 1100ms; }
 .revela { --entrada: basal-cortina; --tramo: 50svh; --duracion: 1400ms; }
+.revela img { --entrada: basal-asienta; }
 .ficha [data-aparece] { --entrada: basal-escribe; --tramo: 22svh; --duracion: 900ms; }
 .gantt .barra[data-aparece] { --entrada: basal-crece; --tramo: 40svh; --duracion: 1300ms; }
 .escena[data-aparece] { --entrada: none; }
 @keyframes basal-sube { from { opacity: 0; translate: 0 16px; } }
 @keyframes basal-cortina { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes basal-asienta { from { scale: 1.12; } }
 @keyframes basal-escribe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes basal-crece { from { scale: 0 1; } }
-@keyframes basal-suelo { 0% { translate: 0 0; } 6% { translate: 16px 0; } 15% { translate: -11.5px 0; } 24% { translate: 8.3px 0; } 33% { translate: -6px 0; } 42% { translate: 4.3px 0; } 51% { translate: -3.1px 0; } 60% { translate: 2.2px 0; } 69% { translate: -1.6px 0; } 78% { translate: 1.2px 0; } 87% { translate: -0.8px 0; } 96%, 100% { translate: 0 0; } }
-@keyframes basal-edificio { 0% { translate: 0 0; } 6% { translate: 1.44px 0; } 15% { translate: -1.03px 0; } 24% { translate: 0.75px 0; } 33% { translate: -0.54px 0; } 42% { translate: 0.39px 0; } 51% { translate: -0.28px 0; } 60% { translate: 0.2px 0; } 69% { translate: -0.14px 0; } 78% { translate: 0.11px 0; } 87% { translate: -0.07px 0; } 96%, 100% { translate: 0 0; } }
-@keyframes basal-aislador { 0% { transform: skewX(0deg); } 6% { transform: skewX(33.5deg); } 15% { transform: skewX(-25.5deg); } 24% { transform: skewX(18.9deg); } 33% { transform: skewX(-13.9deg); } 42% { transform: skewX(10.1deg); } 51% { transform: skewX(-7.3deg); } 60% { transform: skewX(5.2deg); } 69% { transform: skewX(-3.8deg); } 78% { transform: skewX(2.8deg); } 87% { transform: skewX(-1.9deg); } 96%, 100% { transform: skewX(0deg); } }
-@keyframes basal-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .aislador { transform-box: fill-box; transform-origin: 50% 0; }
 .traza path { stroke-dasharray: 1; }
 @media (prefers-reduced-motion: no-preference) {
@@ -216,22 +241,9 @@ main { counter-reset: seccion; }
   .portada > :nth-child(2) { animation-delay: 120ms; }
   .portada > :nth-child(3) { animation-delay: 240ms; }
   .portada > :nth-child(4) { animation-delay: 360ms; }
-  .con-js .suelo { animation: basal-suelo 8s var(--curva) both paused; }
-  .con-js .edificio { animation: basal-edificio 8s var(--curva) both paused; }
-  .con-js .aislador { animation: basal-aislador 8s var(--curva) both paused; }
-  .con-js .traza path { animation: basal-traza 8s var(--curva) both paused; }
-  .con-js .bloque:has(.paso-ensayo.visto) :is(.suelo, .edificio, .aislador, .traza path) { animation-play-state: running; }
-  @media (max-width: 899px) {
-    .con-js .bloque:has(.escena.visto) :is(.suelo, .edificio, .aislador, .traza path) { animation-play-state: running; }
-  }
-  @supports (animation-timeline: view()) {
-    .con-js .bloque { view-timeline: --ensayo; }
-    .con-js :is(.suelo, .edificio, .aislador, .traza path) { animation-duration: auto; animation-play-state: running; animation-timeline: --ensayo; animation-range: contain 24% contain 92%; }
-    @media (max-width: 899px) {
-      .con-js .escena { view-timeline: --ensayo; }
-      .con-js :is(.suelo, .edificio, .aislador, .traza path) { animation-range: contain 0% contain 100%; }
-    }
-  }
+  .con-js .lectura { display: flex; }
+  .logo-vivo:hover .logo-suelo { animation: basal-logo-suelo 1600ms var(--curva); }
+  .logo-vivo:hover .logo-aislador > * { transform-box: fill-box; transform-origin: 50% 0; animation: basal-logo-aislador 1600ms var(--curva); }
 }
 </style>
 </head>
@@ -248,10 +260,20 @@ main { counter-reset: seccion; }
   </defs>
 </svg>
 
-<header class="ancho cabecera">
-  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><span><b>Basal</b> <span>Ingeniería</span></span></a>
-  <nav aria-label="Secciones"><ul><li><a href="#ensayo">El ensayo</a></li><li><a href="#proyectos">Proyectos</a></li><li><a href="#metodo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></nav>
-  <a class="boton boton-borde" href="#contacto">Conversemos</a>
+<header class="cabecera">
+  <div class="ancho cabecera-fila">
+    <a class="logo logo-vivo" href="#inicio">
+      <svg viewBox="0 0 34 26" aria-hidden="true">
+        <rect x="1" y="3" width="32" height="4" rx="1" fill="currentColor"/>
+        <g class="logo-aislador" fill="none" stroke="currentColor" stroke-width="1.6"><g><rect x="6" y="10" width="7" height="8" rx="1.5"/><path d="M6 14h7"/></g></g>
+        <g class="logo-aislador" fill="none" stroke="currentColor" stroke-width="1.6"><g><rect x="21" y="10" width="7" height="8" rx="1.5"/><path d="M21 14h7"/></g></g>
+        <rect class="logo-suelo" x="1" y="21" width="32" height="2" fill="currentColor"/>
+      </svg>
+      <span><b>Basal</b> <span>Ingeniería</span></span>
+    </a>
+    <nav aria-label="Secciones"><ul><li><a href="#ensayo">El ensayo</a></li><li><a href="#proyectos">Proyectos</a></li><li><a href="#metodo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></nav>
+    <a class="boton boton-borde" href="#contacto">Conversemos</a>
+  </div>
 </header>
 
 <main>
@@ -286,6 +308,7 @@ main { counter-reset: seccion; }
             <g transform="translate(350 300)"><use href="#aislador" class="aislador"/></g>
             <g transform="translate(420 300)"><use href="#aislador" class="aislador"/></g>
           </g>
+          <path class="deformada-dibujo" d="M140 292V60H420V292"/>
           <g class="nota" fill="none" stroke="#5a6b7d" stroke-width="1">
             <path d="M120 262V196H40"/><path d="M438 311H560" stroke-dasharray="4 4"/><path d="M436 306L470 284H556"/>
           </g>
@@ -294,12 +317,15 @@ main { counter-reset: seccion; }
         </svg>
         <div class="registro">
           <p class="registro-cabeza"><span>Ensayo · registro escalado</span><span class="suave">Mesa vibratoria · 30 s</span></p>
+          <p class="lectura" aria-hidden="true"><span>t <b data-lee="t">0,0</b> s</span><span>Suelo <b data-lee="suelo">0,0</b> cm</span><span>Último piso <b data-lee="piso">0,0</b> cm</span></p>
           <svg class="traza" viewBox="0 0 600 100" aria-hidden="true">
             <path d="M0 50H600M0 10V90" stroke="#c3cdd8" stroke-width="1"/>
             <path pathLength="1" stroke="#f2a900" d="M0 50C13 50 23 8.4 36 8.4C55.4 8.4 70.6 79.9 90 79.9C109.4 79.9 124.6 28.4 144 28.4C163.4 28.4 178.6 65.6 198 65.6C217.4 65.6 232.6 38.8 252 38.8C271.4 38.8 286.6 58.1 306 58.1C325.4 58.1 340.6 44.3 360 44.3C379.4 44.3 394.6 54.2 414 54.2C433.4 54.2 448.6 46.9 468 46.9C487.4 46.9 502.6 52.1 522 52.1C541.4 52.1 556.6 50 576 50L600 50"/>
             <path pathLength="1" stroke="#0f2a44" d="M0 50C13 50 23 46.3 36 46.3C55.4 46.3 70.6 52.7 90 52.7C109.4 52.7 124.6 48 144 48C163.4 48 178.6 51.4 198 51.4C217.4 51.4 232.6 49 252 49C271.4 49 286.6 50.7 306 50.7C325.4 50.7 340.6 49.5 360 49.5C379.4 49.5 394.6 50.4 414 50.4C433.4 50.4 448.6 49.7 468 49.7C487.4 49.7 502.6 50.2 522 50.2C541.4 50.2 556.6 50 576 50L600 50"/>
+            <circle class="pluma" r="4" stroke="#f2a900" cx="0" cy="50"/>
+            <circle class="pluma" r="4" stroke="#0f2a44" cx="0" cy="50"/>
           </svg>
-          <p class="leyenda"><span><i></i>Suelo: hasta 22 cm</span><span class="edificio"><i></i>Último piso: menos de 2 cm</span></p>
+          <p class="leyenda"><span><i></i>Suelo: hasta 22 cm</span><span class="edificio"><i></i>Último piso: menos de 2 cm</span><span class="deformada"><i></i>Deformada sin aislación</span></p>
         </div>
       </div>
     </div>
@@ -329,7 +355,7 @@ main { counter-reset: seccion; }
       </div>
 
       <article class="proyecto">
-        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/hospital-1200.webp" srcset="/image/bocetos/basal/hospital-700.webp 700w, /image/bocetos/basal/hospital-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio hospitalario moderno de vidrio, con una entrada curva bajo el cielo azul"></figure>
+        <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/hospital-1200.webp" srcset="/image/bocetos/basal/hospital-700.webp 700w, /image/bocetos/basal/hospital-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio hospitalario moderno de vidrio, con una entrada curva bajo el cielo azul"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Salud</p>
           <h3 data-aparece>Hospital del Pacífico, San Antonio</h3>
@@ -344,7 +370,7 @@ main { counter-reset: seccion; }
       </article>
 
       <article class="proyecto">
-        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/obra-1200.webp" srcset="/image/bocetos/basal/obra-700.webp 700w, /image/bocetos/basal/obra-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio en obra gruesa junto a una grúa torre, contra un cielo con nubes"></figure>
+        <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/obra-1200.webp" srcset="/image/bocetos/basal/obra-700.webp 700w, /image/bocetos/basal/obra-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio en obra gruesa junto a una grúa torre, contra un cielo con nubes"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Vivienda</p>
           <h3 data-aparece>Edificio Parque Antumapu, La Florida</h3>
@@ -359,7 +385,7 @@ main { counter-reset: seccion; }
       </article>
 
       <article class="proyecto">
-        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/puente-1200.webp" srcset="/image/bocetos/basal/puente-700.webp 700w, /image/bocetos/basal/puente-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un puente atirantado de varias torres que cruza el mar, con cerros al fondo"></figure>
+        <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/puente-1200.webp" srcset="/image/bocetos/basal/puente-700.webp 700w, /image/bocetos/basal/puente-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un puente atirantado de varias torres que cruza el mar, con cerros al fondo"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Infraestructura</p>
           <h3 data-aparece>Puente Seno Reloncaví, Los Lagos</h3>
@@ -393,7 +419,7 @@ main { counter-reset: seccion; }
   <section class="ancho seccion" id="equipo" style="padding-top: 0">
     <div class="equipo">
       <figure class="revela" data-aparece>
-        <div class="foto"><img src="/image/bocetos/basal/planos-1400.webp" srcset="/image/bocetos/basal/planos-800.webp 800w, /image/bocetos/basal/planos-1400.webp 1400w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1400" height="788" loading="lazy" alt="Dos ingenieras con casco revisan un plano junto a una ventana con edificios de fondo"></div>
+        <div class="foto"><img data-sigue src="/image/bocetos/basal/planos-1400.webp" srcset="/image/bocetos/basal/planos-800.webp 800w, /image/bocetos/basal/planos-1400.webp 1400w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1400" height="788" loading="lazy" alt="Dos ingenieras con casco revisan un plano junto a una ventana con edificios de fondo"></div>
         <figcaption>Carolina Méndez y Paula Ríos revisan los planos del Hospital del Pacífico.</figcaption>
       </figure>
       <div data-aparece>

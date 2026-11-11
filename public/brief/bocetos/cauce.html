@@ -23,7 +23,12 @@
    - Letra y color: gris claro, tinta negra fina y el color solo en el aparato
      (el naranja de señal, nunca en texto chico).
    - Movimiento: el objeto cambia de estado con el scroll (el sensor se despieza).
-   También: Arable (arable.com), por los datos puestos sobre fotos de campo. */
+   También: Arable (arable.com), por los datos puestos sobre fotos de campo.
+   Segunda vuelta, desde Awwwards (Farm Minerals, iyO): la portada y el panel
+   en oscuro, para que la página tenga ritmo; el titular grande y condensado
+   con una foto metida en la línea; la grilla de columnas a la vista, y una
+   pieza que cuenta el producto con el scroll: el corte del suelo durante un
+   riego, con el agua bajando y la estaca leyéndola. */
 @font-face { font-family: 'Instrument Sans'; src: url('/fonts/bocetos/instrument-sans.woff2') format('woff2'); font-weight: 400 700; font-stretch: 75% 100%; font-display: swap; }
 @font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
@@ -49,11 +54,18 @@ a { color: inherit; }
 h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
 p { margin: 0; }
 .ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+/* La grilla de doce columnas, a la vista detrás de las secciones claras. */
+main { background: repeating-linear-gradient(90deg, rgb(16 20 18 / 0.06) 0 1px, transparent 1px calc(100% / 12)) center top / min(var(--ancho) - 2 * var(--margen), 100% - 2 * var(--margen)) 100% repeat-y; }
+
+/* Lo oscuro: la portada y el panel cambian los colores, no las reglas. El
+   grafito sobre el fondo da 7:1. */
+.oscuro { --papel: #0d1210; --blanco: #141a17; --tinta: #eef0eb; --grafito: #9da69f; --linea: #28312c; background: var(--papel); color: var(--tinta); overflow-x: clip; }
+.oscuro .seccion { border-top: 0; }
 .mono { font: 400 12px/1.5 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--grafito); }
 .cifra { font-variant-numeric: tabular-nums; }
 .seccion { padding-block: clamp(80px, 10vw, 150px); border-top: 1px solid var(--linea); }
 .cabeza { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(40px, 6vw, 72px); }
-.cabeza h2 { margin-top: 14px; font-size: clamp(34px, 4.4vw, 60px); }
+.cabeza h2 { margin-top: 14px; font-size: clamp(36px, 5.2vw, 76px); font-stretch: 82%; font-weight: 600; letter-spacing: -0.03em; }
 .cabeza > p { max-width: 46ch; color: var(--grafito); }
 .boton { display: inline-flex; align-items: center; gap: 12px; min-height: 50px; padding: 0 24px; border: 1px solid var(--tinta); border-radius: 999px; background: var(--tinta); color: var(--papel); font: 500 16px/1 'Instrument Sans', system-ui, sans-serif; text-decoration: none; cursor: pointer; transition: background 400ms var(--precisa), color 400ms var(--precisa); }
 .boton::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--senal); }
@@ -69,30 +81,65 @@ p { margin: 0; }
 .cabecera nav a:hover { color: var(--tinta); }
 .cabecera .boton { min-height: 42px; padding-inline: 18px; font-size: 15px; }
 
-/* ---- Portada: el mapa vivo ---- */
-.portada { padding-block: clamp(40px, 6vw, 80px) clamp(64px, 8vw, 110px); }
-.portada-texto { display: grid; justify-items: center; gap: 22px; text-align: center; }
-.portada h1 { max-width: 15ch; font-size: clamp(44px, 6.4vw, 92px); letter-spacing: -0.045em; }
-.portada-texto > p:not(.mono) { max-width: 52ch; color: var(--grafito); }
-.acciones { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 28px; margin-top: 8px; }
-.mapa { position: relative; margin-top: clamp(48px, 6vw, 80px); padding: 28px; border: 1px solid var(--linea); background: var(--blanco); }
-.mapa::before { content: ''; position: absolute; left: 28px; right: 28px; top: 0; height: 8px; background: repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 2.5%); opacity: 0.35; }
-.lienzo { position: relative; aspect-ratio: 800 / 520; }
+/* ---- Portada: el mapa vivo, en oscuro ----
+   El titular grande, condensado, con un puñado de tierra metido en la línea.
+   El mapa va de borde a borde, y una barra de lectura lo cruza: cada sensor
+   se pone al día cuando ella pasa (cauce.js). */
+.portada { padding-block: clamp(32px, 5vw, 72px) 0; }
+.portada-texto { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 24px clamp(32px, 5vw, 80px); align-items: end; }
+.portada-texto > .mono { grid-column: 1 / -1; }
+.portada h1 { font-size: clamp(50px, 8.6vw, 140px); font-stretch: 78%; font-weight: 600; letter-spacing: -0.035em; line-height: 0.92; }
+.pildora { display: inline-block; width: 1.7em; height: 0.74em; margin-inline: 0.04em; border-radius: 999px; overflow: hidden; vertical-align: 0.02em; background: var(--linea); }
+.pildora img { width: 100%; height: 100%; object-fit: cover; }
+.portada-lado { display: grid; gap: 22px; padding-bottom: 0.6em; }
+.portada-lado > p { max-width: 40ch; color: var(--grafito); }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; }
+.mapa { position: relative; margin: clamp(40px, 5vw, 72px) calc(50% - 50vw) 0; padding: 0 0 18px; border-top: 1px solid var(--linea); }
+.mapa::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 2.5%); opacity: 0.3; }
+.lienzo { position: relative; aspect-ratio: 800 / 330; overflow: hidden; }
 .lienzo svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.curvas path { fill: none; stroke: var(--tinta); stroke-width: 0.7; opacity: 0.45; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
+.curvas path { fill: none; stroke: var(--tinta); stroke-width: 0.7; opacity: 0.32; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
 .curvas path:nth-child(4n + 1) { stroke-width: 1.2; opacity: 0.8; }
 .rio { fill: none; stroke: var(--tinta); stroke-width: 2.2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
-.mapa-pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 18px; }
+.mapa-pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; max-width: var(--ancho); margin: 18px auto 0; padding-inline: var(--margen); }
+.barrido { position: absolute; top: 0; bottom: 0; left: -10%; width: 160px; translate: -100% 0; background: linear-gradient(90deg, transparent, rgb(255 91 31 / 0.1)); border-right: 1px solid var(--senal); pointer-events: none; }
 .escala { display: inline-flex; align-items: center; gap: 10px; }
 .escala::before { content: ''; width: 64px; height: 6px; border: 1px solid var(--tinta); border-top: 0; }
 .sensor { position: absolute; left: var(--x); top: var(--y); }
 .punto { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--senal); }
 .punto::after { content: ''; position: absolute; inset: -9px; border: 1px solid var(--senal); border-radius: 50%; opacity: 0.6; }
-.nota { position: absolute; left: 18px; top: -10px; display: grid; gap: 1px; width: max-content; padding: 6px 9px; border-left: 1px solid var(--tinta); background: rgb(251 251 249 / 0.92); font: 400 11.5px/1.45 var(--mono); letter-spacing: 0.02em; color: var(--grafito); }
+.nota { position: absolute; left: 18px; top: -10px; display: grid; gap: 1px; width: max-content; padding: 6px 9px; border-left: 1px solid var(--tinta); background: rgb(13 18 16 / 0.86); font: 400 11.5px/1.45 var(--mono); letter-spacing: 0.02em; color: var(--grafito); }
 .nota b { font-weight: 400; color: var(--tinta); letter-spacing: 0.08em; }
 .izquierda .nota { left: auto; right: 18px; border-left: 0; border-right: 1px solid var(--tinta); text-align: right; }
 .valor { display: inline-block; width: 4ch; color: var(--tinta); text-align: right; font-variant-numeric: tabular-nums; }
 .valor[data-decimales="0"] { width: 3ch; }
+
+/* ---- Un riego: el corte del suelo ----
+   El corte queda pegado mientras se leen los pasos. El agua baja en un
+   bulbo bajo cada gotero, con sus isolíneas, y la estaca la lee a 20, 40 y
+   60 cm (cauce.js). En M y S el corte queda arriba y los pasos pasan bajo él. */
+.riego-bloque { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 80px); }
+.riego-pasos { grid-column: 1; grid-row: 1; }
+.riego-paso { display: grid; align-content: center; gap: 12px; min-height: 72svh; max-width: 30rem; }
+.riego-paso h3 { font-size: clamp(28px, 2.8vw, 40px); font-stretch: 85%; font-weight: 600; letter-spacing: -0.03em; }
+.riego-paso p:not(.mono) { color: var(--grafito); }
+.riego-escena { grid-column: 2; grid-row: 1; position: sticky; top: var(--alto-barra, 0px); display: grid; align-content: center; gap: 12px; height: calc(100svh - var(--alto-barra, 0px)); }
+.corte { position: relative; border: 1px solid var(--linea); background: var(--blanco); }
+.corte-suelo { display: block; width: 100%; height: auto; }
+.corte-suelo .rayita { stroke: var(--linea); stroke-dasharray: 3 5; }
+.corte-suelo text { font: 400 13px var(--mono); fill: var(--grafito); }
+.bulbo { fill: rgb(16 20 18 / 0.09); }
+.isolinea { fill: none; stroke: var(--tinta); stroke-width: 1; opacity: 0.4; }
+.gotero { fill: var(--tinta); transition: fill 500ms var(--precisa); }
+.abierta .gotero { fill: var(--senal); }
+.anillo-s { fill: var(--blanco); stroke: var(--tinta); stroke-width: 1.5; transition: fill 600ms var(--precisa), stroke 600ms var(--precisa); }
+.anillo-s.mojado { fill: var(--senal); stroke: var(--senal); }
+.lee { position: absolute; left: 67%; top: var(--y); translate: 0 -50%; display: grid; padding: 4px 8px; border-left: 1px solid var(--tinta); background: rgb(251 251 249 / 0.92); font: 400 12px/1.4 var(--mono); color: var(--grafito); }
+.lee b { font-weight: 400; color: var(--tinta); }
+.lee [data-prof] { display: inline-block; width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
+.estado { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 18px; }
+.estado b { font-weight: 400; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.estado [data-valvula] { display: inline-block; min-width: 20ch; }
 
 /* ---- Qué mide: el despiece ---- */
 .despiece { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
@@ -253,7 +300,13 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 /* ---- M ---- */
 @media (max-width: 899px) {
   .cabecera nav { display: none; }
-  .cabeza, .panel-arriba, .despiece, .ficha, .visita { grid-template-columns: minmax(0, 1fr); }
+  .cabeza, .panel-arriba, .despiece, .ficha, .visita, .portada-texto, .riego-bloque { grid-template-columns: minmax(0, 1fr); }
+  .portada-lado { padding-bottom: 0; }
+  .lienzo { aspect-ratio: 800 / 520; }
+  .riego-escena { grid-column: 1; z-index: 2; height: auto; padding-block: 12px; background: var(--papel); border-bottom: 1px solid var(--linea); }
+  .corte-suelo { max-height: 40svh; }
+  .riego-pasos { grid-row: 2; }
+  .riego-paso { min-height: 58svh; }
   .escena { --k: 0.85; }
   .tablero { grid-template-columns: minmax(0, 1fr); }
   .grafica { border-right: 0; border-bottom: 1px solid var(--linea); }
@@ -263,8 +316,6 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
   .bloque + .bloque { border-top: 0; border-left: 1px solid var(--linea); }
   .ficha .foto { max-width: 420px; }
   .visita .marco { display: none; }
-  .mapa { padding: 18px; }
-  .mapa::before { left: 18px; right: 18px; }
   .nota .caudal { display: none; }
 }
 
@@ -272,8 +323,9 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 @media (max-width: 599px) {
   body { font-size: 16px; }
   .cabecera .boton { min-height: 40px; padding-inline: 14px; font-size: 14px; }
-  .mapa { margin-inline: calc(var(--margen) * -1); padding: 14px 10px; border-inline: 0; }
-  .mapa::before { left: 10px; right: 10px; }
+  .lienzo { aspect-ratio: 4 / 3.4; }
+  .lee { padding: 2px 6px; font-size: 10.5px; }
+  .estado { font-size: 11px; }
   .nota { left: 12px; top: -9px; padding: 3px 6px; font-size: 10.5px; }
   .izquierda .nota { right: 12px; }
   .escena { --k: 0.72; }
@@ -318,12 +370,12 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 @keyframes cauce-bateria { from { transform: translateY(40px); } }
 @keyframes cauce-vaiven { from { transform: rotateY(-16deg); } to { transform: rotateY(16deg); } }
 @keyframes cauce-enciende { from { opacity: 0; } }
+@keyframes cauce-gotea { from { scale: 1; } to { scale: 1.9; } }
 @keyframes cauce-late { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.5); opacity: 0; } }
 @media (prefers-reduced-motion: no-preference) {
   .portada-texto > * { animation: cauce-aparece 1200ms var(--precisa) both; }
   .portada-texto > :nth-child(2) { animation-delay: 120ms; }
   .portada-texto > :nth-child(3) { animation-delay: 240ms; }
-  .portada-texto > :nth-child(4) { animation-delay: 360ms; }
   .curvas path, .rio { animation: cauce-traza 2400ms var(--precisa) both; }
   .curvas path:nth-child(3n + 1) { animation-delay: 300ms; }
   .curvas path:nth-child(3n + 2) { animation-delay: 600ms; }
@@ -331,6 +383,7 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
   .sensor { animation: cauce-enciende 1000ms var(--precisa) both; animation-delay: calc(1600ms + var(--orden) * 160ms); }
   .vaiven { animation: cauce-vaiven 10s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; }
   .tomada .vaiven, .escena:focus-visible .vaiven { animation-play-state: paused; }
+  .abierta .gotero { transform-box: fill-box; transform-origin: center; animation: cauce-gotea 1400ms cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; }
   .punto::after { animation: cauce-late 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; animation-delay: calc(var(--orden) * -1.2s); }
 }
 </style>
@@ -340,22 +393,28 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="cauce" viewBox="0 0 32 32"><path d="M16 2.5c7.6 0 13.5 4.6 13.5 11.2S24 29.5 15.4 29.5 2.5 24.8 2.5 17 8.4 2.5 16 2.5zM16.4 8.6c4.4 0 7.4 2.6 7.4 6.6s-3.3 8.4-7.9 8.4-7.6-2.8-7.6-7.1 3.7-7.9 8.1-7.9z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="16" r="3.2" fill="#ff5b1f"/></symbol></svg>
 
+<div class="oscuro">
 <header class="ancho cabecera">
   <a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#cauce"/></svg>cauce</a>
-  <nav aria-label="Secciones"><ul><li><a href="#mide">Qué mide</a></li><li><a href="#panel">El panel</a></li><li><a href="#ficha">Ficha técnica</a></li><li><a href="#campos">Campos</a></li></ul></nav>
+  <nav aria-label="Secciones"><ul><li><a href="#riego">Un riego</a></li><li><a href="#mide">Qué mide</a></li><li><a href="#panel">El panel</a></li><li><a href="#ficha">Ficha técnica</a></li><li><a href="#campos">Campos</a></li></ul></nav>
   <a class="boton" href="#visita">Pedir visita</a>
 </header>
+</div>
 
 <main>
+<div class="oscuro">
   <section class="ancho portada" id="inicio">
     <div class="portada-texto">
       <p class="mono">Telemetría de riego · Valle de Colchagua</p>
-      <h1>El suelo te dice cuándo regar</h1>
-      <p>Sensores de humedad y caudal en cada cuartel, y un panel en el teléfono que avisa cuándo abrir la válvula y cuándo cerrarla. Riegas lo que la planta necesita, no lo que dice el calendario.</p>
-      <div class="acciones"><a class="boton" href="#visita">Pedir una visita a terreno</a><a class="callado" href="#mide">Ver qué mide</a></div>
+      <h1>El suelo <span class="pildora"><img src="/image/bocetos/cauce/pildora-240.webp" width="240" height="120" alt=""></span> te dice cuándo regar</h1>
+      <div class="portada-lado">
+        <p>Sensores de humedad y caudal en cada cuartel, y un panel en el teléfono que avisa cuándo abrir la válvula y cuándo cerrarla. Riegas lo que la planta necesita, no lo que dice el calendario.</p>
+        <div class="acciones"><a class="boton" href="#visita">Pedir una visita a terreno</a><a class="callado" href="#riego">Ver un riego</a></div>
+      </div>
     </div>
     <figure class="mapa">
       <div class="lienzo">
+        <span class="barrido" aria-hidden="true"></span>
         <svg viewBox="0 0 800 520" preserveAspectRatio="none" aria-hidden="true"><g class="curvas"><path pathLength="1" d="M0 328 13 310 21 290 13 245 0 208"/><path pathLength="1" d="M0 372 24 355 38 340 52 320 60 300 57 285 28 210 16 185 0 159"/><path pathLength="1" d="M0 413 50 376 90 334 105 321 158 290 155 280 145 270 95 246 75 230 60 210 0 113M800 229 792 235 786 245 780 260 779 270 780 280 784 295 800 324"/><path pathLength="1" d="M0 463 7 450 20 435 65 398 105 361 125 346 150 336 180 330 210 330 265 335 280 334 295 330 315 321 331 310 343 290 347 280 348 270 344 260 340 258 330 257 318 260 275 279 255 283 240 281 215 272 169 245 103 210 90 200 75 183 20 104 11 85 6 70 2 50 0 30M800 197 757 225 744 245 741 255 739 270 742 285 750 305 785 352 800 377"/><path pathLength="1" d="M18 0 17 25 19 45 25 68 35 89 59 125 88 165 108 185 129 200 200 238 220 246 235 249 255 249 270 246 325 220 340 215 355 213 375 215 388 220 397 230 399 240 397 255 386 285 370 309 345 336 330 347 310 358 285 368 260 371 240 370 190 361 165 361 140 368 120 380 50 441 32 460 25 471 18 485 14 500 12 520M800 167 780 182 732 210 711 225 703 235 698 245 697 255 698 270 710 295 730 327 776 385 788 410 800 445M545 225 545 225"/><path pathLength="1" d="M35 0 34 15 35 35 44 65 64 100 100 150 125 175 154 195 195 217 225 227 245 228 260 226 275 220 310 202 330 194 355 188 385 186 455 186 625 208 645 209 660 208 690 199 760 168 785 150 800 131M780 520 774 460 769 440 762 420 750 399 708 340 695 323 680 308 665 300 655 298 645 298 625 302 570 319 550 321 535 320 521 315 510 308 475 271 465 265 455 263 440 267 425 277 410 294 384 330 370 346 345 366 310 385 285 393 260 396 235 395 190 388 170 387 150 392 135 400 110 420 57 470 50 480 42 495 38 520"/><path pathLength="1" d="M55 0 53 25 56 40 61 55 83 95 115 140 140 165 175 190 205 204 220 208 235 210 250 208 265 204 310 180 330 173 355 167 430 155 450 154 466 155 550 177 580 181 610 182 635 180 655 176 735 151 755 141 770 129 783 110 789 90 790 70 786 50 778 30 762 0M750 520 750 495 747 475 736 440 693 360 683 345 670 333 655 326 635 324 615 328 560 343 535 347 515 347 490 342 477 335 460 323 450 319 442 320 435 324 404 355 377 375 340 397 310 410 285 416 260 418 180 415 165 418 150 425 125 443 88 480 75 500 70 520"/><path pathLength="1" d="M80 0 78 10 77 25 83 50 100 85 126 125 150 151 180 174 205 187 230 192 245 190 260 185 300 162 320 154 430 132 450 130 470 132 490 137 550 157 570 161 590 162 611 160 634 155 715 127 730 120 745 109 755 95 759 80 759 65 755 45 746 20 736 0M723 520 722 495 716 470 691 420 672 375 665 364 655 355 645 350 630 348 610 352 560 366 515 377 415 396 390 404 335 427 310 434 280 439 210 442 185 448 165 458 147 475 130 500 123 520"/><path pathLength="1" d="M114 0 108 20 110 45 120 75 137 105 156 130 180 152 205 166 225 171 236 170 250 166 290 142 310 133 435 109 460 109 480 112 540 134 565 140 595 141 625 134 695 102 710 92 721 80 726 65 727 45 721 20 711 0M691 520 693 505 689 485 682 470 661 435 645 397 634 385 625 381 615 381 589 385 420 429 395 438 360 454 340 460 320 462 255 464 222 470 205 478 191 490 182 505 177 520"/><path pathLength="1" d="M156 0 148 20 145 40 147 60 154 80 168 105 185 124 200 135 210 139 220 141 230 141 240 137 275 117 300 108 425 86 455 86 480 90 505 97 545 112 565 117 585 118 605 115 630 105 658 90 675 78 688 65 695 50 696 35 691 15 681 0M623 520 635 511 639 500 637 490 630 475 612 450 600 438 585 431 565 428 535 431 487 440 455 448 430 458 412 470 397 485 386 505 385 520M313 520 306 510 299 505 285 499 270 497 255 498 245 502 234 510 228 520"/><path pathLength="1" d="M196 0 190 15 187 30 188 45 191 60 197 70 206 80 215 85 230 88 250 85 300 73 326 65 370 48 385 46 495 66 560 85 580 87 595 84 617 75 639 60 651 45 653 30 648 20 634 10 616 5 578 0M511 520 517 515 523 505 525 495 524 490 521 485 515 480 505 476 495 475 470 480 454 490 450 495 446 505 447 515 450 520"/></g><path class="rio" pathLength="1" d="M0 283L20 291 40 296 60 298 80 297 100 295 120 292 140 290 160 289 180 291 200 294 220 299 240 305 260 310 280 315 300 316 320 315 340 310 360 302 380 291 400 279 420 268 440 257 460 249 480 244 500 241 520 242 540 244 560 247 580 249 600 250 620 249 640 247 660 242 680 236 700 231 720 226 740 224 760 225 780 230 800 238"/></svg>
         <div class="sensor" style="--x: 17%; --y: 70%; --orden: 0"><span class="punto"></span><p class="nota"><b>S-01</b><span class="sitio">Cuartel 2 · Carménère</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="31.4" data-amplitud="1.6" data-periodo="23" data-fase="0">31,4</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="412" data-amplitud="34" data-periodo="17" data-fase="0.3" data-decimales="0">412</span> L/h</span></p></div>
         <div class="sensor izquierda" style="--x: 37%; --y: 37%; --orden: 1"><span class="punto"></span><p class="nota"><b>S-02</b><span class="sitio">Cuartel 5 · Syrah</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="27.9" data-amplitud="1.2" data-periodo="29" data-fase="0.5">27,9</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="0" data-amplitud="0" data-periodo="29" data-fase="0" data-decimales="0">0</span> L/h</span></p></div>
@@ -366,10 +425,72 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
       <figcaption class="mapa-pie mono"><span>Viña Cerro Pangal · 5 sensores · lectura cada 15 min</span><span class="escala">500 m</span><span>34°38′ S · 71°22′ O</span></figcaption>
     </figure>
   </section>
+</div>
+
+  <section class="ancho seccion" id="riego">
+    <div class="cabeza" data-aparece>
+      <div><p class="mono">01 · Un riego</p><h2>Tres horas y veinte minutos bajo tierra</h2></div>
+      <p>Lo que pasa en el cuartel 2 un domingo de enero, desde que el panel avisa hasta que la válvula se cierra sola. Baja despacio: el agua también.</p>
+    </div>
+    <div class="riego-bloque">
+      <div class="riego-escena">
+        <div class="corte">
+          <svg class="corte-suelo" viewBox="0 0 640 520" role="img" aria-label="Corte del suelo de un cuartel con tres goteros, las raíces de las parras y la estaca de Cauce con sensores a 20, 40 y 60 centímetros. Al regar, el agua baja en un bulbo bajo cada gotero, pasa los 20 cm, llega a las raíces a los 40 y la válvula se cierra antes de que pase los 60.">
+            <defs>
+              <pattern id="tierra" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1" fill="#5b625e" opacity="0.35"/><circle cx="11" cy="12" r="0.8" fill="#5b625e" opacity="0.3"/></pattern>
+              <clipPath id="bajo-tierra"><rect x="0" y="96" width="640" height="424"/></clipPath>
+            </defs>
+            <rect y="96" width="640" height="424" fill="url(#tierra)"/>
+            <path class="rayita" d="M40 216H640M40 336H640M40 456H640"/>
+            <text x="8" y="220">20</text><text x="8" y="340">40</text><text x="8" y="460">60</text><text x="8" y="112">cm</text>
+            <g fill="none" stroke="#5b625e" stroke-width="1.2" stroke-linecap="round" opacity="0.7">
+              <path d="M120 96C116 150 128 190 112 250S96 320 104 370M118 140C96 170 80 200 74 240M114 190C140 220 158 250 162 300M112 250C86 280 70 300 64 330"/>
+              <path d="M320 96C324 150 312 200 326 260S340 330 332 380M322 140C344 168 360 196 366 236M324 200C300 228 284 256 280 300M326 260C352 290 364 312 370 340"/>
+              <path d="M520 96C516 150 530 196 516 254S502 324 510 372M518 146C540 172 556 204 560 244M516 204C492 232 478 262 476 304M516 254C540 286 552 306 556 336"/>
+            </g>
+            <g clip-path="url(#bajo-tierra)">
+              <g data-gotero="150"><path class="bulbo"/><path class="isolinea"/><path class="isolinea"/></g>
+              <g data-gotero="350"><path class="bulbo"/><path class="isolinea"/><path class="isolinea"/></g>
+              <g data-gotero="550"><path class="bulbo"/><path class="isolinea"/><path class="isolinea"/></g>
+            </g>
+            <path d="M0 96H640" stroke="#101412" stroke-width="1.5"/>
+            <g fill="none" stroke="#101412" stroke-width="2" stroke-linecap="round">
+              <path d="M120 96C117 74 124 56 120 36M120 40C104 38 92 42 80 40M120 40C136 38 148 42 160 40"/>
+              <path d="M320 96C323 74 316 56 320 36M320 40C304 38 292 42 280 40M320 40C336 38 348 42 360 40"/>
+              <path d="M520 96C517 74 524 56 520 36M520 40C504 38 492 42 480 40M520 40C536 38 548 42 560 40"/>
+            </g>
+            <g fill="#f3f4f1" stroke="#101412" stroke-width="1"><ellipse cx="90" cy="32" rx="9" ry="6"/><ellipse cx="150" cy="31" rx="9" ry="6"/><ellipse cx="290" cy="32" rx="9" ry="6"/><ellipse cx="350" cy="31" rx="9" ry="6"/><ellipse cx="490" cy="32" rx="9" ry="6"/><ellipse cx="550" cy="31" rx="9" ry="6"/></g>
+            <path d="M0 86H640" stroke="#101412" stroke-width="3"/>
+            <g class="goteros"><circle class="gotero" cx="150" cy="86" r="4.5"/><circle class="gotero" cx="350" cy="86" r="4.5"/><circle class="gotero" cx="550" cy="86" r="4.5"/></g>
+            <g stroke="#101412" stroke-width="1.5">
+              <rect x="381" y="52" width="18" height="44" rx="3" fill="#fbfbf9"/>
+              <rect x="387" y="96" width="6" height="372" fill="#d5d9d4"/>
+              <path d="M387 468L390 480L393 468Z" fill="#d5d9d4"/>
+            </g>
+            <rect class="anillo-s" data-anillo="20" x="383" y="211" width="14" height="10" rx="2"/>
+            <rect class="anillo-s" data-anillo="40" x="383" y="331" width="14" height="10" rx="2"/>
+            <rect class="anillo-s" data-anillo="60" x="383" y="451" width="14" height="10" rx="2"/>
+            <path d="M397 216H424M397 336H424M397 456H424" stroke="#101412" stroke-width="1"/>
+          </svg>
+          <p class="lee" style="--y: 41.5%" aria-hidden="true"><b>20 cm</b><span><span data-prof="20">21,2</span> %</span></p>
+          <p class="lee" style="--y: 64.6%" aria-hidden="true"><b>40 cm</b><span><span data-prof="40">23,1</span> %</span></p>
+          <p class="lee" style="--y: 87.7%" aria-hidden="true"><b>60 cm</b><span><span data-prof="60">25,4</span> %</span></p>
+        </div>
+        <p class="estado mono" aria-hidden="true"><span>Cuartel 2 · <b data-reloj>05:40</b></span><span data-valvula>Válvula cerrada</span><span>Agua <b data-agua>0,0</b> m³</span></p>
+      </div>
+      <ol class="riego-pasos" style="list-style: none; margin: 0; padding: 0">
+        <li class="riego-paso"><p class="mono">Domingo · 05:40</p><h3>El panel avisa: regar el cuartel 2</h3><p>La humedad a 40 cm bajó del punto de riego. Te llega una alerta con la hora y cuánto regar: 3 h 20 min, antes de que se levante el viento.</p></li>
+        <li class="riego-paso"><p class="mono">06:00</p><h3>Se abre la válvula</h3><p>Cada gotero entrega dos litros por hora. Bajo cada uno, el agua empieza a bajar en forma de bulbo, más hondo que ancho.</p></li>
+        <li class="riego-paso"><p class="mono">06:44</p><h3>Pasa los 20 cm</h3><p>El sensor de arriba la ve primero: la humedad sube de 21 a 35 %. Todavía no sirve de mucho: ahí hay pocas raíces.</p></li>
+        <li class="riego-paso"><p class="mono">08:24</p><h3>Llega a las raíces</h3><p>A 40 cm, donde están casi todas las raíces de una vid adulta. Ahí es donde el agua se aprovecha.</p></li>
+        <li class="riego-paso"><p class="mono">09:20</p><h3>La válvula se cierra sola</h3><p>Antes de que el agua pase los 60 cm, donde ya no la alcanza ninguna raíz. El sensor de abajo casi no se mueve: no se perdió ni una gota.</p></li>
+      </ol>
+    </div>
+  </section>
 
   <section class="ancho seccion" id="mide">
     <div class="cabeza" data-aparece>
-      <div><p class="mono">01 · Qué mide</p><h2>Una estaca, cuatro piezas, cinco temporadas</h2></div>
+      <div><p class="mono">02 · Qué mide</p><h2>Una estaca, cuatro piezas, cinco temporadas</h2></div>
       <p>Se entierra a 60 cm, entre las raíces, y no se vuelve a tocar. Mide la humedad a tres profundidades y le avisa al panel cuándo el suelo se secó.</p>
     </div>
     <div class="despiece">
@@ -393,10 +514,11 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
     </div>
   </section>
 
+  <div class="oscuro">
   <section class="ancho seccion" id="panel">
     <div class="panel-arriba">
       <div data-aparece>
-        <p class="mono">02 · El panel</p>
+        <p class="mono">03 · El panel</p>
         <h2>Lo que pasa bajo tierra, en el teléfono</h2>
         <p>Una línea por cuartel, el punto en que la planta empieza a sufrir y una alerta cuando hay que regar. Nada más.</p>
       </div>
@@ -438,10 +560,11 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
       </div>
     </div>
   </section>
+  </div>
 
   <section class="ancho seccion" id="ficha">
     <div class="cabeza" data-aparece>
-      <div><p class="mono">03 · Ficha técnica</p><h2>Hecho para quedarse en el potrero</h2></div>
+      <div><p class="mono">04 · Ficha técnica</p><h2>Hecho para quedarse en el potrero</h2></div>
       <p>Barro, heladas, el tractor que pasa al lado. Lo probamos tres temporadas en Colchagua antes de venderlo.</p>
     </div>
     <div class="ficha">
@@ -473,7 +596,7 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 
   <section class="ancho seccion" id="campos">
     <div class="cabeza" data-aparece>
-      <div><p class="mono">04 · Campos</p><h2>Lo que cambió en dos temporadas</h2></div>
+      <div><p class="mono">05 · Campos</p><h2>Lo que cambió en dos temporadas</h2></div>
       <p>Las cifras salen de sus propios paneles, comparadas con el mismo cuartel el año anterior.</p>
     </div>
     <div class="campos">
@@ -505,7 +628,7 @@ td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15
 
   <section class="ancho seccion visita" id="visita">
     <div data-aparece>
-      <p class="mono">05 · Visita a terreno</p>
+      <p class="mono">06 · Visita a terreno</p>
       <h2>Vamos a tu campo</h2>
       <p style="color: var(--grafito); max-width: 40ch">Recorremos los cuarteles contigo, vemos dónde va cada estaca y te dejamos un presupuesto ese mismo día. La visita no se cobra.</p>
       <div class="datos">

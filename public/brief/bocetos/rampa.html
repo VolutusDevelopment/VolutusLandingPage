@@ -8,7 +8,7 @@
 <meta name="description" content="Boceto de página de una marca inventada, Rampa, tienda de skate y escuela junto al Parque de los Reyes, para mostrar el estilo Collage o zine.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/image/bocetos/rampa/skater-820.webp" imagesrcset="/image/bocetos/rampa/skater-520.webp 520w, /image/bocetos/rampa/skater-820.webp 820w" imagesizes="(min-width: 900px) 34vw, 80vw" fetchpriority="high">
+<link rel="preload" as="image" href="/image/bocetos/rampa/vuelo-cuadro-480.webp" fetchpriority="high">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
@@ -22,7 +22,9 @@
    barra de luz pasa de arriba abajo y las deja impresas. Los títulos son
    letras de rescate, los recortes van pegados con cinta, lo importante se
    pinta con destacador y la inscripción es un volante con tiras para
-   arrancar: los horarios. */
+   arrancar: los horarios. Los «gifs» son videos cortos en bucle que pasan
+   por la misma trama, con el punto chico de una fotocopia buena, y la
+   secuencia del mes va cuadro a cuadro, como en las revistas de skate. */
 @font-face { font-family: 'Special Elite'; src: url('/fonts/bocetos/special-elite.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Archivo Black'; src: url('/fonts/bocetos/archivo-black.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
@@ -40,7 +42,7 @@
 }
 * { box-sizing: border-box; }
 html { background: var(--fotocopia); scroll-behavior: smooth; }
-body { margin: 0; background: var(--fotocopia) radial-gradient(rgb(17 17 17 / 0.07) 0.8px, transparent 1.2px) 0 0 / 7px 7px; color: var(--negro); font: 400 18px/1.6 'Special Elite', 'Courier New', monospace; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--fotocopia) radial-gradient(rgb(17 17 17 / 0.07) 0.6px, transparent 0.9px) 0 0 / 4px 4px; color: var(--negro); font: 400 18px/1.6 'Special Elite', 'Courier New', monospace; -webkit-font-smoothing: antialiased; }
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
 a { color: inherit; }
@@ -73,8 +75,13 @@ p { margin: 0; }
    oscura. Multiplicado sobre la página, el blanco se vuelve papel. */
 .copia { position: relative; }
 .trama { position: relative; overflow: hidden; background: #fff; filter: contrast(18); mix-blend-mode: multiply; }
-.trama img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.66) contrast(1.35) blur(0.7px); }
-.trama::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, #000 0, #fff 82%) 0 0 / var(--punto, 5px) var(--punto, 5px); mix-blend-mode: screen; pointer-events: none; }
+.trama img, .trama video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.56) contrast(1.5) blur(0.4px); }
+.trama video { position: absolute; inset: 0; }
+/* Los gifs, sus cuadros y la secuencia ya vienen en gris y con la curva
+   apretada (oscuros a negro, claros a papel): así la figura se lee con el
+   punto chico. */
+.trama:has(video) img, .trama video, .hojeo img, .cuadros img { filter: brightness(0.8) blur(0.4px); }
+.trama::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, #000 0, #fff 82%) 0 0 / var(--punto, 3px) var(--punto, 3px); mix-blend-mode: screen; pointer-events: none; }
 .luz { position: absolute; inset: 0; z-index: 2; background: linear-gradient(transparent 90%, rgb(255 255 255 / 0.7) 97%, #fff 99%, transparent 100%); opacity: 0; pointer-events: none; }
 
 /* La cinta: un trozo con los cantos dentados. */
@@ -95,10 +102,9 @@ p { margin: 0; }
 .portada { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto auto auto; gap: 0 16px; padding-block: 12px clamp(80px, 10vw, 130px); }
 .portada h1 { grid-column: 1 / 13; grid-row: 1; position: relative; z-index: 2; font-size: clamp(60px, 16vw, 210px); }
 .portada .vuelo { grid-column: 6 / 13; grid-row: 2 / 4; align-self: start; margin-top: -40px; rotate: 1.5deg; }
-.portada .vuelo .trama { aspect-ratio: 3 / 2; --punto: 6px; }
+.portada .vuelo .trama { aspect-ratio: 3 / 2; --punto: 3.4px; }
 .portada .skater { grid-column: 1 / 7; grid-row: 2 / 4; margin-top: -30px; }
-.portada .skater img { scale: 1.5; object-position: 50% 42%; }
-.portada .skater .trama { aspect-ratio: 4 / 5; --punto: 5px; }
+.portada .skater .trama { aspect-ratio: 4 / 5; --punto: 3.4px; }
 .recorte-texto { position: relative; z-index: 3; grid-column: 7 / 12; grid-row: 3; align-self: end; display: grid; gap: 16px; justify-items: start; margin-top: -60px; padding: 26px 26px 24px; background: var(--papel); rotate: -1.5deg; box-shadow: 2px 3px 0 rgb(0 0 0 / 0.12); }
 .recorte-texto .cinta { top: -14px; left: 40%; rotate: -4deg; }
 .timbre { position: absolute; z-index: 4; right: 2%; top: 46%; display: grid; place-items: center; padding: 14px 18px 10px; border: 4px double var(--rojo); color: var(--rojo); font: 400 22px/1.15 'Archivo Black', sans-serif; text-align: center; text-transform: uppercase; rotate: 9deg; opacity: 0.92; mix-blend-mode: multiply; }
@@ -116,13 +122,19 @@ p { margin: 0; }
 .producto:nth-child(3) { --giro: -1deg; margin-top: 14px; }
 .producto:nth-child(4) { --giro: 3deg; margin-top: 64px; }
 .producto:hover { rotate: calc(var(--giro) * -0.6); translate: 0 -4px; }
-.producto .trama { aspect-ratio: 1; --punto: 4px; }
+.producto .trama { aspect-ratio: 1; --punto: 2.6px; }
 .producto h3 { font: 400 22px/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
 .producto p { font-size: 16px; line-height: 1.45; }
 .precio { position: relative; justify-self: start; padding: 6px 12px; font: 400 22px/1 'Archivo Black', sans-serif; font-variant-numeric: tabular-nums; }
 .precio svg { position: absolute; inset: -8px -12px; width: calc(100% + 24px); height: calc(100% + 16px); fill: none; stroke: var(--rojo); stroke-width: 2.4; stroke-linecap: round; overflow: visible; }
 .producto .cinta { top: -14px; left: 30%; width: 84px; rotate: var(--giro); }
-.usadas { max-width: 40ch; margin-top: clamp(48px, 6vw, 72px); font-size: 22px; }
+.vereda { display: flex; flex-wrap: wrap; align-items: center; gap: 28px clamp(28px, 5vw, 64px); margin-top: clamp(56px, 7vw, 88px); }
+.usadas { max-width: 30ch; font-size: 22px; }
+.gif { position: relative; width: min(100%, 300px); padding: 10px 10px 12px; background: var(--papel); rotate: 2deg; box-shadow: 2px 3px 0 rgb(0 0 0 / 0.12); }
+.gif .trama { aspect-ratio: 1; --punto: 2.6px; }
+.gif .cinta { top: -14px; left: 32%; width: 90px; rotate: -5deg; }
+.gif figcaption { margin-top: 8px; font-size: 15px; }
+.gif .marca { position: absolute; z-index: 4; top: 18px; right: 18px; padding: 3px 7px 1px; background: var(--rojo); color: var(--papel); font: 400 13px/1.2 'Archivo Black', sans-serif; letter-spacing: 0.06em; rotate: 6deg; }
 
 /* ---- La escuela: el horario fotocopiado ---- */
 .escuela-seccion { background: var(--papel); }
@@ -136,16 +148,17 @@ p { margin: 0; }
 .frase-grande { font: 400 clamp(32px, 3.6vw, 48px)/1.08 'Archivo Black', sans-serif; text-transform: uppercase; }
 .escuela-texto ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .escuela-texto li::before { content: '* '; color: var(--rojo-texto); }
+.escuela-texto .gif { width: min(100%, 420px); rotate: -1.5deg; margin-top: 8px; }
+.escuela-texto .gif .trama { aspect-ratio: 4 / 3; --punto: 3px; }
 
 /* ---- Los jueves ---- */
 .jueves { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px 16px; align-items: start; }
-.jueves .j1 { grid-column: 1 / 6; rotate: -2deg; }
-.jueves .j2 { grid-column: 6 / 13; margin-top: 60px; rotate: 1.5deg; }
-.jueves .j3 { grid-column: 3 / 9; margin-top: -40px; rotate: -1deg; }
-.jueves .trama { --punto: 5px; }
-.jueves .j1 .trama { aspect-ratio: 4 / 5; }
-.jueves .j2 .trama { aspect-ratio: 3 / 2; }
+.jueves .j1 { grid-column: 1 / 7; rotate: -2deg; }
+.jueves .j2 { grid-column: 7 / 13; margin-top: 90px; rotate: 1.5deg; }
+.jueves .j3 { grid-column: 2 / 7; margin-top: -10px; rotate: -1deg; }
+.jueves .trama { --punto: 3px; aspect-ratio: 3 / 2; }
 .jueves .j3 .trama { aspect-ratio: 1; }
+.jueves .gif-marca { position: absolute; z-index: 4; top: 12px; left: 12px; padding: 3px 7px 1px; background: var(--rojo); color: var(--papel); font: 400 13px/1.2 'Archivo Black', sans-serif; letter-spacing: 0.06em; rotate: -4deg; }
 .jueves figcaption { display: inline-block; margin-top: 10px; padding: 4px 10px; background: var(--papel); font-size: 15px; }
 .jueves .nota { grid-column: 9 / 13; align-self: center; display: grid; gap: 14px; padding: 22px; background: var(--amarillo); rotate: 2deg; }
 .jueves .nota b { font: 400 26px/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
@@ -154,12 +167,26 @@ p { margin: 0; }
 .zine { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
 .tapa { position: relative; display: grid; gap: 14px; aspect-ratio: 3 / 4; padding: 22px; background: var(--papel); rotate: -2deg; box-shadow: 6px 8px 0 rgb(0 0 0 / 0.14); }
 .tapa .rescate { font-size: clamp(40px, 5vw, 64px); }
-.tapa .trama { flex: 1; min-height: 0; --punto: 4px; }
+.tapa .trama { flex: 1; min-height: 0; --punto: 2.6px; }
 .tapa p { font-size: 15px; }
 .tapa .numero { position: absolute; right: 18px; top: 18px; display: grid; place-items: center; width: 64px; aspect-ratio: 1; border-radius: 50%; background: var(--rojo); color: var(--papel); font: 400 22px/1 'Archivo Black', sans-serif; rotate: 12deg; }
 .indice-zine { display: grid; gap: 0; margin: 22px 0; padding: 0; list-style: none; }
 .indice-zine li { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-bottom: 2px dashed var(--negro); }
 .indice-zine span:last-child { font-variant-numeric: tabular-nums; }
+
+/* La secuencia del mes: el gif cuadro a cuadro y la tira con los seis
+   cuadros numerados, como en las revistas de skate. */
+.secuencia { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 28px clamp(24px, 4vw, 56px); align-items: end; margin-top: clamp(72px, 9vw, 120px); }
+.secuencia h3 { font: 400 clamp(26px, 3vw, 38px)/1.05 'Archivo Black', sans-serif; text-transform: uppercase; }
+.secuencia > div > p { margin-top: 12px; }
+.hojeo { position: relative; margin-top: 22px; padding: 10px; background: var(--papel); rotate: -2deg; box-shadow: 3px 4px 0 rgb(0 0 0 / 0.14); }
+.hojeo .trama { aspect-ratio: 1; --punto: 3px; }
+.hojeo .trama img + img { position: absolute; inset: 0; }
+.hojeo .marca { position: absolute; z-index: 4; bottom: 18px; right: 18px; padding: 3px 7px 1px; background: var(--rojo); color: var(--papel); font: 400 13px/1.2 'Archivo Black', sans-serif; letter-spacing: 0.06em; rotate: -5deg; }
+.cuadros { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 10px; background: var(--negro); list-style: none; rotate: 0.8deg; }
+.cuadros li { position: relative; isolation: isolate; background: var(--papel); }
+.cuadros .trama { aspect-ratio: 1; --punto: 2.4px; }
+.cuadros span { position: absolute; z-index: 4; left: 4px; bottom: 4px; display: grid; place-items: center; width: 24px; aspect-ratio: 1; border-radius: 50%; background: var(--amarillo); color: var(--negro); font: 400 13px/1 'Archivo Black', sans-serif; }
 
 /* ---- Inscripción: el volante con tiras para arrancar ---- */
 .volante { position: relative; width: min(100%, 44rem); margin-inline: auto; padding: clamp(28px, 4vw, 44px) clamp(20px, 4vw, 44px) 0; background: var(--papel); rotate: -1deg; box-shadow: 3px 4px 0 rgb(0 0 0 / 0.14); }
@@ -210,11 +237,13 @@ p { margin: 0; }
   .timbre { top: 30%; }
   .tienda { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .escuela, .zine { grid-template-columns: minmax(0, 1fr); }
-  .jueves .j1 { grid-column: 1 / 8; }
-  .jueves .j2 { grid-column: 4 / 13; margin-top: -60px; }
-  .jueves .j3 { grid-column: 1 / 8; margin-top: 0; }
-  .jueves .nota { grid-column: 8 / 13; }
+  .jueves .j1 { grid-column: 1 / 10; }
+  .jueves .j2 { grid-column: 4 / 13; margin-top: -24px; }
+  .jueves .j3 { grid-column: 1 / 7; margin-top: 0; }
+  .jueves .nota { grid-column: 7 / 13; }
   .tapa { width: min(100%, 26rem); justify-self: center; }
+  .secuencia { grid-template-columns: minmax(0, 1fr); }
+  .hojeo { width: min(100%, 20rem); }
 }
 
 /* ---- S ---- */
@@ -238,6 +267,8 @@ p { margin: 0; }
   .tiras label span { font-size: 15px; }
   .tiras label span b { font-size: 15px; }
   .contratapa { grid-template-columns: minmax(0, 1fr); padding-left: 40px; }
+  .cuadros { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gif { width: min(100%, 260px); }
   .corchete { left: 12px; }
 }
 
@@ -247,7 +278,11 @@ p { margin: 0; }
    sale de la fotocopiadora: una barra de luz pasa de arriba abajo y deja la
    trama impresa detrás de ella. El destacador pinta lo importante de
    izquierda a derecha y el plumón encierra los precios. Al pasar el cursor,
-   un recorte se ladea; al elegir un horario, su tira se arranca. */
+   un recorte se ladea y su foto vuelve a pasar por la fotocopiadora; al
+   elegir un horario, su tira se arranca. Las letras del título se mecen
+   apenas, como recién pegadas; los recortes de los jueves flotan a
+   distinta velocidad al bajar, y el gif de la secuencia corre a cuatro
+   cuadros por segundo, como un folioscopio. */
 [data-aparece] { --entrada: rampa-pega; --tramo: 34svh; --duracion: 1100ms; }
 .copia { --entrada: none; --tramo: 46svh; --duracion: 1600ms; }
 .copia .trama { --entrada: rampa-imprime; }
@@ -262,9 +297,22 @@ p { margin: 0; }
 @keyframes rampa-destaca { from { scale: 0 1; } }
 @keyframes rampa-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes rampa-letra { from { opacity: 0; scale: 1.25; rotate: calc(var(--giro) + 10deg); } }
+@keyframes rampa-mece { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
+@keyframes rampa-deriva { from { transform: translateY(var(--deriva)); } to { transform: translateY(calc(var(--deriva) * -1)); } }
+@keyframes rampa-cuadro { 0% { opacity: 1; } 16.67%, 100% { opacity: 0; } }
 .precio svg path { stroke-dasharray: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .portada h1 .rescate b { animation: rampa-letra 900ms var(--curva) calc(150ms + var(--n) * 90ms) backwards; }
+  .portada h1 .rescate b { animation: rampa-letra 900ms var(--curva) calc(150ms + var(--n) * 90ms) backwards, rampa-mece 6.5s cubic-bezier(0.45, 0, 0.55, 1) calc(var(--n) * -1.7s) infinite alternate; }
+  html.con-js .copia:hover .luz { animation: rampa-luz 1200ms var(--curva) both; }
+  .hojeo .trama img { animation: rampa-cuadro 1500ms steps(1, end) calc((var(--c) - 6) * 250ms) infinite; }
+  .jueves .j1 { --deriva: 28px; }
+  .jueves .j2 { --deriva: -22px; }
+  .jueves .j3 { --deriva: 40px; }
+  @media (min-width: 600px) {
+    @supports (animation-timeline: view()) {
+      .jueves .copia, .jueves figcaption { animation: rampa-deriva cubic-bezier(0.45, 0, 0.55, 1) both; animation-timeline: view(); animation-range: cover; }
+    }
+  }
   .portada .copia .trama { animation: rampa-imprime 1600ms var(--curva) 500ms backwards; }
   .portada .copia .luz { animation: rampa-luz 1600ms var(--curva) 500ms backwards; }
   .portada .vuelo .trama, .portada .vuelo .luz { animation-delay: 1000ms; }
@@ -295,7 +343,7 @@ p { margin: 0; }
       <span class="luz" aria-hidden="true"></span>
     </figure>
     <figure class="skater copia">
-      <div class="trama"><img src="/image/bocetos/rampa/skater-820.webp" srcset="/image/bocetos/rampa/skater-520.webp 520w, /image/bocetos/rampa/skater-820.webp 820w" sizes="(min-width: 900px) 34vw, 80vw" width="820" height="1025" alt="Un skater en el aire con las piernas recogidas, la tabla girando bajo sus pies, en blanco y negro" fetchpriority="high"></div>
+      <div class="trama"><img src="/image/bocetos/rampa/vuelo-cuadro-480.webp" width="480" height="600" alt="Un skater salta con la tabla pegada a los pies en la explanada de un parque, con árboles detrás, en blanco y negro" fetchpriority="high"><video data-bucle data-src="/grabados/bocetos/rampa/vuelo.mp4" width="432" height="540" muted playsinline aria-hidden="true"></video></div>
       <span class="luz" aria-hidden="true"></span>
     </figure>
     <div class="recorte-texto">
@@ -343,7 +391,15 @@ p { margin: 0; }
           <p class="precio">$89.900<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path data-sigue pathLength="1" vector-effect="non-scaling-stroke" d="M10 24C4 10 40 2 70 5S99 18 93 30 40 41 15 34 5 16 24 9"/></svg></p>
         </li>
       </ul>
-      <p class="usadas" data-aparece>Las tablas usadas también se venden. <span class="destaca" data-sigue>Las nuestras, no.</span></p>
+      <div class="vereda">
+        <figure class="gif" data-aparece>
+          <span class="cinta" data-sigue aria-hidden="true"></span>
+          <div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/pies-cuadro-480.webp" width="480" height="480" loading="lazy" alt="Unos pies con zapatillas empujan una tabla por el asfalto"><video data-bucle data-src="/grabados/bocetos/rampa/pies.mp4" width="480" height="480" muted playsinline aria-hidden="true"></video></div><span class="luz" data-sigue aria-hidden="true"></span></div>
+          <span class="marca" aria-hidden="true">GIF</span>
+          <figcaption>probando en la vereda antes de pagar</figcaption>
+        </figure>
+        <p class="usadas" data-aparece style="--orden: 1">Las tablas usadas también se venden. <span class="destaca" data-sigue>Las nuestras, no.</span></p>
+      </div>
     </div>
   </section>
 
@@ -368,6 +424,12 @@ p { margin: 0; }
         <div class="escuela-texto" data-aparece style="--orden: 1">
           <p class="frase-grande">Caerse es <span class="destaca" data-sigue>la primera clase.</span></p>
           <ul><li>$38.000 al mes, cuatro clases.</li><li>La primera es gratis, con tabla y casco prestados.</li><li>Si llueve, la clase es de armado y cuidado de la tabla.</li></ul>
+          <figure class="gif">
+            <span class="cinta" aria-hidden="true"></span>
+            <div class="copia"><div class="trama"><img src="/image/bocetos/rampa/escuela-cuadro-560.webp" width="560" height="420" loading="lazy" alt="Dos niños practican en el bowl de un skatepark con grafitis, uno de ellos sobre la tabla"><video data-bucle data-src="/grabados/bocetos/rampa/escuela.mp4" width="560" height="420" muted playsinline aria-hidden="true"></video></div></div>
+            <span class="marca" aria-hidden="true">GIF</span>
+            <figcaption>el grupo del sábado, en su tercera clase</figcaption>
+          </figure>
         </div>
       </div>
     </div>
@@ -380,9 +442,9 @@ p { margin: 0; }
         <p class="bajada">Después de cerrar la tienda nos vamos a la rampa del parque. Trae tu tabla, tu casco y algo para compartir.</p>
       </header>
       <div class="jueves">
-        <figure class="j1" data-aparece><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/bowl-760.webp" srcset="/image/bocetos/rampa/bowl-480.webp 480w, /image/bocetos/rampa/bowl-760.webp 760w" sizes="(min-width: 900px) 36vw, 60vw" width="760" height="950" loading="lazy" alt="El borde curvo de una rampa de hormigón, vacía, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>la rampa del parque, 19:00</figcaption></figure>
+        <figure class="j1" data-aparece><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/bowl-cuadro-600.webp" width="600" height="400" loading="lazy" alt="Un skater con camisa a cuadros anda agachado por una rampa de hormigón rayada, en blanco y negro"><video data-bucle data-src="/grabados/bocetos/rampa/bowl.mp4" width="540" height="360" muted playsinline aria-hidden="true"></video></div><span class="luz" data-sigue aria-hidden="true"></span><span class="gif-marca" aria-hidden="true">GIF</span></div><figcaption>la rampa del parque, 19:00</figcaption></figure>
         <figure class="j2" data-aparece style="--orden: 1"><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/agachado-1000.webp" srcset="/image/bocetos/rampa/agachado-600.webp 600w, /image/bocetos/rampa/agachado-1000.webp 1000w" sizes="(min-width: 900px) 52vw, 80vw" width="1000" height="667" loading="lazy" alt="Un skater agachado sobre su tabla baja una calle a toda velocidad, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>la Sofi bajando Cumming</figcaption></figure>
-        <figure class="j3" data-aparece style="--orden: 2"><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/pies-760.webp" srcset="/image/bocetos/rampa/pies-480.webp 480w, /image/bocetos/rampa/pies-760.webp 760w" sizes="(min-width: 900px) 40vw, 60vw" width="760" height="760" loading="lazy" alt="Unos pies con zapatillas sobre una tabla, en el borde de una rampa, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>a punto de entrar</figcaption></figure>
+        <figure class="j3" data-aparece style="--orden: 2"><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/entra-cuadro-480.webp" width="480" height="480" loading="lazy" alt="Un skater espera en el borde del bowl con la tabla bajo el pie y se deja caer hacia adentro, en blanco y negro"><video data-bucle data-src="/grabados/bocetos/rampa/entra.mp4" width="480" height="480" muted playsinline aria-hidden="true"></video></div><span class="luz" data-sigue aria-hidden="true"></span><span class="gif-marca" aria-hidden="true">GIF</span></div><figcaption>a punto de entrar</figcaption></figure>
         <p class="nota" data-aparece style="--orden: 3"><b>Jueves, 19:00 a 22:00</b>Gratis. Si es tu primera vez en la rampa, avísanos y alguien te acompaña.</p>
       </div>
     </div>
@@ -408,6 +470,24 @@ p { margin: 0; }
           <li><span>Fotos de los jueves</span><span>p. 8</span></li>
         </ul>
       </div>
+    </div>
+    <div class="ancho secuencia">
+      <div data-aparece>
+        <h3>La secuencia del mes</h3>
+        <p>El Tomás saca un ollie en la explanada del parque. Seis cuadros, en la página 8.</p>
+        <figure class="hojeo">
+          <div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-1-320.webp" width="320" height="320" loading="lazy" alt="Un skater salta en la explanada de un parque, cuadro a cuadro, en blanco y negro" style="--c: 0"><img src="/image/bocetos/rampa/secuencia-2-320.webp" width="320" height="320" loading="lazy" alt="" style="--c: 1"><img src="/image/bocetos/rampa/secuencia-3-320.webp" width="320" height="320" loading="lazy" alt="" style="--c: 2"><img src="/image/bocetos/rampa/secuencia-4-320.webp" width="320" height="320" loading="lazy" alt="" style="--c: 3"><img src="/image/bocetos/rampa/secuencia-5-320.webp" width="320" height="320" loading="lazy" alt="" style="--c: 4"><img src="/image/bocetos/rampa/secuencia-6-320.webp" width="320" height="320" loading="lazy" alt="" style="--c: 5"></div></div>
+          <span class="marca" aria-hidden="true">GIF</span>
+        </figure>
+      </div>
+      <ol class="cuadros" data-aparece style="--orden: 1" aria-label="La secuencia, cuadro a cuadro">
+        <li data-sigue style="--orden: 0"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-1-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 1: pisa la cola y la tabla se levanta"></div></div><span aria-hidden="true">1</span></li>
+        <li data-sigue style="--orden: 1"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-2-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 2: despega con la tabla casi vertical"></div></div><span aria-hidden="true">2</span></li>
+        <li data-sigue style="--orden: 2"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-3-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 3: sube con las rodillas recogidas"></div></div><span aria-hidden="true">3</span></li>
+        <li data-sigue style="--orden: 3"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-4-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 4: en lo más alto, con la tabla nivelada"></div></div><span aria-hidden="true">4</span></li>
+        <li data-sigue style="--orden: 4"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-5-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 5: empieza a bajar"></div></div><span aria-hidden="true">5</span></li>
+        <li data-sigue style="--orden: 5"><div class="copia"><div class="trama"><img src="/image/bocetos/rampa/secuencia-6-320.webp" width="320" height="320" loading="lazy" alt="Cuadro 6: cae con los dos pies sobre la tabla"></div></div><span aria-hidden="true">6</span></li>
+      </ol>
     </div>
   </section>
 

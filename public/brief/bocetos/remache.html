@@ -20,8 +20,11 @@
    del portón, con el nombre pintado en sus últimas lamas: sube con el scroll
    y descubre la moto. Las fichas son placas remachadas que se atornillan, los
    servicios cuelgan de un tablero perforado sobre su silueta pintada, la
-   reserva es una orden de trabajo en su portapapeles y, al final, la
-   cortina baja a medias: cerrado los domingos. */
+   reserva es una orden de trabajo en su portapapeles y el pie es la placa de
+   chasis del taller, estampada. La barra es la caja de cambios: N y cinco
+   marchas, con un tacómetro cuya aguja sube con cada una. De Classics Garage
+   (Awwwards) se toma que todo se vea de verdad: metal con brillo, goma,
+   madera con veta y herramientas que se mecen en su gancho. */
 @font-face { font-family: 'Big Shoulders Stencil'; src: url('/fonts/bocetos/big-shoulders-stencil.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: 'Big Shoulders Display'; src: url('/fonts/bocetos/big-shoulders-display.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: 'Barlow'; src: url('/fonts/bocetos/barlow-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
@@ -67,16 +70,35 @@ p { margin: 0; }
   radial-gradient(circle at 35% 35%, #8b9196 0 1.5px, #4b5054 3.5px, transparent 4.5px) calc(100% - 10px) calc(100% - 10px) / 9px 9px no-repeat,
   linear-gradient(160deg, #44494d, #2f3337); }
 
-/* ---- Cabecera: la placa del taller y el índice estampado ---- */
-.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; padding-block: 20px; }
-.placa { display: grid; grid-template-columns: auto auto; column-gap: 12px; align-items: center; padding: 12px 26px 12px 22px; border-radius: 4px; text-decoration: none; box-shadow: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 6px 14px -8px #000; }
-.placa svg { grid-row: 1 / 3; width: 30px; height: 30px; color: var(--senal); }
-.placa b { font: 800 28px/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.08em; }
-.placa small { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); }
-.indice { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 0; padding: 0; list-style: none; }
-.indice a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 700 19px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: color 400ms var(--curva); }
-.indice span { font-size: 14px; color: var(--senal); letter-spacing: 0.04em; }
-.indice a:hover { color: var(--senal); }
+/* ---- Cabecera: la caja de cambios ----
+   La marca a la izquierda; al centro, N y cinco marchas en el tablero, con
+   la luz amarilla que se corre a la marcha que se señala; a la derecha, el
+   tacómetro, cuya aguja sube con cada marcha. */
+.cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px clamp(20px, 3vw, 40px); padding-block: 18px; }
+.marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.marca svg { width: 30px; height: 30px; color: var(--senal); }
+.marca b { font: 800 30px/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.08em; }
+.cambios { --cambio: 0; justify-self: center; width: min(100%, 36rem); padding: 6px; border-radius: 10px; background: linear-gradient(#141617, #0b0c0d); box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.8), 0 1px 0 rgb(255 255 255 / 0.06); }
+.cambios ol { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.cambios ol::after { content: ''; position: absolute; left: 0; bottom: 0; width: calc(100% / 6); height: 3px; border-radius: 2px; background: var(--senal); translate: calc(var(--cambio) * 100%) 0; transition: translate 500ms var(--curva); }
+.cambios a { display: grid; justify-items: center; gap: 3px; padding: 8px 2px 10px; border-radius: 6px; text-decoration: none; color: var(--gris); transition: color 400ms var(--curva), background-color 400ms var(--curva); }
+.cambios b { font: 800 26px/1 'Big Shoulders Stencil', sans-serif; color: #5d6266; transition: color 400ms var(--curva); }
+.cambios span { font: 700 12px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; }
+.cambios a:hover, .cambios a:focus-visible { background: rgb(255 255 255 / 0.04); color: var(--hueso); }
+.cambios a:hover b, .cambios a:focus-visible b { color: var(--senal); }
+.cambios:has(li:nth-child(2) a:is(:hover, :focus-visible)) { --cambio: 1; }
+.cambios:has(li:nth-child(3) a:is(:hover, :focus-visible)) { --cambio: 2; }
+.cambios:has(li:nth-child(4) a:is(:hover, :focus-visible)) { --cambio: 3; }
+.cambios:has(li:nth-child(5) a:is(:hover, :focus-visible)) { --cambio: 4; }
+.cambios:has(li:nth-child(6) a:is(:hover, :focus-visible)) { --cambio: 5; }
+.tacometro { width: 64px; height: 64px; }
+.tacometro svg { display: block; width: 100%; height: 100%; }
+.aguja { transform-origin: 32px 34px; rotate: calc(-118deg + var(--cambio-tac, 0) * 44deg); transition: rotate 700ms cubic-bezier(0.3, 0, 0.2, 1); }
+.cabecera:has(.cambios li:nth-child(2) a:is(:hover, :focus-visible)) { --cambio-tac: 1; }
+.cabecera:has(.cambios li:nth-child(3) a:is(:hover, :focus-visible)) { --cambio-tac: 2; }
+.cabecera:has(.cambios li:nth-child(4) a:is(:hover, :focus-visible)) { --cambio-tac: 3; }
+.cabecera:has(.cambios li:nth-child(5) a:is(:hover, :focus-visible)) { --cambio-tac: 4; }
+.cabecera:has(.cambios li:nth-child(6) a:is(:hover, :focus-visible)) { --cambio-tac: 5; }
 
 /* ---- Portada: el portón y su cortina ---- */
 .porton { position: relative; padding-inline: clamp(24px, 4vw, 56px); }
@@ -87,15 +109,24 @@ p { margin: 0; }
 .leyenda-moto b { display: block; font: 700 20px/1.1 'Big Shoulders Display', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hueso); }
 .cajon { position: absolute; z-index: 3; inset: 0 0 auto; height: 3rem; background: linear-gradient(#4a4f53, #2a2d30); box-shadow: 0 10px 16px -8px #000; }
 .cortina { position: absolute; z-index: 2; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) var(--cola); translate: 0 calc(-100% + var(--cola) + 3rem); }
+/* Cada lama es una chapa curva: una ranura oscura, el canto que toma la luz
+   y la cara que se oscurece hacia abajo. Por encima, un cepillado fino y la
+   sombra de los rieles en los costados. */
 .lamas { background:
-  linear-gradient(90deg, rgb(0 0 0 / 0.3), transparent 12%, transparent 88%, rgb(0 0 0 / 0.3)),
-  repeating-linear-gradient(180deg, #2b2f32 0 2px, #7d8389 2px 4px, #666c71 4px 15px, #50555a 15px 24px, #33373a 24px 28px); }
+  linear-gradient(90deg, rgb(0 0 0 / 0.45), transparent 7%, transparent 93%, rgb(0 0 0 / 0.45)),
+  repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px, rgb(0 0 0 / 0.03) 3px 4px),
+  repeating-linear-gradient(180deg, #16181a 0 1px, #9ba1a6 1px 2px, #b5bbbf 2px 4px, #8a9095 4px 9px, #6a7075 9px 16px, #4a4f53 16px 22px, #2c2f32 22px 26px, #1b1d1f 26px 28px); }
+.rieles { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.rieles::before, .rieles::after { content: ''; position: absolute; top: 0; bottom: 0; width: clamp(10px, 1.2vw, 16px); background: linear-gradient(90deg, #0d0e0f, #50565b 30%, #2a2d30 60%, #0d0e0f); box-shadow: 0 0 10px rgb(0 0 0 / 0.6); }
+.rieles::before { left: 0; }
+.rieles::after { right: 0; }
 .cola { display: grid; grid-template-rows: minmax(0, 1fr) 22px; }
 .letrero { display: grid; align-content: center; justify-items: center; gap: 8px; padding-inline: 16px; text-align: center; }
 .letrero h1 { font: 800 clamp(64px, 12vw, 176px)/0.86 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.06em; color: var(--senal); text-shadow: 0 2px 0 rgb(0 0 0 / 0.35); }
 .letrero p { font: 700 clamp(15px, 1.6vw, 20px)/1.2 'Big Shoulders Display', sans-serif; letter-spacing: 0.22em; text-transform: uppercase; color: var(--hueso); text-shadow: 0 1px 0 rgb(0 0 0 / 0.5); }
 .zocalo { position: relative; background: linear-gradient(#3d4246, #222528); }
-.zocalo::after { content: ''; position: absolute; left: 50%; top: 5px; width: 84px; height: 10px; margin-left: -42px; border-radius: 5px; background: linear-gradient(#9aa0a5, #555a5e); }
+.zocalo::after { content: ''; position: absolute; left: 50%; top: 5px; width: 84px; height: 10px; margin-left: -42px; border-radius: 5px; background: linear-gradient(#c3c8cc, #7b8186 50%, #4a4f53); box-shadow: 0 2px 2px rgb(0 0 0 / 0.6); }
+.zocalo::before { content: ''; position: absolute; left: calc(50% + 70px); top: 4px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #e9d48a, #a8892e 60%, #5d4a14); box-shadow: inset 0 0 0 3px rgb(0 0 0 / 0.25), 0 1px 1px #000; }
 .portada-bajo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px clamp(32px, 6vw, 96px); align-items: end; padding-block: clamp(56px, 7vw, 96px) 0; }
 .lema { font: 800 clamp(44px, 6.4vw, 92px)/0.92 'Big Shoulders Display', sans-serif; text-transform: uppercase; }
 .lema em { font-style: normal; color: var(--senal); }
@@ -114,14 +145,17 @@ p { margin: 0; }
 /* ---- Trabajos: placas atornilladas ---- */
 .trabajos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 72px clamp(24px, 3vw, 40px); margin: 0; padding: 0; list-style: none; }
 .trabajo figure img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.placa-datos { position: relative; margin: -44px 16px 0; padding: 26px 26px 22px; border-radius: 5px; background: linear-gradient(115deg, #d8d4cb, #b7b3aa 45%, #cfcbc2 70%, #aca89f); color: #24272a; box-shadow: 0 14px 22px -14px #000, inset 0 1px 0 rgb(255 255 255 / 0.6); }
+.placa-datos { position: relative; margin: -44px 16px 0; padding: 26px 26px 22px; border-radius: 5px; background: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 3px, rgb(0 0 0 / 0.04) 3px 4px), linear-gradient(115deg, #d8d4cb, #b7b3aa 45%, #cfcbc2 70%, #aca89f); color: #24272a; box-shadow: 0 14px 22px -14px #000, inset 0 1px 0 rgb(255 255 255 / 0.6); }
 .placa-datos h3 { font: 800 30px/0.95 'Big Shoulders Display', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; text-shadow: 0 1px 0 rgb(255 255 255 / 0.55); }
 .placa-datos h3 span { display: block; margin-top: 4px; font-size: 17px; letter-spacing: 0.16em; color: #5c5952; }
 .placa-datos dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 14px; margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed rgb(36 39 42 / 0.4); font-size: 15px; line-height: 1.4; }
 .placa-datos dt { font: 700 13px/1.5 'Big Shoulders Display', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #5c5952; }
 .placa-datos dd { margin: 0; }
-.tornillo { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f0ede6, #8d8a83 70%); box-shadow: 0 1px 1px rgb(0 0 0 / 0.5); }
-.tornillo::after { content: ''; position: absolute; left: 2px; right: 2px; top: 5px; height: 2px; background: #4a4843; }
+/* Tornillo de cabeza redonda y cruz: la luz arriba a la izquierda, la cruz
+   hundida con su borde claro abajo. */
+.tornillo { position: absolute; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #fbfaf6 0 12%, #c9c6bf 40%, #85827b 78%, #5e5b55); box-shadow: 0 1.5px 1.5px rgb(0 0 0 / 0.55), inset 0 -1px 1px rgb(0 0 0 / 0.25); }
+.tornillo::before, .tornillo::after { content: ''; position: absolute; left: 50%; top: 50%; width: 7px; height: 2px; margin: -1px 0 0 -3.5px; border-radius: 1px; background: #3d3b37; box-shadow: 0 0.6px 0 rgb(255 255 255 / 0.5); }
+.tornillo::before { rotate: 90deg; }
 .tornillo:nth-of-type(1) { left: 9px; top: 9px; }
 .tornillo:nth-of-type(2) { right: 9px; top: 9px; rotate: 50deg; }
 .tornillo:nth-of-type(3) { left: 9px; bottom: 9px; rotate: -30deg; }
@@ -144,16 +178,25 @@ p { margin: 0; }
 .comparar .e-antes { left: 14px; }
 .comparar .e-despues { right: 14px; }
 
-/* ---- Servicios: el tablero perforado ---- */
+/* ---- Servicios: el tablero perforado ----
+   Una plancha de acero pintada, con agujeros que tienen hondura y un marco
+   de madera. Cada herramienta cuelga de un gancho de alambre sobre su
+   silueta pintada; sus materiales (cromo, goma, ámbar, madera, cerdas) son
+   degradados que se pasan por variables, y la silueta es la misma figura
+   con todo en el amarillo de la pintura. Al pasar el cursor la herramienta
+   se mece en su gancho y se va calmando. */
 .servicios-seccion { background: var(--fierro); }
-.tablero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 0; padding: clamp(20px, 3vw, 40px) clamp(12px, 2vw, 28px) 12px; list-style: none; border: 12px solid #5a4632; border-radius: 4px; background: #33373b radial-gradient(circle, #16181a 2.4px, transparent 3px) 6px 6px / 24px 24px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), 0 24px 40px -24px #000; }
+.tablero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 0; padding: clamp(24px, 3vw, 44px) clamp(12px, 2vw, 28px) 12px; list-style: none; border: 14px solid #5a4632; border-image: linear-gradient(160deg, #7a5d40, #4d3a27 40%, #6b5038 70%, #3f2f20) 1; background:
+  radial-gradient(circle at 50% 42%, #070808 0 2.2px, #2a2e31 2.8px, rgb(150 158 164 / 0.55) 3.3px, transparent 3.8px) 0 0 / 24px 24px,
+  linear-gradient(170deg, #464c51, #3a3f43 50%, #33373b); box-shadow: inset 0 0 30px rgb(0 0 0 / 0.45), 0 24px 40px -24px #000; }
 .herramienta { position: relative; display: grid; grid-template-rows: 236px auto; justify-items: center; padding: 0 10px 28px; text-align: center; }
 .colgada { position: relative; width: 70px; height: 225px; }
 .colgada svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.silueta { fill: none; stroke: var(--senal); stroke-width: 1.6; stroke-dasharray: 5 4; --mango: none; opacity: 0.85; }
-.pieza { fill: #c3c7cb; stroke: #15171a; stroke-width: 1; --mango: var(--oxido); transform-origin: 50% 4px; transition: translate 500ms var(--curva), rotate 500ms var(--curva), filter 500ms var(--curva); filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.55)); }
-.gancho { position: absolute; left: 50%; top: -6px; width: 14px; height: 16px; margin-left: -7px; border: 3px solid #8b9196; border-bottom: 0; border-radius: 7px 7px 0 0; }
-.herramienta:hover .pieza { translate: 0 -12px; rotate: -5deg; filter: drop-shadow(10px 16px 6px rgb(0 0 0 / 0.5)); }
+.silueta { --cromo: var(--pintura-tablero); --goma: var(--pintura-tablero); --ambar: var(--pintura-tablero); --negro: var(--pintura-tablero); --madera: var(--pintura-tablero); --cerda: var(--pintura-tablero); --punta: var(--pintura-tablero); --detalle: transparent; --pintura-tablero: #d9ae2b; opacity: 0.9; }
+.pieza { --cromo: url(#g-cromo); --goma: url(#g-goma); --ambar: url(#g-ambar); --negro: url(#g-negro); --madera: url(#g-madera); --cerda: url(#g-cerda); --punta: #b5562b; --detalle: rgb(0 0 0 / 0.28); transform-origin: 50% 10px; filter: drop-shadow(3px 6px 3px rgb(0 0 0 / 0.55)); }
+.gancho { position: absolute; z-index: 1; left: 50%; top: -8px; width: 12px; height: 18px; margin-left: -6px; border: 3px solid #9ba1a6; border-bottom: 0; border-radius: 6px 6px 0 0; box-shadow: inset 1px 1px 0 rgb(255 255 255 / 0.4), 1px 2px 2px rgb(0 0 0 / 0.5); }
+.gancho::before { content: ''; position: absolute; left: -6px; bottom: -3px; width: 6px; height: 6px; border-radius: 50%; background: #070808; }
+@keyframes remache-mece { 0% { rotate: 0deg; } 16% { rotate: -7deg; } 36% { rotate: 4.6deg; } 56% { rotate: -2.6deg; } 76% { rotate: 1.1deg; } 100% { rotate: 0deg; } }
 .herramienta h3 { font: 800 22px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
 .herramienta p { margin-top: 8px; font-size: 15px; line-height: 1.4; color: var(--gris); }
 .herramienta .precio { color: var(--senal); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -164,6 +207,8 @@ p { margin: 0; }
 .taller .f1 img { aspect-ratio: 3 / 2; }
 .taller .f2 { margin-top: clamp(48px, 8vw, 120px); }
 .taller .f2 img, .taller .f3 img { aspect-ratio: 4 / 5; }
+.taller .gif { position: relative; overflow: hidden; aspect-ratio: 4 / 5; }
+.taller .gif > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .taller figcaption { margin-top: 12px; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
 .taller-texto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px clamp(32px, 5vw, 72px); margin-top: clamp(48px, 6vw, 80px); }
 .taller-texto p { color: var(--gris); }
@@ -212,16 +257,33 @@ p { margin: 0; }
 .orden .boton { grid-column: 1 / -1; justify-self: start; }
 .orden .boceto-aviso { grid-column: 1 / -1; margin: 0; color: #b23a1f; font-weight: 600; }
 
-/* ---- Pie: la cortina baja a medias ---- */
-.pie { position: relative; overflow: hidden; min-height: 72svh; padding-top: clamp(170px, 22svh, 230px); background: #0e0f10; }
-.pie-cortina { position: absolute; inset: 0 0 auto; height: clamp(130px, 18svh, 190px); display: grid; place-items: center; border-bottom: 18px solid #2a2d30; background:
-  linear-gradient(90deg, rgb(0 0 0 / 0.3), transparent 12%, transparent 88%, rgb(0 0 0 / 0.3)),
-  repeating-linear-gradient(180deg, #2b2f32 0 2px, #7d8389 2px 4px, #666c71 4px 15px, #50555a 15px 24px, #33373a 24px 28px); }
-.pie-cortina p { font: 800 clamp(30px, 5vw, 64px)/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.08em; text-align: center; color: var(--senal); text-shadow: 0 2px 0 rgb(0 0 0 / 0.35); }
-.pie-datos { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; padding-block: clamp(48px, 6vw, 72px) 40px; }
-.pie-datos h2 { font: 700 14px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
-.pie-datos p { margin-top: 10px; }
-.pie-final { padding-block: 22px 32px; border-top: 1px solid var(--linea); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+/* ---- Pie: la placa de chasis ----
+   Sobre el piso de cemento del taller, con su mancha de aceite, la placa de
+   aluminio cepillado del taller, remachada en sus cuatro esquinas y con los
+   datos estampados (hundidos: la sombra arriba y la luz abajo). Al pasar el
+   cursor, un brillo cruza el metal. */
+.pie { position: relative; padding-block: clamp(80px, 10vw, 140px) 32px; background:
+  radial-gradient(ellipse 30% 22% at 78% 30%, rgb(0 0 0 / 0.55), rgb(20 18 14 / 0.3) 60%, transparent 75%),
+  linear-gradient(#141516, #0e0f10); }
+.chasis { position: relative; max-width: 52rem; margin-inline: auto; padding: clamp(28px, 4vw, 44px) clamp(28px, 5vw, 56px); overflow: hidden; border-radius: 6px; background:
+  repeating-linear-gradient(90deg, rgb(255 255 255 / 0.08) 0 1px, transparent 1px 2px, rgb(0 0 0 / 0.05) 2px 3px),
+  linear-gradient(112deg, #b9bcbe, #e4e6e7 26%, #a9acae 52%, #d5d8d9 76%, #a3a6a8); color: #3d4043; box-shadow: 0 2px 0 rgb(255 255 255 / 0.5) inset, 0 -2px 0 rgb(0 0 0 / 0.2) inset, 0 30px 40px -24px #000; }
+.chasis::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.5) 50%, transparent 62%); translate: -110% 0; transition: translate 1400ms var(--curva); pointer-events: none; }
+.chasis:hover::after { translate: 110% 0; }
+.chasis .tornillo:nth-of-type(1) { left: 14px; top: 14px; }
+.chasis .tornillo:nth-of-type(2) { right: 14px; top: 14px; }
+.chasis .tornillo:nth-of-type(3) { left: 14px; bottom: 14px; }
+.chasis .tornillo:nth-of-type(4) { right: 14px; bottom: 14px; }
+.estampado { text-shadow: 0 1px 0 rgb(255 255 255 / 0.7), 0 -1px 0 rgb(0 0 0 / 0.3); }
+.chasis-cabeza { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-bottom: 16px; border-bottom: 2px solid rgb(61 64 67 / 0.5); }
+.chasis-cabeza svg { width: 34px; height: 34px; color: #3d4043; filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.7)); }
+.chasis-cabeza b { font: 800 clamp(36px, 5vw, 52px)/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.1em; }
+.chasis-cabeza span { margin-left: auto; font: 700 15px/1.2 'Big Shoulders Display', sans-serif; letter-spacing: 0.2em; text-transform: uppercase; }
+.chasis-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px clamp(24px, 4vw, 48px); margin: 22px 0 0; }
+.chasis-datos dt { font: 700 13px/1.2 'Big Shoulders Display', sans-serif; letter-spacing: 0.24em; text-transform: uppercase; color: #64686b; }
+.chasis-datos dd { margin: 4px 0 0; font: 600 17px/1.45 'Barlow', sans-serif; }
+.chasis-serie { margin-top: 24px; padding-top: 14px; border-top: 1px dashed rgb(61 64 67 / 0.45); font: 700 clamp(18px, 2.4vw, 26px)/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.3em; }
+.pie-final { margin-top: 40px; font-size: 14px; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; color: var(--gris); }
 
 /* ---- L ---- */
 @media (max-width: 1279px) {
@@ -235,8 +297,8 @@ p { margin: 0; }
   .taller { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .taller .f1 { grid-column: 1 / -1; }
   .taller .f2 { margin-top: 0; }
-  .pie-datos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .pie-datos .placa { grid-column: 1 / -1; justify-self: start; }
+  .cabecera { grid-template-columns: minmax(0, 1fr) auto; }
+  .cambios { grid-column: 1 / -1; grid-row: 2; width: 100%; }
   .repuestos thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .repuestos, .repuestos tbody, .repuestos tr, .repuestos td { display: block; }
   .repuestos tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; padding: 18px 0; border-bottom: 1px solid var(--linea); }
@@ -249,17 +311,17 @@ p { margin: 0; }
 /* ---- S ---- */
 @media (max-width: 599px) {
   :root { --alto-escena: calc(100svh - 15rem); --cola: clamp(150px, 24svh, 200px); }
-  .placa { padding: 10px 20px 10px 16px; }
-  .cabecera { gap: 12px; }
-  .indice { gap: 0 18px; }
-  .indice a { font-size: 17px; }
+  .cambios span { font-size: 10px; letter-spacing: 0.06em; }
+  .cambios b { font-size: 22px; }
+  .tacometro { width: 52px; height: 52px; }
   .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); border-width: 8px; }
   .herramienta { padding-inline: 4px; }
   .placa-datos { margin-inline: 10px; padding: 24px 20px 20px; }
   .orden { grid-template-columns: minmax(0, 1fr); }
   .orden fieldset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .taller { grid-template-columns: minmax(0, 1fr); }
-  .pie-datos { grid-template-columns: minmax(0, 1fr); }
+  .chasis-datos { grid-template-columns: minmax(0, 1fr); }
+  .chasis-cabeza span { margin-left: 0; }
   .repuestos tr { grid-template-columns: minmax(0, 1fr); }
   .repuestos td:not(:first-child) { grid-column: 1; }
   .repuestos td:first-child { grid-row: auto; }
@@ -273,15 +335,15 @@ p { margin: 0; }
    Los títulos llegan y la cinta de peligro se estira. Las placas se asientan
    y sus tornillos giran hasta apretar. Las herramientas se cuelgan en su
    gancho y, al pasar el cursor, se levantan de su silueta. Las fotos se
-   abren como una persiana, lama por lama. Al final, la cortina del pie baja
-   a medias. */
+   abren como una persiana, lama por lama. Al final, la placa de chasis se
+   asienta y sus remaches aprietan. */
 [data-aparece] { --entrada: remache-sube; --tramo: 34svh; --duracion: 1200ms; }
 .placa-datos { --entrada: remache-asienta; --tramo: 40svh; }
 .tornillo { --entrada: remache-atornilla; }
 .cinta { --entrada: remache-estira; }
 .persiana { --entrada: remache-persiana; --tramo: 44svh; --duracion: 1400ms; }
 .herramienta { --entrada: remache-cuelga; }
-.pie-cortina { --entrada: remache-baja; --tramo: 46svh; --duracion: 1600ms; }
+.chasis { --entrada: remache-asienta; --tramo: 40svh; }
 @keyframes remache-sube { from { opacity: 0; translate: 0 22px; } }
 @keyframes remache-abre { from { translate: 0 0; } }
 @keyframes remache-asienta { from { opacity: 0; translate: 0 -18px; rotate: -2.5deg; } 40% { opacity: 1; } }
@@ -289,15 +351,15 @@ p { margin: 0; }
 @keyframes remache-estira { from { scale: 0 1; } }
 @keyframes remache-persiana { from { --abre: 0px; } }
 @keyframes remache-cuelga { from { opacity: 0; translate: 0 -24px; } }
-@keyframes remache-baja { from { translate: 0 -100%; } }
-.persiana img { -webkit-mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); }
+@keyframes remache-arranca { 0% { rotate: -118deg; } 45% { rotate: -20deg; } 100% { rotate: -118deg; } }
+.persiana :is(img, .gif) { -webkit-mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); }
 @media (prefers-reduced-motion: no-preference) {
   .cortina { animation: remache-abre 2600ms var(--curva) 500ms both; }
-  .cabecera .placa, .indice li { animation: remache-sube 1200ms var(--curva) both; }
-  .indice li:nth-child(2) { animation-delay: 80ms; }
-  .indice li:nth-child(3) { animation-delay: 160ms; }
-  .indice li:nth-child(4) { animation-delay: 240ms; }
-  .indice li:nth-child(5) { animation-delay: 320ms; }
+  .cabecera > * { animation: remache-sube 1200ms var(--curva) both; }
+  .cabecera > :nth-child(2) { animation-delay: 120ms; }
+  .cabecera > :nth-child(3) { animation-delay: 240ms; }
+  .aguja { animation: remache-arranca 1600ms cubic-bezier(0.3, 0, 0.2, 1) 500ms backwards; }
+  .herramienta:hover .pieza { animation: remache-mece 2000ms cubic-bezier(0.45, 0, 0.55, 1); }
   @supports (animation-timeline: view()) {
     .porton { height: calc(var(--alto-escena) + 90svh); view-timeline: --porton; }
     .escena { position: sticky; top: 4.5rem; }
@@ -311,17 +373,35 @@ p { margin: 0; }
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="logo" viewBox="0 0 32 32"><path fill="currentColor" d="M3 15a13 10 0 0 1 26 0zM12 15h8v13a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/></symbol>
-  <symbol id="llave" viewBox="0 0 56 180"><path d="M17 6h6v18h10V6h6v20c0 6-3 9-7 10v128c0 5-2 8-4 8s-4-3-4-8V36c-4-1-7-4-7-10z"/></symbol>
-  <symbol id="destornillador" viewBox="0 0 56 180"><path style="fill: var(--mango)" d="M18 8c0-3 3-5 10-5s10 2 10 5v58c0 4-3 6-10 6s-10-2-10-6z"/><path d="M25.5 72h5v86l-2.5 8-2.5-8z"/></symbol>
-  <symbol id="torque" viewBox="0 0 56 180"><circle cx="28" cy="18" r="13"/><path d="M24 30h8v62h-8z"/><path style="fill: var(--mango)" d="M21 92h14v70c0 4-3 6-7 6s-7-2-7-6z"/></symbol>
-  <symbol id="bujia" viewBox="0 0 56 180"><path d="M6 8h44v10H6zM24 18h8v104h-8z"/><path style="fill: var(--mango)" d="M18 122h20v44c0 3-2 5-5 5H23c-3 0-5-2-5-5z"/></symbol>
-  <symbol id="brocha" viewBox="0 0 56 180"><path style="fill: var(--mango)" d="M23 6c0-2 2-3 5-3s5 1 5 3v88h-10z"/><path d="M17 94h22v18H17z"/><path style="fill: var(--mango)" d="M16 112h24v52c0 3-3 5-12 5s-12-2-12-5z"/></symbol>
-  <symbol id="martillo" viewBox="0 0 56 180"><path d="M6 8h40c3 0 5 2 5 5v8c0 3-2 5-5 5H6z"/><path style="fill: var(--mango)" d="M23 26h10v136c0 4-2 6-5 6s-5-2-5-6z"/></symbol>
+  <linearGradient id="g-cromo" x1="0" x2="1"><stop offset="0" stop-color="#5c6368"/><stop offset="0.16" stop-color="#d9dee1"/><stop offset="0.3" stop-color="#fbfcfc"/><stop offset="0.48" stop-color="#959ca1"/><stop offset="0.7" stop-color="#cdd2d5"/><stop offset="1" stop-color="#555c61"/></linearGradient>
+  <linearGradient id="g-goma" x1="0" x2="1"><stop offset="0" stop-color="#4e150c"/><stop offset="0.28" stop-color="#b3412a"/><stop offset="0.42" stop-color="#d9694a"/><stop offset="0.7" stop-color="#8c2d1a"/><stop offset="1" stop-color="#40110a"/></linearGradient>
+  <linearGradient id="g-ambar" x1="0" x2="1"><stop offset="0" stop-color="#6b3a06"/><stop offset="0.26" stop-color="#d98a1c"/><stop offset="0.4" stop-color="#f7c25c"/><stop offset="0.66" stop-color="#b8690e"/><stop offset="1" stop-color="#4f2a04"/></linearGradient>
+  <linearGradient id="g-negro" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0d"/><stop offset="0.34" stop-color="#3b3f42"/><stop offset="0.46" stop-color="#55595d"/><stop offset="1" stop-color="#0b0c0d"/></linearGradient>
+  <linearGradient id="g-madera" x1="0" x2="1"><stop offset="0" stop-color="#5e3b1c"/><stop offset="0.3" stop-color="#b07a45"/><stop offset="0.48" stop-color="#cf9c66"/><stop offset="0.74" stop-color="#996331"/><stop offset="1" stop-color="#55351a"/></linearGradient>
+  <linearGradient id="g-cerda" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2e2117"/><stop offset="1" stop-color="#6f5238"/></linearGradient>
+  <symbol id="llave" viewBox="0 0 56 180"><path style="fill: var(--cromo)" fill-rule="evenodd" d="M13 22a15 15 0 1 0 30 0a15 15 0 1 0-30 0ZM20 22a8 8 0 1 0 16 0a8 8 0 1 0-16 0ZM22 35h12l-1 110h-10ZM13 152q0-7 7-7h16q7 0 7 7v12q0 4-3 8l-3 4h-5v-10h-8v10h-5l-3-4q-3-4-3-8Z"/><path style="fill: var(--detalle)" d="M26 42h4v96h-4z"/></symbol>
+  <symbol id="destornillador" viewBox="0 0 56 180"><path style="fill: var(--ambar)" fill-rule="evenodd" d="M17 11q0-8 11-8t11 8v51q0 6-4 8l-1 6H22l-1-6q-4-2-4-8ZM25.5 12a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0Z"/><path style="fill: var(--detalle)" d="M20.5 20h2v42h-2zM27 20h2v44h-2zM33.5 20h2v42h-2z"/><path style="fill: var(--cromo)" d="M22.5 76h11v9h-11zM25.6 85h4.8v79h-4.8zM25.6 164h4.8l-.8 10h-3.2z"/></symbol>
+  <symbol id="chicharra" viewBox="0 0 56 180"><path style="fill: var(--negro)" fill-rule="evenodd" d="M20 10q0-6 8-6t8 6v64q0 4-3 5h-10q-3-1-3-5ZM25.5 13a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0Z"/><path style="fill: var(--detalle)" d="M21 24l14 6v3l-14-6zm0 10l14 6v3l-14-6zm0 10l14 6v3l-14-6zm0 10l14 6v3l-14-6z"/><path style="fill: var(--cromo)" d="M23.5 79h9l-1 62h-7ZM15 156a13 13 0 1 0 26 0a13 13 0 1 0-26 0Z"/><path style="fill: var(--negro)" d="M24 148h8v6h-8z"/><path style="fill: var(--detalle)" d="M23.5 156a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0-9 0z"/></symbol>
+  <symbol id="alicate" viewBox="0 0 56 180"><path style="fill: var(--cromo)" d="M24 56l-2-36q0-12 6-14q6 2 6 14l-2 36ZM24 58L11 168q0 6 5 6h4l10-114ZM32 58l13 110q0 6-5 6h-4L26 60Z"/><path style="fill: var(--goma)" d="M20.9 84L11 168q0 6 5 6h4l7.9-90ZM35.1 84L45 168q0 6-5 6h-4l-7.9-90Z"/><path style="fill: var(--detalle)" d="M27.4 10h1.2v40h-1.2z"/><path style="fill: var(--cromo)" d="M22 56a6 6 0 1 0 12 0a6 6 0 1 0-12 0Z"/><path style="fill: var(--detalle)" d="M26 56a2 2 0 1 0 4 0a2 2 0 1 0-4 0Z"/></symbol>
+  <symbol id="brocha" viewBox="0 0 56 180"><path style="fill: var(--madera)" fill-rule="evenodd" d="M24 9q0-5 4-5t4 5v20q0 6 3 14t2 16v33H19V59q0-8 2-16t3-14ZM25.6 14a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0Z"/><path style="fill: var(--detalle)" d="M26.6 30h1v58h-1zM30 46h.8v40H30z"/><path style="fill: var(--cromo)" d="M17 92h22v26H17z"/><path style="fill: var(--detalle)" d="M17 98h22v1.4H17zM17 104h22v1.4H17z"/><path style="fill: var(--cerda)" d="M17 118h22l2 46q0 6-6 6H21q-6 0-6-6Z"/><path style="fill: var(--punta)" d="M15.4 150h25.2l.4 14q0 6-6 6H21q-6 0-6-6Z"/><path style="fill: var(--detalle)" d="M21 120h.7v44H21zM25 120h.7v46H25zM29 120h.7v46H29zM33 120h.7v46H33zM36.6 120h.7v44h-.7z"/></symbol>
+  <symbol id="martillo" viewBox="0 0 56 180"><path style="fill: var(--cromo)" d="M6 10q0-4 4-4h8v22h-8q-4 0-4-4ZM18 10h18v14H18ZM33 17a9 9 0 1 0 18 0a9 9 0 1 0-18 0Z"/><path style="fill: var(--detalle)" d="M6 13h12v2H6z"/><path style="fill: var(--madera)" d="M23.5 26h9l1.5 120q.5 8-1 18q-1 6-5 6t-5-6q-1.5-10-1-18Z"/><path style="fill: var(--detalle)" d="M26.5 30h.8v110h-.8zM29.5 40h.6v90h-.6zM27 26h2v4h-2z"/></symbol>
 </svg>
 
 <header class="ancho cabecera">
-  <a class="placa remaches" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b><small>Taller Nº 0412 · San Miguel</small></a>
-  <nav aria-label="Secciones"><ol class="indice"><li><a href="#trabajos"><span>01</span>Trabajos</a></li><li><a href="#servicios"><span>02</span>Servicios</a></li><li><a href="#taller"><span>03</span>Taller</a></li><li><a href="#repuestos"><span>04</span>Repuestos</a></li><li><a href="#agendar"><span>05</span>Agendar</a></li></ol></nav>
+  <a class="marca" href="#inicio" aria-label="Remache, taller de motos, al inicio"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b></a>
+  <nav class="cambios" aria-label="Secciones">
+    <ol>
+      <li><a href="#inicio"><b aria-hidden="true">N</b><span>Inicio</span></a></li>
+      <li><a href="#trabajos"><b aria-hidden="true">1</b><span>Trabajos</span></a></li>
+      <li><a href="#servicios"><b aria-hidden="true">2</b><span>Servicios</span></a></li>
+      <li><a href="#taller"><b aria-hidden="true">3</b><span>Taller</span></a></li>
+      <li><a href="#repuestos"><b aria-hidden="true">4</b><span>Repuestos</span></a></li>
+      <li><a href="#agendar"><b aria-hidden="true">5</b><span>Agendar</span></a></li>
+    </ol>
+  </nav>
+  <div class="tacometro" aria-hidden="true">
+    <svg viewBox="0 0 64 64"><defs><radialGradient id="g-esfera" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#26292c"/><stop offset="1" stop-color="#0b0c0d"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="#5b6166"/><circle cx="32" cy="32" r="27.5" fill="url(#g-esfera)"/><g stroke="#e8e2d6" stroke-width="1.4" stroke-linecap="round"><path d="M14.8 47.2l2.8-2.4M10.6 37.4l3.6-.8M10.8 26.4l3.6.9M15.4 16.6l2.8 2.4M23 10.6l1.5 3.3M32 8.4v3.6M41 10.6l-1.5 3.3"/></g><path d="M48.6 16.6l-2.8 2.4M53.2 26.4l-3.6.9M53.4 37.4l-3.6-.8" stroke="#b5562b" stroke-width="2" stroke-linecap="round"/><text x="32" y="47" text-anchor="middle" font-family="Big Shoulders Display, sans-serif" font-size="7" font-weight="700" fill="#a3a8ab" letter-spacing="1">RPM×1000</text><g class="aguja"><path d="M31 34L32 9l1 25z" fill="#f2c230"/></g><circle cx="32" cy="34" r="3.4" fill="#3a3e42" stroke="#9ba1a6" stroke-width="1"/></svg>
+  </div>
 </header>
 
 <main>
@@ -337,6 +417,7 @@ p { margin: 0; }
             <div class="zocalo" aria-hidden="true"></div>
           </div>
         </div>
+        <div class="rieles" aria-hidden="true"></div>
         <div class="cajon remaches" aria-hidden="true"></div>
       </div>
     </div>
@@ -414,8 +495,8 @@ p { margin: 0; }
       <ul class="tablero">
         <li class="herramienta" data-aparece><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#llave"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#llave"/></svg><i class="gancho"></i></div><div><h3>Mantención</h3><p>Aceite, filtros, cadena, frenos y ajuste general.</p><p class="precio">$65.000 · 1 día</p></div></li>
         <li class="herramienta" data-aparece style="--orden: 1"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#destornillador"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#destornillador"/></svg><i class="gancho"></i></div><div><h3>Carburación</h3><p>Limpieza, sincronizado y puesta a punto del encendido.</p><p class="precio">$48.000 · medio día</p></div></li>
-        <li class="herramienta" data-aparece style="--orden: 2"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#torque"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#torque"/></svg><i class="gancho"></i></div><div><h3>Frenos y suspensión</h3><p>Discos, pastillas, retenes y barras, al torque del manual.</p><p class="precio">$90.000 · 2 días</p></div></li>
-        <li class="herramienta" data-aparece style="--orden: 3"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#bujia"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#bujia"/></svg><i class="gancho"></i></div><div><h3>Electricidad</h3><p>Cableado nuevo, luces, regulador y arranque que no falla.</p><p class="precio">$120.000 · 3 días</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 2"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#chicharra"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#chicharra"/></svg><i class="gancho"></i></div><div><h3>Frenos y suspensión</h3><p>Discos, pastillas, retenes y barras, al torque del manual.</p><p class="precio">$90.000 · 2 días</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 3"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#alicate"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#alicate"/></svg><i class="gancho"></i></div><div><h3>Electricidad</h3><p>Cableado nuevo, luces, regulador y arranque que no falla.</p><p class="precio">$120.000 · 3 días</p></div></li>
         <li class="herramienta" data-aparece style="--orden: 4"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#brocha"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#brocha"/></svg><i class="gancho"></i></div><div><h3>Pintura</h3><p>Estanque, tapas y chasis en pintura al horno, con tus colores.</p><p class="precio">Desde $380.000 · 3 semanas</p></div></li>
         <li class="herramienta" data-aparece style="--orden: 5"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#martillo"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#martillo"/></svg><i class="gancho"></i></div><div><h3>Restauración</h3><p>Desde el chasis pelado hasta la primera vuelta a la manzana.</p><p class="precio">Desde $2.400.000 · 4 a 14 meses</p></div></li>
       </ul>
@@ -432,7 +513,7 @@ p { margin: 0; }
       <div class="taller">
         <figure class="f1 persiana" data-aparece><img src="/image/bocetos/remache/mecanico-1200.webp" srcset="/image/bocetos/remache/mecanico-700.webp 700w, /image/bocetos/remache/mecanico-1200.webp 1200w" sizes="(min-width: 900px) 40vw, 90vw" width="1200" height="800" loading="lazy" alt="Un mecánico sostiene un motor de moto junto a una ventana, en blanco y negro"><figcaption>Hernán, jefe de taller desde 2004</figcaption></figure>
         <figure class="f2 persiana" data-aparece style="--orden: 1"><img src="/image/bocetos/remache/herramientas-760.webp" srcset="/image/bocetos/remache/herramientas-480.webp 480w, /image/bocetos/remache/herramientas-760.webp 760w" sizes="(min-width: 900px) 30vw, 45vw" width="760" height="1013" loading="lazy" alt="Una pared de herramientas colgadas: llaves ordenadas por tamaño, alicates y calcomanías de motos"><figcaption>Llaves de 6 a 32, en orden</figcaption></figure>
-        <figure class="f3 persiana" data-aparece style="--orden: 2"><img src="/image/bocetos/remache/soldadura-760.webp" srcset="/image/bocetos/remache/soldadura-480.webp 480w, /image/bocetos/remache/soldadura-760.webp 760w" sizes="(min-width: 900px) 22vw, 45vw" width="760" height="950" loading="lazy" alt="Una persona con máscara de soldar trabaja una pieza de metal entre chispas"><figcaption>Subchasis y soportes, hechos aquí</figcaption></figure>
+        <figure class="f3 persiana" data-aparece style="--orden: 2"><div class="gif"><img src="/image/bocetos/remache/aceite-600.webp" srcset="/image/bocetos/remache/aceite-600.webp 600w, /image/bocetos/remache/aceite-1120.webp 1120w" sizes="(min-width: 900px) 22vw, 45vw" width="1120" height="630" loading="lazy" alt="Una mano con guante negro echa aceite nuevo al motor de una moto con un embudo"><video data-bucle data-src="/grabados/bocetos/remache/aceite.mp4" width="1120" height="630" muted playsinline aria-hidden="true"></video></div><figcaption>Aceite nuevo, siempre el que pide el manual</figcaption></figure>
       </div>
       <div class="taller-texto" data-aparece>
         <p><b>Somos cuatro y trabajamos con hora.</b> No recibimos más motos de las que podemos tener bajo techo: once, ni una más. Si la tuya tiene que esperar, te lo decimos el primer día.</p>
@@ -501,13 +582,20 @@ p { margin: 0; }
 </main>
 
 <footer class="pie">
-  <div class="pie-cortina" data-aparece><p>Cerrado los domingos</p></div>
-  <div class="ancho pie-datos">
-    <a class="placa remaches" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b><small>Taller Nº 0412 · desde 1998</small></a>
-    <div><h2>Dónde</h2><p>Llano Subercaseaux 3920, San Miguel. A dos cuadras del metro San Miguel, con estacionamiento para motos.</p></div>
-    <div><h2>Cuándo</h2><p>Lunes a viernes de 9:00 a 19:00 · sábado de 9:00 a 14:00 · taller@remache.cl</p></div>
+  <div class="ancho">
+    <div class="chasis" data-aparece>
+      <i class="tornillo" data-sigue aria-hidden="true"></i><i class="tornillo" data-sigue aria-hidden="true"></i><i class="tornillo" data-sigue aria-hidden="true"></i><i class="tornillo" data-sigue aria-hidden="true"></i>
+      <p class="chasis-cabeza estampado"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b><span>Taller de motos · Nº 0412</span></p>
+      <dl class="chasis-datos estampado">
+        <div><dt>Fabricado</dt><dd>1998 · San Miguel · Chile</dd></div>
+        <div><dt>Dónde</dt><dd>Llano Subercaseaux 3920, a dos cuadras del metro San Miguel</dd></div>
+        <div><dt>Horario</dt><dd>Lunes a viernes, 9:00 a 19:00 · sábado, 9:00 a 14:00 · domingo cerrado</dd></div>
+        <div><dt>Escribir</dt><dd>taller@remache.cl</dd></div>
+      </dl>
+      <p class="chasis-serie estampado" aria-hidden="true">RMC · 0412 · 1998 · SM</p>
+    </div>
+    <p class="pie-final">Boceto de Volutus · marca inventada</p>
   </div>
-  <p class="ancho pie-final">Boceto de Volutus · marca inventada</p>
 </footer>
 </body>
 </html>

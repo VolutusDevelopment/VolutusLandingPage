@@ -192,7 +192,11 @@
  * desde el borde de abajo, y retrocede si se vuelve. No hay un instante en
  * que algo salte. Donde no (Safari 18 y anteriores), barra.js la dispara al
  * verse y dura `--duracion`. Sin JavaScript o con el movimiento reducido,
- * todo está quieto y a la vista. */
+ * todo está quieto y a la vista.
+ *
+ * `data-aparece="tiempo"` entra siempre por tiempo, también donde se puede
+ * atar al scroll: es para el texto largo, que así no se queda a medio fundir
+ * (y con poco contraste) mientras se lee en la parte baja de la pantalla. */
 @keyframes aparece {
   from {
     opacity: 0;
@@ -212,12 +216,12 @@
   }
 
   @supports (animation-timeline: view()) {
-    .con-js [data-aparece] {
+    .con-js [data-aparece]:not([data-aparece='tiempo']) {
       view-timeline: --aparece;
     }
 
-    .con-js [data-aparece],
-    .con-js [data-aparece] [data-sigue] {
+    .con-js [data-aparece]:not([data-aparece='tiempo']),
+    .con-js [data-aparece]:not([data-aparece='tiempo']) [data-sigue] {
       animation-duration: auto;
       animation-delay: 0s;
       animation-play-state: running;
@@ -247,4 +251,16 @@
 .en-espera *::before,
 .en-espera *::after {
   animation-play-state: paused !important;
+}
+
+/* Los videos en bucle (barra.js) se funden sobre la foto quieta que llevan
+ * detrás cuando empiezan a correr. Sin JavaScript o con el movimiento
+ * reducido no bajan, y queda la foto. */
+video[data-bucle] {
+  opacity: 0;
+  transition: opacity 900ms cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+video[data-bucle].andando {
+  opacity: 1;
 }

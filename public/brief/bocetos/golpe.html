@@ -131,8 +131,8 @@ p { margin: 0; }
 
 /* ---- Cierre con la velada ---- */
 .cierre { position: relative; isolation: isolate; display: grid; place-items: center; min-height: clamp(480px, 60vw, 760px); text-align: center; overflow: hidden; overflow: clip; }
-.cierre img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
-.cierre::after { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(13 13 13 / 0.66); }
+.cierre img, .cierre video { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.cierre::after { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 60% 55% at 50% 50%, rgb(13 13 13 / 0.7), rgb(13 13 13 / 0.45)); }
 .cierre h2 { font-size: clamp(60px, 11vw, 180px); }
 .cierre h2 span { display: block; }
 .cierre h2 .amarillo { color: var(--amarillo); }
@@ -182,7 +182,8 @@ p { margin: 0; }
    cada línea del título entra de lado, destapándose. Al bajar, los títulos
    enormes cruzan la pantalla atados al scroll, las fotos se abren con un
    corte seco de lado, su imagen se asienta adentro y su rótulo llega detrás, y la foto de portada
-   avanza hacia uno al irse. La foto del cierre se asienta mientras pasa. */
+   avanza hacia uno al irse. En el cierre, una velada en el ring corre en
+   bucle (barra.js) y se asienta mientras pasa. */
 [data-aparece] { --entrada: golpe-sube; --curva: var(--golpe); --tramo: 30svh; --duracion: 800ms; }
 .de-lado { --entrada: golpe-izquierda; --curva: cubic-bezier(0.3, 0.6, 0.3, 1); --tramo: 60svh; --duracion: 1000ms; }
 .de-lado.derecha { --entrada: golpe-derecha; }
@@ -207,7 +208,7 @@ p { margin: 0; }
   @supports (animation-timeline: scroll()) {
     .portada img { animation: golpe-avanza linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
     .cierre { view-timeline: --cierre; }
-    .cierre img { animation: golpe-pasa linear both; animation-timeline: --cierre; animation-range: cover 0% cover 100%; }
+    .cierre img, .cierre video { animation: golpe-pasa linear both; animation-timeline: --cierre; animation-range: cover 0% cover 100%; }
   }
 }
 </style>
@@ -336,7 +337,8 @@ p { margin: 0; }
   </section>
 
   <section class="cierre" aria-labelledby="cierre-titulo">
-    <img src="/image/bocetos/golpe/velada-1600.webp" srcset="/image/bocetos/golpe/velada-1000.webp 1000w, /image/bocetos/golpe/velada-1600.webp 1600w" sizes="100vw" width="1600" height="686" loading="lazy" alt="">
+    <img src="/image/bocetos/golpe/ring-1600.webp" srcset="/image/bocetos/golpe/ring-1000.webp 1000w, /image/bocetos/golpe/ring-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" alt="">
+    <video data-bucle data-src="/grabados/bocetos/golpe/ring.mp4" width="1120" height="630" muted playsinline aria-hidden="true"></video>
     <div class="ancho">
       <h2 id="cierre-titulo" class="de-lado" data-aparece><span>La primera</span> <span class="amarillo">va gratis.</span></h2>
       <p data-aparece>Ven con ropa de deporte y una botella de agua. Del resto nos encargamos.</p>

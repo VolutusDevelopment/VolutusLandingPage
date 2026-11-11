@@ -8,7 +8,8 @@
 <meta name="description" content="Boceto de página de una marca inventada, Viña Ladera, vinos de secano del Valle del Itata, para mostrar el estilo Editorial.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/newsreader.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/image/bocetos/ladera/portada-860.webp" imagesrcset="/image/bocetos/ladera/portada-540.webp 540w, /image/bocetos/ladera/portada-860.webp 860w" imagesizes="(min-width: 600px) 26rem, 76vw">
+<link rel="preload" as="image" href="/image/bocetos/ladera/portada-ancha-1600.webp" media="(min-width: 700px)" imagesrcset="/image/bocetos/ladera/portada-ancha-1100.webp 1100w, /image/bocetos/ladera/portada-ancha-1600.webp 1600w" imagesizes="100vw">
+<link rel="preload" as="image" href="/image/bocetos/ladera/portada-alta-800.webp" media="(max-width: 699px)" imagesrcset="/image/bocetos/ladera/portada-alta-600.webp 600w, /image/bocetos/ladera/portada-alta-800.webp 800w" imagesizes="100vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
@@ -17,7 +18,14 @@
    en titulares grandes y calmos, con rótulos chicos en sans y mucho margen;
    3) el ritmo lento: fotos a sangre que avanzan un poco más despacio que el
    texto. La idea propia: el sitio es la revista que la viña saca con cada
-   cosecha, y se lee con el folio de la página en el margen. */
+   cosecha, y se lee con el folio de la página en el margen.
+   Segunda vuelta, desde Awwwards (Bijou Wines, Post Familiar Wine): la tapa
+   ocupa la pantalla entera, con la cabecera gigante sobre la niebla; las
+   fotos a sangre se abren del ancho de la página al de la pantalla al
+   llegar; una cita grande va sobre la foto de la bodega, y los vinos se
+   presentan en un pliego oscuro, como las páginas de producto de una
+   revista. El texto entra por tiempo y no atado al scroll, para no quedarse
+   a medio fundir mientras se lee. */
 @font-face { font-family: 'Newsreader'; src: url('/fonts/bocetos/newsreader.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
 @font-face { font-family: 'Newsreader'; src: url('/fonts/bocetos/newsreader-italica.woff2') format('woff2'); font-weight: 200 800; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Hanken Grotesk'; src: url('/fonts/bocetos/hanken-grotesk.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
@@ -34,6 +42,7 @@
   --ancho: 1240px;
   --margen: clamp(20px, 4vw, 56px);
   --suave: cubic-bezier(0.45, 0, 0.55, 1);
+  --noche: #221214;
 }
 * { box-sizing: border-box; }
 html { background: var(--papel); scroll-behavior: smooth; }
@@ -48,18 +57,41 @@ p { margin: 0; }
 em { font-style: italic; }
 .sans { font-family: 'Hanken Grotesk', system-ui, sans-serif; }
 .rotulo { font: 600 12px/1.3 'Hanken Grotesk', system-ui, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .pie-foto { margin-top: 10px; font: 400 13px/1.5 'Hanken Grotesk', system-ui, sans-serif; color: var(--gris); }
 .ancho { max-width: calc(var(--ancho) + var(--folio)); margin-inline: auto; padding-inline: var(--margen); }
 
-/* ---- Cabecera ---- */
-.mancheta { display: grid; justify-items: center; gap: 12px; padding-block: 18px 0; text-align: center; }
-.mancheta-fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%; padding-bottom: 10px; border-bottom: 1px solid var(--tinta); color: var(--gris); }
-.mancheta-fila svg { width: 30px; height: 22px; color: var(--vino); }
-.mancheta-marca { font-size: clamp(48px, 8vw, 112px); font-weight: 300; line-height: 0.95; letter-spacing: -0.01em; text-decoration: none; }
-.mancheta nav { width: 100%; padding-block: 12px; border-block: 3px double var(--tinta); }
-.mancheta nav ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 36px; margin: 0; padding: 0; list-style: none; }
-.mancheta nav a { font: 500 14px 'Hanken Grotesk', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--gris); transition: color 400ms var(--suave); }
-.mancheta nav a:hover { color: var(--tinta); }
+/* ---- La tapa: la pantalla entera es la tapa del número ----
+   La cabecera va en tinta sobre la niebla de la foto, con un velo de papel
+   arriba, como más niebla, que la asegura también sobre las viñas; el titular, en blanco sobre un velo oscuro abajo.
+   Los dos dan más de 7:1. */
+.tapa { position: relative; isolation: isolate; display: grid; grid-template-rows: auto 1fr auto; min-height: max(560px, 100svh); overflow: clip; }
+.tapa-foto { position: absolute; inset: 0; z-index: -2; }
+.tapa-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.tapa::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(242 237 227 / 0.86) 0%, rgb(242 237 227 / 0.66) 24%, rgb(242 237 227 / 0) 42%, rgb(24 16 12 / 0) 54%, rgb(24 16 12 / 0.3) 68%, rgb(24 16 12 / 0.84) 100%); }
+.tapa-cabeza { display: grid; justify-items: center; padding-top: 18px; text-align: center; }
+.tapa-fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%; padding-bottom: 10px; border-bottom: 1px solid var(--tinta); }
+.tapa-fila svg { width: 30px; height: 22px; color: var(--vino); }
+.tapa-marca { margin: 0.14em 0 0; font-size: clamp(84px, 19vw, 330px); font-weight: 300; line-height: 0.82; letter-spacing: 0.03em; }
+.tapa-marca i { display: inline-block; font-style: normal; }
+.tapa nav { width: 100%; margin-top: 0.12em; padding-block: 12px; border-block: 3px double var(--tinta); }
+.tapa nav ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 36px; margin: 0; padding: 0; list-style: none; }
+.tapa nav a { font: 600 14px 'Hanken Grotesk', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; background: linear-gradient(currentColor, currentColor) 50% 100% / 0 1px no-repeat; transition: background-size 600ms var(--suave); }
+.tapa nav a:hover { background-size: 100% 1px; }
+.tapa-pie { grid-row: 3; display: grid; gap: 14px; padding-block: 0 clamp(36px, 5vw, 72px); color: #fbf8f2; }
+.tapa-pie > * { max-width: 44rem; }
+.tapa-pie h1 { font-size: clamp(46px, 6.6vw, 104px); font-style: italic; }
+.tapa-pie .entradilla { max-width: 46ch; font-size: clamp(18px, 1.5vw, 21px); color: #f1ebe0; }
+
+/* ---- El sumario, bajo la tapa ---- */
+.sumario-banda { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 9fr); gap: 16px 40px; align-items: start; padding-block: clamp(40px, 5vw, 64px); }
+.sumario-banda .rotulo { padding-top: 10px; color: var(--vino); }
+.sumario { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--tinta); }
+.sumario li + li { border-left: 1px solid var(--linea); }
+.sumario a { display: grid; gap: 6px; height: 100%; padding: 14px 18px 4px; font-size: clamp(19px, 1.7vw, 23px); font-style: italic; line-height: 1.2; text-decoration: none; transition: color 500ms var(--suave); }
+.sumario a:hover { color: var(--vino); }
+.sumario span { font: 500 13px 'Hanken Grotesk', sans-serif; font-style: normal; color: var(--gris); font-variant-numeric: tabular-nums; }
+.sumario li:first-child a { padding-left: 0; }
 
 /* ---- El folio: en el margen, avanza con cada página ---- */
 .pliego { position: relative; padding-left: calc(var(--margen) + var(--folio)); }
@@ -67,25 +99,9 @@ em { font-style: italic; }
 .folio span { position: sticky; top: calc(50svh - 3em); display: grid; gap: 6px; padding-top: 6px; border-top: 1px solid var(--tinta); width: 48px; font: 500 13px/1.2 'Hanken Grotesk', sans-serif; color: var(--gris); font-variant-numeric: tabular-nums; }
 .folio b { font: italic 400 26px/1 'Newsreader', serif; color: var(--tinta); }
 
-/* ---- La tapa ---- */
-.tapa-seccion { display: grid; justify-items: center; gap: 24px; padding-block: clamp(40px, 5vw, 72px) clamp(72px, 9vw, 128px); text-align: center; }
-.tapa-seccion h1 { font-size: clamp(40px, 5vw, 72px); font-style: italic; }
-.tapa-seccion .entradilla { max-width: 44ch; color: var(--gris); }
-.tapa { position: relative; justify-self: center; width: min(100%, 26rem); overflow: hidden; container-type: inline-size; box-shadow: 0 30px 50px -36px rgb(29 26 22 / 0.55), 0 2px 6px rgb(29 26 22 / 0.12); }
-.tapa img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
-.tapa-cabecera { position: absolute; inset: 0 0 auto; display: grid; padding: 4.5% 6% 0; color: var(--tinta); }
-.tapa-cabecera b { font-weight: 300; font-size: 19cqi; line-height: 0.82; letter-spacing: 0.02em; text-align: center; }
-.tapa-cabecera span { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid currentColor; }
-.tapa-lineas { position: absolute; inset: auto 0 0; display: grid; gap: 4px; padding: 0 6% 6%; color: #fbf8f2; text-shadow: 0 1px 12px rgb(0 0 0 / 0.35); }
-.tapa-lineas i { font-size: 7.4cqi; line-height: 1.02; }
-.sumario { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 0; margin: 8px 0 0; padding: 0; list-style: none; }
-.sumario li + li::before { content: '·'; margin-inline: 18px; color: var(--gris); }
-.sumario a { font-size: 18px; font-style: italic; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 600ms var(--suave); }
-.sumario a:hover { background-size: 100% 1px; }
-.sumario span { margin-right: 8px; font: 500 13px 'Hanken Grotesk', sans-serif; font-style: normal; color: var(--gris); font-variant-numeric: tabular-nums; }
-
 /* ---- Páginas interiores ---- */
 .pagina { padding-block: clamp(72px, 9vw, 128px); border-top: 1px solid var(--linea); }
+.sangre + .pagina { padding-top: clamp(48px, 6vw, 80px); border-top: 0; }
 .antetitulo { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; margin-bottom: 18px; color: var(--vino); }
 .pagina h2 { font-size: clamp(38px, 5vw, 72px); }
 .bajada { max-width: 42ch; margin-top: 18px; font-size: clamp(21px, 2vw, 26px); font-style: italic; line-height: 1.38; color: var(--gris); }
@@ -96,30 +112,36 @@ em { font-style: italic; }
 .carta { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 40px clamp(32px, 5vw, 72px); align-items: start; margin-top: clamp(40px, 5vw, 64px); }
 .retrato img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
 
-.estacion { margin-top: clamp(72px, 9vw, 136px); }
 .estacion h3 { font-size: clamp(34px, 4vw, 56px); font-style: italic; }
 .estacion-cuerpo { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 3fr); gap: 32px clamp(32px, 4vw, 56px); margin-top: 28px; }
 .nota { align-self: start; padding-top: 12px; border-top: 1px solid var(--tinta); font: 400 14px/1.55 'Hanken Grotesk', sans-serif; color: var(--gris); }
 .nota sup, .columnas sup { font: 600 11px 'Hanken Grotesk', sans-serif; color: var(--vino); }
-.cita { margin-block: clamp(36px, 5vw, 64px); padding-block: 22px; border-block: 1px solid var(--vino); font-size: clamp(28px, 3.4vw, 46px); font-style: italic; line-height: 1.18; color: var(--vino); text-wrap: balance; }
+.cita { margin-block: clamp(36px, 5vw, 64px); padding-block: 22px; background: linear-gradient(var(--vino), var(--vino)) 50% 0 / 100% 1px no-repeat, linear-gradient(var(--vino), var(--vino)) 50% 100% / 100% 1px no-repeat; font-size: clamp(28px, 3.4vw, 46px); font-style: italic; line-height: 1.18; color: var(--vino); text-wrap: balance; }
 .cita cite { display: block; margin-top: 12px; font: 500 13px 'Hanken Grotesk', sans-serif; font-style: normal; letter-spacing: 0.06em; color: var(--gris); }
 
-/* Fotos a sangre: llegan hasta el borde derecho de la pantalla. */
-.sangre { margin-right: calc(-1 * max(var(--margen), (100vw - var(--ancho) - var(--folio)) / 2 + var(--margen))); }
-.sangre .marco { height: clamp(300px, 62svh, 680px); overflow: hidden; background: #d9d1c2; }
-.sangre img { width: 100%; height: 116%; object-fit: cover; }
-.sangre figcaption { padding-right: var(--margen); }
-.par { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px clamp(24px, 4vw, 56px); align-items: end; margin-top: 32px; }
-.par img { width: 100%; object-fit: cover; }
-.par .alta img { aspect-ratio: 4 / 5; }
-.par .ancha img { aspect-ratio: 3 / 2; }
+/* Fotos a sangre: de borde a borde de la pantalla, entre página y página.
+   Al llegar se abren del ancho de la página al de la pantalla, y adentro la
+   foto avanza más despacio que el texto. */
+.sangre { margin-block: clamp(56px, 7vw, 104px) 0; }
+.sangre .marco { position: relative; height: clamp(420px, 86svh, 980px); overflow: hidden; background: #d9d1c2; }
+.sangre picture, .sangre img { display: block; width: 100%; height: 116%; }
+.sangre img { object-fit: cover; }
+.sangre figcaption { margin-top: 12px; }
+.con-cita .marco::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(24 16 12 / 0.05) 30%, rgb(24 16 12 / 0.8)); }
+.cita-grande { position: absolute; inset: auto 0 0; z-index: 1; padding-bottom: clamp(36px, 5vw, 72px); color: #fbf8f2; font-size: clamp(32px, 4.6vw, 68px); font-style: italic; line-height: 1.1; text-wrap: balance; }
+.cita-grande p { max-width: 22ch; }
+.cita-grande cite { display: block; margin-top: 16px; font: 500 13px 'Hanken Grotesk', sans-serif; font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: #ede5d8; }
 .lado { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; margin-top: 28px; }
 .lado img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
-/* ---- Los vinos ---- */
+/* ---- Los vinos: el pliego oscuro ----
+   Cambia los colores de la página, no las reglas: papel sobre vino oscuro,
+   el gris pasa a un beige que da más de 9:1 y el vino, a una greda clara. */
+.noche { --tinta: #f2ede3; --gris: #cbc1b2; --vino: #e8a48a; --linea: rgb(242 237 227 / 0.18); background: var(--noche); color: var(--tinta); }
+.noche .pagina { border-top: 0; }
 .vinos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px clamp(24px, 3vw, 48px); margin-top: clamp(40px, 5vw, 64px); }
 .vino { display: grid; gap: 14px; align-content: start; }
-.foto-vino { overflow: hidden; margin-bottom: 4px; background: #d9d1c2; }
+.foto-vino { overflow: hidden; margin-bottom: 4px; background: #3a2226; }
 .foto-vino img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: scale 1600ms var(--suave); }
 .vino:hover .foto-vino img { scale: 1.04; }
 .vino .romano { font: 500 13px 'Hanken Grotesk', sans-serif; letter-spacing: 0.16em; color: var(--vino); }
@@ -164,7 +186,11 @@ em { font-style: italic; }
   .folio { position: static; width: auto; margin-bottom: 20px; }
   .folio span { position: static; display: flex; gap: 10px; align-items: baseline; width: auto; }
   .folio b { font-size: 20px; }
-  .tapa-seccion, .carta, .estacion-cuerpo, .lado, .visitas { grid-template-columns: minmax(0, 1fr); }
+  .carta, .estacion-cuerpo, .lado, .visitas, .sumario-banda { grid-template-columns: minmax(0, 1fr); }
+  .sumario { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sumario li:nth-child(3) { border-left: 0; }
+  .sumario li:nth-child(3) a { padding-left: 0; }
+  .sumario li:nth-child(n + 3) { border-top: 1px solid var(--linea); }
   .retrato { width: min(70%, 20rem); }
   .vinos { grid-template-columns: minmax(0, 1fr); }
   .foto-vino { width: min(100%, 22rem); }
@@ -175,25 +201,46 @@ em { font-style: italic; }
 @media (max-width: 599px) {
   body { font-size: 18px; }
   .columnas { text-align: left; }
-  .par, .formulario, .colofon-grilla { grid-template-columns: minmax(0, 1fr); }
-  .tapa { width: 84%; }
+  .formulario, .colofon-grilla { grid-template-columns: minmax(0, 1fr); }
+  .tapa nav ul { gap: 4px 22px; }
+  .tapa nav a { font-size: 13px; }
+  .sangre .marco { height: min(125vw, 78svh); }
+  .cita-grande { font-size: clamp(28px, 7.4vw, 40px); }
 }
 
 /* ---- Movimiento: se lee despacio ----
-   Las fotos a sangre se corren un poco más despacio que el texto mientras
-   cruzan la pantalla, con una curva suave en las dos puntas del tramo. Los
-   textos aparecen con un fundido corto, sin viajar. La tapa se asienta al
-   cargar como una revista que se deja sobre la mesa. */
-[data-aparece] { --entrada: ladera-funde; --curva: var(--suave); --tramo: 30svh; --duracion: 1000ms; }
-@keyframes ladera-funde { from { opacity: 0; } }
-@keyframes ladera-tapa { from { translate: 0 18px; rotate: -1.2deg; } }
+   Al cargar, la foto de la tapa se asienta y las letras de la cabecera suben
+   de una en una, desenfocadas al principio; el resto llega con un fundido.
+   Al bajar, la tapa se queda atrás más despacio que la página. Las fotos a
+   sangre se abren al ancho de la pantalla y avanzan más lento que el texto;
+   las de los vinos se llenan de abajo arriba, como una copa. Las rayas de
+   las citas se dibujan desde el centro. El texto entra por tiempo
+   (`data-aparece="tiempo"`): un fundido corto, una vez, y queda entero. */
+[data-aparece] { --entrada: ladera-funde; --curva: var(--suave); --tramo: 30svh; --duracion: 1100ms; }
+.sangre[data-aparece] { --entrada: ladera-abre; --tramo: 70svh; --duracion: 1600ms; }
+.foto-vino img { --entrada: ladera-llena; }
+.cita[data-aparece] { --entrada: ladera-raya; --duracion: 1400ms; }
+@keyframes ladera-funde { from { opacity: 0; translate: 0 10px; } }
+@keyframes ladera-letra { from { opacity: 0; translate: 0 0.14em; filter: blur(10px); } }
+@keyframes ladera-asienta { from { scale: 1.08; } }
+@keyframes ladera-queda { to { translate: 0 22%; } }
+@keyframes ladera-abre { from { clip-path: inset(7% max(var(--margen), (100% - var(--ancho)) / 2)); } to { clip-path: inset(0 0); } }
+@keyframes ladera-llena { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ladera-raya { from { opacity: 0; background-size: 0 1px, 0 1px; } 40% { opacity: 1; } }
 @keyframes ladera-paralaje { from { translate: 0 0; } to { translate: 0 -13.8%; } }
 @media (prefers-reduced-motion: no-preference) {
-  .tapa { animation: ladera-tapa 1600ms var(--suave) both; }
-  .tapa-seccion > :not(.tapa) { animation: ladera-funde 1200ms var(--suave) both; }
+  .tapa-foto img { animation: ladera-asienta 2800ms var(--suave) both; }
+  .tapa-marca i { animation: ladera-letra 1500ms var(--suave) both; animation-delay: calc(160ms + var(--i) * 90ms); }
+  .tapa-fila, .tapa nav { animation: ladera-funde 1200ms var(--suave) 500ms both; }
+  .tapa-pie > * { animation: ladera-funde 1300ms var(--suave) 800ms both; }
+  .tapa-pie > :nth-child(2) { animation-delay: 900ms; }
+  .tapa-pie > :nth-child(3) { animation-delay: 1000ms; }
+  @supports (animation-timeline: scroll()) {
+    .tapa-foto { animation: ladera-queda var(--suave) both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+  }
   @supports (animation-timeline: view()) {
     .sangre .marco { view-timeline: --sangre; }
-    .sangre img { animation: ladera-paralaje auto var(--suave) both; animation-timeline: --sangre; animation-range: cover 0% cover 100%; }
+    .sangre picture { animation: ladera-paralaje auto var(--suave) both; animation-timeline: --sangre; animation-range: cover 0% cover 100%; }
   }
 }
 </style>
@@ -203,38 +250,40 @@ em { font-style: italic; }
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ladera" viewBox="0 0 30 22"><path d="M1 21L29 3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 16.5v-5M14 12.6v-5M20 8.8v-5M26 5v-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol></svg>
 
-<header class="ancho mancheta">
-  <p class="rotulo mancheta-fila"><span>Nº 12</span><svg aria-hidden="true"><use href="#ladera"/></svg><span>Vendimia 2026</span></p>
-  <a class="mancheta-marca" href="#inicio">Viña Ladera</a>
-  <nav aria-label="Secciones"><ul><li><a href="#carta">Carta</a></li><li><a href="#reportaje">Reportaje</a></li><li><a href="#vinos">Vinos</a></li><li><a href="#visitas">Visitas</a></li></ul></nav>
+<header class="tapa" id="inicio">
+  <picture class="tapa-foto">
+    <source media="(max-width: 699px)" srcset="/image/bocetos/ladera/portada-alta-600.webp 600w, /image/bocetos/ladera/portada-alta-800.webp 800w" sizes="100vw" width="800" height="1067">
+    <img src="/image/bocetos/ladera/portada-ancha-1600.webp" srcset="/image/bocetos/ladera/portada-ancha-1100.webp 1100w, /image/bocetos/ladera/portada-ancha-1600.webp 1600w" sizes="100vw" width="1600" height="900" alt="Viñas en terrazas sobre un cerro, vistas desde arriba, con la niebla cubriendo el valle" fetchpriority="high">
+  </picture>
+  <div class="ancho tapa-cabeza">
+    <p class="rotulo tapa-fila"><span>Nº 12</span><svg aria-hidden="true"><use href="#ladera"/></svg><span>Vendimia 2026</span></p>
+    <p class="tapa-marca"><span class="oculto">Viña Ladera</span><span aria-hidden="true"><i style="--i: 0">L</i><i style="--i: 1">A</i><i style="--i: 2">D</i><i style="--i: 3">E</i><i style="--i: 4">R</i><i style="--i: 5">A</i></span></p>
+    <nav aria-label="Secciones"><ul><li><a href="#carta">Carta</a></li><li><a href="#reportaje">Reportaje</a></li><li><a href="#vinos">Vinos</a></li><li><a href="#visitas">Visitas</a></li></ul></nav>
+  </div>
+  <div class="ancho tapa-pie">
+    <p class="rotulo">La revista de Viña Ladera · Nº 12 · Valle del Itata</p>
+    <h1>Un año en la ladera</h1>
+    <p class="entradilla">Sale una vez al año, con la vendimia. Este número cuenta cuatro estaciones en ocho hectáreas de secano, sin riego y sin tractor, y los tres vinos que salieron de ellas.</p>
+  </div>
 </header>
 
 <main>
-  <section class="ancho tapa-seccion" id="inicio" aria-labelledby="titulo">
-    <p class="rotulo" style="color: var(--vino)">La revista de Viña Ladera · Nº 12</p>
-    <h1 id="titulo">Un año en la ladera</h1>
-    <figure class="tapa">
-      <img src="/image/bocetos/ladera/portada-860.webp" srcset="/image/bocetos/ladera/portada-540.webp 540w, /image/bocetos/ladera/portada-860.webp 860w" sizes="(min-width: 600px) 26rem, 76vw" width="860" height="1075" alt="La tapa del número 12: viñas en terrazas sobre un cerro, con la niebla bajando hacia el valle" fetchpriority="high">
-      <div class="tapa-cabecera" aria-hidden="true"><b>LADERA</b><span class="rotulo"><span>Nº 12</span><span>Vendimia 2026</span><span>Valle del Itata</span></span></div>
-      <figcaption class="tapa-lineas" aria-hidden="true"><i>Un año en la ladera</i><span class="rotulo">Cinsault de 1940 · Carta desde Guarilihue</span></figcaption>
-    </figure>
-    <p class="entradilla">Sale una vez al año, con la vendimia. Este número cuenta cuatro estaciones en ocho hectáreas de secano, sin riego y sin tractor, y los tres vinos que salieron de ellas.</p>
-    <nav aria-label="Sumario">
-        <ol class="sumario">
-          <li><a href="#carta"><span>p. 3</span>Carta de la viticultora</a></li>
-          <li><a href="#reportaje"><span>p. 6</span>Un año en la ladera</a></li>
-          <li><a href="#vinos"><span>p. 18</span>Los vinos de la cosecha 2025</a></li>
-          <li><a href="#visitas"><span>p. 24</span>Visitas y la revista impresa</a></li>
-        </ol>
-      </nav>
-  </section>
+  <nav class="ancho sumario-banda" aria-label="Sumario">
+    <p class="rotulo">En este número</p>
+    <ol class="sumario">
+      <li><a href="#carta"><span>p. 3</span>Carta de la viticultora</a></li>
+      <li><a href="#reportaje"><span>p. 6</span>Un año en la ladera</a></li>
+      <li><a href="#vinos"><span>p. 18</span>Los vinos de la cosecha 2025</a></li>
+      <li><a href="#visitas"><span>p. 24</span>Visitas y la revista impresa</a></li>
+    </ol>
+  </nav>
 
   <section class="pliego ancho pagina" id="carta" aria-labelledby="carta-titulo">
     <p class="folio" aria-hidden="true"><span><b>3</b>Nº 12</span></p>
-    <p class="rotulo antetitulo" data-aparece><span>Carta de la viticultora</span></p>
-    <h2 id="carta-titulo" data-aparece>Volvimos a podar como podaba mi abuelo</h2>
+    <p class="rotulo antetitulo" data-aparece="tiempo"><span>Carta de la viticultora</span></p>
+    <h2 id="carta-titulo" data-aparece="tiempo">Volvimos a podar como podaba mi abuelo</h2>
     <div class="carta">
-      <div data-aparece>
+      <div data-aparece="tiempo">
         <div class="columnas">
           <p class="capitular">Cuando llegamos a Guarilihue, en 2014, las parras tenían setenta años y nadie las había mirado en diez. Eran de país y de cinsault, plantadas en cabeza, sin alambres, como se planta en el secano desde hace tres siglos. Lo fácil era arrancarlas y poner otra cosa. Lo que hicimos fue sentarnos a escuchar a don Ruperto, el vecino, que las había podado de niño.</p>
           <p>Él nos enseñó que aquí la parra no se riega: se la deja buscar el agua sola, hondo, entre el granito. Que la poda se hace en luna menguante, aunque eso no lo pueda probar nadie. Que el caballo pisa menos que el tractor. Once años después seguimos haciendo casi todo como nos dijo.</p>
@@ -252,38 +301,41 @@ em { font-style: italic; }
   <div id="reportaje">
     <section class="pliego ancho pagina" aria-labelledby="reportaje-titulo">
       <p class="folio" aria-hidden="true"><span><b>6</b>Nº 12</span></p>
-      <p class="rotulo antetitulo" data-aparece><span>Reportaje</span><span>Texto de Antonia Fuentealba</span></p>
-      <h2 id="reportaje-titulo" data-aparece>Un año en la ladera</h2>
-      <p class="bajada" data-aparece>Cuatro estaciones en una viña de secano, del frío de julio a las manos de abril.</p>
+      <p class="rotulo antetitulo" data-aparece="tiempo"><span>Reportaje</span><span>Texto de Antonia Fuentealba</span></p>
+      <h2 id="reportaje-titulo" data-aparece="tiempo">Un año en la ladera</h2>
+      <p class="bajada" data-aparece="tiempo">Cuatro estaciones en una viña de secano, del frío de julio a las manos de abril.</p>
 
-      <article class="estacion" aria-labelledby="invierno">
-        <figure class="sangre">
-          <div class="marco"><img src="/image/bocetos/ladera/invierno-1400.webp" srcset="/image/bocetos/ladera/invierno-800.webp 800w, /image/bocetos/ladera/invierno-1400.webp 1400w" sizes="100vw" width="1400" height="933" loading="lazy" alt="En blanco y negro, hileras de parras desnudas bajan por una loma mientras la niebla tapa los cerros del fondo"></div>
-          <figcaption class="pie-foto">Julio. La niebla del Itata sube por la quebrada casi todas las mañanas.</figcaption>
-        </figure>
-        <p class="rotulo antetitulo" style="margin-top: 36px" data-aparece><span>I · Invierno</span><span>Junio a agosto</span></p>
-        <h3 id="invierno" data-aparece>La poda en luna menguante</h3>
+    </section>
+
+    <figure class="sangre" data-aparece>
+      <div class="marco"><picture><source media="(max-width: 699px)" srcset="/image/bocetos/ladera/invierno-alta-800.webp" width="800" height="1000"><img src="/image/bocetos/ladera/invierno-ancha-1600.webp" srcset="/image/bocetos/ladera/invierno-ancha-1000.webp 1000w, /image/bocetos/ladera/invierno-ancha-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" alt="En blanco y negro, hileras de parras desnudas bajan por una loma mientras la niebla tapa los cerros del fondo"></picture></div>
+      <figcaption class="ancho pie-foto">Julio. La niebla del Itata sube por la quebrada casi todas las mañanas.</figcaption>
+    </figure>
+
+    <section class="pliego ancho pagina estacion" aria-labelledby="invierno">
+      <p class="folio" aria-hidden="true"><span><b>7</b>Nº 12</span></p>
+        <p class="rotulo antetitulo" data-aparece="tiempo"><span>I · Invierno</span><span>Junio a agosto</span></p>
+        <h3 id="invierno" data-aparece="tiempo">La poda en luna menguante</h3>
         <div class="estacion-cuerpo">
-          <div class="columnas" data-aparece>
+          <div class="columnas" data-aparece="tiempo">
             <p>En invierno la viña parece muerta. Las parras quedan como manos abiertas, negras de lluvia, y el trabajo es cortar. Cada planta se poda a dos o tres yemas por brazo, a tijera, y los sarmientos se juntan para el fuego de la cocina<sup>1</sup>.</p>
             <p>Somos cuatro y tardamos seis semanas en recorrer las ocho hectáreas. No hay apuro: la parra no despierta hasta septiembre y una mala poda se paga con dos años de racimos chicos.</p>
           </div>
-          <p class="nota" data-aparece><sup>1</sup> Un sarmiento seco arde rápido y parejo. Con ellos se asa el cordero de la vendimia, en abril.</p>
+          <p class="nota" data-aparece="tiempo"><sup>1</sup> Un sarmiento seco arde rápido y parejo. Con ellos se asa el cordero de la vendimia, en abril.</p>
         </div>
-      </article>
     </section>
 
-    <section class="pliego ancho pagina" aria-labelledby="primavera">
+    <section class="pliego ancho pagina estacion" aria-labelledby="primavera">
       <p class="folio" aria-hidden="true"><span><b>9</b>Nº 12</span></p>
-      <p class="rotulo antetitulo" data-aparece><span>II · Primavera</span><span>Septiembre a noviembre</span></p>
-      <h3 id="primavera" data-aparece style="font-size: clamp(34px, 4vw, 56px); font-style: italic">La primera hoja y la última helada</h3>
+      <p class="rotulo antetitulo" data-aparece="tiempo"><span>II · Primavera</span><span>Septiembre a noviembre</span></p>
+      <h3 id="primavera" data-aparece="tiempo">La primera hoja y la última helada</h3>
       <div class="lado">
-        <div data-aparece>
+        <div data-aparece="tiempo">
           <div class="columnas" style="columns: 1">
             <p>La brotación llega de golpe, una mañana de septiembre. Las yemas se hinchan, se abren y en una semana la loma pasa del gris al verde claro. Es la época más frágil del año: una helada en octubre puede quemar media cosecha en una noche.</p>
             <p>No tenemos ventiladores ni velas. Tenemos la pendiente, que deja bajar el aire frío hacia el estero, y la costumbre de mirar el cielo antes de acostarse.</p>
           </div>
-          <blockquote class="cita">«Una helada en octubre puede quemar media cosecha en una noche.»<cite>Antonia Fuentealba</cite></blockquote>
+          <blockquote class="cita" data-aparece="tiempo">«Una helada en octubre puede quemar media cosecha en una noche.»<cite>Antonia Fuentealba</cite></blockquote>
         </div>
         <figure data-aparece>
           <img src="/image/bocetos/ladera/primavera-800.webp" srcset="/image/bocetos/ladera/primavera-500.webp 500w, /image/bocetos/ladera/primavera-800.webp 800w" sizes="(min-width: 900px) 32vw, 100vw" width="800" height="1000" loading="lazy" alt="Hojas nuevas de parra a contraluz, verdes y amarillas, sobre un fondo oscuro">
@@ -292,69 +344,73 @@ em { font-style: italic; }
       </div>
     </section>
 
-    <section class="pliego ancho pagina" aria-labelledby="verano">
+    <figure class="sangre" data-aparece>
+      <div class="marco"><picture><source media="(max-width: 699px)" srcset="/image/bocetos/ladera/verano-alta-800.webp" width="800" height="1000"><img src="/image/bocetos/ladera/verano-ancha-1600.webp" srcset="/image/bocetos/ladera/verano-ancha-1000.webp 1000w, /image/bocetos/ladera/verano-ancha-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" alt="Una viña en ladera al atardecer, con el sol bajo y el valle dorado al fondo"></picture></div>
+      <figcaption class="ancho pie-foto">Enero, siete de la tarde. A esa hora se trabaja; al mediodía, no.</figcaption>
+    </figure>
+
+    <section class="pliego ancho pagina estacion" aria-labelledby="verano">
       <p class="folio" aria-hidden="true"><span><b>12</b>Nº 12</span></p>
-      <figure class="sangre">
-        <div class="marco"><img src="/image/bocetos/ladera/verano-1400.webp" srcset="/image/bocetos/ladera/verano-800.webp 800w, /image/bocetos/ladera/verano-1400.webp 1400w" sizes="100vw" width="1400" height="933" loading="lazy" alt="Una viña en ladera al atardecer, con el sol bajo y el valle dorado al fondo"></div>
-        <figcaption class="pie-foto">Enero, siete de la tarde. A esa hora se trabaja; al mediodía, no.</figcaption>
-      </figure>
-      <p class="rotulo antetitulo" style="margin-top: 36px" data-aparece><span>III · Verano</span><span>Diciembre a febrero</span></p>
-      <h3 id="verano" data-aparece>El envero, cuando la uva cambia de color</h3>
+      <p class="rotulo antetitulo" data-aparece="tiempo"><span>III · Verano</span><span>Diciembre a febrero</span></p>
+      <h3 id="verano" data-aparece="tiempo">El envero, cuando la uva cambia de color</h3>
       <div class="estacion-cuerpo">
-        <div class="columnas" data-aparece>
+        <div class="columnas" data-aparece="tiempo">
           <p>En enero no llueve y la tierra se parte. Las parras viejas aguantan porque sus raíces llegan a cuatro metros; las jóvenes, plantadas hace cinco años, las regamos a mano el primer verano y nunca más<sup>2</sup>.</p>
           <p>A fines de mes empieza el envero: los granos del país pasan del verde al morado de a uno, como si alguien los fuera pintando. Desde ese día probamos uva todas las semanas para saber cuándo cosechar.</p>
         </div>
-        <p class="nota" data-aparece><sup>2</sup> Cinco litros por planta, con balde, en dos riegos. Después la parra se las arregla sola.</p>
+        <p class="nota" data-aparece="tiempo"><sup>2</sup> Cinco litros por planta, con balde, en dos riegos. Después la parra se las arregla sola.</p>
       </div>
     </section>
 
-    <section class="pliego ancho pagina" aria-labelledby="otono">
+    <section class="pliego ancho pagina estacion" aria-labelledby="otono">
       <p class="folio" aria-hidden="true"><span><b>15</b>Nº 12</span></p>
-      <p class="rotulo antetitulo" data-aparece><span>IV · Otoño</span><span>Marzo y abril</span></p>
-      <h3 id="otono" data-aparece style="font-size: clamp(34px, 4vw, 56px); font-style: italic">Las manos de la vendimia</h3>
-      <div class="par">
-        <figure class="alta" data-aparece>
-          <img src="/image/bocetos/ladera/vendimia-800.webp" srcset="/image/bocetos/ladera/vendimia-500.webp 500w, /image/bocetos/ladera/vendimia-800.webp 800w" sizes="(min-width: 600px) 40vw, 100vw" width="800" height="1000" loading="lazy" alt="Manos que sostienen un racimo de uva negra entre las hojas de la parra">
+      <p class="rotulo antetitulo" data-aparece="tiempo"><span>IV · Otoño</span><span>Marzo y abril</span></p>
+      <h3 id="otono" data-aparece="tiempo">Las manos de la vendimia</h3>
+      <div class="lado">
+        <div class="columnas" style="columns: 1" data-aparece="tiempo">
+          <p>La vendimia empieza cuando el cinsault dice que está listo, casi siempre la segunda semana de marzo. Vienen las mismas familias de cada año, de Coelemu y de Ránquil, y se trabaja de seis a una, antes del calor.</p>
+          <p>La uva baja la loma en gamelas, a caballo, y entra entera a las tinajas de greda. Ahí fermenta con sus propias levaduras, sin nada más. En abril, cuando la última tinaja se calma, se asa el cordero con los sarmientos del invierno y el año vuelve a empezar.</p>
+        </div>
+        <figure data-aparece>
+          <img src="/image/bocetos/ladera/vendimia-800.webp" srcset="/image/bocetos/ladera/vendimia-500.webp 500w, /image/bocetos/ladera/vendimia-800.webp 800w" sizes="(min-width: 900px) 32vw, 100vw" width="800" height="1000" loading="lazy" alt="Manos que sostienen un racimo de uva negra entre las hojas de la parra">
           <figcaption class="pie-foto">El país se corta a mano, racimo por racimo.</figcaption>
         </figure>
-        <figure class="ancha" data-aparece>
-          <img src="/image/bocetos/ladera/bodega-1100.webp" srcset="/image/bocetos/ladera/bodega-700.webp 700w, /image/bocetos/ladera/bodega-1100.webp 1100w" sizes="(min-width: 600px) 48vw, 100vw" width="1100" height="733" loading="lazy" alt="Una bodega abovedada con barricas de madera a los dos lados, iluminada con luz cálida">
-          <figcaption class="pie-foto">La bodega de adobe, que mantiene 14 °C todo el año.</figcaption>
-        </figure>
-      </div>
-      <blockquote class="cita" data-aparece>«Treinta personas, doce días y ni una máquina. Así se ha cosechado aquí desde siempre.»<cite>Don Ruperto Sanhueza, vecino</cite></blockquote>
-      <div class="columnas" data-aparece>
-        <p>La vendimia empieza cuando el cinsault dice que está listo, casi siempre la segunda semana de marzo. Vienen las mismas familias de cada año, de Coelemu y de Ránquil, y se trabaja de seis a una, antes del calor.</p>
-        <p>La uva baja la loma en gamelas, a caballo, y entra entera a las tinajas de greda. Ahí fermenta con sus propias levaduras, sin nada más. En abril, cuando la última tinaja se calma, se asa el cordero con los sarmientos del invierno y el año vuelve a empezar.</p>
       </div>
     </section>
+
+    <figure class="sangre con-cita" data-aparece>
+      <div class="marco"><picture><source media="(max-width: 699px)" srcset="/image/bocetos/ladera/bodega-alta-800.webp" width="800" height="1000"><img src="/image/bocetos/ladera/bodega-ancha-1600.webp" srcset="/image/bocetos/ladera/bodega-ancha-1000.webp 1000w, /image/bocetos/ladera/bodega-ancha-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" alt="Una bodega abovedada con barricas de madera a los dos lados, iluminada con luz cálida"></picture>
+        <blockquote class="ancho cita-grande"><p>«Treinta personas, doce días y ni una máquina. Así se ha cosechado aquí desde siempre.»</p><cite>Don Ruperto Sanhueza, vecino</cite></blockquote>
+      </div>
+      <figcaption class="ancho pie-foto">La bodega de adobe, que mantiene 14 °C todo el año.</figcaption>
+    </figure>
   </div>
 
+  <div class="noche">
   <section class="pliego ancho pagina" id="vinos" aria-labelledby="vinos-titulo">
     <p class="folio" aria-hidden="true"><span><b>18</b>Nº 12</span></p>
-    <p class="rotulo antetitulo" data-aparece><span>Los vinos</span><span>Cosecha 2025</span></p>
-    <h2 id="vinos-titulo" data-aparece>Tres vinos de secano</h2>
-    <p class="bajada" data-aparece>Pocas botellas, sin maquillaje. Se venden por caja de seis y llegan con la revista.</p>
+    <p class="rotulo antetitulo" data-aparece="tiempo"><span>Los vinos</span><span>Cosecha 2025</span></p>
+    <h2 id="vinos-titulo" data-aparece="tiempo">Tres vinos de secano</h2>
+    <p class="bajada" data-aparece="tiempo">Pocas botellas, sin maquillaje. Se venden por caja de seis y llegan con la revista.</p>
     <div class="vinos">
-      <article class="vino" data-aparece>
-        <figure class="foto-vino"><img src="/image/bocetos/ladera/pais-640.webp" srcset="/image/bocetos/ladera/pais-400.webp 400w, /image/bocetos/ladera/pais-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Una botella de vino tinto con etiqueta lisa de color cobre, sobre una mesa de madera"></figure>
+      <article class="vino" data-aparece="tiempo">
+        <figure class="foto-vino"><img data-sigue src="/image/bocetos/ladera/pais-640.webp" srcset="/image/bocetos/ladera/pais-400.webp 400w, /image/bocetos/ladera/pais-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Una botella de vino tinto con etiqueta lisa de color cobre, sobre una mesa de madera"></figure>
         <p class="romano">I</p>
         <h3>País de Guarilihue</h3>
         <p>Rojo liviano, de fruta roja y tierra mojada. Para el almuerzo largo de un domingo.</p>
         <dl><dt>Cepa</dt><dd>País, parras de 1940</dd><dt>Suelo</dt><dd>Granito descompuesto</dd><dt>Crianza</dt><dd>8 meses en tinaja de greda</dd><dt>Botellas</dt><dd>3.200</dd></dl>
         <p class="precio">$14.900</p>
       </article>
-      <article class="vino" data-aparece style="--orden: 1">
-        <figure class="foto-vino"><img src="/image/bocetos/ladera/cinsault-640.webp" srcset="/image/bocetos/ladera/cinsault-400.webp 400w, /image/bocetos/ladera/cinsault-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Barricas de roble con la cabeza teñida de vino tinto, en penumbra"></figure>
+      <article class="vino" data-aparece="tiempo" style="--orden: 1">
+        <figure class="foto-vino"><img data-sigue src="/image/bocetos/ladera/cinsault-640.webp" srcset="/image/bocetos/ladera/cinsault-400.webp 400w, /image/bocetos/ladera/cinsault-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Barricas de roble con la cabeza teñida de vino tinto, en penumbra"></figure>
         <p class="romano">II</p>
         <h3>Cinsault de la Ladera</h3>
         <p>Más hondo, con flores secas y un final de grafito. El que mejor guarda.</p>
         <dl><dt>Cepa</dt><dd>Cinsault en cabeza</dd><dt>Suelo</dt><dd>Granito y arcilla roja</dd><dt>Crianza</dt><dd>10 meses en fudre de raulí</dd><dt>Botellas</dt><dd>4.800</dd></dl>
         <p class="precio">$16.900</p>
       </article>
-      <article class="vino" data-aparece style="--orden: 2">
-        <figure class="foto-vino"><img src="/image/bocetos/ladera/moscatel-640.webp" srcset="/image/bocetos/ladera/moscatel-400.webp 400w, /image/bocetos/ladera/moscatel-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Una copa de vino blanco sobre una mesa de madera, con luz cálida de tarde"></figure>
+      <article class="vino" data-aparece="tiempo" style="--orden: 2">
+        <figure class="foto-vino"><img data-sigue src="/image/bocetos/ladera/moscatel-640.webp" srcset="/image/bocetos/ladera/moscatel-400.webp 400w, /image/bocetos/ladera/moscatel-640.webp 640w" sizes="(min-width: 900px) 30vw, 100vw" width="640" height="800" loading="lazy" alt="Una copa de vino blanco sobre una mesa de madera, con luz cálida de tarde"></figure>
         <p class="romano">III</p>
         <h3>Moscatel de secano</h3>
         <p>Blanco seco, de flor de azahar y piel de naranja. Para la tarde, bien frío.</p>
@@ -363,17 +419,18 @@ em { font-style: italic; }
       </article>
     </div>
   </section>
+  </div>
 
   <section class="pliego ancho pagina" id="visitas" aria-labelledby="visitas-titulo">
     <p class="folio" aria-hidden="true"><span><b>24</b>Nº 12</span></p>
-    <p class="rotulo antetitulo" data-aparece><span>Visitas y la revista impresa</span></p>
-    <h2 id="visitas-titulo" data-aparece>Vengan a la viña, o reciban el próximo número</h2>
+    <p class="rotulo antetitulo" data-aparece="tiempo"><span>Visitas y la revista impresa</span></p>
+    <h2 id="visitas-titulo" data-aparece="tiempo">Vengan a la viña, o reciban el próximo número</h2>
     <div class="visitas">
       <figure data-aparece>
         <img src="/image/bocetos/ladera/mesa-800.webp" srcset="/image/bocetos/ladera/mesa-500.webp 500w, /image/bocetos/ladera/mesa-800.webp 800w" sizes="(min-width: 900px) 38vw, 100vw" width="800" height="1000" loading="lazy" alt="Una mesa de madera en penumbra con pan, mantequilla, una pera y un higo">
         <figcaption class="pie-foto">Los sábados a las 11:00: la viña a pie, tres vinos y almuerzo de campo. $25.000 por persona.</figcaption>
       </figure>
-      <form class="formulario" data-muestra data-aparece toolname="pedir_visita_o_revista" tooldescription="Reserva una visita a Viña Ladera o pide recibir su revista impresa. Viña Ladera es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+      <form class="formulario" data-muestra data-aparece="tiempo" toolname="pedir_visita_o_revista" tooldescription="Reserva una visita a Viña Ladera o pide recibir su revista impresa. Viña Ladera es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
         <p class="cupon" aria-hidden="true">✂ Recorte aquí</p>
         <h3>Cupón del lector</h3>
         <fieldset class="todo" toolparamdescription="Qué quiere la persona: visitar la viña un sábado o recibir el próximo número impreso de la revista">

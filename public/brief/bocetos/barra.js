@@ -24,6 +24,12 @@
  * lotes de Libar) le responden al agente lo que quedó a la vista, y el
  * deslizador del antes y después (`input[data-comparar]`) mueve su corte
  * (`--corte`).
+ *
+ * Los videos en bucle (`video[data-bucle]`, los «gifs» de los bocetos) bajan
+ * recién cuando están por verse, corren solo mientras se ven y, con el
+ * movimiento reducido, no bajan: queda la foto quieta que llevan detrás. Y el
+ * alto de la barra queda en `--alto-barra`, para que lo que se pega arriba
+ * quede bajo ella.
  */
 
 const CLAVE = 'volutus:brief:bocetos'
@@ -228,7 +234,63 @@ function montarComparadores() {
   }
 }
 
+// El alto de la barra, para las cabeceras que se pegan arriba (`top:
+// var(--alto-barra, 0px)`). En el visor no hay barra y queda en cero.
+function medirBarra() {
+  const barra = document.querySelector('.boceto-barra')
+  if (!barra || enElVisor || !('ResizeObserver' in window)) return
+  new ResizeObserver(([{ target }]) => {
+    document.documentElement.style.setProperty('--alto-barra', `${target.offsetHeight}px`)
+  }).observe(barra)
+}
+
+// Un video en bucle lleva su fuente en `data-src` y una foto quieta detrás.
+// Baja a una pantalla de verse, corre mientras se ve y se detiene fuera de
+// ella, con la pestaña oculta o con la página en espera en el visor. Al
+// arrancar se le pone `andando`, y el CSS del boceto lo funde sobre su foto.
+function montarVideos() {
+  const videos = document.querySelectorAll('video[data-bucle]')
+  if (quieto || !videos.length || !('IntersectionObserver' in window)) return
+  const raiz = document.documentElement
+  const vistos = new Set()
+  const puede = () => !document.hidden && !raiz.classList.contains('en-espera')
+  const seguir = () => {
+    for (const video of videos) {
+      if (vistos.has(video) && puede()) video.play().catch(() => {})
+      else video.pause()
+    }
+  }
+  const cerca = new IntersectionObserver(
+    (entradas) => {
+      for (const { isIntersecting, target } of entradas) {
+        if (!isIntersecting) continue
+        cerca.unobserve(target)
+        target.src = target.dataset.src
+      }
+      seguir()
+    },
+    { rootMargin: '100% 0px' }
+  )
+  const enPantalla = new IntersectionObserver((entradas) => {
+    for (const { isIntersecting, target } of entradas) {
+      if (isIntersecting) vistos.add(target)
+      else vistos.delete(target)
+    }
+    seguir()
+  })
+  for (const video of videos) {
+    Object.assign(video, { muted: true, loop: true, playsInline: true })
+    video.addEventListener('playing', () => video.classList.add('andando'), { once: true })
+    cerca.observe(video)
+    enPantalla.observe(video)
+  }
+  document.addEventListener('visibilitychange', seguir)
+  new MutationObserver(seguir).observe(raiz, { attributes: true, attributeFilter: ['class'] })
+}
+
 if (!enElVisor) montarBarra()
+medirBarra()
+montarVideos()
 montarEntradas()
 montarMuestras()
 montarConsultas()

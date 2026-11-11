@@ -1,26 +1,30 @@
 /**
  * La vitrina de Quillay (quillay.html): el jabón elegido, en 3D, con WebGL y
- * sin dependencias. Es una barra de bordes redondeados con su sello hundido
- * en la cara de arriba (la hoja y «quillay», dibujados en un canvas), la
- * textura de cada receta (puntos de avena, grano de arcilla) y una luz
- * cálida de ventana. Flota y se balancea despacio, se inclina hacia el
- * cursor como con un resorte y, al cambiar de jabón, da una vuelta mientras
- * cambia de forma y de color.
+ * sin dependencias. Los tres son distintos: la barra de avena, larga y
+ * redondeada, con su sello hundido; el cubo de maqui y arcilla, cortado a
+ * mano con cantos vivos, en dos capas con una veta entre ellas, y la pastilla
+ * cuadrada del champú, gruesa, color rosa mosqueta, con semillas.
+ *
+ * Gira apoyado en una esquina, como un jabón que alguien sostiene por la
+ * punta y hace girar: la diagonal casi vertical, la esquina quieta sobre el
+ * pedestal, una vuelta cada nueve segundos y un cabeceo leve, como un trompo.
+ * Se inclina hacia el cursor con un resorte y, al cambiar de jabón, da una
+ * vuelta más mientras cambia de forma y de color.
  *
  * La forma no se vuelve a armar al cambiar de jabón: la malla es un cubo
  * subdividido y el shader lo redondea con el tamaño y el radio de cada uno,
- * así que pasar de uno a otro es interpolar cuatro números.
+ * así que pasar de uno a otro es interpolar unos pocos números.
  *
  * Solo dibuja mientras la vitrina se ve, la pestaña está a la vista y la
  * página no espera en el visor del brief (`.en-espera`). Con el movimiento
- * reducido dibuja un cuadro sinMovimiento cada vez que algo cambia. Sin WebGL queda
+ * reducido dibuja un cuadro quieto cada vez que algo cambia. Sin WebGL queda
  * la foto que trae la página.
  */
 
 const JABONES = {
-  avena: { medio: [1.0, 0.34, 0.62], radio: 0.2, color: [0.93, 0.87, 0.75], puntos: [0.5, 0.36, 0.22], densidad: 0.55, escala: 9, sello: 1 },
-  maqui: { medio: [0.95, 0.38, 0.6], radio: 0.27, color: [0.63, 0.7, 0.57], puntos: [0.36, 0.43, 0.32], densidad: 0.8, escala: 22, sello: 0.96 },
-  champu: { medio: [0.72, 0.42, 0.72], radio: 0.4, color: [0.76, 0.64, 0.5], puntos: [0.33, 0.37, 0.22], densidad: 0.45, escala: 14, sello: 0.55 },
+  avena: { medio: [1.0, 0.34, 0.62], radio: 0.2, color: [0.93, 0.87, 0.75], color2: [0.93, 0.87, 0.75], capas: 0, puntos: [0.52, 0.38, 0.22], densidad: 0.55, escala: 9, sello: 1, conSello: 1 },
+  maqui: { medio: [0.62, 0.62, 0.62], radio: 0.045, color: [0.5, 0.36, 0.5], color2: [0.62, 0.69, 0.55], capas: 1, puntos: [0.3, 0.22, 0.32], densidad: 0.3, escala: 24, sello: 0.9, conSello: 0 },
+  champu: { medio: [0.7, 0.3, 0.7], radio: 0.15, color: [0.83, 0.55, 0.4], color2: [0.83, 0.55, 0.4], capas: 0, puntos: [0.42, 0.2, 0.11], densidad: 0.5, escala: 15, sello: 0.6, conSello: 1 },
 }
 
 const VERTICES = `
@@ -28,6 +32,7 @@ attribute vec3 aQ;
 uniform vec3 uMedio;
 uniform float uRadio;
 uniform mat3 uGiro;
+uniform vec3 uPivote;
 uniform vec3 uLugar;
 uniform mat4 uProyeccion;
 varying vec3 vObjeto;
@@ -40,7 +45,7 @@ void main() {
   vec3 objeto = dentro + n * uRadio;
   vObjeto = objeto;
   vNormal = n;
-  vVista = uGiro * objeto + uLugar;
+  vVista = uGiro * (objeto - uPivote) + uLugar;
   gl_Position = uProyeccion * vec4(vVista, 1.0);
 }`
 
@@ -52,11 +57,14 @@ precision mediump float;
 #endif
 uniform mat3 uGiro;
 uniform vec3 uColor;
+uniform vec3 uColor2;
+uniform float uCapas;
 uniform vec3 uPuntos;
 uniform float uDensidad;
 uniform float uEscala;
 uniform sampler2D uSello;
 uniform float uTamSello;
+uniform float uConSello;
 varying vec3 vObjeto;
 varying vec3 vNormal;
 varying vec3 vVista;
@@ -77,7 +85,15 @@ float ruido(vec3 x) {
 
 void main() {
   vec3 n = normalize(vNormal);
-  vec3 albedo = uColor * (0.93 + 0.07 * ruido(vObjeto * 3.0) + 0.04 * ruido(vObjeto * 11.0));
+
+  // Las dos capas del maqui: la línea entre ellas ondula como al verterlas,
+  // con una veta clara justo en el borde.
+  float borde = vObjeto.y - (0.06 + 0.09 * sin(vObjeto.x * 4.2 + vObjeto.z * 2.6) + 0.07 * (ruido(vObjeto * 4.0) - 0.5));
+  float arriba = mix(1.0, smoothstep(-0.012, 0.012, borde), uCapas);
+  vec3 base = mix(uColor2, uColor, arriba);
+  float veta = uCapas * (1.0 - smoothstep(0.0, 0.03, abs(borde)));
+  base = mix(base, vec3(0.94, 0.9, 0.84), veta * 0.75);
+  vec3 albedo = base * (0.93 + 0.07 * ruido(vObjeto * 3.0) + 0.04 * ruido(vObjeto * 11.0));
 
   vec3 celda = floor(vObjeto * uEscala);
   vec3 dentro = fract(vObjeto * uEscala);
@@ -85,7 +101,7 @@ void main() {
   float punto = step(azar(celda), uDensidad) * (1.0 - smoothstep(0.07, 0.15, length(dentro - centro)));
   albedo = mix(albedo, uPuntos, punto * 0.85);
 
-  if (n.y > 0.985) {
+  if (n.y > 0.985 && uConSello > 0.5) {
     vec2 uv = vec2(vObjeto.x / 1.3, vObjeto.z / 0.65) / uTamSello + 0.5;
     float h = texture2D(uSello, uv).r;
     float hx = texture2D(uSello, uv + vec2(0.003, 0.0)).r - texture2D(uSello, uv - vec2(0.003, 0.0)).r;
@@ -101,9 +117,9 @@ void main() {
   float clave = max((dot(N, luz) + 0.35) / 1.35, 0.0);
   float suave = max((dot(N, relleno) + 0.35) / 1.35, 0.0);
   float brillo = pow(max(dot(N, normalize(luz + V)), 0.0), 36.0) * 0.1;
-  float borde = pow(1.0 - max(dot(N, V), 0.0), 3.0) * 0.18;
+  float filo = pow(1.0 - max(dot(N, V), 0.0), 3.0) * 0.18;
   vec3 ambiente = mix(vec3(0.5, 0.45, 0.38), vec3(0.86, 0.86, 0.8), N.y * 0.5 + 0.5) * 0.36;
-  vec3 color = albedo * (ambiente + clave * vec3(1.0, 0.95, 0.86) * 0.82 + suave * vec3(0.55, 0.6, 0.62) * 0.3 + borde) + brillo;
+  vec3 color = albedo * (ambiente + clave * vec3(1.0, 0.95, 0.86) * 0.82 + suave * vec3(0.55, 0.6, 0.62) * 0.3 + filo) + brillo;
   gl_FragColor = vec4(color, 1.0);
 }`
 
@@ -205,6 +221,29 @@ async function sello() {
   return c
 }
 
+// Matrices de 3×3 por columnas, como las pide WebGL.
+const por = (a, b) => {
+  const r = new Array(9)
+  for (let c = 0; c < 3; c++) for (let f = 0; f < 3; f++) r[c * 3 + f] = a[f] * b[c * 3] + a[3 + f] * b[c * 3 + 1] + a[6 + f] * b[c * 3 + 2]
+  return r
+}
+const giroX = (a) => [1, 0, 0, 0, Math.cos(a), Math.sin(a), 0, -Math.sin(a), Math.cos(a)]
+const giroY = (a) => [Math.cos(a), 0, -Math.sin(a), 0, 1, 0, Math.sin(a), 0, Math.cos(a)]
+const giroZ = (a) => [Math.cos(a), Math.sin(a), 0, -Math.sin(a), Math.cos(a), 0, 0, 0, 1]
+
+// El giro que endereza la diagonal `d` hasta dejarla vertical (Rodrigues).
+function enderezar(d) {
+  const largo = Math.hypot(...d)
+  const [x, y, z] = d.map((v) => v / largo)
+  const eje = [z, 0, -x]
+  const s = Math.hypot(...eje)
+  if (s < 1e-6) return [1, 0, 0, 0, 1, 0, 0, 0, 1]
+  const [kx, , kz] = eje.map((v) => v / s)
+  const c = y
+  const t = 1 - c
+  return [t * kx * kx + c, -s * kz, t * kx * kz, s * kz, c, -s * kx, t * kx * kz, s * kx, t * kz * kz + c]
+}
+
 async function iniciar() {
   gl = lienzo.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true })
   if (!gl) return sinTresD()
@@ -233,7 +272,7 @@ async function iniciar() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
 
   const u = {}
-  for (const nombre of ['uMedio', 'uRadio', 'uGiro', 'uLugar', 'uProyeccion', 'uColor', 'uPuntos', 'uDensidad', 'uEscala', 'uSello', 'uTamSello']) {
+  for (const nombre of ['uMedio', 'uRadio', 'uGiro', 'uPivote', 'uLugar', 'uProyeccion', 'uColor', 'uColor2', 'uCapas', 'uPuntos', 'uDensidad', 'uEscala', 'uSello', 'uTamSello', 'uConSello']) {
     u[nombre] = gl.getUniformLocation(programa, nombre)
   }
   gl.uniform1i(u.uSello, 0)
@@ -256,6 +295,18 @@ async function iniciar() {
 
   const mezcla = (a, b, t) => a + (b - a) * t
   const suave = (t) => t * t * (3 - 2 * t)
+  const actual = (t) => ({
+    medio: desde.medio.map((m, i) => mezcla(m, hacia.medio[i], t)),
+    radio: mezcla(desde.radio, hacia.radio, t),
+    color: desde.color.map((c, i) => mezcla(c, hacia.color[i], t)),
+    color2: desde.color2.map((c, i) => mezcla(c, hacia.color2[i], t)),
+    capas: mezcla(desde.capas, hacia.capas, t),
+    puntos: desde.puntos.map((c, i) => mezcla(c, hacia.puntos[i], t)),
+    densidad: mezcla(desde.densidad, hacia.densidad, t),
+    escala: t < 0.5 ? desde.escala : hacia.escala,
+    sello: mezcla(desde.sello, hacia.sello, t),
+    conSello: t < 0.5 ? desde.conSello : hacia.conSello,
+  })
 
   function medir() {
     const dpr = Math.min(devicePixelRatio || 1, 1.5)
@@ -286,32 +337,39 @@ async function iniciar() {
       cursor[p] += cursor[vel] * dt
     }
 
-    if (cambio < 1) cambio = sinMovimiento ? 1 : Math.min((ahora - inicioCambio) / 1100, 1)
+    if (cambio < 1) cambio = sinMovimiento ? 1 : Math.min((ahora - inicioCambio) / 1300, 1)
     const t = suave(cambio)
-    const vuelta = cambio < 1 ? t * Math.PI * 2 : 0
-    const medio = desde.medio.map((m, i) => mezcla(m, hacia.medio[i], t))
-    gl.uniform3fv(u.uMedio, medio)
-    gl.uniform1f(u.uRadio, mezcla(desde.radio, hacia.radio, t))
-    gl.uniform3fv(u.uColor, desde.color.map((c, i) => mezcla(c, hacia.color[i], t)))
-    gl.uniform3fv(u.uPuntos, desde.puntos.map((c, i) => mezcla(c, hacia.puntos[i], t)))
-    gl.uniform1f(u.uDensidad, mezcla(desde.densidad, hacia.densidad, t))
-    gl.uniform1f(u.uEscala, t < 0.5 ? desde.escala : hacia.escala)
-    gl.uniform1f(u.uTamSello, mezcla(desde.sello, hacia.sello, t))
+    const j = actual(t)
+    gl.uniform3fv(u.uMedio, j.medio)
+    gl.uniform1f(u.uRadio, j.radio)
+    gl.uniform3fv(u.uColor, j.color)
+    gl.uniform3fv(u.uColor2, j.color2)
+    gl.uniform1f(u.uCapas, j.capas)
+    gl.uniform3fv(u.uPuntos, j.puntos)
+    gl.uniform1f(u.uDensidad, j.densidad)
+    gl.uniform1f(u.uEscala, j.escala)
+    gl.uniform1f(u.uTamSello, j.sello)
+    gl.uniform1f(u.uConSello, j.conSello)
 
-    // Se balancea de ida y vuelta (9 s) y flota (7 s), con curvas seno: frena
-    // en cada extremo.
-    const vaiven = Math.sin((reloj / 9) * Math.PI * 2) * 0.42
-    const altura = Math.sin((reloj / 7) * Math.PI * 2) * 0.06
-    vitrina.style.setProperty('--altura', altura.toFixed(3))
-    const yaw = -0.55 + vaiven + cursor.x * 0.4 + vuelta
-    const pitch = 0.5 + cursor.y * 0.14
-    const cy = Math.cos(yaw)
-    const sy = Math.sin(yaw)
-    const cp = Math.cos(pitch)
-    const sp = Math.sin(pitch)
-    // Primero gira en el eje vertical y después se inclina hacia la cámara.
-    gl.uniformMatrix3fv(u.uGiro, false, new Float32Array([cy, sp * sy, -cp * sy, 0, cp, sp, sy, -sp * cy, cp * cy]))
-    gl.uniform3fv(u.uLugar, [0, 0.22 + altura, -4.9])
+    // La esquina de abajo: el punto de la esquina redondeada que queda más
+    // lejos del centro, en la dirección de la diagonal.
+    const nucleo = j.medio.map((m) => m - j.radio)
+    const largo = Math.hypot(...nucleo)
+    const pivote = nucleo.map((v) => -v - (j.radio * v) / largo)
+    gl.uniform3fv(u.uPivote, pivote)
+
+    // Endereza la diagonal, la deja apenas ladeada y con un cabeceo lento
+    // (sin, 6 s), gira a velocidad pareja (una vuelta cada 9 s, más la del
+    // cambio), se inclina hacia el cursor y se mira desde un poco arriba.
+    const ladeo = 0.13 + Math.sin((reloj / 6) * Math.PI * 2) * 0.035
+    const vuelta = (reloj / 9) * Math.PI * 2 + (cambio < 1 ? t * Math.PI * 2 : 0)
+    const base = por(giroX(ladeo), enderezar(pivote.map((v) => -v)))
+    const girado = por(giroY(vuelta), base)
+    const inclinado = por(giroZ(-cursor.x * 0.16), por(giroX(cursor.y * 0.12), girado))
+    const escala = 0.62
+    const vista = por(giroX(0.3), inclinado).map((v) => v * escala)
+    gl.uniformMatrix3fv(u.uGiro, false, new Float32Array(vista))
+    gl.uniform3fv(u.uLugar, [0, -0.64, -4.9])
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
@@ -355,16 +413,7 @@ async function iniciar() {
 
   for (const opcion of vitrina.querySelectorAll('input[name="jabon"]')) {
     opcion.addEventListener('change', () => {
-      const t = suave(cambio)
-      desde = {
-        medio: desde.medio.map((m, i) => mezcla(m, hacia.medio[i], t)),
-        radio: mezcla(desde.radio, hacia.radio, t),
-        color: desde.color.map((c, i) => mezcla(c, hacia.color[i], t)),
-        puntos: desde.puntos.map((c, i) => mezcla(c, hacia.puntos[i], t)),
-        densidad: mezcla(desde.densidad, hacia.densidad, t),
-        escala: t < 0.5 ? desde.escala : hacia.escala,
-        sello: mezcla(desde.sello, hacia.sello, t),
-      }
+      desde = actual(suave(cambio))
       hacia = JABONES[opcion.value]
       cambio = 0
       inicioCambio = performance.now()
@@ -378,10 +427,10 @@ async function iniciar() {
   })
 }
 
-// «Agregar al pedido» deja el jabón elegido en el formulario de pedido.
+// «Agregar al pedido» marca ese producto en la caja del pedido.
 for (const enlace of document.querySelectorAll('[data-pedir]')) {
   enlace.addEventListener('click', () => {
-    const campo = document.querySelector('#pedido select[name="producto"]')
-    if (campo) campo.value = enlace.dataset.pedir
+    const casilla = document.querySelector(`#pedido input[name="producto"][value="${enlace.dataset.pedir}"]`)
+    if (casilla) casilla.checked = true
   })
 }

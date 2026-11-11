@@ -11,6 +11,7 @@
 <link rel="preload" as="image" href="/image/bocetos/parina/portada-800.webp" imagesrcset="/image/bocetos/parina/portada-600.webp 600w, /image/bocetos/parina/portada-800.webp 800w" imagesizes="(min-width: 900px) 40vw, 86vw" fetchpriority="high">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
+<script type="module" src="/brief/bocetos/parina.js"></script>
 <style>
 /* Parina · andino. Inspiración: Explora (explora.com). Se toma: 1) el
    paisaje como protagonista, visto grande y quieto; 2) las rutas contadas
@@ -21,7 +22,11 @@
    contrario a la anterior, como la lanzadera del telar. Los colores salen
    del paisaje de la portada (el lago, el bofedal, la puna, la tierra) y el
    pie es el aguayo entero, con todas las franjas que se cruzaron al bajar.
-   La reserva también se teje: cada dato que completas es una fila más. */
+   La reserva también se teje: cada dato que completas es una fila más.
+   Las caminatas se ven en un mapa en relieve (parina.js, WebGL propio): la
+   maqueta del altiplano con los lados tejidos en franjas, las rutas y sus
+   paradas, y una cámara que viaja a la ruta que eliges. Después, un día en
+   el cerro contado por horas, por un sendero que baja con la página. */
 @font-face { font-family: 'Alegreya'; src: url('/fonts/bocetos/alegreya.woff2') format('woff2'); font-weight: 400 900; font-display: swap; }
 @font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
@@ -76,7 +81,9 @@ p { margin: 0; }
 /* ---- Cabecera: el logo y el menú tejido en su franja ---- */
 .cabecera-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 22px 18px; }
 .logo { display: inline-flex; align-items: center; gap: 12px; font: 800 30px/1 'Alegreya', serif; text-decoration: none; }
-.logo svg { width: 30px; height: 40px; }
+.logo svg { flex: none; width: 34px; height: 48px; }
+.logo .i { position: relative; }
+.logo .i::after { content: ''; position: absolute; left: 50%; top: 0.17em; width: 0.17em; height: 0.17em; background: var(--tierra); transform: translateX(-50%) rotate(45deg); }
 .altitud { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 15px; color: var(--gris); }
 .menu-tejido { padding-block: 10px; background: conic-gradient(from -45deg at 50% 100%, var(--lago) 90deg, var(--negro) 0) 0 0 / 14px 14px, var(--negro); }
 .menu-tejido ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -144,6 +151,49 @@ p { margin: 0; }
 .perfil .putre { stroke: var(--gris); stroke-width: 1; stroke-dasharray: 4 5; }
 .perfil text { font: 700 13px/1 'Alegreya Sans', sans-serif; fill: var(--gris); letter-spacing: 0.06em; }
 .perfil .cima { fill: var(--tierra); }
+
+/* El mapa en relieve (parina.js). Sin WebGL queda oculto. */
+.mapa { position: relative; aspect-ratio: 16 / 9; margin: 0 0 clamp(40px, 5vw, 64px); overflow: hidden; cursor: grab; }
+.mapa.girando { cursor: grabbing; }
+.mapa canvas, .mapa svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mapa canvas { touch-action: pan-y; }
+.mapa svg { overflow: visible; pointer-events: none; filter: drop-shadow(0 0 1.5px var(--lana)); }
+.mapa path { fill: none; stroke: var(--negro); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0.012 0.014; opacity: 0.5; }
+.mapa path.elegida { stroke: var(--tierra); stroke-width: 4; stroke-dasharray: 1; opacity: 1; }
+.mapa-nombres { position: absolute; inset: 0; pointer-events: none; }
+.mapa-nombres span { position: absolute; left: 0; top: 0; white-space: nowrap; font: 700 13px/1.2 'Alegreya Sans', sans-serif; }
+.mapa-nombre { translate: -50% -100%; padding: 3px 8px 2px; background: rgb(243 231 211 / 0.88); letter-spacing: 0.08em; text-transform: uppercase; font-size: 12px !important; }
+.mapa-nombre.agua { color: var(--lago); }
+.mapa-nombre.lodge { background: var(--negro); color: var(--lana); }
+.mapa-parada { display: flex; align-items: center; gap: 8px; translate: -8px -50%; }
+.mapa-parada::before { content: ''; flex: none; width: 12px; height: 12px; background: var(--ocre); outline: 2px solid var(--negro); outline-offset: 1px; rotate: 45deg; }
+.mapa-parada.inicio::before { background: var(--tierra); }
+.mapa-parada { padding-right: 8px; color: var(--lana); text-shadow: 0 1px 2px rgb(26 21 18 / 0.9), 0 0 6px rgb(26 21 18 / 0.7); font-size: 14px !important; }
+.mapa-ayuda { position: absolute; right: 12px; bottom: 10px; display: none; margin: 0; font-size: 14px; color: var(--gris); }
+@media (hover: hover) and (pointer: fine) { .mapa-ayuda { display: block; } }
+.paradas { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 20px 0 0; padding: 0; list-style: none; }
+.paradas li { display: grid; grid-template-columns: 12px auto; gap: 2px 10px; align-items: center; font-size: 16px; line-height: 1.3; }
+.paradas li::before { content: ''; grid-row: 1 / 3; width: 10px; height: 10px; background: var(--ocre); rotate: 45deg; }
+.paradas li:first-child::before { background: var(--tierra); }
+.paradas b { font-variant-numeric: tabular-nums; color: var(--gris); font-size: 14px; letter-spacing: 0.06em; }
+
+/* ---- Un día en el cerro: un sendero que baja con la página ---- */
+.jornada { position: relative; display: grid; gap: clamp(56px, 8vw, 104px); margin: 0; padding: 0; list-style: none; }
+.jornada::before { content: ''; position: absolute; top: 0; bottom: 0; left: calc(50% - 1.5px); width: 3px; background: repeating-linear-gradient(var(--tierra) 0 10px, transparent 10px 18px); transform-origin: top; }
+.jornada li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr); align-items: center; }
+.jornada li::before { content: ''; grid-column: 2; grid-row: 1; justify-self: center; width: 18px; height: 18px; background: var(--ocre); outline: 3px solid var(--lana); box-shadow: 0 0 0 5px var(--tierra); rotate: 45deg; }
+.jornada figure { grid-column: 1; grid-row: 1; }
+.jornada .momento { grid-column: 3; grid-row: 1; display: grid; gap: 8px; max-width: 30rem; }
+.jornada li:nth-child(even) figure { grid-column: 3; }
+.jornada li:nth-child(even) .momento { grid-column: 1; justify-self: end; text-align: right; }
+.jornada img { width: 100%; object-fit: cover; }
+.jornada .ancha img { aspect-ratio: 3 / 2; }
+.jornada .alta { width: min(100%, 22rem); }
+.jornada li:nth-child(odd) .alta { justify-self: end; }
+.jornada .alta img { aspect-ratio: 4 / 5; }
+.jornada time { font: 700 15px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.12em; color: var(--tierra); font-variant-numeric: tabular-nums; }
+.jornada h3 { font-size: clamp(30px, 3.2vw, 42px); }
+.jornada .momento p { color: var(--gris); }
 
 /* ---- La aclimatación: andenes ---- */
 .andenes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(12px, 2vw, 24px); align-items: end; margin: 0; padding: 0; list-style: none; }
@@ -222,6 +272,7 @@ p { margin: 0; }
   .telar { position: static; }
   .pampa { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .pampa .logo { grid-column: 1 / -1; }
+  .mapa { aspect-ratio: 4 / 3; }
 }
 
 /* ---- S ---- */
@@ -238,6 +289,13 @@ p { margin: 0; }
   .tejedoras .f2 { margin-top: 0; }
   .puna { grid-template-columns: minmax(0, 1fr); }
   .pampa { grid-template-columns: minmax(0, 1fr); }
+  .mapa { aspect-ratio: 4 / 5; margin-inline: calc(var(--margen) * -1); }
+  .mapa-parada { font-size: 13px !important; }
+  .jornada::before { left: 8px; }
+  .jornada li, .jornada li:nth-child(even) { grid-template-columns: 18px minmax(0, 1fr); gap: 18px 22px; align-items: start; }
+  .jornada li::before { grid-column: 1; margin-top: 4px; }
+  .jornada figure, .jornada li:nth-child(even) figure { grid-column: 2; grid-row: 2; justify-self: start; }
+  .jornada .momento, .jornada li:nth-child(even) .momento { grid-column: 2; grid-row: 1; justify-self: start; text-align: left; }
 }
 
 /* ---- Movimiento: el telar ----
@@ -245,8 +303,10 @@ p { margin: 0; }
    otra, cada una en sentido contrario a la anterior, como la lanzadera que
    va y vuelve. La ventana de la portada se abre desde el centro y las
    madejas llegan una a una. El perfil de la ruta elegida se dibuja de
-   izquierda a derecha, como se camina. Los andenes de la aclimatación suben
-   de a uno. En la reserva, cada dato completo teje una fila. */
+   izquierda a derecha, como se camina, y en el mapa la ruta elegida se
+   traza mientras la cámara baja a verla. El sendero del día en el cerro se
+   dibuja con el scroll. Los andenes de la aclimatación suben de a uno. En
+   la reserva, cada dato completo teje una fila. */
 [data-aparece] { --entrada: parina-aparece; --tramo: 34svh; --duracion: 1200ms; }
 .franja { --entrada: none; --tramo: 14svh; }
 .franja .fila { --entrada: parina-teje; --duracion: 900ms; }
@@ -260,6 +320,7 @@ p { margin: 0; }
 @keyframes parina-ventana { from { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); } }
 @keyframes parina-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes parina-funde { from { opacity: 0; } }
+@keyframes parina-sendero { from { scale: 1 0; } }
 .perfil .linea { stroke-dasharray: 1; }
 @media (prefers-reduced-motion: reduce) {
   .tejido .fila { transition: none; }
@@ -274,6 +335,12 @@ p { margin: 0; }
   .menu-tejido li { animation: parina-funde 1200ms var(--curva) calc(var(--i) * 100ms) backwards; }
   .ruta .linea { animation: parina-traza 1800ms var(--curva) 200ms backwards; }
   .ruta .suelo, .ruta .cima, .ruta .marca-cima { animation: parina-funde 1200ms var(--curva) 1200ms backwards; }
+  .mapa path.elegida { animation: parina-traza 1800ms var(--curva) 500ms backwards; }
+  .mapa-parada { animation: parina-funde 900ms var(--curva) 1400ms backwards; }
+  @supports (animation-timeline: view()) {
+    .jornada { view-timeline: --sendero; }
+    .jornada::before { animation: parina-sendero var(--curva) both; animation-timeline: --sendero; animation-range: entry 30% exit 30%; }
+  }
 }
 </style>
 </head>
@@ -281,12 +348,12 @@ p { margin: 0; }
 <div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Parina</b> es una marca inventada por Volutus para mostrarte el estilo <b>Andino / folclórico</b>.</p></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="flamenco" viewBox="0 0 30 40"><path fill="#d9677a" d="M14 18l7 7-7 7-7-7z"/><path fill="none" stroke="#d9677a" stroke-width="2.4" stroke-linecap="round" d="M19 22C24 18 23 13 19 11"/><path fill="#d9677a" d="M19 4l4 4-4 4-4-4z"/><path fill="#1a1512" d="M22 7l6 2-4 2z"/><path fill="none" stroke="#1a1512" stroke-width="1.6" stroke-linecap="round" d="M14 32v7M14 34l-3 2"/></symbol>
+  <symbol id="flamenco" viewBox="0 0 40 56"><path fill="#d9677a" d="M1.5 27.5 15.5 19 32 24.5 18 35.5z"/><path fill="#b9475d" d="M10 26.6 17.6 22.6 25.6 25.2 18.2 30.4z"/><path fill="none" stroke="#d9677a" stroke-width="3.2" stroke-linecap="round" d="M27 24.5C34 21 35.5 14 30 11.2 24.6 8.6 25.2 3.4 30 3"/><path fill="#d9677a" d="M27.6 4 31 .8 34.4 4 31 7.2z"/><path fill="#1a1512" d="M33.2 3.1 38.6 4.4 37.4 8.8 35 5.6z"/><circle cx="30.6" cy="3.6" r=".9" fill="#f3e7d3"/><path fill="none" stroke="#1a1512" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M17.5 34V54M17.5 40.5 23 44.5 17.5 46.5M15 54h5"/></symbol>
 </svg>
 
 <header>
   <div class="ancho cabecera-fila">
-    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg>Parina</a>
+    <a class="logo" href="#inicio" aria-label="Parina, al inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg><span aria-hidden="true">Par<span class="i">ı</span>na</span></a>
     <p class="altitud">Putre · 3.500 m sobre el mar</p>
   </div>
   <nav class="menu-tejido" aria-label="Secciones"><ul><li style="--i: 0"><a href="#lodge">El lodge</a></li><li style="--i: 1"><a href="#caminatas">Caminatas</a></li><li style="--i: 2"><a href="#altura">La altura</a></li><li style="--i: 3"><a href="#tejedoras">Tejedoras</a></li><li style="--i: 4"><a href="#reservar">Reservar</a></li></ul></nav>
@@ -347,17 +414,24 @@ p { margin: 0; }
       </header>
       <fieldset class="elige" data-aparece>
         <legend class="oculto">Elige una caminata</legend>
-        <input type="radio" name="ruta" id="r-chungara" checked><label for="r-chungara">Lago Chungará</label>
-        <input type="radio" name="ruta" id="r-parinacota"><label for="r-parinacota">Pueblo de Parinacota</label>
-        <input type="radio" name="ruta" id="r-surire"><label for="r-surire">Salar de Surire</label>
-        <input type="radio" name="ruta" id="r-choquelimpie"><label for="r-choquelimpie">Cerro Choquelimpie</label>
+        <input type="radio" name="ruta" id="r-chungara" value="chungara" checked><label for="r-chungara">Lago Chungará</label>
+        <input type="radio" name="ruta" id="r-parinacota" value="parinacota"><label for="r-parinacota">Pueblo de Parinacota</label>
+        <input type="radio" name="ruta" id="r-surire" value="surire"><label for="r-surire">Salar de Surire</label>
+        <input type="radio" name="ruta" id="r-choquelimpie" value="choquelimpie"><label for="r-choquelimpie">Cerro Choquelimpie</label>
       </fieldset>
+      <div class="mapa" data-mapa hidden aria-hidden="true">
+        <canvas></canvas>
+        <svg></svg>
+        <div class="mapa-nombres"></div>
+        <p class="mapa-ayuda">Arrastra para girar el relieve</p>
+      </div>
       <article class="ruta chungara">
         <img src="/image/bocetos/parina/lago-1000.webp" srcset="/image/bocetos/parina/lago-600.webp 600w, /image/bocetos/parina/lago-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Un lago azul de aguas quietas con volcanes de fondo, bajo un cielo despejado">
         <div>
           <h3>Lago Chungará</h3>
           <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.630 m</dd></div><div><dt>Horas</dt><dd>4</dd></div><div><dt>Dificultad</dt><dd><i></i><i class="no"></i><i class="no"></i><span class="oculto">fácil</span></dd></div></dl>
           <p>Por la orilla del lago, con el Parinacota reflejado en el agua y las taguas haciendo sus nidos. Es la del tercer día, cuando el cuerpo ya se acostumbró.</p>
+          <ol class="paradas" aria-label="Paradas"><li><b>08:30</b>Mirador del Parinacota</li><li><b>10:30</b>Descanso en la playa de las taguas</li><li><b>13:00</b>Almuerzo en la orilla sur</li></ol>
           <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: casi plana, entre 4.520 y 4.630 metros"><path class="suelo" d="M0 58 50 56 100 52 150 50 200 53 250 56 300 54 350 50 400 47 450 51 500 55 550 58 600 58V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 58 50 56 100 52 150 50 200 53 250 56 300 54 350 50 400 47 450 51 500 55 550 58 600 58"/><circle class="cima" cx="400" cy="47" r="6"/><text class="marca-cima" x="400" y="30" text-anchor="middle">4.630 m</text></svg>
         </div>
       </article>
@@ -367,6 +441,7 @@ p { margin: 0; }
           <h3>Pueblo de Parinacota</h3>
           <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.500 m</dd></div><div><dt>Horas</dt><dd>3</dd></div><div><dt>Dificultad</dt><dd><i></i><i class="no"></i><i class="no"></i><span class="oculto">fácil</span></dd></div></dl>
           <p>Entre llamas y vicuñas hasta el pueblo y su iglesia de 1789, con las paredes pintadas por dentro. Ideal para el segundo día.</p>
+          <ol class="paradas" aria-label="Paradas"><li><b>09:00</b>Bofedal de las vicuñas</li><li><b>10:00</b>Descanso en la vertiente</li><li><b>11:30</b>Iglesia de 1789</li></ol>
           <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: una subida suave hasta 4.500 metros y vuelta"><path class="suelo" d="M0 71 50 70 100 68 150 64 200 60 250 62 300 66 350 68 400 65 450 67 500 69 550 70 600 71V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 71 50 70 100 68 150 64 200 60 250 62 300 66 350 68 400 65 450 67 500 69 550 70 600 71"/><circle class="cima" cx="200" cy="60" r="6"/><text class="marca-cima" x="200" y="43" text-anchor="middle">4.500 m</text></svg>
         </div>
       </article>
@@ -376,6 +451,7 @@ p { margin: 0; }
           <h3>Salar de Surire</h3>
           <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.272 m</dd></div><div><dt>Horas</dt><dd>6</dd></div><div><dt>Dificultad</dt><dd><i></i><i></i><i class="no"></i><span class="oculto">media</span></dd></div></dl>
           <p>Dos horas en camioneta y una caminata plana por la orilla del salar, donde comen las tres especies de flamenco. Llevar binoculares.</p>
+          <ol class="paradas" aria-label="Paradas"><li><b>10:00</b>Llegada en camioneta</li><li><b>11:30</b>Mirador de los flamencos</li><li><b>14:00</b>Termas de Polloquere</li></ol>
           <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: plana, alrededor de 4.250 metros"><path class="suelo" d="M0 85 50 84 100 84 150 83 200 83 250 84 300 85 350 84 400 83 450 84 500 84 550 85 600 85V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 85 50 84 100 84 150 83 200 83 250 84 300 85 350 84 400 83 450 84 500 84 550 85 600 85"/><circle class="cima" cx="150" cy="83" r="6"/><text class="marca-cima" x="150" y="66" text-anchor="middle">4.272 m</text></svg>
         </div>
       </article>
@@ -385,9 +461,42 @@ p { margin: 0; }
           <h3>Cerro Choquelimpie</h3>
           <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.800 m</dd></div><div><dt>Horas</dt><dd>7</dd></div><div><dt>Dificultad</dt><dd><i></i><i></i><i></i><span class="oculto">exigente</span></dd></div></dl>
           <p>La más alta: seiscientos metros de subida hasta un mirador sobre las lagunas de Cotacotani. Solo desde el quinto día, y si el oxímetro dice que sí.</p>
+          <ol class="paradas" aria-label="Paradas"><li><b>08:30</b>La mina vieja</li><li><b>11:00</b>Descanso en el abra, a 4.600 m</li><li><b>12:30</b>Mirador, a 4.800 m</li></ol>
           <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: sube desde 4.200 hasta 4.800 metros y vuelve a bajar"><path class="suelo" d="M0 90 50 82 100 72 150 63 200 54 250 45 300 37 350 30 400 38 450 50 500 62 550 77 600 90V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 90 50 82 100 72 150 63 200 54 250 45 300 37 350 30 400 38 450 50 500 62 550 77 600 90"/><circle class="cima" cx="350" cy="30" r="6"/><text class="marca-cima" x="350" y="13" text-anchor="middle">4.800 m</text></svg>
         </div>
       </article>
+    </div>
+  </section>
+
+  <section class="seccion" id="cerro" aria-labelledby="cerro-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="altura">De 4.300 a 4.800 m</p>
+        <h2 id="cerro-titulo">Un día en el cerro</h2>
+        <p>Así es una caminata con nosotros, de la salida a la vuelta. Los descansos los marca la altura, no el reloj.</p>
+      </header>
+      <ol class="jornada">
+      <li data-aparece>
+        <figure class="ancha"><img src="/image/bocetos/parina/salida-900.webp" srcset="/image/bocetos/parina/salida-560.webp 560w, /image/bocetos/parina/salida-900.webp 900w" sizes="(min-width: 900px) 40vw, (min-width: 600px) 44vw, 80vw" width="900" height="600" loading="lazy" alt="Un valle seco de la cordillera con un cerro nevado al fondo y un grupo de caminantes con mulas a lo lejos"></figure>
+        <div class="momento"><time datetime="07:45">07:45</time><h3>La salida</h3><p>Desayuno, mate de coca y a la camioneta. El guía revisa que cada uno lleve agua, gorro y bloqueador.</p></div>
+      </li>
+      <li data-aparece>
+        <figure class="alta"><img src="/image/bocetos/parina/descanso-640.webp" srcset="/image/bocetos/parina/descanso-420.webp 420w, /image/bocetos/parina/descanso-640.webp 640w" sizes="(min-width: 900px) 22rem, 80vw" width="640" height="800" loading="lazy" alt="Una caminante con gorro de lana naranjo y bastones mira los cerros desde un mirador"></figure>
+        <div class="momento"><time datetime="09:30">09:30</time><h3>El primer descanso</h3><p>Cada cuarenta minutos paramos cinco. Se toma agua aunque no haya sed: la altura engaña.</p></div>
+      </li>
+      <li data-aparece>
+        <figure class="alta"><img src="/image/bocetos/parina/ladera-640.webp" srcset="/image/bocetos/parina/ladera-420.webp 420w, /image/bocetos/parina/ladera-640.webp 640w" sizes="(min-width: 900px) 22rem, 80vw" width="640" height="800" loading="lazy" alt="Un sendero de tierra sube por el lomo de un cerro cubierto de pasto dorado, con una persona caminando a lo lejos"></figure>
+        <div class="momento"><time datetime="11:00">11:00</time><h3>La ladera</h3><p>El sendero es de los pastores: angosto, firme y sin apuro. Arriba se ve el lago entero.</p></div>
+      </li>
+      <li data-aparece>
+        <figure class="ancha"><img src="/image/bocetos/parina/arrieros-900.webp" srcset="/image/bocetos/parina/arrieros-560.webp 560w, /image/bocetos/parina/arrieros-900.webp 900w" sizes="(min-width: 900px) 40vw, (min-width: 600px) 44vw, 80vw" width="900" height="600" loading="lazy" alt="Un arriero a caballo y un grupo de caminantes con mochila suben por un camino de piedras hacia un cerro nevado"></figure>
+        <div class="momento"><time datetime="13:00">13:00</time><h3>Almuerzo con los arrieros</h3><p>Los caballos cargan la comida y a quien se canse. Sopa caliente, queso de cabra y pan amasado.</p></div>
+      </li>
+      <li data-aparece>
+        <figure class="ancha"><img src="/image/bocetos/parina/regreso-900.webp" srcset="/image/bocetos/parina/regreso-560.webp 560w, /image/bocetos/parina/regreso-900.webp 900w" sizes="(min-width: 900px) 40vw, (min-width: 600px) 44vw, 80vw" width="900" height="600" loading="lazy" alt="Caminantes y una llama bajan por una ladera seca a contraluz, con el sol sobre los cerros"></figure>
+        <div class="momento"><time datetime="16:30">16:30</time><h3>La vuelta</h3><p>Se baja con el sol de lado. A las seis estás en el lodge, con ducha caliente y la estufa prendida.</p></div>
+      </li>
+      </ol>
     </div>
   </section>
 
@@ -472,7 +581,7 @@ p { margin: 0; }
   <div class="franja f-lago" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
   <div class="franja f-bofedal zigzag" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
   <div class="ancho pampa">
-    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg>Parina</a>
+    <a class="logo" href="#inicio" aria-label="Parina, al inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg><span aria-hidden="true">Par<span class="i">ı</span>na</span></a>
     <div><h2>Dónde</h2><p>Calle Baquedano 412, Putre, Región de Arica y Parinacota. A 150 km de Arica por la ruta 11.</p></div>
     <div><h2>Escríbenos</h2><p>hola@parinalodge.cl · respondemos en el día, salvo cuando estamos en el cerro.</p></div>
   </div>

@@ -200,11 +200,15 @@ tbody tr:last-child > * { border-bottom: 0; }
    Al cargar, las filas de la tabla de la portada parten desenfocadas y se
    enfocan una tras otra, de la letra más grande a la más chica. Al bajar,
    cada sección se aclara. Las barras del tiempo de la consulta se
-   llenan de izquierda a derecha. */
+   llenan de izquierda a derecha.
+   Donde el navegador ata animaciones al scroll, la pantalla enfoca como un
+   ojo: lo que está en el tercio de abajo o en el de arriba se ve un poco
+   borroso y se aclara al llegar a su lugar, al centro. */
 [data-aparece] { --entrada: iris-aclara; --tramo: 30svh; --duracion: 1100ms; }
 .barra-tiempo[data-aparece] { --entrada: none; }
 .barra-tiempo i { --entrada: iris-llena; }
-@keyframes iris-aclara { from { opacity: 0; filter: blur(4px); } }
+@keyframes iris-aclara { from { opacity: 0.4; filter: blur(6px); } }
+@keyframes iris-sale { to { filter: blur(5px); } }
 @keyframes iris-enfoca { from { filter: blur(7px); } }
 @keyframes iris-llena { from { scale: 0 1; } }
 @media (prefers-reduced-motion: no-preference) {
@@ -215,6 +219,14 @@ tbody tr:last-child > * { border-bottom: 0; }
   .portada .snellen li:nth-child(3) { animation-delay: 440ms; }
   .portada .snellen li:nth-child(4) { animation-delay: 660ms; }
   .portada .snellen li:nth-child(5) { animation-delay: 880ms; }
+  @supports (animation-timeline: view()) {
+    html.con-js [data-aparece]:not([data-aparece='tiempo']) {
+      animation-name: var(--entrada), iris-sale;
+      animation-fill-mode: both, forwards;
+      animation-range: cover 0% cover var(--tramo), cover calc(100% - var(--tramo)) cover 100%;
+    }
+    .portada-cabeza, .portada .snellen { animation: iris-sale var(--curva) forwards; animation-timeline: view(); animation-range: cover calc(100% - 30svh) cover 100%; }
+  }
 }
 </style>
 </head>

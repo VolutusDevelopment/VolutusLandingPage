@@ -5,20 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Pelusa · boceto de página de Volutus</title>
-<meta name="description" content="Boceto de página de una marca inventada, Pelusa, guardería de día y peluquería de perros en Ñuñoa, para mostrar el estilo Lúdico.">
+<meta name="description" content="Boceto de página de una marca inventada, Pelusa, guardería de día y peluquería de perros, para mostrar el estilo Lúdico.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/fredoka.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/image/bocetos/pelusa/portada-1000.webp" imagesrcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" imagesizes="(min-width: 900px) 40vw, 82vw">
+<link rel="preload" as="image" href="/image/bocetos/pelusa/portada-600.webp" imagesrcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" imagesizes="(min-width: 900px) 34vw, 70vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/pelusa.js" type="module"></script>
 <style>
-/* Pelusa · lúdico. Inspiración: Wild One (wildone.com), del mismo mundo. Se
-   toma: 1) los perros como protagonistas de cada foto, en primer plano; 2) el
-   color plano en bloques y una letra redonda que no infantiliza; 3) el humor
-   puesto en lo que dicen los textos, no en el dibujo. La idea propia: cada
-   perro es un personaje con su placa, su nombre, su edad y su manía. */
+/* Pelusa · lúdico. Segunda vuelta: el día de tu perro, contado.
+   Inspiración: Wild One (wildone.com) para el color y el humor que no
+   infantiliza, y desde Awwwards My Dog Company (mydogcompany.com): el perro
+   como personaje y el color que cambia con cada servicio. El scroll guiado es
+   el de /nosotros de Volutus: un telón fijo detrás que cambia con la historia
+   y una tarjeta por momento, que encaja de a una. Aquí el telón es el cielo de
+   Ñuñoa de la mañana a la noche, con el sol cruzándolo y la casa de Pelusa en
+   la loma, y cada tarjeta es un momento del día con su «gif», su hora y lo que
+   opina alguien de la pandilla. Después de la noche, la página se lee libre:
+   precios, la pandilla, las reglas y el carnet de ingreso. */
 @font-face { font-family: 'Fredoka'; src: url('/fonts/bocetos/fredoka.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
 @font-face { font-family: 'Nunito Sans'; src: url('/fonts/bocetos/nunito-sans.woff2') format('woff2'); font-weight: 200 1000; font-display: swap; }
+
+/* El cielo se pinta con tres colores que cambian de un momento a otro. Van
+   registrados para que el navegador los funda (Safari 16.4 y Chrome); sin
+   eso, cambian de una vez. */
+@property --arriba { syntax: '<color>'; inherits: true; initial-value: #ffd9b8; }
+@property --abajo { syntax: '<color>'; inherits: true; initial-value: #fff3e0; }
+@property --loma { syntax: '<color>'; inherits: true; initial-value: #a8d98a; }
+@property --astro { syntax: '<color>'; inherits: true; initial-value: #ffcf6b; }
 
 :root {
   --crema: #fff6e6;
@@ -31,6 +45,7 @@
   --ancho: 1240px;
   --margen: clamp(20px, 4vw, 56px);
   --curva: cubic-bezier(0.6, 0, 0.25, 1);
+  --calma: cubic-bezier(0.45, 0, 0.55, 1);
 }
 * { box-sizing: border-box; }
 html { background: var(--crema); scroll-behavior: smooth; }
@@ -66,42 +81,94 @@ p { margin: 0; }
 .cabecera nav li:nth-child(4) a { background: var(--blanco); rotate: 3deg; }
 .cabecera nav a:hover { rotate: 0deg; }
 
-/* ---- Portada ---- */
-.portada-bloque { background: var(--amarillo); }
-.portada { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(24px, 4vw, 56px) clamp(80px, 10vw, 140px); }
-.portada-texto { display: grid; gap: 24px; justify-items: start; }
-.portada h1 { font-size: clamp(46px, 6.4vw, 96px); }
+/* ---- El día: el telón ----
+   El cielo queda pegado detrás de toda la historia, del alto de la pantalla,
+   y la historia sube sobre él (como el atardecer de /nosotros). pelusa.js
+   marca el momento que está al centro (`data-hora`) y el cielo, el sol, la
+   loma y la ventana de la casa pasan a sus colores y su sitio. El sol hace un
+   arco: lo horizontal y lo vertical se mueven con curvas distintas. */
+.dia { position: relative; isolation: isolate; --arriba: #ffd9b8; --abajo: #fff3e0; --loma: #a8d98a; --astro: #ffcf6b; --sol-x: 10vw; --sol-y: 64svh; --luz: 0; --estrellas: 0; }
+.cielo { position: sticky; top: 0; z-index: -1; height: 100lvh; overflow: hidden; background: linear-gradient(var(--arriba), var(--abajo) 78%); transition: --arriba 1400ms var(--calma), --abajo 1400ms var(--calma), --loma 1400ms var(--calma), --astro 1400ms var(--calma); }
+.sol-x { position: absolute; left: 0; top: 0; translate: var(--sol-x) 0; transition: translate 1800ms var(--calma); }
+.sol { display: block; width: clamp(70px, 9vw, 130px); aspect-ratio: 1; border-radius: 50%; background: var(--astro); box-shadow: 0 0 0 18px color-mix(in srgb, var(--astro) 22%, transparent); translate: -50% var(--sol-y); transition: translate 1800ms cubic-bezier(0.3, 0, 0.15, 1); }
+.estrellas { position: absolute; inset: 0 0 30%; opacity: var(--estrellas); transition: opacity 1400ms var(--calma); background: radial-gradient(circle at 12% 18%, #fff 0 1.5px, transparent 2.5px), radial-gradient(circle at 28% 40%, #fff 0 1px, transparent 2px), radial-gradient(circle at 46% 12%, #fff 0 1.5px, transparent 2.5px), radial-gradient(circle at 63% 30%, #fff 0 1px, transparent 2px), radial-gradient(circle at 74% 8%, #fff 0 2px, transparent 3px), radial-gradient(circle at 88% 36%, #fff 0 1px, transparent 2px), radial-gradient(circle at 36% 24%, #fff 0 1px, transparent 2px), radial-gradient(circle at 92% 18%, #fff 0 1.5px, transparent 2.5px); }
+.nube { position: absolute; height: clamp(30px, 3.4vw, 46px); border-radius: 999px; background: rgb(255 255 255 / 0.85); opacity: calc(1 - var(--estrellas)); transition: opacity 1400ms var(--calma); }
+.nube::before { content: ''; position: absolute; left: 22%; bottom: 40%; width: 46%; aspect-ratio: 1; border-radius: 50%; background: inherit; }
+.nube-a { left: 14%; top: 22%; width: clamp(110px, 13vw, 190px); }
+.nube-b { right: 10%; top: 34%; width: clamp(90px, 10vw, 150px); }
+.loma { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 30%; }
+.loma path { fill: var(--loma); }
+.casa { position: absolute; right: 12%; bottom: 16%; width: clamp(90px, 11vw, 150px); }
+.casa .ventana { fill: color-mix(in srgb, #ffd34d calc(var(--luz) * 100%), #3a2f2a); transition: fill 1400ms var(--calma); }
+.dia[data-hora="inicio"] { --arriba: #ffd9b8; --abajo: #fff3e0; --loma: #a8d98a; --astro: #ffcf6b; --sol-x: 10vw; --sol-y: 64svh; }
+.dia[data-hora="llegada"] { --arriba: #9fd8ff; --abajo: #fff1d6; --loma: #9fd67a; --astro: #ffd34d; --sol-x: 18vw; --sol-y: 46svh; }
+.dia[data-hora="patio"] { --arriba: #6cc4ff; --abajo: #d4f0ff; --loma: #8fd06a; --astro: #ffd34d; --sol-x: 32vw; --sol-y: 24svh; }
+.dia[data-hora="almuerzo"] { --arriba: #5bbcff; --abajo: #fff0b8; --loma: #8fcf62; --astro: #ffe27a; --sol-x: 50vw; --sol-y: 10svh; }
+.dia[data-hora="siesta"] { --arriba: #b9c4ff; --abajo: #ffe6f0; --loma: #a3c98a; --astro: #ffe9a8; --sol-x: 63vw; --sol-y: 16svh; }
+.dia[data-hora="bano"] { --arriba: #ffcf8a; --abajo: #fff0d4; --loma: #b3c76a; --astro: #ffb84d; --sol-x: 76vw; --sol-y: 32svh; }
+.dia[data-hora="vuelta"] { --arriba: #ff8f6b; --abajo: #ffd2a3; --loma: #7f9a52; --astro: #ff7a59; --sol-x: 88vw; --sol-y: 56svh; --luz: 0.6; }
+.dia[data-hora="noche"] { --arriba: #262046; --abajo: #4a3a78; --loma: #2f2b52; --astro: #fff3c4; --sol-x: 80vw; --sol-y: 12svh; --luz: 1; --estrellas: 1; }
+
+/* ---- El día: la primera pantalla ---- */
+.dia-cabecera { min-height: calc(100svh - var(--alto-barra, 0px)); margin-top: -100lvh; display: grid; grid-template-rows: auto 1fr; }
+.portada { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 32px clamp(32px, 5vw, 80px); align-items: center; padding-block: 8px 48px; }
+.portada-texto { display: grid; gap: 22px; justify-items: start; }
+.portada h1 { font-size: clamp(44px, 6vw, 92px); }
 .portada-texto > p.suave { max-width: 34ch; font-size: 20px; color: #4a3b31; }
 .portada .rotulo { color: #4a3b31; }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
-.escena { position: relative; aspect-ratio: 1; }
-.escena .forma { position: absolute; }
-.f-cielo { left: -6%; bottom: 4%; width: 34%; aspect-ratio: 1; border-radius: 50%; background: var(--cielo); }
-.f-coral { right: -4%; bottom: 12%; width: 26%; aspect-ratio: 1; border-radius: 28%; background: var(--coral); rotate: 14deg; }
-.f-pildora { left: 4%; top: 2%; width: 30%; height: 11%; border-radius: 999px; background: var(--tinta); rotate: -18deg; }
-.foto-perro { position: absolute; inset: 7%; overflow: hidden; border: 10px solid var(--blanco); border-radius: 50%; background: var(--amarillo); }
-.globo { position: absolute; right: -2%; top: -4%; z-index: 1; max-width: 13rem; padding: 14px 18px; border-radius: 24px 24px 24px 4px; background: var(--blanco); font: 600 19px/1.2 'Fredoka', sans-serif; box-shadow: 0 12px 24px -16px rgb(42 31 26 / 0.5); }
+.baja { display: inline-flex; align-items: center; gap: 10px; font: 600 17px 'Fredoka', sans-serif; color: #4a3b31; }
+.baja svg { width: 22px; height: 22px; color: var(--coral); }
+.escena { position: relative; width: min(100%, 30rem); aspect-ratio: 1; justify-self: center; }
+.foto-perro { position: absolute; inset: 6%; overflow: hidden; border: 10px solid var(--blanco); border-radius: 46% 54% 50% 50% / 54% 48% 52% 46%; background: var(--amarillo); box-shadow: 0 30px 50px -30px rgb(42 31 26 / 0.5); }
 .foto-perro img { width: 100%; height: 100%; object-fit: cover; }
-.placa { position: absolute; left: 2%; bottom: 2%; display: grid; gap: 2px; width: min(15rem, 62%); padding: 14px 18px 16px; border-radius: 22px; background: var(--blanco); box-shadow: 0 14px 30px -18px rgb(42 31 26 / 0.45); transform-origin: 50% -14px; }
-.placa::before { content: ''; position: absolute; left: calc(50% - 7px); top: -12px; width: 14px; height: 14px; border: 3px solid var(--tinta); border-radius: 50%; background: var(--crema); }
+.globo { position: absolute; right: -2%; top: -2%; z-index: 1; max-width: 13rem; padding: 14px 18px; border-radius: 24px 24px 24px 4px; background: var(--blanco); font: 600 19px/1.2 'Fredoka', sans-serif; box-shadow: 0 12px 24px -16px rgb(42 31 26 / 0.5); }
+.placa { position: absolute; left: 0; bottom: 2%; display: grid; gap: 2px; width: min(15rem, 62%); padding: 14px 18px 16px; border-radius: 22px; background: var(--blanco); box-shadow: 0 14px 30px -18px rgb(42 31 26 / 0.45); }
 .placa b { font: 600 22px/1.1 'Fredoka', sans-serif; }
 .placa span { font-size: 15px; line-height: 1.4; color: var(--gris); }
 
-/* ---- Un día en Pelusa: el camino de huellas ---- */
-.dia { background: var(--blanco); }
-.camino { display: grid; margin: 0; padding: 0; list-style: none; }
-.parada { display: grid; grid-template-columns: minmax(0, 2fr) 72px minmax(0, 7fr); gap: 0 clamp(16px, 3vw, 40px); }
-.hora { padding-top: 6px; font: 600 clamp(32px, 4vw, 52px)/1 'Fredoka', sans-serif; text-align: right; font-variant-numeric: tabular-nums; }
-.rastro { display: grid; justify-items: center; align-content: start; gap: 18px; padding-block: 14px 26px; }
-.rastro svg { width: 26px; height: 26px; color: var(--coral); }
-.rastro svg:nth-child(odd) { translate: -12px 0; rotate: -8deg; }
-.rastro svg:nth-child(even) { translate: 12px 0; rotate: 8deg; }
-.parada-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 32px; align-items: start; padding-bottom: clamp(32px, 4vw, 56px); }
-.parada-cuerpo h3 { font-size: clamp(26px, 2.6vw, 34px); margin-bottom: 8px; }
-.parada-cuerpo p { max-width: 38ch; color: var(--gris); }
-.parada-foto { width: clamp(140px, 18vw, 220px); overflow: hidden; border-radius: 38% 62% 52% 48% / 46% 44% 56% 54%; background: var(--crema); }
-.parada:nth-child(even) .parada-foto { border-radius: 58% 42% 40% 60% / 50% 58% 42% 50%; }
-.parada-foto img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+/* ---- El día: un momento por pantalla ---- */
+.momentos { margin: 0; padding: 0; list-style: none; }
+.momento { display: grid; place-items: center; min-height: calc(100svh - var(--alto-barra, 0px)); padding: 24px var(--margen) 96px; }
+.tarjeta { --acento: var(--coral); --acento-claro: #ffe1d6; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; width: min(100%, 1000px); padding: 14px; border-radius: 40px; background: var(--blanco); box-shadow: 0 40px 70px -46px rgb(42 31 26 / 0.55); }
+.momento:nth-child(even) .tarjeta { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.momento:nth-child(even) .tarjeta-video { order: 2; }
+.tarjeta-video { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 30px 30px 110px 30px; background: var(--acento-claro); }
+.momento:nth-child(even) .tarjeta-video { border-radius: 30px 30px 30px 110px; }
+.tarjeta-video img, .tarjeta-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tarjeta-texto { display: grid; gap: 12px; justify-items: start; padding: clamp(18px, 3vw, 44px); }
+.hora { font: 600 clamp(46px, 5.6vw, 80px)/0.9 'Fredoka', sans-serif; color: var(--acento); font-variant-numeric: tabular-nums; }
+.tarjeta h2 { font-size: clamp(28px, 2.8vw, 40px); }
+.tarjeta-texto > p:not(.hora, .dice) { max-width: 36ch; color: var(--gris); }
+.dice { position: relative; margin-top: 6px; padding: 12px 16px; border-radius: 22px 22px 22px 6px; background: var(--acento-claro); font: 500 18px/1.3 'Fredoka', sans-serif; }
+.dice b { font-weight: 600; }
+.momento:nth-child(1) .tarjeta { --acento: #e2552f; --acento-claro: #ffe1d6; }
+.momento:nth-child(2) .tarjeta { --acento: #1f84c9; --acento-claro: #d9f0ff; }
+.momento:nth-child(3) .tarjeta { --acento: #b07a00; --acento-claro: #fff1c2; }
+.momento:nth-child(4) .tarjeta { --acento: #7a5fd0; --acento-claro: #ece6ff; }
+.momento:nth-child(5) .tarjeta { --acento: #138a8a; --acento-claro: #d6f5f2; }
+.momento:nth-child(6) .tarjeta { --acento: #d4482a; --acento-claro: #ffdcc9; }
+
+/* ---- El día: la noche ----
+   La pausa es la escena sola, de noche, con la casa encendida. Su texto va
+   en tinta hasta que cae la noche y entonces pasa a crema: así también se
+   lee sin JavaScript, cuando el cielo se queda en la mañana. */
+.dia-pausa { display: grid; justify-items: center; align-content: start; gap: 18px; min-height: 100svh; padding: 20svh var(--margen) 0; color: var(--tinta); text-align: center; transition: color 1400ms var(--calma); }
+.dia-pausa h2 { font-size: clamp(44px, 6vw, 88px); }
+.dia-pausa p { max-width: 36ch; font-size: 20px; }
+.dia[data-hora="noche"] .dia-pausa { color: #fff6e6; }
+
+/* ---- La hora, abajo ----
+   Mientras dura el día, un reloj chico pegado abajo dice qué momento se está
+   viendo y deja saltar a otro. Va pegado dentro de la historia, así que
+   aparece y se va con ella, sin JavaScript; en la primera pantalla espera
+   escondido, para no tapar la portada. */
+.reloj { position: sticky; bottom: max(14px, env(safe-area-inset-bottom, 0px)); z-index: 5; display: flex; justify-content: center; margin-top: -64px; height: 64px; pointer-events: none; }
+.reloj ol { display: flex; gap: 4px; margin: 0; padding: 6px; list-style: none; border-radius: 999px; background: rgb(255 255 255 / 0.92); box-shadow: 0 10px 30px -14px rgb(42 31 26 / 0.5); pointer-events: auto; }
+.reloj a { display: grid; place-items: center; min-width: 44px; height: 44px; padding: 0 10px; border-radius: 999px; font: 600 15px/1 'Fredoka', sans-serif; text-decoration: none; font-variant-numeric: tabular-nums; transition: background-color 500ms var(--calma), color 500ms var(--calma); }
+.reloj a[aria-current] { background: var(--tinta); color: var(--crema); }
+.reloj ol { transition: opacity 700ms var(--calma), translate 700ms var(--calma); }
+.con-js .dia[data-hora="inicio"] .reloj ol { opacity: 0; translate: 0 24px; pointer-events: none; }
 
 /* ---- Servicios y precios ---- */
 .precios { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
@@ -173,11 +240,26 @@ tbody tr:last-child > * { border-bottom: 0; }
 .pie-marca { display: block; font: 600 clamp(80px, 18vw, 260px)/0.85 'Fredoka', sans-serif; letter-spacing: -0.03em; color: #de5634; }
 .pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 28px; font-size: 15px; color: var(--gris); }
 
+
+/* ---- Después del día: colores de cada sección ---- */
+.despues { position: relative; background: var(--crema); }
+#precios { background: #def1ff; max-width: none; }
+#precios > * { max-width: calc(var(--ancho) - 2 * var(--margen)); margin-inline: auto; }
+#pandilla { background: #ffe5da; max-width: none; padding-top: clamp(80px, 10vw, 140px) !important; }
+#pandilla > * { max-width: calc(var(--ancho) - 2 * var(--margen)); margin-inline: auto; }
+#reglas { padding-top: clamp(80px, 10vw, 140px); }
+.pie { max-width: none; background: #c9401f; }
+.pie-marca { color: var(--blanco) !important; }
+.pie-fila { color: var(--blanco) !important; }
+
 /* ---- M ---- */
 @media (max-width: 899px) {
   .cabecera nav { display: none; }
   .portada, .precios, .reservar { grid-template-columns: minmax(0, 1fr); }
-  .escena { width: min(100% - 32px, 30rem); justify-self: center; }
+  .portada { padding-bottom: 24px; }
+  .escena { width: min(100%, 22rem); }
+  .tarjeta, .momento:nth-child(even) .tarjeta { grid-template-columns: minmax(0, 1fr); width: min(100%, 34rem); }
+  .momento:nth-child(even) .tarjeta-video { order: 0; }
   .pandilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .precios figure { width: min(60%, 18rem); justify-self: end; margin-top: -24px; }
 }
@@ -186,11 +268,19 @@ tbody tr:last-child > * { border-bottom: 0; }
 @media (max-width: 599px) {
   .logo { font-size: 26px; }
   .cabecera .boton { min-height: 44px; padding: 0 18px; font-size: 16px; }
-  .parada { grid-template-columns: 44px minmax(0, 1fr); }
-  .hora { grid-column: 2; grid-row: 1; text-align: left; font-size: 30px; }
-  .rastro { grid-column: 1; grid-row: 1 / 3; }
-  .parada-cuerpo { grid-column: 2; grid-template-columns: minmax(0, 1fr); padding-top: 10px; }
-  .parada-foto { width: 150px; }
+  .portada h1 { font-size: clamp(40px, 11vw, 52px); }
+  .portada-texto > p.suave { font-size: 18px; }
+  .escena { width: min(78%, 18rem); }
+  .globo { font-size: 16px; max-width: 10rem; padding: 10px 14px; }
+  .placa { padding: 10px 14px 12px; }
+  .placa b { font-size: 18px; }
+  .momento { padding-bottom: 88px; }
+  .tarjeta { padding: 10px; border-radius: 32px; }
+  .tarjeta-texto { gap: 8px; padding: 16px 12px 12px; }
+  .tarjeta-texto > p:not(.hora, .dice) { font-size: 16px; }
+  .dice { font-size: 16px; }
+  .reloj a { min-width: 40px; padding: 0 6px; font-size: 13px; }
+  .reloj b { display: none; }
   .pandilla { column-gap: 16px; row-gap: 32px; }
   .perro { padding: 8px 8px 12px; }
   .perro b { font-size: 18px; }
@@ -206,34 +296,56 @@ tbody tr:last-child > * { border-bottom: 0; }
   thead svg { width: 30px; }
 }
 
-/* ---- Movimiento: llegan y se acomodan ----
-   Las formas de la portada llegan desde afuera y se acomodan frenando, sin
-   rebote, y después flotan de ida y vuelta, cada una a su ritmo. Las huellas
-   del día aparecen una tras otra al bajar, como si alguien caminara. Al pasar
-   el cursor por una foto de la pandilla, se mece colgada de su chinche de ida y vuelta hasta quedar
-   quieta; si el cursor se va antes, la placa se detiene donde estaba, sin
-   saltar. */
+/* ---- El encaje: un momento por scroll ----
+   Como en /nosotros: mientras dura el día, cada scroll cae en un momento y
+   ninguno se salta (`scroll-snap-stop`). La primera pantalla encaja arriba,
+   cada tarjeta al centro y la noche arriba. Lo que sigue encaja a su inicio
+   y, como es más alto que la pantalla, adentro se baja libre; pasado un
+   cuarto de pantalla dentro, el encaje se apaga (pelusa.js pone `libre`). Con el movimiento reducido no encaja. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.dia):not(.libre) { scroll-snap-type: y mandatory; }
+  .dia-cabecera, .momento, .dia-pausa, .despues { scroll-margin-top: var(--alto-barra, 0px); }
+  .boceto-barra, .dia-cabecera { scroll-snap-align: start; }
+  @media (max-width: 599px) { .dia-cabecera .portada { scroll-snap-align: end; } }
+  .momento { scroll-snap-align: center; scroll-snap-stop: always; }
+  .dia-pausa { scroll-snap-align: start; scroll-snap-stop: always; }
+  .despues { scroll-snap-align: start; }
+}
+
+/* ---- Movimiento: más vivo, sin rebote ----
+   El cielo, el sol y la casa pasan de un momento al siguiente con fundidos
+   largos. Al llegar a un momento (pelusa.js le pone `actual`), su tarjeta
+   entra, la hora se corre a su sitio y el globo de la pandilla sube un poco
+   después; los gifs corren solo mientras se ven. Las nubes van y vuelven
+   despacio. En la portada, el perro se asienta y el globo llega detrás. Al
+   pasar el cursor por una foto de la pandilla, se mece colgada de su chinche
+   hasta quedar quieta. Todo llega frenando: nada rebota. */
 [data-aparece] { --entrada: pelusa-llega; --tramo: 34svh; --duracion: 1200ms; }
-.rastro svg { --entrada: pelusa-huella; }
 @keyframes pelusa-llega { from { opacity: 0; translate: 0 28px; } }
-@keyframes pelusa-huella { from { opacity: 0; scale: 0.4; } }
-@keyframes pelusa-entra-a { from { opacity: 0; translate: -60px 40px; } }
-@keyframes pelusa-entra-b { from { opacity: 0; translate: 50px 60px; } }
-@keyframes pelusa-entra-c { from { opacity: 0; translate: 40px -50px; } }
-@keyframes pelusa-foto { from { opacity: 0; scale: 0.9; } }
-@keyframes pelusa-flota { to { translate: 0 -10px; } }
+@keyframes pelusa-foto { from { opacity: 0; scale: 0.9; rotate: -4deg; } }
+@keyframes pelusa-nube { to { translate: 6vw 0; } }
+@keyframes pelusa-tarjeta { from { opacity: 0; scale: 0.94; } }
+@keyframes pelusa-hora { from { opacity: 0; translate: -24px 0; } }
+@keyframes pelusa-globo { from { opacity: 0; translate: 0 14px; scale: 0.92; } }
 @media (prefers-reduced-motion: no-preference) {
   .portada-texto > * { animation: pelusa-llega 1200ms var(--curva) both; }
   .portada-texto > :nth-child(2) { animation-delay: 120ms; }
   .portada-texto > :nth-child(3) { animation-delay: 240ms; }
   .portada-texto > :nth-child(4) { animation-delay: 360ms; }
   .foto-perro { animation: pelusa-foto 1400ms var(--curva) both; }
-  .f-cielo { animation: pelusa-entra-a 1500ms var(--curva) 200ms both, pelusa-flota 7s var(--curva) 1700ms infinite alternate; }
-  .f-coral { animation: pelusa-entra-b 1500ms var(--curva) 350ms both, pelusa-flota 9s var(--curva) 1850ms infinite alternate; }
-  .f-pildora { animation: pelusa-entra-c 1500ms var(--curva) 500ms both, pelusa-flota 8s var(--curva) 2000ms infinite alternate; }
-  .portada .placa { animation: pelusa-llega 1400ms var(--curva) 700ms both; }
+  .globo { animation: pelusa-globo 1100ms var(--curva) 900ms both; }
+  .placa { animation: pelusa-llega 1300ms var(--curva) 700ms both; }
+  .nube-a { animation: pelusa-nube 26s var(--calma) infinite alternate; }
+  .nube-b { animation: pelusa-nube 32s var(--calma) -9s infinite alternate-reverse; }
+  .con-js .momento .tarjeta { opacity: 0; }
+  .con-js .momento.actual .tarjeta { opacity: 1; animation: pelusa-tarjeta 900ms var(--curva) both; }
+  .con-js .momento.actual .hora { animation: pelusa-hora 1000ms var(--curva) 150ms both; }
+  .con-js .momento.actual .dice { animation: pelusa-globo 1000ms var(--curva) 500ms both; }
   .perro { animation: pelusa-mece 6s var(--curva) infinite paused; }
   .perro:hover { animation-play-state: running; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cielo, .sol-x, .sol, .estrellas, .nube, .casa .ventana { transition: none; }
 }
 </style>
 </head>
@@ -245,68 +357,116 @@ tbody tr:last-child > * { border-bottom: 0; }
   <symbol id="perro" viewBox="0 0 64 48"><g fill="currentColor"><path d="M9 9c-3 6-1 11 5 13" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><rect x="11" y="19" width="38" height="16" rx="8"/><circle cx="50" cy="17" r="9.5"/><path d="M43 9c-4 3-5 9-1 13l6-10z"/><rect x="14" y="29" width="7" height="16" rx="3.5"/><rect x="38" y="29" width="7" height="16" rx="3.5"/><circle cx="59.5" cy="19.5" r="2.8"/></g></symbol>
 </svg>
 
-<header class="ancho cabecera">
-  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#huella"/></svg>pelusa</a>
-  <nav aria-label="Secciones"><ul><li><a href="#dia">Un día aquí</a></li><li><a href="#precios">Precios</a></li><li><a href="#pandilla">La pandilla</a></li><li><a href="#reglas">Reglas</a></li></ul></nav>
-  <a class="boton boton-oscuro" href="#reservar">Reservar</a>
-</header>
-
 <main>
-  <div class="portada-bloque">
-  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
-    <div class="portada-texto">
-      <p class="rotulo">Guardería de día y peluquería de perros · Ñuñoa</p>
-      <h1 id="titulo">Aquí tu perro tiene más vida social que tú</h1>
-      <p class="suave">Lo pasamos a buscar en la mañana, juega con su grupo, duerme siesta y vuelve bañado si le toca. A ti te llegan las fotos.</p>
-      <div class="acciones"><a class="boton" href="#reservar">Reservar un día de prueba</a><a class="enlace" href="#precios">Ver precios</a></div>
+  <section class="dia" id="dia" data-hora="inicio" aria-label="Un día en Pelusa">
+    <div class="cielo" aria-hidden="true">
+      <span class="estrellas"></span>
+      <span class="sol-x"><span class="sol"></span></span>
+      <span class="nube nube-a"></span><span class="nube nube-b"></span>
+      <svg class="loma" viewBox="0 0 1440 300" preserveAspectRatio="none"><path d="M0 120C240 40 420 60 640 110S1040 200 1240 120 1440 90 1440 90V300H0Z"/></svg>
+      <svg class="casa" viewBox="0 0 120 100"><path d="M10 50L60 12 110 50V96H10Z" fill="#fff6e6"/><path d="M4 54L60 8l56 46" fill="none" stroke="#2a1f1a" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><rect x="48" y="62" width="24" height="34" rx="12" fill="#ff7a59"/><rect class="ventana" x="22" y="56" width="18" height="18" rx="5"/><rect class="ventana" x="80" y="56" width="18" height="18" rx="5"/></svg>
     </div>
-    <div class="escena">
-      <span class="forma f-cielo" aria-hidden="true"></span>
-      <span class="forma f-pildora" aria-hidden="true"></span>
-      <span class="forma f-coral" aria-hidden="true"></span>
-      <figure class="foto-perro"><img src="/image/bocetos/pelusa/portada-1000.webp" srcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 82vw" width="1000" height="1000" alt="Un perro blanco y negro sonríe con la boca abierta frente a un fondo amarillo" fetchpriority="high"></figure>
-      <p class="globo" aria-hidden="true">¿Me vienes a buscar a las seis?</p>
-      <p class="placa"><b>Canela, 4 años</b><span>Vino por un baño y se quedó a almorzar.</span></p>
-    </div>
-  </section>
-  </div>
 
-  <section class="seccion dia" id="dia" aria-labelledby="dia-titulo">
-    <div class="ancho">
-      <div class="cabeza" data-aparece>
-        <p class="rotulo">Un día en Pelusa</p>
-        <h2 id="dia-titulo">De 8 a 6, sin aburrirse ni un rato</h2>
+    <div class="dia-cabecera" data-momento="inicio">
+      <header class="ancho cabecera">
+        <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#huella"/></svg>pelusa</a>
+        <nav aria-label="Secciones"><ul><li><a href="#m-llegada">Un día aquí</a></li><li><a href="#precios">Precios</a></li><li><a href="#pandilla">La pandilla</a></li><li><a href="#reglas">Reglas</a></li></ul></nav>
+        <a class="boton boton-oscuro" href="#reservar">Reservar</a>
+      </header>
+      <div class="ancho portada" id="inicio">
+        <div class="portada-texto">
+          <p class="rotulo">Guardería de día y peluquería de perros · Ñuñoa</p>
+          <h1>Aquí tu perro tiene más vida social que tú</h1>
+          <p class="suave">Lo pasamos a buscar en la mañana, juega con su grupo, duerme siesta y vuelve bañado si le toca. Baja y te contamos su día, de 8 a 6.</p>
+          <div class="acciones"><a class="boton" href="#reservar">Reservar un día de prueba</a><a class="baja" href="#m-llegada"><svg aria-hidden="true"><use href="#huella"/></svg>Empezar el día</a></div>
+        </div>
+        <div class="escena">
+          <figure class="foto-perro"><img src="/image/bocetos/pelusa/portada-600.webp" srcset="/image/bocetos/pelusa/portada-600.webp 600w, /image/bocetos/pelusa/portada-1000.webp 1000w" sizes="(min-width: 900px) 34vw, 70vw" width="1000" height="1000" alt="Un perro blanco y negro sonríe con la boca abierta frente a un fondo amarillo" fetchpriority="high"></figure>
+          <p class="globo" aria-hidden="true">¿Me vienes a buscar a las seis?</p>
+          <p class="placa"><b>Canela, 4 años</b><span>Vino por un baño y se quedó a almorzar.</span></p>
+        </div>
       </div>
-      <ol class="camino">
-        <li class="parada">
-          <p class="hora" data-aparece>8:00</p>
-          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
-          <div class="parada-cuerpo" data-aparece><div><h3>Llegada</h3><p>Lo buscamos en la furgoneta o lo dejas tú. Lo primero es saludar y olfatear a todo el grupo.</p></div></div>
-        </li>
-        <li class="parada">
-          <p class="hora" data-aparece>10:00</p>
-          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
-          <div class="parada-cuerpo" data-aparece><div><h3>Patio</h3><p>Jugamos en grupos por tamaño y por carácter. Los tímidos parten de a poco y con un amigo.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/juego-500.webp" srcset="/image/bocetos/pelusa/juego-500.webp 500w, /image/bocetos/pelusa/juego-800.webp 800w" sizes="220px" width="800" height="600" loading="lazy" alt="Dos perros de pelo crespo café corren por el pasto"></figure></div>
-        </li>
-        <li class="parada">
-          <p class="hora" data-aparece>13:00</p>
-          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
-          <div class="parada-cuerpo" data-aparece><div><h3>Siesta</h3><p>Colchonetas, luz baja y música suave durante una hora y media. Roncar está permitido.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/siesta-500.webp" srcset="/image/bocetos/pelusa/siesta-500.webp 500w, /image/bocetos/pelusa/siesta-800.webp 800w" sizes="220px" width="800" height="600" loading="lazy" alt="Un perro café duerme tapado con una manta tejida naranja"></figure></div>
-        </li>
-        <li class="parada">
-          <p class="hora" data-aparece>15:00</p>
-          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg><svg data-sigue style="--orden: 1"><use href="#huella"/></svg><svg data-sigue style="--orden: 2"><use href="#huella"/></svg></div>
-          <div class="parada-cuerpo" data-aparece><div><h3>Baño, si le toca</h3><p>Champú según su pelo y secado sin apuro. El perfume va solo si lo pides, y casi nadie lo pide.</p></div><figure class="parada-foto"><img src="/image/bocetos/pelusa/bano-360.webp" srcset="/image/bocetos/pelusa/bano-360.webp 360w, /image/bocetos/pelusa/bano-600.webp 600w" sizes="220px" width="600" height="600" loading="lazy" alt="Un perro pequeño envuelto en una toalla azul, con cara de satisfecho"></figure></div>
-        </li>
-        <li class="parada">
-          <p class="hora" data-aparece>18:00</p>
-          <div class="rastro" data-aparece aria-hidden="true"><svg data-sigue><use href="#huella"/></svg></div>
-          <div class="parada-cuerpo" data-aparece><div><h3>De vuelta a casa</h3><p>Llega cansado y con un reporte: con quién jugó, si comió todo y cuántas siestas durmió.</p></div></div>
-        </li>
-      </ol>
     </div>
+
+    <ol class="momentos">
+      <li class="momento" id="m-llegada" data-momento="llegada">
+        <article class="tarjeta" aria-labelledby="t-llegada">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-llegada-560.webp" width="560" height="420" loading="lazy" alt="Un terrier blanco corre por el pasto hacia la cámara, con la lengua afuera"><video data-bucle data-src="/grabados/bocetos/pelusa/llegada.mp4" width="560" height="420" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">8:00</p>
+            <h2 id="t-llegada">Llega saludando a todos</h2>
+            <p>Lo buscamos en la furgoneta o lo dejas tú. Lo primero es saludar y olfatear a todo el grupo, uno por uno.</p>
+            <p class="dice"><b>Mostaza:</b> «Llegué primero. Como siempre.»</p>
+          </div>
+        </article>
+      </li>
+      <li class="momento" id="m-patio" data-momento="patio">
+        <article class="tarjeta" aria-labelledby="t-patio">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-patio-560.webp" width="560" height="420" loading="lazy" alt="Dos perros color canela juegan a luchar sobre el pasto"><video data-bucle data-src="/grabados/bocetos/pelusa/patio.mp4" width="560" height="420" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">10:00</p>
+            <h2 id="t-patio">Patio con su grupo</h2>
+            <p>Jugamos en grupos por tamaño y por carácter. Los tímidos parten de a poco y con un amigo.</p>
+            <p class="dice"><b>Tuerca:</b> «Yo no empecé. Bueno, sí.»</p>
+          </div>
+        </article>
+      </li>
+      <li class="momento" id="m-almuerzo" data-momento="almuerzo">
+        <article class="tarjeta" aria-labelledby="t-almuerzo">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-almuerzo-560.webp" width="560" height="420" loading="lazy" alt="Un beagle come de su plato sobre un piso de madera"><video data-bucle data-src="/grabados/bocetos/pelusa/almuerzo.mp4" width="640" height="480" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">12:30</p>
+            <h2 id="t-almuerzo">Almuerzo, cada uno en su plato</h2>
+            <p>Si trae su comida, se la damos a la hora de siempre y en su plato. Nadie le roba al de al lado. Casi nadie.</p>
+            <p class="dice"><b>Charqui:</b> «¿Y el postre?»</p>
+          </div>
+        </article>
+      </li>
+      <li class="momento" id="m-siesta" data-momento="siesta">
+        <article class="tarjeta" aria-labelledby="t-siesta">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-siesta-560.webp" width="560" height="420" loading="lazy" alt="Un cachorro color miel duerme acurrucado en su cama"><video data-bucle data-src="/grabados/bocetos/pelusa/siesta.mp4" width="640" height="480" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">13:30</p>
+            <h2 id="t-siesta">Siesta con luz baja</h2>
+            <p>Colchonetas, cortinas cerradas y música suave durante una hora y media. Roncar está permitido.</p>
+            <p class="dice"><b>Tuerca:</b> «Ronco por todos.»</p>
+          </div>
+        </article>
+      </li>
+      <li class="momento" id="m-bano" data-momento="bano">
+        <article class="tarjeta" aria-labelledby="t-bano">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-bano-560.webp" width="560" height="420" loading="lazy" alt="Un yorkshire envuelto en una toalla celeste mientras lo secan"><video data-bucle data-src="/grabados/bocetos/pelusa/bano.mp4" width="640" height="480" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">16:00</p>
+            <h2 id="t-bano">Baño, si le toca</h2>
+            <p>Champú según su pelo y secado sin apuro. El perfume va solo si lo pides, y casi nadie lo pide.</p>
+            <p class="dice"><b>Pimienta:</b> «Me porté bien. Que conste.»</p>
+          </div>
+        </article>
+      </li>
+      <li class="momento" id="m-vuelta" data-momento="vuelta">
+        <article class="tarjeta" aria-labelledby="t-vuelta">
+          <div class="tarjeta-video"><img src="/image/bocetos/pelusa/dia-vuelta-560.webp" width="560" height="420" loading="lazy" alt="Un perro de pelo rizado mira por la ventana del auto con el viento en la cara"><video data-bucle data-src="/grabados/bocetos/pelusa/vuelta.mp4" width="560" height="420" muted playsinline aria-hidden="true"></video></div>
+          <div class="tarjeta-texto">
+            <p class="hora">18:00</p>
+            <h2 id="t-vuelta">De vuelta a casa</h2>
+            <p>Llega cansado y con un reporte: con quién jugó, si comió todo y cuántas siestas durmió.</p>
+            <p class="dice"><b>Mostaza:</b> «¿Mañana a la misma hora?»</p>
+          </div>
+        </article>
+      </li>
+    </ol>
+
+    <div class="dia-pausa" data-momento="noche">
+      <h2>Y mañana, otra vez</h2>
+      <p>Antes de la once te llega su reporte, con fotos. Él ya se quedó dormido.</p>
+      <a class="boton" href="#reservar">Reservar un día de prueba</a>
+    </div>
+
+    <nav class="reloj" aria-label="Momentos del día"><ol><li><a href="#m-llegada"><span>8:00</span></a></li><li><a href="#m-patio"><span>10:00</span></a></li><li><a href="#m-almuerzo"><span>12:30</span></a></li><li><a href="#m-siesta"><span>13:30</span></a></li><li><a href="#m-bano"><span>16:00</span></a></li><li><a href="#m-vuelta"><span>18:00</span></a></li></ol></nav>
   </section>
 
+  <div class="despues">
   <section class="ancho seccion" id="precios" aria-labelledby="precios-titulo">
     <div class="cabeza" data-aparece>
       <p class="rotulo">Servicios y precios</p>
@@ -328,7 +488,7 @@ tbody tr:last-child > * { border-bottom: 0; }
     </div>
   </section>
 
-  <section class="ancho seccion" id="pandilla" style="padding-top: 0" aria-labelledby="pandilla-titulo">
+  <section class="ancho seccion" id="pandilla" aria-labelledby="pandilla-titulo">
     <div class="cabeza" data-aparece>
       <p class="rotulo">La pandilla</p>
       <h2 id="pandilla-titulo">Los de siempre</h2>
@@ -387,6 +547,7 @@ tbody tr:last-child > * { border-bottom: 0; }
       <button class="boton todo" type="submit">Reservar</button>
     </form>
   </section>
+  </div>
 </main>
 
 <footer class="ancho pie">

@@ -386,9 +386,12 @@ const ESTILOS = {
         ))}
       </span>
       <span className="rot">
-        <svg viewBox="0 0 30 40">
-          <path d="M14 18l7 7-7 7-7-7zM19 4l4 4-4 4-4-4z" />
-          <path className="cuello" d="M19 22C24 18 23 13 19 11M14 32v7" />
+        <svg viewBox="0 0 40 56">
+          <path d="M1.5 27.5 15.5 19 32 24.5 18 35.5zM27.6 4 31 .8 34.4 4 31 7.2z" />
+          <path className="ala" d="M10 26.6 17.6 22.6 25.6 25.2 18.2 30.4z" />
+          <path className="cuello" d="M27 24.5C34 21 35.5 14 30 11.2 24.6 8.6 25.2 3.4 30 3" />
+          <path className="pico" d="M33.2 3.1 38.6 4.4 37.4 8.8 35 5.6z" />
+          <path className="pata" d="M17.5 34V54M17.5 40.5 23 44.5 17.5 46.5M15 54h5" />
         </svg>
         Parina
       </span>

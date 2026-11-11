@@ -8,18 +8,24 @@
 <meta name="description" content="Boceto de página de una marca inventada, Cénit, observatorio turístico y astroturismo en Pisco Elqui, para mostrar el estilo Futurista.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/unbounded.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/cenit/cielo-1280.webp" imagesrcset="/image/bocetos/cenit/cielo-800.webp 800w, /image/bocetos/cenit/cielo-1280.webp 1280w" imagesizes="100vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/cenit.js" type="module"></script>
 <style>
 /* Cénit · futurista. Inspiración: Apple Vision Pro (apple.com/apple-vision-pro),
    ESO (eso.org) y Lusion (lusion.co). Se toma: 1) una sola frase grande por
    pantalla, centrada, que se revela al bajar, y secciones oscuras con el
    título sobre la imagen; 2) la luz sobre negro, los degradés de la noche y el
    vidrio neutro (blanco, sin color) para los datos; 3) la profundidad: la
-   portada es un cielo que se mueve detrás del horizonte. La idea propia: el
-   cielo en exposición larga. Las estrellas giran alrededor del polo sur
-   celeste, muy lento, y dejan su estela; el planisferio gira con la hora que
-   se elige, y el telescopio muestra el camino de la luz. */
+   portada es un cielo que se mueve detrás del horizonte. Y de White Desert
+   (Awwwards, sitio del día), la portada a sangre con video real. La idea
+   propia: el cielo en exposición larga, y que se pueda mirar. La portada es un
+   video de la Vía Láctea que cruza un valle entre cerros, con una retícula de
+   telescopio que sigue al cursor y lee hacia dónde apunta; el planisferio
+   gira con la hora que se elige, el telescopio muestra el camino de la luz y
+   en el ocular uno mismo enfoca Saturno, la Luna o un cúmulo. El pie amanece
+   detrás de los cerros. */
 @font-face { font-family: 'Unbounded'; src: url('/fonts/bocetos/unbounded.woff2') format('woff2'); font-weight: 200 900; font-display: swap; }
 /* Los respaldos ocupan lo mismo que Unbounded y Sora, para que la portada no
    se mueva al cargarlas. */
@@ -70,31 +76,26 @@ p { margin: 0; }
 .cabecera .reservar-enlace { justify-self: end; font-size: 15px; font-weight: 400; text-underline-offset: 6px; text-decoration-color: var(--polvo); }
 
 /* ---- Portada: el cielo en exposición larga ---- */
-.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(100svh, 1000px)); overflow: hidden; background: radial-gradient(120% 80% at 50% 100%, #2a2f6a 0%, var(--indigo) 30%, var(--noche) 72%); isolation: isolate; }
-.polo { position: absolute; left: 50%; top: 22%; width: 0; height: 0; z-index: -1; }
-.cielo, .estelas { position: absolute; left: 0; top: 0; width: 170vmax; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; }
-.cielo {
-  background:
-    radial-gradient(circle at 37px 53px, #ffffff 0 1.2px, transparent 1.8px) 0 0 / 127px 131px,
-    radial-gradient(circle at 91px 17px, #dfe4ff 0 0.9px, transparent 1.5px) 0 0 / 151px 113px,
-    radial-gradient(circle at 12px 88px, #fff4e8 0 1px, transparent 1.6px) 0 0 / 173px 167px,
-    radial-gradient(circle at 140px 60px, #ffffff 0 1.5px, transparent 2.2px) 0 0 / 211px 197px,
-    radial-gradient(circle at 70px 150px, #cdd6ff 0 0.8px, transparent 1.4px) 0 0 / 89px 179px,
-    radial-gradient(circle at 20px 20px, #ffffff 0 0.7px, transparent 1.2px) 0 0 / 61px 73px,
-    radial-gradient(circle at 200px 240px, #ffffff 0 2px, transparent 2.8px) 0 0 / 331px 307px;
-}
-.estelas {
-  background:
-    repeating-radial-gradient(circle, transparent 0 13px, rgb(233 232 255 / 0.32) 13px 14px, transparent 14px 31px),
-    repeating-radial-gradient(circle, transparent 0 22px, rgb(206 212 255 / 0.2) 22px 23px, transparent 23px 47px),
-    repeating-radial-gradient(circle, transparent 0 7px, rgb(255 236 220 / 0.12) 7px 8px, transparent 8px 59px);
-  -webkit-mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.35) 320deg, #000 360deg);
-  mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.35) 320deg, #000 360deg);
-}
-.horizonte { position: absolute; left: 0; right: 0; bottom: -2px; z-index: 1; width: 100%; height: auto; fill: var(--cerro); }
-.portada-texto { position: relative; z-index: 2; display: grid; gap: 22px; justify-items: center; padding: 120px var(--margen) 18svh; text-align: center; }
+.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(100svh, 1000px)); overflow: hidden; background: var(--noche); isolation: isolate; }
+/* El cielo: un video corto en bucle (barra.js) sobre su cuadro quieto, que es
+   la imagen de la portada. Se oscurece arriba y abajo para que el título se
+   lea y la portada se funda con la página. Se corre apenas con el cursor. */
+.cielo-video { position: absolute; inset: -16px; z-index: -1; }
+.cielo-video > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(70% 46% at 50% 46%, rgb(11 12 30 / 0.55), rgb(11 12 30 / 0) 70%), linear-gradient(rgb(11 12 30 / 0.7), rgb(11 12 30 / 0) 22%, rgb(11 12 30 / 0) 72%, var(--noche)); }
+
+/* La retícula: un buscador de telescopio que sigue al cursor (cenit.js) y lee
+   hacia dónde apunta, en azimut y altura. Su lectura tiene ancho fijo. */
+.reticula { position: absolute; left: 0; top: 0; z-index: 1; width: 132px; height: 132px; margin: -66px 0 0 -66px; border: 1px solid rgb(233 232 255 / 0.5); border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity 600ms var(--curva); }
+.reticula::before, .reticula::after { content: ''; position: absolute; background: rgb(233 232 255 / 0.45); }
+.reticula::before { left: 50%; top: -14px; bottom: -14px; width: 1px; -webkit-mask: linear-gradient(#000 0 40%, transparent 40% 60%, #000 60%); mask: linear-gradient(#000 0 40%, transparent 40% 60%, #000 60%); }
+.reticula::after { top: 50%; left: -14px; right: -14px; height: 1px; -webkit-mask: linear-gradient(90deg, #000 0 40%, transparent 40% 60%, #000 60%); mask: linear-gradient(90deg, #000 0 40%, transparent 40% 60%, #000 60%); }
+.lectura { position: absolute; left: calc(100% + 14px); top: 50%; width: 19ch; translate: 0 -50%; font: 400 12px/1.4 'Sora', 'Sora respaldo', sans-serif; letter-spacing: 0.12em; color: var(--luz); font-variant-numeric: tabular-nums; white-space: pre; }
+.apuntando .reticula { opacity: 1; }
+.portada-texto { position: relative; z-index: 2; pointer-events: none; display: grid; gap: 22px; justify-items: center; padding: 120px var(--margen) 18svh; text-align: center; }
 .portada h1 { max-width: 13ch; font-size: clamp(42px, 6.4vw, 96px); font-weight: 400; line-height: 1.02; }
-.portada-texto > p:not(.rotulo) { max-width: 40ch; color: #c9cae6; }
+.portada-texto > p:not(.rotulo) { max-width: 40ch; color: #d6d7ee; }
+.portada-texto a { pointer-events: auto; }
 
 /* ---- La noche de esta semana: el planisferio ---- */
 .noche-semana { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 6vw, 96px); align-items: center; margin-top: 72px; }
@@ -157,6 +158,43 @@ p { margin: 0; }
 .telescopio figcaption { margin-top: 12px; font-size: 14px; color: var(--polvo); }
 @keyframes cenit-rayo { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 
+/* ---- El ocular: enfoca tú ----
+   Se elige qué mirar y se gira el foco (cenit.js mide cuánto falta y
+   desenfoca el campo). Cada objeto enfoca en un punto distinto. Sin
+   JavaScript, se ve nítido. */
+.ocular { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 6vw, 96px); align-items: center; margin-top: clamp(72px, 9vw, 120px); }
+.campo-marco { position: relative; width: min(100%, 30rem); aspect-ratio: 1; justify-self: center; padding: 18px; border-radius: 50%; background: conic-gradient(from 200deg, #2a2d48, #0c0d1a 30%, #2a2d48 50%, #0c0d1a 80%, #2a2d48); box-shadow: 0 30px 60px -30px #000; }
+.campo { position: relative; height: 100%; overflow: hidden; border-radius: 50%; background: radial-gradient(circle, #05060d 55%, #000 72%); box-shadow: inset 0 0 50px 24px #000; }
+.campo > * { position: absolute; inset: 0; opacity: 0; filter: blur(var(--desenfoque, 0px)); transition: opacity 900ms var(--curva), filter 260ms var(--curva), scale 900ms var(--curva); scale: 0.96; }
+.campo svg { width: 100%; height: 100%; }
+.ocular:has([value="saturno"]:checked) .ver-saturno,
+.ocular:has([value="luna"]:checked) .ver-luna,
+.ocular:has([value="omega"]:checked) .ver-omega,
+.ocular:has([value="carina"]:checked) .ver-carina { opacity: 1; scale: 1; }
+.campo .fondo-estrellas { opacity: 0.6; scale: 1; }
+.mandos { display: grid; gap: 26px; }
+.mandos fieldset { display: grid; gap: 10px; margin: 0; padding: 0; border: 0; }
+.mandos legend { margin-bottom: 12px; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--polvo); }
+.objeto { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 18px; border: 1px solid var(--borde-vidrio); border-radius: 16px; cursor: pointer; transition: background-color 500ms var(--curva), border-color 500ms var(--curva); }
+.objeto input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.objeto b { font: 500 16px/1.3 'Unbounded', 'Unbounded respaldo', sans-serif; }
+.objeto small { font-size: 14px; color: var(--polvo); font-variant-numeric: tabular-nums; }
+.objeto:hover { border-color: rgb(233 232 255 / 0.4); }
+.objeto:has(input:checked) { background: rgb(233 232 255 / 0.1); border-color: var(--luz); }
+.objeto:has(input:focus-visible) { outline: 2px solid var(--luz); outline-offset: 3px; }
+.foco { display: grid; gap: 12px; }
+.foco label { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--polvo); }
+.foco output { width: 12ch; text-align: right; color: var(--luz); letter-spacing: 0.12em; }
+.foco input { width: 100%; height: 44px; margin: 0; background: transparent; cursor: grab; -webkit-appearance: none; appearance: none; }
+.foco input::-webkit-slider-runnable-track { height: 2px; background: repeating-linear-gradient(90deg, var(--polvo) 0 1px, transparent 1px 10px), rgb(233 232 255 / 0.2); }
+.foco input::-moz-range-track { height: 2px; background: rgb(233 232 255 / 0.3); }
+.foco input::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -14px; border: 1px solid var(--luz); border-radius: 50%; background: var(--noche); box-shadow: inset 0 0 0 6px var(--noche), inset 0 0 0 30px var(--luz); -webkit-appearance: none; appearance: none; }
+.foco input::-moz-range-thumb { width: 28px; height: 28px; border: 1px solid var(--luz); border-radius: 50%; background: var(--luz); }
+.foco input:focus-visible { outline: 2px solid var(--luz); outline-offset: 4px; }
+.descripciones { display: grid; min-height: 6.6em; color: #c9cae6; font-size: 16px; }
+.descripciones p { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity 600ms var(--curva), visibility 600ms; }
+.ocular:has([value="saturno"]:checked) .d-saturno, .ocular:has([value="luna"]:checked) .d-luna, .ocular:has([value="omega"]:checked) .d-omega, .ocular:has([value="carina"]:checked) .d-carina { opacity: 1; visibility: visible; }
+
 /* ---- Cómo llegar ---- */
 .llegar { position: relative; }
 .banda { position: relative; margin-top: 72px; overflow: hidden; border-radius: 28px; }
@@ -197,12 +235,32 @@ p { margin: 0; }
 .formulario .boton { justify-self: start; }
 .formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
 
-/* ---- Pie: el horizonte ---- */
-.pie { position: relative; margin-top: clamp(64px, 8vw, 120px); background: var(--cerro); }
-.pie-cerros { display: block; width: 100%; height: auto; margin-bottom: -1px; fill: var(--cerro); background: var(--noche); }
-.pie-cuerpo { display: grid; gap: 28px; padding-block: 24px 40px; }
-.pie-coord { font: 300 clamp(26px, 5vw, 64px)/1.1 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px; font-size: 15px; color: var(--polvo); }
+/* ---- Pie: amanece ----
+   Detrás de los cerros, el cielo se aclara al llegar al final: la noche
+   termina. Arriba, la despedida; abajo, cuatro columnas con lo práctico y la
+   luna nueva que viene, y las coordenadas como firma. */
+.pie { position: relative; isolation: isolate; margin-top: clamp(64px, 8vw, 120px); overflow: hidden; background: var(--cerro); }
+.alba { position: relative; display: grid; place-items: center; min-height: clamp(300px, 34vw, 460px); padding: 80px var(--margen) 0; overflow: hidden; background: linear-gradient(var(--noche), #151a44 46%, #3b3a6a 72%, #8a6a78 90%, #c99a7e); text-align: center; }
+.alba::before { content: ''; position: absolute; left: 50%; bottom: 0; width: 120vw; aspect-ratio: 2; translate: -50% 50%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 214 170 / 0.55), rgb(255 214 170 / 0) 70%); }
+.alba-estrellas { position: absolute; inset: 0; background:
+    radial-gradient(circle at 37px 53px, #ffffff 0 1.1px, transparent 1.7px) 0 0 / 127px 131px,
+    radial-gradient(circle at 91px 17px, #dfe4ff 0 0.8px, transparent 1.4px) 0 0 / 151px 113px,
+    radial-gradient(circle at 12px 88px, #fff4e8 0 0.9px, transparent 1.5px) 0 0 / 173px 167px,
+    radial-gradient(circle at 70px 150px, #cdd6ff 0 0.7px, transparent 1.3px) 0 0 / 89px 179px,
+    radial-gradient(circle at 200px 240px, #ffffff 0 1.6px, transparent 2.4px) 0 0 / 331px 307px;
+  -webkit-mask: linear-gradient(#000, transparent 60%); mask: linear-gradient(#000, transparent 60%); }
+.alba-adios { position: relative; z-index: 1; max-width: 16ch; padding-bottom: clamp(70px, 10vw, 130px); font: 400 clamp(32px, 4.6vw, 64px)/1.08 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: -0.02em; text-wrap: balance; }
+.alba svg { position: absolute; left: 0; bottom: -1px; width: 100%; height: auto; fill: var(--cerro); }
+.pie-cuerpo { display: grid; gap: 48px; padding-block: 48px 40px; }
+.pie-columnas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px clamp(24px, 3vw, 48px); margin: 0; }
+.pie-columnas div { display: grid; gap: 8px; align-content: start; }
+.pie-columnas dt { font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--polvo); }
+.pie-columnas dd { margin: 0; font-size: 16px; line-height: 1.6; }
+.pie-columnas a { text-decoration-color: var(--polvo); text-underline-offset: 5px; }
+.luna-nueva { display: inline-flex; align-items: center; gap: 12px; }
+.luna-nueva .luna { width: 30px; height: 30px; background: var(--noche); box-shadow: inset 0 0 0 1px rgb(233 232 255 / 0.55); }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 32px; padding-top: 24px; border-top: 1px solid var(--borde-vidrio); font-size: 15px; color: var(--polvo); }
+.pie-coord { font: 300 clamp(18px, 2vw, 24px)/1.3 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: 0.02em; color: var(--luz); font-variant-numeric: tabular-nums; }
 
 /* ---- M ---- */
 @media (max-width: 899px) {
@@ -210,6 +268,8 @@ p { margin: 0; }
   .experiencias { grid-template-columns: minmax(0, 1fr); max-width: 34rem; margin-inline: auto; }
   .telescopio { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .telescopio figure { grid-column: 1 / -1; max-width: 26rem; }
+  .ocular { grid-template-columns: minmax(0, 1fr); }
+  .pie-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .llevar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .perfil { position: static; background: var(--cerro); }
   .paradas { grid-template-columns: 1fr 1fr; }
@@ -221,7 +281,7 @@ p { margin: 0; }
   .cabecera { grid-template-columns: 1fr auto; }
   .coordenadas { display: none; }
   .logo { font-size: 18px; letter-spacing: 0.18em; }
-  .polo { top: 26%; }
+  .pie-columnas { grid-template-columns: minmax(0, 1fr); }
   .horas { flex-wrap: wrap; }
   .hora { min-width: 64px; }
   .telescopio { grid-template-columns: minmax(0, 1fr); }
@@ -231,25 +291,25 @@ p { margin: 0; }
 }
 
 /* ---- Movimiento ----
-   El cielo de la portada aparece con un fundido largo y gira una vuelta
-   completa alrededor del polo, a velocidad pareja, en cuatro minutos: las
-   estelas giran con él. Al bajar, el horizonte se hunde un poco. El disco
+   El cielo de la portada es un video en bucle que entra fundiéndose sobre su
+   cuadro quieto, y la retícula lo sigue con un resorte corto. Al llegar al
+   pie, el alba sube detrás de los cerros, atada al scroll. El disco
    del planisferio gira al elegir la hora, frenando al llegar. Los rayos de
    luz del telescopio y el camino a Pisco Elqui se dibujan al llegar, y todo
    lo demás aparece con un fundido que sube apenas. */
 [data-aparece] { --entrada: cenit-llega; --tramo: 40svh; --duracion: 1600ms; }
 @keyframes cenit-llega { from { opacity: 0; translate: 0 20px; } }
-@keyframes cenit-fundido { from { opacity: 0; } }
-@keyframes cenit-gira { to { rotate: 1turn; } }
-@keyframes cenit-hunde { to { translate: 0 12%; } }
+@keyframes cenit-amanece { from { translate: -50% 90%; opacity: 0.2; } }
+@keyframes cenit-aclara { from { opacity: 0.35; } }
 @media (prefers-reduced-motion: no-preference) {
-  .polo { animation: cenit-fundido 4s var(--curva) both, cenit-gira 240s linear infinite; }
   .portada-texto > * { animation: cenit-llega 1600ms var(--curva) both; }
   .portada-texto > :nth-child(2) { animation-delay: 300ms; }
   .portada-texto > :nth-child(3) { animation-delay: 600ms; }
   .portada-texto > :nth-child(4) { animation-delay: 900ms; }
   @supports (animation-timeline: scroll()) {
-    .horizonte { animation: cenit-hunde var(--curva) both; animation-timeline: scroll(root); animation-range: 0 90svh; }
+    .alba { view-timeline: --alba; }
+    .alba::before { animation: cenit-amanece var(--curva) both; animation-timeline: --alba; animation-range: entry 10% exit 0%; }
+    .alba-adios { animation: cenit-aclara var(--curva) both; animation-timeline: --alba; animation-range: entry 20% cover 50%; }
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -271,14 +331,17 @@ p { margin: 0; }
       <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#estrella-8"/></svg>Cénit</a>
       <a class="reservar-enlace" href="#reservar">Reservar una noche</a>
     </header>
-    <div class="polo" aria-hidden="true"><span class="estelas"></span><span class="cielo"></span></div>
+    <div class="cielo-video">
+      <img src="/image/bocetos/cenit/cielo-1280.webp" srcset="/image/bocetos/cenit/cielo-800.webp 800w, /image/bocetos/cenit/cielo-1280.webp 1280w" sizes="100vw" width="1280" height="720" alt="La Vía Láctea cruza en diagonal un cielo lleno de estrellas, entre dos cerros oscuros que se abren en un valle" fetchpriority="high">
+      <video data-bucle data-src="/grabados/bocetos/cenit/cielo.mp4" width="1280" height="720" muted playsinline aria-hidden="true"></video>
+    </div>
+    <div class="reticula" aria-hidden="true"><span class="lectura"></span></div>
     <div class="portada-texto">
       <p class="rotulo">Observatorio turístico · Pisco Elqui</p>
       <h1 id="titulo">El cielo, en exposición larga</h1>
       <p>Una noche con un telescopio de 16 pulgadas, a 1.250 metros de altura y sin una luz alrededor.</p>
       <a class="boton" href="#reservar">Reservar una noche</a>
     </div>
-    <svg class="horizonte" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150C90 120 150 92 240 104S380 160 470 140 600 70 700 82 820 150 930 132 1060 60 1150 72 1270 128 1350 118 1420 96 1440 100V220H0Z"/><path d="M1120 76a16 16 0 0 1 32 0z M1122 76h28v6h-28z"/></svg>
   </section>
 
   <section class="ancho seccion" id="noche" aria-labelledby="noche-titulo">
@@ -404,6 +467,62 @@ p { margin: 0; }
         <figcaption>En su domo de madera, que se abre de a un gajo.</figcaption>
       </figure>
     </div>
+
+    <form class="ocular" data-consulta toolname="mirar_por_el_telescopio" toolautosubmit tooldescription="Muestra en el ocular del telescopio de Cénit (un observatorio inventado por Volutus como boceto de página) uno de cuatro objetos del cielo de noviembre y responde qué se ve en él. No envía nada a nadie.">
+      <div class="campo-marco" data-aparece>
+        <div class="campo" aria-hidden="true">
+          <svg class="fondo-estrellas" viewBox="0 0 200 200"><g fill="#e9e8ff"><circle cx="64.8" cy="30.2" r="0.3"/><circle cx="14.5" cy="107.2" r="0.6"/><circle cx="116.6" cy="181.9" r="0.5"/><circle cx="7.5" cy="86.7" r="0.3"/><circle cx="48.1" cy="110.2" r="0.3"/><circle cx="165.4" cy="24.8" r="0.5"/><circle cx="126.1" cy="116.6" r="0.3"/><circle cx="115.4" cy="79.3" r="0.5"/><circle cx="9.3" cy="171.7" r="0.6"/><circle cx="83.8" cy="108.1" r="0.6"/><circle cx="112.1" cy="136.4" r="0.3"/><circle cx="116.3" cy="127.8" r="0.6"/><circle cx="19.5" cy="142.4" r="0.3"/><circle cx="123.8" cy="99.3" r="0.7"/><circle cx="155.4" cy="93.1" r="0.7"/><circle cx="72.3" cy="49.7" r="0.5"/><circle cx="139.8" cy="48.8" r="0.6"/><circle cx="105" cy="175" r="0.7"/><circle cx="57.6" cy="196" r="0.3"/><circle cx="102.4" cy="33" r="0.6"/><circle cx="30.4" cy="97.8" r="0.3"/><circle cx="192.4" cy="15.5" r="0.6"/><circle cx="68" cy="70" r="0.7"/><circle cx="116" cy="91.2" r="0.3"/><circle cx="188.9" cy="94.8" r="0.3"/><circle cx="12.1" cy="140.3" r="0.7"/><circle cx="56.9" cy="77.2" r="0.6"/><circle cx="4.5" cy="92.3" r="0.5"/><circle cx="122.2" cy="98.7" r="0.5"/><circle cx="153.6" cy="25.9" r="0.5"/><circle cx="79.6" cy="183.4" r="0.7"/><circle cx="16.1" cy="89.8" r="0.6"/><circle cx="176.7" cy="163.9" r="0.6"/><circle cx="141.3" cy="197.3" r="0.7"/><circle cx="191.5" cy="30.2" r="0.5"/><circle cx="30.3" cy="131.7" r="0.3"/><circle cx="97" cy="117.8" r="0.6"/><circle cx="56.4" cy="29.1" r="0.6"/><circle cx="122" cy="63.7" r="0.5"/><circle cx="138.1" cy="103.1" r="0.3"/><circle cx="91.3" cy="174.2" r="0.7"/><circle cx="79.6" cy="78.8" r="0.7"/><circle cx="126.9" cy="12.4" r="0.3"/><circle cx="196.9" cy="88.1" r="0.3"/><circle cx="68" cy="10.5" r="0.3"/><circle cx="113.4" cy="107.3" r="0.6"/></g></svg>
+          <svg class="ver-saturno" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="bandas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d6ae"/><stop offset="0.35" stop-color="#d9c08c"/><stop offset="0.5" stop-color="#c9a873"/><stop offset="0.62" stop-color="#e2cfa2"/><stop offset="1" stop-color="#b8935c"/></linearGradient>
+              <radialGradient id="sombra-saturno" cx="0.35" cy="0.3" r="0.8"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.75"/></radialGradient>
+            </defs>
+            <g transform="rotate(-16 100 100)">
+              <path d="M30 100a70 17 0 0 1 140 0" fill="none" stroke="#cdbb92" stroke-width="9" opacity="0.8"/>
+              <path d="M44 100a56 13 0 0 1 112 0" fill="none" stroke="#a8946c" stroke-width="5" opacity="0.7"/>
+              <circle cx="100" cy="100" r="30" fill="url(#bandas)"/>
+              <circle cx="100" cy="100" r="30" fill="url(#sombra-saturno)"/>
+              <path d="M30 100a70 17 0 0 0 140 0" fill="none" stroke="#d8c69c" stroke-width="9"/>
+              <path d="M44 100a56 13 0 0 0 112 0" fill="none" stroke="#b09c72" stroke-width="5"/>
+            </g>
+            <circle cx="156" cy="62" r="1.6" fill="#f3e6c8"/>
+          </svg>
+          <svg class="ver-luna" viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="cara" cx="0.42" cy="0.4" r="0.7"><stop offset="0" stop-color="#e9e6dc"/><stop offset="0.7" stop-color="#bdb8ab"/><stop offset="1" stop-color="#8d887d"/></radialGradient>
+              <linearGradient id="terminador" x1="0" y1="0" x2="1" y2="0"><stop offset="0.58" stop-color="#05060d" stop-opacity="0"/><stop offset="0.74" stop-color="#05060d" stop-opacity="0.92"/></linearGradient>
+              <radialGradient id="crater" cx="0.62" cy="0.58" r="0.6"><stop offset="0.45" stop-color="#6f6a61" stop-opacity="0.6"/><stop offset="0.8" stop-color="#9a958a" stop-opacity="0.2"/><stop offset="1" stop-color="#fbf8f0" stop-opacity="0.45"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="78" fill="url(#cara)"/>
+            <filter id="mares" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
+            <g fill="#7f7a70" opacity="0.55" filter="url(#mares)"><ellipse cx="78" cy="78" rx="22" ry="16"/><ellipse cx="108" cy="96" rx="16" ry="12"/><ellipse cx="70" cy="118" rx="14" ry="20"/><ellipse cx="118" cy="66" rx="10" ry="8"/><ellipse cx="96" cy="74" rx="8" ry="10"/></g>
+            <g fill="url(#crater)"><circle cx="92" cy="146" r="9"/><circle cx="58" cy="94" r="6"/><circle cx="124" cy="128" r="7"/><circle cx="86" cy="50" r="5"/><circle cx="140" cy="96" r="5"/><circle cx="104" cy="168" r="4"/></g>
+            <circle cx="100" cy="100" r="78" fill="url(#terminador)"/>
+          </svg>
+          <svg class="ver-omega" viewBox="0 0 200 200"><defs><radialGradient id="nucleo"><stop offset="0" stop-color="#fff3dc" stop-opacity="0.5"/><stop offset="0.5" stop-color="#fff3dc" stop-opacity="0.12"/><stop offset="1" stop-color="#fff3dc" stop-opacity="0"/></radialGradient></defs><circle cx="100" cy="100" r="46" fill="url(#nucleo)"/><g fill="#fff4e4"><circle cx="100.8" cy="102.7" r="0.8"/><circle cx="101.4" cy="101.8" r="0.7"/><circle cx="66.8" cy="105" r="0.5"/><circle cx="102.7" cy="96.6" r="0.8"/><circle cx="110.6" cy="112.5" r="0.7"/><circle cx="100" cy="99.4" r="0.8"/><circle cx="102.9" cy="100.4" r="1"/><circle cx="95" cy="105.5" r="1"/><circle cx="88.2" cy="134.8" r="0.5"/><circle cx="94.2" cy="84.8" r="0.7"/><circle cx="53.1" cy="155.1" r="0.6"/><circle cx="97.6" cy="99.5" r="1"/><circle cx="101.5" cy="96.6" r="0.6"/><circle cx="103.6" cy="91.1" r="0.8"/><circle cx="99.8" cy="100" r="0.7"/><circle cx="98.5" cy="88.2" r="0.5"/><circle cx="101" cy="102.5" r="1"/><circle cx="124.5" cy="93.7" r="0.8"/><circle cx="94.7" cy="106.8" r="0.7"/><circle cx="136.6" cy="118.7" r="0.5"/><circle cx="100.1" cy="100.5" r="1"/><circle cx="111.1" cy="99" r="1"/><circle cx="94.2" cy="92.4" r="0.5"/><circle cx="110.5" cy="83.6" r="0.5"/><circle cx="100" cy="62.4" r="0.8"/><circle cx="115.2" cy="88.3" r="0.8"/><circle cx="100.6" cy="98.3" r="0.8"/><circle cx="82.8" cy="103.7" r="0.5"/><circle cx="100.4" cy="100.3" r="0.6"/><circle cx="91.8" cy="95.1" r="0.8"/><circle cx="100.7" cy="98.7" r="0.8"/><circle cx="95.7" cy="93.9" r="0.7"/><circle cx="112.4" cy="101.5" r="0.5"/><circle cx="76.7" cy="96.4" r="0.6"/><circle cx="127.2" cy="51.8" r="0.6"/><circle cx="115.7" cy="102.6" r="0.6"/><circle cx="98.6" cy="99.2" r="0.7"/><circle cx="87.6" cy="96.7" r="0.6"/><circle cx="134.5" cy="76.2" r="1"/><circle cx="104" cy="91.5" r="1"/><circle cx="35.3" cy="99.4" r="1"/><circle cx="114.2" cy="118.4" r="1"/><circle cx="110" cy="120.6" r="0.5"/><circle cx="100.1" cy="99.3" r="0.6"/><circle cx="98.8" cy="92.7" r="1"/><circle cx="120.4" cy="107.7" r="1"/><circle cx="104.4" cy="75.8" r="1"/><circle cx="101.8" cy="100.6" r="0.6"/><circle cx="97" cy="99.9" r="1"/><circle cx="150.4" cy="108.2" r="0.5"/><circle cx="66.9" cy="98.9" r="1"/><circle cx="102.1" cy="106" r="0.7"/><circle cx="71.6" cy="103.6" r="0.6"/><circle cx="98.6" cy="96.2" r="0.7"/><circle cx="117.6" cy="152.6" r="0.8"/><circle cx="114" cy="115" r="0.5"/><circle cx="94.4" cy="90.4" r="0.8"/><circle cx="107.5" cy="103.4" r="0.7"/><circle cx="103.5" cy="104.7" r="0.7"/><circle cx="144.4" cy="151.3" r="0.6"/><circle cx="111.6" cy="96.7" r="0.8"/><circle cx="100.7" cy="99.4" r="0.6"/><circle cx="132.1" cy="147.5" r="0.8"/><circle cx="100.7" cy="100" r="0.8"/><circle cx="98.3" cy="103.4" r="0.7"/><circle cx="108.6" cy="101" r="1"/><circle cx="68.3" cy="125.9" r="1"/><circle cx="96.4" cy="96.7" r="1"/><circle cx="105.8" cy="97" r="0.6"/><circle cx="100.7" cy="99.9" r="0.5"/><circle cx="110" cy="93.8" r="0.6"/><circle cx="99.3" cy="104.7" r="0.6"/><circle cx="92.7" cy="86.7" r="0.7"/><circle cx="54.8" cy="127.9" r="1"/><circle cx="91.7" cy="76.4" r="0.5"/><circle cx="98.1" cy="109.6" r="0.6"/><circle cx="103.7" cy="98.6" r="0.5"/><circle cx="100.4" cy="98.8" r="0.5"/><circle cx="99.2" cy="107.8" r="0.5"/><circle cx="94.2" cy="101.6" r="0.7"/><circle cx="120.2" cy="89.1" r="1"/><circle cx="100.1" cy="100.1" r="1"/><circle cx="109.4" cy="98.3" r="0.7"/><circle cx="178.3" cy="123.6" r="0.6"/><circle cx="67.9" cy="94.2" r="0.6"/><circle cx="97.7" cy="108.2" r="1"/><circle cx="101.5" cy="96.1" r="0.7"/><circle cx="112.1" cy="102.6" r="0.5"/><circle cx="100.3" cy="100.8" r="0.8"/><circle cx="100.9" cy="129.2" r="0.8"/><circle cx="63.6" cy="115.2" r="0.8"/><circle cx="73.8" cy="92.9" r="0.8"/><circle cx="103.6" cy="115" r="0.6"/><circle cx="99.4" cy="100.9" r="0.6"/><circle cx="113.5" cy="104.4" r="0.6"/><circle cx="107.7" cy="100.6" r="0.7"/><circle cx="98.3" cy="97.4" r="0.8"/><circle cx="100.7" cy="99.4" r="0.7"/><circle cx="130.2" cy="108.1" r="0.6"/><circle cx="110.1" cy="114.1" r="0.8"/><circle cx="90.3" cy="116.4" r="1"/><circle cx="100" cy="100" r="0.5"/><circle cx="89.7" cy="112" r="0.5"/><circle cx="99.2" cy="101.2" r="0.5"/><circle cx="108.5" cy="124.7" r="1"/><circle cx="100.2" cy="98.6" r="0.5"/><circle cx="99.9" cy="100.1" r="0.5"/><circle cx="95.5" cy="103.3" r="0.7"/><circle cx="98" cy="98.9" r="1"/><circle cx="107.3" cy="91.2" r="0.6"/><circle cx="112.8" cy="88.8" r="0.8"/><circle cx="103.1" cy="68.3" r="0.8"/><circle cx="87.4" cy="85.5" r="0.5"/><circle cx="115.1" cy="72.7" r="1"/><circle cx="110.2" cy="77.1" r="0.6"/><circle cx="123.8" cy="86.1" r="1"/><circle cx="149.4" cy="104.6" r="1"/><circle cx="104.2" cy="87.4" r="0.6"/><circle cx="98.4" cy="98.3" r="0.5"/><circle cx="99.3" cy="100.7" r="0.8"/><circle cx="76.2" cy="77.7" r="0.6"/><circle cx="92.6" cy="100.5" r="0.5"/><circle cx="104" cy="98.3" r="1"/><circle cx="100.5" cy="100.3" r="1"/><circle cx="99.4" cy="138.5" r="0.5"/><circle cx="106.4" cy="91.5" r="0.6"/><circle cx="100" cy="99.6" r="0.8"/><circle cx="88.4" cy="100.4" r="0.8"/><circle cx="85.2" cy="157.1" r="0.5"/><circle cx="83.2" cy="86" r="0.6"/><circle cx="99.8" cy="106.7" r="0.7"/><circle cx="98.1" cy="98.3" r="0.6"/><circle cx="99.5" cy="103.8" r="0.5"/><circle cx="100" cy="99.9" r="0.8"/><circle cx="96.8" cy="100.7" r="0.8"/><circle cx="103" cy="74.3" r="1"/><circle cx="116.1" cy="93.7" r="0.5"/><circle cx="74.6" cy="191.9" r="0.5"/><circle cx="75.1" cy="107.5" r="0.7"/><circle cx="33.4" cy="152.7" r="0.6"/><circle cx="99.9" cy="95.5" r="0.7"/><circle cx="101.6" cy="99.6" r="0.6"/><circle cx="95.1" cy="124" r="0.5"/><circle cx="95.1" cy="84.9" r="0.6"/><circle cx="45.7" cy="139.2" r="0.6"/><circle cx="100.1" cy="100" r="0.8"/><circle cx="99.2" cy="94.9" r="0.8"/><circle cx="89.2" cy="114.9" r="0.7"/><circle cx="95" cy="109.1" r="0.7"/><circle cx="105.4" cy="92.1" r="0.5"/><circle cx="110" cy="100.7" r="0.7"/><circle cx="100" cy="102.1" r="0.5"/><circle cx="-0.5" cy="42" r="0.7"/><circle cx="173.6" cy="65.7" r="0.7"/><circle cx="106.8" cy="102.1" r="0.7"/><circle cx="92.8" cy="92.5" r="0.6"/><circle cx="100" cy="100" r="0.6"/><circle cx="102.2" cy="86.4" r="0.8"/><circle cx="75.4" cy="75.6" r="1"/><circle cx="71.4" cy="91.6" r="0.5"/><circle cx="57.9" cy="112.3" r="0.6"/><circle cx="95.6" cy="94.8" r="0.7"/><circle cx="26.4" cy="77.9" r="0.6"/><circle cx="98.4" cy="100.3" r="0.7"/><circle cx="99.9" cy="99" r="0.7"/><circle cx="88.4" cy="107.2" r="0.6"/><circle cx="96" cy="102.9" r="0.6"/><circle cx="81.4" cy="78.4" r="0.5"/><circle cx="91.1" cy="100.2" r="0.6"/><circle cx="31.1" cy="119.3" r="0.7"/><circle cx="116.2" cy="117.9" r="0.6"/><circle cx="100" cy="100.1" r="0.6"/><circle cx="100.2" cy="102" r="0.7"/><circle cx="101.6" cy="96.2" r="0.6"/><circle cx="72.7" cy="115.3" r="0.8"/><circle cx="99.3" cy="77" r="0.6"/><circle cx="110.2" cy="103.9" r="0.7"/><circle cx="90.5" cy="95.6" r="0.7"/><circle cx="88.8" cy="89" r="0.6"/><circle cx="113.9" cy="108.4" r="0.6"/><circle cx="77.4" cy="109.5" r="0.7"/><circle cx="111.9" cy="84.7" r="0.5"/><circle cx="101.2" cy="87.7" r="0.8"/><circle cx="113.7" cy="97.4" r="0.8"/><circle cx="119.6" cy="91.1" r="1"/><circle cx="100" cy="100" r="0.8"/><circle cx="100" cy="100" r="1"/><circle cx="106.7" cy="98.9" r="0.5"/><circle cx="74.9" cy="69.3" r="0.8"/><circle cx="107.8" cy="104.2" r="0.5"/><circle cx="93" cy="97" r="0.5"/><circle cx="100" cy="100" r="0.7"/><circle cx="64.4" cy="94.1" r="0.8"/><circle cx="98.8" cy="96.8" r="0.5"/><circle cx="111.3" cy="96.2" r="0.6"/><circle cx="94.6" cy="104.2" r="0.6"/><circle cx="100" cy="100" r="0.8"/><circle cx="100" cy="100.1" r="0.7"/><circle cx="67.9" cy="104.6" r="0.6"/><circle cx="53.7" cy="87.1" r="0.5"/><circle cx="84.9" cy="136.8" r="0.5"/><circle cx="101.6" cy="104.1" r="0.8"/><circle cx="90.7" cy="104.4" r="0.7"/><circle cx="100.6" cy="103.7" r="0.5"/><circle cx="94.8" cy="105.6" r="0.8"/><circle cx="113.5" cy="136.7" r="0.7"/><circle cx="100.1" cy="100.3" r="0.6"/><circle cx="89.1" cy="124.5" r="0.6"/><circle cx="100" cy="99.6" r="0.7"/><circle cx="109.7" cy="107.3" r="1"/><circle cx="101.8" cy="109.9" r="0.8"/><circle cx="100" cy="100" r="0.5"/><circle cx="93.7" cy="104.6" r="0.6"/><circle cx="101.4" cy="100.2" r="1"/><circle cx="101.6" cy="100.6" r="0.8"/><circle cx="97.7" cy="100.7" r="0.7"/><circle cx="104.2" cy="98.2" r="0.7"/><circle cx="158" cy="236.4" r="1"/><circle cx="100" cy="100" r="0.8"/><circle cx="101.3" cy="98.1" r="0.7"/><circle cx="105.4" cy="102.7" r="0.5"/><circle cx="99.2" cy="101" r="0.5"/><circle cx="67.2" cy="128.3" r="0.7"/><circle cx="104.6" cy="91.3" r="0.8"/><circle cx="111.6" cy="130.2" r="1"/><circle cx="114" cy="92.9" r="0.6"/><circle cx="87" cy="101.9" r="0.8"/><circle cx="100.5" cy="137.3" r="0.8"/><circle cx="102.3" cy="100.9" r="0.5"/><circle cx="100" cy="100.3" r="0.5"/><circle cx="98.1" cy="112.1" r="1"/><circle cx="107.9" cy="102.1" r="0.7"/><circle cx="97.6" cy="87.5" r="1"/><circle cx="104.1" cy="97.8" r="0.5"/><circle cx="87.1" cy="101.9" r="0.8"/><circle cx="100.6" cy="99.8" r="0.8"/><circle cx="103.3" cy="92.9" r="0.6"/><circle cx="167.1" cy="70.1" r="0.6"/><circle cx="72.4" cy="172.9" r="0.6"/><circle cx="99.4" cy="99.5" r="0.7"/><circle cx="102.7" cy="88.4" r="1"/><circle cx="114.9" cy="107.4" r="0.6"/><circle cx="94.7" cy="103.2" r="0.5"/><circle cx="95.5" cy="100.5" r="1"/><circle cx="124.4" cy="79.8" r="0.5"/><circle cx="91.2" cy="186.8" r="0.5"/><circle cx="102.7" cy="99.8" r="0.8"/><circle cx="110.4" cy="118.2" r="0.6"/><circle cx="86.4" cy="75.7" r="1"/><circle cx="107" cy="90.7" r="0.5"/><circle cx="99.8" cy="101" r="0.7"/><circle cx="88.8" cy="110.5" r="0.7"/><circle cx="100.1" cy="102" r="0.6"/><circle cx="97.5" cy="111.6" r="1"/><circle cx="100" cy="100.9" r="0.6"/><circle cx="96.1" cy="99.8" r="0.6"/><circle cx="97.3" cy="100.6" r="0.5"/><circle cx="103.6" cy="102.5" r="0.8"/><circle cx="92.3" cy="102.4" r="0.7"/><circle cx="106.7" cy="101.6" r="0.7"/></g></svg>
+          <svg class="ver-carina" viewBox="0 0 200 200"><defs><filter id="gas" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter></defs><g filter="url(#gas)"><ellipse cx="90" cy="92" rx="48" ry="30" fill="#b9746a" opacity="0.55"/><ellipse cx="118" cy="112" rx="40" ry="34" fill="#a7825e" opacity="0.5"/><ellipse cx="76" cy="122" rx="30" ry="18" fill="#6f8796" opacity="0.4"/><ellipse cx="112" cy="84" rx="16" ry="11" fill="#1a1216" opacity="0.9"/><path d="M60 104q30-12 52 4t48-6" fill="none" stroke="#120c10" stroke-width="10" opacity="0.7"/></g><g fill="#fff"><circle cx="51.9" cy="19.1" r="1.1"/><circle cx="185.1" cy="115" r="0.4"/><circle cx="77" cy="165.9" r="0.8"/><circle cx="118.5" cy="149.5" r="0.4"/><circle cx="29" cy="117.3" r="1.1"/><circle cx="72.9" cy="16.7" r="0.6"/><circle cx="35.4" cy="46.7" r="0.6"/><circle cx="16.9" cy="141.8" r="0.5"/><circle cx="156.7" cy="157.4" r="0.8"/><circle cx="132.1" cy="43.3" r="0.6"/><circle cx="24" cy="15.7" r="0.8"/><circle cx="108.6" cy="21.4" r="0.4"/><circle cx="153.3" cy="129.5" r="0.5"/><circle cx="125.1" cy="26.4" r="0.5"/><circle cx="81.6" cy="58.8" r="0.6"/><circle cx="130.2" cy="85.2" r="0.4"/><circle cx="66.2" cy="112" r="0.6"/><circle cx="84.5" cy="13.3" r="0.6"/><circle cx="126" cy="80.3" r="0.8"/><circle cx="46.7" cy="11.1" r="0.5"/><circle cx="86.3" cy="157.7" r="0.8"/><circle cx="114" cy="75.7" r="0.5"/><circle cx="33.4" cy="19.3" r="0.5"/><circle cx="125.3" cy="173.8" r="0.4"/><circle cx="113.1" cy="176.9" r="1.1"/><circle cx="40.9" cy="72.6" r="0.5"/><circle cx="103.8" cy="176.6" r="0.4"/><circle cx="79.1" cy="145.6" r="0.5"/><circle cx="64.3" cy="160.7" r="0.4"/><circle cx="185.6" cy="96.9" r="0.4"/><circle cx="119.4" cy="124.5" r="0.4"/><circle cx="172.8" cy="121.7" r="0.5"/><circle cx="125.3" cy="164.2" r="1.1"/><circle cx="82.8" cy="162.3" r="0.8"/><circle cx="42.9" cy="49.3" r="0.8"/><circle cx="178.9" cy="38.2" r="0.6"/><circle cx="32.2" cy="54.5" r="0.5"/><circle cx="17.4" cy="111.2" r="0.4"/><circle cx="130.2" cy="68.4" r="0.8"/><circle cx="117.9" cy="109" r="0.6"/><circle cx="126.8" cy="65.5" r="0.5"/><circle cx="86.6" cy="128.6" r="0.8"/><circle cx="100.6" cy="42.2" r="0.4"/><circle cx="121.4" cy="98.1" r="0.5"/><circle cx="90.4" cy="121.3" r="0.8"/><circle cx="160.6" cy="155.9" r="0.8"/><circle cx="29.3" cy="33.1" r="0.8"/><circle cx="75.8" cy="154.4" r="1.1"/><circle cx="101.8" cy="17.3" r="0.5"/><circle cx="24.8" cy="142" r="1.1"/><circle cx="24.4" cy="145.4" r="0.8"/><circle cx="127.5" cy="151.2" r="0.4"/><circle cx="164.3" cy="189.3" r="0.4"/><circle cx="44.9" cy="186.7" r="0.8"/><circle cx="61.8" cy="156" r="0.5"/><circle cx="133.5" cy="139.8" r="0.5"/><circle cx="21.8" cy="73.2" r="0.6"/><circle cx="38.6" cy="171.4" r="0.6"/><circle cx="172.9" cy="92.2" r="0.6"/><circle cx="100.4" cy="175.6" r="0.5"/><circle cx="116.5" cy="120.9" r="0.5"/><circle cx="67.4" cy="16.6" r="0.5"/><circle cx="82.6" cy="124.6" r="0.6"/><circle cx="132.3" cy="171.2" r="0.5"/><circle cx="152.6" cy="57.6" r="1.1"/><circle cx="18.7" cy="164.5" r="0.8"/><circle cx="109.9" cy="114.4" r="0.4"/><circle cx="55.4" cy="106.4" r="0.8"/><circle cx="142.8" cy="76.9" r="0.8"/><circle cx="188.3" cy="113.9" r="0.6"/></g><circle cx="104" cy="98" r="1.6" fill="#fff8e8"/></svg>
+        </div>
+      </div>
+      <div class="mandos" data-aparece>
+        <fieldset toolparamdescription="Qué mirar: saturno (el planeta y sus anillos), luna (la Luna creciente), omega (el cúmulo Omega Centauri) o carina (la Nebulosa de Carina)">
+          <legend>Mira por el ocular</legend>
+          <label class="objeto"><input type="radio" name="objeto" value="saturno" data-foco="64" checked><b>Saturno</b><small>1.300 millones de km</small></label>
+          <label class="objeto"><input type="radio" name="objeto" value="luna" data-foco="38"><b>La Luna</b><small>384.000 km</small></label>
+          <label class="objeto"><input type="radio" name="objeto" value="omega" data-foco="78"><b>Omega Centauri</b><small>17.000 años luz</small></label>
+          <label class="objeto"><input type="radio" name="objeto" value="carina" data-foco="52"><b>Nebulosa de Carina</b><small>8.500 años luz</small></label>
+        </fieldset>
+        <div class="foco">
+          <label for="foco">Foco <output for="foco" class="estado-foco" aria-live="polite"></output></label>
+          <input type="range" id="foco" name="foco" min="0" max="100" value="20" toolparamdescription="La perilla del foco, de 0 a 100. Cada objeto enfoca en un punto distinto">
+        </div>
+        <div class="descripciones">
+          <p class="d-saturno" data-respuesta>A 150 aumentos se ven los anillos separados del planeta, la sombra que le hacen y, si la noche está quieta, Titán a un costado.</p>
+          <p class="d-luna" data-respuesta>Con poco aumento entra entera. Los cráteres se ven mejor en el borde de la sombra, donde la luz los pega de lado.</p>
+          <p class="d-omega" data-respuesta>Diez millones de estrellas en una bola. Desde el sur sube alto; desde Europa casi no se ve.</p>
+          <p class="d-carina" data-respuesta>Una nube de gas donde nacen estrellas, cuatro veces más grande que la de Orión. Es la favorita de quien vuelve.</p>
+        </div>
+      </div>
+    </form>
   </section>
 
   <section class="ancho seccion llegar" id="llegar" aria-labelledby="llegar-titulo" style="padding-top: 0">
@@ -465,10 +584,19 @@ p { margin: 0; }
 </main>
 
 <footer class="pie">
-  <svg class="pie-cerros" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V82C110 70 190 40 290 50S430 96 540 84 700 26 800 34 930 88 1040 80 1210 30 1300 38 1400 60 1440 56V120Z"/></svg>
+  <div class="alba">
+    <span class="alba-estrellas" aria-hidden="true"></span>
+    <p class="alba-adios">La noche termina. Vuelve cuando oscurezca.</p>
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V82C110 70 190 40 290 50S430 96 540 84 700 26 800 34 930 88 1040 80 1210 30 1300 38 1400 60 1440 56V120Z"/><path d="M1006 58a14 14 0 0 1 28 0z M1008 58h24v5h-24z"/></svg>
+  </div>
   <div class="ancho pie-cuerpo">
-    <p class="pie-coord">30°07′ S · 70°29′ O · 1.250 m</p>
-    <div class="pie-fila"><span>Camino a Horcón km 2, Pisco Elqui, Paihuano · noche@cenitelqui.cl</span><span>Boceto de Volutus · marca inventada</span></div>
+    <dl class="pie-columnas">
+      <div><dt>Dónde</dt><dd>Camino a Horcón km 2<br>Pisco Elqui, Paihuano</dd></div>
+      <div><dt>Cuándo</dt><dd>Martes a domingo, desde que oscurece. En invierno, desde las 19:00.</dd></div>
+      <div><dt>Escríbenos</dt><dd>noche@cenitelqui.cl<br>+56 51 241 9900</dd></div>
+      <div><dt>Próxima luna nueva</dt><dd><span class="luna-nueva"><span class="luna" aria-hidden="true"></span>Miércoles 9 de diciembre</span></dd></div>
+    </dl>
+    <div class="pie-fila"><p class="pie-coord">30°07′ S · 70°29′ O · 1.250 m</p><span>Boceto de Volutus · marca inventada</span></div>
   </div>
 </footer>
 </body>

@@ -19,13 +19,13 @@ const b = (slug, nombre, rubro, estilo, titulo, detalle, fondo) => ({ slug, nomb
 
 export const BOCETOS = [
   b('alba', 'Alba Interiores', 'Estudio de interiorismo', 'minimalista', 'Minimalista', 'Poco, preciso, mucho aire', '#fafaf8'),
-  b('cauce', 'Cauce', 'Telemetría de riego para viñas y huertos', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#f3f4f1'),
+  b('cauce', 'Cauce', 'Telemetría de riego para viñas y huertos', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#0d1210'),
   b('basal', 'Basal Ingeniería', 'Aislación sísmica y cálculo estructural', 'corporativo', 'Corporativo', 'Estructura, respaldo, orden', '#ffffff'),
   b('ladera', 'Viña Ladera', 'Vinos de secano del Itata', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
-  b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#f6e4d0'),
+  b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#3b2418'),
   b('onix', 'Ónix', 'Joyería contemporánea de autor', 'premium', 'Premium', 'Oscuro, dorado, exclusivo', '#0b0a09'),
   b('golpe', 'Golpe', 'Club de boxeo', 'audaz', 'Audaz', 'Contraste, letras enormes', '#0d0d0d'),
-  b('pelusa', 'Pelusa', 'Guardería y peluquería de perros', 'ludico', 'Lúdico', 'Color, formas, humor', '#fff6e6'),
+  b('pelusa', 'Pelusa', 'Guardería y peluquería de perros', 'ludico', 'Lúdico', 'Color, formas, humor', '#ffd9b8'),
   b('sotano', 'Sótano', 'Cine club y sala independiente', 'brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir', '#ffffff'),
   b('lucero', 'Pista Lucero', 'Pista de patinaje y disco', 'retro', 'Retro', 'Nostalgia de los 70', '#24140c'),
   b('rumbo', 'Rumbo', 'Señalética y orientación', 'suizo', 'Suizo / gráfico', 'Grilla, rojo, tipografía', '#ffffff'),

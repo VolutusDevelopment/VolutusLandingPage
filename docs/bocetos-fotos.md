@@ -2,6 +2,8 @@
 
 Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unsplash.com/license), con su licencia gratuita: se pueden usar y modificar sin pedir permiso ni citar al autor. Igual se anotan aquí, para saber de dónde salió cada una. Se bajan, se recortan y se pasan a WebP al ancho en que se muestran; algunas van en blanco y negro, en espejo o redibujadas a línea (el «plano» de Alba).
 
+Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen de [Pexels](https://www.pexels.com/license/) y [Mixkit](https://mixkit.co/license/#videoFree), con sus licencias gratuitas. Se recortan a unos segundos, con un fundido entre el final y el principio para que el bucle no salte, se pasan a MP4 (H.264, sin sonido) y su foto quieta es un cuadro del mismo video. Van en `/grabados/` porque el Worker los entrega por partes, como pide Safari.
+
 ## alba
 
 | Archivo | Foto original |
@@ -27,11 +29,7 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 
 | Archivo | Foto original |
 | --- | --- |
-| mesa | https://images.unsplash.com/photo-1547573854-74d2a71d0826 |
-| pan | https://images.unsplash.com/photo-1520099786114-37290de065e6 |
-| cazuela | https://images.unsplash.com/photo-1664741662725-bd131742b7b7 |
-| verano | https://images.unsplash.com/photo-1792736946584-eec13a0ce4d3 |
-| manos | https://images.unsplash.com/photo-1608500218882-986df81d55fc |
+| portada-ancha, portada-alta | https://images.unsplash.com/photo-1547573854-74d2a71d0826 |
 | cocineras | https://images.unsplash.com/photo-1761839257845-9283b7d1b933 |
 | lunes | https://images.unsplash.com/photo-1775229910950-0b7a99bf8674 |
 | martes | https://images.unsplash.com/photo-1648455320791-a667c8aab7e4 |
@@ -69,7 +67,7 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | coach-1 | https://images.unsplash.com/photo-1570456824246-bd6d13126fc4 |
 | coach-2 | https://images.unsplash.com/photo-1636581563867-1ecab574858f |
 | coach-3 | https://images.unsplash.com/photo-1726867844097-dee6752f6cfc |
-| velada | https://images.unsplash.com/photo-1575654402720-0af3480d1fad |
+| ring (video y su foto quieta) | https://www.pexels.com/video/12995023/ |
 
 ## koen
 
@@ -125,13 +123,13 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 
 | Archivo | Foto original |
 | --- | --- |
-| portada | https://images.unsplash.com/photo-1764438631347-af1911339a25 |
+| portada-ancha, portada-alta | https://images.unsplash.com/photo-1764438631347-af1911339a25 |
 | retrato | https://images.unsplash.com/photo-1771086061785-ac187f1969ad |
-| invierno | https://images.unsplash.com/photo-1706364057629-c22c600863d4 |
+| invierno-ancha, invierno-alta | https://images.unsplash.com/photo-1706364057629-c22c600863d4 |
 | primavera | https://images.unsplash.com/photo-1618100789816-86508e3f2275 |
-| verano | https://images.unsplash.com/photo-1478116285712-2d465a7f29b5 |
+| verano-ancha, verano-alta | https://images.unsplash.com/photo-1478116285712-2d465a7f29b5 |
 | vendimia | https://images.unsplash.com/photo-1602170284347-f9c28856f149 |
-| bodega | https://images.unsplash.com/photo-1561906814-23da9a8bfee0 |
+| bodega-ancha, bodega-alta | https://images.unsplash.com/photo-1561906814-23da9a8bfee0 |
 | mesa | https://images.unsplash.com/photo-1789676062016-fefd691a4c88 |
 | pais | https://images.unsplash.com/photo-1530367184358-c28b2007c3a1 |
 | cinsault | https://images.unsplash.com/photo-1790278136305-14291bc72615 |
@@ -168,14 +166,17 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | Archivo | Foto original |
 | --- | --- |
 | portada | https://images.unsplash.com/photo-1658337921250-10578c1372fa |
-| juego | https://images.unsplash.com/photo-1597046835715-16f81ac132c0 |
-| siesta | https://images.unsplash.com/photo-1601880348117-25c1127a95df |
-| bano | https://images.unsplash.com/photo-1698313790088-c59e134c75e8 |
 | peluqueria | https://images.unsplash.com/photo-1611173622933-91942d394b04 |
 | mostaza | https://images.unsplash.com/photo-1674224624366-b8c6cf5ac3d2 |
 | tuerca | https://images.unsplash.com/photo-1790172537408-3c6adbb2fc1f |
 | pimienta | https://images.unsplash.com/photo-1628884978036-35035df5968b |
 | charqui | https://images.unsplash.com/photo-1624956578877-4948166c5dcb |
+| dia-llegada (video y su foto quieta) | https://www.pexels.com/video/32075613/ |
+| dia-patio | https://www.pexels.com/video/5081013/ |
+| dia-almuerzo | https://www.pexels.com/video/8056271/ |
+| dia-siesta | https://www.pexels.com/video/36447836/ |
+| dia-bano | https://www.pexels.com/video/6131727/ |
+| dia-vuelta | https://www.pexels.com/video/853722/ |
 
 ## lucero
 

@@ -15,11 +15,13 @@
 /* Quillay · natural. Inspiración: Aesop (aesop.com). Se toma: 1) el fondo
    crema y los tonos de tierra, con una serif tranquila para los nombres y
    una sans para todo lo demás; 2) los ingredientes contados con precisión,
-   sin promesas; 3) una tienda que no apura: cuatro productos en una lista de
-   botica, cada uno con lo que lleva y su precio. La idea propia: luz entre hojas. La sombra
-   moteada de un quillay se mece sobre la vitrina de la portada, donde el
-   jabón elegido gira en 3D, y las tres plantas de la marca se dibujan como
-   láminas de herbario. */
+   sin promesas, gramo a gramo; 3) una tienda que no apura y que aconseja.
+   De Awwwards (Truekind, Garoa), el producto como objeto 3D que se puede
+   mirar de todos lados. La idea propia: luz entre hojas. La sombra moteada
+   de un quillay se mece sobre la vitrina, donde el jabón elegido gira
+   apoyado en una esquina; cada jabón tiene su forma. Siguen un índice de
+   las tres plantas con su lámina, la repisa de las seis semanas de curado,
+   una guía para elegir, la barra cortada en gramos y una caja que se arma. */
 @font-face { font-family: 'Young Serif'; src: url('/fonts/bocetos/young-serif.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Figtree'; src: url('/fonts/bocetos/figtree.woff2') format('woff2'); font-weight: 300 900; font-display: swap; }
 
@@ -90,7 +92,7 @@ p { margin: 0; }
 .vitrina canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
 .con-3d .vitrina canvas { opacity: 1; translate: 0 0; }
 .pedestal { position: absolute; left: 10%; right: 10%; top: 62%; aspect-ratio: 3.4; border-radius: 50%; background: radial-gradient(ellipse 70% 60% at 50% 38%, #ecdcc3, #cdae88 78%); box-shadow: 0 34px 44px -28px rgb(43 42 34 / 0.45); }
-.sombra-jabon { position: absolute; left: 20%; right: 20%; top: 64%; aspect-ratio: 5; border-radius: 50%; background: radial-gradient(closest-side, rgb(70 50 30 / 0.5), rgb(70 50 30 / 0)); scale: calc(1 - var(--altura, 0) * 2.4); opacity: calc(0.9 - var(--altura, 0) * 3); }
+.sombra-jabon { position: absolute; left: 36%; right: 36%; top: 74.5%; aspect-ratio: 3.2; border-radius: 50%; background: radial-gradient(closest-side, rgb(60 42 24 / 0.55), rgb(60 42 24 / 0.18) 45%, rgb(60 42 24 / 0)); }
 .jabon-foto { position: absolute; inset: 6% 10% 18%; width: 80%; height: 76%; object-fit: cover; border-radius: 46% 54% 44% 56% / 40% 42% 58% 60%; }
 .con-js .jabon-foto { display: none; }
 .con-js .sin-3d .jabon-foto { display: block; }
@@ -102,87 +104,137 @@ p { margin: 0; }
 .sombra svg { position: absolute; inset: 0; width: 100%; height: 100%; color: #3e4a2c; filter: blur(7px); opacity: 0.16; }
 .sombra .capa-2 { filter: blur(11px); opacity: 0.11; }
 
-/* ---- Las tres plantas: láminas de herbario ---- */
-.laminas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px clamp(20px, 3vw, 40px); align-items: start; }
-.lamina { display: grid; gap: 18px; padding: clamp(18px, 2vw, 28px); background: var(--papel); box-shadow: 0 1px 2px rgb(43 42 34 / 0.08), 0 18px 30px -24px rgb(43 42 34 / 0.4); }
-.lamina:nth-child(1) { rotate: -1deg; }
-.lamina:nth-child(2) { margin-top: 72px; rotate: 0.8deg; }
-.lamina:nth-child(3) { margin-top: 28px; rotate: -0.4deg; }
-.dibujo { width: 100%; height: auto; aspect-ratio: 300 / 360; }
-.trazo { fill: none; stroke: var(--tinta); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; }
-.ficha-herbario { display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--tinta); font-size: 15px; }
-.ficha-herbario .cientifico { font-style: italic; font-size: 14px; color: var(--gris); }
-.ficha-herbario h3 { font-size: 26px; }
-.ficha-herbario dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; margin: 6px 0 0; padding-top: 8px; border-top: 1px dashed var(--linea); font-size: 13px; }
-.ficha-herbario dt { color: var(--gris); }
-.ficha-herbario dd { margin: 0; }
+/* ---- Las plantas: el índice y su lámina ----
+   Tres nombres grandes. Al elegir uno (o pasar el cursor), su planta se
+   dibuja a línea en la lámina de al lado y el nombre se corre hacia la hoja. */
+.plantas { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 6vw, 96px); align-items: start; }
+.indice-plantas { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--linea); }
+.planta { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: baseline; padding: 26px 4px 28px; border-bottom: 1px solid var(--linea); cursor: pointer; }
+.planta input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
+.planta h3 { font-size: clamp(40px, 5.2vw, 76px); line-height: 1; transition: translate 700ms var(--curva), color 700ms var(--curva); }
+.planta h3 em { display: block; margin-top: 8px; font: italic 400 15px/1.3 'Figtree', sans-serif; letter-spacing: 0; color: var(--gris); }
+.planta .parte { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tierra); }
+.planta .uso { grid-column: 1 / -1; max-width: 48ch; color: var(--gris); }
+.planta::before { content: ''; position: absolute; left: 2px; top: 46px; width: 22px; height: 13px; border-radius: 0 100% 0 100%; background: var(--hoja); rotate: -30deg; opacity: 0; scale: 0.3; transition: opacity 600ms var(--curva), scale 700ms var(--curva); }
+.planta:is(:hover, :has(input:checked)) h3 { translate: 38px 0; color: var(--hoja); }
+.planta:is(:hover, :has(input:checked))::before { opacity: 1; scale: 1; }
+.planta:has(input:focus-visible) { outline: 2px solid var(--hoja); outline-offset: -2px; }
+.lamina-grande { position: sticky; top: calc(var(--alto-barra, 0px) + 24px); aspect-ratio: 300 / 380; border: 1px solid var(--linea); background: var(--papel); box-shadow: 0 30px 50px -36px rgb(43 42 34 / 0.6); }
+.lamina-grande svg { position: absolute; inset: 6%; width: 88%; height: 82%; fill: none; stroke: var(--tinta); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.lamina-grande g { opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2000ms var(--curva), opacity 500ms var(--curva); }
+.plantas:has(.p-quillay input:checked) .l-quillay, .plantas:has(.p-maqui input:checked) .l-maqui, .plantas:has(.p-mosqueta input:checked) .l-mosqueta { opacity: 1; stroke-dashoffset: 0; }
 
-/* ---- Del bosque al jabón ---- */
-.proceso { display: grid; gap: clamp(56px, 8vw, 104px); margin: 0; padding: 0; list-style: none; counter-reset: paso; }
-.paso { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px clamp(32px, 6vw, 96px); align-items: center; counter-increment: paso; }
-.paso:nth-child(even) .forma { order: 2; }
-.forma { overflow: hidden; background: var(--arcilla); }
-.paso:nth-child(1) .forma { border-radius: 58% 42% 52% 48% / 46% 54% 46% 54%; }
-.paso:nth-child(2) .forma { border-radius: 42% 58% 40% 60% / 56% 44% 56% 44%; }
-.paso:nth-child(3) .forma { border-radius: 50% 50% 46% 54% / 60% 60% 40% 40%; }
-.forma img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
-.paso-texto { display: grid; gap: 14px; max-width: 30rem; }
-.paso-texto::before { content: counter(paso, decimal-leading-zero); font: 400 15px 'Young Serif', serif; color: var(--hoja); }
-.paso h3 { font-size: clamp(28px, 3vw, 40px); }
-.tiempo { display: inline-flex; justify-self: start; padding: 6px 14px; border-radius: 999px; background: var(--papel); font-size: 14px; font-weight: 600; }
+/* ---- Del bosque al jabón: la repisa de seis semanas ----
+   Tres pasos antes y, después, la repisa: una fila de barras por semana de
+   curado, de la más húmeda (oscura, la primera) a la seca (clara, la
+   sexta), con el peso de una barra al lado. */
+.antes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px clamp(20px, 3vw, 40px); margin: 0 0 clamp(56px, 7vw, 88px); padding: 0; list-style: none; counter-reset: paso; }
+.antes li { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 4px 18px; align-items: center; }
+.antes img { grid-row: 1 / 3; width: 88px; height: 88px; object-fit: cover; border-radius: 52% 48% 46% 54% / 50% 44% 56% 50%; transition: border-radius 900ms var(--curva), scale 900ms var(--curva); }
+.antes li:hover img { border-radius: 44% 56% 58% 42% / 56% 52% 48% 44%; scale: 1.06; }
+.antes b { font: 400 21px/1.2 'Young Serif', Georgia, serif; }
+.antes span { font-size: 15px; color: var(--gris); }
+.repisa { display: grid; margin: 0; padding: 0; list-style: none; }
+.semana { --seco: calc(var(--n) * 20%); display: grid; grid-template-columns: 10rem minmax(0, 1fr) 9rem; gap: 10px clamp(20px, 3vw, 40px); align-items: end; padding-top: 22px; }
+.semana > p:first-child b { display: block; font: 400 22px/1.2 'Young Serif', Georgia, serif; }
+.semana > p:first-child span { font-size: 14px; color: var(--gris); }
+.barras { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(6px, 1.1vw, 16px); padding: 0 14px 13px; }
+.barras::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 13px; border-radius: 2px; background: linear-gradient(#cda274, #9a6c3f 70%, #7d5531); box-shadow: 0 10px 14px -8px rgb(43 42 34 / 0.55); }
+.barras i { aspect-ratio: 1.7; background: #e3cfab; border-radius: 7px 7px 5px 5px; background: radial-gradient(ellipse 60% 40% at 50% 38%, rgb(255 255 255 / calc(0.3 - var(--n) * 0.05)), transparent 70%), color-mix(in srgb, #efe4cb var(--seco), #bf9466); box-shadow: inset 0 -4px 0 rgb(60 40 20 / 0.12), 0 2px 2px rgb(43 42 34 / 0.18); }
+.peso { justify-self: end; text-align: right; }
+.peso b { display: block; font: 400 28px/1 'Young Serif', Georgia, serif; font-variant-numeric: tabular-nums; }
+.peso span { font-size: 14px; color: var(--gris); }
 
-/* ---- Productos ---- */
+/* ---- Productos: ¿cuál es para ti? ---- */
 .productos-seccion { background: var(--papel); }
-.botica { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--tinta); }
-.producto { display: grid; grid-template-columns: 112px minmax(0, 1fr) 6rem 7rem; gap: 8px clamp(16px, 3vw, 40px); align-items: center; padding-block: 18px; border-bottom: 1px solid var(--linea); transition: background-color 500ms var(--curva); }
-.producto:hover { background: var(--crema); }
-.producto img { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; }
-.producto h3 { font-size: clamp(22px, 2.2vw, 28px); }
-.producto .lleva { margin-top: 4px; color: var(--gris); }
-.producto .medida { color: var(--gris); font-variant-numeric: tabular-nums; }
-.producto .precio { font: 400 24px/1 'Young Serif', serif; text-align: right; font-variant-numeric: tabular-nums; }
+.guia { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 6vw, 96px); align-items: center; }
+.necesidades { display: grid; gap: 4px; margin: 0; padding: 0; border: 0; }
+.necesidades legend { margin-bottom: 18px; padding: 0; }
+.necesidad { position: relative; display: flex; align-items: baseline; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--linea); font: 400 clamp(24px, 2.6vw, 34px)/1.2 'Young Serif', Georgia, serif; color: var(--gris); cursor: pointer; transition: color 500ms var(--curva); }
+.necesidad input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.necesidad small { font: 600 13px/1 'Figtree', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tierra); }
+.necesidad::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; background: var(--hoja); scale: 0 1; transform-origin: left; transition: scale 600ms var(--curva); }
+.necesidad:hover { color: var(--tinta); }
+.necesidad:has(input:checked) { color: var(--tinta); }
+.necesidad:has(input:checked)::after { scale: 1 1; }
+.necesidad:has(input:focus-visible) { outline: 2px solid var(--hoja); outline-offset: 2px; }
+.respuestas { display: grid; }
+.respuesta { grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 20px 32px; align-items: center; opacity: 0; visibility: hidden; translate: 16px 0; transition: opacity 600ms var(--curva), translate 700ms var(--curva), visibility 0s 600ms; }
+.guia:has([value="sensible"]:checked) .r-sensible, .guia:has([value="grasa"]:checked) .r-grasa, .guia:has([value="seca"]:checked) .r-seca, .guia:has([value="pelo"]:checked) .r-pelo { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.respuesta figure { overflow: hidden; border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%; aspect-ratio: 1; }
+.respuesta img { width: 100%; height: 100%; object-fit: cover; transition: scale 1200ms var(--curva); }
+.respuesta:hover img { scale: 1.06; }
+.respuesta > div { display: grid; gap: 12px; justify-items: start; }
+.respuesta h3 { font-size: clamp(28px, 3vw, 40px); }
+.respuesta .porque { color: var(--gris); }
+.respuesta .compra b { font-size: 30px; }
 
-/* ---- Ingredientes ---- */
-.ingredientes { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 40px clamp(32px, 6vw, 96px); align-items: start; }
-.receta { display: grid; margin: 0; border-top: 1px solid var(--tinta); }
-.receta div { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 4px 18px; padding-block: 16px; border-bottom: 1px solid var(--linea); }
-.receta dt { grid-row: 1 / 3; font: 400 24px/1.1 'Young Serif', serif; color: var(--hoja); font-variant-numeric: tabular-nums; }
-.receta dd { margin: 0; }
-.receta dd b { font-weight: 600; }
-.receta dd span { display: block; font-size: 15px; color: var(--gris); }
-.sin { margin-top: 24px; padding: 18px 20px; border-radius: 18px; background: var(--papel); }
-.ingredientes figure img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 999px 999px 24px 24px; }
-.ingredientes figcaption { margin-top: 10px; font-size: 14px; color: var(--gris); }
+/* ---- Ingredientes: una barra por dentro ---- */
+.corte { display: flex; height: clamp(110px, 12vw, 150px); overflow: hidden; border-radius: 22px 22px 18px 18px; box-shadow: inset 0 -8px 0 rgb(60 40 20 / 0.08), 0 24px 40px -28px rgb(43 42 34 / 0.6); }
+.corte span { position: relative; display: grid; place-items: end start; padding: 12px; border-right: 1px solid rgb(43 42 34 / 0.12); font: 400 clamp(15px, 1.6vw, 20px)/1 'Young Serif', Georgia, serif; font-variant-numeric: tabular-nums; color: rgb(43 42 34 / 0.75); transition: translate 600ms var(--curva), filter 600ms var(--curva); }
+.corte span:last-child { border-right: 0; }
+.c1 { flex: 52; background: linear-gradient(#e2d39f, #d4c286); }
+.c2 { flex: 26; background: linear-gradient(#f4eedd, #e9e0c8); }
+.c3 { flex: 12; background: linear-gradient(#f8f2e2, #efe6cf); }
+.c4 { flex: 8; background: linear-gradient(#ead7ae, #dcc596); }
+.c5 { flex: 6; background: radial-gradient(circle at 30% 40%, #a8875e 0 1.5px, transparent 2px) 0 0 / 9px 11px, linear-gradient(#e2cfa8, #d3bd92); }
+.c6 { flex: 6; background: repeating-linear-gradient(80deg, #8f5f3a 0 2px, #b07a4f 2px 5px); }
+.partes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px clamp(20px, 3vw, 48px); margin: 40px 0 0; padding: 0; list-style: none; }
+.partes li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; padding-top: 14px; border-top: 1px solid var(--linea); }
+.partes li::before { content: ''; width: 14px; height: 14px; border-radius: 4px; background: var(--muestra); box-shadow: inset 0 0 0 1px rgb(43 42 34 / 0.2); }
+.partes b { font-weight: 600; }
+.partes .g { font: 400 20px/1 'Young Serif', Georgia, serif; font-variant-numeric: tabular-nums; }
+.partes p { grid-column: 2 / -1; font-size: 15px; color: var(--gris); }
+.ingredientes-seccion:has(.partes li:nth-child(1):hover) .c1, .ingredientes-seccion:has(.partes li:nth-child(2):hover) .c2, .ingredientes-seccion:has(.partes li:nth-child(3):hover) .c3, .ingredientes-seccion:has(.partes li:nth-child(4):hover) .c4, .ingredientes-seccion:has(.partes li:nth-child(5):hover) .c5, .ingredientes-seccion:has(.partes li:nth-child(6):hover) .c6 { translate: 0 -10px; filter: brightness(1.05); }
 
-/* ---- Pedido ---- */
-.pedido { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px clamp(32px, 6vw, 96px); }
-.pedido h2 { font-size: clamp(32px, 4vw, 52px); margin-block: 12px 18px; }
-.datos { display: grid; gap: 16px; margin-top: 32px; font-size: 15px; }
-.datos b { display: block; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gris); }
-.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; padding: clamp(24px, 3vw, 40px); border-radius: 28px; background: var(--papel); }
-.formulario label, .formulario legend { display: grid; gap: 8px; font-size: 14px; font-weight: 600; }
-.formulario .todo { grid-column: 1 / -1; }
-.formulario fieldset { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
-.formulario legend { margin-bottom: 8px; }
-.opcion { display: inline-flex !important; grid-auto-flow: column; align-items: center; gap: 10px !important; padding: 10px 18px; border: 1px solid var(--linea); border-radius: 999px; font-weight: 500 !important; cursor: pointer; transition: border-color 400ms var(--curva), background-color 400ms var(--curva); }
-.opcion:has(input:checked) { border-color: var(--hoja); background: #e7e6d3; }
-.opcion input { width: 18px; height: 18px; margin: 0; accent-color: var(--hoja); }
-.formulario input:not([type="radio"]), .formulario select, .formulario textarea { width: 100%; min-height: 50px; padding: 10px 16px; border: 1px solid #cfc4ad; border-radius: 14px; background: #fffdf8; color: var(--tinta); font: 400 17px/1.3 'Figtree', sans-serif; -webkit-appearance: none; appearance: none; transition: border-color 400ms var(--curva); }
-.formulario textarea { min-height: 100px; resize: vertical; }
-.formulario select { padding-right: 40px; background: #fffdf8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232b2a22' stroke-width='1.6'/%3E%3C/svg%3E") right 16px center / 12px 8px no-repeat; }
-.formulario :is(input, select, textarea):focus-visible { outline: 2px solid var(--hoja); outline-offset: 0; border-color: var(--hoja); }
-.formulario button { justify-self: start; }
-.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+/* ---- Pedido: arma tu caja ----
+   La caja, vista desde arriba, tiene cuatro lugares. Lo que se marca en la
+   lista cae en su lugar, y si va de regalo, un papel con su cordel la tapa. */
+.pedido-form { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px clamp(32px, 6vw, 96px); align-items: start; }
+.caja { position: sticky; top: calc(var(--alto-barra, 0px) + 24px); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; aspect-ratio: 1; padding: 22px; border-radius: 6px; background: linear-gradient(135deg, #d9bd94, #c9a679); box-shadow: inset 0 0 0 10px #c29d70, inset 0 0 26px rgb(90 60 30 / 0.4), 0 30px 50px -30px rgb(43 42 34 / 0.6); }
+.hueco { position: relative; display: grid; place-items: center; border-radius: 4px; background: #b8915f; box-shadow: inset 0 4px 10px rgb(70 45 20 / 0.45); }
+.hueco::before { content: attr(data-vacio); font-size: 13px; color: rgb(60 40 20 / 0.5); }
+.hueco i { position: absolute; opacity: 0; translate: 0 -24px; scale: 1.08; transition: opacity 500ms var(--curva), translate 600ms var(--curva), scale 600ms var(--curva); }
+.h-avena i { width: 72%; height: 44%; border-radius: 14px; background: radial-gradient(circle at 30% 40%, #8d6b45 0 1.2px, transparent 1.8px) 0 0 / 10px 9px, linear-gradient(160deg, #f3e9d3, #e0d0ad); box-shadow: 0 6px 8px rgb(70 45 20 / 0.35); }
+.h-maqui i { width: 58%; aspect-ratio: 1; border-radius: 4px; background: linear-gradient(160deg, #8a6886, #6b4c6a); box-shadow: 0 6px 8px rgb(70 45 20 / 0.35), inset 0 -6px 0 #9fae8f; }
+.h-champu i { width: 64%; aspect-ratio: 1; border-radius: 12px; background: radial-gradient(circle at 40% 30%, #6e3a1e 0 1.2px, transparent 1.8px) 0 0 / 11px 12px, linear-gradient(160deg, #e0936c, #c7724c); box-shadow: 0 6px 8px rgb(70 45 20 / 0.35); }
+.h-aceite i { width: 46%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #2b2a22 0 34%, #5a3a12 36%, #a8661b 60%, #6f420f 100%); box-shadow: 0 6px 8px rgb(70 45 20 / 0.35); }
+.pedido-form:has([value="Jabón de quillay y avena"]:checked) .h-avena i, .pedido-form:has([value="Jabón de maqui y arcilla"]:checked) .h-maqui i, .pedido-form:has([value="Champú sólido de quillay"]:checked) .h-champu i, .pedido-form:has([value="Aceite de rosa mosqueta"]:checked) .h-aceite i { opacity: 1; translate: 0 0; scale: 1; }
+.pedido-form:has([value="Jabón de quillay y avena"]:checked) .h-avena::before, .pedido-form:has([value="Jabón de maqui y arcilla"]:checked) .h-maqui::before, .pedido-form:has([value="Champú sólido de quillay"]:checked) .h-champu::before, .pedido-form:has([value="Aceite de rosa mosqueta"]:checked) .h-aceite::before { opacity: 0; }
+.papel { position: absolute; inset: 0; border-radius: 6px; background: radial-gradient(circle at 20% 30%, rgb(95 111 69 / 0.35) 0 2px, transparent 2.5px) 0 0 / 26px 22px, linear-gradient(135deg, #f3ecdc, #e6dcc6); box-shadow: 0 2px 6px rgb(43 42 34 / 0.25); opacity: 0; translate: 0 -30px; transition: opacity 600ms var(--curva), translate 700ms var(--curva); }
+.papel::before, .papel::after { content: ''; position: absolute; background: #9b7a52; }
+.papel::before { left: 50%; top: 0; bottom: 0; width: 3px; }
+.papel::after { top: 50%; left: 0; right: 0; height: 3px; }
+.pedido-form:has([name="regalo"]:checked) .papel { opacity: 1; translate: 0 0; }
+.campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; }
+.campos .todo { grid-column: 1 / -1; }
+.lista-caja { display: grid; gap: 0; margin: 0; padding: 0; border: 0; }
+.lista-caja legend, .campos > label { font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hoja); }
+.lista-caja legend { margin-bottom: 8px; padding: 0; }
+.item { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 2px; border-bottom: 1px solid var(--linea); font-size: 17px; cursor: pointer; }
+.item input, .regalo input { width: 22px; height: 22px; margin: 0; accent-color: var(--hoja); }
+.item span { font-weight: 600; }
+.item small { display: block; font-weight: 400; color: var(--gris); }
+.item b { font: 400 20px/1 'Young Serif', Georgia, serif; font-variant-numeric: tabular-nums; }
+.campos > .regalo { display: flex; align-items: center; gap: 14px; letter-spacing: 0; text-transform: none; font-size: 17px; font-weight: 500; color: var(--tinta); cursor: pointer; }
+.campos > label { display: grid; gap: 8px; }
+.campos input:not([type="checkbox"]) { width: 100%; min-width: 0; min-height: 50px; padding: 10px 14px; border: 1px solid #cfc3aa; border-radius: 10px; background: #fffdf8; color: var(--tinta); font: 400 17px/1.3 'Figtree', sans-serif; letter-spacing: 0; text-transform: none; }
+.campos input:focus-visible { outline: 2px solid var(--hoja); outline-offset: 1px; }
+.campos .boton { justify-self: start; }
+.campos .boceto-aviso { grid-column: 1 / -1; margin: 0; }
 
-/* ---- Pie ---- */
-.pie { display: grid; justify-items: center; gap: 20px; padding-block: 64px 40px; border-top: 1px solid var(--linea); }
-.etiqueta-pie { display: grid; gap: 8px; width: min(100%, 30rem); padding: 22px 24px; border: 1px solid var(--tinta); background: var(--papel); }
-.etiqueta-pie .cientifico { font-size: 13px; font-style: italic; color: var(--gris); }
-.pie-marca { font: 400 clamp(48px, 7vw, 72px)/1 'Young Serif', Georgia, serif; color: var(--hoja); }
-.etiqueta-pie dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; margin: 8px 0 0; padding-top: 10px; border-top: 1px dashed var(--linea); font-size: 14px; }
-.etiqueta-pie dt { color: var(--gris); }
-.etiqueta-pie dd { margin: 0; }
-.pie-boceto { font-size: 14px; color: var(--gris); }
+/* ---- Pie: la etiqueta de papel ---- */
+.pie { position: relative; margin-top: clamp(40px, 6vw, 80px); padding-block: clamp(64px, 8vw, 100px) 32px; background: #e6dcc6; }
+.pie::before { content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 15px; background: #e6dcc6; -webkit-mask: radial-gradient(circle at 50% 100%, #000 7px, transparent 7.5px) 0 0 / 18px 15px repeat-x; mask: radial-gradient(circle at 50% 100%, #000 7px, transparent 7.5px) 0 0 / 18px 15px repeat-x; }
+.pie-cuerpo { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 64px); align-items: center; }
+.sello { width: clamp(120px, 12vw, 150px); aspect-ratio: 1; color: var(--hoja); transition: rotate 1800ms var(--curva); }
+.sello:hover { rotate: 120deg; }
+.sello svg { width: 100%; height: 100%; }
+.sello text { font: 600 10.5px 'Figtree', sans-serif; letter-spacing: 0.32em; fill: currentColor; text-transform: uppercase; }
+.pie dl { margin: 0; }
+.pie dt { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hoja); }
+.pie dd { margin: 6px 0 0; }
+.pie-boceto { margin-top: 48px; padding-top: 20px; border-top: 1px solid #d3c6aa; font-size: 14px; color: var(--gris); }
 
 /* ---- M ---- */
 @media (max-width: 899px) {
@@ -190,48 +242,45 @@ p { margin: 0; }
   .cabecera .logo { grid-row: 1; }
   .cabecera nav ul { gap: 18px; font-size: 14px; }
   .cabecera .lado-izq { display: none; }
-  .portada, .paso, .ingredientes, .pedido { grid-template-columns: minmax(0, 1fr); }
+  .portada, .plantas, .guia, .pedido-form { grid-template-columns: minmax(0, 1fr); }
   .portada { min-height: 0; }
   .vitrina { order: -1; width: min(100%, 32rem); justify-self: center; margin-block: -24px -40px; }
-  .paso:nth-child(even) .forma { order: 0; }
-  .forma { width: min(80%, 26rem); }
-  .paso:nth-child(even) .forma { justify-self: end; }
-  .laminas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lamina:nth-child(3) { margin-top: -40px; }
-  .ingredientes figure { width: min(70%, 22rem); }
+  .lamina-grande { position: relative; top: 0; order: -1; width: min(100%, 22rem); justify-self: center; }
+  .antes { grid-template-columns: minmax(0, 1fr); }
+  .semana { grid-template-columns: minmax(0, 1fr) auto; }
+  .semana .barras { grid-column: 1 / -1; grid-row: 2; }
+  .partes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .caja { position: relative; top: 0; width: min(100%, 24rem); justify-self: center; }
+  .pie-cuerpo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sello { grid-column: 1 / -1; }
 }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
-  .laminas { grid-template-columns: minmax(0, 1fr); }
-  .lamina:nth-child(n) { margin-top: 0; }
-  .lamina:nth-child(2) { width: 92%; justify-self: end; }
-  .producto { grid-template-columns: 72px minmax(0, 1fr) auto; }
-  .producto img { width: 72px; height: 72px; grid-row: 1 / 3; }
-  .producto > div { grid-column: 2 / -1; }
-  .producto .medida { grid-column: 2; }
-  .producto .precio { grid-column: 3; font-size: 20px; }
-  .formulario { grid-template-columns: minmax(0, 1fr); }
+  .respuesta { grid-template-columns: minmax(0, 1fr); }
+  .respuesta figure { width: min(100%, 16rem); }
+  .partes { grid-template-columns: minmax(0, 1fr); }
+  .corte span { padding: 8px 4px; font-size: 13px; }
+  .campos { grid-template-columns: minmax(0, 1fr); }
+  .pie-cuerpo { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---- Movimiento: luz entre hojas ----
-   En la portada, el jabón elegido aparece en 3D sobre su pedestal (quillay.js):
-   flota, se balancea y se inclina hacia el cursor, y da una vuelta al cambiar
-   de jabón. Encima, dos capas de sombra de hojas se mecen de ida y vuelta,
-   muy lento y a distinto ritmo, para que el ciclo no se note: aparecen con un
-   fundido al cargar. Las plantas de las láminas se dibujan a línea con el
-   scroll. Las fotos del proceso llegan dentro de su forma, que se abre desde
-   el centro. */
+   En la portada, el jabón elegido gira en 3D apoyado en una esquina sobre su
+   pedestal (quillay.js): se inclina hacia el cursor y da una vuelta más al
+   cambiar de jabón. Encima, dos capas de sombra de hojas se mecen de ida y
+   vuelta, muy lento y a distinto ritmo, y aparecen con un fundido. La planta
+   elegida se dibuja a línea en su lámina. En la repisa, las barras se secan
+   al bajar: pasan de húmedas a su tono, una tras otra. Lo que se marca en el
+   pedido cae en su lugar de la caja. */
 [data-aparece] { --entrada: quillay-sube; --tramo: 34svh; --duracion: 1300ms; }
-.lamina[data-aparece] { --entrada: quillay-funde; --tramo: 50svh; --duracion: 2400ms; }
-.trazo { --entrada: quillay-traza; }
-.forma[data-aparece] { --entrada: quillay-abre; --tramo: 50svh; --duracion: 1600ms; }
-.forma img { --entrada: quillay-asienta; }
+.barras { --entrada: quillay-funde; --tramo: 40svh; }
+.barras i { --entrada: quillay-seca; }
+.corte span { --entrada: quillay-crece; --tramo: 40svh; }
 @keyframes quillay-sube { from { opacity: 0; translate: 0 14px; } }
 @keyframes quillay-funde { from { opacity: 0; } }
-@keyframes quillay-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes quillay-asienta { from { scale: 1.12; } }
-@keyframes quillay-abre { from { clip-path: ellipse(16% 12% at 50% 56%); } to { clip-path: ellipse(80% 80% at 50% 50%); } }
+@keyframes quillay-seca { from { background-color: #a87a4c; filter: saturate(1.3) brightness(0.85); } }
+@keyframes quillay-crece { from { flex-grow: 0.0001; color: transparent; } }
 @keyframes quillay-mece { from { transform: rotate(-1.6deg) translate(-6px, 0); } to { transform: rotate(1.6deg) translate(8px, 6px); } }
 @keyframes quillay-luz { from { opacity: 0; } }
 @media (prefers-reduced-motion: no-preference) {
@@ -245,6 +294,9 @@ p { margin: 0; }
   .portada-texto > :nth-child(5) { animation-delay: 600ms; }
   .vitrina canvas { translate: 0 18px; transition: opacity 1400ms var(--curva), translate 1600ms var(--curva); }
   .con-3d .vitrina canvas { translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lamina-grande g, .respuesta, .hueco i, .papel { transition: none; }
 }
 </style>
 </head>
@@ -335,135 +387,151 @@ p { margin: 0; }
 
   <section class="ancho seccion" id="plantas" aria-labelledby="plantas-titulo">
     <div class="cabeza" data-aparece>
-      <p class="rotulo">Las tres plantas</p>
-      <h2 id="plantas-titulo">Tres árboles del cerro, y para qué sirve cada uno</h2>
-      <p class="suave">Las dibujamos como en un herbario, con el lugar y el mes en que las recolectamos este año.</p>
+      <p class="rotulo">Las plantas</p>
+      <h2 id="plantas-titulo">Tres árboles del cerro y lo que le toma a cada uno</h2>
+      <p class="suave">De cada planta usamos una sola parte, la que sirve, y en la cantidad que el árbol vuelve a dar en un año.</p>
     </div>
-    <div class="laminas">
-      <article class="lamina" data-aparece>
-        <svg class="dibujo" viewBox="0 0 300 360" aria-hidden="true"><g class="trazo" data-sigue><use href="#planta-quillay"/></g></svg>
-        <div class="ficha-herbario">
-          <p class="cientifico">Quillaja saponaria Molina</p>
-          <h3>Quillay</h3>
-          <p>Su corteza hace espuma sola, sin nada más. Limpia suave y no reseca.</p>
-          <dl><dt>Lugar</dt><dd>Cerro Los Robles, Lolol</dd><dt>Mes</dt><dd>Abril de 2026</dd><dt>Usamos</dt><dd>La corteza</dd></dl>
-        </div>
-      </article>
-      <article class="lamina" data-aparece>
-        <svg class="dibujo" viewBox="0 0 300 360" aria-hidden="true"><g class="trazo" data-sigue><use href="#planta-maqui"/></g></svg>
-        <div class="ficha-herbario">
-          <p class="cientifico">Aristotelia chilensis</p>
-          <h3>Maqui</h3>
-          <p>Sus hojas calman la piel irritada. La baya la dejamos para los pájaros.</p>
-          <dl><dt>Lugar</dt><dd>Quebrada El Huique</dd><dt>Mes</dt><dd>Enero de 2026</dd><dt>Usamos</dt><dd>La hoja</dd></dl>
-        </div>
-      </article>
-      <article class="lamina" data-aparece>
-        <svg class="dibujo" viewBox="0 0 300 360" aria-hidden="true"><g class="trazo" data-sigue><use href="#planta-mosqueta"/></g></svg>
-        <div class="ficha-herbario">
-          <p class="cientifico">Rosa rubiginosa</p>
-          <h3>Rosa mosqueta</h3>
-          <p>De su semilla sale un aceite que ayuda a cicatrizar y a nutrir la piel seca.</p>
-          <dl><dt>Lugar</dt><dd>Orillas del estero Nilahue</dd><dt>Mes</dt><dd>Marzo de 2026</dd><dt>Usamos</dt><dd>La semilla</dd></dl>
-        </div>
-      </article>
+    <div class="plantas">
+      <ul class="indice-plantas" data-aparece>
+        <li class="planta p-quillay"><input type="radio" name="planta" aria-label="Ver la lámina del quillay" checked><h3>Quillay<em>Quillaja saponaria</em></h3><p class="parte">La corteza</p><p class="uso">Hace espuma sola: tiene saponinas, el mismo jabón con que se lavaba la lana en el campo. Limpia sin resecar.</p></li>
+        <li class="planta p-maqui"><input type="radio" name="planta" aria-label="Ver la lámina del maqui"><h3>Maqui<em>Aristotelia chilensis</em></h3><p class="parte">La hoja</p><p class="uso">Macerada en aceite, calma la piel irritada y la que brilla a media tarde. La baya la dejamos para los pájaros.</p></li>
+        <li class="planta p-mosqueta"><input type="radio" name="planta" aria-label="Ver la lámina de la rosa mosqueta"><h3>Rosa mosqueta<em>Rosa rubiginosa</em></h3><p class="parte">La semilla</p><p class="uso">De ella sale un aceite que ayuda a cicatrizar y nutre la piel seca. La prensamos en frío, en marzo.</p></li>
+      </ul>
+      <div class="lamina-grande" aria-hidden="true">
+        <svg viewBox="40 10 260 360"><g class="l-quillay"><use href="#planta-quillay"/></g><g class="l-maqui"><use href="#planta-maqui"/></g><g class="l-mosqueta"><use href="#planta-mosqueta"/></g></svg>
+      </div>
     </div>
   </section>
 
   <section class="ancho seccion" id="proceso" style="padding-top: 0" aria-labelledby="proceso-titulo">
     <div class="cabeza" data-aparece>
       <p class="rotulo">Del bosque al jabón</p>
-      <h2 id="proceso-titulo">Dos meses entre el cerro y tu lavamanos</h2>
+      <h2 id="proceso-titulo">Seis semanas en la repisa</h2>
+      <p class="suave">Un jabón recién hecho todavía tiene agua. Lo dejamos secar seis semanas, dándolo vuelta cada domingo, hasta que pierde ocho gramos y queda duro y suave. Por eso dura el doble.</p>
     </div>
-    <ol class="proceso">
-      <li class="paso">
-        <figure class="forma" data-aparece><img data-sigue src="/image/bocetos/quillay/hojas-800.webp" srcset="/image/bocetos/quillay/hojas-500.webp 500w, /image/bocetos/quillay/hojas-800.webp 800w" sizes="(min-width: 900px) 40vw, 80vw" width="800" height="1067" loading="lazy" alt="Hojas verdes a contraluz, con el sol filtrándose entre ellas"></figure>
-        <div class="paso-texto" data-aparece><h3>Recolección</h3><p class="suave">Sacamos corteza de quillays caídos o de la poda de los vecinos, nunca de un árbol en pie. La hoja de maqui y la mosqueta las cortamos a mano, dejando siempre la mitad.</p><span class="tiempo">Marzo a mayo</span></div>
-      </li>
-      <li class="paso">
-        <figure class="forma" data-aparece><img data-sigue src="/image/bocetos/quillay/espuma-800.webp" srcset="/image/bocetos/quillay/espuma-500.webp 500w, /image/bocetos/quillay/espuma-800.webp 800w" sizes="(min-width: 900px) 40vw, 80vw" width="800" height="1000" loading="lazy" alt="Unas manos abiertas sostienen espuma blanca"></figure>
-        <div class="paso-texto" data-aparece><h3>Maceración</h3><p class="suave">La corteza se remoja en agua de vertiente y suelta su saponina, la parte que hace espuma. Las hojas reposan en aceite de oliva al sol, en frascos de vidrio.</p><span class="tiempo">Dos semanas</span></div>
-      </li>
-      <li class="paso">
-        <figure class="forma" data-aparece><img data-sigue src="/image/bocetos/quillay/jabon-700.webp" srcset="/image/bocetos/quillay/jabon-400.webp 400w, /image/bocetos/quillay/jabon-700.webp 700w" sizes="(min-width: 900px) 40vw, 80vw" width="700" height="700" loading="lazy" alt="Una pila de jabones artesanales de distintos colores sobre una mesa de piedra"></figure>
-        <div class="paso-texto" data-aparece><h3>Curado</h3><p class="suave">Cortamos cada barra a mano y la dejamos secar en repisas de raulí. Con el tiempo pierde agua, se endurece y dura el doble en la ducha.</p><span class="tiempo">Seis semanas</span></div>
-      </li>
+    <ol class="antes" data-aparece>
+      <li><img src="/image/bocetos/quillay/hojas-800.webp" srcset="/image/bocetos/quillay/hojas-500.webp 500w, /image/bocetos/quillay/hojas-800.webp 800w" sizes="88px" width="800" height="1067" loading="lazy" alt="Hojas verdes a contraluz, con el sol filtrándose entre ellas"><b>Abril: se recolecta</b><span>La corteza, a mano, de árboles que la vuelven a dar.</span></li>
+      <li><img src="/image/bocetos/quillay/aceite-700.webp" srcset="/image/bocetos/quillay/aceite-400.webp 400w, /image/bocetos/quillay/aceite-700.webp 700w" sizes="88px" width="400" height="400" loading="lazy" alt="Un frasco de vidrio ámbar acostado sobre un paño de lino rosado"><b>Mayo: se macera</b><span>Treinta días en aceite de oliva de Colchagua.</span></li>
+      <li><img src="/image/bocetos/quillay/espuma-800.webp" srcset="/image/bocetos/quillay/espuma-500.webp 500w, /image/bocetos/quillay/espuma-800.webp 800w" sizes="88px" width="800" height="1000" loading="lazy" alt="Unas manos abiertas sostienen espuma blanca"><b>Junio: se hace el jabón</b><span>Se vierte en moldes de madera y se corta al día siguiente.</span></li>
+    </ol>
+    <ol class="repisa">
+        <li class="semana" style="--n: 0" data-aparece>
+          <p><b>Semana 1</b><span>Se corta en barras. Húmeda y blanda; se deja respirar.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>118 g</b><span>recién cortada</span></p>
+        </li>
+        <li class="semana" style="--n: 1" data-aparece>
+          <p><b>Semana 2</b><span>Se da vuelta. Cada domingo, para que seque pareja.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>116 g</b><span>pierde agua</span></p>
+        </li>
+        <li class="semana" style="--n: 2" data-aparece>
+          <p><b>Semana 3</b><span>Se endurece. Ya no se marca con la uña.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>114 g</b><span>&nbsp;</span></p>
+        </li>
+        <li class="semana" style="--n: 3" data-aparece>
+          <p><b>Semana 4</b><span>Se aclara. El color baja medio tono.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>112 g</b><span>&nbsp;</span></p>
+        </li>
+        <li class="semana" style="--n: 4" data-aparece>
+          <p><b>Semana 5</b><span>Se suaviza. La espuma se vuelve más cremosa.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>111 g</b><span>&nbsp;</span></p>
+        </li>
+        <li class="semana" style="--n: 5" data-aparece>
+          <p><b>Semana 6</b><span>Lista. Se pesa, se envuelve y sale el martes.</span></p>
+          <div class="barras" aria-hidden="true" data-sigue><i data-sigue style="--orden: 0"></i><i data-sigue style="--orden: 1"></i><i data-sigue style="--orden: 2"></i><i data-sigue style="--orden: 3"></i><i data-sigue style="--orden: 4"></i><i data-sigue style="--orden: 5"></i><i data-sigue style="--orden: 6"></i></div>
+          <p class="peso"><b>110 g</b><span>lo que dice la etiqueta</span></p>
+        </li>
     </ol>
   </section>
 
   <section class="seccion productos-seccion" id="productos" aria-labelledby="productos-titulo">
     <div class="ancho">
       <div class="cabeza" data-aparece>
-        <p class="rotulo">Productos</p>
-        <h2 id="productos-titulo">Cuatro, y ninguno más</h2>
-        <p class="suave">Preferimos hacer pocos productos y hacerlos bien. Todos se despachan en papel, sin plástico.</p>
+        <p class="rotulo">Los productos</p>
+        <h2 id="productos-titulo">¿Cuál es para ti?</h2>
+        <p class="suave">Elige lo que buscas y te decimos cuál llevar, sin letra chica.</p>
       </div>
-      <ul class="botica">
-        <li class="producto" data-aparece><img src="/image/bocetos/quillay/manos-400.webp" srcset="/image/bocetos/quillay/manos-400.webp 400w, /image/bocetos/quillay/manos-700.webp 700w" sizes="112px" width="400" height="400" loading="lazy" alt="Unas manos sostienen tres barras de jabón artesanal"><div><h3>Jabón de quillay y avena</h3><p class="lleva">Corteza de quillay, aceite de oliva de Colchagua y avena molida.</p></div><p class="medida">110 g</p><p class="precio">$6.900</p></li>
-        <li class="producto" data-aparece><img src="/image/bocetos/quillay/maqui-400.webp" srcset="/image/bocetos/quillay/maqui-400.webp 400w, /image/bocetos/quillay/maqui-700.webp 700w" sizes="112px" width="400" height="400" loading="lazy" alt="Una barra de jabón verde pálido atada con un cordel"><div><h3>Jabón de maqui y arcilla</h3><p class="lleva">Hoja de maqui macerada y arcilla verde. Para piel grasa.</p></div><p class="medida">110 g</p><p class="precio">$7.400</p></li>
-        <li class="producto" data-aparece><img src="/image/bocetos/quillay/aceite-400.webp" srcset="/image/bocetos/quillay/aceite-400.webp 400w, /image/bocetos/quillay/aceite-700.webp 700w" sizes="112px" width="400" height="400" loading="lazy" alt="Un frasco de vidrio ámbar acostado sobre un paño de lino rosado"><div><h3>Aceite de rosa mosqueta</h3><p class="lleva">Prensado en frío de la semilla. Nada más.</p></div><p class="medida">30 ml</p><p class="precio">$12.900</p></li>
-        <li class="producto" data-aparece><img src="/image/bocetos/quillay/champu-400.webp" srcset="/image/bocetos/quillay/champu-400.webp 400w, /image/bocetos/quillay/champu-700.webp 700w" sizes="112px" width="400" height="400" loading="lazy" alt="Cuatro barras de jabón de distintos tonos paradas sobre una tela clara"><div><h3>Champú sólido de quillay</h3><p class="lleva">Quillay, ortiga y aceite de coco. Rinde como dos botellas.</p></div><p class="medida">80 g</p><p class="precio">$9.900</p></li>
-      </ul>
+      <form class="guia" data-consulta data-aparece toolname="elegir_producto" toolautosubmit tooldescription="Recomienda un producto de Quillay (jabones y aceite de plantas nativas, una marca inventada por Volutus como boceto de página) según lo que busca la persona, y responde cuál es, por qué y cuánto cuesta. No envía nada a nadie.">
+        <fieldset class="necesidades" toolparamdescription="Lo que busca: sensible (piel sensible, uso diario), grasa (piel grasa o que brilla), seca (piel seca o con marcas) o pelo (lavar el pelo)">
+          <legend class="rotulo">Lo que buscas</legend>
+          <label class="necesidad"><input type="radio" name="necesidad" value="sensible" checked>Piel sensible<small>todos los días</small></label>
+          <label class="necesidad"><input type="radio" name="necesidad" value="grasa">Piel grasa<small>brilla a media tarde</small></label>
+          <label class="necesidad"><input type="radio" name="necesidad" value="seca">Piel seca<small>o con marcas</small></label>
+          <label class="necesidad"><input type="radio" name="necesidad" value="pelo">El pelo<small>sin botella</small></label>
+        </fieldset>
+        <div class="respuestas" aria-live="polite">
+          <article class="respuesta r-sensible" data-respuesta><figure><img src="/image/bocetos/quillay/manos-700.webp" srcset="/image/bocetos/quillay/manos-400.webp 400w, /image/bocetos/quillay/manos-700.webp 700w" sizes="(min-width: 900px) 20vw, 60vw" width="400" height="400" loading="lazy" alt="Unas manos sostienen tres barras de jabón artesanal"></figure><div><h3>Jabón de quillay y avena</h3><p class="porque">La avena calma y el quillay limpia sin arrastrar la grasa buena de la piel. Sin perfume.</p><p class="compra"><b>$6.900</b><span>110 g</span><a class="boton" href="#pedido" data-pedir="Jabón de quillay y avena">Agregar a la caja</a></p></div></article>
+          <article class="respuesta r-grasa" data-respuesta><figure><img src="/image/bocetos/quillay/maqui-700.webp" srcset="/image/bocetos/quillay/maqui-400.webp 400w, /image/bocetos/quillay/maqui-700.webp 700w" sizes="(min-width: 900px) 20vw, 60vw" width="400" height="400" loading="lazy" alt="Una barra de jabón verde pálido atada con un cordel"></figure><div><h3>Jabón de maqui y arcilla</h3><p class="porque">La arcilla verde absorbe el exceso de grasa y la hoja de maqui baja el enrojecimiento.</p><p class="compra"><b>$7.400</b><span>110 g</span><a class="boton" href="#pedido" data-pedir="Jabón de maqui y arcilla">Agregar a la caja</a></p></div></article>
+          <article class="respuesta r-seca" data-respuesta><figure><img src="/image/bocetos/quillay/aceite-700.webp" srcset="/image/bocetos/quillay/aceite-400.webp 400w, /image/bocetos/quillay/aceite-700.webp 700w" sizes="(min-width: 900px) 20vw, 60vw" width="400" height="400" loading="lazy" alt="Un frasco de vidrio ámbar acostado sobre un paño de lino rosado"></figure><div><h3>Aceite de rosa mosqueta</h3><p class="porque">Tres gotas en la noche, sobre la piel húmeda. Prensado en frío, sin nada más.</p><p class="compra"><b>$12.900</b><span>30 ml</span><a class="boton" href="#pedido" data-pedir="Aceite de rosa mosqueta">Agregar a la caja</a></p></div></article>
+          <article class="respuesta r-pelo" data-respuesta><figure><img src="/image/bocetos/quillay/champu-700.webp" srcset="/image/bocetos/quillay/champu-400.webp 400w, /image/bocetos/quillay/champu-700.webp 700w" sizes="(min-width: 900px) 20vw, 60vw" width="400" height="400" loading="lazy" alt="Cuatro barras de jabón de distintos tonos paradas sobre una tela clara"></figure><div><h3>Champú sólido de quillay</h3><p class="porque">Quillay, ortiga y aceite de coco. Una barra rinde como dos botellas y no deja plástico.</p><p class="compra"><b>$9.900</b><span>80 g</span><a class="boton" href="#pedido" data-pedir="Champú sólido de quillay">Agregar a la caja</a></p></div></article>
+        </div>
+      </form>
     </div>
   </section>
 
-  <section class="ancho seccion" id="ingredientes" aria-labelledby="ingredientes-titulo">
-    <div class="ingredientes">
-      <div>
-        <div class="cabeza" data-aparece style="margin-bottom: 32px">
-          <p class="rotulo">Ingredientes</p>
-          <h2 id="ingredientes-titulo">Qué lleva un jabón, y de dónde viene</h2>
-          <p class="suave">La receta del jabón de quillay y avena, por peso. No todo es de Chile, y preferimos decirlo.</p>
-        </div>
-        <dl class="receta">
-          <div data-aparece><dt>38&nbsp;%</dt><dd><b>Aceite de oliva</b><span>De un olivar de Peralillo, a 30 km del taller.</span></dd></div>
-          <div data-aparece><dt>22&nbsp;%</dt><dd><b>Aceite de coco</b><span>Importado de Filipinas. Da una espuma firme que no logramos con aceites de aquí.</span></dd></div>
-          <div data-aparece><dt>18&nbsp;%</dt><dd><b>Corteza de quillay macerada</b><span>De Lolol, recolectada por nosotros.</span></dd></div>
-          <div data-aparece><dt>12&nbsp;%</dt><dd><b>Hidróxido de sodio</b><span>Hace el jabón y se consume entero en el curado: no queda en la barra.</span></dd></div>
-          <div data-aparece><dt>10&nbsp;%</dt><dd><b>Manteca de karité y avena</b><span>El karité viene de Ghana; la avena, de Temuco.</span></dd></div>
-        </dl>
-        <p class="sin" data-aparece><b>Lo que no lleva:</b> perfume, colorantes, aceite de palma ni conservantes.</p>
-      </div>
-      <figure data-aparece>
-        <img src="/image/bocetos/quillay/mosqueta-1100.webp" srcset="/image/bocetos/quillay/mosqueta-700.webp 700w, /image/bocetos/quillay/mosqueta-1100.webp 1100w" sizes="(min-width: 900px) 34vw, 70vw" width="1100" height="733" loading="lazy" alt="Una rama de rosa mosqueta con frutos rojos y hojas verdes">
-        <figcaption>Rosa mosqueta a orillas del Nilahue, en marzo.</figcaption>
-      </figure>
+  <section class="ancho seccion ingredientes-seccion" id="ingredientes" aria-labelledby="ingredientes-titulo">
+    <div class="cabeza" data-aparece>
+      <p class="rotulo">Ingredientes</p>
+      <h2 id="ingredientes-titulo">Una barra de 110 gramos, por dentro</h2>
+      <p class="suave">Lo que queda en el jabón de avena después de curarse, gramo a gramo. La soda que lo hace jabón no queda: se vuelve jabón y glicerina.</p>
     </div>
+    <div class="corte" aria-hidden="true" data-aparece><span class="c1" data-sigue>52 g</span><span class="c2" data-sigue style="--orden: 1">26 g</span><span class="c3" data-sigue style="--orden: 2">12 g</span><span class="c4" data-sigue style="--orden: 3">8 g</span><span class="c5" data-sigue style="--orden: 4">6</span><span class="c6" data-sigue style="--orden: 5">6</span></div>
+    <ol class="partes" data-aparece>
+      <li style="--muestra: #dccb92"><b>Jabón de oliva</b><span class="g">52 g</span><p>Del aceite de oliva de Colchagua. Limpia suave.</p></li>
+      <li style="--muestra: #efe7d2"><b>Jabón de coco</b><span class="g">26 g</span><p>Le da la espuma firme y que dure en la ducha.</p></li>
+      <li style="--muestra: #f5eedc"><b>Glicerina</b><span class="g">12 g</span><p>Sale sola al hacer el jabón y la dejamos: humecta.</p></li>
+      <li style="--muestra: #e3cea1"><b>Aceite sin saponificar</b><span class="g">8 g</span><p>Un poco más de aceite del necesario, para que no reseque.</p></li>
+      <li style="--muestra: #d9c49c"><b>Avena molida</b><span class="g">6 g</span><p>De Pichidegua. Exfolia apenas y calma.</p></li>
+      <li style="--muestra: #a06c45"><b>Corteza de quillay</b><span class="g">6 g</span><p>Molida fina. Es la que hace la espuma.</p></li>
+    </ol>
   </section>
 
   <section class="ancho seccion pedido" id="pedido" style="padding-top: 0" aria-labelledby="pedido-titulo">
-    <div data-aparece>
-      <p class="rotulo">Pedidos</p>
-      <h2 id="pedido-titulo">Para tu casa o para tu tienda</h2>
-      <p class="suave" style="max-width: 36ch">Despachamos a todo Chile los martes. Si tienes una tienda, te mandamos la lista de precios por mayor.</p>
-      <div class="datos">
-        <p><b>Taller</b>Calle Los Aromos 214, Lolol</p>
-        <p><b>Correo</b>hola@jabonesquillay.cl</p>
-      </div>
+    <div class="cabeza" data-aparece>
+      <p class="rotulo">Pedido</p>
+      <h2 id="pedido-titulo">Arma tu caja</h2>
+      <p class="suave">Hasta cuatro, envueltos en papel con semillas que se puede plantar. Despachamos los martes a todo Chile; para tiendas, precio por mayor desde 24 unidades.</p>
     </div>
-    <form class="formulario" data-muestra data-aparece toolname="hacer_pedido" tooldescription="Hace un pedido a Quillay, de jabones y aceites de plantas nativas, para una casa o para venta por mayor. Quillay es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
-      <fieldset class="todo" toolparamdescription="Tipo de pedido: para la casa o venta por mayor para una tienda">
-        <legend>Tipo de pedido</legend>
-        <label class="opcion"><input type="radio" name="tipo" value="casa" checked>Para mi casa</label>
-        <label class="opcion"><input type="radio" name="tipo" value="mayor">Por mayor, para una tienda</label>
-      </fieldset>
-      <label>Nombre<input name="nombre" autocomplete="name" required></label>
-      <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
-      <label>Producto<select name="producto" toolparamdescription="Qué producto quiere: jabón de quillay y avena, jabón de maqui y arcilla, aceite de rosa mosqueta o champú sólido de quillay"><option>Jabón de quillay y avena</option><option>Jabón de maqui y arcilla</option><option>Aceite de rosa mosqueta</option><option>Champú sólido de quillay</option></select></label>
-      <label>Cantidad<input type="number" name="cantidad" min="1" max="500" value="1" inputmode="numeric" toolparamdescription="Cuántas unidades, de 1 a 500"></label>
-      <label class="todo">Comuna de despacho<input name="comuna" autocomplete="address-level2" toolparamdescription="Comuna de Chile a la que se despacha el pedido"></label>
-      <button class="boton todo" type="submit">Enviar pedido</button>
+    <form class="pedido-form" data-muestra data-aparece toolname="armar_caja" tooldescription="Pide una caja de Quillay con uno o más de sus cuatro productos (jabones y aceite de plantas nativas), para la casa o por mayor. Quillay es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+      <div class="caja" aria-hidden="true">
+        <span class="hueco h-avena" data-vacio="avena"><i></i></span>
+        <span class="hueco h-maqui" data-vacio="maqui"><i></i></span>
+        <span class="hueco h-champu" data-vacio="champú"><i></i></span>
+        <span class="hueco h-aceite" data-vacio="aceite"><i></i></span>
+        <span class="papel"></span>
+      </div>
+      <div class="campos">
+        <fieldset class="lista-caja todo" toolparamdescription="Qué productos van en la caja: uno o más de jabón de quillay y avena, jabón de maqui y arcilla, champú sólido de quillay y aceite de rosa mosqueta">
+          <legend>Qué va en la caja</legend>
+          <label class="item"><input type="checkbox" name="producto" value="Jabón de quillay y avena" checked><span>Jabón de quillay y avena<small>110 g</small></span><b>$6.900</b></label>
+          <label class="item"><input type="checkbox" name="producto" value="Jabón de maqui y arcilla"><span>Jabón de maqui y arcilla<small>110 g</small></span><b>$7.400</b></label>
+          <label class="item"><input type="checkbox" name="producto" value="Champú sólido de quillay"><span>Champú sólido de quillay<small>80 g</small></span><b>$9.900</b></label>
+          <label class="item"><input type="checkbox" name="producto" value="Aceite de rosa mosqueta"><span>Aceite de rosa mosqueta<small>30 ml</small></span><b>$12.900</b></label>
+        </fieldset>
+        <label class="regalo todo"><input type="checkbox" name="regalo" toolparamdescription="Si va envuelta para regalo, con tarjeta escrita a mano ($1.500 más)">Envolver para regalo, con tarjeta escrita a mano (+$1.500)</label>
+        <label>Nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+        <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+        <label class="todo">Comuna de despacho<input name="comuna" autocomplete="address-level2" maxlength="60" toolparamdescription="Comuna de Chile a la que se despacha la caja"></label>
+        <button class="boton todo" type="submit">Pedir la caja</button>
+      </div>
     </form>
   </section>
 </main>
 
-<footer class="ancho pie">
-  <div class="etiqueta-pie">
-    <p class="cientifico">Herbario de la casa · lámina nº 4</p>
-    <p class="pie-marca">quillay</p>
-    <dl><dt>Taller</dt><dd>Calle Los Aromos 214, Lolol, Valle de Colchagua</dd><dt>Correo</dt><dd>hola@jabonesquillay.cl</dd><dt>Despachos</dt><dd>Los martes, a todo Chile</dd></dl>
+<footer class="pie">
+  <div class="ancho">
+    <div class="pie-cuerpo">
+      <div class="sello" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="anillo" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="60" cy="60" r="36" fill="none" stroke="currentColor" stroke-width="1"/><text><textPath href="#anillo">Quillay · Lolol · Colchagua · 2026 ·</textPath></text><use href="#hq" transform="translate(45 66) rotate(-40)" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></div>
+      <dl><dt>Taller</dt><dd>Calle Los Aromos 214, Lolol, Valle de Colchagua</dd></dl>
+      <dl><dt>Escríbenos</dt><dd>hola@jabonesquillay.cl</dd></dl>
+      <dl><dt>Despachos</dt><dd>Los martes, a todo Chile. Sobre $30.000, gratis.</dd></dl>
+    </div>
+    <p class="pie-boceto">Boceto de Volutus · marca inventada</p>
   </div>
-  <p class="pie-boceto">Boceto de Volutus · marca inventada</p>
 </footer>
 </body>
 </html>
