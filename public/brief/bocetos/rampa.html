@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Rampa · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Rampa, tienda de skate y escuela junto al Parque de los Reyes, para mostrar el estilo Collage o zine.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/archivo-black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/rampa/skater-820.webp" imagesrcset="/image/bocetos/rampa/skater-520.webp 520w, /image/bocetos/rampa/skater-820.webp 820w" imagesizes="(min-width: 900px) 34vw, 80vw" fetchpriority="high">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Rampa · collage / zine. Inspiración: Thrasher (thrashermagazine.com). Se
+   toma: 1) la portada densa, con fotos de skate en blanco y negro que se
+   pisan unas con otras; 2) los títulos gruesos en versales y el texto
+   apretado, sin adornos de diseño; 3) el humor de revista hecha por la
+   misma gente que patina. La idea propia: un zine fotocopiado en la
+   tienda. Las fotos tienen trama de semitono (hecha en CSS, con los puntos
+   del mismo tamaño en cualquier pantalla) y salen de la fotocopiadora: una
+   barra de luz pasa de arriba abajo y las deja impresas. Los títulos son
+   letras de rescate, los recortes van pegados con cinta, lo importante se
+   pinta con destacador y la inscripción es un volante con tiras para
+   arrancar: los horarios. */
+@font-face { font-family: 'Special Elite'; src: url('/fonts/bocetos/special-elite.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo Black'; src: url('/fonts/bocetos/archivo-black.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+
+:root {
+  --fotocopia: #e6e3dc;
+  --papel: #f7f5ef;
+  --negro: #111111;
+  --gris: #4a4844;
+  --rojo: #e63228;
+  --rojo-texto: #b8231b;
+  --amarillo: #ffe14d;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.5, 0, 0.3, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--fotocopia); scroll-behavior: smooth; }
+body { margin: 0; background: var(--fotocopia) radial-gradient(rgb(17 17 17 / 0.07) 0.8px, transparent 1.2px) 0 0 / 7px 7px; color: var(--negro); font: 400 18px/1.6 'Special Elite', 'Courier New', monospace; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 3px solid var(--negro); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 400; line-height: 1; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.seccion { position: relative; padding-block: clamp(80px, 10vw, 140px); }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 6px 26px 4px; border: 0; background: var(--negro); color: var(--amarillo); font: 400 19px/1 'Archivo Black', sans-serif; letter-spacing: 0.02em; text-transform: uppercase; text-decoration: none; cursor: pointer; rotate: -2deg; box-shadow: 6px 6px 0 var(--rojo); transition: rotate 400ms var(--curva), box-shadow 400ms var(--curva); }
+.boton:hover { rotate: 0deg; box-shadow: 3px 3px 0 var(--rojo); }
+.destaca { --entrada: none; position: relative; isolation: isolate; padding-inline: 0.15em; }
+.destaca::before { content: ''; position: absolute; z-index: -1; inset: 0.1em -0.05em 0.02em; background: var(--amarillo); transform-origin: left; rotate: -1deg; }
+
+/* ---- Letras de rescate: cada letra, un recorte distinto ---- */
+.rescate { display: inline-flex; flex-wrap: wrap; row-gap: 0.06em; }
+.rescate b { display: inline-grid; place-items: center; min-width: 0.62em; padding: 0.06em 0.1em 0; font: 400 1em/1 'Archivo Black', sans-serif; text-transform: uppercase; rotate: var(--giro, 0deg); box-shadow: 1px 2px 0 rgb(0 0 0 / 0.18); }
+.rescate .v0 { --giro: -4deg; background: var(--negro); color: var(--papel); }
+.rescate .v1 { --giro: 3deg; background: var(--amarillo); color: var(--negro); font-size: 0.9em; }
+.rescate .v2 { --giro: -2deg; background: var(--papel); color: var(--negro); font-family: 'Special Elite', monospace; font-size: 1.05em; }
+.rescate .v3 { --giro: 5deg; background: var(--rojo); color: var(--papel); font-size: 0.86em; }
+.rescate .v4 { --giro: -3deg; background: var(--papel); color: var(--negro); border: 0.05em solid var(--negro); }
+.rescate .palabra { display: inline-flex; gap: 0.04em; }
+.rescate .palabra + .palabra { margin-left: 0.22em; }
+
+/* ---- La trama: semitono en CSS ----
+   La foto gris, apenas desenfocada, se suma a una grilla de puntos y el
+   contraste alto deja solo puntos negros, más grandes donde la foto es más
+   oscura. Multiplicado sobre la página, el blanco se vuelve papel. */
+.copia { position: relative; }
+.trama { position: relative; overflow: hidden; background: #fff; filter: contrast(18); mix-blend-mode: multiply; }
+.trama img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.66) contrast(1.35) blur(0.7px); }
+.trama::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, #000 0, #fff 82%) 0 0 / var(--punto, 5px) var(--punto, 5px); mix-blend-mode: screen; pointer-events: none; }
+.luz { position: absolute; inset: 0; z-index: 2; background: linear-gradient(transparent 90%, rgb(255 255 255 / 0.7) 97%, #fff 99%, transparent 100%); opacity: 0; pointer-events: none; }
+
+/* La cinta: un trozo con los cantos dentados. */
+.cinta { position: absolute; z-index: 3; width: 110px; height: 30px; background: rgb(255 248 215 / 0.72); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); clip-path: polygon(0 8%, 6% 0, 12% 10%, 18% 0, 82% 0, 88% 9%, 94% 0, 100% 10%, 100% 90%, 94% 100%, 88% 91%, 82% 100%, 18% 100%, 12% 92%, 6% 100%, 0 90%); }
+
+/* ---- Cabecera: el sticker y la tira escrita a máquina ---- */
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; padding-block: 22px; }
+.sticker { display: grid; place-items: center; width: 108px; aspect-ratio: 1; background: var(--negro); color: var(--amarillo); font: 400 21px/1 'Archivo Black', sans-serif; text-decoration: none; rotate: -8deg; clip-path: polygon(50% 0, 61% 26%, 90% 10%, 75% 38%, 100% 50%, 75% 62%, 90% 90%, 61% 74%, 50% 100%, 39% 74%, 10% 90%, 25% 62%, 0 50%, 25% 38%, 10% 10%, 39% 26%); transition: rotate 500ms var(--curva); }
+.sticker:hover { rotate: 4deg; }
+.tira { position: relative; padding: 14px 30px 12px; background: var(--papel); rotate: 1deg; clip-path: polygon(0 6%, 4% 0, 9% 7%, 15% 1%, 22% 6%, 30% 0, 38% 5%, 47% 1%, 56% 6%, 64% 0, 72% 5%, 81% 1%, 89% 6%, 96% 0, 100% 5%, 100% 95%, 95% 100%, 88% 94%, 80% 99%, 71% 94%, 62% 100%, 53% 95%, 44% 100%, 35% 94%, 26% 99%, 17% 94%, 8% 100%, 0 95%); }
+.tira ul { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.tira a { display: inline-flex; align-items: center; min-height: 40px; text-decoration: none; }
+.tira a::before { content: '→ '; white-space: pre; color: var(--rojo-texto); }
+.tira a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+.cabecera > .cinta { position: relative; display: none; }
+
+/* ---- Portada: el collage ---- */
+.portada { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto auto auto; gap: 0 16px; padding-block: 12px clamp(80px, 10vw, 130px); }
+.portada h1 { grid-column: 1 / 13; grid-row: 1; position: relative; z-index: 2; font-size: clamp(60px, 16vw, 210px); }
+.portada .vuelo { grid-column: 6 / 13; grid-row: 2 / 4; align-self: start; margin-top: -40px; rotate: 1.5deg; }
+.portada .vuelo .trama { aspect-ratio: 3 / 2; --punto: 6px; }
+.portada .skater { grid-column: 1 / 7; grid-row: 2 / 4; margin-top: -30px; }
+.portada .skater img { scale: 1.5; object-position: 50% 42%; }
+.portada .skater .trama { aspect-ratio: 4 / 5; --punto: 5px; }
+.recorte-texto { position: relative; z-index: 3; grid-column: 7 / 12; grid-row: 3; align-self: end; display: grid; gap: 16px; justify-items: start; margin-top: -60px; padding: 26px 26px 24px; background: var(--papel); rotate: -1.5deg; box-shadow: 2px 3px 0 rgb(0 0 0 / 0.12); }
+.recorte-texto .cinta { top: -14px; left: 40%; rotate: -4deg; }
+.timbre { position: absolute; z-index: 4; right: 2%; top: 46%; display: grid; place-items: center; padding: 14px 18px 10px; border: 4px double var(--rojo); color: var(--rojo); font: 400 22px/1.15 'Archivo Black', sans-serif; text-align: center; text-transform: uppercase; rotate: 9deg; opacity: 0.92; mix-blend-mode: multiply; }
+
+/* ---- Títulos de sección ---- */
+.cabeza { display: grid; gap: 18px; max-width: 50rem; margin-bottom: clamp(44px, 6vw, 72px); }
+.cabeza h2 { font-size: clamp(46px, 7vw, 96px); }
+.cabeza .bajada { max-width: 44ch; }
+
+/* ---- La tienda: recortes con su precio en círculo ---- */
+.tienda { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(20px, 3vw, 40px); align-items: start; margin: 0; padding: 0; list-style: none; }
+.producto { position: relative; display: grid; gap: 12px; padding: 14px 14px 18px; background: var(--papel); rotate: var(--giro); box-shadow: 2px 3px 0 rgb(0 0 0 / 0.12); transition: rotate 400ms var(--curva), translate 400ms var(--curva); }
+.producto:nth-child(1) { --giro: -2.5deg; }
+.producto:nth-child(2) { --giro: 2deg; margin-top: 48px; }
+.producto:nth-child(3) { --giro: -1deg; margin-top: 14px; }
+.producto:nth-child(4) { --giro: 3deg; margin-top: 64px; }
+.producto:hover { rotate: calc(var(--giro) * -0.6); translate: 0 -4px; }
+.producto .trama { aspect-ratio: 1; --punto: 4px; }
+.producto h3 { font: 400 22px/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
+.producto p { font-size: 16px; line-height: 1.45; }
+.precio { position: relative; justify-self: start; padding: 6px 12px; font: 400 22px/1 'Archivo Black', sans-serif; font-variant-numeric: tabular-nums; }
+.precio svg { position: absolute; inset: -8px -12px; width: calc(100% + 24px); height: calc(100% + 16px); fill: none; stroke: var(--rojo); stroke-width: 2.4; stroke-linecap: round; overflow: visible; }
+.producto .cinta { top: -14px; left: 30%; width: 84px; rotate: var(--giro); }
+.usadas { max-width: 40ch; margin-top: clamp(48px, 6vw, 72px); font-size: 22px; }
+
+/* ---- La escuela: el horario fotocopiado ---- */
+.escuela-seccion { background: var(--papel); }
+.escuela { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 72px); align-items: start; }
+.horario { width: 100%; border-collapse: collapse; font-size: 17px; }
+.horario caption { margin-bottom: 14px; text-align: left; font: 400 15px/1 'Archivo Black', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.horario th, .horario td { padding: 14px 12px; border: 2px solid var(--negro); text-align: left; vertical-align: top; }
+.horario thead th { background: var(--negro); color: var(--papel); font: 400 15px/1.2 'Archivo Black', sans-serif; text-transform: uppercase; }
+.horario tbody th { font-weight: 400; white-space: nowrap; }
+.escuela-texto { display: grid; gap: 22px; }
+.frase-grande { font: 400 clamp(32px, 3.6vw, 48px)/1.08 'Archivo Black', sans-serif; text-transform: uppercase; }
+.escuela-texto ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.escuela-texto li::before { content: '* '; color: var(--rojo-texto); }
+
+/* ---- Los jueves ---- */
+.jueves { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px 16px; align-items: start; }
+.jueves .j1 { grid-column: 1 / 6; rotate: -2deg; }
+.jueves .j2 { grid-column: 6 / 13; margin-top: 60px; rotate: 1.5deg; }
+.jueves .j3 { grid-column: 3 / 9; margin-top: -40px; rotate: -1deg; }
+.jueves .trama { --punto: 5px; }
+.jueves .j1 .trama { aspect-ratio: 4 / 5; }
+.jueves .j2 .trama { aspect-ratio: 3 / 2; }
+.jueves .j3 .trama { aspect-ratio: 1; }
+.jueves figcaption { display: inline-block; margin-top: 10px; padding: 4px 10px; background: var(--papel); font-size: 15px; }
+.jueves .nota { grid-column: 9 / 13; align-self: center; display: grid; gap: 14px; padding: 22px; background: var(--amarillo); rotate: 2deg; }
+.jueves .nota b { font: 400 26px/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
+
+/* ---- El zine del mes ---- */
+.zine { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 72px); align-items: center; }
+.tapa { position: relative; display: grid; gap: 14px; aspect-ratio: 3 / 4; padding: 22px; background: var(--papel); rotate: -2deg; box-shadow: 6px 8px 0 rgb(0 0 0 / 0.14); }
+.tapa .rescate { font-size: clamp(40px, 5vw, 64px); }
+.tapa .trama { flex: 1; min-height: 0; --punto: 4px; }
+.tapa p { font-size: 15px; }
+.tapa .numero { position: absolute; right: 18px; top: 18px; display: grid; place-items: center; width: 64px; aspect-ratio: 1; border-radius: 50%; background: var(--rojo); color: var(--papel); font: 400 22px/1 'Archivo Black', sans-serif; rotate: 12deg; }
+.indice-zine { display: grid; gap: 0; margin: 22px 0; padding: 0; list-style: none; }
+.indice-zine li { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-bottom: 2px dashed var(--negro); }
+.indice-zine span:last-child { font-variant-numeric: tabular-nums; }
+
+/* ---- Inscripción: el volante con tiras para arrancar ---- */
+.volante { position: relative; width: min(100%, 44rem); margin-inline: auto; padding: clamp(28px, 4vw, 44px) clamp(20px, 4vw, 44px) 0; background: var(--papel); rotate: -1deg; box-shadow: 3px 4px 0 rgb(0 0 0 / 0.14); }
+.volante > .cinta { top: -16px; }
+.volante > .cinta.c1 { left: 12%; rotate: -6deg; }
+.volante > .cinta.c2 { right: 12%; rotate: 5deg; }
+.volante h2 { font-size: clamp(44px, 7vw, 82px); }
+.volante .bajada { margin-top: 14px; font-size: 20px; }
+.campos { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 18px 22px; margin-top: 28px; }
+.volante label, .volante legend { display: grid; gap: 4px; font-size: 16px; }
+.volante input:not([type="radio"]) { width: 100%; min-height: 46px; padding: 6px 2px; border: 0; border-bottom: 2px solid var(--negro); border-radius: 0; background: transparent; color: var(--negro); font: 400 19px/1.3 'Special Elite', monospace; }
+.volante input:focus-visible { outline: none; border-bottom-width: 4px; }
+.nivel { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.nivel legend { margin-bottom: 8px; padding: 0; }
+.nivel label { position: relative; display: inline-flex; align-items: center; min-height: 46px; padding: 6px 14px 4px; border: 2px solid var(--negro); cursor: pointer; transition: background-color 300ms var(--curva), rotate 400ms var(--curva); }
+.nivel input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.nivel label:has(input:checked) { background: var(--amarillo); rotate: -2deg; }
+.nivel label:has(input:focus-visible) { outline: 3px solid var(--negro); outline-offset: 3px; }
+.volante .boton { margin-top: 28px; }
+.volante .boceto-aviso { color: var(--rojo-texto); font-weight: 400; }
+.tiras { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 28px calc(-1 * clamp(20px, 4vw, 44px)) 0; padding: 0; border: 0; border-top: 2px dashed var(--negro); }
+.tiras legend { padding: 0 0 10px clamp(20px, 4vw, 44px); font-size: 16px; }
+.tiras label { position: relative; display: grid; place-items: center; min-height: 170px; padding: 14px 6px; border-left: 2px dashed var(--negro); background: var(--papel); cursor: pointer; transform-origin: 50% 0; transition: rotate 600ms var(--curva), translate 600ms var(--curva), box-shadow 600ms var(--curva); }
+.tiras label:first-of-type { border-left: 0; }
+.tiras label span { writing-mode: vertical-rl; rotate: 180deg; font-size: 16px; line-height: 1.3; text-align: center; }
+.tiras label span b { font: 400 17px/1.2 'Archivo Black', sans-serif; }
+.tiras input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.tiras label:has(input:checked) { rotate: 7deg; translate: 0 14px; box-shadow: 3px 6px 0 rgb(0 0 0 / 0.16); background: var(--amarillo); }
+.tiras label:has(input:focus-visible) { outline: 3px solid var(--negro); outline-offset: -6px; }
+
+/* ---- Pie: la contratapa del zine ---- */
+.pie { position: relative; margin-top: clamp(40px, 6vw, 80px); padding-block: clamp(48px, 6vw, 72px) 32px; background: var(--negro); color: var(--papel); }
+.corchete { position: absolute; left: clamp(16px, 3vw, 40px); width: 6px; height: 46px; border: 2px solid #8d8b86; border-left: 0; }
+.corchete.c1 { top: 22%; }
+.corchete.c2 { top: 62%; }
+.contratapa { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 32px clamp(24px, 4vw, 56px); }
+.contratapa h2 { font: 400 16px/1 'Archivo Black', sans-serif; text-transform: uppercase; color: var(--amarillo); }
+.contratapa p { margin-top: 10px; font-size: 16px; }
+.pie-final { margin-top: 40px; padding-top: 18px; border-top: 2px dashed #6d6b66; font-size: 14px; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .portada h1 { grid-column: 1 / 7; }
+  .portada .skater { grid-column: 1 / 5; grid-row: 2; }
+  .portada .vuelo { grid-column: 3 / 7; grid-row: 2; margin-top: 30%; }
+  .recorte-texto { grid-column: 1 / 7; grid-row: 3; margin-top: -24px; }
+  .timbre { top: 30%; }
+  .tienda { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .escuela, .zine { grid-template-columns: minmax(0, 1fr); }
+  .jueves .j1 { grid-column: 1 / 8; }
+  .jueves .j2 { grid-column: 4 / 13; margin-top: -60px; }
+  .jueves .j3 { grid-column: 1 / 8; margin-top: 0; }
+  .jueves .nota { grid-column: 8 / 13; }
+  .tapa { width: min(100%, 26rem); justify-self: center; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .sticker { width: 88px; font-size: 17px; }
+  .tira { padding: 12px 22px 10px; }
+  .tira ul { gap: 0 16px; }
+  .portada .skater { grid-column: 1 / 7; }
+  .portada .vuelo { display: none; }
+  .timbre { top: 26%; right: 0; font-size: 17px; padding: 10px 12px 8px; }
+  .tienda { gap: 36px 16px; }
+  .producto { padding: 10px 10px 14px; }
+  .producto h3 { font-size: 17px; }
+  .producto p { font-size: 15px; }
+  .precio { font-size: 18px; }
+  .horario { font-size: 15px; }
+  .horario th, .horario td { padding: 10px 8px; }
+  .jueves .j1, .jueves .j2, .jueves .j3, .jueves .nota { grid-column: 1 / 13; margin-top: 0; }
+  .campos { grid-template-columns: minmax(0, 1fr); }
+  .tiras label { min-height: 150px; }
+  .tiras label span { font-size: 15px; }
+  .tiras label span b { font-size: 15px; }
+  .contratapa { grid-template-columns: minmax(0, 1fr); padding-left: 40px; }
+  .corchete { left: 12px; }
+}
+
+/* ---- Movimiento: la fotocopiadora y el pegamento ----
+   Los recortes llegan girando un poco más de la cuenta y se asientan en su
+   ángulo, frenando, sin rebote. La cinta se estira al pegarse. Cada foto
+   sale de la fotocopiadora: una barra de luz pasa de arriba abajo y deja la
+   trama impresa detrás de ella. El destacador pinta lo importante de
+   izquierda a derecha y el plumón encierra los precios. Al pasar el cursor,
+   un recorte se ladea; al elegir un horario, su tira se arranca. */
+[data-aparece] { --entrada: rampa-pega; --tramo: 34svh; --duracion: 1100ms; }
+.copia { --entrada: none; --tramo: 46svh; --duracion: 1600ms; }
+.copia .trama { --entrada: rampa-imprime; }
+.copia .luz { --entrada: rampa-luz; }
+.cinta { --entrada: rampa-estira; }
+.destaca::before { --entrada: rampa-destaca; }
+.precio svg path { --entrada: rampa-traza; }
+@keyframes rampa-pega { from { opacity: 0; translate: 0 18px; rotate: calc(var(--giro, 0deg) - 6deg); } }
+@keyframes rampa-imprime { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes rampa-luz { 0% { transform: translateY(-90%); opacity: 1; } 92% { opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+@keyframes rampa-estira { from { opacity: 0; scale: 0.4 1; } }
+@keyframes rampa-destaca { from { scale: 0 1; } }
+@keyframes rampa-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes rampa-letra { from { opacity: 0; scale: 1.25; rotate: calc(var(--giro) + 10deg); } }
+.precio svg path { stroke-dasharray: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .portada h1 .rescate b { animation: rampa-letra 900ms var(--curva) calc(150ms + var(--n) * 90ms) backwards; }
+  .portada .copia .trama { animation: rampa-imprime 1600ms var(--curva) 500ms backwards; }
+  .portada .copia .luz { animation: rampa-luz 1600ms var(--curva) 500ms backwards; }
+  .portada .vuelo .trama, .portada .vuelo .luz { animation-delay: 1000ms; }
+  .recorte-texto, .timbre { animation: rampa-pega 1100ms var(--curva) 1300ms backwards; }
+  .timbre { --giro: 9deg; animation-delay: 1700ms; }
+  .tira, .sticker { animation: rampa-pega 1100ms var(--curva) backwards; }
+  .sticker { --giro: -8deg; }
+  .tira { --giro: 1deg; animation-delay: 150ms; }
+  .cabeza h2 .rescate, .cabeza h2 .palabra { animation: inherit; animation-name: none; }
+  .cabeza h2 .rescate b { animation: inherit; animation-name: rampa-letra; animation-delay: calc(var(--n) * 60ms); }
+  .destaca::before { animation: inherit; animation-name: rampa-destaca; }
+}
+</style>
+</head>
+<body data-boceto="rampa">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Rampa</b> es una marca inventada por Volutus para mostrarte el estilo <b>Collage / zine</b>.</p></div>
+
+<header class="ancho cabecera">
+  <a class="sticker" href="#inicio">RAMPA</a>
+  <nav class="tira" aria-label="Secciones"><ul><li><a href="#tienda">la tienda</a></li><li><a href="#escuela">la escuela</a></li><li><a href="#jueves">los jueves</a></li><li><a href="#zine">el zine</a></li><li><a href="#inscribirse">inscribirse</a></li></ul></nav>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <h1 id="titulo"><span class="oculto">Rampa</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">R</b><b class="v1" style="--n: 1">a</b><b class="v2" style="--n: 2">m</b><b class="v3" style="--n: 3">p</b><b class="v4" style="--n: 4">a</b></span></span></h1>
+    <figure class="vuelo copia">
+      <div class="trama"><img src="/image/bocetos/rampa/vuelo-1100.webp" srcset="/image/bocetos/rampa/vuelo-700.webp 700w, /image/bocetos/rampa/vuelo-1100.webp 1100w" sizes="(min-width: 900px) 52vw, 70vw" width="1100" height="733" loading="lazy" alt="Un skater salta sobre una rampa de un parque, con árboles detrás, en blanco y negro"></div>
+      <span class="luz" aria-hidden="true"></span>
+    </figure>
+    <figure class="skater copia">
+      <div class="trama"><img src="/image/bocetos/rampa/skater-820.webp" srcset="/image/bocetos/rampa/skater-520.webp 520w, /image/bocetos/rampa/skater-820.webp 820w" sizes="(min-width: 900px) 34vw, 80vw" width="820" height="1025" alt="Un skater en el aire con las piernas recogidas, la tabla girando bajo sus pies, en blanco y negro" fetchpriority="high"></div>
+      <span class="luz" aria-hidden="true"></span>
+    </figure>
+    <div class="recorte-texto">
+      <span class="cinta" aria-hidden="true"></span>
+      <p>Tienda de skate y escuela para niños y adultos, al lado de la rampa del Parque de los Reyes. Abierto de martes a domingo.</p>
+      <p><span class="destaca">Caerse es la primera clase.</span></p>
+      <a class="boton" href="#inscribirse">Inscríbete</a>
+    </div>
+    <p class="timbre">Jueves<br>hasta las 22</p>
+  </section>
+
+  <section class="seccion" id="tienda" aria-labelledby="tienda-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 id="tienda-titulo" data-sigue><span class="oculto">La tienda</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">L</b><b class="v1" style="--n: 1">a</b></span><span class="palabra"><b class="v2" style="--n: 2">t</b><b class="v3" style="--n: 3">i</b><b class="v4" style="--n: 4">e</b><b class="v0" style="--n: 5">n</b><b class="v1" style="--n: 6">d</b><b class="v2" style="--n: 7">a</b></span></span></h2>
+        <p class="bajada">Tablas, ruedas y zapatillas que probamos nosotros primero. Si no sabes qué llevar, te dejamos andar en la vereda antes de pagar.</p>
+      </header>
+      <ul class="tienda">
+        <li class="producto" data-aparece>
+          <span class="cinta" data-sigue aria-hidden="true"></span>
+          <div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/tabla-640.webp" srcset="/image/bocetos/rampa/tabla-400.webp 400w, /image/bocetos/rampa/tabla-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="853" loading="lazy" alt="Una tabla de skate con dibujos en la base, sostenida en el aire por un pie"></div><span class="luz" data-sigue aria-hidden="true"></span></div>
+          <h3>Tabla Rampa 8,25"</h3>
+          <p>Siete láminas de arce, hechas en Maipú. La lija va de regalo.</p>
+          <p class="precio">$44.900<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path data-sigue pathLength="1" vector-effect="non-scaling-stroke" d="M10 24C4 10 40 2 70 5S99 18 93 30 40 41 15 34 5 16 24 9"/></svg></p>
+        </li>
+        <li class="producto" data-aparece style="--orden: 1">
+          <span class="cinta" data-sigue aria-hidden="true"></span>
+          <div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/ruedas-640.webp" srcset="/image/bocetos/rampa/ruedas-400.webp 400w, /image/bocetos/rampa/ruedas-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una tabla de skate dada vuelta, con sus ejes y sus cuatro ruedas a la vista"></div><span class="luz" data-sigue aria-hidden="true"></span></div>
+          <h3>Ruedas de 54 mm</h3>
+          <p>Duras, para la rampa. Para la calle, pide las blandas.</p>
+          <p class="precio">$29.900<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path data-sigue pathLength="1" vector-effect="non-scaling-stroke" d="M10 24C4 10 40 2 70 5S99 18 93 30 40 41 15 34 5 16 24 9"/></svg></p>
+        </li>
+        <li class="producto" data-aparece style="--orden: 2">
+          <span class="cinta" data-sigue aria-hidden="true"></span>
+          <div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/zapatilla-640.webp" srcset="/image/bocetos/rampa/zapatilla-400.webp 400w, /image/bocetos/rampa/zapatilla-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una zapatilla de lona de caña alta, con cordones blancos"></div><span class="luz" data-sigue aria-hidden="true"></span></div>
+          <h3>Zapatillas de lona</h3>
+          <p>Suela plana y lisa. Duran tres meses si patinas todos los días.</p>
+          <p class="precio">$39.900<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path data-sigue pathLength="1" vector-effect="non-scaling-stroke" d="M10 24C4 10 40 2 70 5S99 18 93 30 40 41 15 34 5 16 24 9"/></svg></p>
+        </li>
+        <li class="producto" data-aparece style="--orden: 3">
+          <span class="cinta" data-sigue aria-hidden="true"></span>
+          <div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/tienda-1000.webp" srcset="/image/bocetos/rampa/tienda-600.webp 600w, /image/bocetos/rampa/tienda-1000.webp 1000w" sizes="(min-width: 900px) 20vw, 42vw" width="1000" height="750" loading="lazy" alt="Un estante con muchas tablas de skate colgadas en fila"></div><span class="luz" data-sigue aria-hidden="true"></span></div>
+          <h3>Tabla armada</h3>
+          <p>Tabla, ejes, ruedas y rodamientos, armada en el mesón mientras esperas.</p>
+          <p class="precio">$89.900<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path data-sigue pathLength="1" vector-effect="non-scaling-stroke" d="M10 24C4 10 40 2 70 5S99 18 93 30 40 41 15 34 5 16 24 9"/></svg></p>
+        </li>
+      </ul>
+      <p class="usadas" data-aparece>Las tablas usadas también se venden. <span class="destaca" data-sigue>Las nuestras, no.</span></p>
+    </div>
+  </section>
+
+  <section class="seccion escuela-seccion" id="escuela" aria-labelledby="escuela-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 id="escuela-titulo" data-sigue><span class="oculto">La escuela</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">L</b><b class="v1" style="--n: 1">a</b></span><span class="palabra"><b class="v2" style="--n: 2">e</b><b class="v3" style="--n: 3">s</b><b class="v4" style="--n: 4">c</b><b class="v0" style="--n: 5">u</b><b class="v1" style="--n: 6">e</b><b class="v2" style="--n: 7">l</b><b class="v3" style="--n: 8">a</b></span></span></h2>
+        <p class="bajada">Grupos de seis, con casco y rodilleras. Para niños desde los siete años y para adultos que nunca se atrevieron.</p>
+      </header>
+      <div class="escuela">
+        <table class="horario" data-aparece>
+          <caption>Horario de noviembre · fotocopia Nº 23</caption>
+          <thead><tr><th scope="col">Día</th><th scope="col">Hora</th><th scope="col">Grupo</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Martes</th><td>17:00</td><td>Niños de 7 a 12, desde cero</td></tr>
+            <tr><th scope="row">Jueves</th><td>18:30</td><td><span class="destaca" data-sigue>Adultos, desde cero</span></td></tr>
+            <tr><th scope="row">Sábado</th><td>10:00</td><td>Niños que ya andan</td></tr>
+            <tr><th scope="row">Sábado</th><td>12:00</td><td>Todos, a la rampa</td></tr>
+            <tr><th scope="row">Domingo</th><td>11:00</td><td>Familias: un adulto y un niño</td></tr>
+          </tbody>
+        </table>
+        <div class="escuela-texto" data-aparece style="--orden: 1">
+          <p class="frase-grande">Caerse es <span class="destaca" data-sigue>la primera clase.</span></p>
+          <ul><li>$38.000 al mes, cuatro clases.</li><li>La primera es gratis, con tabla y casco prestados.</li><li>Si llueve, la clase es de armado y cuidado de la tabla.</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="jueves" aria-labelledby="jueves-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 id="jueves-titulo" data-sigue><span class="oculto">Los jueves</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">L</b><b class="v1" style="--n: 1">o</b><b class="v2" style="--n: 2">s</b></span><span class="palabra"><b class="v3" style="--n: 3">j</b><b class="v4" style="--n: 4">u</b><b class="v0" style="--n: 5">e</b><b class="v1" style="--n: 6">v</b><b class="v2" style="--n: 7">e</b><b class="v3" style="--n: 8">s</b></span></span></h2>
+        <p class="bajada">Después de cerrar la tienda nos vamos a la rampa del parque. Trae tu tabla, tu casco y algo para compartir.</p>
+      </header>
+      <div class="jueves">
+        <figure class="j1" data-aparece><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/bowl-760.webp" srcset="/image/bocetos/rampa/bowl-480.webp 480w, /image/bocetos/rampa/bowl-760.webp 760w" sizes="(min-width: 900px) 36vw, 60vw" width="760" height="950" loading="lazy" alt="El borde curvo de una rampa de hormigón, vacía, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>la rampa del parque, 19:00</figcaption></figure>
+        <figure class="j2" data-aparece style="--orden: 1"><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/agachado-1000.webp" srcset="/image/bocetos/rampa/agachado-600.webp 600w, /image/bocetos/rampa/agachado-1000.webp 1000w" sizes="(min-width: 900px) 52vw, 80vw" width="1000" height="667" loading="lazy" alt="Un skater agachado sobre su tabla baja una calle a toda velocidad, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>la Sofi bajando Cumming</figcaption></figure>
+        <figure class="j3" data-aparece style="--orden: 2"><div class="copia"><div class="trama" data-sigue><img src="/image/bocetos/rampa/pies-760.webp" srcset="/image/bocetos/rampa/pies-480.webp 480w, /image/bocetos/rampa/pies-760.webp 760w" sizes="(min-width: 900px) 40vw, 60vw" width="760" height="760" loading="lazy" alt="Unos pies con zapatillas sobre una tabla, en el borde de una rampa, en blanco y negro"></div><span class="luz" data-sigue aria-hidden="true"></span></div><figcaption>a punto de entrar</figcaption></figure>
+        <p class="nota" data-aparece style="--orden: 3"><b>Jueves, 19:00 a 22:00</b>Gratis. Si es tu primera vez en la rampa, avísanos y alguien te acompaña.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="zine" aria-labelledby="zine-titulo">
+    <div class="ancho zine">
+      <div class="tapa" data-aparece aria-hidden="true">
+        <p class="rescate"><span class="palabra"><b class="v0" style="--n: 0">R</b><b class="v1" style="--n: 1">a</b><b class="v2" style="--n: 2">m</b><b class="v3" style="--n: 3">p</b><b class="v4" style="--n: 4">a</b></span><span class="palabra"><b class="v0" style="--n: 5">z</b><b class="v1" style="--n: 6">i</b><b class="v2" style="--n: 7">n</b><b class="v3" style="--n: 8">e</b></span></p>
+        <div class="copia"><div class="trama" style="aspect-ratio: 4 / 3"><img src="/image/bocetos/rampa/vuelo-700.webp" width="700" height="467" loading="lazy" alt=""></div></div>
+        <p>Noviembre · hecho en la tienda · gratis</p>
+        <span class="numero">23</span>
+      </div>
+      <div data-aparece style="--orden: 1">
+        <header class="cabeza">
+          <h2 id="zine-titulo"><span class="oculto">El zine del mes</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">E</b><b class="v1" style="--n: 1">l</b></span><span class="palabra"><b class="v2" style="--n: 2">z</b><b class="v3" style="--n: 3">i</b><b class="v4" style="--n: 4">n</b><b class="v0" style="--n: 5">e</b></span></span></h2>
+          <p class="bajada">Lo hacemos entre todos y lo fotocopiamos el primer jueves del mes. Se lee en la tienda; te lo llevas gratis si traes de vuelta el anterior.</p>
+        </header>
+        <ul class="indice-zine">
+          <li><span>Cómo se cambia un rodamiento</span><span>p. 2</span></li>
+          <li><span>Entrevista: la Sofi y Cumming abajo</span><span>p. 4</span></li>
+          <li><span>Mapa de veredas lisas de Santiago Centro</span><span>p. 6</span></li>
+          <li><span>Fotos de los jueves</span><span>p. 8</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="inscribirse" aria-labelledby="inscribirse-titulo">
+    <div class="ancho">
+      <form class="volante" data-muestra data-aparece toolname="inscribir_escuela_skate" tooldescription="Inscribe a una persona en la escuela de skate de Rampa, junto al Parque de los Reyes en Santiago: su nombre, su edad, su nivel y el horario que elige. Rampa es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+        <span class="cinta c1" aria-hidden="true"></span><span class="cinta c2" aria-hidden="true"></span>
+        <h2 id="inscribirse-titulo"><span class="oculto">Escuela de skate: inscríbete</span><span class="rescate" aria-hidden="true"><span class="palabra"><b class="v0" style="--n: 0">E</b><b class="v1" style="--n: 1">s</b><b class="v2" style="--n: 2">c</b><b class="v3" style="--n: 3">u</b><b class="v4" style="--n: 4">e</b><b class="v0" style="--n: 5">l</b><b class="v1" style="--n: 6">a</b></span></span></h2>
+        <p class="bajada">Inscríbete. La primera clase es gratis y la tabla la ponemos nosotros.</p>
+        <div class="campos">
+          <label>Nombre de quien patina<input name="nombre" autocomplete="name" required></label>
+          <label>Edad<input type="number" name="edad" min="7" max="90" inputmode="numeric" required toolparamdescription="La edad de quien va a patinar, desde los 7 años"></label>
+          <label>Correo de contacto<input type="email" name="correo" autocomplete="email" required></label>
+          <fieldset class="nivel" toolparamdescription="El nivel: nunca (nunca se ha subido a una tabla), anda (se para y anda en plano) o rampa (ya baja rampas)">
+            <legend>¿Cuánto patinas?</legend>
+            <label><input type="radio" name="nivel" value="nunca" checked>Nunca me he subido</label>
+            <label><input type="radio" name="nivel" value="anda">Me paro y ando</label>
+            <label><input type="radio" name="nivel" value="rampa">Ya bajo rampas</label>
+          </fieldset>
+        </div>
+        <button class="boton" type="submit">Mandar el volante</button>
+        <p class="boceto-aviso"></p>
+        <fieldset class="tiras" toolparamdescription="El horario de clases: martes (martes 17:00, niños desde cero), jueves (jueves 18:30, adultos desde cero), sabado-10 (sábado 10:00, niños que ya andan), sabado-12 (sábado 12:00, todos a la rampa) o domingo (domingo 11:00, familias)">
+          <legend>Arranca tu horario:</legend>
+          <label><input type="radio" name="horario" value="martes"><span><b>Mar 17:00</b><br>niños</span></label>
+          <label><input type="radio" name="horario" value="jueves"><span><b>Jue 18:30</b><br>adultos</span></label>
+          <label><input type="radio" name="horario" value="sabado-10"><span><b>Sáb 10:00</b><br>niños</span></label>
+          <label><input type="radio" name="horario" value="sabado-12"><span><b>Sáb 12:00</b><br>todos</span></label>
+          <label><input type="radio" name="horario" value="domingo"><span><b>Dom 11:00</b><br>familias</span></label>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <span class="corchete c1" aria-hidden="true"></span><span class="corchete c2" aria-hidden="true"></span>
+  <div class="ancho contratapa">
+    <div><h2>Rampa zine · Nº 23</h2><p>Fotocopiado en la tienda. Gratis. Si lo botas, que sea al reciclaje.</p></div>
+    <div><h2>La tienda</h2><p>Presidente Balmaceda 1288, Santiago, frente a la rampa del Parque de los Reyes. Martes a domingo, de 11:00 a 20:00.</p></div>
+    <div><h2>Escríbenos</h2><p>hola@rampaskate.cl · o pasa a conversar, que es mejor.</p></div>
+  </div>
+  <p class="ancho pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
+</body>
+</html>

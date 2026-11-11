@@ -50,12 +50,12 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 | Brutalista | Sótano | 4 | pendiente | pendiente | pendiente | pendiente |
 | Suizo / gráfico | Rumbo | 4 | pendiente | pendiente | pendiente | pendiente |
 | Bauhaus | Foco | 4 | pendiente | pendiente | pendiente | pendiente |
-| Art déco | Bar Marfil | 4 | pendiente | pendiente | pendiente | pendiente |
-| Artesanal | Ulmo | 5 | pendiente | pendiente | pendiente | pendiente |
-| Industrial | Remache | 5 | pendiente | pendiente | pendiente | pendiente |
-| Andino / folclórico | Parina | 5 | pendiente | pendiente | pendiente | pendiente |
-| Letterpress | Prensa Tilde | 5 | pendiente | pendiente | pendiente | pendiente |
-| Collage / zine | Rampa | 5 | pendiente | pendiente | pendiente | pendiente |
+| Art déco | Bar Marfil | 4 | hecho | hecho | hecho | pendiente |
+| Artesanal | Libar | 5 | hecho | hecho | hecho | pendiente |
+| Industrial | Remache | 5 | hecho | hecho | hecho | pendiente |
+| Andino / folclórico | Parina | 5 | hecho | hecho | hecho | pendiente |
+| Letterpress | Prensa Tilde | 5 | hecho | hecho | hecho | pendiente |
+| Collage / zine | Rampa | 5 | hecho | hecho | hecho | pendiente |
 | Minimalista | Alba Interiores | 6 | hecho | hecho | pendiente | pendiente |
 | Cálido y cercano | La Mesa de Rosa | 6 | hecho | hecho | pendiente | pendiente |
 | Premium | Ónix | 6 | hecho | hecho | pendiente | pendiente |
@@ -66,12 +66,13 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 1. **Cauce y Kiri**, que reemplazan a Nodo y Kōen, con sus tarjetas. En la misma tanda se borran `public/brief/bocetos/nodo.html` y `koen.html`, `public/image/bocetos/nodo/` y `koen/` y sus tablas en [bocetos-fotos.md](bocetos-fotos.md), y el abanico de [PreguntaBrief.jsx](../src/components/PreguntaBrief.jsx) (`ABANICO`, línea 345) pasa a `['kiri', 'golpe', 'cauce']`.
 2. **Basal, Ladera, Iris y Quillay**: los estilos que más piden las pymes. *Hecha el 11 de noviembre, junto con Pelusa y Lucero.*
 3. **Pelusa, Lucero, Tablero, Destello y Cénit**: los de color, luz y humor. *Pelusa y Lucero, hechos; siguen Tablero, Destello y Cénit.*
-4. **Sótano, Rumbo, Foco y Marfil**: los de tipografía y geometría.
-5. **Ulmo, Remache, Parina, Tilde y Rampa**: los de material y oficio.
+4. **Sótano, Rumbo, Foco y Marfil**: los de tipografía y geometría. *Marfil, hecho el 11 de noviembre junto con la tanda 5; siguen Sótano, Rumbo y Foco.*
+5. **Libar, Remache, Parina, Tilde y Rampa**: los de material y oficio. *Hecha el 11 de noviembre, junto con Marfil.*
 6. **Las tarjetas de Alba, Rosa, Ónix y Golpe**, sacadas de sus páginas, y una revisión de conjunto de /brief-web con las 24 tarjetas y el recorrido del visor de principio a fin.
 
 ## Pendientes conocidos
 
+- **En un iPhone o iPad real:** la cortina pegada de Remache (sube con el scroll en Safari 26 y sola en Safari 18) y la trama de Rampa (filtro de contraste con mezcla), que en el WebKit de Playwright se ven bien pero conviene confirmar.
 - **Ladera da 98 en rendimiento.** El LCP es la tapa: en la carga real llega en menos de 100 ms, pero la red simulada de Lighthouse reparte el ancho de banda entre sus tres letras (Newsreader, su itálica y Hanken Grotesk) y la foto, y lo estima en 2,3 s. Se probó con una tapa más liviana (540 px) sin cambio. Queda probar con una sola letra arriba del pliegue o precargando la itálica.
 - **Un desplazamiento de 0,048 al cargar**, que Lighthouse ve a veces en varios bocetos (también en Golpe, anterior a estas tandas). Parece la barra de calificar de barra.js, que se monta después del primer pintado. El rendimiento igual queda en 100.
 
@@ -81,6 +82,7 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 - **2026-11-11, segunda sesión.** El usuario pidió seis páginas que no fueran zen ni tecnológico, así que la tanda 1 (Cauce y Kiri) sigue pendiente y se hicieron la tanda 2 entera y las dos primeras de la 3: Basal, Ladera, Iris, Quillay, Pelusa y Lucero, con sus fotos, sus tarjetas y sus entradas en bocetos.js (reemplazan a Roble, Marea, Andes Dental, Raíz, Pinpón y Disco Sur). Quedan para la tanda 3 Tablero, Destello y Cénit. Cambios respecto de las fichas: el `fondo` de Basal es `#ffffff`, porque la página es blanca y la niebla queda para sus bandas; la portada de Iris es una mujer probándose lentes en una óptica, porque la foto con la tabla de letras cortaba la cara; Ladera tiene una viticultora, Antonia Fuentealba; el patinador de Lucero da vueltas con `<animateMotion>` de SVG, que escala con el plano (con el movimiento reducido se cambia por uno quieto).
 - **2026-11-11, misma sesión.** Al ver los seis, el usuario pidió más variedad de componentes: tenían un formato demasiado parecido (cabecera con logo, menú y botón; portada partida en texto y foto; rótulo, título y párrafo en cada sección; filas de tarjetas; contacto con datos a la izquierda y formulario a la derecha; pie con la marca gigante). Se rehizo cada uno desde su marca: Ladera tiene mancheta de diario, tapa centrada con el sumario debajo y un cupón de recorte; Iris pone la tabla de Snellen como portada, el equipo en una agenda semanal y la reserva como turnero de días y horas, y titula con preguntas; Quillay va con el logo al centro y el menú a los lados, portada centrada con foto panorámica, productos en lista de botica y pie como etiqueta de herbario; Pelusa tiene la portada en un bloque amarillo con el perro que habla, la pandilla clavada en un corcho y el formulario como carnet de ingreso; Lucero es un afiche centrado, con tablero de precios con puntos guía, la historia en fundas de disco y la reserva como entrada con talón; Basal queda como el corporativo clásico, con secciones numeradas y pie institucional en columnas.
 - **2026-11-11, revisión de los seis.** Basal, Iris y Pelusa quedaron como estaban; del clínico le gustó mucho el desenfoque de las letras de distintos tamaños. Ladera suma fotos de sus vinos (una botella, una barrica y una copa, una por ficha). Quillay pidió una portada con más impacto, pensada para quien compra, con textos que lleguen y una presentación muy pulida de los jabones, con WebGL o un componente 3D: ahora es una vitrina donde el jabón elegido gira en 3D sobre su pedestal (quillay.js, WebGL propio sin dependencias, que arranca después de la carga y muestra la foto si no hay WebGL), con un selector de los tres jabones, su ficha y «Agregar al pedido», que deja el producto elegido en el formulario. Lucero no gustó ni en su orden ni en su estética y se rehízo: es la pista de noche, con fondo café oscuro, una cinta de cuatro franjas que cruza la página en curva y la foto dentro de un anillo de colores, y sigue el camino de quien llega por primera vez (la semana como cartel, tres pasos para empezar, la pista para grupos con su entrada y la historia en fundas de disco). Su `fondo` pasó a `#24140c` y las tarjetas de natural y retro se redibujaron con el jabón y la noche.
+- **2026-11-11, tercera sesión.** El usuario pidió seis de una vez (Marfil, Ulmo, Remache, Parina, Tilde y Rampa), cada uno único y con algo nuevo que aportar al índice, personalidad marcada y animaciones con sentido. Se aprobó un plan con una pieza y un movimiento nuevos por boceto (anotados como «Lo nuevo» en cada ficha). Ulmo pasó a llamarse **Libar**, porque existe Los Ulmos, una empresa chilena de miel de ulmo y tiaca; Bar Marfil se mantuvo (lo más cercano es un café en Villarrica y una cervecería en Estación Central). barra.js suma `form[data-consulta]` para los formularios que solo consultan. Revisados con movimiento en Chromium y WebKit a 390 y 1440 px, sin desborde ni errores; faltan la pasada a 820 y 1024, la política de contenido con `wrangler dev` y Lighthouse (en Rampa, por el costo de la trama en CSS) antes del commit.
 - **Lección de Nodo y Kōen.** Los dos eran una secuencia de secciones de plantilla: logos de clientes, cifras, planes, preguntas frecuentes, en un caso, y clases, horario, pases y reserva, en el otro. Cada boceto nuevo parte de una idea propia de su marca, y las secciones salen de esa idea, no de una lista.
 - **2026-11-11, tanda 1.** Cauce y Kiri quedaron hechos, con sus fotos y sus tarjetas, y el abanico pasó a `['kiri', 'golpe', 'cauce']`. Al ver Cauce, el usuario dijo que le gustaba mucho y pidió más interacción o componentes 3D de su producto. Se sumó, sin librerías: el sensor como modelo 3D de caras de CSS que se mece, se gira al arrastrarlo o con las flechas, se despieza con el scroll y enciende la pieza que se señala en la lista; un cursor que lee la gráfica del panel, y una calculadora de ahorro de agua (`calcular_ahorro_agua`, con `toolautosubmit`). Todo eso vive en `cauce.js`, que va como módulo para no chocar con las constantes de barra.js.
 - **Pendiente de la tanda 1.** El borrado de `nodo.html`, `koen.html`, `public/image/bocetos/nodo/` y `koen/`, y de sus tablas en bocetos-fotos.md, no se aprobó en la sesión: queda para que el usuario lo haga o lo autorice. El WebKit de Playwright en Windows aplana `transform-style: preserve-3d` (también en un cubo mínimo), así que el sensor 3D se confirma en un iPhone o iPad real. En S, la barra de los bocetos puede dar un CLS de hasta 0,05: barra.js le agrega el formulario de calificar después del primer cuadro, según cuánto tarde la página en pintar. Es de la barra común, no de un boceto.
@@ -115,6 +117,7 @@ El esqueleto de [alba.html](../public/brief/bocetos/alba.html):
 
 - Cada boceto tiene al menos un formulario de muestra: `<form data-muestra>` con `toolname` (snake_case, con verbo), `tooldescription` (que diga que la marca es inventada y que no envía nada) y `toolparamdescription` donde la etiqueta no baste. barra.js responde al agente y avisa que es un boceto.
 - `toolautosubmit` solo en los que no envían nada a nadie (el configurador de Foco, el filtro de Tablero). Los demás los rellena el agente y los envía la persona.
+- Los que solo consultan algo de la página (filtran, configuran, buscan) llevan `data-consulta` en vez de `data-muestra`, y lo que muestran, `data-respuesta`: barra.js le responde al agente el texto de las respuestas visibles. Lo usa el rastreador de lotes de Libar.
 - Letra de 16 px o más en los campos, etiquetas reales y foco visible.
 - Correos y teléfonos van como texto, sin `mailto:` ni `tel:`.
 
@@ -223,7 +226,7 @@ Cada boceto tiene una página real en la que inspirarse, elegida por su estilo y
 | Rumbo | [Mijksenaar](https://www.mijksenaar.com) | Mismo rubro: señalética |
 | Foco | [Tecnolumen](https://tecnolumen.com) | Lámparas de la Bauhaus |
 | Marfil | [American Bar del Savoy](https://www.thesavoylondon.com/restaurants-and-bars/american-bar) | Bar art déco y su carta |
-| Ulmo | [Diaspora Co.](https://www.diasporaco.com) | Origen y lotes como historia |
+| Libar | [Diaspora Co.](https://www.diasporaco.com) | Origen y lotes como historia |
 | Remache | [Deus Ex Machina](https://deuscustoms.com) | Mismo rubro: motos custom |
 | Parina | [Explora](https://www.explora.com) | Mismo rubro: lodges en Chile |
 | Tilde | [Studio On Fire](https://www.studioonfire.com) | Taller de impresión tipográfica |
@@ -427,11 +430,12 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada; la casa (1928, el salón y su barra); la carta de cócteles, simétrica en dos columnas, con precio; las noches (jazz los jueves, swing los sábados); salón privado para eventos; reservar mesa (formulario: nombre, personas, fecha, hora).
 - **Fotos:** cócteles en copa coupé, barra con botellas iluminadas, interior déco con lámparas, músicos de jazz.
 - **Página de inspiración:** [American Bar del Savoy](https://www.thesavoylondon.com/restaurants-and-bars/american-bar), un bar art déco de Londres. Se toma la carta como pieza central, la elegancia simétrica y el ritual del cóctel. También: [Bemelmans Bar](https://www.rosewoodhotels.com/en/the-carlyle-new-york/dining/bemelmans-bar), por el oro y la luz baja, y [Claridge's](https://www.maybourne.com/en/hotels/claridges).
-- **Tarjeta:** fondo botella con el abanico dorado y «MARFIL» en Poiret One. Al pasar el cursor, el abanico se abre un poco más. Sello: el abanico.
+- **Lo nuevo:** el menú es el dial del ascensor del edificio, con su aguja, que apunta al piso que se señala (`:has()`). Las copas de la carta se llenan con el scroll (`data-sigue`). La mesa se elige sobre el plano simétrico del salón: radios con dos etiquetas, la de la derecha decorada (`aria-hidden`). Las fotos se abren desde el eje, como dos puertas. El pie es una ficha de guardarropía bajo el abanico, que se cierra hacia abajo.
+- **Tarjeta:** fondo botella con el abanico de rayos y «MARFIL» en Poiret One. Al pasar el cursor, el abanico se abre hacia los lados. Sello: el abanico.
 
-### Ulmo · artesanal
+### Libar · artesanal
 
-- **Slug y marca:** `ulmo` · Ulmo.
+- **Slug y marca:** `libar` · Libar (lo que hace la abeja con la flor). Se iba a llamar Ulmo, pero ya existe Los Ulmos, una empresa chilena de miel de ulmo y tiaca.
 - **Rubro:** miel cruda de ulmo, quillay y tiaca, de colmenas propias. Curacautín, Región de La Araucanía.
 - **Idea:** el frasco y su etiqueta. Papel kraft, sellos de tinta, lote numerado y notas a mano en los márgenes.
 - **Movimiento:** un sello que baja y deja tinta: se acerca, se asienta y la tinta aparece, sin rebote. Las notas a mano se escriben con una máscara que avanza. El mapa de colmenas se traza al llegar.
@@ -440,7 +444,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada (el frasco y su etiqueta); de dónde viene (el mapa dibujado de las colmenas); las tres mieles, con su color, su sabor y su cosecha; el apicultor; cómo pedir (cajas de tres y de seis); pedido (formulario).
 - **Fotos:** frascos de miel con etiqueta de papel, panal, apicultor con traje, abeja en una flor, cuchara con miel.
 - **Página de inspiración:** [Diaspora Co.](https://www.diasporaco.com), especias de un solo origen. Se toma el origen como historia (cada lote, su campo y su productor) y las etiquetas como identidad. También: [Heath Ceramics](https://www.heathceramics.com), por el oficio a mano contado sin adornos, y [Blue Bottle Coffee](https://bluebottlecoffee.com).
-- **Tarjeta:** kraft con un sello redondo «ULMO · Lote 07» y «miel cruda» a mano. Al pasar el cursor, el sello baja. Sello: el timbre redondo.
+- **Lo nuevo:** «Rastrea tu frasco». Un formulario de consulta (`buscar_lote`, con `toolautosubmit` y `data-consulta`) en el que eliges el lote de tu etiqueta, y con `:has()` se enciende su colmenar en el mapa y aparece su ficha (flor, cosecha, color Pfund y la nota del apicultor). La hoja de pedido recibe un timbre «BOCETO» al enviarse (`:has(.boceto-aviso:not(:empty))`). Una hebra de miel cuelga de la cuchara de la portada y se estira sin caer. La tinta de los timbres lleva un filtro SVG de ruido.
+- **Tarjeta:** kraft con la etiqueta «LIBAR · miel cruda · Lote 07» y su timbre redondo, que espera arriba. Al pasar el cursor, el timbre baja. Sello: el timbre redondo.
 
 ### Remache · industrial
 
@@ -453,7 +458,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada con la cortina; trabajos (tres motos con su ficha, una con el antes y después); servicios; el taller; repuestos en tabla; agendar (formulario: marca, modelo, año, qué necesita).
 - **Fotos:** café racer en un taller, pared de herramientas, soldadura, motor de cerca, moto antes de restaurar.
 - **Página de inspiración:** [Deus Ex Machina](https://deuscustoms.com), del mismo rubro: motos custom y taller. Se toma cada moto como una obra con su nombre y su historia, el taller como lugar y las fotos crudas.
-- **Tarjeta:** acero con «REMACHE» en stencil, cuatro remaches y las lamas de una cortina. Al pasar el cursor, la cortina sube un poco. Sello: el remache.
+- **Lo nuevo:** la cortina de la portada, con el nombre pintado en sus últimas lamas: la escena queda pegada (más angosta que el 90 % del ancho) y la cortina sube con el scroll; en Safari 18 sube sola al cargar. Las fichas son placas remachadas que se atornillan, los servicios cuelgan de un tablero perforado sobre su silueta pintada, las fotos se abren como persiana (`@property --abre`), la reserva es una orden de trabajo en su portapapeles y el pie baja la cortina a medias.
+- **Tarjeta:** acero con la cortina y «REMACHE» pintado en esténcil, y cuatro remaches. Al pasar el cursor, la cortina sube y deja ver adentro. Sello: el remache.
 
 ### Parina · andino / folclórico
 
@@ -466,7 +472,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada (el volcán Parinacota y el lago); el lodge; las caminatas (cuatro rutas, con altura, horas y dificultad); la aclimatación, contada con honestidad (los primeros dos días, la puna); el taller de las tejedoras; reservar (formulario: fechas, personas, rutas de interés).
 - **Fotos:** volcán con lago, llamas o alpacas, textiles andinos de cerca, casa de piedra, flamencos en un salar.
 - **Página de inspiración:** [Explora](https://www.explora.com), del mismo rubro: lodges y expediciones en Chile, entre ellos uno en el desierto de Atacama. Se toma el paisaje como protagonista y las rutas con su dificultad y sus horas. También: [Kuna](https://www.kuna.com.pe), por el textil andino contemporáneo.
-- **Tarjeta:** franjas de grecas en sus colores y «Parina» en Alegreya. Al pasar el cursor, se teje una fila. Sello: un rombo de greca.
+- **Lo nuevo:** la página se teje. Entre sección y sección, una franja de siete filas se teje con el scroll, cada fila en sentido contrario a la anterior; el pie es el aguayo entero. Las madejas de la portada dicen de dónde sale cada color. Las caminatas se eligen con radios y el perfil de altura de la elegida se dibuja. La reserva se teje: cada dato completo suma una fila (`:has(:valid)`). Su `fondo` pasó a `#f3e7d3`.
+- **Tarjeta:** dos franjas de grecas y «Parina» con el flamenco de rombos. A la segunda franja le falta su fila de rombos: al pasar el cursor, se teje. Sello: un rombo de greca.
 
 ### Prensa Tilde · letterpress
 
@@ -479,7 +486,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada (el nombre en relieve); el taller (la prensa de 1962 y la caja de tipos); invitaciones (matrimonios, bautizos y aniversarios, con muestras); papeles y tintas (gramajes, algodón, colores); cómo encargar (plazos y pruebas); presupuesto (formulario: pieza, cantidad, fecha del evento).
 - **Fotos:** tipos móviles en su caja, prensa tipográfica, tarjetas con relieve, rodillo con tinta, papel de algodón con bordes irregulares.
 - **Página de inspiración:** [Studio On Fire](https://www.studioonfire.com), un taller de impresión tipográfica de Minneapolis. Se toma el papel y la tinta mostrados de cerca, las muestras como portafolio y el oficio como argumento. También: [Hamilton Wood Type & Printing Museum](https://woodtype.org), por los tipos móviles, y Fonts In Use, buscando «letterpress».
-- **Tarjeta:** papel de algodón con «Tilde» hundido en Abril Fatface y un ornamento. Al pasar el cursor, el relieve se hunde más. Sello: la tilde (ˊ).
+- **Lo nuevo:** la prueba de imprenta en vivo. Lo que se escribe en el presupuesto se compone en la invitación de al lado y se vuelve a imprimir al dejar de escribir (`tilde.js`, módulo, solo `textContent`); el papel, la tinta y la pieza cambian con `:has()`. Los tipos de la portada están en espejo y se dan vuelta en 2D (se angostan hasta cero y se abren derechos): el 3D con `backface-visibility` no se veía en el WebKit de prueba. La tilde es un acento en SVG, en bermellón.
+- **Tarjeta:** papel de algodón con «Tilde» hundido en Abril Fatface, su acento y las marcas de corte. Al pasar el cursor, el relieve se hunde más. Sello: el acento.
 
 ### Rampa · collage / zine
 
@@ -492,7 +500,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada (el collage); la tienda (tablas, ruedas y zapatillas, como recortes con su precio a mano); la escuela (clases y horarios); las sesiones de los jueves en la rampa; el zine del mes, para leer en la tienda; inscripción (formulario: nombre, edad, nivel, horario).
 - **Fotos:** skaters en el aire, tablas gastadas, rampa de hormigón, zapatillas rotas. Todas con `sat=-100` y una trama de semitono en CSS encima.
 - **Página de inspiración:** [Thrasher](https://www.thrashermagazine.com), la revista de skate. Se toma la energía de revista, las fotos de skate en blanco y negro y la tipografía de portada. También: [Bronze 56k](https://shop.bronze56k.com), por la estética lo-fi de tienda de skate, y *Ray Gun*, la revista de David Carson, para el collage.
-- **Tarjeta:** textura de fotocopia, «RAMPA» en letras de rescate y una tira de cinta. Al pasar el cursor, un recorte se ladea. Sello: una estrella recortada.
+- **Lo nuevo:** la trama de semitono en CSS (la foto gris, oscurecida y apenas desenfocada, bajo una grilla de puntos con contraste alto y multiplicada sobre el papel) y la barra de luz de la fotocopiadora que la imprime al entrar. Los títulos son letras de rescate (el texto real va oculto para lectores de pantalla). La inscripción es un volante con tiras para arrancar: los horarios son radios y la elegida se ladea y cae, como arrancada.
+- **Tarjeta:** textura de fotocopia, «RAMPA» en letras de rescate, una tira de cinta y una línea a máquina. Al pasar el cursor, dos recortes se ladean. Sello: una estrella recortada.
 
 ## Las tarjetas de Alba, Rosa, Ónix y Golpe
 

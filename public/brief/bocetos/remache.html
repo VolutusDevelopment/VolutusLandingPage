@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Remache · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Remache, taller de motos clásicas y custom en San Miguel, para mostrar el estilo Industrial.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/big-shoulders-stencil.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/remache/portada-1200.webp" imagesrcset="/image/bocetos/remache/portada-760.webp 760w, /image/bocetos/remache/portada-1200.webp 1200w" imagesizes="100vw" fetchpriority="high">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Remache · industrial. Inspiración: Deus Ex Machina (deuscustoms.com). Se
+   toma: 1) cada moto contada como una obra, con su nombre, su dueño y lo que
+   se le hizo; 2) letras condensadas y gruesas sobre fondos oscuros de taller,
+   con un solo color de señal; 3) fotos crudas que aparecen sin adornos. La
+   idea propia: el taller abre su cortina. La portada es la cortina metálica
+   del portón, con el nombre pintado en sus últimas lamas: sube con el scroll
+   y descubre la moto. Las fichas son placas remachadas que se atornillan, los
+   servicios cuelgan de un tablero perforado sobre su silueta pintada, la
+   reserva es una orden de trabajo en su portapapeles y, al final, la
+   cortina baja a medias: cerrado los domingos. */
+@font-face { font-family: 'Big Shoulders Stencil'; src: url('/fonts/bocetos/big-shoulders-stencil.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Big Shoulders Display'; src: url('/fonts/bocetos/big-shoulders-display.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Barlow'; src: url('/fonts/bocetos/barlow-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Barlow'; src: url('/fonts/bocetos/barlow-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@property --abre { syntax: '<length>'; inherits: true; initial-value: 26px; }
+
+:root {
+  --acero: #1b1d1f;
+  --plomo: #3a3e42;
+  --fierro: #26292c;
+  --hueso: #e8e2d6;
+  --gris: #a3a8ab;
+  --oxido: #b5562b;
+  --senal: #f2c230;
+  --linea: rgb(232 226 214 / 0.14);
+  --ancho: 1280px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.7, 0, 0.3, 1);
+  --cola: clamp(150px, 26svh, 240px);
+  --alto-escena: calc(100svh - 10rem);
+}
+* { box-sizing: border-box; }
+html { background: var(--acero); scroll-behavior: smooth; }
+body { margin: 0; background: var(--acero); color: var(--hueso); font: 400 18px/1.55 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 3px solid var(--senal); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 800; line-height: 0.92; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.seccion { padding-block: clamp(96px, 12vw, 168px); }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 2px 30px 0; border: 0; border-radius: 3px; background: var(--senal); color: var(--acero); font: 800 20px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: pointer; box-shadow: inset 0 -4px 0 rgb(0 0 0 / 0.2); transition: background-color 400ms var(--curva); }
+.boton:hover { background: #ffd457; }
+
+/* El metal: un remache es un círculo con luz arriba a la izquierda. */
+.remaches { background:
+  radial-gradient(circle at 35% 35%, #8b9196 0 1.5px, #4b5054 3.5px, transparent 4.5px) 10px 10px / 9px 9px no-repeat,
+  radial-gradient(circle at 35% 35%, #8b9196 0 1.5px, #4b5054 3.5px, transparent 4.5px) calc(100% - 10px) 10px / 9px 9px no-repeat,
+  radial-gradient(circle at 35% 35%, #8b9196 0 1.5px, #4b5054 3.5px, transparent 4.5px) 10px calc(100% - 10px) / 9px 9px no-repeat,
+  radial-gradient(circle at 35% 35%, #8b9196 0 1.5px, #4b5054 3.5px, transparent 4.5px) calc(100% - 10px) calc(100% - 10px) / 9px 9px no-repeat,
+  linear-gradient(160deg, #44494d, #2f3337); }
+
+/* ---- Cabecera: la placa del taller y el índice estampado ---- */
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; padding-block: 20px; }
+.placa { display: grid; grid-template-columns: auto auto; column-gap: 12px; align-items: center; padding: 12px 26px 12px 22px; border-radius: 4px; text-decoration: none; box-shadow: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 6px 14px -8px #000; }
+.placa svg { grid-row: 1 / 3; width: 30px; height: 30px; color: var(--senal); }
+.placa b { font: 800 28px/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.08em; }
+.placa small { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); }
+.indice { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 0; padding: 0; list-style: none; }
+.indice a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 700 19px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: color 400ms var(--curva); }
+.indice span { font-size: 14px; color: var(--senal); letter-spacing: 0.04em; }
+.indice a:hover { color: var(--senal); }
+
+/* ---- Portada: el portón y su cortina ---- */
+.porton { position: relative; padding-inline: clamp(24px, 4vw, 56px); }
+.escena { position: relative; height: var(--alto-escena); min-height: 26rem; max-height: 60rem; overflow: hidden; border-radius: 2px; background: #0e0f10; box-shadow: 0 0 0 10px var(--fierro), 0 0 0 12px #000; }
+.escena > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%; }
+.escena::after { content: ''; position: absolute; inset: auto 0 0; height: 40%; background: linear-gradient(transparent, rgb(14 15 16 / 0.85)); pointer-events: none; }
+.leyenda-moto { position: absolute; z-index: 1; left: clamp(16px, 3vw, 36px); bottom: clamp(16px, 3vw, 32px); max-width: 30ch; font-size: 15px; letter-spacing: 0.06em; color: var(--gris); }
+.leyenda-moto b { display: block; font: 700 20px/1.1 'Big Shoulders Display', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hueso); }
+.cajon { position: absolute; z-index: 3; inset: 0 0 auto; height: 3rem; background: linear-gradient(#4a4f53, #2a2d30); box-shadow: 0 10px 16px -8px #000; }
+.cortina { position: absolute; z-index: 2; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) var(--cola); translate: 0 calc(-100% + var(--cola) + 3rem); }
+.lamas { background:
+  linear-gradient(90deg, rgb(0 0 0 / 0.3), transparent 12%, transparent 88%, rgb(0 0 0 / 0.3)),
+  repeating-linear-gradient(180deg, #2b2f32 0 2px, #7d8389 2px 4px, #666c71 4px 15px, #50555a 15px 24px, #33373a 24px 28px); }
+.cola { display: grid; grid-template-rows: minmax(0, 1fr) 22px; }
+.letrero { display: grid; align-content: center; justify-items: center; gap: 8px; padding-inline: 16px; text-align: center; }
+.letrero h1 { font: 800 clamp(64px, 12vw, 176px)/0.86 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.06em; color: var(--senal); text-shadow: 0 2px 0 rgb(0 0 0 / 0.35); }
+.letrero p { font: 700 clamp(15px, 1.6vw, 20px)/1.2 'Big Shoulders Display', sans-serif; letter-spacing: 0.22em; text-transform: uppercase; color: var(--hueso); text-shadow: 0 1px 0 rgb(0 0 0 / 0.5); }
+.zocalo { position: relative; background: linear-gradient(#3d4246, #222528); }
+.zocalo::after { content: ''; position: absolute; left: 50%; top: 5px; width: 84px; height: 10px; margin-left: -42px; border-radius: 5px; background: linear-gradient(#9aa0a5, #555a5e); }
+.portada-bajo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px clamp(32px, 6vw, 96px); align-items: end; padding-block: clamp(56px, 7vw, 96px) 0; }
+.lema { font: 800 clamp(44px, 6.4vw, 92px)/0.92 'Big Shoulders Display', sans-serif; text-transform: uppercase; }
+.lema em { font-style: normal; color: var(--senal); }
+.portada-bajo > div { display: grid; gap: 22px; justify-items: start; }
+.portada-bajo > div p { max-width: 40ch; color: var(--gris); }
+.horario { font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ---- Encabezados: código estampado, título condensado, cinta de peligro ---- */
+.cabeza { display: grid; gap: 14px; max-width: 54rem; margin-bottom: clamp(48px, 6vw, 80px); }
+.codigo { font: 700 16px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.24em; text-transform: uppercase; color: var(--senal); }
+.codigo span { color: var(--gris); }
+.cabeza h2 { font: 800 clamp(52px, 7.4vw, 108px)/0.88 'Big Shoulders Display', sans-serif; text-transform: uppercase; }
+.cinta { width: min(100%, 15rem); height: 12px; margin-top: 6px; background: repeating-linear-gradient(-45deg, var(--senal) 0 12px, #111 12px 24px); transform-origin: left; }
+.cabeza > p:last-child { max-width: 46ch; color: var(--gris); }
+
+/* ---- Trabajos: placas atornilladas ---- */
+.trabajos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 72px clamp(24px, 3vw, 40px); margin: 0; padding: 0; list-style: none; }
+.trabajo figure img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.placa-datos { position: relative; margin: -44px 16px 0; padding: 26px 26px 22px; border-radius: 5px; background: linear-gradient(115deg, #d8d4cb, #b7b3aa 45%, #cfcbc2 70%, #aca89f); color: #24272a; box-shadow: 0 14px 22px -14px #000, inset 0 1px 0 rgb(255 255 255 / 0.6); }
+.placa-datos h3 { font: 800 30px/0.95 'Big Shoulders Display', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; text-shadow: 0 1px 0 rgb(255 255 255 / 0.55); }
+.placa-datos h3 span { display: block; margin-top: 4px; font-size: 17px; letter-spacing: 0.16em; color: #5c5952; }
+.placa-datos dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 14px; margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed rgb(36 39 42 / 0.4); font-size: 15px; line-height: 1.4; }
+.placa-datos dt { font: 700 13px/1.5 'Big Shoulders Display', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #5c5952; }
+.placa-datos dd { margin: 0; }
+.tornillo { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f0ede6, #8d8a83 70%); box-shadow: 0 1px 1px rgb(0 0 0 / 0.5); }
+.tornillo::after { content: ''; position: absolute; left: 2px; right: 2px; top: 5px; height: 2px; background: #4a4843; }
+.tornillo:nth-of-type(1) { left: 9px; top: 9px; }
+.tornillo:nth-of-type(2) { right: 9px; top: 9px; rotate: 50deg; }
+.tornillo:nth-of-type(3) { left: 9px; bottom: 9px; rotate: -30deg; }
+.tornillo:nth-of-type(4) { right: 9px; bottom: 9px; rotate: 80deg; }
+
+/* El antes y el después: el corte lo mueve barra.js (--corte). */
+.restauracion { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; margin-top: clamp(88px, 10vw, 140px); }
+.restauracion h3 { font: 800 clamp(36px, 4vw, 56px)/0.92 'Big Shoulders Display', sans-serif; text-transform: uppercase; }
+.restauracion > div p { margin-top: 18px; color: var(--gris); }
+.comparar { --corte: 50%; position: relative; overflow: hidden; background: #000; touch-action: pan-y; box-shadow: 0 0 0 8px var(--fierro); }
+.comparar img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.comparar .antes { position: absolute; inset: 0; height: 100%; clip-path: inset(0 calc(100% - var(--corte)) 0 0); }
+.comparar .linea-corte { position: absolute; top: 0; bottom: 0; left: var(--corte); width: 3px; margin-left: -1.5px; background: var(--senal); pointer-events: none; }
+.comparar .manija { position: absolute; top: 50%; left: var(--corte); display: grid; place-items: center; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: var(--senal); color: var(--acero); pointer-events: none; transition: scale 300ms var(--curva); }
+.comparar .manija svg { width: 24px; height: 24px; }
+.comparar input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+.comparar:has(input:focus-visible) .manija { outline: 3px solid var(--hueso); outline-offset: 4px; }
+.comparar:has(input:active) .manija { scale: 0.92; }
+.comparar .etiqueta { position: absolute; top: 14px; padding: 6px 10px 4px; background: rgb(17 17 17 / 0.85); font: 700 14px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.2em; text-transform: uppercase; pointer-events: none; }
+.comparar .e-antes { left: 14px; }
+.comparar .e-despues { right: 14px; }
+
+/* ---- Servicios: el tablero perforado ---- */
+.servicios-seccion { background: var(--fierro); }
+.tablero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 0; padding: clamp(20px, 3vw, 40px) clamp(12px, 2vw, 28px) 12px; list-style: none; border: 12px solid #5a4632; border-radius: 4px; background: #33373b radial-gradient(circle, #16181a 2.4px, transparent 3px) 6px 6px / 24px 24px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), 0 24px 40px -24px #000; }
+.herramienta { position: relative; display: grid; grid-template-rows: 236px auto; justify-items: center; padding: 0 10px 28px; text-align: center; }
+.colgada { position: relative; width: 70px; height: 225px; }
+.colgada svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.silueta { fill: none; stroke: var(--senal); stroke-width: 1.6; stroke-dasharray: 5 4; --mango: none; opacity: 0.85; }
+.pieza { fill: #c3c7cb; stroke: #15171a; stroke-width: 1; --mango: var(--oxido); transform-origin: 50% 4px; transition: translate 500ms var(--curva), rotate 500ms var(--curva), filter 500ms var(--curva); filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.55)); }
+.gancho { position: absolute; left: 50%; top: -6px; width: 14px; height: 16px; margin-left: -7px; border: 3px solid #8b9196; border-bottom: 0; border-radius: 7px 7px 0 0; }
+.herramienta:hover .pieza { translate: 0 -12px; rotate: -5deg; filter: drop-shadow(10px 16px 6px rgb(0 0 0 / 0.5)); }
+.herramienta h3 { font: 800 22px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.herramienta p { margin-top: 8px; font-size: 15px; line-height: 1.4; color: var(--gris); }
+.herramienta .precio { color: var(--senal); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---- El taller ---- */
+.taller { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr); gap: clamp(20px, 3vw, 36px); align-items: start; }
+.taller figure img { width: 100%; object-fit: cover; }
+.taller .f1 img { aspect-ratio: 3 / 2; }
+.taller .f2 { margin-top: clamp(48px, 8vw, 120px); }
+.taller .f2 img, .taller .f3 img { aspect-ratio: 4 / 5; }
+.taller figcaption { margin-top: 12px; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+.taller-texto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px clamp(32px, 5vw, 72px); margin-top: clamp(48px, 6vw, 80px); }
+.taller-texto p { color: var(--gris); }
+.taller-texto b { color: var(--hueso); font-weight: 600; }
+
+/* ---- Repuestos ---- */
+.repuestos-seccion { background: var(--fierro); }
+.repuestos { width: 100%; border-collapse: collapse; font-size: 16px; }
+.repuestos th { padding: 12px 14px; border-bottom: 3px solid var(--senal); font: 700 14px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; text-align: left; color: var(--gris); }
+.repuestos td { padding: 18px 14px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+.repuestos tr { transition: background-color 400ms var(--curva); }
+.repuestos tbody tr:hover { background: rgb(242 194 48 / 0.06); }
+.serie { font: 700 18px/1.3 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.1em; color: var(--senal); white-space: nowrap; }
+.repuestos td b { display: block; font-weight: 600; }
+.repuestos td small { font-size: 14px; color: var(--gris); }
+.quedan { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 8px; }
+.quedan i { width: 5px; height: 16px; background: var(--hueso); }
+.quedan i.no { background: var(--plomo); }
+.repuestos .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---- Agendar: la orden de trabajo en su portapapeles ---- */
+.agendar { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px clamp(40px, 6vw, 96px); align-items: start; }
+.agendar-texto { display: grid; gap: 22px; }
+.agendar-texto ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; color: var(--gris); }
+.agendar-texto li::before { content: '— '; color: var(--senal); }
+.agendar-texto .cabeza { margin-bottom: 0; }
+.portapapeles { position: relative; padding: 46px 18px 18px; border-radius: 10px; background: linear-gradient(170deg, #6b5039, #4f3a28); box-shadow: 0 30px 50px -30px #000; }
+.portapapeles::before { content: ''; position: absolute; left: 50%; top: -14px; width: 150px; height: 46px; margin-left: -75px; border-radius: 8px 8px 4px 4px; background: linear-gradient(#c9cdd1, #7e8489); box-shadow: 0 4px 6px rgb(0 0 0 / 0.5); }
+.orden { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px; padding: 30px clamp(20px, 3vw, 34px) 24px; border-radius: 2px; background: #f1ecdf repeating-linear-gradient(transparent 0 31px, rgb(50 70 110 / 0.12) 31px 32px); color: #24272a; }
+.orden-cabeza { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; padding-bottom: 10px; border-bottom: 2px solid #24272a; }
+.orden-cabeza h3 { font: 800 34px/1 'Big Shoulders Display', sans-serif; text-transform: uppercase; }
+.orden-cabeza span { font: 700 20px/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.1em; color: #b23a1f; }
+.orden label, .orden legend { display: grid; gap: 4px; font: 700 13px/1.3 'Big Shoulders Display', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #5c5952; }
+.orden input, .orden textarea { width: 100%; min-height: 44px; padding: 6px 2px; border: 0; border-bottom: 2px solid #24272a; border-radius: 0; background: transparent; color: #1b1d1f; font: 400 18px/1.3 'Barlow', sans-serif; letter-spacing: 0; text-transform: none; }
+.orden textarea { min-height: 88px; resize: vertical; }
+.orden input:focus-visible, .orden textarea:focus-visible { outline: none; border-bottom-color: #b23a1f; box-shadow: 0 2px 0 #b23a1f; }
+.orden .todo { grid-column: 1 / -1; }
+.orden fieldset { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 16px; margin: 0; padding: 0; border: 0; }
+.orden legend { margin-bottom: 10px; padding: 0; }
+.orden .casilla { position: relative; display: flex; align-items: center; gap: 10px; min-height: 40px; font: 400 17px/1.2 'Barlow', sans-serif; letter-spacing: 0; text-transform: none; color: #24272a; cursor: pointer; }
+.casilla input { position: absolute; width: 26px; height: 26px; margin: 0; opacity: 0; cursor: pointer; }
+.casilla span { position: relative; flex: none; width: 26px; height: 26px; border: 2px solid #24272a; }
+.casilla span::after { content: '✕'; position: absolute; inset: 0; display: grid; place-items: center; font: 800 20px/1 'Big Shoulders Display', sans-serif; color: #b23a1f; opacity: 0; scale: 1.6; transition: opacity 300ms var(--curva), scale 300ms var(--curva); }
+.casilla input:checked + span::after { opacity: 1; scale: 1; }
+.casilla input:focus-visible + span { outline: 3px solid #b23a1f; outline-offset: 2px; }
+.orden .boton { grid-column: 1 / -1; justify-self: start; }
+.orden .boceto-aviso { grid-column: 1 / -1; margin: 0; color: #b23a1f; font-weight: 600; }
+
+/* ---- Pie: la cortina baja a medias ---- */
+.pie { position: relative; overflow: hidden; min-height: 72svh; padding-top: clamp(170px, 22svh, 230px); background: #0e0f10; }
+.pie-cortina { position: absolute; inset: 0 0 auto; height: clamp(130px, 18svh, 190px); display: grid; place-items: center; border-bottom: 18px solid #2a2d30; background:
+  linear-gradient(90deg, rgb(0 0 0 / 0.3), transparent 12%, transparent 88%, rgb(0 0 0 / 0.3)),
+  repeating-linear-gradient(180deg, #2b2f32 0 2px, #7d8389 2px 4px, #666c71 4px 15px, #50555a 15px 24px, #33373a 24px 28px); }
+.pie-cortina p { font: 800 clamp(30px, 5vw, 64px)/1 'Big Shoulders Stencil', sans-serif; letter-spacing: 0.08em; text-align: center; color: var(--senal); text-shadow: 0 2px 0 rgb(0 0 0 / 0.35); }
+.pie-datos { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; padding-block: clamp(48px, 6vw, 72px) 40px; }
+.pie-datos h2 { font: 700 14px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
+.pie-datos p { margin-top: 10px; }
+.pie-final { padding-block: 22px 32px; border-top: 1px solid var(--linea); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+
+/* ---- L ---- */
+@media (max-width: 1279px) {
+  .tablero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada-bajo, .restauracion, .agendar, .taller-texto { grid-template-columns: minmax(0, 1fr); }
+  .trabajos { grid-template-columns: minmax(0, 1fr); max-width: 34rem; }
+  .taller { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .taller .f1 { grid-column: 1 / -1; }
+  .taller .f2 { margin-top: 0; }
+  .pie-datos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .pie-datos .placa { grid-column: 1 / -1; justify-self: start; }
+  .repuestos thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .repuestos, .repuestos tbody, .repuestos tr, .repuestos td { display: block; }
+  .repuestos tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; padding: 18px 0; border-bottom: 1px solid var(--linea); }
+  .repuestos td { padding: 0; border: 0; }
+  .repuestos td:not(:first-child) { grid-column: 2; }
+  .repuestos td:first-child { grid-row: 1 / 5; }
+  .repuestos td[data-col]::before { content: attr(data-col) ': '; color: var(--gris); font-size: 14px; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  :root { --alto-escena: calc(100svh - 15rem); --cola: clamp(150px, 24svh, 200px); }
+  .placa { padding: 10px 20px 10px 16px; }
+  .cabecera { gap: 12px; }
+  .indice { gap: 0 18px; }
+  .indice a { font-size: 17px; }
+  .tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); border-width: 8px; }
+  .herramienta { padding-inline: 4px; }
+  .placa-datos { margin-inline: 10px; padding: 24px 20px 20px; }
+  .orden { grid-template-columns: minmax(0, 1fr); }
+  .orden fieldset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .taller { grid-template-columns: minmax(0, 1fr); }
+  .pie-datos { grid-template-columns: minmax(0, 1fr); }
+  .repuestos tr { grid-template-columns: minmax(0, 1fr); }
+  .repuestos td:not(:first-child) { grid-column: 1; }
+  .repuestos td:first-child { grid-row: auto; }
+}
+
+/* ---- Movimiento: el taller abre ----
+   La cortina sube con el scroll: la escena queda pegada mientras las lamas
+   se enrollan en el cajón, con la curva pesada de la marca, y el nombre
+   pintado sube con ellas hasta quedar arriba como letrero. Donde el
+   navegador no ata animaciones al scroll (Safari 18), sube sola al cargar.
+   Los títulos llegan y la cinta de peligro se estira. Las placas se asientan
+   y sus tornillos giran hasta apretar. Las herramientas se cuelgan en su
+   gancho y, al pasar el cursor, se levantan de su silueta. Las fotos se
+   abren como una persiana, lama por lama. Al final, la cortina del pie baja
+   a medias. */
+[data-aparece] { --entrada: remache-sube; --tramo: 34svh; --duracion: 1200ms; }
+.placa-datos { --entrada: remache-asienta; --tramo: 40svh; }
+.tornillo { --entrada: remache-atornilla; }
+.cinta { --entrada: remache-estira; }
+.persiana { --entrada: remache-persiana; --tramo: 44svh; --duracion: 1400ms; }
+.herramienta { --entrada: remache-cuelga; }
+.pie-cortina { --entrada: remache-baja; --tramo: 46svh; --duracion: 1600ms; }
+@keyframes remache-sube { from { opacity: 0; translate: 0 22px; } }
+@keyframes remache-abre { from { translate: 0 0; } }
+@keyframes remache-asienta { from { opacity: 0; translate: 0 -18px; rotate: -2.5deg; } 40% { opacity: 1; } }
+@keyframes remache-atornilla { 0%, 45% { rotate: -320deg; } }
+@keyframes remache-estira { from { scale: 0 1; } }
+@keyframes remache-persiana { from { --abre: 0px; } }
+@keyframes remache-cuelga { from { opacity: 0; translate: 0 -24px; } }
+@keyframes remache-baja { from { translate: 0 -100%; } }
+.persiana img { -webkit-mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); mask: repeating-linear-gradient(#000 0 var(--abre), transparent var(--abre) 26px); }
+@media (prefers-reduced-motion: no-preference) {
+  .cortina { animation: remache-abre 2600ms var(--curva) 500ms both; }
+  .cabecera .placa, .indice li { animation: remache-sube 1200ms var(--curva) both; }
+  .indice li:nth-child(2) { animation-delay: 80ms; }
+  .indice li:nth-child(3) { animation-delay: 160ms; }
+  .indice li:nth-child(4) { animation-delay: 240ms; }
+  .indice li:nth-child(5) { animation-delay: 320ms; }
+  @supports (animation-timeline: view()) {
+    .porton { height: calc(var(--alto-escena) + 90svh); view-timeline: --porton; }
+    .escena { position: sticky; top: 4.5rem; }
+    .cortina { animation-duration: auto; animation-delay: 0s; animation-timeline: --porton; animation-range: contain 0% contain 80%; }
+  }
+}
+</style>
+</head>
+<body data-boceto="remache">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Remache</b> es una marca inventada por Volutus para mostrarte el estilo <b>Industrial</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 32 32"><path fill="currentColor" d="M3 15a13 10 0 0 1 26 0zM12 15h8v13a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="llave" viewBox="0 0 56 180"><path d="M17 6h6v18h10V6h6v20c0 6-3 9-7 10v128c0 5-2 8-4 8s-4-3-4-8V36c-4-1-7-4-7-10z"/></symbol>
+  <symbol id="destornillador" viewBox="0 0 56 180"><path style="fill: var(--mango)" d="M18 8c0-3 3-5 10-5s10 2 10 5v58c0 4-3 6-10 6s-10-2-10-6z"/><path d="M25.5 72h5v86l-2.5 8-2.5-8z"/></symbol>
+  <symbol id="torque" viewBox="0 0 56 180"><circle cx="28" cy="18" r="13"/><path d="M24 30h8v62h-8z"/><path style="fill: var(--mango)" d="M21 92h14v70c0 4-3 6-7 6s-7-2-7-6z"/></symbol>
+  <symbol id="bujia" viewBox="0 0 56 180"><path d="M6 8h44v10H6zM24 18h8v104h-8z"/><path style="fill: var(--mango)" d="M18 122h20v44c0 3-2 5-5 5H23c-3 0-5-2-5-5z"/></symbol>
+  <symbol id="brocha" viewBox="0 0 56 180"><path style="fill: var(--mango)" d="M23 6c0-2 2-3 5-3s5 1 5 3v88h-10z"/><path d="M17 94h22v18H17z"/><path style="fill: var(--mango)" d="M16 112h24v52c0 3-3 5-12 5s-12-2-12-5z"/></symbol>
+  <symbol id="martillo" viewBox="0 0 56 180"><path d="M6 8h40c3 0 5 2 5 5v8c0 3-2 5-5 5H6z"/><path style="fill: var(--mango)" d="M23 26h10v136c0 4-2 6-5 6s-5-2-5-6z"/></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="placa remaches" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b><small>Taller Nº 0412 · San Miguel</small></a>
+  <nav aria-label="Secciones"><ol class="indice"><li><a href="#trabajos"><span>01</span>Trabajos</a></li><li><a href="#servicios"><span>02</span>Servicios</a></li><li><a href="#taller"><span>03</span>Taller</a></li><li><a href="#repuestos"><span>04</span>Repuestos</a></li><li><a href="#agendar"><span>05</span>Agendar</a></li></ol></nav>
+</header>
+
+<main>
+  <section class="portada" id="inicio" aria-labelledby="titulo">
+    <div class="porton">
+      <div class="escena">
+        <img src="/image/bocetos/remache/portada-1200.webp" srcset="/image/bocetos/remache/portada-760.webp 760w, /image/bocetos/remache/portada-1200.webp 1200w" sizes="100vw" width="1200" height="900" alt="Una café racer negra con el foco encendido, estacionada bajo un tubo fluorescente en un taller en penumbra" fetchpriority="high">
+        <p class="leyenda-moto"><b>CB750 de 1978</b>Entró sin chispa. Salió en marzo, con asiento corto y escape propio.</p>
+        <div class="cortina">
+          <div class="lamas" aria-hidden="true"></div>
+          <div class="cola">
+            <div class="lamas letrero"><h1 id="titulo">Remache</h1><p>Motos clásicas y custom · San Miguel</p></div>
+            <div class="zocalo" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="cajon remaches" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="ancho portada-bajo">
+      <p class="lema">Lo que entra roto, <em>sale andando.</em></p>
+      <div>
+        <p>Restauramos, preparamos y mantenemos motos clásicas y custom desde 1998. Sin apuro y con el torque que dice el manual.</p>
+        <a class="boton" href="#agendar">Agendar una revisión</a>
+        <p class="horario">Lunes a sábado · Llano Subercaseaux 3920</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="trabajos" aria-labelledby="trabajos-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="codigo" data-sigue>SEC-01 <span>/ Trabajos</span></p>
+        <h2 id="trabajos-titulo">Tres motos que salieron andando</h2>
+        <div class="cinta" data-sigue aria-hidden="true"></div>
+        <p>Cada moto sale con su placa: qué tenía cuando llegó, qué se le hizo y cuánto tiempo pasó en el taller.</p>
+      </header>
+      <ul class="trabajos">
+        <li class="trabajo">
+          <figure class="persiana" data-aparece><img src="/image/bocetos/remache/bmw-1000.webp" srcset="/image/bocetos/remache/bmw-600.webp 600w, /image/bocetos/remache/bmw-1000.webp 1000w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 34rem, 90vw" width="1000" height="750" loading="lazy" alt="Una café racer de motor bóxer con asiento corto de cuero, estacionada frente a un muro de ladrillo"></figure>
+          <div class="placa-datos" data-aparece>
+            <span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span>
+            <h3>BMW R80 <span>1984 · Ñuñoa</span></h3>
+            <dl><dt>Llegó</dt><dd>Sin compresión en el cilindro izquierdo.</dd><dt>Se hizo</dt><dd>Motor abierto, subchasis nuevo y asiento corto.</dd><dt>Taller</dt><dd>11 semanas</dd></dl>
+          </div>
+        </li>
+        <li class="trabajo">
+          <figure class="persiana" data-aparece style="--orden: 1"><img src="/image/bocetos/remache/honda-1000.webp" srcset="/image/bocetos/remache/honda-600.webp 600w, /image/bocetos/remache/honda-1000.webp 1000w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 34rem, 90vw" width="1000" height="750" loading="lazy" alt="Una Honda clásica con el estanque café brillante y el motor cromado, sobre un fondo blanco"></figure>
+          <div class="placa-datos" data-aparece style="--orden: 1">
+            <span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span>
+            <h3>Honda CB400 <span>1977 · Maipú</span></h3>
+            <dl><dt>Llegó</dt><dd>En cajas, desarmada por el dueño anterior.</dd><dt>Se hizo</dt><dd>Armado completo, cableado nuevo y el estanque original.</dd><dt>Taller</dt><dd>7 meses</dd></dl>
+          </div>
+        </li>
+        <li class="trabajo">
+          <figure class="persiana" data-aparece style="--orden: 2"><img src="/image/bocetos/remache/triumph-1000.webp" srcset="/image/bocetos/remache/triumph-600.webp 600w, /image/bocetos/remache/triumph-1000.webp 1000w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 34rem, 90vw" width="1000" height="750" loading="lazy" alt="Una café racer negra estacionada a un lado del camino, con árboles sin hojas detrás"></figure>
+          <div class="placa-datos" data-aparece style="--orden: 2">
+            <span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span><span class="tornillo" data-sigue></span>
+            <h3>Continental 650 <span>2019 · La Florida</span></h3>
+            <dl><dt>Llegó</dt><dd>De agencia, sin un rayón.</dd><dt>Se hizo</dt><dd>Manillar bajo, escape corto y tapiz de cuero.</dd><dt>Taller</dt><dd>3 semanas</dd></dl>
+          </div>
+        </li>
+      </ul>
+
+      <div class="restauracion">
+        <div data-aparece>
+          <p class="codigo">Antes y después</p>
+          <h3 style="margin-top: 14px">Veinte años en un patio, catorce meses aquí</h3>
+          <p>Don Raúl la encontró en el patio de su suegro, en La Cisterna, con un nido en el filtro de aire. Mueve el corte para ver cómo llegó y cómo se fue.</p>
+        </div>
+        <div class="comparar" data-comparar-marco data-aparece>
+          <img class="despues" src="/image/bocetos/remache/despues-860.webp" srcset="/image/bocetos/remache/despues-600.webp 600w, /image/bocetos/remache/despues-860.webp 860w" sizes="(min-width: 900px) 52vw, 90vw" width="860" height="645" loading="lazy" alt="Después: una moto clásica restaurada, con el estanque amarillo y negro y el motor limpio, estacionada entre plantas">
+          <img class="antes" src="/image/bocetos/remache/antes-860.webp" srcset="/image/bocetos/remache/antes-600.webp 600w, /image/bocetos/remache/antes-860.webp 860w" sizes="(min-width: 900px) 52vw, 90vw" width="860" height="645" loading="lazy" alt="Antes: una moto pequeña cubierta de óxido, apoyada en un muro de piedra">
+          <span class="linea-corte" aria-hidden="true"></span>
+          <span class="manija" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+          <span class="etiqueta e-antes" aria-hidden="true">Antes</span><span class="etiqueta e-despues" aria-hidden="true">Después</span>
+          <input type="range" min="0" max="100" value="50" data-comparar aria-label="Corte entre la moto antes y después de restaurarla">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion servicios-seccion" id="servicios" aria-labelledby="servicios-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="codigo" data-sigue>SEC-02 <span>/ Servicios</span></p>
+        <h2 id="servicios-titulo">Cada herramienta, en su silueta</h2>
+        <div class="cinta" data-sigue aria-hidden="true"></div>
+        <p>Los precios son de mano de obra, con IVA. Los repuestos se cobran aparte y siempre te los mostramos antes de ponerlos.</p>
+      </header>
+      <ul class="tablero">
+        <li class="herramienta" data-aparece><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#llave"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#llave"/></svg><i class="gancho"></i></div><div><h3>Mantención</h3><p>Aceite, filtros, cadena, frenos y ajuste general.</p><p class="precio">$65.000 · 1 día</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 1"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#destornillador"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#destornillador"/></svg><i class="gancho"></i></div><div><h3>Carburación</h3><p>Limpieza, sincronizado y puesta a punto del encendido.</p><p class="precio">$48.000 · medio día</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 2"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#torque"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#torque"/></svg><i class="gancho"></i></div><div><h3>Frenos y suspensión</h3><p>Discos, pastillas, retenes y barras, al torque del manual.</p><p class="precio">$90.000 · 2 días</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 3"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#bujia"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#bujia"/></svg><i class="gancho"></i></div><div><h3>Electricidad</h3><p>Cableado nuevo, luces, regulador y arranque que no falla.</p><p class="precio">$120.000 · 3 días</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 4"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#brocha"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#brocha"/></svg><i class="gancho"></i></div><div><h3>Pintura</h3><p>Estanque, tapas y chasis en pintura al horno, con tus colores.</p><p class="precio">Desde $380.000 · 3 semanas</p></div></li>
+        <li class="herramienta" data-aparece style="--orden: 5"><div class="colgada" aria-hidden="true"><svg class="silueta" viewBox="0 0 56 180"><use href="#martillo"/></svg><svg class="pieza" viewBox="0 0 56 180"><use href="#martillo"/></svg><i class="gancho"></i></div><div><h3>Restauración</h3><p>Desde el chasis pelado hasta la primera vuelta a la manzana.</p><p class="precio">Desde $2.400.000 · 4 a 14 meses</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion" id="taller" aria-labelledby="taller-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="codigo" data-sigue>SEC-03 <span>/ Taller</span></p>
+        <h2 id="taller-titulo">Doscientos metros de fierro y aceite</h2>
+        <div class="cinta" data-sigue aria-hidden="true"></div>
+      </header>
+      <div class="taller">
+        <figure class="f1 persiana" data-aparece><img src="/image/bocetos/remache/mecanico-1200.webp" srcset="/image/bocetos/remache/mecanico-700.webp 700w, /image/bocetos/remache/mecanico-1200.webp 1200w" sizes="(min-width: 900px) 40vw, 90vw" width="1200" height="800" loading="lazy" alt="Un mecánico sostiene un motor de moto junto a una ventana, en blanco y negro"><figcaption>Hernán, jefe de taller desde 2004</figcaption></figure>
+        <figure class="f2 persiana" data-aparece style="--orden: 1"><img src="/image/bocetos/remache/herramientas-760.webp" srcset="/image/bocetos/remache/herramientas-480.webp 480w, /image/bocetos/remache/herramientas-760.webp 760w" sizes="(min-width: 900px) 30vw, 45vw" width="760" height="1013" loading="lazy" alt="Una pared de herramientas colgadas: llaves ordenadas por tamaño, alicates y calcomanías de motos"><figcaption>Llaves de 6 a 32, en orden</figcaption></figure>
+        <figure class="f3 persiana" data-aparece style="--orden: 2"><img src="/image/bocetos/remache/soldadura-760.webp" srcset="/image/bocetos/remache/soldadura-480.webp 480w, /image/bocetos/remache/soldadura-760.webp 760w" sizes="(min-width: 900px) 22vw, 45vw" width="760" height="950" loading="lazy" alt="Una persona con máscara de soldar trabaja una pieza de metal entre chispas"><figcaption>Subchasis y soportes, hechos aquí</figcaption></figure>
+      </div>
+      <div class="taller-texto" data-aparece>
+        <p><b>Somos cuatro y trabajamos con hora.</b> No recibimos más motos de las que podemos tener bajo techo: once, ni una más. Si la tuya tiene que esperar, te lo decimos el primer día.</p>
+        <p><b>Te mandamos fotos del avance.</b> Cada pieza que cambiamos te la guardamos en una caja con tu nombre, para que veas qué salió y por qué.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion repuestos-seccion" id="repuestos" aria-labelledby="repuestos-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="codigo" data-sigue>SEC-04 <span>/ Repuestos</span></p>
+        <h2 id="repuestos-titulo">En la repisa esta semana</h2>
+        <div class="cinta" data-sigue aria-hidden="true"></div>
+        <p>Piezas revisadas, con su número de serie del taller. Se retiran en San Miguel o se mandan por pagar.</p>
+      </header>
+      <table class="repuestos" data-aparece>
+        <thead><tr><th scope="col">Serie</th><th scope="col">Pieza</th><th scope="col">Estado</th><th scope="col">Quedan</th><th scope="col">Precio</th></tr></thead>
+        <tbody>
+          <tr><td class="serie">RM-1044</td><td><b>Carburador Amal 930</b><small>Triumph y BSA, 1968 a 1972</small></td><td data-col="Estado">Reacondicionado</td><td data-col="Quedan" class="num"><span class="quedan" aria-hidden="true"><i></i><i></i><i class="no"></i><i class="no"></i><i class="no"></i></span>2</td><td data-col="Precio" class="num">$185.000</td></tr>
+          <tr><td class="serie">RM-0387</td><td><b>Asiento café racer de cuero</b><small>Universal, base de 22 cm</small></td><td data-col="Estado">Hecho en el taller</td><td data-col="Quedan" class="num"><span class="quedan" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="no"></i></span>4</td><td data-col="Precio" class="num">$129.000</td></tr>
+          <tr><td class="serie">RM-3302</td><td><b>Estanque Honda CB350</b><small>CB350 y CL350, 1970 a 1973</small></td><td data-col="Estado">Lijado y sellado por dentro</td><td data-col="Quedan" class="num"><span class="quedan" aria-hidden="true"><i></i><i class="no"></i><i class="no"></i><i class="no"></i><i class="no"></i></span>1</td><td data-col="Precio" class="num">$240.000</td></tr>
+          <tr><td class="serie">RM-1580</td><td><b>Manillar clip-on de 35 mm</b><small>Horquillas de 35 mm</small></td><td data-col="Estado">Nuevo</td><td data-col="Quedan" class="num"><span class="quedan" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>6</td><td data-col="Precio" class="num">$58.000</td></tr>
+          <tr><td class="serie">RM-0921</td><td><b>Foco redondo de 7" con parrilla</b><small>Universal, 12 V</small></td><td data-col="Estado">Nuevo</td><td data-col="Quedan" class="num"><span class="quedan" aria-hidden="true"><i></i><i></i><i></i><i class="no"></i><i class="no"></i></span>3</td><td data-col="Precio" class="num">$72.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="seccion" id="agendar" aria-labelledby="agendar-titulo">
+    <div class="ancho agendar">
+      <div class="agendar-texto" data-aparece>
+        <header class="cabeza">
+          <p class="codigo">SEC-05 <span>/ Agendar</span></p>
+          <h2 id="agendar-titulo">Deja tu orden de trabajo</h2>
+          <div class="cinta" aria-hidden="true"></div>
+        </header>
+        <p>Cuéntanos qué moto es y qué le pasa. Te llamamos en el día para darle hora; la primera revisión, de una hora, es gratis.</p>
+        <ul><li>Trae los papeles y la llave de repuesto.</li><li>Si no anda, la vamos a buscar en grúa ($35.000 en la Región Metropolitana).</li><li>Domingos cerrado. Sábado hasta las 14:00.</li></ul>
+      </div>
+      <div class="portapapeles" data-aparece style="--orden: 1">
+        <form class="orden" data-muestra toolname="agendar_revision_moto" tooldescription="Pide hora en Remache, un taller de motos clásicas y custom de San Miguel, para revisar una moto: quién la trae, qué moto es y qué necesita. Remache es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+          <div class="orden-cabeza"><h3>Orden de trabajo</h3><span aria-hidden="true">Nº 0412-118</span></div>
+          <label>Tu nombre<input name="nombre" autocomplete="name" required></label>
+          <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+          <label>Marca<input name="marca" required toolparamdescription="Marca de la moto, por ejemplo Honda, BMW o Royal Enfield"></label>
+          <label>Modelo<input name="modelo" toolparamdescription="Modelo de la moto, por ejemplo CB400 o R80"></label>
+          <label>Año<input type="number" name="ano" min="1930" max="2026" inputmode="numeric" toolparamdescription="Año de fabricación de la moto, de 1930 a 2026"></label>
+          <label>¿Cuándo la traes?<input type="date" name="fecha" min="2026-11-12" toolparamdescription="El día en que puede traer la moto al taller"></label>
+          <fieldset toolparamdescription="Qué necesita la moto: se pueden marcar varios">
+            <legend>¿Qué necesita?</legend>
+            <label class="casilla"><input type="checkbox" name="necesita" value="mantencion"><span aria-hidden="true"></span>Mantención</label>
+            <label class="casilla"><input type="checkbox" name="necesita" value="carburacion"><span aria-hidden="true"></span>Carburación</label>
+            <label class="casilla"><input type="checkbox" name="necesita" value="frenos"><span aria-hidden="true"></span>Frenos</label>
+            <label class="casilla"><input type="checkbox" name="necesita" value="electricidad"><span aria-hidden="true"></span>Electricidad</label>
+            <label class="casilla"><input type="checkbox" name="necesita" value="pintura"><span aria-hidden="true"></span>Pintura</label>
+            <label class="casilla"><input type="checkbox" name="necesita" value="restauracion"><span aria-hidden="true"></span>Restauración</label>
+          </fieldset>
+          <label class="todo">¿Qué le pasa?<textarea name="nota" maxlength="500" toolparamdescription="Lo que le pasa a la moto o lo que quiere hacerle, en pocas palabras"></textarea></label>
+          <button class="boton" type="submit">Dejar la orden</button>
+          <p class="boceto-aviso"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="pie-cortina" data-aparece><p>Cerrado los domingos</p></div>
+  <div class="ancho pie-datos">
+    <a class="placa remaches" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><b>REMACHE</b><small>Taller Nº 0412 · desde 1998</small></a>
+    <div><h2>Dónde</h2><p>Llano Subercaseaux 3920, San Miguel. A dos cuadras del metro San Miguel, con estacionamiento para motos.</p></div>
+    <div><h2>Cuándo</h2><p>Lunes a viernes de 9:00 a 19:00 · sábado de 9:00 a 14:00 · taller@remache.cl</p></div>
+  </div>
+  <p class="ancho pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
+</body>
+</html>

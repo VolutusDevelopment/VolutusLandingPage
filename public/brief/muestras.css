@@ -40,6 +40,7 @@
 @font-face { font-family: 'Muestra Rubik'; src: url('/fonts/brief/rubik-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 @font-face { font-family: 'Muestra Syne'; src: url('/fonts/brief/syne-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 @font-face { font-family: 'Muestra Alegreya'; src: url('/fonts/brief/alegreya-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Muestra Alegreya Sans'; src: url('/fonts/brief/alegreya-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'Muestra Abril'; src: url('/fonts/brief/abril-fatface.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Muestra Special Elite'; src: url('/fonts/brief/special-elite.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Muestra Archivo Black'; src: url('/fonts/brief/archivo-black.woff2') format('woff2'); font-display: swap; }
@@ -62,7 +63,7 @@
 .estilo-suizo { --letra: 700 1em 'Muestra Archivo', Helvetica, Arial, sans-serif; }
 .estilo-natural { --letra: 400 1em 'Muestra Young Serif', Georgia, serif; }
 .estilo-futurista { --letra: 700 1em 'Muestra Unbounded', sans-serif; }
-.estilo-artesanal { --letra: 700 1em 'Muestra Caveat', cursive; }
+.estilo-artesanal { --letra: 700 1em 'Muestra Alegreya Sans', sans-serif; }
 .estilo-zen { --letra: 400 1em 'Muestra Shippori', Georgia, serif; }
 .estilo-industrial { --letra: 800 1em 'Muestra Stencil', Impact, sans-serif; }
 .estilo-artdeco { --letra: 400 1em 'Muestra Poiret', sans-serif; }
@@ -427,17 +428,21 @@
 .estilo-futurista:has([value='si']:checked) .brief-muestra-nombre { font-size: 13px; }
 .estilo-futurista .brief-sello span { width: 26px; height: 26px; border: 2px solid transparent; border-top-color: #00c2ff; border-right-color: #7a5cff; border-radius: 50%; }
 
-/* Artesanal: una etiqueta de papel con su sello. */
-.estilo-artesanal { --marcado: #b4462b; }
-.estilo-artesanal .brief-muestra-arte { display: grid; place-items: center; background: #e9dcc4 radial-gradient(rgb(122 75 42 / 0.08) 1px, transparent 1.4px) 0 0 / 6px 6px; }
-.estilo-artesanal .etiqueta { padding: 10px 16px; border: 2px solid #7a4b2a; border-radius: 4px; color: #7a4b2a; text-align: center; transform: rotate(-3deg); transition: transform 500ms var(--masa); }
-.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .etiqueta { transform: rotate(0) scale(1.05); }
-.estilo-artesanal .etiqueta b { display: block; font: 700 30px/1 'Muestra Caveat', cursive; }
-.estilo-artesanal .etiqueta small { font: 700 9px/1 'Muestra Zilla', serif; letter-spacing: 0.2em; text-transform: uppercase; }
-.estilo-artesanal:has([value='si']:checked) .brief-muestra-pie { background: #e9dcc4; color: #4a2817; }
-.estilo-artesanal:has([value='si']:checked) .brief-muestra-nombre { font-size: 22px; }
-.estilo-artesanal .brief-sello span { display: grid; place-items: center; width: 34px; height: 34px; border: 2px dashed #b4462b; border-radius: 50%; color: #b4462b; font: 700 10px/1 'Muestra Zilla', serif; text-transform: uppercase; transform: scale(1.8) rotate(-30deg); }
-.estilo-artesanal:has([value='si']:checked) .brief-sello span { transform: rotate(-12deg); }
+/* Artesanal · Libar: la etiqueta del frasco y su timbre, que espera arriba.
+   Al pasar, el timbre baja y deja la tinta. */
+.estilo-artesanal { --marcado: #b5442b; }
+.estilo-artesanal .brief-muestra-arte { display: grid; place-items: center; background: #e9dcc4 radial-gradient(rgb(122 75 42 / 0.09) 1px, transparent 1.4px) 0 0 / 6px 6px; }
+.estilo-artesanal .etiqueta { display: grid; justify-items: center; gap: 5px; padding: 14px 24px 12px; background: #f6efe1; color: #3b2a1a; outline: 1.5px dashed rgb(59 42 26 / 0.45); outline-offset: -6px; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); rotate: -2deg; }
+.estilo-artesanal .etiqueta i { font: 700 18px/1 'Muestra Caveat', cursive; color: #4f5b3a; }
+.estilo-artesanal .etiqueta b { padding-left: 0.16em; font: 700 30px/1 'Muestra Alegreya Sans', sans-serif; letter-spacing: 0.16em; }
+.estilo-artesanal .etiqueta small { font: 700 9px/1 'Muestra Alegreya Sans', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #6b5236; }
+.estilo-artesanal .timbre { position: absolute; left: calc(50% + 40px); top: 16px; width: 60px; fill: none; stroke: #b5442b; stroke-width: 2.5; opacity: 0.3; scale: 1.25; translate: 8px -10px; rotate: -14deg; filter: drop-shadow(5px 8px 3px rgb(59 42 26 / 0.3)); transition: opacity 700ms var(--calma), scale 700ms var(--calma), translate 700ms var(--calma), filter 700ms var(--calma); }
+.estilo-artesanal .timbre .fino { stroke-width: 1; }
+.estilo-artesanal .timbre text { fill: #b5442b; stroke: none; font: 700 15px/1 'Muestra Alegreya Sans', sans-serif; text-anchor: middle; }
+.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .timbre { opacity: 0.9; scale: 1; translate: 0 0; filter: drop-shadow(0 0 0 transparent); }
+.estilo-artesanal:has([value='si']:checked) .brief-muestra-pie { background: #e9dcc4; color: #3b2a1a; }
+.estilo-artesanal .brief-sello svg { width: 26px; fill: none; stroke: #b5442b; stroke-width: 2.5; transform: scale(1.8) rotate(-30deg); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-artesanal:has([value='si']:checked) .brief-sello svg { transform: rotate(-12deg); }
 
 /* Zen: Kiri. Papel washi, el ensō a pincel y 霧 con «Kiri» en vertical; al
    pasar, una niebla sube despacio. */
@@ -453,30 +458,38 @@
 .estilo-zen .brief-sello svg { width: 28px; height: 28px; fill: #1c1b19; transform: rotate(-50deg) scale(0.6); transition: opacity 600ms, transform 1200ms var(--calma); }
 .estilo-zen:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Industrial: plancha, remaches y cinta de peligro. */
-.estilo-industrial { --marcado: #f2b705; }
-.estilo-industrial .brief-muestra-arte { background: linear-gradient(180deg, #2c3136, #1b1d1f); }
-.estilo-industrial .rot { position: absolute; left: 16px; top: 18px; font: 800 44px/0.9 'Muestra Stencil', Impact, sans-serif; letter-spacing: 0.02em; color: #e5e1d8; }
-.estilo-industrial .cinta { position: absolute; left: -20px; right: -20px; bottom: 20px; height: 22px; background: repeating-linear-gradient(-45deg, #f2b705 0 14px, #111111 14px 28px); transform: rotate(-4deg); transition: background-position 1s linear; }
-.estilo-industrial:is(:hover, :focus-within, :has([value='si']:checked)) .cinta { background-position: 80px 0; }
-.estilo-industrial .remache { position: absolute; top: 14px; width: 6px; height: 6px; border-radius: 50%; background: #5d656c; }
-.estilo-industrial .r1 { right: 14px; }
-.estilo-industrial .r2 { right: 28px; }
-.estilo-industrial:has([value='si']:checked) .brief-muestra-pie { background: #1b1d1f; color: #f2b705; }
+/* Industrial · Remache: la cortina del taller, con el nombre pintado en sus
+   últimas lamas. Al pasar, la cortina sube un poco y deja ver adentro. */
+.estilo-industrial { --marcado: #f2c230; }
+.estilo-industrial .brief-muestra-arte { background: #26292c; }
+.estilo-industrial .adentro { position: absolute; inset: 0 10px 0; background: linear-gradient(transparent 76%, rgb(242 194 48 / 0.5) 76% 78%, transparent 78%), radial-gradient(70% 60% at 50% 100%, #4a4f53, #0e0f10); }
+.estilo-industrial .cortina { position: absolute; inset: 0 10px 22px; display: grid; align-items: end; justify-items: center; padding-bottom: 12px; background: repeating-linear-gradient(180deg, #2b2f32 0 2px, #7d8389 2px 3px, #666c71 3px 9px, #50555a 9px 13px, #33373a 13px 15px); box-shadow: 0 7px 0 #1b1d1f; transition: translate 900ms var(--calma); }
+.estilo-industrial .cortina b { font: 800 36px/1 'Muestra Stencil', Impact, sans-serif; letter-spacing: 0.06em; color: #f2c230; text-shadow: 0 1px 0 rgb(0 0 0 / 0.4); }
+.estilo-industrial:is(:hover, :focus-within, :has([value='si']:checked)) .cortina { translate: 0 -44px; }
+.estilo-industrial .remache { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #9aa0a5, #4b5054); }
+.estilo-industrial .r1 { left: 2px; top: 6px; }
+.estilo-industrial .r2 { right: 2px; top: 6px; }
+.estilo-industrial .r3 { left: 2px; bottom: 6px; }
+.estilo-industrial .r4 { right: 2px; bottom: 6px; }
+.estilo-industrial:has([value='si']:checked) .brief-muestra-pie { background: #1b1d1f; color: #f2c230; }
 .estilo-industrial:has([value='si']:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.04em; text-transform: uppercase; }
-.estilo-industrial .brief-sello span { padding: 5px 5px 4px; background: #f2b705; color: #111111; font: 800 16px/1 'Muestra Stencil', Impact, sans-serif; transform: translateY(14px); }
+.estilo-industrial .brief-sello span { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe08a, #f2c230 55%, #8a6a10); transform: scale(0.3); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-industrial:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Art déco: un abanico dorado que se despliega. */
-.estilo-artdeco { --marcado: #d4af37; }
-.estilo-artdeco .brief-muestra-arte { display: grid; place-items: center; background: #0f1f1c; }
-.estilo-artdeco .abanico { position: absolute; left: 50%; bottom: -150px; width: 240px; height: 240px; margin-left: -120px; border-radius: 50%; background: repeating-conic-gradient(from -90deg, #d4af37 0 2deg, transparent 2deg 12deg); -webkit-mask: radial-gradient(circle, transparent 32%, #000 33%); mask: radial-gradient(circle, transparent 32%, #000 33%); transform: scale(0.7); transition: transform 900ms var(--masa); }
-.estilo-artdeco:is(:hover, :focus-within, :has([value='si']:checked)) .abanico { transform: scale(1) rotate(6deg); }
-.estilo-artdeco .rot { position: relative; margin-top: -30px; padding: 8px 0 8px 0.32em; border-block: 1px solid #d4af37; font: 400 26px/1 'Muestra Poiret', sans-serif; letter-spacing: 0.32em; color: #e9d7a5; }
-.estilo-artdeco:has([value='si']:checked) .brief-muestra-pie { background: #0f1f1c; color: #e9d7a5; }
+/* Art déco · Bar Marfil: el abanico de rayos que nace del eje y la marca.
+   Al pasar, el abanico se abre un poco más hacia los lados. */
+.estilo-artdeco { --marcado: #c9a24a; }
+.estilo-artdeco .brief-muestra-arte { background: #0f1f1c; }
+.estilo-artdeco .abanico { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #c9a24a; stroke-width: 1.4; }
+.estilo-artdeco .abanico path { transform-box: view-box; transform-origin: 150px 158px; transition: rotate 900ms var(--calma); }
+.estilo-artdeco .izq { rotate: 9deg; }
+.estilo-artdeco .der { rotate: -9deg; }
+.estilo-artdeco:is(:hover, :focus-within, :has([value='si']:checked)) :is(.izq, .der) { rotate: 0deg; }
+.estilo-artdeco .rot { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; padding: 8px 8px 7px 0.34em; border-block: 1px solid #c9a24a; background: #0f1f1c; font: 400 25px/1 'Muestra Poiret', sans-serif; letter-spacing: 0.34em; color: #f1e9d6; }
+.estilo-artdeco:has([value='si']:checked) .brief-muestra-pie { background: #0f1f1c; color: #f1e9d6; }
 .estilo-artdeco:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; }
-.estilo-artdeco .brief-sello span { width: 16px; height: 16px; background: #d4af37; transform: rotate(45deg) scale(0.2); }
-.estilo-artdeco:has([value='si']:checked) .brief-sello span { transform: rotate(45deg); }
+.estilo-artdeco .brief-sello svg { width: 30px; fill: #c9a24a; transform: scale(0.3); transform-origin: 50% 100%; transition: opacity 300ms, transform 700ms var(--calma); }
+.estilo-artdeco:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Bauhaus: círculo, cuadrado y triángulo que se reordenan. */
 .estilo-bauhaus { --marcado: #d6312b; }
@@ -523,42 +536,61 @@
 .estilo-y2k .brief-sello span { color: #ffb8e6; font-size: 22px; transform: scale(0.2) rotate(-90deg); }
 .estilo-y2k:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Andino: la greca que se teje. */
+/* Andino · Parina: dos franjas tejidas y el flamenco hecho de rombos. A la
+   segunda le falta su fila de rombos: al pasar, se teje. */
 .estilo-andino { --marcado: #b5442b; }
-.estilo-andino .brief-muestra-arte { display: grid; align-content: center; gap: 10px; background: #b5442b; }
-.estilo-andino .greca { display: block; height: 26px; background: linear-gradient(90deg, #fbf1e1 0 25%, transparent 25% 50%, #e2a33a 50% 75%, transparent 75%) 0 0 / 52px 13px repeat-x, linear-gradient(90deg, transparent 0 25%, #fbf1e1 25% 50%, transparent 50% 75%, #1f5c5a 75%) 0 13px / 52px 13px repeat-x; transition: background-position 1.2s linear; }
-.estilo-andino .g2 { height: 10px; background: repeating-linear-gradient(45deg, #fbf1e1 0 4px, transparent 4px 8px); }
-.estilo-andino:is(:hover, :focus-within, :has([value='si']:checked)) .greca:not(.g2) { background-position: 104px 0, 104px 13px; }
-.estilo-andino .rot { padding-left: 18px; font: 700 30px/1 'Muestra Alegreya', Georgia, serif; color: #fbf1e1; }
-.estilo-andino:has([value='si']:checked) .brief-muestra-pie { background: #1f5c5a; color: #fbf1e1; }
-.estilo-andino .brief-sello span { width: 22px; height: 22px; border: 3px solid #e2a33a; transform: rotate(45deg) scale(0.2); }
+.estilo-andino .brief-muestra-arte { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: #f3e7d3; }
+.estilo-andino .franja { display: grid; }
+.estilo-andino .franja i { height: 6px; background: var(--borde, #2f5d8a); }
+.estilo-andino .franja i:nth-child(2) { height: 10px; background: conic-gradient(from -45deg at 50% 100%, #d99b3c 90deg, #1a1512 0) 0 0 / 10px 10px; }
+.estilo-andino .franja i:nth-child(4) { height: 10px; background: conic-gradient(from 135deg at 50% 0, #d99b3c 90deg, #1a1512 0) 0 0 / 10px 10px; }
+.estilo-andino .franja i:nth-child(3) { height: 18px; background: linear-gradient(45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 18px 18px, linear-gradient(-45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 18px 18px, var(--rombo, #b5442b); }
+.estilo-andino .f2 { --borde: #5b7a4a; --rombo: #2f5d8a; }
+.estilo-andino .f2 i:nth-child(3) { clip-path: inset(0 100% 0 0); transition: clip-path 1000ms var(--calma); }
+.estilo-andino:is(:hover, :focus-within, :has([value='si']:checked)) .f2 i:nth-child(3) { clip-path: inset(0); }
+.estilo-andino .rot { display: flex; align-items: center; gap: 10px; padding-left: 18px; font: 700 34px/1 'Muestra Alegreya', Georgia, serif; color: #1a1512; }
+.estilo-andino .rot svg { width: 22px; height: 30px; fill: #d9677a; }
+.estilo-andino .rot .cuello { fill: none; stroke: #d9677a; stroke-width: 2.4; stroke-linecap: round; }
+.estilo-andino:has([value='si']:checked) .brief-muestra-pie { background: #1a1512; color: #f3e7d3; }
+.estilo-andino .brief-sello span { width: 18px; height: 18px; background: #d99b3c; box-shadow: inset 0 0 0 4px #b5442b; transform: rotate(45deg) scale(0.2); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-andino:has([value='si']:checked) .brief-sello span { transform: rotate(45deg); }
 
-/* Letterpress: la letra hundida en el papel. */
-.estilo-letterpress { --marcado: #2b2a6b; }
-.estilo-letterpress .brief-muestra-arte { display: grid; place-items: center; align-content: center; gap: 4px; background: #f4efe6; }
-.estilo-letterpress .rot { font: 400 40px/1 'Muestra Abril', Georgia, serif; color: #2b2a6b; text-shadow: 0 1px 0 rgb(255 255 255 / 0.9), 0 -1px 0 rgb(43 42 107 / 0.25); transition: transform 180ms ease-in, text-shadow 180ms; }
-.estilo-letterpress:is(:hover, :focus-within, :has([value='si']:checked)) .rot { transform: translateY(1px) scale(0.98); text-shadow: 0 2px 0 #ffffff, 0 -1px 1px rgb(43 42 107 / 0.45); }
-.estilo-letterpress .brief-muestra-arte small { font: 400 11px/1 'Muestra Newsreader', serif; letter-spacing: 0.2em; text-transform: uppercase; color: #c0392b; }
-.estilo-letterpress:has([value='si']:checked) .brief-muestra-pie { background: #f4efe6; color: #2b2a6b; }
+/* Letterpress · Prensa Tilde: el nombre hundido en el papel de algodón, con
+   su acento y las marcas de corte. Al pasar, la prensa lo hunde más. */
+.estilo-letterpress { --marcado: #c0392b; }
+.estilo-letterpress .brief-muestra-arte { display: grid; place-content: center; justify-items: center; gap: 8px; background: #f4efe6; }
+.estilo-letterpress .rot { position: relative; font: 400 48px/1 'Muestra Abril', Georgia, serif; color: #1f2a44; text-shadow: 0 1px 0 rgb(255 255 255 / 0.85), 0 -1px 0 rgb(31 42 68 / 0.25); transition: text-shadow 600ms var(--calma), translate 600ms var(--calma); }
+.estilo-letterpress .rot svg { position: absolute; left: 100%; top: 2px; width: 15px; margin-left: 2px; fill: #c0392b; }
+.estilo-letterpress:is(:hover, :focus-within, :has([value='si']:checked)) .rot { translate: 0 1px; text-shadow: 0 2px 0 #ffffff, 0 -2px 1px rgb(31 42 68 / 0.45); }
+.estilo-letterpress .brief-muestra-arte small { font: 500 10px/1 'Muestra Newsreader', serif; letter-spacing: 0.22em; text-transform: uppercase; color: #6b665d; }
+.estilo-letterpress .corte { position: absolute; width: 14px; height: 14px; border: 0 solid #8a857c; }
+.estilo-letterpress .c1 { left: 10px; top: 10px; border-right-width: 1px; border-bottom-width: 1px; }
+.estilo-letterpress .c2 { right: 10px; top: 10px; border-left-width: 1px; border-bottom-width: 1px; }
+.estilo-letterpress .c3 { left: 10px; bottom: 10px; border-right-width: 1px; border-top-width: 1px; }
+.estilo-letterpress .c4 { right: 10px; bottom: 10px; border-left-width: 1px; border-top-width: 1px; }
+.estilo-letterpress:has([value='si']:checked) .brief-muestra-pie { background: #f4efe6; color: #1f2a44; }
 .estilo-letterpress:has([value='si']:checked) .brief-muestra-nombre { font-size: 19px; }
-.estilo-letterpress .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 1.5px solid #c0392b; border-radius: 50%; color: #c0392b; transform: scale(1.6); }
-.estilo-letterpress:has([value='si']:checked) .brief-sello span { transform: none; }
+.estilo-letterpress .brief-sello svg { width: 16px; fill: #c0392b; transform: translate(4px, -12px) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-letterpress:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Collage / zine: recortes con cinta. */
-.estilo-collage { --marcado: #ff3b1f; }
-.estilo-collage .brief-muestra-arte { background: #e6e3dc radial-gradient(rgb(0 0 0 / 0.1) 1px, transparent 1.4px) 0 0 / 4px 4px; }
-.estilo-collage .brief-muestra-arte b { position: absolute; font-weight: 400; transition: transform 500ms var(--masa); }
-.estilo-collage .r1 { left: 18px; top: 26px; padding: 2px 6px; background: #0d0d0d; color: #e6e3dc; font: 400 26px/1 'Muestra Archivo Black', sans-serif; transform: rotate(-4deg); }
-.estilo-collage .r2 { left: 120px; top: 30px; padding: 3px 6px; background: #ffffff; color: #0d0d0d; font: 400 24px/1 'Muestra Special Elite', monospace; transform: rotate(3deg); }
-.estilo-collage .r3 { left: 40px; top: 80px; padding: 2px 8px; background: #ff3b1f; color: #0d0d0d; font: 400 30px/1 'Muestra Archivo Black', sans-serif; transform: rotate(2deg); }
-.estilo-collage .cinta { position: absolute; right: 30px; top: 18px; width: 60px; height: 18px; background: rgb(255 240 170 / 0.8); transform: rotate(24deg); }
-.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r1 { transform: rotate(3deg) translateY(4px); }
-.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r2 { transform: rotate(-5deg) translateX(-6px); }
-.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r3 { transform: rotate(-3deg) translateX(10px); }
-.estilo-collage:has([value='si']:checked) .brief-muestra-pie { background: #0d0d0d; color: #e6e3dc; }
-.estilo-collage .brief-sello span { width: 34px; height: 14px; background: rgb(255 240 170 / 0.9); transform: rotate(-20deg) scale(0.3); }
-.estilo-collage:has([value='si']:checked) .brief-sello span { transform: rotate(-20deg); }
+/* Collage · Rampa: el nombre en letras de rescate, su cinta y una línea a
+   máquina. Al pasar, dos recortes se ladean. */
+.estilo-collage { --marcado: #e63228; }
+.estilo-collage .brief-muestra-arte { display: grid; align-content: center; justify-items: start; gap: 14px; padding-left: 16px; background: #e6e3dc radial-gradient(rgb(17 17 17 / 0.1) 1px, transparent 1.4px) 0 0 / 5px 5px; }
+.estilo-collage .rescate { display: flex; gap: 2px; }
+.estilo-collage .rescate b { display: grid; place-items: center; min-width: 30px; padding: 6px 5px 3px; font: 400 32px/1 'Muestra Archivo Black', sans-serif; box-shadow: 1px 2px 0 rgb(0 0 0 / 0.18); transition: rotate 500ms var(--calma); }
+.estilo-collage .v0 { background: #111111; color: #f7f5ef; rotate: -4deg; }
+.estilo-collage .v1 { background: #ffe14d; color: #111111; font-size: 28px; rotate: 3deg; }
+.estilo-collage .v2 { background: #f7f5ef; color: #111111; font-family: 'Muestra Special Elite', monospace; rotate: -2deg; }
+.estilo-collage .v3 { background: #e63228; color: #f7f5ef; font-size: 28px; rotate: 5deg; }
+.estilo-collage .v4 { background: #f7f5ef; color: #111111; outline: 2px solid #111111; outline-offset: -2px; rotate: -3deg; }
+.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .v2 { rotate: 9deg; }
+.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .v4 { rotate: -9deg; }
+.estilo-collage .cinta { position: absolute; left: 132px; top: 26px; width: 62px; height: 20px; background: rgb(255 248 215 / 0.8); rotate: 16deg; clip-path: polygon(0 10%, 8% 0, 16% 12%, 24% 0, 76% 0, 84% 12%, 92% 0, 100% 10%, 100% 90%, 92% 100%, 84% 88%, 76% 100%, 24% 100%, 16% 88%, 8% 100%, 0 90%); }
+.estilo-collage .lema { padding: 4px 8px 2px; background: #f7f5ef; font: 400 13px/1.2 'Muestra Special Elite', monospace; rotate: -1deg; }
+.estilo-collage:has([value='si']:checked) .brief-muestra-pie { background: #111111; color: #ffe14d; }
+.estilo-collage .brief-sello span { width: 26px; height: 26px; background: #ffe14d; clip-path: polygon(50% 0, 61% 30%, 95% 25%, 70% 50%, 95% 75%, 61% 70%, 50% 100%, 39% 70%, 5% 75%, 30% 50%, 5% 25%, 39% 30%); transform: scale(0.3) rotate(-40deg); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-collage:has([value='si']:checked) .brief-sello span { transform: rotate(-8deg); }
 
 /* Clínico · Iris: su anillo y una tabla de Snellen que se lee cada vez peor
    hacia abajo. Al pasar, las filas se enfocan una tras otra. */

@@ -19,8 +19,11 @@
  *
  * Y lo que los bocetos no pueden hacer solos, porque la política de contenido
  * no deja scripts en línea: los formularios de muestra (`form[data-muestra]`)
- * avisan que no envían nada, también al agente que los use, y el deslizador
- * del antes y después (`input[data-comparar]`) mueve su corte (`--corte`).
+ * avisan que no envían nada, también al agente que los use; los que solo
+ * consultan algo de la página (`form[data-consulta]`, como el rastreador de
+ * lotes de Libar) le responden al agente lo que quedó a la vista, y el
+ * deslizador del antes y después (`input[data-comparar]`) mueve su corte
+ * (`--corte`).
  */
 
 const CLAVE = 'volutus:brief:bocetos'
@@ -201,6 +204,20 @@ function montarMuestras() {
   }
 }
 
+// Un formulario de consulta cambia la página con CSS (`:has()`) y no envía
+// nada. Al agente le responde el texto de sus `[data-respuesta]` visibles:
+// `checkVisibility` existe en Chrome, el único navegador con WebMCP.
+function montarConsultas() {
+  for (const form of document.querySelectorAll('form[data-consulta]')) {
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault()
+      if (!evento.agentInvoked) return
+      const vistas = [...form.querySelectorAll('[data-respuesta]')].filter((respuesta) => respuesta.checkVisibility())
+      evento.respondWith(Promise.resolve(vistas.map((respuesta) => respuesta.innerText.trim()).join('\n') || 'No hay nada que mostrar.'))
+    })
+  }
+}
+
 function montarComparadores() {
   for (const control of document.querySelectorAll('input[data-comparar]')) {
     const marco = control.closest('[data-comparar-marco]')
@@ -214,4 +231,5 @@ function montarComparadores() {
 if (!enElVisor) montarBarra()
 montarEntradas()
 montarMuestras()
+montarConsultas()
 montarComparadores()

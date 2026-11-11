@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Prensa Tilde · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Prensa Tilde, taller de invitaciones y papelería impresas en tipos móviles en Barrio Italia, para mostrar el estilo Letterpress.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/abril-fatface.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/tilde.js" type="module"></script>
+<style>
+/* Prensa Tilde · letterpress. Inspiración: Studio On Fire
+   (studioonfire.com), que hoy es Franklin Press. Se toma: 1) la sobriedad
+   tipográfica, con mucho blanco y el oficio como argumento; 2) el papel y la
+   tinta mostrados de cerca, como muestras; 3) un trato directo, de taller,
+   sin palabras de agencia. La idea propia: la impresión. El texto aparece
+   hundido en el papel grueso, como cuando baja la prensa. En la portada, los
+   tipos de metal están en espejo, se dan vuelta uno por uno y la prensa los
+   hunde; los títulos se imprimen al llegar, las muestras se apilan con un
+   desfase y un rodillo entinta su plancha. Lo nuevo: la prueba de imprenta en
+   vivo. Lo que escribes en el presupuesto se compone en la invitación de al
+   lado, con su papel y su tinta, y se vuelve a imprimir cuando dejas de
+   escribir. */
+@font-face { font-family: 'Abril Fatface'; src: url('/fonts/bocetos/abril-fatface.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Libre Caslon Text'; src: url('/fonts/bocetos/libre-caslon-text.woff2') format('woff2'); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: 'Libre Caslon Text'; src: url('/fonts/bocetos/libre-caslon-text-italica.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+
+:root {
+  --algodon: #f4efe6;
+  --algodon-2: #ebe3d4;
+  --tinta: #1f2a44;
+  --bermellon: #c0392b;
+  --gris: #6b665d;
+  --hundido: 0 1px 0 rgb(255 255 255 / 0.75), 0 -1px 0 rgb(31 42 68 / 0.28);
+  --ancho: 1200px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.55, 0, 0.45, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--algodon); scroll-behavior: smooth; }
+body { margin: 0; background: var(--algodon) radial-gradient(rgb(31 42 68 / 0.05) 0.7px, transparent 1.1px) 0 0 / 5px 5px; color: var(--tinta); font: 400 18px/1.7 'Libre Caslon Text', Georgia, serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 2px solid var(--bermellon); outline-offset: 4px; }
+h1, h2, h3 { margin: 0; font-family: 'Abril Fatface', Georgia, serif; font-weight: 400; line-height: 1.04; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.versal { font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; }
+.seccion { position: relative; padding-block: clamp(88px, 11vw, 150px); }
+.hundido { text-shadow: var(--hundido); }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 28px; border: 0; border-radius: 2px; background: var(--tinta); color: var(--algodon); font: 400 17px/1 'Libre Caslon Text', serif; letter-spacing: 0.08em; text-decoration: none; cursor: pointer; box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.35); transition: background-color 400ms var(--curva); }
+.boton:hover { background: #2c3a5e; }
+.enlace { font-style: italic; text-decoration-color: var(--bermellon); text-decoration-thickness: 1px; text-underline-offset: 6px; }
+.floron { display: inline-block; width: 18px; height: 10px; vertical-align: middle; fill: var(--bermellon); }
+
+/* ---- El pliego: marcas de corte y de registro en la primera pantalla ---- */
+.pliego { position: relative; }
+.marcas i { position: absolute; width: 28px; height: 28px; border-color: var(--gris); border-style: solid; border-width: 0; pointer-events: none; }
+.marcas i:nth-child(1) { left: 12px; top: 12px; border-right-width: 1px; border-bottom-width: 1px; }
+.marcas i:nth-child(2) { right: 12px; top: 12px; border-left-width: 1px; border-bottom-width: 1px; }
+.marcas i:nth-child(3) { left: 12px; bottom: 12px; border-right-width: 1px; border-top-width: 1px; }
+.marcas i:nth-child(4) { right: 12px; bottom: 12px; border-left-width: 1px; border-top-width: 1px; }
+.registro { position: absolute; left: 50%; width: 22px; height: 22px; margin-left: -11px; border: 1px solid var(--gris); border-radius: 50%; background: linear-gradient(var(--gris), var(--gris)) center / 1px 100% no-repeat, linear-gradient(var(--gris), var(--gris)) center / 100% 1px no-repeat; pointer-events: none; }
+.registro.arriba { top: 14px; }
+.registro.abajo { bottom: 14px; }
+
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-block: 52px 20px; }
+.logo { display: inline-flex; align-items: baseline; gap: 2px; font: 400 28px/1 'Abril Fatface', serif; text-decoration: none; text-shadow: var(--hundido); }
+.logo .acento { align-self: flex-start; }
+.menu ul { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin: 0; padding: 0; list-style: none; }
+.menu a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; }
+.menu a:hover { color: var(--bermellon); }
+
+/* ---- Portada: los tipos en espejo que se dan vuelta ---- */
+.portada { display: grid; justify-items: center; gap: 26px; padding-block: clamp(32px, 6vw, 72px) clamp(110px, 12vw, 160px); text-align: center; }
+.portada h1 { display: grid; justify-items: center; gap: 0.08em; font-size: clamp(60px, 12vw, 168px); line-height: 1; }
+.linea { position: relative; display: flex; gap: 0.04em; }
+/* El giro es en 2D: el tipo se angosta hasta cero y se abre derecho. En el
+   cero, cuando no se ve, la cara de metal deja paso a la impresa. Así no
+   depende del 3D, que el WebKit de prueba aplana. */
+.tipo { position: relative; display: inline-grid; }
+.cara { grid-area: 1 / 1; display: grid; place-items: center; padding: 0 0.04em; }
+.impresa { color: var(--tinta); text-shadow: 0 2px 0 rgb(255 255 255 / 0.8), 0 -2px 1px rgb(31 42 68 / 0.3); }
+.metal { opacity: 0; border-radius: 0.05em; background: linear-gradient(160deg, #b6bcc2, #7b838a 55%, #5d646b); color: #2b3036; box-shadow: inset 0 0 0 0.02em rgb(255 255 255 / 0.4); }
+.acento { width: 0.2em; height: 0.2em; fill: var(--bermellon); }
+.linea .acento { position: absolute; left: 100%; top: 0.08em; margin-left: 0.02em; width: 0.34em; height: 0.34em; }
+.portada .bajada { max-width: 34ch; font-size: 21px; font-style: italic; }
+.acciones { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px 32px; }
+
+/* ---- Títulos: un ornamento, el título hundido y la signatura del pliego ---- */
+.cabeza { display: grid; gap: 14px; max-width: 46rem; margin-bottom: clamp(48px, 6vw, 80px); }
+.cabeza .ornamento { width: 120px; height: 14px; fill: none; stroke: var(--bermellon); stroke-width: 1.2; }
+.cabeza h2 { font-size: clamp(44px, 5.6vw, 76px); text-shadow: var(--hundido); }
+.cabeza > p:last-child { max-width: 46ch; color: var(--gris); }
+.signatura { position: absolute; right: var(--margen); bottom: 28px; font-size: 18px; font-style: italic; color: var(--gris); }
+
+/* ---- El taller ---- */
+.taller { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.taller .prensa img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.taller figcaption { margin-top: 10px; font-size: 15px; font-style: italic; color: var(--gris); }
+.taller-texto { display: grid; gap: 22px; }
+.taller-texto .capitular::first-letter { float: left; margin: 0.08em 0.1em 0 0; font: 400 4.2em/0.8 'Abril Fatface', serif; color: var(--bermellon); }
+.taller-fotos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+.taller-fotos img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.entintado { display: grid; gap: 10px; }
+.plancha { position: relative; height: 92px; overflow: hidden; border-radius: 4px; background: linear-gradient(180deg, #2a3350, #1a2135); box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.5); }
+.plancha::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 7px, rgb(255 255 255 / 0.06) 7px 9px); }
+.rodillo { position: absolute; left: 6%; top: 14px; width: 64px; height: 64px; border-radius: 12px; background: linear-gradient(90deg, #11172a, #3a4670 40%, #1b2236); box-shadow: 0 6px 10px rgb(0 0 0 / 0.45); }
+.rodillo::after { content: ''; position: absolute; left: 50%; top: -14px; width: 6px; height: 18px; margin-left: -3px; background: #9aa0a6; }
+.entintado figcaption { font-size: 15px; font-style: italic; color: var(--gris); }
+
+/* ---- Invitaciones: las muestras apiladas ---- */
+.muestras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px clamp(24px, 4vw, 56px); margin: 0; padding: 0; list-style: none; }
+.pila { position: relative; display: grid; aspect-ratio: 5 / 7; margin-bottom: 26px; }
+.tarjeta { grid-area: 1 / 1; display: grid; align-content: center; justify-items: center; gap: 8px; padding: 18px; background: #fbf8f2; text-align: center; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 12px 22px -16px rgb(31 42 68 / 0.6); transition: translate 500ms var(--curva), rotate 500ms var(--curva); }
+.tarjeta:nth-child(1) { translate: 14px 14px; rotate: 3deg; background: var(--algodon-2); }
+.tarjeta:nth-child(2) { translate: 7px 7px; rotate: 1.5deg; background: #f1e9db; }
+.tarjeta:nth-child(3) { position: relative; z-index: 1; color: var(--c, var(--tinta)); }
+.tarjeta:nth-child(3) small { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; text-shadow: var(--hundido); }
+.tarjeta:nth-child(3) b { font: 400 clamp(26px, 2.6vw, 36px)/1.05 'Abril Fatface', serif; text-shadow: var(--hundido); }
+.tarjeta:nth-child(3) i { font-size: 16px; text-shadow: var(--hundido); }
+.pila:hover .tarjeta:nth-child(3) { translate: 0 -10px; rotate: -1.5deg; }
+.muestra h3 { font-size: 30px; }
+.muestra p { color: var(--gris); }
+.muestra .precio { margin-top: 6px; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.fotos-invitaciones { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: clamp(56px, 7vw, 88px); }
+.fotos-invitaciones img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+
+/* ---- Papeles y tintas: el muestrario ---- */
+.muestrario-seccion { background: var(--algodon-2); }
+.muestrario { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.papeles { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.papel { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 20px; align-items: baseline; padding: 20px 46px 20px 24px; background: var(--p); color: var(--t, var(--tinta)); clip-path: polygon(0 0, 97% 0, 98% 12%, 96.5% 24%, 98.5% 37%, 97% 50%, 99% 63%, 97.5% 76%, 98.5% 88%, 97% 100%, 0 100%); }
+.papel b { font: 400 24px/1.1 'Abril Fatface', serif; }
+.papel span { font-size: 15px; font-style: italic; }
+.papel small { grid-column: 1 / -1; font-size: 15px; }
+.tintas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 16px; margin: 0; padding: 0; list-style: none; }
+.tintas li { display: grid; justify-items: center; gap: 8px; font-size: 15px; text-align: center; }
+.tintas li::before { content: ''; width: 64px; aspect-ratio: 1; border-radius: 48% 52% 50% 46% / 52% 46% 54% 48%; background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.35), transparent 40%), var(--c); }
+.muestrario figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.muestrario figure { margin-top: 26px; }
+.muestrario figcaption { margin-top: 10px; font-size: 15px; font-style: italic; color: var(--gris); }
+
+/* ---- Cómo encargar ---- */
+.encargo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.encargo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.pasos { display: grid; margin: 0; padding: 0; list-style: none; }
+.pasos li { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; gap: 4px 16px; align-items: baseline; padding-block: 18px; border-bottom: 1px solid rgb(31 42 68 / 0.2); }
+.pasos li > span { font: 400 32px/1 'Abril Fatface', serif; color: var(--bermellon); }
+.pasos h3 { font-family: 'Libre Caslon Text', serif; font-size: 20px; font-weight: 700; }
+.pasos p { grid-column: 2 / 3; font-size: 16px; color: var(--gris); }
+.pasos .plazo { grid-column: 3; grid-row: 1; font-style: italic; white-space: nowrap; }
+
+/* ---- Presupuesto: el formulario y la prueba en vivo ---- */
+.presupuesto { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+.formulario label, .formulario legend { display: grid; gap: 6px; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gris); }
+.formulario input:not([type="radio"]) { width: 100%; min-height: 50px; padding: 10px 14px; border: 1px solid rgb(31 42 68 / 0.45); border-radius: 2px; background: #fbf8f2; color: var(--tinta); font: 400 18px/1.3 'Libre Caslon Text', serif; letter-spacing: 0; text-transform: none; box-shadow: inset 0 1px 2px rgb(31 42 68 / 0.12); }
+.formulario input:focus-visible { outline: 2px solid var(--bermellon); outline-offset: 1px; }
+.formulario .todo, .formulario fieldset { grid-column: 1 / -1; }
+.formulario fieldset { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.formulario legend { margin-bottom: 8px; padding: 0; }
+.formulario .opcion { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px; border: 1px solid rgb(31 42 68 / 0.45); background: #fbf8f2; font: 400 16px/1 'Libre Caslon Text', serif; letter-spacing: 0; text-transform: none; color: var(--tinta); cursor: pointer; transition: border-color 400ms var(--curva), box-shadow 400ms var(--curva); }
+.opcion input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.opcion i { width: 16px; height: 16px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.2); }
+.formulario .opcion:has(input:checked) { border-color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta), inset 0 2px 4px rgb(31 42 68 / 0.2); }
+.opcion:has(input:focus-visible) { outline: 2px solid var(--bermellon); outline-offset: 3px; }
+.formulario .boton { grid-column: 1 / -1; justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--bermellon); }
+.prueba-col { position: sticky; top: 24px; display: grid; gap: 12px; }
+.prueba { --papel-prueba: #fbf8f2; --tinta-prueba: var(--tinta); display: grid; align-content: center; justify-items: center; gap: 12px; aspect-ratio: 5 / 7; padding: clamp(24px, 4vw, 44px); background: var(--papel-prueba); color: var(--tinta-prueba); text-align: center; box-shadow: 0 1px 2px rgb(0 0 0 / 0.14), 0 26px 40px -26px rgb(31 42 68 / 0.6); transition: background-color 600ms var(--curva), color 600ms var(--curva); }
+.prueba > * { text-shadow: 0 1px 0 rgb(255 255 255 / 0.6), 0 -1px 0 rgb(0 0 0 / 0.25); }
+.prueba .pieza { display: none; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; }
+.prueba .nombres { font: 400 clamp(34px, 3.6vw, 48px)/1.05 'Abril Fatface', serif; overflow-wrap: anywhere; }
+.prueba .fecha { font-size: 18px; font-style: italic; }
+.prueba .lugar { font-size: 16px; letter-spacing: 0.06em; }
+.prueba svg { width: 120px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.presupuesto:has([name="pieza"][value="matrimonio"]:checked) [data-pieza="matrimonio"],
+.presupuesto:has([name="pieza"][value="bautizo"]:checked) [data-pieza="bautizo"],
+.presupuesto:has([name="pieza"][value="aniversario"]:checked) [data-pieza="aniversario"] { display: block; }
+.presupuesto:has([name="papel"][value="crema"]:checked) .prueba { --papel-prueba: #f1e6cf; }
+.presupuesto:has([name="papel"][value="kraft"]:checked) .prueba { --papel-prueba: #d9c4a0; }
+.presupuesto:has([name="tinta"][value="bermellon"]:checked) .prueba { --tinta-prueba: #b23427; }
+.presupuesto:has([name="tinta"][value="verde"]:checked) .prueba { --tinta-prueba: #3f5a3a; }
+.presupuesto:has([name="tinta"][value="negro"]:checked) .prueba { --tinta-prueba: #1b1b1b; }
+.prueba-col p { font-size: 15px; font-style: italic; color: var(--gris); }
+
+/* ---- Pie: la tarjeta de visita ---- */
+.pie { padding-block: clamp(72px, 9vw, 120px) 28px; background: var(--tinta); color: var(--algodon); }
+.visita { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 28px; align-items: center; width: min(100%, 34rem); aspect-ratio: 85 / 55; margin-inline: auto; padding: clamp(22px, 4vw, 40px); background: #fbf8f2; color: var(--tinta); rotate: -2deg; box-shadow: 0 30px 50px -20px rgb(0 0 0 / 0.6); }
+.visita .logo { grid-row: 1 / 3; font-size: clamp(30px, 4vw, 44px); flex-direction: column; align-items: center; gap: 0; }
+
+.visita p { font-size: clamp(14px, 1.4vw, 16px); line-height: 1.55; text-shadow: var(--hundido); }
+.pie-final { margin-top: clamp(56px, 7vw, 88px); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: #b9c0d2; text-align: center; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .taller, .muestrario, .encargo, .presupuesto { grid-template-columns: minmax(0, 1fr); }
+  .taller .prensa { width: min(100%, 28rem); }
+  .muestras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .prueba-col { position: static; width: min(100%, 26rem); }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera { padding-top: 48px; }
+  .muestras { grid-template-columns: minmax(0, 1fr); }
+  .pila { width: min(100%, 18rem); }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+  .tintas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .taller-fotos { grid-template-columns: minmax(0, 1fr); }
+  .pasos li { grid-template-columns: 2rem minmax(0, 1fr); }
+  .pasos .plazo { grid-column: 2; grid-row: auto; }
+  .visita { grid-template-columns: minmax(0, 1fr); aspect-ratio: auto; rotate: -1deg; }
+  .visita .logo { grid-row: auto; flex-direction: row; align-items: baseline; }
+}
+
+/* ---- Movimiento: la prensa ----
+   En la portada, cada tipo de metal está en espejo: se da vuelta, uno tras
+   otro, y al quedar derecho la prensa lo hunde en el papel (la sombra
+   interior crece y queda el relieve). Los títulos se imprimen igual al
+   llegar. Las muestras de cada pila se abren en abanico, con un desfase. El
+   rodillo va y viene sobre la plancha, sin apuro. La prueba del presupuesto
+   se vuelve a imprimir cuando dejas de escribir. */
+[data-aparece] { --entrada: tilde-aparece; --tramo: 34svh; --duracion: 1200ms; }
+.cabeza h2 { --entrada: tilde-imprime; }
+.tarjeta { --entrada: tilde-apila; }
+@keyframes tilde-aparece { from { opacity: 0; translate: 0 16px; } }
+@keyframes tilde-imprime { 0% { opacity: 0; text-shadow: 0 0 0 transparent, 0 0 0 transparent; scale: 1.02; } 50% { opacity: 1; scale: 1; text-shadow: 0 0 0 transparent, 0 0 0 transparent; } }
+@keyframes tilde-gira { from { scale: -1 1; } to { scale: 1 1; } }
+@keyframes tilde-metal { 0%, 50% { opacity: 1; } 50.1%, 100% { opacity: 0; } }
+@keyframes tilde-hunde { 0%, 40% { text-shadow: 0 0 0 transparent, 0 0 0 transparent; } }
+@keyframes tilde-apila { from { translate: 0 0; rotate: 0deg; } }
+@keyframes tilde-entinta { from { left: 6%; } to { left: calc(94% - 64px); } }
+@keyframes tilde-funde { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .tipo { animation: tilde-gira 1300ms var(--curva) calc(300ms + var(--n) * 110ms) backwards; }
+  .metal { animation: tilde-metal 1300ms var(--curva) calc(300ms + var(--n) * 110ms) backwards; }
+  .impresa { animation: tilde-hunde 900ms var(--curva) calc(1400ms + var(--n) * 110ms) backwards; }
+  .linea .acento { animation: tilde-funde 1200ms var(--curva) 2300ms backwards; }
+  .portada > :not(h1) { animation: tilde-aparece 1200ms var(--curva) 1600ms backwards; }
+  .rodillo { animation: tilde-entinta 7s var(--curva) infinite alternate, tilde-funde 1200ms var(--curva) backwards; }
+  .prueba.imprime > * { animation: tilde-imprime 900ms var(--curva) backwards; }
+}
+</style>
+</head>
+<body data-boceto="tilde">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Prensa Tilde</b> es una marca inventada por Volutus para mostrarte el estilo <b>Letterpress</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="floron" viewBox="0 0 18 10"><path d="M9 0C11 3 14 4 18 5C14 6 11 7 9 10C7 7 4 6 0 5C4 4 7 3 9 0Z"/></symbol>
+  <symbol id="acento" viewBox="0 0 16 16"><path d="M2 15L9 1H15L5 15Z"/></symbol>
+  <symbol id="ornamento" viewBox="0 0 120 14"><path d="M0 7H48M72 7H120M60 1L66 7L60 13L54 7Z"/></symbol>
+</svg>
+
+<div class="pliego">
+  <div class="marcas" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="registro arriba"></span><span class="registro abajo"></span></div>
+  <header class="ancho cabecera">
+    <a class="logo" href="#inicio">Prensa Tilde<svg class="acento" aria-hidden="true"><use href="#acento"/></svg></a>
+    <nav class="menu" aria-label="Secciones"><ul><li><a href="#taller">El taller</a></li><li aria-hidden="true"><svg class="floron"><use href="#floron"/></svg></li><li><a href="#invitaciones">Invitaciones</a></li><li aria-hidden="true"><svg class="floron"><use href="#floron"/></svg></li><li><a href="#papeles">Papeles</a></li><li aria-hidden="true"><svg class="floron"><use href="#floron"/></svg></li><li><a href="#presupuesto">Presupuesto</a></li></ul></nav>
+  </header>
+
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <p class="versal">Taller de impresión tipográfica · Barrio Italia</p>
+    <h1 id="titulo"><span class="oculto">Prensa Tilde</span><span class="linea" aria-hidden="true"><span class="tipo" style="--n: 0"><span class="cara impresa">P</span><span class="cara metal">P</span></span><span class="tipo" style="--n: 1"><span class="cara impresa">r</span><span class="cara metal">r</span></span><span class="tipo" style="--n: 2"><span class="cara impresa">e</span><span class="cara metal">e</span></span><span class="tipo" style="--n: 3"><span class="cara impresa">n</span><span class="cara metal">n</span></span><span class="tipo" style="--n: 4"><span class="cara impresa">s</span><span class="cara metal">s</span></span><span class="tipo" style="--n: 5"><span class="cara impresa">a</span><span class="cara metal">a</span></span></span><span class="linea" aria-hidden="true"><span class="tipo" style="--n: 6"><span class="cara impresa">T</span><span class="cara metal">T</span></span><span class="tipo" style="--n: 7"><span class="cara impresa">i</span><span class="cara metal">i</span></span><span class="tipo" style="--n: 8"><span class="cara impresa">l</span><span class="cara metal">l</span></span><span class="tipo" style="--n: 9"><span class="cara impresa">d</span><span class="cara metal">d</span></span><span class="tipo" style="--n: 10"><span class="cara impresa">e</span><span class="cara metal">e</span></span><svg class="acento"><use href="#acento"/></svg></span></h1>
+    <p class="bajada">Invitaciones, tarjetas y papelería impresas una por una, con tipos de metal y una prensa de 1962. Pasa el dedo: se siente.</p>
+    <div class="acciones"><a class="boton" href="#presupuesto">Pedir un presupuesto</a><a class="enlace" href="#papeles">Ver papeles y tintas</a></div>
+  </section>
+</div>
+
+<main>
+  <section class="seccion" id="taller" aria-labelledby="taller-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <svg class="ornamento" aria-hidden="true"><use href="#ornamento"/></svg>
+        <h2 id="taller-titulo" data-sigue>El taller</h2>
+      </header>
+      <div class="taller">
+        <figure class="prensa" data-aparece><img src="/image/bocetos/tilde/prensa-760.webp" srcset="/image/bocetos/tilde/prensa-480.webp 480w, /image/bocetos/tilde/prensa-760.webp 760w" sizes="(min-width: 900px) 38vw, 90vw" width="760" height="950" loading="lazy" alt="Una prensa tipográfica antigua de fierro negro, con su gran rueda, en un taller de muros de madera"><figcaption>La prensa, una Heidelberg de aspas de 1962.</figcaption></figure>
+        <div class="taller-texto" data-aparece style="--orden: 1">
+          <p class="capitular">Cada letra se pone a mano, al revés, en un componedor de metal. Una invitación de cuarenta palabras toma una mañana en armarse y un día entero en imprimirse, color por color.</p>
+          <p>Trabajamos con tipos de plomo y de madera que vienen de imprentas de Valparaíso y Concepción que cerraron. Algunas cajas tienen más de cien años y todavía les faltan las mismas letras.</p>
+          <div class="taller-fotos">
+            <img src="/image/bocetos/tilde/espejo-1000.webp" srcset="/image/bocetos/tilde/espejo-600.webp 600w, /image/bocetos/tilde/espejo-1000.webp 1000w" sizes="(min-width: 900px) 24vw, 90vw" width="1000" height="667" loading="lazy" alt="Tipos de madera de cerca, con las letras en espejo, tal como se ponen en la prensa">
+            <img src="/image/bocetos/tilde/caja-860.webp" srcset="/image/bocetos/tilde/caja-600.webp 600w, /image/bocetos/tilde/caja-860.webp 860w" sizes="(min-width: 900px) 24vw, 90vw" width="860" height="573" loading="lazy" alt="Una caja de madera con compartimentos llenos de tipos de metal">
+          </div>
+          <figure class="entintado">
+            <div class="plancha" aria-hidden="true"><span class="rodillo"></span></div>
+            <figcaption>Antes de cada tiraje, el rodillo reparte la tinta en la plancha hasta que suena como seda.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+    <span class="signatura" aria-hidden="true">B</span>
+  </section>
+
+  <section class="seccion" id="invitaciones" aria-labelledby="invitaciones-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <svg class="ornamento" aria-hidden="true"><use href="#ornamento"/></svg>
+        <h2 id="invitaciones-titulo" data-sigue>Invitaciones</h2>
+        <p>Cada juego incluye la invitación, su sobre y una tarjeta de respuesta. Los precios son por cien, a una tinta.</p>
+      </header>
+      <ul class="muestras">
+        <li class="muestra" data-aparece>
+          <div class="pila" aria-hidden="true"><span class="tarjeta" data-sigue></span><span class="tarjeta" data-sigue></span><span class="tarjeta"><small>se casan</small><b>Camila<br>&amp; Tomás</b><i>sábado 14 de marzo</i></span></div>
+          <h3>Matrimonios</h3>
+          <p>Algodón de 600 gramos, con el borde a mano.</p>
+          <p class="precio">Desde $390.000</p>
+        </li>
+        <li class="muestra" data-aparece style="--orden: 1">
+          <div class="pila" aria-hidden="true" style="--c: #3f5a3a"><span class="tarjeta" data-sigue></span><span class="tarjeta" data-sigue></span><span class="tarjeta"><small>su bautizo</small><b>Julieta</b><i>domingo 8 de junio</i></span></div>
+          <h3>Bautizos</h3>
+          <p>Tarjetas más chicas, en papel crema y tinta verde.</p>
+          <p class="precio">Desde $240.000</p>
+        </li>
+        <li class="muestra" data-aparece style="--orden: 2">
+          <div class="pila" aria-hidden="true" style="--c: #b23427"><span class="tarjeta" data-sigue></span><span class="tarjeta" data-sigue></span><span class="tarjeta"><small>cincuenta años</small><b>Rosa<br>&amp; Andrés</b><i>en la misma iglesia</i></span></div>
+          <h3>Aniversarios</h3>
+          <p>Bodas de oro y de plata, con una tinta dorada de regalo.</p>
+          <p class="precio">Desde $280.000</p>
+        </li>
+      </ul>
+      <div class="fotos-invitaciones">
+        <img data-aparece src="/image/bocetos/tilde/invitacion-760.webp" srcset="/image/bocetos/tilde/invitacion-480.webp 480w, /image/bocetos/tilde/invitacion-760.webp 760w" sizes="(min-width: 900px) 38vw, 45vw" width="760" height="950" loading="lazy" alt="Una invitación de matrimonio con letras finas sobre papel blanco, junto a un sobre y una tela de lino">
+        <img data-aparece style="--orden: 1" src="/image/bocetos/tilde/suite-760.webp" srcset="/image/bocetos/tilde/suite-480.webp 480w, /image/bocetos/tilde/suite-760.webp 760w" sizes="(min-width: 900px) 38vw, 45vw" width="760" height="950" loading="lazy" alt="Un juego de tarjetas de matrimonio sobre una tela beige, con una rama seca de flores">
+      </div>
+    </div>
+    <span class="signatura" aria-hidden="true">C</span>
+  </section>
+
+  <section class="seccion muestrario-seccion" id="papeles" aria-labelledby="papeles-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <svg class="ornamento" aria-hidden="true"><use href="#ornamento"/></svg>
+        <h2 id="papeles-titulo" data-sigue>Papeles y tintas</h2>
+        <p>El papel grueso es el que deja ver el relieve. Te mandamos las muestras por correo, o pasa a tocarlas.</p>
+      </header>
+      <div class="muestrario">
+        <ul class="papeles">
+          <li class="papel" data-aparece style="--p: #fbf8f2"><b>Algodón blanco</b><span>600 g</span><small>El más hundido. Hecho en Italia, con el borde rasgado a mano.</small></li>
+          <li class="papel" data-aparece style="--p: #f1e6cf; --orden: 1"><b>Algodón crema</b><span>600 g</span><small>El mismo, con un tono más tibio para las tintas oscuras.</small></li>
+          <li class="papel" data-aparece style="--p: #d9c4a0; --orden: 2"><b>Kraft</b><span>350 g</span><small>Para tarjetas de visita y etiquetas. La tinta blanca no se lleva con él.</small></li>
+          <li class="papel" data-aparece style="--p: #24272c; --t: #f4efe6; --orden: 3"><b>Negro</b><span>400 g</span><small>Solo con tinta blanca u oro, que se imprime dos veces.</small></li>
+        </ul>
+        <div data-aparece style="--orden: 1">
+          <ul class="tintas">
+            <li style="--c: #1f2a44">Azul tinta</li>
+            <li style="--c: #b23427">Bermellón</li>
+            <li style="--c: #3f5a3a">Verde musgo</li>
+            <li style="--c: #1b1b1b">Negro</li>
+            <li style="--c: #b48a35">Oro</li>
+            <li style="--c: #c9a7a0">Rosa viejo</li>
+          </ul>
+          <figure><img src="/image/bocetos/tilde/rodillo-760.webp" srcset="/image/bocetos/tilde/rodillo-480.webp 480w, /image/bocetos/tilde/rodillo-760.webp 760w" sizes="(min-width: 900px) 34vw, 90vw" width="760" height="950" loading="lazy" alt="Una mano pasa un rodillo cargado de tinta negra sobre una superficie blanca"><figcaption>Mezclamos cada tinta a ojo, contra la muestra de papel.</figcaption></figure>
+        </div>
+      </div>
+    </div>
+    <span class="signatura" aria-hidden="true">D</span>
+  </section>
+
+  <section class="seccion" id="encargar" aria-labelledby="encargar-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <svg class="ornamento" aria-hidden="true"><use href="#ornamento"/></svg>
+        <h2 id="encargar-titulo" data-sigue>Cómo encargar</h2>
+        <p>Una invitación de matrimonio se pide con dos meses de anticipación. Con menos, conversemos.</p>
+      </header>
+      <div class="encargo">
+        <figure data-aparece><img src="/image/bocetos/tilde/taller-1000.webp" srcset="/image/bocetos/tilde/taller-700.webp 700w, /image/bocetos/tilde/taller-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 90vw" width="1000" height="667" loading="lazy" alt="Un taller antiguo de impresión, con prensas de fierro y estantes de madera"></figure>
+        <ol class="pasos" data-aparece style="--orden: 1">
+          <li><span>1</span><h3>Conversamos</h3><p class="plazo">1 día</p><p>Nos cuentas la fecha, cuántas necesitas y qué te gusta.</p></li>
+          <li><span>2</span><h3>La prueba en pantalla</h3><p class="plazo">3 días</p><p>Te mandamos el diseño con las letras que tenemos de verdad.</p></li>
+          <li><span>3</span><h3>La prueba impresa</h3><p class="plazo">1 semana</p><p>Opcional: una sola tarjeta, en el papel elegido, por $15.000.</p></li>
+          <li><span>4</span><h3>El tiraje</h3><p class="plazo">2 semanas</p><p>Color por color. Se seca una noche entre cada tinta.</p></li>
+        </ol>
+      </div>
+    </div>
+    <span class="signatura" aria-hidden="true">E</span>
+  </section>
+
+  <section class="seccion muestrario-seccion" id="presupuesto" aria-labelledby="presupuesto-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <svg class="ornamento" aria-hidden="true"><use href="#ornamento"/></svg>
+        <h2 id="presupuesto-titulo" data-sigue>Pide un presupuesto</h2>
+        <p>Escribe los nombres y la fecha: a la derecha se compone tu invitación, con el papel y la tinta que elijas.</p>
+      </header>
+      <div class="presupuesto">
+        <form class="formulario" data-muestra data-prueba data-aparece toolname="pedir_presupuesto_impresion" tooldescription="Pide un presupuesto a Prensa Tilde, un taller de impresión tipográfica en Barrio Italia, para invitaciones impresas en tipos móviles: la pieza, los nombres, la fecha y el lugar del evento, la cantidad, el papel y la tinta. Prensa Tilde es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+          <fieldset toolparamdescription="La pieza: matrimonio, bautizo o aniversario">
+            <legend>Pieza</legend>
+            <label class="opcion"><input type="radio" name="pieza" value="matrimonio" checked>Matrimonio</label>
+            <label class="opcion"><input type="radio" name="pieza" value="bautizo">Bautizo</label>
+            <label class="opcion"><input type="radio" name="pieza" value="aniversario">Aniversario</label>
+          </fieldset>
+          <label class="todo">Nombres<input name="nombres" maxlength="40" placeholder="Camila & Tomás" toolparamdescription="Los nombres que van impresos, de hasta 40 letras, por ejemplo Camila & Tomás"></label>
+          <label>Fecha del evento<input type="date" name="fecha" min="2026-11-12" toolparamdescription="La fecha del evento, que va impresa en la invitación"></label>
+          <label>Lugar<input name="lugar" maxlength="40" placeholder="Viña Santa Rita, Buin" toolparamdescription="Dónde es el evento, de hasta 40 letras"></label>
+          <label>Cantidad<input type="number" name="cantidad" min="50" max="500" step="10" value="100" inputmode="numeric" toolparamdescription="Cuántas invitaciones, de 50 a 500"></label>
+          <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+          <fieldset toolparamdescription="El papel: blanco (algodón blanco), crema (algodón crema) o kraft">
+            <legend>Papel</legend>
+            <label class="opcion"><input type="radio" name="papel" value="blanco" checked><i style="--c: #fbf8f2"></i>Algodón blanco</label>
+            <label class="opcion"><input type="radio" name="papel" value="crema"><i style="--c: #f1e6cf"></i>Algodón crema</label>
+            <label class="opcion"><input type="radio" name="papel" value="kraft"><i style="--c: #d9c4a0"></i>Kraft</label>
+          </fieldset>
+          <fieldset toolparamdescription="La tinta: azul, bermellon, verde o negro">
+            <legend>Tinta</legend>
+            <label class="opcion"><input type="radio" name="tinta" value="azul" checked><i style="--c: #1f2a44"></i>Azul tinta</label>
+            <label class="opcion"><input type="radio" name="tinta" value="bermellon"><i style="--c: #b23427"></i>Bermellón</label>
+            <label class="opcion"><input type="radio" name="tinta" value="verde"><i style="--c: #3f5a3a"></i>Verde musgo</label>
+            <label class="opcion"><input type="radio" name="tinta" value="negro"><i style="--c: #1b1b1b"></i>Negro</label>
+          </fieldset>
+          <button class="boton" type="submit">Pedir el presupuesto</button>
+          <p class="boceto-aviso"></p>
+        </form>
+        <div class="prueba-col" data-aparece style="--orden: 1">
+          <div class="prueba" aria-label="Prueba de la invitación" role="img">
+            <p class="pieza" data-pieza="matrimonio">tenemos el gusto de invitarte a nuestro matrimonio</p>
+            <p class="pieza" data-pieza="bautizo">te invitamos al bautizo de</p>
+            <p class="pieza" data-pieza="aniversario">celebramos cincuenta años juntos</p>
+            <svg aria-hidden="true"><use href="#ornamento"/></svg>
+            <p class="nombres" data-en="nombres" data-ejemplo="Camila &amp; Tomás">Camila &amp; Tomás</p>
+            <p class="fecha" data-en="fecha" data-ejemplo="sábado, 13 de marzo de 2027">sábado, 13 de marzo de 2027</p>
+            <p class="lugar" data-en="lugar" data-ejemplo="Viña Santa Rita, Buin">Viña Santa Rita, Buin</p>
+          </div>
+          <p>La prueba se vuelve a imprimir cuando dejas de escribir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho">
+    <div class="visita">
+      <a class="logo" href="#inicio">Tilde<svg class="acento" aria-hidden="true"><use href="#acento"/></svg></a>
+      <p>Prensa Tilde · impresión tipográfica<br>Girardi 1456, Barrio Italia, Providencia</p>
+      <p>Martes a sábado, de 10:00 a 18:00<br>hola@prensatilde.cl</p>
+    </div>
+    <p class="pie-final">Boceto de Volutus · marca inventada</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -187,3 +187,79 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | clases | https://images.unsplash.com/photo-1578057183197-423269e14014 |
 | bola | https://images.unsplash.com/photo-1759906219378-9c1accdc32c9 |
 | historia | https://images.unsplash.com/photo-1785088561527-3b48824b5eb5 |
+
+## marfil
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1787274031613-559170d08741 |
+| colador | https://images.unsplash.com/photo-1779635593390-8b478382885f |
+| ascensor | https://images.unsplash.com/photo-1563219125-1db796e20ff2 |
+| lampara | https://images.unsplash.com/photo-1561047699-d4d557d7489c |
+| trompeta | https://images.unsplash.com/photo-1511192336575-5a79af67a629 |
+| baile | https://images.unsplash.com/photo-1758810409996-583f3bad7d51 |
+| salon | https://images.unsplash.com/photo-1779219505918-970ca739ac78 |
+
+## libar
+
+| Archivo | Foto original |
+| --- | --- |
+| apicultor | https://images.unsplash.com/photo-1473973266408-ed4e27abdd47 |
+| flor | https://images.unsplash.com/photo-1550170139-ed6b5e6b4c38 |
+| cuchara | https://images.unsplash.com/photo-1665473052284-164335672208 |
+| colmenas | https://images.unsplash.com/photo-1693225428299-996f236f239f |
+
+## remache
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1561811565-6ed172b54cbe |
+| bmw | https://images.unsplash.com/photo-1568708167243-438efa1d7697 |
+| antes | https://images.unsplash.com/photo-1612881076138-d29be91ef8a7 |
+| despues | https://images.unsplash.com/photo-1648300117829-d9e207740785 |
+| triumph | https://images.unsplash.com/photo-1720722594991-35138eebe81a |
+| honda | https://images.unsplash.com/photo-1527537232679-89f0d63ea3f7 |
+| herramientas | https://images.unsplash.com/photo-1549636367-13c144c47063 |
+| mecanico | https://images.unsplash.com/photo-1517524206127-48bbd363f3d7 |
+| soldadura | https://images.unsplash.com/photo-1609348632802-b952f368fc3a |
+
+## parina
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1603803341053-91702927d0fa |
+| lago | https://images.unsplash.com/photo-1620225848929-5c7d2b8f06b4 |
+| bofedal | https://images.unsplash.com/photo-1620225966221-5c8d50a77f13 |
+| llamas | https://images.unsplash.com/photo-1703946004096-63030f9b11f7 |
+| flamencos | https://images.unsplash.com/photo-1697178129176-62492c896fff |
+| telar | https://images.unsplash.com/photo-1606681246653-74521ac452f4 |
+| hilos | https://images.unsplash.com/photo-1643766883805-829d9ad95c42 |
+| lodge | https://images.unsplash.com/photo-1764768049904-5392dffdda14 |
+
+## tilde
+
+| Archivo | Foto original |
+| --- | --- |
+| prensa | https://images.unsplash.com/photo-1701743807670-d25bdde3816e |
+| espejo | https://images.unsplash.com/photo-1699662585308-fcb113a0a4ba |
+| caja | https://images.unsplash.com/photo-1778167093244-33d90e4f76c2 |
+| rodillo | https://images.unsplash.com/photo-1778690133450-ddb08af48d76 |
+| invitacion | https://images.unsplash.com/photo-1741893043659-ca8b82a8b637 |
+| suite | https://images.unsplash.com/photo-1732649124686-3bab54f79aa3 |
+| taller | https://images.unsplash.com/photo-1763668193232-c4d0962fe4e4 |
+
+## rampa
+
+Todas en blanco y negro (`sat=-100`); la trama de semitono la pone el CSS.
+
+| Archivo | Foto original |
+| --- | --- |
+| skater | https://images.unsplash.com/photo-1597769555495-c54a15cd8c3f |
+| vuelo | https://images.unsplash.com/photo-1784290624606-6163ff1be504 |
+| bowl | https://images.unsplash.com/photo-1683806904728-e5a2b9341da7 |
+| pies | https://images.unsplash.com/photo-1579382280945-f57c6a629a05 |
+| agachado | https://images.unsplash.com/photo-1517871627464-75e4506348f3 |
+| ruedas | https://images.unsplash.com/photo-1536318431364-5cc762cfc8ec |
+| tabla | https://images.unsplash.com/photo-1601247309037-a3e434b07906 |
+| zapatilla | https://images.unsplash.com/photo-1679736468688-a394f6a1646f |
+| tienda | https://images.unsplash.com/photo-1688318375271-b25e13f196ca |

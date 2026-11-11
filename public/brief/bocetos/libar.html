@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Libar · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Libar, miel cruda de ulmo, quillay y tiaca de colmenas propias en Curacautín, para mostrar el estilo Artesanal.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/alegreya-sans-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/libar/cuchara-760.webp" imagesrcset="/image/bocetos/libar/cuchara-480.webp 480w, /image/bocetos/libar/cuchara-760.webp 760w" imagesizes="(min-width: 900px) 28vw, 70vw" fetchpriority="high">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Libar · artesanal. Inspiración: Diaspora Co. (diasporaco.com). Se toma:
+   1) el origen como historia: cada lote con su campo, su cosecha y quien lo
+   hizo; 2) las preguntas de siempre contestadas con franqueza (por qué
+   cristaliza, por qué no se calienta); 3) las etiquetas como identidad, con
+   ilustraciones hechas a mano. La idea propia: el frasco y su etiqueta.
+   Papel kraft, timbres de tinta, lote numerado y notas a mano en los
+   márgenes. Lo nuevo: el lote de tu frasco se rastrea en la página, con su
+   colmenar en el mapa, y el pedido, al enviarse, recibe su timbre. */
+@font-face { font-family: 'Caveat'; src: url('/fonts/bocetos/caveat.woff2') format('woff2'); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  --kraft: #e9dcc4;
+  --kraft-2: #dccaa9;
+  --papel: #f6efe1;
+  --miel: #d99a1e;
+  --cafe: #3b2a1a;
+  --cafe-suave: #6b5236;
+  --ulmo: #4f5b3a;
+  --sello: #b5442b;
+  --sello-texto: #9a3520;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.6, 0, 0.4, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--kraft); scroll-behavior: smooth; }
+body { margin: 0; background: var(--kraft) radial-gradient(rgb(122 75 42 / 0.09) 1px, transparent 1.4px) 0 0 / 6px 6px; color: var(--cafe); font: 400 19px/1.6 'Alegreya Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 3px solid var(--ulmo); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 700; line-height: 1.05; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.mano { font-family: 'Caveat', cursive; font-weight: 600; line-height: 1.15; }
+.seccion { position: relative; padding-block: clamp(84px, 10vw, 140px); }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 2px 28px 0; border: 2px solid var(--cafe); border-radius: 3px; background: var(--cafe); color: var(--papel); font: 700 17px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.boton:hover { background: transparent; color: var(--cafe); }
+
+/* La tinta de los timbres: el ruido le saca puntos, como un timbre real. */
+.tinta { color: var(--sello); filter: url(#tinta); }
+
+/* ---- Cabecera: solo el timbre ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
+.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo svg { width: 64px; height: 64px; rotate: -8deg; }
+.logo b { font-size: 26px; letter-spacing: 0.18em; }
+.cabecera p { font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cafe-suave); }
+
+/* ---- Portada: la etiqueta del frasco ---- */
+.portada { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 4fr); gap: 40px clamp(24px, 4vw, 56px); align-items: start; padding-block: clamp(24px, 4vw, 48px) clamp(96px, 11vw, 150px); }
+.indice { align-self: center; display: grid; gap: 4px; padding: 18px 20px; rotate: -3deg; font-size: 26px; }
+.indice p { font-size: 22px; color: var(--cafe-suave); }
+.indice ul { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.indice a { text-decoration: none; background: linear-gradient(var(--miel), var(--miel)) 0 88% / 0 3px no-repeat; transition: background-size 500ms var(--curva); }
+.indice a:hover { background-size: 100% 3px; }
+.indice svg { width: 90px; height: 40px; margin-top: 6px; fill: none; stroke: var(--cafe); stroke-width: 2; stroke-linecap: round; }
+.etiqueta-col { display: grid; gap: 28px; justify-items: start; }
+.etiqueta { position: relative; width: 100%; padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 40px); background: var(--papel); clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px); text-align: center; }
+.etiqueta::before { content: ''; position: absolute; inset: 10px; border: 2px dashed rgb(59 42 26 / 0.45); clip-path: inherit; pointer-events: none; }
+.etiqueta .mano { font-size: 32px; color: var(--ulmo); }
+.etiqueta h1 { margin-top: 6px; font-size: clamp(64px, 8vw, 112px); line-height: 0.9; letter-spacing: 0.14em; padding-left: 0.14em; }
+.etiqueta .de { margin-top: 10px; font-size: 20px; letter-spacing: 0.08em; }
+.etiqueta dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 22px 0 0; padding-top: 16px; border-top: 2px solid var(--cafe); }
+.etiqueta dt { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cafe-suave); }
+.etiqueta dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.etiqueta .timbre { position: absolute; right: 3%; top: 3%; width: clamp(96px, 11vw, 140px); rotate: -14deg; }
+.etiqueta-col > p { max-width: 36ch; }
+.cuchara { position: relative; }
+.frasco img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+.hebra { position: absolute; left: 50%; top: calc(100% - 2px); width: 16px; height: 92px; margin-left: -8px; transform-origin: 50% 0; fill: #c4851d; }
+.frasco figcaption { margin-top: 108px; font-size: 24px; text-align: center; }
+
+/* ---- Títulos: un rótulo de timbre y su acotación a mano ---- */
+.cabeza { position: relative; display: grid; justify-items: start; gap: 16px; max-width: 48rem; margin-bottom: clamp(44px, 6vw, 72px); }
+.rotulo { display: inline-block; padding: 12px 20px 10px; border: 3px double currentColor; font-size: clamp(30px, 4.4vw, 56px); letter-spacing: 0.1em; text-transform: uppercase; rotate: -1.5deg; }
+.acotacion { display: flex; align-items: center; gap: 8px; margin-left: 12px; font-size: 28px; color: var(--ulmo); }
+.acotacion svg { width: 46px; height: 30px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.cabeza > p:last-child { max-width: 46ch; }
+
+/* ---- De dónde viene: el mapa y el rastreo del lote ---- */
+.origen { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 72px); align-items: start; }
+.mapa { width: 100%; height: auto; padding: 12px; background: var(--papel); box-shadow: 0 18px 30px -24px rgb(59 42 26 / 0.7); }
+.mapa .trazo { fill: none; stroke: var(--cafe); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mapa .rio { stroke: #4f7a8a; stroke-width: 3; }
+.mapa .ruta { stroke-dasharray: 0; stroke-width: 1.6; }
+.mapa .volcan { fill: var(--kraft-2); }
+.mapa text { font: 600 21px/1 'Caveat', cursive; fill: var(--cafe); }
+.mapa .rotulo-c { font: 700 13px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.1em; }
+.mapa .celda { fill: var(--papel); stroke: var(--cafe); stroke-width: 2; transition: fill 500ms var(--curva); }
+.origen:has(#lote-05:checked) .c1, .origen:has(#lote-08:checked) .c1, .origen:has(#lote-06:checked) .c2, .origen:has(#lote-07:checked) .c3 { fill: var(--miel); }
+.rastreo { display: grid; gap: 18px; padding: 26px; border: 2px solid var(--cafe); background: var(--papel); }
+.rastreo h3 { font-size: 26px; }
+.rastreo fieldset { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.rastreo legend { margin-bottom: 10px; padding: 0; font-size: 16px; }
+.lote-chip { position: relative; display: grid; place-items: center; width: 74px; aspect-ratio: 1; border: 2px dashed var(--cafe); border-radius: 50%; font-size: 15px; font-weight: 700; line-height: 1.1; text-align: center; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva), rotate 500ms var(--curva); }
+.lote-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border-radius: 50%; opacity: 0; cursor: pointer; }
+.lote-chip:has(input:checked) { border-style: solid; background: var(--sello); color: var(--papel); rotate: -10deg; }
+.lote-chip:has(input:focus-visible) { outline: 3px solid var(--ulmo); outline-offset: 3px; }
+.ficha-lote { display: none; gap: 10px; padding-top: 16px; border-top: 2px dashed rgb(59 42 26 / 0.4); }
+.rastreo:has(#lote-05:checked) .l05, .rastreo:has(#lote-06:checked) .l06, .rastreo:has(#lote-07:checked) .l07, .rastreo:has(#lote-08:checked) .l08 { display: grid; }
+.ficha-lote dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; margin: 0; font-size: 17px; }
+.ficha-lote dt { font-weight: 700; }
+.ficha-lote dd { margin: 0; }
+.ficha-lote .mano { font-size: 25px; color: var(--ulmo); }
+.rastreo .boton { justify-self: start; min-height: 48px; font-size: 15px; }
+
+/* ---- Las tres mieles: la ficha de cata con la escala Pfund ---- */
+.cata-seccion { background: var(--papel); }
+.pfund { position: relative; height: 34px; margin: 10px 0 64px; border: 2px solid var(--cafe); background: linear-gradient(90deg, #f8eec6, #f1d98a 25%, #e3b44a 45%, #c47f1d 65%, #8d4d12 85%, #4d2508); }
+.pfund > span { position: absolute; top: 100%; margin-top: 6px; font-size: 14px; color: var(--cafe-suave); }
+.pfund .marca { position: absolute; top: -12px; left: var(--x); width: 2px; height: 58px; background: var(--cafe); }
+.pfund .marca b { position: absolute; left: 50%; bottom: 100%; translate: -50% 0; padding-bottom: 4px; font: 600 24px/1 'Caveat', cursive; white-space: nowrap; }
+.mieles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--cafe); }
+.miel { display: grid; gap: 12px; align-content: start; padding: 26px clamp(16px, 2.4vw, 32px) 30px; border-right: 2px dashed rgb(59 42 26 / 0.35); }
+.miel:last-child { border-right: 0; }
+.miel .gota { width: 46px; height: 58px; }
+.miel .gota path { fill: var(--color); stroke: var(--cafe); stroke-width: 1.5; }
+.miel h3 { font-size: 32px; }
+.miel dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 17px; }
+.miel dt { font-weight: 700; }
+.miel dd { margin: 0; }
+.miel .mano { font-size: 25px; color: var(--ulmo); }
+.preguntas { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 4fr); align-items: start; gap: 24px clamp(32px, 5vw, 72px); margin-top: clamp(56px, 7vw, 88px); }
+.preguntas h3 { font-size: 22px; }
+.preguntas p { margin-top: 8px; color: var(--cafe-suave); }
+.preguntas figure { padding: 10px 10px 4px; background: #fff; rotate: -3deg; box-shadow: 0 10px 20px -14px rgb(59 42 26 / 0.8); }
+.preguntas figure img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.preguntas figcaption { padding: 6px 0 2px; font-size: 24px; text-align: center; }
+.apicultor > figure:first-child { grid-row: 1 / 3; }
+.colmenas { grid-column: 2; }
+.colmenas img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.colmenas figcaption { margin-top: 8px; font-size: 24px; color: var(--ulmo); }
+
+/* ---- El apicultor: su carta ---- */
+.apicultor { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.apicultor img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.carta { display: grid; gap: 6px; padding: clamp(28px, 4vw, 44px); background: var(--papel) repeating-linear-gradient(transparent 0 37px, rgb(79 122 138 / 0.22) 37px 38px); rotate: 1deg; box-shadow: 0 18px 30px -24px rgb(59 42 26 / 0.7); }
+.carta p { font: 600 clamp(25px, 2.4vw, 30px)/1.27 'Caveat', cursive; }
+.carta .firma { margin-top: 14px; font-size: 34px; color: var(--ulmo); }
+
+/* ---- Cómo pedir: las cajas ---- */
+.cajas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 56px); margin: 0; padding: 0; list-style: none; }
+.caja { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; }
+.caja-dibujo { display: grid; grid-template-columns: repeat(var(--cols), 44px); gap: 8px; padding: 14px; border: 3px solid #a07c4f; background: #c7a679; }
+.caja-dibujo i { width: 44px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #f6efe1 0 30%, #e6d6b8 31% 62%, #8a6a46 63% 66%, #e6d6b8 67%); box-shadow: 0 2px 2px rgb(0 0 0 / 0.2); }
+.caja h3 { font-size: 26px; }
+.caja p { font-size: 17px; color: var(--cafe-suave); }
+.caja .precio { margin-top: 6px; font: 700 26px/1 'Alegreya Sans', sans-serif; color: var(--cafe); font-variant-numeric: tabular-nums; }
+
+/* ---- Pedido: la hoja y su timbre ---- */
+.pedido-envoltura { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; margin-top: clamp(72px, 9vw, 120px); }
+.pedido { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; padding: clamp(28px, 4vw, 44px); background: var(--papel); box-shadow: 0 18px 30px -24px rgb(59 42 26 / 0.7); }
+.pedido h3 { grid-column: 1 / -1; font-size: 30px; letter-spacing: 0.06em; text-transform: uppercase; }
+.pedido label, .pedido legend { display: grid; gap: 2px; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cafe-suave); }
+.pedido input:not([type="radio"]), .pedido select, .pedido textarea { width: 100%; min-height: 46px; padding: 6px 2px; border: 0; border-bottom: 2px solid var(--cafe); border-radius: 0; background: transparent; color: var(--cafe); font: 600 24px/1.2 'Caveat', cursive; letter-spacing: 0; text-transform: none; }
+.pedido textarea { min-height: 84px; resize: vertical; }
+.pedido input:focus-visible, .pedido select:focus-visible, .pedido textarea:focus-visible { outline: none; border-bottom: 3px solid var(--ulmo); }
+.pedido .todo { grid-column: 1 / -1; }
+.pedido fieldset { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.pedido legend { margin-bottom: 6px; padding: 0; }
+.opcion { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px; border: 2px solid var(--cafe); font: 700 17px/1 'Alegreya Sans', sans-serif; letter-spacing: 0; text-transform: none; color: var(--cafe); cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.opcion input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.pedido .opcion:has(input:checked) { background: var(--cafe); color: var(--papel); }
+.opcion:has(input:focus-visible) { outline: 3px solid var(--ulmo); outline-offset: 3px; }
+.pedido .boton { grid-column: 1 / -1; justify-self: start; }
+.pedido .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--sello-texto); font-weight: 700; }
+.recibido { position: absolute; right: 7%; bottom: 14%; width: 150px; opacity: 0; rotate: -16deg; pointer-events: none; }
+.pedido:has(.boceto-aviso:not(:empty)) .recibido { opacity: 0.9; }
+
+/* ---- Pie: la contraetiqueta ---- */
+.pie { padding-block: clamp(48px, 6vw, 72px) 28px; background: var(--kraft-2); }
+.contraetiqueta { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto; gap: 28px clamp(24px, 4vw, 56px); align-items: start; padding: 26px 28px; border: 2px solid var(--cafe); background: var(--papel); font-size: 15px; line-height: 1.5; }
+.contraetiqueta h2 { font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; }
+.contraetiqueta p { margin-top: 6px; }
+.barras { display: grid; gap: 4px; justify-items: center; font-size: 13px; letter-spacing: 0.2em; font-variant-numeric: tabular-nums; }
+.barras::before { content: ''; width: 132px; height: 60px; background: repeating-linear-gradient(90deg, var(--cafe) 0 2px, transparent 2px 4px, var(--cafe) 4px 5px, transparent 5px 8px, var(--cafe) 8px 11px, transparent 11px 12px); }
+.pie-final { margin-top: 22px; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cafe-suave); }
+
+/* ---- L ---- */
+@media (max-width: 1279px) {
+  .portada { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+  .indice { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+}
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada, .origen, .apicultor, .pedido-envoltura { grid-template-columns: minmax(0, 1fr); }
+  .indice { grid-row: auto; order: 3; }
+  .apicultor > figure:first-child, .colmenas { grid-row: auto; grid-column: auto; }
+  .frasco { width: min(100%, 26rem); justify-self: center; }
+  .mieles { grid-template-columns: minmax(0, 1fr); }
+  .miel { border-right: 0; border-bottom: 2px dashed rgb(59 42 26 / 0.35); }
+  .cajas { grid-template-columns: minmax(0, 1fr); }
+  .preguntas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .preguntas figure { grid-column: 1 / -1; width: min(70%, 18rem); }
+  .contraetiqueta { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera p { display: none; }
+  .etiqueta dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .etiqueta .timbre { width: 82px; }
+  .pfund .marca b { font-size: 20px; }
+  .pfund .marca:nth-child(2) b { translate: -80% 0; }
+  .pfund .marca:nth-child(4) b { translate: -20% 0; }
+  .caja { grid-template-columns: minmax(0, 1fr); }
+  .caja-dibujo { justify-self: start; }
+  .pedido { grid-template-columns: minmax(0, 1fr); }
+  .contraetiqueta { grid-template-columns: minmax(0, 1fr); }
+  .preguntas { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento: el timbre y la mano ----
+   El timbre baja, se asienta sin rebote y recién entonces aparece la
+   tinta. Los rótulos de cada sección se timbran igual al llegar, y sus
+   acotaciones se escriben de izquierda a derecha con una máscara que avanza;
+   la carta del apicultor se escribe renglón por renglón. El mapa se dibuja
+   a pulso. Una hebra de miel cuelga de la cuchara, se estira despacio y
+   vuelve, sin caer: la miel cruda es espesa. Al enviar el pedido, cae el
+   timbre de recibido. */
+[data-aparece] { --entrada: libar-aparece; --tramo: 34svh; --duracion: 1200ms; }
+.rotulo { --entrada: libar-timbra; }
+.acotacion, .carta p { --entrada: libar-escribe; }
+.mapa .trazo { --entrada: libar-traza; }
+@keyframes libar-aparece { from { opacity: 0; translate: 0 18px; } }
+@keyframes libar-timbra { 0% { opacity: 0; scale: 1.18; translate: 0 -10px; } 55% { opacity: 0.25; scale: 1; translate: 0 0; } }
+@keyframes libar-escribe { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; } to { -webkit-mask-position: 0 0; mask-position: 0 0; } }
+@keyframes libar-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes libar-hebra { from { scale: 1 0.82; } to { scale: 1 1.12; } }
+.mapa .trazo { stroke-dasharray: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .acotacion, .carta p { -webkit-mask: linear-gradient(90deg, #000 45%, transparent 55%) 0 0 / 220% 100% no-repeat; mask: linear-gradient(90deg, #000 45%, transparent 55%) 0 0 / 220% 100% no-repeat; }
+  .etiqueta { animation: libar-aparece 1200ms var(--curva) backwards; }
+  .etiqueta .timbre { animation: libar-timbra 1400ms var(--curva) 900ms backwards; }
+  .logo svg { animation: libar-timbra 1400ms var(--curva) 200ms backwards; }
+  .frasco, .indice { animation: libar-aparece 1400ms var(--curva) 300ms backwards; }
+  .indice { animation-delay: 600ms; }
+  .hebra { animation: libar-aparece 1600ms var(--curva) 1400ms backwards, libar-hebra 8s var(--curva) 1400ms infinite alternate; }
+  .recibido { transition: opacity 500ms var(--curva) 120ms, scale 700ms var(--curva), translate 700ms var(--curva); scale: 1.2; translate: 0 -12px; }
+  .pedido:has(.boceto-aviso:not(:empty)) .recibido { scale: 1; translate: 0 0; }
+}
+</style>
+</head>
+<body data-boceto="libar">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Libar</b> es una marca inventada por Volutus para mostrarte el estilo <b>Artesanal</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="tinta"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="ruido"/><feColorMatrix in="ruido" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.9" result="puntos"/><feComposite in="SourceGraphic" in2="puntos" operator="in"/></filter>
+  <symbol id="flecha" viewBox="0 0 46 30"><path d="M3 22C14 8 28 6 40 12M40 12L31 6M40 12L33 20"/></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg class="tinta timbre" viewBox="0 0 120 120" aria-hidden="true"><path id="arco-timbre-1" fill="none" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/><g fill="none" stroke="currentColor"><circle cx="60" cy="60" r="56" stroke-width="3"/><circle cx="60" cy="60" r="51" stroke-width="1"/><circle cx="60" cy="60" r="29" stroke-width="1.5"/></g><g fill="currentColor" font-family="Alegreya Sans, sans-serif" font-weight="700"><text font-size="11.5" letter-spacing="1.4"><textPath href="#arco-timbre-1">LIBAR · MIEL CRUDA · CURACAUTÍN ·</textPath></text><text x="60" y="54" text-anchor="middle" font-size="10" letter-spacing="3">LOTE</text><text x="60" y="78" text-anchor="middle" font-size="26">07</text></g></svg><b>LIBAR</b></a>
+  <p>Curacautín · Araucanía</p>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <nav class="indice mano" aria-label="En esta página">
+      <p>en esta página:</p>
+      <ul><li><a href="#origen">de dónde viene</a></li><li><a href="#mieles">las tres mieles</a></li><li><a href="#apicultor">el apicultor</a></li><li><a href="#pedir">pedir una caja</a></li></ul>
+      <svg aria-hidden="true"><use href="#flecha"/></svg>
+    </nav>
+    <div class="etiqueta-col">
+      <div class="etiqueta">
+        <p class="mano">miel cruda</p>
+        <h1 id="titulo">Libar</h1>
+        <p class="de">de ulmo, quillay y tiaca</p>
+        <dl><div><dt>Lote</dt><dd>07</dd></div><div><dt>Cosecha</dt><dd>Ene 2026</dd></div><div><dt>Peso</dt><dd>500 g</dd></div></dl>
+        <svg class="timbre tinta" viewBox="0 0 120 120" aria-hidden="true"><path id="arco-timbre-2" fill="none" d="M60 60m-41 0a41 41 0 1 1 82 0a41 41 0 1 1-82 0"/><g fill="none" stroke="currentColor"><circle cx="60" cy="60" r="56" stroke-width="3"/><circle cx="60" cy="60" r="51" stroke-width="1"/><circle cx="60" cy="60" r="29" stroke-width="1.5"/></g><g fill="currentColor" font-family="Alegreya Sans, sans-serif" font-weight="700"><text font-size="11.5" letter-spacing="1.4"><textPath href="#arco-timbre-2">LIBAR · MIEL CRUDA · CURACAUTÍN ·</textPath></text><text x="60" y="54" text-anchor="middle" font-size="10" letter-spacing="3">LOTE</text><text x="60" y="78" text-anchor="middle" font-size="26">07</text></g></svg>
+      </div>
+      <p>Miel de nuestras propias colmenas en la precordillera de la Araucanía. No la calentamos ni la filtramos fino: por eso cristaliza, y por eso sabe a la flor de donde salió.</p>
+      <a class="boton" href="#pedir">Pedir una caja</a>
+    </div>
+    <figure class="frasco">
+      <div class="cuchara">
+      <img src="/image/bocetos/libar/cuchara-760.webp" srcset="/image/bocetos/libar/cuchara-480.webp 480w, /image/bocetos/libar/cuchara-760.webp 760w" sizes="(min-width: 900px) 28vw, 70vw" width="760" height="950" alt="Un cucharón de madera para miel, del que cae un hilo de miel dorada sobre un fondo negro" fetchpriority="high">
+      <svg class="hebra" viewBox="0 0 16 92" aria-hidden="true"><path d="M6.6 0H9.4C9.2 30 8.9 58 9.6 74C12.4 76 14 79 14 82.5C14 87 11.3 90 8 90S2 87 2 82.5C2 79 3.6 76 6.4 74C7.1 58 6.8 30 6.6 0Z"/></svg>
+      </div>
+      <figcaption class="mano">cae despacio: está cruda</figcaption>
+    </figure>
+  </section>
+
+  <section class="seccion" id="origen" aria-labelledby="origen-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 class="rotulo tinta" id="origen-titulo" data-sigue>De dónde viene</h2>
+        <p class="acotacion mano" data-sigue><svg aria-hidden="true"><use href="#flecha"/></svg>tres colmenares, a media hora uno del otro</p>
+        <p>Movemos las colmenas detrás de la flor: primero la tiaca, en noviembre; después el quillay y, en enero, el ulmo de los bosques de Tolhuaca.</p>
+      </header>
+      <div class="origen">
+        <svg class="mapa" data-aparece viewBox="0 0 600 420" role="img" aria-label="Mapa dibujado a mano de los alrededores de Curacautín: el río Cautín cruza de este a oeste, el volcán Tolhuaca al norte, el Lonquimay al este y el Llaima al sur. Los colmenares Las Raíces, junto al pueblo, El Manzanar, al este, y Tolhuaca, al norte, van marcados con un hexágono.">
+          <path class="trazo rio" data-sigue pathLength="1" d="M590 300C530 290 500 250 450 240S380 270 330 262 270 210 220 222 140 290 80 300 20 280 10 284"/>
+          <path class="trazo ruta" data-sigue pathLength="1" d="M20 340C120 330 180 300 262 262S400 300 470 290 560 330 590 340"/>
+          <path class="trazo volcan" data-sigue pathLength="1" d="M340 80L372 30L404 80Z"/>
+          <path class="trazo volcan" data-sigue pathLength="1" d="M500 200L540 140L580 200Z"/>
+          <path class="trazo volcan" data-sigue pathLength="1" d="M110 400L150 340L190 400Z"/>
+          <path class="trazo" data-sigue pathLength="1" d="M362 44L372 30L382 44M530 154L540 140L550 154M140 354L150 340L160 354"/>
+          <circle cx="262" cy="248" r="5" fill="#3b2a1a"/>
+          <text x="214" y="200">Curacautín</text>
+          <text x="410" y="40">Tolhuaca</text>
+          <text x="484" y="226">Lonquimay</text>
+          <text x="196" y="392">Llaima</text>
+          <text x="40" y="276">río Cautín</text>
+          <text x="480" y="364">ruta 181</text>
+          <path class="celda c1" d="M273.3 254.5 262 261 250.7 254.5 250.7 241.5 262 235 273.3 241.5Z"/>
+          <path class="celda c2" d="M447.3 268.5 436 275 424.7 268.5 424.7 255.5 436 249 447.3 255.5Z"/>
+          <path class="celda c3" d="M383.3 124.5 372 131 360.7 124.5 360.7 111.5 372 105 383.3 111.5Z"/>
+          <text class="rotulo-c" x="226" y="290">LAS RAÍCES</text>
+          <text class="rotulo-c" x="404" y="300">EL MANZANAR</text>
+          <text class="rotulo-c" x="392" y="128">TOLHUACA</text>
+        </svg>
+        <form class="rastreo" data-consulta data-aparece style="--orden: 1" toolname="buscar_lote" toolautosubmit tooldescription="Busca un lote de la miel Libar, una marca inventada por Volutus como boceto de página, por el número que trae la etiqueta del frasco (05, 06, 07 u 08), y responde de qué colmenar es, cuándo se cosechó, de qué flor, su color en la escala Pfund y una nota del apicultor. No envía nada a nadie.">
+          <h3>Rastrea tu frasco</h3>
+          <fieldset toolparamdescription="El número de lote que trae la etiqueta del frasco: 05, 06, 07 u 08">
+            <legend>El número de lote está en la etiqueta, junto a la fecha.</legend>
+            <label class="lote-chip"><input type="radio" name="lote" value="05" id="lote-05">Lote<br>05</label>
+            <label class="lote-chip"><input type="radio" name="lote" value="06" id="lote-06">Lote<br>06</label>
+            <label class="lote-chip"><input type="radio" name="lote" value="07" id="lote-07" checked>Lote<br>07</label>
+            <label class="lote-chip"><input type="radio" name="lote" value="08" id="lote-08">Lote<br>08</label>
+          </fieldset>
+          <div class="ficha-lote l05" data-respuesta><dl><dt>Flor</dt><dd>Tiaca</dd><dt>Colmenar</dt><dd>Las Raíces, junto al pueblo</dd><dt>Cosecha</dt><dd>28 de noviembre de 2025</dd><dt>Color</dt><dd>85 mm Pfund, ámbar claro</dd></dl><p class="mano">"La tiaca florece primero y sale espesa, con gusto a caramelo."</p></div>
+          <div class="ficha-lote l06" data-respuesta><dl><dt>Flor</dt><dd>Quillay</dd><dt>Colmenar</dt><dd>El Manzanar, camino a Lonquimay</dd><dt>Cosecha</dt><dd>19 de diciembre de 2025</dd><dt>Color</dt><dd>50 mm Pfund, ámbar extra claro</dd></dl><p class="mano">"Suave y floral. Es la que más piden los niños."</p></div>
+          <div class="ficha-lote l07" data-respuesta><dl><dt>Flor</dt><dd>Ulmo</dd><dt>Colmenar</dt><dd>Tolhuaca, al borde del parque</dd><dt>Cosecha</dt><dd>14 de enero de 2026</dd><dt>Color</dt><dd>34 mm Pfund, ámbar extra claro</dd></dl><p class="mano">"Este año el ulmo floreció tarde y la miel salió clarita."</p></div>
+          <div class="ficha-lote l08" data-respuesta><dl><dt>Flor</dt><dd>Ulmo</dd><dt>Colmenar</dt><dd>Las Raíces, junto al pueblo</dd><dt>Cosecha</dt><dd>9 de febrero de 2026</dd><dt>Color</dt><dd>38 mm Pfund, ámbar extra claro</dd></dl><p class="mano">"La última del verano. Un poco más oscura, con un dejo a anís."</p></div>
+          <button class="boton" type="submit">Buscar el lote</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion cata-seccion" id="mieles" aria-labelledby="mieles-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 class="rotulo tinta" id="mieles-titulo" data-sigue>Las tres mieles</h2>
+        <p class="acotacion mano" data-sigue><svg aria-hidden="true"><use href="#flecha"/></svg>de la más clara a la más oscura</p>
+      </header>
+      <div class="pfund" data-aparece role="img" aria-label="Escala de color Pfund, de 0 milímetros, agua clara, a 114, ámbar oscuro. El ulmo marca 34, el quillay 50 y la tiaca 85.">
+        <span style="left: 0">0 mm · agua clara</span><span style="right: 0">114 mm · ámbar oscuro</span>
+        <i class="marca" style="--x: 29.8%"><b>ulmo</b></i>
+        <i class="marca" style="--x: 43.9%"><b>quillay</b></i>
+        <i class="marca" style="--x: 74.6%"><b>tiaca</b></i>
+      </div>
+      <ul class="mieles">
+        <li class="miel" data-aparece style="--color: #f1d98a">
+          <svg class="gota" viewBox="0 0 46 58" aria-hidden="true"><path d="M23 2C30 16 44 28 44 39A21 18 0 0 1 2 39C2 28 16 16 23 2Z"/></svg>
+          <h3>Ulmo</h3>
+          <dl><dt>Sabor</dt><dd>Floral, con un fondo a anís y vainilla.</dd><dt>Cristaliza</dt><dd>En dos meses, fino como mantequilla.</dd><dt>Cosecha</dt><dd>Enero y febrero</dd><dt>500 g</dt><dd>$11.900</dd></dl>
+          <p class="mano">la del té con limón</p>
+        </li>
+        <li class="miel" data-aparece style="--orden: 1; --color: #e8bf5c">
+          <svg class="gota" viewBox="0 0 46 58" aria-hidden="true"><path d="M23 2C30 16 44 28 44 39A21 18 0 0 1 2 39C2 28 16 16 23 2Z"/></svg>
+          <h3>Quillay</h3>
+          <dl><dt>Sabor</dt><dd>Suave, dulce, apenas cítrico.</dd><dt>Cristaliza</dt><dd>En tres semanas, de grano grueso.</dd><dt>Cosecha</dt><dd>Diciembre</dd><dt>500 g</dt><dd>$9.900</dd></dl>
+          <p class="mano">la del pan tostado</p>
+        </li>
+        <li class="miel" data-aparece style="--orden: 2; --color: #b06d1b">
+          <svg class="gota" viewBox="0 0 46 58" aria-hidden="true"><path d="M23 2C30 16 44 28 44 39A21 18 0 0 1 2 39C2 28 16 16 23 2Z"/></svg>
+          <h3>Tiaca</h3>
+          <dl><dt>Sabor</dt><dd>Intenso, a caramelo y madera.</dd><dt>Cristaliza</dt><dd>Lento: puede pasar un año líquida.</dd><dt>Cosecha</dt><dd>Noviembre</dd><dt>500 g</dt><dd>$10.900</dd></dl>
+          <p class="mano">la del queso de cabra</p>
+        </li>
+      </ul>
+      <div class="preguntas">
+        <figure data-aparece><img src="/image/bocetos/libar/flor-700.webp" srcset="/image/bocetos/libar/flor-440.webp 440w, /image/bocetos/libar/flor-700.webp 700w" sizes="(min-width: 900px) 24vw, 60vw" width="700" height="700" loading="lazy" alt="Una abeja se posa en una flor blanca de muchos pétalos finos, sobre un fondo verde"><figcaption class="mano">la flor del ulmo, en enero</figcaption></figure>
+        <div data-aparece style="--orden: 1"><h3>¿Por qué se puso dura?</h3><p>Porque es cruda. Toda miel sin calentar cristaliza con el tiempo; no está mala ni tiene azúcar agregada. Si la quieres líquida, pon el frasco en agua tibia, nunca en el microondas.</p></div>
+        <div data-aparece style="--orden: 2"><h3>¿Por qué no la filtran fino?</h3><p>Porque el filtro fino le quita el polen, que es lo que dice de qué flor viene. Le pasamos solo un colador de tela, para sacar la cera.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="apicultor" aria-labelledby="apicultor-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 class="rotulo tinta" id="apicultor-titulo" data-sigue>El apicultor</h2>
+      </header>
+      <div class="apicultor">
+        <figure data-aparece><img src="/image/bocetos/libar/apicultor-760.webp" srcset="/image/bocetos/libar/apicultor-480.webp 480w, /image/bocetos/libar/apicultor-760.webp 760w" sizes="(min-width: 900px) 40vw, 90vw" width="760" height="950" loading="lazy" alt="Un apicultor con traje blanco y velo revisa una colmena de madera entre árboles"></figure>
+        <div class="carta" data-aparece style="--orden: 1">
+          <p data-sigue>Mi abuelo tenía doce cajones detrás de la casa.</p>
+          <p data-sigue style="--orden: 1">Yo tengo ciento ochenta, repartidos en tres campos,</p>
+          <p data-sigue style="--orden: 2">y sigo abriéndolos uno por uno, con humo y sin apuro.</p>
+          <p data-sigue style="--orden: 3">Si un año la flor no da, no hay miel. No la compramos afuera.</p>
+          <p class="firma" data-sigue style="--orden: 4">Tomás Huenchullán</p>
+        </div>
+        <figure class="colmenas" data-aparece style="--orden: 2"><img src="/image/bocetos/libar/colmenas-1000.webp" srcset="/image/bocetos/libar/colmenas-700.webp 700w, /image/bocetos/libar/colmenas-1000.webp 1000w" sizes="(min-width: 900px) 46vw, 90vw" width="1000" height="563" loading="lazy" alt="Una hilera de colmenas de madera en un claro, con árboles altos detrás"><figcaption class="mano">El Manzanar, en diciembre</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion cata-seccion" id="pedir" aria-labelledby="pedir-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <h2 class="rotulo tinta" id="pedir-titulo" data-sigue>Cómo pedir</h2>
+        <p class="acotacion mano" data-sigue><svg aria-hidden="true"><use href="#flecha"/></svg>despacho por pagar a todo Chile</p>
+      </header>
+      <ul class="cajas">
+        <li class="caja" data-aparece><div class="caja-dibujo" style="--cols: 3" aria-hidden="true"><i></i><i></i><i></i></div><div><h3>Caja de tres</h3><p>Una de cada miel, para probarlas todas.</p><p class="precio">$29.900</p></div></li>
+        <li class="caja" data-aparece style="--orden: 1"><div class="caja-dibujo" style="--cols: 3" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div><h3>Caja de seis</h3><p>Las que tú elijas. La más pedida es dos de cada una.</p><p class="precio">$54.900</p></div></li>
+      </ul>
+      <div class="pedido-envoltura">
+        <div data-aparece>
+          <p>Despachamos los martes, envuelto en papel y cartón, sin plástico. En Curacautín y Victoria lo llevamos nosotros.</p>
+          <p class="mano" style="font-size: 28px; margin-top: 18px; color: var(--ulmo)">Y si te llega un frasco quebrado, te mandamos otro.</p>
+        </div>
+        <form class="pedido" data-muestra data-aparece style="--orden: 1" toolname="pedir_miel" tooldescription="Pide una caja de miel cruda Libar (de tres o de seis frascos, de ulmo, quillay o tiaca) con despacho en Chile: quién pide, su correo, su comuna, la caja y una nota. Libar es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+          <h3>Hoja de pedido</h3>
+          <label>Nombre<input name="nombre" autocomplete="name" required></label>
+          <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+          <label class="todo">Comuna<input name="comuna" autocomplete="address-level2" required toolparamdescription="La comuna de Chile donde se despacha"></label>
+          <fieldset toolparamdescription="La caja: tres (una de cada miel) o seis (las que elija)">
+            <legend>Caja</legend>
+            <label class="opcion"><input type="radio" name="caja" value="tres" checked>De tres · $29.900</label>
+            <label class="opcion"><input type="radio" name="caja" value="seis">De seis · $54.900</label>
+          </fieldset>
+          <label class="todo">¿Qué mieles van en la de seis?<textarea name="nota" maxlength="300" toolparamdescription="Para la caja de seis, cuántos frascos de cada miel (ulmo, quillay, tiaca); o una nota para el despacho"></textarea></label>
+          <button class="boton" type="submit">Enviar el pedido</button>
+          <p class="boceto-aviso"></p>
+          <svg class="recibido tinta" viewBox="0 0 150 70" aria-hidden="true"><rect x="3" y="3" width="144" height="64" rx="6" fill="none" stroke="currentColor" stroke-width="4"/><text x="75" y="33" text-anchor="middle" style="font: 700 22px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.16em" fill="currentColor">BOCETO</text><text x="75" y="54" text-anchor="middle" style="font: 700 11px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.14em" fill="currentColor">NO SE ENVIÓ NADA</text></svg>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho">
+    <div class="contraetiqueta">
+      <div><h2>Libar · miel cruda</h2><p>Ingredientes: 100 % miel de abeja, sin calentar. No dar a menores de un año. Consumir preferentemente antes de enero de 2028. Guardar en un lugar fresco y oscuro.</p></div>
+      <div><h2>Elaborado por</h2><p>Libar, camino a Malalcahuello km 4, Curacautín, Región de La Araucanía. hola@mielibar.cl</p></div>
+      <p class="barras" aria-hidden="true">7 800000 000007</p>
+    </div>
+    <p class="pie-final">Boceto de Volutus · marca inventada</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -51,6 +51,11 @@ const HUELLA = (
   </>
 )
 
+// El abanico de Bar Marfil (art déco) y el acento de Prensa Tilde
+// (letterpress): los mismos de sus bocetos, en el arte y en el sello.
+const ABANICO = 'M18 20L2 14.5A16 16 0 0 1 4.6 9zM18 20L5.4 7.9A16 16 0 0 1 9.4 4.4zM18 20L10.6 3.7A16 16 0 0 1 15.6 2.2zM18 20L17 2h2zM18 20L20.4 2.2A16 16 0 0 1 25.4 3.7zM18 20L26.6 4.4A16 16 0 0 1 30.6 7.9zM18 20L31.4 9A16 16 0 0 1 34 14.5z'
+const ACENTO = 'M2 15L9 1H15L5 15Z'
+
 // El arte de cada estilo y su marca de elegido. Todo es decorado: la tarjeta
 // se llama por la leyenda de su estilo.
 const ESTILOS = {
@@ -217,11 +222,23 @@ const ESTILOS = {
   ],
   futurista: [<span className="vidrio">NEXT/26</span>, <span />],
   artesanal: [
-    <span className="etiqueta">
-      <b>Hecho a mano</b>
-      <small>Lote 014 · Valdivia</small>
-    </span>,
-    <span>Sí</span>,
+    <>
+      <span className="etiqueta">
+        <i>miel cruda</i>
+        <b>LIBAR</b>
+        <small>Lote 07 · Curacautín</small>
+      </span>
+      <svg className="timbre" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="27" />
+        <circle className="fino" cx="30" cy="30" r="23" />
+        <circle cx="30" cy="30" r="13" />
+        <text x="30" y="35">07</text>
+      </svg>
+    </>,
+    <svg viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="12.5" />
+      <circle cx="15" cy="15" r="6" />
+    </svg>,
   ],
   zen: [
     <>
@@ -237,23 +254,28 @@ const ESTILOS = {
   ],
   industrial: [
     <>
-      <span className="rot">
-        TALLER
-        <br />
-        Nº 9
+      <span className="adentro" />
+      <span className="cortina">
+        <b>REMACHE</b>
       </span>
-      <span className="cinta" />
-      <span className="remache r1" />
-      <span className="remache r2" />
+      {['r1', 'r2', 'r3', 'r4'].map((esquina) => (
+        <span key={esquina} className={`remache ${esquina}`} />
+      ))}
     </>,
-    <span>OK</span>,
+    <span />,
   ],
   artdeco: [
     <>
-      <span className="abanico" />
-      <span className="rot">MIRADOR</span>
+      <svg className="abanico" viewBox="0 0 300 150" preserveAspectRatio="xMidYMax meet">
+        <path className="izq" d="M125.3 150L7.3 111.6M127.5 145L20.1 83M130.7 140.6L38.5 57.6M134.7 137L61.8 36.6M139.4 134.2L89 21M144.6 132.6L118.8 11.3" />
+        <path d="M150 132V8" />
+        <path className="der" d="M155.4 132.6L181.2 11.3M160.6 134.2L211 21M165.3 137L238.2 36.6M169.3 140.6L261.5 57.6M172.5 145L279.9 83M174.7 150L292.7 111.6" />
+      </svg>
+      <span className="rot">MARFIL</span>
     </>,
-    <span />,
+    <svg viewBox="0 0 36 20">
+      <path d={ABANICO} />
+    </svg>,
   ],
   bauhaus: [
     <>
@@ -284,25 +306,54 @@ const ESTILOS = {
   ],
   andino: [
     <>
-      <span className="greca" />
-      <span className="rot">Telar</span>
-      <span className="greca g2" />
+      <span className="franja">
+        {[1, 2, 3, 4, 5].map((fila) => (
+          <i key={fila} />
+        ))}
+      </span>
+      <span className="rot">
+        <svg viewBox="0 0 30 40">
+          <path d="M14 18l7 7-7 7-7-7zM19 4l4 4-4 4-4-4z" />
+          <path className="cuello" d="M19 22C24 18 23 13 19 11M14 32v7" />
+        </svg>
+        Parina
+      </span>
+      <span className="franja f2">
+        {[1, 2, 3, 4, 5].map((fila) => (
+          <i key={fila} />
+        ))}
+      </span>
     </>,
     <span />,
   ],
   letterpress: [
     <>
-      <span className="rot">Valdés</span>
-      <small>Impreso a mano</small>
+      {['c1', 'c2', 'c3', 'c4'].map((esquina) => (
+        <i key={esquina} className={`corte ${esquina}`} />
+      ))}
+      <span className="rot">
+        Tilde
+        <svg viewBox="0 0 16 16">
+          <path d={ACENTO} />
+        </svg>
+      </span>
+      <small>Prensa · tipos móviles</small>
     </>,
-    <span>✓</span>,
+    <svg viewBox="0 0 16 16">
+      <path d={ACENTO} />
+    </svg>,
   ],
   collage: [
     <>
-      <b className="r1">SIN</b>
-      <b className="r2">permiso</b>
-      <b className="r3">RUIDO</b>
+      <span className="rescate">
+        {['R', 'A', 'M', 'P', 'A'].map((letra, orden) => (
+          <b key={orden} className={`v${orden}`}>
+            {letra}
+          </b>
+        ))}
+      </span>
       <span className="cinta" />
+      <span className="lema">caerse es la primera clase</span>
     </>,
     <span />,
   ],

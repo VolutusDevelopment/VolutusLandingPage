@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Parina · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Parina, lodge de ocho habitaciones y caminatas por el altiplano en Putre, para mostrar el estilo Andino o folclórico.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/alegreya.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/parina/portada-800.webp" imagesrcset="/image/bocetos/parina/portada-600.webp 600w, /image/bocetos/parina/portada-800.webp 800w" imagesizes="(min-width: 900px) 40vw, 86vw" fetchpriority="high">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Parina · andino. Inspiración: Explora (explora.com). Se toma: 1) el
+   paisaje como protagonista, visto grande y quieto; 2) las rutas contadas
+   con su altura, sus horas y su dificultad, y lo que incluye la estadía
+   dicho sin rodeos; 3) un ritmo sin prisa, con mucho aire. La idea propia:
+   el tejido. La página se teje mientras bajas: entre sección y sección, una
+   franja de grecas se teje fila por fila, y cada fila va en sentido
+   contrario a la anterior, como la lanzadera del telar. Los colores salen
+   del paisaje de la portada (el lago, el bofedal, la puna, la tierra) y el
+   pie es el aguayo entero, con todas las franjas que se cruzaron al bajar.
+   La reserva también se teje: cada dato que completas es una fila más. */
+@font-face { font-family: 'Alegreya'; src: url('/fonts/bocetos/alegreya.woff2') format('woff2'); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Alegreya Sans'; src: url('/fonts/bocetos/alegreya-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  --tierra: #b5442b;
+  --ocre: #d99b3c;
+  --bofedal: #5b7a4a;
+  --lago: #2f5d8a;
+  --lana: #f3e7d3;
+  --lana-2: #e9d8bb;
+  --negro: #1a1512;
+  --gris: #5e5246;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.65, 0, 0.35, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--lana); scroll-behavior: smooth; }
+body { margin: 0; background: var(--lana); color: var(--negro); font: 400 19px/1.6 'Alegreya Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+main { overflow-x: clip; }
+:focus-visible { outline: 3px solid var(--lago); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Alegreya', Georgia, serif; font-weight: 700; line-height: 1.02; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 28px; border: 0; border-radius: 2px; background: var(--tierra); color: #fff8ec; font: 700 18px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.16); transition: background-color 400ms var(--curva); }
+.boton:hover { background: #9c3822; }
+.enlace { font-weight: 700; text-decoration-thickness: 2px; text-underline-offset: 6px; text-decoration-color: var(--ocre); }
+
+/* ---- Las franjas: siete filas, cada una con su greca ----
+   Los colores van por franja (--c1 a --c5); las filas son siempre las mismas:
+   borde, dientes, hilo, rombos, hilo, dientes al revés, borde. */
+.franja { display: grid; width: 100%; }
+.fila { display: block; height: 6px; }
+.fila:nth-child(1), .fila:nth-child(7) { height: 8px; background: var(--c1); }
+.fila:nth-child(2) { height: 14px; background: conic-gradient(from -45deg at 50% 100%, var(--c2) 90deg, var(--c3) 0) 0 0 / 14px 14px; }
+.fila:nth-child(6) { height: 14px; background: conic-gradient(from 135deg at 50% 0, var(--c2) 90deg, var(--c3) 0) 0 0 / 14px 14px; }
+.fila:nth-child(3), .fila:nth-child(5) { height: 4px; background: var(--lana); }
+.fila:nth-child(4) { height: 28px; background: radial-gradient(circle, var(--c2) 2.5px, transparent 3.2px) 0 0 / 28px 28px, linear-gradient(45deg, var(--c5) 25%, transparent 25% 75%, var(--c5) 75%) 0 0 / 28px 28px, linear-gradient(-45deg, var(--c5) 25%, transparent 25% 75%, var(--c5) 75%) 0 0 / 28px 28px, var(--c4); }
+.zigzag .fila:nth-child(4) { background: linear-gradient(135deg, var(--c4) 25%, transparent 25%) -14px 0 / 28px 28px, linear-gradient(225deg, var(--c4) 25%, transparent 25%) -14px 0 / 28px 28px, linear-gradient(315deg, var(--c4) 25%, transparent 25%) 0 0 / 28px 28px, linear-gradient(45deg, var(--c4) 25%, transparent 25%) 0 0 / 28px 28px, var(--c5); }
+.f-lago { --c1: var(--lago); --c2: var(--ocre); --c3: var(--negro); --c4: var(--tierra); --c5: var(--lana-2); }
+.f-bofedal { --c1: var(--bofedal); --c2: var(--lana); --c3: var(--tierra); --c4: var(--lago); --c5: var(--ocre); }
+.f-puna { --c1: var(--ocre); --c2: var(--tierra); --c3: var(--lana-2); --c4: var(--negro); --c5: var(--bofedal); }
+.f-tierra { --c1: var(--tierra); --c2: var(--ocre); --c3: var(--lago); --c4: var(--bofedal); --c5: var(--lana-2); }
+.f-noche { --c1: var(--negro); --c2: var(--ocre); --c3: var(--tierra); --c4: var(--lana-2); --c5: var(--lago); }
+
+/* ---- Cabecera: el logo y el menú tejido en su franja ---- */
+.cabecera-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 22px 18px; }
+.logo { display: inline-flex; align-items: center; gap: 12px; font: 800 30px/1 'Alegreya', serif; text-decoration: none; }
+.logo svg { width: 30px; height: 40px; }
+.altitud { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 15px; color: var(--gris); }
+.menu-tejido { padding-block: 10px; background: conic-gradient(from -45deg at 50% 100%, var(--lago) 90deg, var(--negro) 0) 0 0 / 14px 14px, var(--negro); }
+.menu-tejido ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.menu-tejido a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; background: var(--lana); font-weight: 700; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; font-size: 15px; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.menu-tejido a:hover { background: var(--ocre); }
+
+/* ---- Portada: el paisaje por una ventana escalonada y sus madejas ---- */
+.portada { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 6vw, 96px); align-items: center; padding-block: clamp(48px, 7vw, 96px) clamp(64px, 8vw, 110px); }
+.ventana img { width: 100%; aspect-ratio: 1; object-fit: cover; clip-path: polygon(50% 0, 60% 0, 60% 10%, 70% 10%, 70% 20%, 80% 20%, 80% 30%, 90% 30%, 90% 40%, 100% 40%, 100% 60%, 90% 60%, 90% 70%, 80% 70%, 80% 80%, 70% 80%, 70% 90%, 60% 90%, 60% 100%, 40% 100%, 40% 90%, 30% 90%, 30% 80%, 20% 80%, 20% 70%, 10% 70%, 10% 60%, 0 60%, 0 40%, 10% 40%, 10% 30%, 20% 30%, 20% 20%, 30% 20%, 30% 10%, 40% 10%, 40% 0); }
+.ventana figcaption { margin-top: 12px; font-size: 15px; color: var(--gris); text-align: center; }
+.portada-texto { display: grid; gap: 22px; justify-items: start; }
+.portada h1 { font-size: clamp(76px, 10vw, 140px); font-weight: 800; line-height: 0.9; letter-spacing: -0.01em; }
+.portada h1 small { display: block; margin-top: 10px; font: 700 15px/1.3 'Alegreya Sans', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tierra); }
+.portada .bajada { max-width: 34ch; font-size: 21px; }
+.madejas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; width: 100%; margin: 6px 0 0; padding: 0; list-style: none; }
+.madeja { display: grid; gap: 8px; justify-items: center; font-size: 14px; line-height: 1.25; text-align: center; }
+.madeja::before { content: ''; width: 100%; max-width: 74px; aspect-ratio: 2 / 1; border-radius: 999px; background: linear-gradient(90deg, transparent 44%, rgb(0 0 0 / 0.28) 44% 56%, transparent 56%), repeating-linear-gradient(65deg, var(--color) 0 3px, color-mix(in srgb, var(--color), #000 22%) 3px 5px); box-shadow: inset 0 -4px 6px rgb(0 0 0 / 0.18); }
+.madeja b { display: block; font-weight: 700; }
+.madeja span { color: var(--gris); font-variant-numeric: tabular-nums; }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+
+/* ---- Títulos con la altura del lugar ---- */
+.cabeza { display: grid; gap: 10px; max-width: 46rem; margin-bottom: clamp(44px, 6vw, 72px); }
+.altura { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 16px; color: var(--tierra); }
+.altura::before { content: ''; width: 18px; height: 12px; background: currentColor; clip-path: polygon(0 100%, 35% 30%, 50% 55%, 70% 0, 100% 100%); }
+.cabeza h2 { font-size: clamp(46px, 5.6vw, 80px); }
+.cabeza > p:last-child { max-width: 44ch; color: var(--gris); font-size: 20px; }
+
+/* ---- El lodge ---- */
+.lodge { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.lodge img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.lodge figcaption { margin-top: 12px; font-size: 15px; color: var(--gris); }
+.incluye { display: grid; gap: 0; margin: 20px 0 0; padding: 0; list-style: none; }
+.incluye li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding-block: 14px; border-bottom: 2px dotted rgb(26 21 18 / 0.25); }
+.incluye li::before { content: ''; width: 14px; height: 14px; margin-top: 6px; background: var(--c, var(--tierra)); rotate: 45deg; }
+.incluye li:nth-child(2) { --c: var(--lago); }
+.incluye li:nth-child(3) { --c: var(--bofedal); }
+.incluye li:nth-child(4) { --c: var(--ocre); }
+.precio-noche { margin-top: 24px; font: 700 26px/1.2 'Alegreya', serif; }
+.precio-noche small { display: block; font: 400 16px/1.4 'Alegreya Sans', sans-serif; color: var(--gris); }
+
+/* ---- Las caminatas: el selector y el perfil de altura ---- */
+.caminatas-seccion { background: var(--lana-2); }
+.elige { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 32px; padding: 0; border: 0; }
+.elige input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.elige label { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border: 2px solid var(--negro); font-weight: 700; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.elige label::before { content: ''; width: 10px; height: 10px; border: 2px solid currentColor; rotate: 45deg; }
+.elige label:hover { background: var(--lana); }
+.elige input:checked + label { background: var(--negro); color: var(--lana); }
+.elige input:checked + label::before { background: var(--ocre); border-color: var(--ocre); }
+.elige input:focus-visible + label { outline: 3px solid var(--lago); outline-offset: 3px; }
+.ruta { display: none; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px clamp(32px, 5vw, 72px); align-items: start; }
+.caminatas:has(#r-chungara:checked) .ruta.chungara, .caminatas:has(#r-parinacota:checked) .ruta.parinacota, .caminatas:has(#r-surire:checked) .ruta.surire, .caminatas:has(#r-choquelimpie:checked) .ruta.choquelimpie { display: grid; }
+.ruta img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.ruta h3 { font-size: clamp(36px, 4vw, 54px); }
+.ruta-datos { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 6px 32px; margin: 18px 0; }
+.ruta-datos dt { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gris); }
+.ruta-datos dd { margin: 0; font: 700 24px/1.2 'Alegreya', serif; font-variant-numeric: tabular-nums; }
+.ruta-datos dd i { display: inline-block; width: 11px; height: 11px; margin-right: 5px; background: var(--tierra); rotate: 45deg; }
+.ruta-datos dd i.no { background: none; border: 2px solid var(--tierra); }
+.ruta > div > p { color: var(--gris); }
+.perfil { width: 100%; height: auto; margin-top: 24px; overflow: visible; }
+.perfil .suelo { fill: rgb(91 122 74 / 0.18); }
+.perfil .linea { fill: none; stroke: var(--tierra); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.perfil .putre { stroke: var(--gris); stroke-width: 1; stroke-dasharray: 4 5; }
+.perfil text { font: 700 13px/1 'Alegreya Sans', sans-serif; fill: var(--gris); letter-spacing: 0.06em; }
+.perfil .cima { fill: var(--tierra); }
+
+/* ---- La aclimatación: andenes ---- */
+.andenes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(12px, 2vw, 24px); align-items: end; margin: 0; padding: 0; list-style: none; }
+.anden { display: grid; grid-template-rows: auto auto; gap: 16px; }
+.anden-bloque { display: grid; align-content: start; height: calc((var(--h) - 3000) * 0.2px + 56px); padding: 12px 14px; color: var(--lana); background: var(--c); transform-origin: bottom; }
+.anden-bloque b { font: 800 clamp(24px, 2.6vw, 34px)/1 'Alegreya', serif; font-variant-numeric: tabular-nums; }
+.anden-bloque span { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.anden h3 { font-size: 24px; }
+.anden p { font-size: 17px; color: var(--gris); }
+.puna { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: start; max-width: 52rem; margin-top: clamp(48px, 6vw, 72px); padding: 24px 28px; border-left: 6px solid var(--ocre); background: var(--lana-2); }
+.puna b { font: 700 22px/1.2 'Alegreya', serif; }
+
+/* ---- Las tejedoras ---- */
+.tejedoras { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+.tejedoras figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.tejedoras .f2 { margin-top: clamp(48px, 8vw, 110px); }
+.tejedoras figcaption { margin-top: 10px; font-size: 15px; color: var(--gris); }
+.nombres { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
+.nombres li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; }
+.nombres li::before { content: ''; width: 40px; height: 40px; border-radius: 50%; background: repeating-linear-gradient(65deg, var(--c) 0 3px, color-mix(in srgb, var(--c), #000 25%) 3px 5px); }
+.nombres h3 { font-size: 24px; }
+.nombres p { font-size: 17px; color: var(--gris); }
+.nombres .nota { grid-template-columns: minmax(0, 1fr); padding-top: 18px; border-top: 2px dotted rgb(26 21 18 / 0.25); font-weight: 700; }
+.nombres .nota::before { display: none; }
+
+/* ---- Reservar: el formulario que se teje ---- */
+.reservar { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.reserva { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+.reserva label, .reserva legend { display: grid; gap: 6px; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
+.reserva input:not([type="checkbox"]), .reserva textarea { width: 100%; min-height: 50px; padding: 10px 14px; border: 2px solid var(--negro); border-radius: 2px; background: #fffaf1; color: var(--negro); font: 400 18px/1.4 'Alegreya Sans', sans-serif; letter-spacing: 0; text-transform: none; }
+.reserva textarea { min-height: 96px; resize: vertical; }
+.reserva input:focus-visible, .reserva textarea:focus-visible { outline: 3px solid var(--lago); outline-offset: 1px; }
+.reserva .todo { grid-column: 1 / -1; }
+.reserva fieldset { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.reserva legend { margin-bottom: 8px; padding: 0; }
+.reserva .marca-ruta { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px; border: 2px solid var(--negro); font: 700 17px/1 'Alegreya Sans', sans-serif; letter-spacing: 0; text-transform: none; color: var(--negro); cursor: pointer; transition: background-color 400ms var(--curva); }
+.marca-ruta input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.marca-ruta span { width: 14px; height: 14px; border: 2px solid currentColor; rotate: 45deg; transition: background-color 400ms var(--curva); }
+.marca-ruta:has(input:checked) { background: var(--negro); color: var(--lana); }
+.marca-ruta:has(input:checked) span { background: var(--ocre); border-color: var(--ocre); }
+.marca-ruta:has(input:focus-visible) { outline: 3px solid var(--lago); outline-offset: 3px; }
+.reserva .boton { grid-column: 1 / -1; justify-self: start; }
+.reserva .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--tierra); font-weight: 700; }
+.telar { position: sticky; top: 24px; display: grid; gap: 14px; padding: 22px; border: 2px solid var(--negro); background: #fffaf1; }
+.telar h3 { font-size: 24px; }
+.telar p { font-size: 16px; color: var(--gris); }
+.tejido { display: grid; gap: 0; padding: 10px 0; border-inline: 6px solid #8a6a46; }
+.tejido .fila { height: 20px; clip-path: inset(0 100% 0 0); transition: clip-path 1200ms var(--curva); }
+.tejido .fila:nth-child(even) { clip-path: inset(0 0 0 100%); }
+.tejido .fila:nth-child(n) { height: 20px; }
+.tejido .fila:nth-child(1), .tejido .fila:nth-child(6) { height: 12px; }
+.reservar:has([name="nombre"]:valid) .tejido .fila:nth-child(1),
+.reservar:has([name="correo"]:valid) .tejido .fila:nth-child(2),
+.reservar:has([name="llegada"]:valid) .tejido .fila:nth-child(3),
+.reservar:has([name="salida"]:valid) .tejido .fila:nth-child(4),
+.reservar:has([name="personas"]:valid) .tejido .fila:nth-child(5),
+.reservar:has([name="rutas"]:checked) .tejido .fila:nth-child(6) { clip-path: inset(0); }
+.tejido .fila:nth-child(3), .tejido .fila:nth-child(5) { background: radial-gradient(circle, var(--c2) 2.5px, transparent 3.2px) 0 0 / 20px 20px, linear-gradient(45deg, var(--c5) 25%, transparent 25% 75%, var(--c5) 75%) 0 0 / 20px 20px, linear-gradient(-45deg, var(--c5) 25%, transparent 25% 75%, var(--c5) 75%) 0 0 / 20px 20px, var(--c4); }
+.tejido .fila:nth-child(4) { background: var(--c1); }
+
+/* ---- Pie: el aguayo entero ---- */
+.pie { display: grid; }
+.pampa { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 28px clamp(32px, 5vw, 72px); align-items: start; padding-block: clamp(48px, 6vw, 72px); }
+.pampa .logo { color: var(--negro); }
+.pampa h2 { font: 700 14px/1 'Alegreya Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tierra); }
+.pampa p { margin-top: 8px; font-size: 17px; }
+.pie-final { padding-block: 18px 26px; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada, .lodge, .ruta, .reservar { grid-template-columns: minmax(0, 1fr); }
+  .ventana { width: min(100%, 32rem); justify-self: center; }
+  .andenes { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+  .tejedoras { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .tejedoras .nombres { grid-column: 1 / -1; }
+  .telar { position: static; }
+  .pampa { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .pampa .logo { grid-column: 1 / -1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .menu-tejido a { padding: 0 12px; font-size: 14px; }
+  .madejas { gap: 8px; }
+  .madeja { font-size: 13px; }
+  .reserva { grid-template-columns: minmax(0, 1fr); }
+  .ruta-datos { gap: 6px 20px; }
+  .ruta-datos dd { font-size: 20px; }
+  .andenes { grid-template-columns: minmax(0, 1fr); }
+  .anden-bloque { height: calc((var(--h) - 3000) * 0.06px + 56px); }
+  .tejedoras { grid-template-columns: minmax(0, 1fr); }
+  .tejedoras .f2 { margin-top: 0; }
+  .puna { grid-template-columns: minmax(0, 1fr); }
+  .pampa { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento: el telar ----
+   Cada franja se teje con el scroll: sus siete filas se descubren una tras
+   otra, cada una en sentido contrario a la anterior, como la lanzadera que
+   va y vuelve. La ventana de la portada se abre desde el centro y las
+   madejas llegan una a una. El perfil de la ruta elegida se dibuja de
+   izquierda a derecha, como se camina. Los andenes de la aclimatación suben
+   de a uno. En la reserva, cada dato completo teje una fila. */
+[data-aparece] { --entrada: parina-aparece; --tramo: 34svh; --duracion: 1200ms; }
+.franja { --entrada: none; --tramo: 14svh; }
+.franja .fila { --entrada: parina-teje; --duracion: 900ms; }
+.franja .fila:nth-child(even) { --entrada: parina-vuelve; }
+.franja .fila:nth-child(2) { --orden: 1; } .franja .fila:nth-child(3) { --orden: 2; } .franja .fila:nth-child(4) { --orden: 3; } .franja .fila:nth-child(5) { --orden: 4; } .franja .fila:nth-child(6) { --orden: 5; } .franja .fila:nth-child(7) { --orden: 6; }
+.anden-bloque { --entrada: parina-sube; }
+@keyframes parina-aparece { from { opacity: 0; translate: 0 20px; } }
+@keyframes parina-teje { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes parina-vuelve { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+@keyframes parina-sube { from { scale: 1 0; } }
+@keyframes parina-ventana { from { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); } }
+@keyframes parina-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes parina-funde { from { opacity: 0; } }
+.perfil .linea { stroke-dasharray: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .tejido .fila { transition: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ventana img { animation: parina-ventana 1600ms var(--curva) 200ms backwards; }
+  .portada-texto > * { animation: parina-aparece 1200ms var(--curva) backwards; }
+  .portada-texto > :nth-child(2) { animation-delay: 120ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 240ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 360ms; }
+  .madeja { animation: parina-aparece 1200ms var(--curva) calc(500ms + var(--i) * 140ms) backwards; }
+  .menu-tejido li { animation: parina-funde 1200ms var(--curva) calc(var(--i) * 100ms) backwards; }
+  .ruta .linea { animation: parina-traza 1800ms var(--curva) 200ms backwards; }
+  .ruta .suelo, .ruta .cima, .ruta .marca-cima { animation: parina-funde 1200ms var(--curva) 1200ms backwards; }
+}
+</style>
+</head>
+<body data-boceto="parina">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Parina</b> es una marca inventada por Volutus para mostrarte el estilo <b>Andino / folclórico</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flamenco" viewBox="0 0 30 40"><path fill="#d9677a" d="M14 18l7 7-7 7-7-7z"/><path fill="none" stroke="#d9677a" stroke-width="2.4" stroke-linecap="round" d="M19 22C24 18 23 13 19 11"/><path fill="#d9677a" d="M19 4l4 4-4 4-4-4z"/><path fill="#1a1512" d="M22 7l6 2-4 2z"/><path fill="none" stroke="#1a1512" stroke-width="1.6" stroke-linecap="round" d="M14 32v7M14 34l-3 2"/></symbol>
+</svg>
+
+<header>
+  <div class="ancho cabecera-fila">
+    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg>Parina</a>
+    <p class="altitud">Putre · 3.500 m sobre el mar</p>
+  </div>
+  <nav class="menu-tejido" aria-label="Secciones"><ul><li style="--i: 0"><a href="#lodge">El lodge</a></li><li style="--i: 1"><a href="#caminatas">Caminatas</a></li><li style="--i: 2"><a href="#altura">La altura</a></li><li style="--i: 3"><a href="#tejedoras">Tejedoras</a></li><li style="--i: 4"><a href="#reservar">Reservar</a></li></ul></nav>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <figure class="ventana">
+      <img src="/image/bocetos/parina/portada-800.webp" srcset="/image/bocetos/parina/portada-600.webp 600w, /image/bocetos/parina/portada-800.webp 800w" sizes="(min-width: 900px) 40vw, 86vw" width="800" height="800" alt="El volcán Parinacota con la cumbre nevada sobre un bofedal dorado y un cielo azul intenso" fetchpriority="high">
+      <figcaption>El Parinacota desde el bofedal, a media hora del lodge.</figcaption>
+    </figure>
+    <div class="portada-texto">
+      <h1 id="titulo">Parina<small>Lodge y caminatas en el altiplano</small></h1>
+      <p class="bajada">Ocho habitaciones de piedra en Putre y caminatas con guías del pueblo, al ritmo que pide la altura.</p>
+      <ul class="madejas" aria-label="Los colores de la página, sacados del paisaje">
+        <li class="madeja" style="--color: #2f5d8a; --i: 0"><b>Azul Chungará</b><span>el lago</span></li>
+        <li class="madeja" style="--color: #5b7a4a; --i: 1"><b>Verde bofedal</b><span>el pasto</span></li>
+        <li class="madeja" style="--color: #d99b3c; --i: 2"><b>Ocre de puna</b><span>la paja brava</span></li>
+        <li class="madeja" style="--color: #b5442b; --i: 3"><b>Tierra de Putre</b><span>los cerros</span></li>
+      </ul>
+      <div class="acciones"><a class="boton" href="#reservar">Reservar</a><a class="enlace" href="#caminatas">Ver las caminatas</a></div>
+    </div>
+  </section>
+
+  <div class="franja f-lago" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
+
+  <section class="seccion" id="lodge" aria-labelledby="lodge-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="altura">3.500 m</p>
+        <h2 id="lodge-titulo">El lodge</h2>
+        <p>Una casa de piedra y adobe a la salida del pueblo, con estufa a leña, frazadas de alpaca y la cordillera en la ventana.</p>
+      </header>
+      <div class="lodge">
+        <figure data-aparece><img src="/image/bocetos/parina/lodge-1200.webp" srcset="/image/bocetos/parina/lodge-700.webp 700w, /image/bocetos/parina/lodge-1200.webp 1200w" sizes="(min-width: 900px) 55vw, 92vw" width="1200" height="750" loading="lazy" alt="Una casa de piedra entre grandes rocas, rodeada de pasto seco del altiplano"><figcaption>Ocho habitaciones, cada una con su baño y su estufa.</figcaption></figure>
+        <div data-aparece style="--orden: 1">
+          <h3>Qué incluye la estadía</h3>
+          <ul class="incluye">
+            <li>Desayuno y cena con lo que se cosecha en Putre: papa chuño, quínoa, ajo y carne de llama.</li>
+            <li>Un guía del pueblo en cada caminata, que habla aimara y castellano.</li>
+            <li>El traslado desde el aeropuerto de Arica: 150 kilómetros y dos horas y media de subida.</li>
+            <li>Un oxímetro y té de coca en cada habitación, desde que llegas.</li>
+          </ul>
+          <p class="precio-noche">$128.000 la noche por persona<small>Mínimo cuatro noches, para aclimatarse. Todo incluido salvo el vino.</small></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="franja f-bofedal zigzag" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
+
+  <section class="seccion caminatas-seccion" id="caminatas" aria-labelledby="caminatas-titulo">
+    <div class="ancho caminatas">
+      <header class="cabeza" data-aparece>
+        <p class="altura">Hasta 4.800 m</p>
+        <h2 id="caminatas-titulo">Cuatro caminatas</h2>
+        <p>Elige una para ver su perfil. Salen a las ocho, con almuerzo y vuelven antes de que baje el sol.</p>
+      </header>
+      <fieldset class="elige" data-aparece>
+        <legend class="oculto">Elige una caminata</legend>
+        <input type="radio" name="ruta" id="r-chungara" checked><label for="r-chungara">Lago Chungará</label>
+        <input type="radio" name="ruta" id="r-parinacota"><label for="r-parinacota">Pueblo de Parinacota</label>
+        <input type="radio" name="ruta" id="r-surire"><label for="r-surire">Salar de Surire</label>
+        <input type="radio" name="ruta" id="r-choquelimpie"><label for="r-choquelimpie">Cerro Choquelimpie</label>
+      </fieldset>
+      <article class="ruta chungara">
+        <img src="/image/bocetos/parina/lago-1000.webp" srcset="/image/bocetos/parina/lago-600.webp 600w, /image/bocetos/parina/lago-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Un lago azul de aguas quietas con volcanes de fondo, bajo un cielo despejado">
+        <div>
+          <h3>Lago Chungará</h3>
+          <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.630 m</dd></div><div><dt>Horas</dt><dd>4</dd></div><div><dt>Dificultad</dt><dd><i></i><i class="no"></i><i class="no"></i><span class="oculto">fácil</span></dd></div></dl>
+          <p>Por la orilla del lago, con el Parinacota reflejado en el agua y las taguas haciendo sus nidos. Es la del tercer día, cuando el cuerpo ya se acostumbró.</p>
+          <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: casi plana, entre 4.520 y 4.630 metros"><path class="suelo" d="M0 58 50 56 100 52 150 50 200 53 250 56 300 54 350 50 400 47 450 51 500 55 550 58 600 58V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 58 50 56 100 52 150 50 200 53 250 56 300 54 350 50 400 47 450 51 500 55 550 58 600 58"/><circle class="cima" cx="400" cy="47" r="6"/><text class="marca-cima" x="400" y="30" text-anchor="middle">4.630 m</text></svg>
+        </div>
+      </article>
+      <article class="ruta parinacota">
+        <img src="/image/bocetos/parina/llamas-1000.webp" srcset="/image/bocetos/parina/llamas-600.webp 600w, /image/bocetos/parina/llamas-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Un grupo de llamas en un camino de tierra al atardecer, con cerros y un volcán detrás">
+        <div>
+          <h3>Pueblo de Parinacota</h3>
+          <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.500 m</dd></div><div><dt>Horas</dt><dd>3</dd></div><div><dt>Dificultad</dt><dd><i></i><i class="no"></i><i class="no"></i><span class="oculto">fácil</span></dd></div></dl>
+          <p>Entre llamas y vicuñas hasta el pueblo y su iglesia de 1789, con las paredes pintadas por dentro. Ideal para el segundo día.</p>
+          <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: una subida suave hasta 4.500 metros y vuelta"><path class="suelo" d="M0 71 50 70 100 68 150 64 200 60 250 62 300 66 350 68 400 65 450 67 500 69 550 70 600 71V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 71 50 70 100 68 150 64 200 60 250 62 300 66 350 68 400 65 450 67 500 69 550 70 600 71"/><circle class="cima" cx="200" cy="60" r="6"/><text class="marca-cima" x="200" y="43" text-anchor="middle">4.500 m</text></svg>
+        </div>
+      </article>
+      <article class="ruta surire">
+        <img src="/image/bocetos/parina/flamencos-1000.webp" srcset="/image/bocetos/parina/flamencos-600.webp 600w, /image/bocetos/parina/flamencos-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Un grupo de flamencos rosados de pie en aguas bajas y quietas, con el horizonte blanco">
+        <div>
+          <h3>Salar de Surire</h3>
+          <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.272 m</dd></div><div><dt>Horas</dt><dd>6</dd></div><div><dt>Dificultad</dt><dd><i></i><i></i><i class="no"></i><span class="oculto">media</span></dd></div></dl>
+          <p>Dos horas en camioneta y una caminata plana por la orilla del salar, donde comen las tres especies de flamenco. Llevar binoculares.</p>
+          <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: plana, alrededor de 4.250 metros"><path class="suelo" d="M0 85 50 84 100 84 150 83 200 83 250 84 300 85 350 84 400 83 450 84 500 84 550 85 600 85V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 85 50 84 100 84 150 83 200 83 250 84 300 85 350 84 400 83 450 84 500 84 550 85 600 85"/><circle class="cima" cx="150" cy="83" r="6"/><text class="marca-cima" x="150" y="66" text-anchor="middle">4.272 m</text></svg>
+        </div>
+      </article>
+      <article class="ruta choquelimpie">
+        <img src="/image/bocetos/parina/bofedal-1000.webp" srcset="/image/bocetos/parina/bofedal-600.webp 600w, /image/bocetos/parina/bofedal-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Una laguna clara en el altiplano, con cerros cafés y rojizos al fondo">
+        <div>
+          <h3>Cerro Choquelimpie</h3>
+          <dl class="ruta-datos"><div><dt>Altura</dt><dd>4.800 m</dd></div><div><dt>Horas</dt><dd>7</dd></div><div><dt>Dificultad</dt><dd><i></i><i></i><i></i><span class="oculto">exigente</span></dd></div></dl>
+          <p>La más alta: seiscientos metros de subida hasta un mirador sobre las lagunas de Cotacotani. Solo desde el quinto día, y si el oxímetro dice que sí.</p>
+          <svg class="perfil" viewBox="0 0 600 180" role="img" aria-label="Perfil de la caminata: sube desde 4.200 hasta 4.800 metros y vuelve a bajar"><path class="suelo" d="M0 90 50 82 100 72 150 63 200 54 250 45 300 37 350 30 400 38 450 50 500 62 550 77 600 90V180H0Z"/><path class="putre" d="M0 160H600"/><text x="4" y="152">Putre, 3.500 m</text><path class="linea" pathLength="1" d="M0 90 50 82 100 72 150 63 200 54 250 45 300 37 350 30 400 38 450 50 500 62 550 77 600 90"/><circle class="cima" cx="350" cy="30" r="6"/><text class="marca-cima" x="350" y="13" text-anchor="middle">4.800 m</text></svg>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="franja f-puna" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
+
+  <section class="seccion" id="altura" aria-labelledby="altura-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="altura">De 0 a 4.800 m</p>
+        <h2 id="altura-titulo">La altura, de a poco</h2>
+        <p>Llegas desde el nivel del mar. Por eso los primeros días se sube como en andenes: un escalón por día, sin saltarse ninguno.</p>
+      </header>
+      <ol class="andenes">
+        <li class="anden" data-aparece><div class="anden-bloque" data-sigue style="--h: 3500; --c: var(--tierra)"><b>3.500 m</b><span>Día 1</span></div><h3>Llegar y descansar</h3><p>Almuerzo liviano, siesta y una vuelta corta por la plaza. Nada más.</p></li>
+        <li class="anden" data-aparece style="--orden: 1"><div class="anden-bloque" data-sigue style="--h: 4500; --c: var(--ocre)"><b>4.500 m</b><span>Día 2</span></div><h3>Parinacota</h3><p>La primera caminata, plana y corta, para conocer cómo responde tu cuerpo.</p></li>
+        <li class="anden" data-aparece style="--orden: 2"><div class="anden-bloque" data-sigue style="--h: 4630; --c: var(--bofedal)"><b>4.630 m</b><span>Día 3</span></div><h3>Chungará</h3><p>Cuatro horas a la orilla del lago. Ya se duerme bien.</p></li>
+        <li class="anden" data-aparece style="--orden: 3"><div class="anden-bloque" data-sigue style="--h: 4800; --c: var(--lago)"><b>4.800 m</b><span>Día 5</span></div><h3>Choquelimpie</h3><p>La subida larga, solo si los días anteriores fueron bien.</p></li>
+      </ol>
+      <div class="puna" data-aparece><b>La puna es normal</b><p>Dolor de cabeza leve, cansancio y poco apetito los dos primeros días. Tenemos oxígeno en la recepción, y el consultorio de Putre está a cuatro cuadras. Si tienes una enfermedad del corazón o del pulmón, consulta a tu médico antes de venir.</p></div>
+    </div>
+  </section>
+
+  <div class="franja f-tierra zigzag" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
+
+  <section class="seccion" id="tejedoras" aria-labelledby="tejedoras-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="altura">3.500 m · la plaza</p>
+        <h2 id="tejedoras-titulo">El taller de las tejedoras</h2>
+        <p>Las grecas de esta página son de ellas. El taller abre martes y jueves en la tarde, frente a la iglesia.</p>
+      </header>
+      <div class="tejedoras">
+        <figure data-aparece><img src="/image/bocetos/parina/telar-760.webp" srcset="/image/bocetos/parina/telar-480.webp 480w, /image/bocetos/parina/telar-760.webp 760w" sizes="(min-width: 900px) 30vw, 45vw" width="760" height="950" loading="lazy" alt="Unas manos pasan el hilo en un telar, sobre un tejido blanco con grecas fucsia y moradas"><figcaption>Un pallay de rombos, a medio tejer.</figcaption></figure>
+        <figure class="f2" data-aparece style="--orden: 1"><img src="/image/bocetos/parina/hilos-760.webp" srcset="/image/bocetos/parina/hilos-480.webp 480w, /image/bocetos/parina/hilos-760.webp 760w" sizes="(min-width: 900px) 22vw, 45vw" width="760" height="950" loading="lazy" alt="Los hilos de colores de la urdimbre tensados en un telar: rosados, naranjos, amarillos y celestes"><figcaption>La urdimbre, lista para empezar.</figcaption></figure>
+        <ul class="nombres" data-aparece style="--orden: 2">
+          <li style="--c: var(--tierra)"><div><h3>Eusebia Mamani</h3><p>Teje aguayos con las grecas de su abuela, de memoria y sin dibujo.</p></div></li>
+          <li style="--c: var(--lago)"><div><h3>Rosa Condori</h3><p>Hila la lana de sus propias alpacas, que pastan en el bofedal de Socoroma.</p></div></li>
+          <li style="--c: var(--ocre)"><div><h3>Lidia Choque</h3><p>Tiñe con plantas de la quebrada: tola para el amarillo, chilca para el verde, cochinilla para el rojo.</p></div></li>
+          <li class="nota">Lo que compras en el taller va entero a ellas. Nosotros solo te llevamos.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="franja f-noche" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
+
+  <section class="seccion" id="reservar" aria-labelledby="reservar-titulo">
+    <div class="ancho">
+      <header class="cabeza" data-aparece>
+        <p class="altura">Para llegar a 3.500 m</p>
+        <h2 id="reservar-titulo">Reservar</h2>
+      </header>
+      <div class="reservar">
+        <form class="reserva" data-muestra data-aparece toolname="reservar_lodge" tooldescription="Pide reservar el lodge Parina en Putre, en el altiplano de Chile: quién viaja, las fechas de llegada y salida, cuántas personas y qué caminatas le interesan. Parina es una marca inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+          <label>Nombre<input name="nombre" autocomplete="name" required></label>
+          <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+          <label>Llegada<input type="date" name="llegada" min="2026-11-12" required toolparamdescription="El día de llegada a Putre"></label>
+          <label>Salida<input type="date" name="salida" min="2026-11-16" required toolparamdescription="El día de salida. La estadía mínima es de cuatro noches"></label>
+          <label>Personas<input type="number" name="personas" min="1" max="16" value="2" required inputmode="numeric" toolparamdescription="Cuántas personas viajan, de 1 a 16"></label>
+          <fieldset toolparamdescription="Las caminatas que le interesan; se pueden marcar varias: chungara, parinacota, surire o choquelimpie">
+            <legend>Caminatas que te interesan</legend>
+            <label class="marca-ruta"><input type="checkbox" name="rutas" value="chungara"><span aria-hidden="true"></span>Chungará</label>
+            <label class="marca-ruta"><input type="checkbox" name="rutas" value="parinacota"><span aria-hidden="true"></span>Parinacota</label>
+            <label class="marca-ruta"><input type="checkbox" name="rutas" value="surire"><span aria-hidden="true"></span>Surire</label>
+            <label class="marca-ruta"><input type="checkbox" name="rutas" value="choquelimpie"><span aria-hidden="true"></span>Choquelimpie</label>
+          </fieldset>
+          <label class="todo">Algo que debamos saber<textarea name="nota" maxlength="500" toolparamdescription="Alergias, dieta, si viaja con niños o algo de salud que el lodge deba saber"></textarea></label>
+          <button class="boton" type="submit">Pedir la reserva</button>
+          <p class="boceto-aviso"></p>
+        </form>
+        <aside class="telar f-lago" data-aparece style="--orden: 1" aria-label="Tu reserva, tejida">
+          <h3>Tu reserva, tejida</h3>
+          <div class="tejido" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+          <p>Cada dato que completas es una fila. Cuando el tejido está entero, la reserva está lista para enviar.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="franja f-lago" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+  <div class="franja f-bofedal zigzag" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+  <div class="ancho pampa">
+    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#flamenco"/></svg>Parina</a>
+    <div><h2>Dónde</h2><p>Calle Baquedano 412, Putre, Región de Arica y Parinacota. A 150 km de Arica por la ruta 11.</p></div>
+    <div><h2>Escríbenos</h2><p>hola@parinalodge.cl · respondemos en el día, salvo cuando estamos en el cerro.</p></div>
+  </div>
+  <div class="franja f-puna" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+  <div class="franja f-tierra zigzag" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+  <div class="franja f-noche" aria-hidden="true"><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i><i class="fila"></i></div>
+  <p class="ancho pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
+</body>
+</html>
