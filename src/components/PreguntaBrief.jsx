@@ -342,7 +342,7 @@ function Colores({ pregunta }) {
 // en el boceto abierto aparte.
 // Los tres bocetos del abanico que invita a recorrerlos: tres estilos que se
 // distinguen de un vistazo.
-const ABANICO = ['koen', 'golpe', 'nodo'].map((slug) => BOCETOS.find((boceto) => boceto.slug === slug))
+const ABANICO = ['kiri', 'golpe', 'cauce'].map((slug) => BOCETOS.find((boceto) => boceto.slug === slug))
 
 function Bocetos() {
   return (

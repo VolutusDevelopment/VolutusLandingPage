@@ -83,3 +83,30 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | matcha | https://images.unsplash.com/photo-1759933164283-ab161f34bd02 |
 | tetera | https://images.unsplash.com/photo-1531969179221-3946e6b5a5e7 |
 | dulces | https://images.unsplash.com/photo-1512923680040-ae76121db32b |
+
+## cauce
+
+| Archivo | Foto original |
+| --- | --- |
+| sensor | https://images.unsplash.com/photo-1609539086369-460c58ca7669 |
+| goteo | https://images.unsplash.com/photo-1666082187762-e963df0f9f05 |
+| valle | https://images.unsplash.com/photo-1610447921699-1f777c789637 |
+| dron | https://images.unsplash.com/photo-1590354950148-310263cd5424 |
+| ladera | https://images.unsplash.com/photo-1764259422786-7fe06165f226 |
+| manos | https://images.unsplash.com/photo-1492496913980-501348b61469 |
+
+## kiri
+
+| Archivo | Foto original |
+| --- | --- |
+| portada-ancho | https://images.unsplash.com/photo-1644413638617-02369c89c156 |
+| portada-alto | https://images.unsplash.com/photo-1644413638617-02369c89c156 |
+| lavarse | https://images.unsplash.com/photo-1706017597480-24b0a4d9a943 |
+| entrar | https://images.unsplash.com/photo-1783094724116-ff5f8362a581 |
+| reposar | https://images.unsplash.com/photo-1510453091749-fcd4158d4aa6 |
+| volver | https://images.unsplash.com/photo-1745813083408-efae3cd6c0f3 |
+| pozon-piedra | https://images.unsplash.com/photo-1766485108563-4fa16ba48140 |
+| pozon-cubierto | https://images.unsplash.com/photo-1726537625746-4ab5285c60f8 |
+| pozon-volcan | https://images.unsplash.com/photo-1578602857088-a6bca7b09710 |
+| habitacion | https://images.unsplash.com/photo-1757852823730-8bf5b66af780 |
+| cena | https://images.unsplash.com/photo-1587560555570-4d3f84dcee05 |

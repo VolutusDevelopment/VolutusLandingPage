@@ -16,6 +16,8 @@
 
 /* ---- Las fuentes de las muestras (OFL, Google Fonts) ---- */
 @font-face { font-family: 'Muestra Hanken'; src: url('/fonts/brief/hanken-300.woff2') format('woff2'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Muestra Instrument'; src: url('/fonts/brief/instrument-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Muestra Shippori'; src: url('/fonts/brief/shippori-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Muestra Plex Mono'; src: url('/fonts/brief/plex-mono-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
 @font-face { font-family: 'Muestra Manrope'; src: url('/fonts/brief/manrope-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 @font-face { font-family: 'Muestra Newsreader'; src: url('/fonts/brief/newsreader-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
@@ -48,7 +50,7 @@
 
 /* La letra de cada estilo: la de su boceto. La usa su nombre cuando gusta. */
 .estilo-minimalista { --letra: 300 1em 'Muestra Hanken', sans-serif; }
-.estilo-tecnologico { --letra: 600 1em 'Muestra Plex Mono', monospace; }
+.estilo-tecnologico { --letra: 600 1em 'Muestra Instrument', sans-serif; }
 .estilo-corporativo { --letra: 800 1em 'Muestra Manrope', sans-serif; }
 .estilo-editorial { --letra: italic 500 1em 'Muestra Newsreader', Georgia, serif; }
 .estilo-calido { --letra: 700 1em 'Muestra Fraunces', Georgia, serif; }
@@ -61,7 +63,7 @@
 .estilo-natural { --letra: 400 1em 'Muestra Young Serif', Georgia, serif; }
 .estilo-futurista { --letra: 700 1em 'Muestra Unbounded', sans-serif; }
 .estilo-artesanal { --letra: 700 1em 'Muestra Caveat', cursive; }
-.estilo-zen { --letra: 300 1em 'Muestra Cormorant', Georgia, serif; }
+.estilo-zen { --letra: 400 1em 'Muestra Shippori', Georgia, serif; }
 .estilo-industrial { --letra: 800 1em 'Muestra Stencil', Impact, sans-serif; }
 .estilo-artdeco { --letra: 400 1em 'Muestra Poiret', sans-serif; }
 .estilo-bauhaus { --letra: 700 1em 'Muestra Jost', sans-serif; }
@@ -245,15 +247,21 @@
 .estilo-minimalista .brief-sello svg { width: 22px; fill: none; stroke: #141414; stroke-width: 1.4; stroke-dasharray: 30; stroke-dashoffset: 30; }
 .estilo-minimalista:has([value='si']:checked) .brief-sello svg { stroke-dashoffset: 0; transition: stroke-dashoffset 600ms var(--ease), opacity 100ms; }
 
-/* Tecnológico: una terminal sobre su grilla. */
-.estilo-tecnologico { --marcado: #2ee6a6; }
-.estilo-tecnologico .brief-muestra-arte { padding: 18px; background: #06121b linear-gradient(rgb(46 230 166 / 0.09) 1px, transparent 1px) 0 0 / 16px 16px, linear-gradient(90deg, rgb(46 230 166 / 0.09) 1px, transparent 1px) 0 0 / 16px 16px; color: #2ee6a6; font: 600 11px/1.6 'Muestra Plex Mono', monospace; }
-.estilo-tecnologico .brief-muestra-arte b { display: block; margin: 8px 0; font: 600 21px/1.1 'Muestra Plex Mono', monospace; color: #e8fff6; }
-.estilo-tecnologico .brief-muestra-arte i { display: inline-block; width: 7px; height: 13px; background: #2ee6a6; vertical-align: -2px; }
-.estilo-tecnologico .brief-muestra-arte::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 40%; background: linear-gradient(transparent, rgb(46 230 166 / 0.14), transparent); transform: translateY(-100%); }
-.estilo-tecnologico:has([value='si']:checked) .brief-muestra-pie { background: #06121b; color: #2ee6a6; }
-.estilo-tecnologico:has([value='si']:checked) .brief-muestra-nombre { font-size: 14px; }
-.estilo-tecnologico .brief-sello span { font: 600 13px/1 'Muestra Plex Mono', monospace; color: #2ee6a6; }
+/* Tecnológico: Cauce. Curvas de nivel en tinta sobre papel, un sensor que
+   late despacio y su lectura; al pasar, el relieve se corre apenas. */
+.estilo-tecnologico { --marcado: #ff5b1f; --precisa: cubic-bezier(0.65, 0, 0.35, 1); }
+.estilo-tecnologico .brief-muestra-arte { background: #f3f4f1; }
+.estilo-tecnologico .curvas { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); fill: none; stroke: #101412; stroke-width: 1; opacity: 0.45; }
+.estilo-tecnologico .logo { position: absolute; left: 18px; top: 16px; display: flex; align-items: center; gap: 7px; font: 600 18px/1 'Muestra Instrument', sans-serif; letter-spacing: -0.04em; color: #101412; }
+.estilo-tecnologico .logo svg { width: 20px; height: 20px; fill: none; stroke: #101412; stroke-width: 1.8; }
+.estilo-tecnologico .logo circle { fill: #ff5b1f; stroke: none; }
+.estilo-tecnologico .sensor { position: absolute; left: 38%; top: 64%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #ff5b1f; }
+.estilo-tecnologico .sensor::after { content: ''; position: absolute; inset: -7px; border: 1px solid #ff5b1f; border-radius: 50%; opacity: 0.6; }
+.estilo-tecnologico .lectura { position: absolute; left: calc(38% + 14px); top: calc(64% - 10px); padding: 3px 7px; border-left: 1px solid #101412; background: rgb(251 251 249 / 0.92); font: 600 11px/1.3 'Muestra Plex Mono', monospace; color: #101412; }
+.estilo-tecnologico:has([value='si']:checked) .brief-muestra-pie { background: #f3f4f1; color: #101412; }
+.estilo-tecnologico:has([value='si']:checked) .brief-muestra-nombre { font-size: 15px; letter-spacing: -0.02em; }
+.estilo-tecnologico .brief-sello span { width: 14px; height: 14px; border-radius: 50%; background: #ff5b1f; box-shadow: 0 0 0 5px rgb(255 91 31 / 0.18); transform: scale(0.3); transition: opacity 400ms, transform 900ms var(--precisa); }
+.estilo-tecnologico:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Corporativo: su banda y sus cifras. */
 .estilo-corporativo { --marcado: #10284f; }
@@ -405,18 +413,19 @@
 .estilo-artesanal .brief-sello span { display: grid; place-items: center; width: 34px; height: 34px; border: 2px dashed #b4462b; border-radius: 50%; color: #b4462b; font: 700 10px/1 'Muestra Zilla', serif; text-transform: uppercase; transform: scale(1.8) rotate(-30deg); }
 .estilo-artesanal:has([value='si']:checked) .brief-sello span { transform: rotate(-12deg); }
 
-/* Zen: un ensō que se dibuja de un trazo. */
-.estilo-zen { --marcado: #23231f; }
-.estilo-zen .brief-muestra-arte { display: grid; place-items: center; background: #f2efe8; }
-.estilo-zen .brief-muestra-arte svg { width: 96px; height: 96px; }
-.estilo-zen svg circle { fill: none; stroke: #23231f; stroke-linecap: round; }
-.estilo-zen .brief-muestra-arte circle { stroke-width: 7; stroke-dasharray: 230 300; }
-.estilo-zen .rojo { position: absolute; right: 28px; bottom: 26px; width: 10px; height: 10px; border-radius: 50%; background: #b8342c; }
-.estilo-zen:has([value='si']:checked) .brief-muestra-pie { background: #f2efe8; color: #23231f; }
-.estilo-zen:has([value='si']:checked) .brief-muestra-nombre { font-size: 19px; letter-spacing: 0.06em; }
-.estilo-zen .brief-sello svg { width: 28px; height: 28px; }
-.estilo-zen .brief-sello circle { stroke-width: 3; stroke-dasharray: 60 80; stroke-dashoffset: 60; transition: stroke-dashoffset 900ms var(--ease); }
-.estilo-zen:has([value='si']:checked) .brief-sello circle { stroke-dashoffset: 0; }
+/* Zen: Kiri. Papel washi, el ensō a pincel y 霧 con «Kiri» en vertical; al
+   pasar, una niebla sube despacio. */
+.estilo-zen { --marcado: #1c1b19; --calma: cubic-bezier(0.45, 0, 0.55, 1); }
+.estilo-zen .brief-muestra-arte { background: #efeae0; }
+.estilo-zen .brief-muestra-arte .enso { position: absolute; left: calc(42% - 52px); top: calc(50% - 52px); width: 104px; height: 104px; fill: #1c1b19; }
+.estilo-zen .nombre { position: absolute; right: 26px; top: 18px; display: grid; justify-items: center; gap: 10px; color: #1c1b19; }
+.estilo-zen .nombre svg { width: 26px; height: 26px; fill: #1c1b19; }
+.estilo-zen .nombre b { writing-mode: vertical-rl; text-orientation: upright; font: 400 14px/1 'Muestra Shippori', Georgia, serif; letter-spacing: 0.3em; }
+.estilo-zen .brief-muestra-arte::after { content: ''; position: absolute; left: -20%; right: -20%; top: 45%; height: 100%; background: radial-gradient(closest-side, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0)); opacity: 0; transform: translateY(30%); }
+.estilo-zen:has([value='si']:checked) .brief-muestra-pie { background: #efeae0; color: #1c1b19; }
+.estilo-zen:has([value='si']:checked) .brief-muestra-nombre { font-size: 18px; letter-spacing: 0.12em; }
+.estilo-zen .brief-sello svg { width: 28px; height: 28px; fill: #1c1b19; transform: rotate(-50deg) scale(0.6); transition: opacity 600ms, transform 1200ms var(--calma); }
+.estilo-zen:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Industrial: plancha, remaches y cinta de peligro. */
 .estilo-industrial { --marcado: #f2b705; }
@@ -540,9 +549,11 @@
 /* Lo que se mueve en bucle o se dibuja al pasar: solo sin el movimiento
    reducido. */
 @media (prefers-reduced-motion: no-preference) {
-  .estilo-tecnologico .brief-muestra-arte i { animation: muestra-parpadeo 1s steps(1) infinite; }
-  .estilo-tecnologico:is(:hover, :focus-within) .brief-muestra-arte::after { animation: muestra-barrido 1.4s linear infinite; }
-  .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte circle { animation: muestra-enso 1.6s var(--ease) both; }
+  .estilo-tecnologico .curvas { transition: transform 1200ms var(--precisa); }
+  .estilo-tecnologico:is(:hover, :focus-within, :has([value='si']:checked)) .curvas { transform: translate(-6px, 4px); }
+  .estilo-tecnologico .sensor::after { animation: muestra-late 6s var(--precisa) infinite alternate; }
+  .estilo-zen .brief-muestra-arte::after { transition: opacity 1600ms var(--calma), transform 2600ms var(--calma); }
+  .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { opacity: 1; transform: translateY(-20%); }
   .estilo-retro:has([value='si']:checked) .brief-sello svg { animation: muestra-gira 8s linear infinite; }
   .estilo-futurista:has([value='si']:checked) .brief-sello span { animation: muestra-gira 1.4s linear infinite; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 0.9s ease-in-out infinite alternate; }
@@ -551,9 +562,7 @@
   .estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte path { animation: muestra-pulso 1.6s var(--ease) both; }
 }
 
-@keyframes muestra-parpadeo { 50% { opacity: 0; } }
-@keyframes muestra-barrido { to { transform: translateY(260%); } }
-@keyframes muestra-enso { from { stroke-dashoffset: 230; } }
+@keyframes muestra-late { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.5); opacity: 0; } }
 @keyframes muestra-gira { to { transform: rotate(1turn); } }
 @keyframes muestra-titila { to { opacity: 1; transform: scale(1.4) rotate(20deg); } }
 @keyframes muestra-pulso { from { stroke-dashoffset: 320; } }
@@ -1041,8 +1050,8 @@
 }
 
 .brief-recorrer-abanico .estilo-zen {
-  background: #f2efe8;
-  color: #23231f;
+  background: #efeae0;
+  color: #1c1b19;
   transform: translateX(-30px) rotate(-16deg);
 }
 
@@ -1057,9 +1066,9 @@
 
 .brief-recorrer-abanico .estilo-tecnologico {
   justify-items: end;
-  background: #06121b;
-  color: #2ee6a6;
-  font-size: 13px;
+  background: #f3f4f1;
+  color: #101412;
+  font-size: 16px;
   transform: translateX(30px) rotate(16deg);
 }
 

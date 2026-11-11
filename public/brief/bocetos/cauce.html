@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Cauce · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Cauce, telemetría de riego para viñas y huertos, para mostrar el estilo Tecnológico.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/bocetos/ibm-plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/cauce.js" type="module"></script>
+<style>
+/* Cauce · tecnológico. La página es el instrumento: una hoja de ingeniería
+   clara, de líneas finas, con anotaciones en monoespaciada y un solo color de
+   señal, que solo marca lo activo.
+
+   Inspiración: Teenage Engineering, OP–1 field (teenage.engineering/products/op-1).
+   - Composición: un solo objeto dibujado grande, con anotaciones diminutas en
+     mayúsculas junto a cada detalle (el mapa de la portada y el despiece).
+   - Letra y color: gris claro, tinta negra fina y el color solo en el aparato
+     (el naranja de señal, nunca en texto chico).
+   - Movimiento: el objeto cambia de estado con el scroll (el sensor se despieza).
+   También: Arable (arable.com), por los datos puestos sobre fotos de campo. */
+@font-face { font-family: 'Instrument Sans'; src: url('/fonts/bocetos/instrument-sans.woff2') format('woff2'); font-weight: 400 700; font-stretch: 75% 100%; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+
+:root {
+  --papel: #f3f4f1;
+  --blanco: #fbfbf9;
+  --tinta: #101412;
+  --grafito: #5b625e;
+  --linea: #d5d9d4;
+  --senal: #ff5b1f;
+  --ancho: 1320px;
+  --margen: clamp(20px, 4vw, 56px);
+  --precisa: cubic-bezier(0.65, 0, 0.35, 1);
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--papel); scroll-behavior: smooth; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.55 'Instrument Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.mono { font: 400 12px/1.5 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--grafito); }
+.cifra { font-variant-numeric: tabular-nums; }
+.seccion { padding-block: clamp(80px, 10vw, 150px); border-top: 1px solid var(--linea); }
+.cabeza { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(40px, 6vw, 72px); }
+.cabeza h2 { margin-top: 14px; font-size: clamp(34px, 4.4vw, 60px); }
+.cabeza > p { max-width: 46ch; color: var(--grafito); }
+.boton { display: inline-flex; align-items: center; gap: 12px; min-height: 50px; padding: 0 24px; border: 1px solid var(--tinta); border-radius: 999px; background: var(--tinta); color: var(--papel); font: 500 16px/1 'Instrument Sans', system-ui, sans-serif; text-decoration: none; cursor: pointer; transition: background 400ms var(--precisa), color 400ms var(--precisa); }
+.boton::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--senal); }
+.boton:hover { background: transparent; color: var(--tinta); }
+.callado { font-size: 16px; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; }
+.marca { display: inline-flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 600; letter-spacing: -0.04em; text-decoration: none; }
+.marca svg { width: 30px; height: 30px; }
+.cabecera nav ul { display: flex; gap: 30px; margin: 0; padding: 0; list-style: none; }
+.cabecera nav a { font-size: 15px; color: var(--grafito); text-decoration: none; transition: color 300ms; }
+.cabecera nav a:hover { color: var(--tinta); }
+.cabecera .boton { min-height: 42px; padding-inline: 18px; font-size: 15px; }
+
+/* ---- Portada: el mapa vivo ---- */
+.portada { padding-block: clamp(40px, 6vw, 80px) clamp(64px, 8vw, 110px); }
+.portada-texto { display: grid; justify-items: center; gap: 22px; text-align: center; }
+.portada h1 { max-width: 15ch; font-size: clamp(44px, 6.4vw, 92px); letter-spacing: -0.045em; }
+.portada-texto > p:not(.mono) { max-width: 52ch; color: var(--grafito); }
+.acciones { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 28px; margin-top: 8px; }
+.mapa { position: relative; margin-top: clamp(48px, 6vw, 80px); padding: 28px; border: 1px solid var(--linea); background: var(--blanco); }
+.mapa::before { content: ''; position: absolute; left: 28px; right: 28px; top: 0; height: 8px; background: repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 2.5%); opacity: 0.35; }
+.lienzo { position: relative; aspect-ratio: 800 / 520; }
+.lienzo svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.curvas path { fill: none; stroke: var(--tinta); stroke-width: 0.7; opacity: 0.45; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
+.curvas path:nth-child(4n + 1) { stroke-width: 1.2; opacity: 0.8; }
+.rio { fill: none; stroke: var(--tinta); stroke-width: 2.2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
+.mapa-pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 18px; }
+.escala { display: inline-flex; align-items: center; gap: 10px; }
+.escala::before { content: ''; width: 64px; height: 6px; border: 1px solid var(--tinta); border-top: 0; }
+.sensor { position: absolute; left: var(--x); top: var(--y); }
+.punto { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--senal); }
+.punto::after { content: ''; position: absolute; inset: -9px; border: 1px solid var(--senal); border-radius: 50%; opacity: 0.6; }
+.nota { position: absolute; left: 18px; top: -10px; display: grid; gap: 1px; width: max-content; padding: 6px 9px; border-left: 1px solid var(--tinta); background: rgb(251 251 249 / 0.92); font: 400 11.5px/1.45 var(--mono); letter-spacing: 0.02em; color: var(--grafito); }
+.nota b { font-weight: 400; color: var(--tinta); letter-spacing: 0.08em; }
+.izquierda .nota { left: auto; right: 18px; border-left: 0; border-right: 1px solid var(--tinta); text-align: right; }
+.valor { display: inline-block; width: 4ch; color: var(--tinta); text-align: right; font-variant-numeric: tabular-nums; }
+.valor[data-decimales="0"] { width: 3ch; }
+
+/* ---- Qué mide: el despiece ---- */
+.despiece { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.plano { position: relative; padding: clamp(16px, 3vw, 40px); border: 1px solid var(--linea); background: var(--blanco); }
+.pista { position: absolute; left: 18px; bottom: 14px; }
+
+/* El sensor en 3D, armado con caras de CSS: cajas de seis caras, cilindros
+   de doce y una punta de cuatro. Se ve como dibujo a línea; las caras van
+   un poco más oscuras según hacia dónde miran, para que se lea el volumen. */
+.escena { --k: 1; position: relative; height: calc(640px * var(--k)); perspective: 1600px; perspective-origin: 50% 10%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.escena.tomada { cursor: grabbing; }
+.escena:focus-visible { outline: 2px solid var(--tinta); outline-offset: 8px; }
+.vaiven, .giro, .pieza, .caja, .cilindro, .punta { transform-style: preserve-3d; }
+.vaiven { position: absolute; left: 50%; top: 50%; }
+.giro { transform: scale(var(--k)) rotateX(var(--gx, -24deg)) rotateY(var(--gy, -32deg)); }
+.pieza, .caja, .cilindro, .punta, .anillo { position: absolute; left: 0; top: 0; }
+.caja, .cilindro, .punta, .anillo { left: var(--x, 0px); top: var(--y); }
+.caja > i, .cilindro > *, .punta > i { position: absolute; left: 0; top: 0; box-sizing: border-box; border: 1px solid var(--tinta); background: var(--blanco); transition: background-color 500ms var(--precisa), border-color 500ms var(--precisa); }
+.caja > i:nth-child(-n + 2), .caja > i:nth-child(n + 3):nth-child(-n + 4) { height: var(--h); }
+.caja > i:nth-child(1) { width: var(--w); transform: translate(-50%, -50%) translateZ(calc(var(--d) / 2)); }
+.caja > i:nth-child(2) { width: var(--w); transform: translate(-50%, -50%) rotateY(180deg) translateZ(calc(var(--d) / 2)); background: #e3e6e1; }
+.caja > i:nth-child(3) { width: var(--d); transform: translate(-50%, -50%) rotateY(90deg) translateZ(calc(var(--w) / 2)); background: #eceee9; }
+.caja > i:nth-child(4) { width: var(--d); transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2)); background: #e3e6e1; }
+.caja > i:nth-child(5) { width: var(--w); height: var(--d); transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2)); background: #f7f8f5; }
+.caja > i:nth-child(6) { width: var(--w); height: var(--d); transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2)); background: #d9ddd7; }
+.cilindro > i { width: calc(var(--r) * 0.536 + 1px); height: var(--h); border-width: 1px 0; background: color-mix(in srgb, var(--blanco), #b9bfb9 calc(var(--sombra) * 1%)); transform: translate(-50%, -50%) rotateY(calc(var(--n) * 30deg)) translateZ(var(--r)); }
+.cilindro > i:nth-child(1) { --n: 0; --sombra: 0; } .cilindro > i:nth-child(2) { --n: 1; --sombra: 8; } .cilindro > i:nth-child(3) { --n: 2; --sombra: 18; }
+.cilindro > i:nth-child(4) { --n: 3; --sombra: 28; } .cilindro > i:nth-child(5) { --n: 4; --sombra: 36; } .cilindro > i:nth-child(6) { --n: 5; --sombra: 40; }
+.cilindro > i:nth-child(7) { --n: 6; --sombra: 40; } .cilindro > i:nth-child(8) { --n: 7; --sombra: 36; } .cilindro > i:nth-child(9) { --n: 8; --sombra: 28; }
+.cilindro > i:nth-child(10) { --n: 9; --sombra: 18; } .cilindro > i:nth-child(11) { --n: 10; --sombra: 8; } .cilindro > i:nth-child(12) { --n: 11; --sombra: 2; }
+.cilindro > b { width: calc(var(--r) * 2); height: calc(var(--r) * 2); border-radius: 50%; background: #f7f8f5; transform: translate(-50%, -50%) rotateX(90deg) translateZ(calc(var(--h) / 2)); }
+.cilindro > b:last-child { transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2)); }
+.anillo { width: 34px; height: 34px; border: 1.5px solid var(--senal); border-radius: 50%; transform: translate(-50%, -50%) rotateX(90deg); }
+.punta > i { width: 28px; height: 30px; border: 0; background: #cfd4ce; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; transform: translateX(-50%) rotateY(calc(var(--n) * 90deg)) translateZ(14px) rotateX(-28.3deg); }
+.punta > i:nth-child(2) { --n: 1; background: #dde1db; } .punta > i:nth-child(3) { --n: 2; background: #c3c9c3; } .punta > i:nth-child(4) { --n: 3; background: #d6dad4; }
+.cupula > i:nth-child(5) { padding: 14px; background: repeating-linear-gradient(90deg, transparent 0 22px, rgb(16 20 18 / 0.45) 22px 23px) content-box, repeating-linear-gradient(transparent 0 22px, rgb(16 20 18 / 0.45) 22px 23px) content-box, linear-gradient(#e6e9e3, #e6e9e3) content-box, #f7f8f5; }
+.placa > i:nth-child(5) { background: radial-gradient(circle at 84% 24%, var(--senal) 0 4px, transparent 4.5px), linear-gradient(var(--grafito), var(--grafito)) 20% 55% / 26px 24px no-repeat, linear-gradient(var(--grafito), var(--grafito)) 58% 55% / 14px 16px no-repeat, #eef0ec; }
+.despiece:has(.parte:nth-child(1):hover) .p-tapa :is(i, b),
+.despiece:has(.parte:nth-child(2):hover) .p-placa :is(i, b),
+.despiece:has(.parte:nth-child(3):hover) .p-bateria :is(i, b),
+.despiece:has(.parte:nth-child(4):hover) .p-sonda :is(i, b) { border-color: var(--senal); background-color: #fff1ea; }
+.parte { transition: border-color 500ms var(--precisa); }
+.parte:hover { border-top-color: var(--senal); }
+.partes { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.parte { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 4px 16px; padding-block: 24px; border-top: 1px solid var(--linea); }
+.parte:last-child { border-bottom: 1px solid var(--linea); }
+.parte .mono { grid-row: span 2; padding-top: 6px; }
+.parte h3 { font-size: clamp(22px, 2.2vw, 28px); }
+.parte p { max-width: 48ch; color: var(--grafito); }
+
+/* ---- El panel ---- */
+.panel-arriba { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); align-items: end; margin-bottom: clamp(32px, 4vw, 48px); }
+.panel-arriba h2 { margin-block: 14px 20px; font-size: clamp(34px, 4.4vw, 60px); }
+.panel-arriba p:not(.mono) { max-width: 44ch; color: var(--grafito); }
+.foto figcaption { margin-top: 10px; }
+.tablero { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); border: 1px solid var(--linea); background: var(--blanco); }
+.grafica { padding: clamp(18px, 2.4vw, 32px); border-right: 1px solid var(--linea); }
+.grafica-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-bottom: 16px; }
+.grafica-cabeza svg { display: inline; width: 10px; height: 10px; vertical-align: 0; }
+.grafica > svg { display: block; width: 100%; height: auto; overflow: visible; }
+.grafica .eje { stroke: var(--linea); stroke-width: 1; }
+.grafica .umbral { stroke: var(--tinta); stroke-width: 1; stroke-dasharray: 4 4; }
+.grafica .banda { fill: var(--papel); }
+.grafica .humedad { fill: none; stroke: var(--tinta); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; }
+.grafica .riego { fill: var(--senal); }
+.grafica > svg { cursor: crosshair; touch-action: pan-y; }
+.grafica > svg:focus-visible { outline: 2px solid var(--tinta); outline-offset: 6px; }
+.grafica .cursor path { stroke: var(--tinta); stroke-width: 1; stroke-dasharray: 2 3; }
+.grafica .cursor circle { fill: var(--senal); stroke: var(--blanco); stroke-width: 2; }
+.cursor-lectura { display: flex; justify-content: flex-end; min-height: 1.5em; margin: -6px 0 6px; }
+.cursor-lectura span { display: inline-block; min-width: 19ch; padding: 2px 8px; background: var(--tinta); color: var(--papel); text-align: center; font-variant-numeric: tabular-nums; }
+.grafica text { font: 400 11px var(--mono); fill: var(--grafito); }
+.lateral { display: grid; grid-template-rows: auto 1fr; }
+.bloque { display: grid; gap: 12px; align-content: start; padding: clamp(18px, 2.4vw, 32px); }
+.bloque + .bloque { border-top: 1px solid var(--linea); }
+.alerta h3 { display: flex; align-items: center; gap: 10px; font-size: 22px; }
+.alerta h3::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--senal); }
+.alerta p:not(.mono) { color: var(--grafito); }
+.alerta strong { color: var(--tinta); font-weight: 500; }
+.ahorro .grande { font-size: clamp(48px, 5vw, 72px); font-weight: 500; letter-spacing: -0.05em; line-height: 1; }
+.barras { display: grid; gap: 10px; margin: 4px 0 0; }
+.barras div { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); align-items: center; gap: 10px; }
+.barras dt, .barras dd { margin: 0; }
+.barras dd { display: grid; gap: 4px; }
+.barras i { display: block; height: 8px; background: var(--tinta); transform-origin: left; }
+.barras .antes i { width: 100%; background: var(--linea); }
+.barras .ahora i { width: 69%; }
+
+/* ---- Ficha técnica ---- */
+.ficha { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+.tabla { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 16px 0; border-top: 1px solid var(--linea); text-align: left; vertical-align: top; }
+tr:last-child th, tr:last-child td { border-bottom: 1px solid var(--linea); }
+th { width: 34%; padding-right: 24px; font: 400 12px/1.6 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--grafito); }
+td { font-size: 17px; }
+caption { padding-bottom: 14px; text-align: left; }
+td small { display: block; margin-top: 2px; color: var(--grafito); font-size: 15px; }
+
+/* ---- El valle ---- */
+.valle { position: relative; overflow: hidden; }
+.valle img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
+.marcador { position: absolute; left: var(--x); top: var(--y); display: flex; align-items: center; gap: 8px; padding: 5px 9px 5px 6px; background: rgb(251 251 249 / 0.92); font: 400 11.5px/1 var(--mono); letter-spacing: 0.04em; }
+.marcador::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--senal); }
+.valle figcaption { position: absolute; left: var(--margen); bottom: 16px; padding: 5px 9px; background: rgb(251 251 249 / 0.92); color: var(--tinta); }
+
+/* ---- Campos ---- */
+.campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px); }
+.campo { display: grid; gap: 20px; align-content: start; }
+.campo .marco { overflow: hidden; }
+.campo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.dato { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; gap: 8px 20px; padding-top: 18px; border-top: 1px solid var(--tinta); }
+.dato .grande { font-size: clamp(56px, 6vw, 88px); font-weight: 500; letter-spacing: -0.05em; line-height: 0.9; }
+.dato p { color: var(--grafito); }
+.campo h3 { font-size: 22px; }
+.campo > p { max-width: 48ch; color: var(--grafito); }
+
+.calculadora { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 2fr) minmax(0, 2fr) auto; gap: 20px 24px; align-items: end; margin-top: clamp(56px, 7vw, 96px); padding: clamp(20px, 3vw, 40px); border: 1px solid var(--linea); background: var(--blanco); }
+.calc-pregunta h3 { margin-top: 10px; font-size: clamp(24px, 2.4vw, 32px); }
+.calculadora label { display: grid; gap: 8px; font: 400 12px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--grafito); }
+.calculadora input, .calculadora select { width: 100%; min-height: 50px; padding: 10px 14px; border: 1px solid #b9bfb9; border-radius: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.3 'Instrument Sans', system-ui, sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; }
+.calculadora input { -moz-appearance: textfield; font-variant-numeric: tabular-nums; }
+.calculadora input::-webkit-inner-spin-button, .calculadora input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.calculadora select { padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%), linear-gradient(-45deg, transparent 50%, var(--tinta) 50%); background-position: calc(100% - 22px) 52%, calc(100% - 16px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
+.calculadora :is(input, select):focus-visible { outline: 2px solid var(--tinta); outline-offset: 0; }
+.calc-resultado { grid-column: 1 / -1; display: grid; gap: 10px; padding-top: 18px; border-top: 1px solid var(--tinta); color: var(--grafito); }
+.calc-resultado .grande { min-width: 9ch; color: var(--tinta); font-size: clamp(44px, 6vw, 80px); font-weight: 500; letter-spacing: -0.05em; line-height: 1; white-space: nowrap; }
+.calc-resultado small { font-size: 0.45em; letter-spacing: 0; }
+.calc-nota { grid-column: 1 / -1; }
+
+/* ---- Visita a terreno ---- */
+.visita { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); }
+.visita h2 { margin-block: 14px 20px; font-size: clamp(34px, 4.4vw, 60px); }
+.visita .marco { margin-top: 32px; overflow: hidden; }
+.visita .marco img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.datos { display: grid; gap: 14px; margin-top: 28px; color: var(--grafito); }
+.datos b { display: block; font: 400 12px/1.5 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta); }
+.formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 24px; align-content: start; padding: clamp(20px, 3vw, 40px); border: 1px solid var(--linea); background: var(--blanco); }
+.formulario label { display: grid; gap: 8px; font: 400 12px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--grafito); }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select { width: 100%; min-height: 50px; padding: 10px 14px; border: 1px solid #b9bfb9; border-radius: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.3 'Instrument Sans', system-ui, sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; transition: border-color 300ms; }
+.formulario input[type="number"] { -moz-appearance: textfield; font-variant-numeric: tabular-nums; }
+.formulario input::-webkit-inner-spin-button, .formulario input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.formulario select { padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%), linear-gradient(-45deg, transparent 50%, var(--tinta) 50%); background-position: calc(100% - 22px) 52%, calc(100% - 16px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
+.formulario input:focus-visible, .formulario select:focus-visible { outline: 2px solid var(--tinta); outline-offset: 0; border-color: var(--tinta); }
+.formulario .boton { justify-self: start; margin-top: 6px; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--tinta); }
+
+/* ---- Pie ---- */
+.pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px 40px; padding-block: 40px; border-top: 1px solid var(--linea); font-size: 15px; color: var(--grafito); }
+.pie .marca { color: var(--tinta); }
+
+/* ---- L ---- */
+@media (max-width: 1279px) {
+  .cabecera nav ul { gap: 22px; }
+}
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera nav { display: none; }
+  .cabeza, .panel-arriba, .despiece, .ficha, .visita { grid-template-columns: minmax(0, 1fr); }
+  .escena { --k: 0.85; }
+  .tablero { grid-template-columns: minmax(0, 1fr); }
+  .grafica { border-right: 0; border-bottom: 1px solid var(--linea); }
+  .lateral { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  .calculadora { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; }
+  .calc-pregunta { grid-column: 1 / -1; }
+  .bloque + .bloque { border-top: 0; border-left: 1px solid var(--linea); }
+  .ficha .foto { max-width: 420px; }
+  .visita .marco { display: none; }
+  .mapa { padding: 18px; }
+  .mapa::before { left: 18px; right: 18px; }
+  .nota .caudal { display: none; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  body { font-size: 16px; }
+  .cabecera .boton { min-height: 40px; padding-inline: 14px; font-size: 14px; }
+  .mapa { margin-inline: calc(var(--margen) * -1); padding: 14px 10px; border-inline: 0; }
+  .mapa::before { left: 10px; right: 10px; }
+  .nota { left: 12px; top: -9px; padding: 3px 6px; font-size: 10.5px; }
+  .izquierda .nota { right: 12px; }
+  .escena { --k: 0.72; }
+  .nota { grid-auto-flow: column; gap: 6px; }
+  .nota .sitio, .nota .palabra { display: none; }
+  .grafica text { font-size: 18px; }
+  .lateral, .campos { grid-template-columns: minmax(0, 1fr); }
+  .bloque + .bloque { border-left: 0; border-top: 1px solid var(--linea); }
+  .valle img { aspect-ratio: 4 / 3; }
+  .marcador { font-size: 10.5px; }
+  .formulario { grid-template-columns: minmax(0, 1fr); padding: 20px 16px; }
+  .calculadora { grid-template-columns: minmax(0, 1fr); padding: 20px 16px; }
+  .calculadora .boton { justify-self: start; }
+  th, td { display: block; width: auto; padding: 0; border: 0; }
+  th { padding-top: 16px; border-top: 1px solid var(--linea); }
+  td { padding: 4px 0 16px; }
+  tr:last-child td { border-bottom: 1px solid var(--linea); }
+  tr:last-child th { border-bottom: 0; }
+}
+
+/* ---- Movimiento: preciso y continuo ----
+   Todo arranca y frena con la misma curva (--precisa). Al cargar, las curvas
+   de nivel se dibujan y los sensores se encienden; sus lecturas cambian con un
+   ciclo seno lento y desfasado entre ellos (cauce.js). El sensor es un modelo
+   3D de caras de CSS: se mece despacio, se gira al arrastrarlo y, al bajar, se
+   despieza en sus capas, atado al scroll. Las gráficas se trazan y las fotos
+   se descubren de arriba abajo, como un plotter. */
+[data-aparece] { --entrada: cauce-aparece; --curva: var(--precisa); --tramo: 36svh; --duracion: 1200ms; }
+.revela { --entrada: cauce-barrido; --tramo: 50svh; --duracion: 1400ms; }
+.despiece-plano { --entrada: none; --tramo: 85svh; --duracion: 1600ms; }
+.traza { --entrada: cauce-traza; --tramo: 60svh; --duracion: 1600ms; }
+.crece { --entrada: cauce-crece; --duracion: 1400ms; }
+.p-tapa { --entrada: cauce-tapa; }
+.p-placa { --entrada: cauce-placa; }
+.p-bateria { --entrada: cauce-bateria; }
+@keyframes cauce-aparece { from { opacity: 0; transform: translateY(14px); } }
+@keyframes cauce-barrido { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes cauce-traza { from { stroke-dashoffset: 1; } }
+@keyframes cauce-crece { from { transform: scaleX(0); } }
+@keyframes cauce-tapa { from { transform: translateY(232px); } }
+@keyframes cauce-placa { from { transform: translateY(150px); } }
+@keyframes cauce-bateria { from { transform: translateY(40px); } }
+@keyframes cauce-vaiven { from { transform: rotateY(-16deg); } to { transform: rotateY(16deg); } }
+@keyframes cauce-enciende { from { opacity: 0; } }
+@keyframes cauce-late { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .portada-texto > * { animation: cauce-aparece 1200ms var(--precisa) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 120ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 240ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 360ms; }
+  .curvas path, .rio { animation: cauce-traza 2400ms var(--precisa) both; }
+  .curvas path:nth-child(3n + 1) { animation-delay: 300ms; }
+  .curvas path:nth-child(3n + 2) { animation-delay: 600ms; }
+  .rio { animation-delay: 900ms; animation-duration: 2800ms; }
+  .sensor { animation: cauce-enciende 1000ms var(--precisa) both; animation-delay: calc(1600ms + var(--orden) * 160ms); }
+  .vaiven { animation: cauce-vaiven 10s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; }
+  .tomada .vaiven, .escena:focus-visible .vaiven { animation-play-state: paused; }
+  .punto::after { animation: cauce-late 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; animation-delay: calc(var(--orden) * -1.2s); }
+}
+</style>
+</head>
+<body data-boceto="cauce">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Cauce</b> es una marca inventada por Volutus para mostrarte el estilo <b>Tecnológico</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="cauce" viewBox="0 0 32 32"><path d="M16 2.5c7.6 0 13.5 4.6 13.5 11.2S24 29.5 15.4 29.5 2.5 24.8 2.5 17 8.4 2.5 16 2.5zM16.4 8.6c4.4 0 7.4 2.6 7.4 6.6s-3.3 8.4-7.9 8.4-7.6-2.8-7.6-7.1 3.7-7.9 8.1-7.9z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="16" r="3.2" fill="#ff5b1f"/></symbol></svg>
+
+<header class="ancho cabecera">
+  <a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#cauce"/></svg>cauce</a>
+  <nav aria-label="Secciones"><ul><li><a href="#mide">Qué mide</a></li><li><a href="#panel">El panel</a></li><li><a href="#ficha">Ficha técnica</a></li><li><a href="#campos">Campos</a></li></ul></nav>
+  <a class="boton" href="#visita">Pedir visita</a>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio">
+    <div class="portada-texto">
+      <p class="mono">Telemetría de riego · Valle de Colchagua</p>
+      <h1>El suelo te dice cuándo regar</h1>
+      <p>Sensores de humedad y caudal en cada cuartel, y un panel en el teléfono que avisa cuándo abrir la válvula y cuándo cerrarla. Riegas lo que la planta necesita, no lo que dice el calendario.</p>
+      <div class="acciones"><a class="boton" href="#visita">Pedir una visita a terreno</a><a class="callado" href="#mide">Ver qué mide</a></div>
+    </div>
+    <figure class="mapa">
+      <div class="lienzo">
+        <svg viewBox="0 0 800 520" preserveAspectRatio="none" aria-hidden="true"><g class="curvas"><path pathLength="1" d="M0 328 13 310 21 290 13 245 0 208"/><path pathLength="1" d="M0 372 24 355 38 340 52 320 60 300 57 285 28 210 16 185 0 159"/><path pathLength="1" d="M0 413 50 376 90 334 105 321 158 290 155 280 145 270 95 246 75 230 60 210 0 113M800 229 792 235 786 245 780 260 779 270 780 280 784 295 800 324"/><path pathLength="1" d="M0 463 7 450 20 435 65 398 105 361 125 346 150 336 180 330 210 330 265 335 280 334 295 330 315 321 331 310 343 290 347 280 348 270 344 260 340 258 330 257 318 260 275 279 255 283 240 281 215 272 169 245 103 210 90 200 75 183 20 104 11 85 6 70 2 50 0 30M800 197 757 225 744 245 741 255 739 270 742 285 750 305 785 352 800 377"/><path pathLength="1" d="M18 0 17 25 19 45 25 68 35 89 59 125 88 165 108 185 129 200 200 238 220 246 235 249 255 249 270 246 325 220 340 215 355 213 375 215 388 220 397 230 399 240 397 255 386 285 370 309 345 336 330 347 310 358 285 368 260 371 240 370 190 361 165 361 140 368 120 380 50 441 32 460 25 471 18 485 14 500 12 520M800 167 780 182 732 210 711 225 703 235 698 245 697 255 698 270 710 295 730 327 776 385 788 410 800 445M545 225 545 225"/><path pathLength="1" d="M35 0 34 15 35 35 44 65 64 100 100 150 125 175 154 195 195 217 225 227 245 228 260 226 275 220 310 202 330 194 355 188 385 186 455 186 625 208 645 209 660 208 690 199 760 168 785 150 800 131M780 520 774 460 769 440 762 420 750 399 708 340 695 323 680 308 665 300 655 298 645 298 625 302 570 319 550 321 535 320 521 315 510 308 475 271 465 265 455 263 440 267 425 277 410 294 384 330 370 346 345 366 310 385 285 393 260 396 235 395 190 388 170 387 150 392 135 400 110 420 57 470 50 480 42 495 38 520"/><path pathLength="1" d="M55 0 53 25 56 40 61 55 83 95 115 140 140 165 175 190 205 204 220 208 235 210 250 208 265 204 310 180 330 173 355 167 430 155 450 154 466 155 550 177 580 181 610 182 635 180 655 176 735 151 755 141 770 129 783 110 789 90 790 70 786 50 778 30 762 0M750 520 750 495 747 475 736 440 693 360 683 345 670 333 655 326 635 324 615 328 560 343 535 347 515 347 490 342 477 335 460 323 450 319 442 320 435 324 404 355 377 375 340 397 310 410 285 416 260 418 180 415 165 418 150 425 125 443 88 480 75 500 70 520"/><path pathLength="1" d="M80 0 78 10 77 25 83 50 100 85 126 125 150 151 180 174 205 187 230 192 245 190 260 185 300 162 320 154 430 132 450 130 470 132 490 137 550 157 570 161 590 162 611 160 634 155 715 127 730 120 745 109 755 95 759 80 759 65 755 45 746 20 736 0M723 520 722 495 716 470 691 420 672 375 665 364 655 355 645 350 630 348 610 352 560 366 515 377 415 396 390 404 335 427 310 434 280 439 210 442 185 448 165 458 147 475 130 500 123 520"/><path pathLength="1" d="M114 0 108 20 110 45 120 75 137 105 156 130 180 152 205 166 225 171 236 170 250 166 290 142 310 133 435 109 460 109 480 112 540 134 565 140 595 141 625 134 695 102 710 92 721 80 726 65 727 45 721 20 711 0M691 520 693 505 689 485 682 470 661 435 645 397 634 385 625 381 615 381 589 385 420 429 395 438 360 454 340 460 320 462 255 464 222 470 205 478 191 490 182 505 177 520"/><path pathLength="1" d="M156 0 148 20 145 40 147 60 154 80 168 105 185 124 200 135 210 139 220 141 230 141 240 137 275 117 300 108 425 86 455 86 480 90 505 97 545 112 565 117 585 118 605 115 630 105 658 90 675 78 688 65 695 50 696 35 691 15 681 0M623 520 635 511 639 500 637 490 630 475 612 450 600 438 585 431 565 428 535 431 487 440 455 448 430 458 412 470 397 485 386 505 385 520M313 520 306 510 299 505 285 499 270 497 255 498 245 502 234 510 228 520"/><path pathLength="1" d="M196 0 190 15 187 30 188 45 191 60 197 70 206 80 215 85 230 88 250 85 300 73 326 65 370 48 385 46 495 66 560 85 580 87 595 84 617 75 639 60 651 45 653 30 648 20 634 10 616 5 578 0M511 520 517 515 523 505 525 495 524 490 521 485 515 480 505 476 495 475 470 480 454 490 450 495 446 505 447 515 450 520"/></g><path class="rio" pathLength="1" d="M0 283L20 291 40 296 60 298 80 297 100 295 120 292 140 290 160 289 180 291 200 294 220 299 240 305 260 310 280 315 300 316 320 315 340 310 360 302 380 291 400 279 420 268 440 257 460 249 480 244 500 241 520 242 540 244 560 247 580 249 600 250 620 249 640 247 660 242 680 236 700 231 720 226 740 224 760 225 780 230 800 238"/></svg>
+        <div class="sensor" style="--x: 17%; --y: 70%; --orden: 0"><span class="punto"></span><p class="nota"><b>S-01</b><span class="sitio">Cuartel 2 · Carménère</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="31.4" data-amplitud="1.6" data-periodo="23" data-fase="0">31,4</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="412" data-amplitud="34" data-periodo="17" data-fase="0.3" data-decimales="0">412</span> L/h</span></p></div>
+        <div class="sensor izquierda" style="--x: 37%; --y: 37%; --orden: 1"><span class="punto"></span><p class="nota"><b>S-02</b><span class="sitio">Cuartel 5 · Syrah</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="27.9" data-amplitud="1.2" data-periodo="29" data-fase="0.5">27,9</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="0" data-amplitud="0" data-periodo="29" data-fase="0" data-decimales="0">0</span> L/h</span></p></div>
+        <div class="sensor" style="--x: 58%; --y: 63%; --orden: 2"><span class="punto"></span><p class="nota"><b>S-03</b><span class="sitio">Cuartel 8 · Cabernet</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="33.1" data-amplitud="1.9" data-periodo="19" data-fase="0.2">33,1</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="386" data-amplitud="28" data-periodo="21" data-fase="0.7" data-decimales="0">386</span> L/h</span></p></div>
+        <div class="sensor izquierda" style="--x: 77%; --y: 30%; --orden: 3"><span class="punto"></span><p class="nota"><b>S-04</b><span class="sitio">Cuartel 11 · Carménère</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="24.6" data-amplitud="0.9" data-periodo="31" data-fase="0.8">24,6</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="0" data-amplitud="0" data-periodo="31" data-fase="0" data-decimales="0">0</span> L/h</span></p></div>
+        <div class="sensor izquierda" style="--x: 88%; --y: 78%; --orden: 4"><span class="punto"></span><p class="nota"><b>S-05</b><span class="sitio">Cuartel 14 · Malbec</span><span><span class="palabra">Humedad </span><span class="valor" data-lectura="29.8" data-amplitud="1.4" data-periodo="26" data-fase="0.1">29,8</span> %</span><span class="caudal">Caudal <span class="valor" data-lectura="447" data-amplitud="40" data-periodo="15" data-fase="0.6" data-decimales="0">447</span> L/h</span></p></div>
+      </div>
+      <figcaption class="mapa-pie mono"><span>Viña Cerro Pangal · 5 sensores · lectura cada 15 min</span><span class="escala">500 m</span><span>34°38′ S · 71°22′ O</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="ancho seccion" id="mide">
+    <div class="cabeza" data-aparece>
+      <div><p class="mono">01 · Qué mide</p><h2>Una estaca, cuatro piezas, cinco temporadas</h2></div>
+      <p>Se entierra a 60 cm, entre las raíces, y no se vuelve a tocar. Mide la humedad a tres profundidades y le avisa al panel cuándo el suelo se secó.</p>
+    </div>
+    <div class="despiece">
+      <figure class="plano despiece-plano" data-aparece>
+        <div class="escena" tabindex="0" role="img" aria-label="El sensor Cauce en 3D, separado en sus cuatro piezas: la tapa con su antena, la placa, la batería y la sonda. Arrástralo o usa las flechas para girarlo.">
+          <div class="vaiven"><div class="giro">
+<div class="pieza p-sonda"><div class="caja collar" style="--w: 60px; --h: 34px; --d: 60px; --y: 79px"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="cilindro vastago" style="--r: 14px; --h: 178px; --y: 185px; --x: 0px"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b></b><b></b></div><span class="anillo" style="--y: 138px"></span><span class="anillo" style="--y: 196px"></span><span class="anillo" style="--y: 254px"></span><div class="punta" style="--y: 274px"><i></i><i></i><i></i><i></i></div></div>
+<div class="pieza p-bateria" data-sigue style="--orden: 1"><div class="cilindro celda" style="--r: 17px; --h: 86px; --y: -21px; --x: -21px"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b></b><b></b></div><div class="cilindro celda" style="--r: 17px; --h: 86px; --y: -21px; --x: 21px"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b></b><b></b></div></div>
+<div class="pieza p-placa" data-sigue style="--orden: 2"><div class="caja placa" style="--w: 108px; --h: 8px; --d: 92px; --y: -135px"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="pieza p-tapa" data-sigue style="--orden: 3"><div class="caja antena" style="--w: 4px; --h: 46px; --d: 4px; --y: -275px"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="caja cupula" style="--w: 120px; --h: 72px; --d: 120px; --y: -216px"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          </div></div>
+        </div>
+        <figcaption class="mono pista">Arrastra para girarlo</figcaption>
+      </figure>
+      <ol class="partes">
+        <li class="parte" data-aparece><span class="mono">01</span><h3>Tapa</h3><p>Antena LoRa y un panel solar de 2 W bajo la cúpula. Manda las lecturas cada 15 minutos, hasta a 8 km del gateway.</p></li>
+        <li class="parte" data-aparece style="--orden: 1"><span class="mono">02</span><h3>Placa</h3><p>Despierta, mide y vuelve a dormir. Si se corta la señal guarda 30 días de lecturas y las manda cuando vuelve.</p></li>
+        <li class="parte" data-aparece style="--orden: 2"><span class="mono">03</span><h3>Batería</h3><p>Dos celdas de litio de 19 Ah. Alcanzan para cinco temporadas sin abrir la tapa.</p></li>
+        <li class="parte" data-aparece style="--orden: 3"><span class="mono">04</span><h3>Sonda</h3><p>Humedad y temperatura del suelo a 20, 40 y 60 cm, que es donde están las raíces de una vid adulta.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="panel">
+    <div class="panel-arriba">
+      <div data-aparece>
+        <p class="mono">02 · El panel</p>
+        <h2>Lo que pasa bajo tierra, en el teléfono</h2>
+        <p>Una línea por cuartel, el punto en que la planta empieza a sufrir y una alerta cuando hay que regar. Nada más.</p>
+      </div>
+      <figure class="foto revela" data-aparece>
+        <img src="/image/bocetos/cauce/goteo-600.webp" srcset="/image/bocetos/cauce/goteo-600.webp 600w, /image/bocetos/cauce/goteo-960.webp 960w" sizes="(min-width: 900px) 38vw, 100vw" width="960" height="720" loading="lazy" alt="Un brote verde junto a una manguera de goteo sobre tierra oscura">
+        <figcaption class="mono">Cuartel 2 · la válvula abre a las 06:00 y cierra sola</figcaption>
+      </figure>
+    </div>
+    <div class="tablero" data-aparece>
+      <figure class="grafica">
+        <figcaption class="grafica-cabeza"><span class="mono">Humedad a 40 cm · cuartel 2 · última semana</span><span class="mono">Riego <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path class="riego" d="M5 0l5 9H0z" fill="#ff5b1f"/></svg></span></figcaption>
+        <p class="cursor-lectura mono" aria-hidden="true"><span data-cursor-texto>Dom 21:00 · 23,8 %</span></p>
+        <svg viewBox="0 0 600 260" tabindex="0" role="img" data-humedad="34.3 34.0 33.6 33.1 32.6 32.1 31.7 31.4 31.1 30.8 30.4 29.9 29.4 28.9 28.5 28.2 27.9 27.6 27.2 26.7 29.1 31.5 31.1 30.8 30.5 30.2 29.8 29.3 28.8 28.3 27.9 27.6 27.3 27.0 26.6 26.1 25.6 25.1 24.7 24.4 24.1 23.8 23.4 22.9 25.3 27.7 27.3 27.0 26.7 26.4 26.0 25.5 25.0 24.5 24.1 23.8 23.5" aria-label="La humedad baja de 34,3 % a 26,7 % en dos días y medio, sube a 31,5 % con el riego del miércoles, baja a 22,9 %, sube a 27,7 % con el riego del sábado y el domingo queda en 23,5 %, bajo el punto de riego de 24 %. Recórrela con el cursor o con las flechas para leer cada hora.">
+          <rect class="banda" x="44" y="20" width="548" height="160"/>
+          <path class="eje" d="M44 220h548M44 170h548M44 120h548M44 70h548M44 20h548"/>
+          <path class="umbral" d="M44 180h548"/>
+          <text x="0" y="224">20 %</text><text x="0" y="174">25 %</text><text x="0" y="124">30 %</text><text x="0" y="74">35 %</text><text x="0" y="24">40 %</text>
+          <text x="52" y="198">Punto de riego · 24 %</text>
+          <path class="humedad traza" data-sigue pathLength="1" d="M44 77C45.6 77.5 50.5 79.1 53.8 80.3C57 81.5 60.3 82.8 63.6 84.3C66.8 85.7 70.1 87.4 73.4 89C76.6 90.6 79.9 92.4 83.1 94C86.4 95.6 89.7 97.3 92.9 98.7C96.2 100.2 99.5 101.5 102.7 102.7C106 103.9 109.2 105 112.5 106C115.8 107 119 108 122.3 109C125.5 110 128.8 111.1 132.1 112.3C135.3 113.5 138.6 114.8 141.9 116.3C145.1 117.7 148.4 119.4 151.6 121C154.9 122.6 158.2 124.4 161.4 126C164.7 127.6 168 129.3 171.2 130.7C174.5 132.2 177.7 133.5 181 134.7C184.3 135.9 187.5 137 190.8 138C194 139 197.3 140 200.6 141C203.8 142 207.1 143.1 210.4 144.3C213.6 145.5 216.9 146.8 220.1 148.3C223.4 149.7 226.7 156.2 229.9 153C233.2 149.8 236.5 137 239.7 129C243 121 246.2 108.1 249.5 104.7C252.8 101.3 256 107.5 259.3 108.7C262.5 109.9 265.8 111 269.1 112C272.3 113 275.6 114 278.9 115C282.1 116 285.4 117.1 288.6 118.3C291.9 119.5 295.2 120.8 298.4 122.3C301.7 123.7 305 125.4 308.2 127C311.5 128.6 314.7 130.4 318 132C321.3 133.6 324.5 135.3 327.8 136.7C331 138.2 334.3 139.5 337.6 140.7C340.8 141.9 344.1 143 347.4 144C350.6 145 353.9 146 357.1 147C360.4 148 363.7 149.1 366.9 150.3C370.2 151.5 373.5 152.8 376.7 154.3C380 155.7 383.2 157.4 386.5 159C389.8 160.6 393 162.4 396.3 164C399.5 165.6 402.8 167.3 406.1 168.7C409.3 170.2 412.6 171.5 415.9 172.7C419.1 173.9 422.4 175 425.6 176C428.9 177 432.2 178 435.4 179C438.7 180 442 181.1 445.2 182.3C448.5 183.5 451.7 184.8 455 186.3C458.3 187.7 461.5 194.2 464.8 191C468 187.8 471.3 175 474.6 167C477.8 159 481.1 146.1 484.4 142.7C487.6 139.3 490.9 145.5 494.1 146.7C497.4 147.9 500.7 149 503.9 150C507.2 151 510.5 152 513.7 153C517 154 520.2 155.1 523.5 156.3C526.8 157.5 530 158.8 533.3 160.3C536.5 161.7 539.8 163.4 543.1 165C546.3 166.6 549.6 168.4 552.9 170C556.1 171.6 559.4 173.3 562.6 174.7C565.9 176.2 569.2 177.5 572.4 178.7C575.7 179.9 579 181 582.2 182C585.5 183 590.4 184.5 592 185"/>
+          <path class="riego" d="M235.8 228l6 10h-12zM466.7 228l6 10h-12z"/>
+          <g class="cursor" data-cursor><path d="M0 20V220"/><circle r="4.5"/></g>
+          <text x="44" y="256">Lun</text><text x="122" y="256">Mar</text><text x="200" y="256">Mié</text><text x="279" y="256">Jue</text><text x="357" y="256">Vie</text><text x="435" y="256">Sáb</text><text x="513" y="256">Dom</text>
+        </svg>
+      </figure>
+      <div class="lateral">
+        <div class="bloque alerta">
+          <p class="mono">Domingo · 05:40</p>
+          <h3>Regar el cuartel 2</h3>
+          <p>La humedad a 40 cm bajó a <strong class="cifra">23,5 %</strong>. Riega <strong>3 h 20 min</strong> antes de las 11:00, cuando todavía no hay viento.</p>
+        </div>
+        <div class="bloque ahorro">
+          <p class="mono">Agua usada esta temporada</p>
+          <p class="grande cifra">−31 %</p>
+          <dl class="barras mono">
+            <div class="antes"><dt>2024</dt><dd><i data-sigue class="crece"></i>5.940 m³</dd></div>
+            <div class="ahora"><dt>2025</dt><dd><i data-sigue class="crece" style="--orden: 1"></i>4.100 m³</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="ficha">
+    <div class="cabeza" data-aparece>
+      <div><p class="mono">03 · Ficha técnica</p><h2>Hecho para quedarse en el potrero</h2></div>
+      <p>Barro, heladas, el tractor que pasa al lado. Lo probamos tres temporadas en Colchagua antes de venderlo.</p>
+    </div>
+    <div class="ficha">
+      <div class="tabla" data-aparece>
+        <table>
+          <caption class="mono">Sensor Cauce S2 · temporada 2026</caption>
+          <tr><th scope="row">Mide</th><td>Humedad volumétrica y temperatura del suelo<small>A 20, 40 y 60 cm, ±2 % de humedad</small></td></tr>
+          <tr><th scope="row">Caudal</th><td>Caudalímetro ultrasónico en la matriz<small>De 0 a 2.000 L/h, ±2 %</small></td></tr>
+          <tr><th scope="row">Alcance</th><td>LoRa, hasta 8 km con línea de vista<small>Un gateway con 4G por campo</small></td></tr>
+          <tr><th scope="row">Batería</th><td>5 años<small>Litio de 19 Ah, con lecturas cada 15 minutos</small></td></tr>
+          <tr><th scope="row">Protección</th><td>IP68<small>Sumergible a 1 m, de −20 a 60 °C</small></td></tr>
+          <tr><th scope="row">Instalación</th><td>Una estaca cada 3 a 5 hectáreas<small>Un campo de 40 ha se deja listo en una mañana</small></td></tr>
+          <tr><th scope="row">Precio</th><td>$189.000 por sensor<small>Más $14.900 al mes por el panel, sin contrato</small></td></tr>
+        </table>
+      </div>
+      <figure class="foto revela" data-aparece>
+        <img src="/image/bocetos/cauce/sensor-480.webp" srcset="/image/bocetos/cauce/sensor-480.webp 480w, /image/bocetos/cauce/sensor-800.webp 800w" sizes="(min-width: 900px) 28vw, 100vw" width="800" height="1000" loading="lazy" alt="Una estación blanca con anemómetro sobre un poste, junto a un árbol, al borde de un potrero verde">
+        <figcaption class="mono">Estación de referencia: lluvia, viento y temperatura para todo el campo</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <figure class="valle revela" data-aparece>
+    <img src="/image/bocetos/cauce/valle-800.webp" srcset="/image/bocetos/cauce/valle-800.webp 800w, /image/bocetos/cauce/valle-1440.webp 1440w" sizes="100vw" width="1440" height="617" loading="lazy" alt="Hileras de vides que se pierden hacia un cordón de cerros bajo un cielo azul con nubes">
+    <span class="marcador" style="--x: 22%; --y: 52%" aria-hidden="true">S-07 · 30,2 %</span>
+    <span class="marcador" style="--x: 61%; --y: 45%" aria-hidden="true">S-08 · 27,5 %</span>
+    <figcaption class="mono">Cuartel 9, mirando a la cordillera de la costa</figcaption>
+  </figure>
+
+  <section class="ancho seccion" id="campos">
+    <div class="cabeza" data-aparece>
+      <div><p class="mono">04 · Campos</p><h2>Lo que cambió en dos temporadas</h2></div>
+      <p>Las cifras salen de sus propios paneles, comparadas con el mismo cuartel el año anterior.</p>
+    </div>
+    <div class="campos">
+      <article class="campo">
+        <div class="marco revela" data-aparece><img src="/image/bocetos/cauce/dron-560.webp" srcset="/image/bocetos/cauce/dron-560.webp 560w, /image/bocetos/cauce/dron-880.webp 880w" sizes="(min-width: 600px) 46vw, 100vw" width="880" height="660" loading="lazy" alt="Un viñedo visto desde arriba: hileras verdes en diagonal, muy juntas"></div>
+        <div class="dato" data-aparece><p class="grande cifra">−31 %</p><p>de agua en la temporada 2025, con la misma cosecha por hectárea.</p></div>
+        <h3>Viña Cerro Pangal · Peralillo</h3>
+        <p>42 hectáreas de carménère y syrah. Antes regaban dos veces por semana, parejo; ahora riegan cada cuartel cuando lo pide.</p>
+      </article>
+      <article class="campo">
+        <div class="marco revela" data-aparece><img src="/image/bocetos/cauce/ladera-560.webp" srcset="/image/bocetos/cauce/ladera-560.webp 560w, /image/bocetos/cauce/ladera-880.webp 880w" sizes="(min-width: 600px) 46vw, 100vw" width="880" height="660" loading="lazy" alt="Un viñedo de secano con casas blancas al fondo y cerros pelados detrás"></div>
+        <div class="dato" data-aparece style="--orden: 1"><p class="grande cifra">11</p><p>riegos menos entre noviembre y marzo, sin perder un racimo con la ola de calor de enero.</p></div>
+        <h3>Viña Tres Esteros · Lolol</h3>
+        <p>26 hectáreas de cabernet en ladera, con un pozo que no da para más. Los sensores dicen qué cuartel tiene prioridad.</p>
+      </article>
+    </div>
+    <form class="calculadora" id="calcular" data-aparece toolname="calcular_ahorro_agua" tooldescription="Estima cuánta agua y cuánto dinero ahorraría un campo por temporada con los sensores de Cauce, una empresa de telemetría de riego inventada por Volutus como boceto de página. No envía nada a nadie: calcula aquí mismo y responde el ahorro estimado." toolautosubmit>
+      <div class="calc-pregunta">
+        <p class="mono">¿Y en tu campo?</p>
+        <h3>Calcula cuánta agua dejarías de bombear</h3>
+      </div>
+      <label>Hectáreas<input type="number" name="hectareas" value="20" min="1" max="5000" inputmode="numeric" required toolparamdescription="Superficie regada del campo, en hectáreas, de 1 a 5.000"></label>
+      <label>Cultivo<select name="cultivo" toolparamdescription="Qué se riega: vid (vid vinífera), cerezo, nogal o palto"><option value="vid">Vid vinífera</option><option value="cerezo">Cerezos</option><option value="nogal">Nogales</option><option value="palto">Paltos</option></select></label>
+      <button class="boton" type="submit">Calcular</button>
+      <output class="calc-resultado" name="resultado" aria-live="polite"><span class="grande cifra"><span data-ahorro-agua>25.200</span><small> m³</small></span><span data-ahorro-pesos>menos por temporada: $3.024.000 en bombeo</span></output>
+      <p class="mono calc-nota">Estimación con el 28 % de ahorro promedio de nuestros campos en 2025 y $120 por m³ bombeado.</p>
+    </form>
+  </section>
+
+  <section class="ancho seccion visita" id="visita">
+    <div data-aparece>
+      <p class="mono">05 · Visita a terreno</p>
+      <h2>Vamos a tu campo</h2>
+      <p style="color: var(--grafito); max-width: 40ch">Recorremos los cuarteles contigo, vemos dónde va cada estaca y te dejamos un presupuesto ese mismo día. La visita no se cobra.</p>
+      <div class="datos">
+        <p><b>Oficina</b>Av. Rafael Casanova 418, Santa Cruz</p>
+        <p><b>Correo</b>terreno@cauce.cl</p>
+      </div>
+      <div class="marco revela" data-aparece><img src="/image/bocetos/cauce/manos-480.webp" srcset="/image/bocetos/cauce/manos-480.webp 480w, /image/bocetos/cauce/manos-800.webp 800w" sizes="28vw" width="800" height="1000" loading="lazy" alt="Dos manos que sostienen un puñado de tierra húmeda"></div>
+    </div>
+    <form class="formulario" data-muestra data-aparece toolname="pedir_visita_terreno" tooldescription="Pide una visita a terreno de Cauce, una empresa de telemetría de riego inventada por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto.">
+      <label>Nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+      <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+      <label>Cultivo<select name="cultivo" toolparamdescription="Qué se cultiva en el campo: vid vinífera, cerezos, nogales, paltos u otro"><option>Vid vinífera</option><option>Cerezos</option><option>Nogales</option><option>Paltos</option><option>Otro</option></select></label>
+      <label>Hectáreas<input type="number" name="hectareas" min="1" max="5000" inputmode="numeric" toolparamdescription="Superficie del campo que se quiere medir, en hectáreas"></label>
+      <label class="todo">Comuna<input name="comuna" autocomplete="address-level2" maxlength="60" toolparamdescription="Comuna donde está el campo, por ejemplo Santa Cruz o Lolol"></label>
+      <button class="boton todo" type="submit">Pedir la visita</button>
+    </form>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <span class="marca" aria-hidden="true"><svg><use href="#cauce"/></svg>cauce</span>
+  <span>Av. Rafael Casanova 418, Santa Cruz · Lunes a sábado, 8:00 a 18:00</span>
+  <span>Boceto de Volutus · marca inventada</span>
+</footer>
+</body>
+</html>

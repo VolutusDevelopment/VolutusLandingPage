@@ -19,7 +19,7 @@ const b = (slug, nombre, rubro, estilo, titulo, detalle, fondo) => ({ slug, nomb
 
 export const BOCETOS = [
   b('alba', 'Alba Interiores', 'Estudio de interiorismo', 'minimalista', 'Minimalista', 'Poco, preciso, mucho aire', '#fafaf8'),
-  b('nodo', 'Nodo', 'Software de despacho para pymes', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#06121b'),
+  b('cauce', 'Cauce', 'Telemetría de riego para viñas y huertos', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#f3f4f1'),
   b('roble', 'Roble & Asociados', 'Estudio contable y tributario', 'corporativo', 'Corporativo', 'Estructura, respaldo, orden', '#f3f6fa'),
   b('marea', 'Marea', 'Viajes por la costa chilena', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
   b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#f6e4d0'),
@@ -32,7 +32,7 @@ export const BOCETOS = [
   b('raiz', 'Raíz', 'Vivero y paisajismo', 'natural', 'Natural', 'Formas orgánicas, tonos de tierra', '#e9ecdf'),
   b('helio', 'Helio', 'Energía solar para casas', 'futurista', 'Futurista', 'Degradados, vidrio, luz', '#0b0c1e'),
   b('bruma', 'Bruma', 'Café de especialidad y tostaduría', 'artesanal', 'Artesanal', 'Papel, sellos, a mano', '#e9dcc4'),
-  b('koen', 'Kōen', 'Yoga y casa de té', 'zen', 'Zen / japonés', 'Silencio, aire, calma', '#f2efe8'),
+  b('kiri', 'Kiri', 'Termas y ryokan junto al volcán Osorno', 'zen', 'Zen / japonés', 'Silencio, aire, calma', '#efeae0'),
   b('galpon', 'Galpón 9', 'Cervecería y taller de metal', 'industrial', 'Industrial', 'Fuerte, oscuro, de taller', '#1b1d1f'),
   b('mirador', 'Hotel Mirador', 'Hotel boutique en Valparaíso', 'artdeco', 'Art déco', 'Dorado, simetría, años 20', '#0f1f1c'),
   b('forma', 'Forma', 'Mueblería de diseño', 'bauhaus', 'Bauhaus', 'Formas puras, colores primarios', '#f1ead8'),

@@ -10,7 +10,7 @@
 
 El brief muestra 24 direcciones de estilo ([src/lib/brief/bocetos.js](../src/lib/brief/bocetos.js)). Cada una tiene una tarjeta en el brief y un boceto: la landing page entera de una marca inventada, en `public/brief/bocetos/<slug>.html`, para que el cliente vea el estilo puesto en una página real y lo califique.
 
-Hoy hay 6 bocetos (Alba, Nodo, Rosa, Ónix, Golpe y Kōen) y los otros 18 dan 404. Las tarjetas dibujan cada estilo con un arte genérico («$ ./tu-marca --deploy») que no se parece a su boceto.
+Hoy hay 6 bocetos (Alba, Cauce, Rosa, Ónix, Golpe y Kiri) y los otros 18 dan 404. Nodo y Kōen, los que reemplazaron Cauce y Kiri, siguen en `public/` hasta que se borren (ver la bitácora). Salvo las de Cauce y Kiri, las tarjetas dibujan cada estilo con un arte genérico que no se parece a su boceto.
 
 El trabajo termina cuando:
 
@@ -36,8 +36,8 @@ Estados: **pendiente**, **hecho** (listo para revisar) y **aprobado** (el usuari
 
 | Estilo | Marca | Tanda | Página | Fotos | Tarjeta | Revisado |
 | --- | --- | --- | --- | --- | --- | --- |
-| Tecnológico | Cauce | 1 | pendiente | pendiente | pendiente | pendiente |
-| Zen / japonés | Kiri | 1 | pendiente | pendiente | pendiente | pendiente |
+| Tecnológico | Cauce | 1 | hecho | hecho | hecho | pendiente |
+| Zen / japonés | Kiri | 1 | hecho | hecho | hecho | pendiente |
 | Corporativo | Basal Ingeniería | 2 | pendiente | pendiente | pendiente | pendiente |
 | Editorial | Viña Ladera | 2 | pendiente | pendiente | pendiente | pendiente |
 | Clínico / limpio | Iris Centro Visual | 2 | pendiente | pendiente | pendiente | pendiente |
@@ -74,6 +74,8 @@ Estados: **pendiente**, **hecho** (listo para revisar) y **aprobado** (el usuari
 
 - **2026-11-11.** Al usuario no le gustaron Nodo ni Kōen y pidió marcas nuevas desde cero para tecnológico y zen. Para los 18 que faltaban eligió inventar todo: nombre, rubro e identidad, sin usar los nombres que traía bocetos.js (Roble, Marea, Pinpón…). Pidió referencias de galerías de diseño, fotos de stock y animaciones «sin nada brusco, siempre con un inicio y un final continuo». Su «portada» es la tarjeta de cada estilo en el brief, que debe ir con su estilo y su marca.
 - **Lección de Nodo y Kōen.** Los dos eran una secuencia de secciones de plantilla: logos de clientes, cifras, planes, preguntas frecuentes, en un caso, y clases, horario, pases y reserva, en el otro. Cada boceto nuevo parte de una idea propia de su marca, y las secciones salen de esa idea, no de una lista.
+- **2026-11-11, tanda 1.** Cauce y Kiri quedaron hechos, con sus fotos y sus tarjetas, y el abanico pasó a `['kiri', 'golpe', 'cauce']`. Al ver Cauce, el usuario dijo que le gustaba mucho y pidió más interacción o componentes 3D de su producto. Se sumó, sin librerías: el sensor como modelo 3D de caras de CSS que se mece, se gira al arrastrarlo o con las flechas, se despieza con el scroll y enciende la pieza que se señala en la lista; un cursor que lee la gráfica del panel, y una calculadora de ahorro de agua (`calcular_ahorro_agua`, con `toolautosubmit`). Todo eso vive en `cauce.js`, que va como módulo para no chocar con las constantes de barra.js.
+- **Pendiente de la tanda 1.** El borrado de `nodo.html`, `koen.html`, `public/image/bocetos/nodo/` y `koen/`, y de sus tablas en bocetos-fotos.md, no se aprobó en la sesión: queda para que el usuario lo haga o lo autorice. El WebKit de Playwright en Windows aplana `transform-style: preserve-3d` (también en un cubo mínimo), así que el sensor 3D se confirma en un iPhone o iPad real. En S, la barra de los bocetos puede dar un CLS de hasta 0,05: barra.js le agrega el formulario de calificar después del primer cuadro, según cuánto tarde la página en pintar. Es de la barra común, no de un boceto.
 
 ## Reglas comunes
 
@@ -225,14 +227,14 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Slug y marca:** `cauce` · Cauce.
 - **Rubro:** telemetría de riego para viñas y huertos. Sensores de humedad de suelo y caudal, con un panel en el teléfono. Santa Cruz, Valle de Colchagua.
 - **Idea:** la página es el instrumento. La tecnología se ve en su precisión, no en un terminal oscuro como el de Nodo: una hoja de ingeniería clara, de líneas finas, con anotaciones en monoespaciada y un solo color de señal.
-- **Movimiento:** en la portada, las curvas de nivel del valle con cinco sensores, cuyas lecturas (humedad %, caudal L/h) cambian con un ciclo seno lento y desfasado entre ellos. Al bajar, el sensor se despieza en capas (tapa, placa, batería, sonda), atadas al scroll y con curva suave en las dos puntas. Las gráficas del panel se dibujan con `stroke-dashoffset` al llegar.
+- **Movimiento:** en la portada, las curvas de nivel del valle con cinco sensores, cuyas lecturas (humedad %, caudal L/h) cambian con un ciclo seno lento y desfasado entre ellos. El sensor es un modelo 3D de caras de CSS (cajas, cilindros y una punta): se mece de ida y vuelta, se gira al arrastrarlo o con las flechas (en el visor, solo con el mouse) y, al bajar, se despieza en capas (tapa, placa, batería, sonda), atadas al scroll y con curva suave en las dos puntas. La pieza que se señala en la lista se enciende en el modelo. Las gráficas del panel se dibujan con `stroke-dashoffset` al llegar, y un cursor lee la humedad de cada hora.
 - **Letras:** Instrument Sans (títulos, apretada) e IBM Plex Mono (datos, rótulos).
 - **Paleta:** papel `#f3f4f1`, tinta `#101412`, grafito `#5b625e`, línea `#d5d9d4`, señal `#ff5b1f` (solo marcas y lo activo, nunca texto chico). `fondo`: `#f3f4f1`.
-- **Secciones:** portada con el mapa vivo; «Qué mide» (el despiece); el panel (una semana de humedad, la alerta de riego, el ahorro de agua, todo en HTML y SVG); ficha técnica en tabla (alcance, batería de 5 años, IP68, LoRa); dos campos con su foto y su dato («−31 % de agua en la temporada 2025»); pedir una visita a terreno (formulario: nombre, correo, cultivo, hectáreas, comuna).
+- **Secciones:** portada con el mapa vivo; «Qué mide» (el despiece); el panel (una semana de humedad, la alerta de riego, el ahorro de agua, todo en HTML y SVG); ficha técnica en tabla (alcance, batería de 5 años, IP68, LoRa); dos campos con su foto y su dato («−31 % de agua en la temporada 2025») y una calculadora de ahorro (`calcular_ahorro_agua`, con `toolautosubmit`: hectáreas y cultivo, responde m³ y pesos); pedir una visita a terreno (formulario: nombre, correo, cultivo, hectáreas, comuna).
 - **Fotos:** viñedo desde dron, goteo de riego de cerca, manos con tierra húmeda, sensor o estaca en el suelo, valle con la cordillera al fondo.
 - **Página de inspiración:** [Teenage Engineering · OP–1 field](https://teenage.engineering/products/op-1). Se toma la ficha de producto como hoja técnica: dibujos a línea, anotaciones en monoespaciada, un solo color de acento y medidas exactas. También: [Arable](https://www.arable.com), del mismo rubro, por cómo pone los datos sobre fotos de campo.
 - **Tarjeta:** curvas de nivel finas en tinta sobre papel, un sensor naranja que late despacio y «Humedad 31,4 %» en mono. Al pasar el cursor, las curvas se desplazan apenas. Sello: el punto de señal.
-- **Puede necesitar** `cauce.js` para las lecturas, si `@property` con contadores no alcanza para los decimales en WebKit. Primero se prueba con CSS.
+- **Usa** `cauce.js`, como módulo para no chocar con las constantes de barra.js: las lecturas (WebKit no garantiza contadores con decimales desde una propiedad animada), el giro del sensor, el cursor de la gráfica y la calculadora.
 
 ### Kiri · zen / japonés
 
