@@ -1,6 +1,7 @@
-import MuestraBrief, { LogoDeMarca } from './MuestraBrief.jsx'
+import MuestraBrief, { IconoReaccion, LogoDeMarca, muestraDeEstilo } from './MuestraBrief.jsx'
 import { BOCETOS, rutaDeBoceto } from '../lib/brief/bocetos.js'
 import {
+  ARCHIVO_BRIEF,
   ERRORES_BRIEF,
   ESCALA,
   LIMITES_BRIEF,
@@ -74,6 +75,42 @@ function Guias({ guias }) {
   )
 }
 
+// Un archivo para subir: se suelta sobre la zona o se elige al tocarla. La
+// casilla nativa cubre la zona, transparente, así que las dos cosas funcionan
+// sin JavaScript; brief-logo.js suma la vista previa, revisa el formato y el
+// peso, y escribe en el estado lo que pasó. El estado tiene su alto fijo:
+// cambiar de mensaje no mueve nada.
+function ZonaDeArchivo({ id, etiqueta, ayuda }) {
+  return (
+    <div className="brief-archivo">
+      <div className="brief-archivo-zona">
+        <input
+          id={idDe(id)}
+          name={id}
+          type="file"
+          accept={ARCHIVO_BRIEF.aceptados}
+          data-etiqueta={etiqueta}
+          aria-describedby={[ayuda && `ayuda-${id}`, `estado-${id}`].filter(Boolean).join(' ')}
+          toolparamdescription="El archivo del logo actual, si lo tiene (opcional): SVG, PDF, AI, EPS, PNG, JPG o WEBP, hasta 5 MB"
+        />
+        <span className="brief-archivo-vista" aria-hidden="true">
+          <img alt="" hidden />
+          <span className="brief-archivo-icono" />
+        </span>
+        <span className="brief-archivo-texto" aria-hidden="true">
+          <b>Suelta tu logo aquí</b> o toca para elegirlo
+        </span>
+      </div>
+      <p className="brief-archivo-estado" id={`estado-${id}`} aria-live="polite">
+        No se guarda en este equipo: si cierras la página, súbelo de nuevo.
+      </p>
+      <button className="brief-archivo-quitar" type="button" hidden>
+        Quitar el archivo
+      </button>
+    </div>
+  )
+}
+
 // Texto de una línea o de varias. Los tres de contacto reservan el hueco de su
 // aviso, como en el formulario de contacto: aparecer no empuja nada.
 function Campo({ pregunta }) {
@@ -95,7 +132,9 @@ function Campo({ pregunta }) {
       </label>
       <Ayuda id={id} texto={ayuda} />
       <Guias guias={guias} />
-      {tipo === 'parrafo' ? (
+      {tipo === 'archivo' ? (
+        <ZonaDeArchivo id={id} etiqueta={etiqueta} ayuda={ayuda} />
+      ) : tipo === 'parrafo' ? (
         <textarea {...comunes} rows={filas ?? 3} />
       ) : (
         <input
@@ -294,51 +333,90 @@ function Colores({ pregunta }) {
   )
 }
 
-// Los 24 bocetos (lib/brief/bocetos.js): cada uno abre su página en otra
-// pestaña y se califica aquí o allá (public/brief/bocetos/barra.js); brief.js
-// mantiene las dos cosas iguales. La miniatura toma los colores de su marca y
-// la letra de su estilo (public/brief/muestras.css).
+// Las direcciones de estilo (lib/brief/bocetos.js): una tarjeta por estilo,
+// con su arte, su nombre y su boceto, y la reacción, que es la elección: lo
+// que le gusta es lo elegido. El arte lleva al boceto. Sin JavaScript abre en
+// otra pestaña, donde se califica (public/brief/bocetos/barra.js); con él, el
+// visor del brief lo muestra aquí mismo (brief-visor.js), y la invitación de
+// arriba los muestra uno tras otro. brief.js mantiene iguales lo calificado aquí y
+// en el boceto abierto aparte.
+// Los tres bocetos del abanico que invita a recorrerlos: tres estilos que se
+// distinguen de un vistazo.
+const ABANICO = ['koen', 'golpe', 'nodo'].map((slug) => BOCETOS.find((boceto) => boceto.slug === slug))
+
 function Bocetos() {
   return (
-    <div className="brief-bocetos">
-      {BOCETOS.map(({ slug, nombre, rubro, estilo, fondo, tinta, acento }) => (
-        <fieldset key={slug} className="brief-boceto" data-boceto={slug}>
-          <legend className="solo-lectores">{nombre}</legend>
-          <a
-            className={`brief-boceto-miniatura estilo-${estilo}`}
-            href={rutaDeBoceto(slug)}
-            target="_blank"
-            rel="noopener"
-            style={{ '--fondo-boceto': fondo, '--tinta-boceto': tinta, '--acento-boceto': acento }}
-          >
-            <span className="brief-boceto-marca">{nombre}</span>
-            <span className="brief-boceto-rubro">{rubro}</span>
-            <span className="brief-boceto-abrir">
-              Abrir boceto <span aria-hidden="true">↗</span>
-              <span className="solo-lectores"> (se abre en otra pestaña)</span>
+    <>
+      <div className="brief-recorrer" hidden>
+        <span className="brief-recorrer-abanico" aria-hidden="true">
+          {ABANICO.map(({ slug, nombre, estilo }) => (
+            <span key={slug} className={`estilo-${estilo}`}>
+              {nombre}
             </span>
-          </a>
-          <div className="brief-boceto-reacciones">
-            {REACCIONES.map(([valor, texto, signo]) => (
-              <label key={valor} className={`brief-reaccion brief-reaccion-${valor}`}>
-                <input type="radio" name={campoBoceto(slug)} value={valor} data-etiqueta={texto} />
-                <span aria-hidden="true">{signo}</span>
-                {texto}
-              </label>
-            ))}
-          </div>
-          <input
-            className="brief-boceto-nota"
-            name={campoNotaBoceto(slug)}
-            type="text"
-            maxLength={LIMITES_BRIEF.nota}
-            placeholder="¿Qué te gustó o qué no?"
-            aria-label={`Qué te gustó o qué no de ${nombre}`}
-            data-etiqueta="Nota"
-          />
-        </fieldset>
-      ))}
-    </div>
+          ))}
+        </span>
+        <span className="brief-recorrer-texto">
+          <b>Míralos a pantalla completa, uno tras otro</b>
+          <span>Cada boceto es la página entera de una marca. Recórrelo, dinos qué te parece y pasa al siguiente.</span>
+          <span className="brief-recorrer-cuenta" data-recorrer-cuenta>
+            Son {BOCETOS.length}, y toma unos minutos
+          </span>
+        </span>
+        <button className="boton boton-primario" type="button" data-recorrer>
+          <span data-recorrer-texto>Empezar el recorrido</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <div className="brief-estilos">
+        {BOCETOS.map(({ slug, nombre, rubro, estilo, titulo, detalle }) => {
+          const { arte, sello } = muestraDeEstilo(estilo)
+          return (
+            <fieldset key={slug} className={`brief-estilo estilo-${estilo}`} data-boceto={slug}>
+              <legend className="solo-lectores">{titulo}</legend>
+              <a className="brief-estilo-enlace" href={rutaDeBoceto(slug)} target="_blank" rel="noopener" data-visor={slug}>
+                <span className="brief-estilo-cuadro" aria-hidden="true">
+                  <span className="brief-muestra-arte">{arte}</span>
+                </span>
+                <span className="brief-estilo-ver">
+                  Ver el boceto
+                  <span className="solo-lectores">
+                    {' '}
+                    de {titulo}: {nombre}, {rubro}
+                    <span data-otra-pestana> (se abre en otra pestaña)</span>
+                  </span>
+                </span>
+              </a>
+              <span className="brief-muestra-pie" aria-hidden="true">
+                <span className="brief-muestra-nombre">{titulo}</span>
+                <span className="brief-muestra-detalle">{detalle}</span>
+                <span className="brief-estilo-boceto">
+                  {nombre} · {rubro}
+                </span>
+                <span className="brief-sello">{sello}</span>
+              </span>
+              <div className="brief-boceto-reacciones">
+                {REACCIONES.map(([valor, texto]) => (
+                  <label key={valor} className={`brief-reaccion brief-reaccion-${valor}`}>
+                    <input type="radio" name={campoBoceto(slug)} value={valor} data-etiqueta={texto} />
+                    <IconoReaccion valor={valor} />
+                    <span className="brief-reaccion-texto">{texto}</span>
+                  </label>
+                ))}
+              </div>
+              <input
+                className="brief-boceto-nota"
+                name={campoNotaBoceto(slug)}
+                type="text"
+                maxLength={LIMITES_BRIEF.nota}
+                placeholder="¿Qué te gustó o qué no?"
+                aria-label={`Qué te gustó o qué no de ${titulo}`}
+                data-etiqueta="Nota"
+              />
+            </fieldset>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
@@ -434,7 +512,7 @@ function Mockup() {
 function descripcionParaAgente({ tipo, max, izquierda, derecha, columnas, filas }) {
   if (tipo === 'escala') return `Del 1 (${izquierda[0]}) al 5 (${derecha[0]}); el 3 es equilibrado`
   if (tipo === 'tabla') return `Hasta ${filas} filas con: ${columnas.map((c) => c.etiqueta).join(', ')}`
-  if (tipo === 'bocetos') return 'Para cada boceto: si (me gusta), medio o no, y una nota opcional de por qué'
+  if (tipo === 'bocetos') return 'Para cada estilo: si (me gusta, lo elige), medio o no, y una nota opcional de por qué'
   if (max) return `Hasta ${max} opciones`
 }
 
@@ -461,13 +539,17 @@ function Columnas({ columnas }) {
   )
 }
 
-// Las escalas, con la portada de muestra al lado (desde L) o debajo.
+// Las escalas, con la portada de muestra al lado (en XL) o encima. Cada
+// escala va en su parada: encajan de a una al bajar, como los socios de
+// /nosotros, y la portada queda siempre a la vista (public/brief/muestras.css).
 function ConMockup({ preguntas }) {
   return (
     <div className="brief-escalas">
       <div className="brief-escalas-lista">
         {preguntas.map((pregunta) => (
-          <PreguntaBrief key={pregunta.id} pregunta={pregunta} />
+          <div key={pregunta.id} className="brief-escala-parada">
+            <PreguntaBrief pregunta={pregunta} />
+          </div>
         ))}
       </div>
       <div className="brief-mockup-columna">

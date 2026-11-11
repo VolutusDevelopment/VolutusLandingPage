@@ -12,7 +12,10 @@
 // - los topes de «elige hasta 3», con su cuenta;
 // - que Enter en un campo avance en vez de enviar a medias;
 // - pedir los dos datos obligatorios donde están;
-// - traer lo que se calificó en los bocetos, que se abren en otra pestaña;
+// - traer lo que se calificó en los bocetos abiertos aparte, y el visor que
+//   los muestra aquí mismo (brief-visor.js);
+// - las muestras de logo con el nombre del negocio y el logo que se sube
+//   (brief-logo.js);
 // - la revisión: cuánto hay en cada área, lo que más sirve y falta, lo que no
 //   calza (lib/brief/revision.js) y el resumen; y el envío con su salida si
 //   falla.
@@ -30,12 +33,16 @@ import {
   TURNSTILE_ACCION_BRIEF,
   campoBoceto,
   campoNotaBoceto,
+  peso,
 } from './lib/brief/reglas.js'
 import { incoherencias } from './lib/brief/revision.js'
 import { montarTurnstile } from './lib/turnstile.js'
+import montarLogo from './brief-logo.js'
+import montarVisor from './brief-visor.js'
 
-// Lo que no es una respuesta y no se guarda.
-const NO_SE_GUARDA = new Set(['hp_campo', 'cf-turnstile-response', 'dispositivo', 'pantalla', 'zona', 'idioma', 'transcurrido'])
+// Lo que no es una respuesta y no se guarda. El logo tampoco: un archivo no
+// cabe entre las respuestas guardadas, y su campo lo avisa.
+const NO_SE_GUARDA = new Set(['hp_campo', 'cf-turnstile-response', 'dispositivo', 'pantalla', 'zona', 'idioma', 'transcurrido', 'logo_archivo'])
 
 const CLAVE_DEL_DISPOSITIVO = 'volutus:dispositivo'
 
@@ -117,7 +124,10 @@ function respuestaDe(contenedor) {
   const partes = []
   for (const campo of contenedor.querySelectorAll('input[name], textarea')) {
     if (campo.closest('.brief-estrella')) continue
-    if (campo.type === 'checkbox' || campo.type === 'radio') {
+    if (campo.type === 'file') {
+      const [archivo] = campo.files
+      if (archivo) partes.push(`${archivo.name} (${peso(archivo.size)})`)
+    } else if (campo.type === 'checkbox' || campo.type === 'radio') {
       const estrella = campo.closest('.brief-tarjeta')?.querySelector('.brief-estrella input:checked')
       if (campo.checked) partes.push(campo.dataset.etiqueta + (estrella ? ' ★' : ''))
     } else if (valor(campo)) {
@@ -257,7 +267,7 @@ export default function iniciarBrief(form) {
     }
   }
 
-  // ---- Los bocetos: lo calificado aquí y en su pestaña es lo mismo ----
+  // ---- Los bocetos: lo calificado aquí y en su página es lo mismo ----
   //
   // Cada boceto guarda su calificación bajo `CLAVE_BOCETOS`
   // (public/brief/bocetos/barra.js), aparte de las respuestas: así el brief,
@@ -401,7 +411,9 @@ export default function iniciarBrief(form) {
     const parte = n >= 0 ? `Parte ${n + 1} de ${pasos.length}` : pantalla.id === 'revisar' ? 'Revisar y enviar' : 'El recorrido'
     const { area } = pantalla.dataset
     const texto = n >= 0 ? `${nombreDeArea(area)}, ${parte}: ${titulo}` : parte
-    donde.textContent = parte
+    // «Parte» va aparte: en lo más angosto se esconde y queda «7 de 9».
+    if (n >= 0) donde.replaceChildren(nuevo('span', 'brief-donde-parte', 'Parte '), `${n + 1} de ${pasos.length}`)
+    else donde.textContent = parte
     dondeArea.textContent = area ? nombreDeArea(area) : ''
     dondeArea.hidden = !area
     for (const otra of ['marca', 'diseno']) guia.classList.toggle(`brief-area-${otra}`, otra === area)
@@ -772,6 +784,8 @@ export default function iniciarBrief(form) {
     mostrarAviso(`Retomaste las respuestas que dejaste el ${fechaLegible(guardado.fecha)}.`)
   }
   traerBocetos()
+  montarVisor(form)
+  montarLogo(form)
   actualizar()
   mostrar(false)
 

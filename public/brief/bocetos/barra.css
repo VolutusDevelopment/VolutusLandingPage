@@ -24,6 +24,11 @@
   box-sizing: border-box;
 }
 
+/* En el visor del brief, el visor hace de barra (barra.js). */
+.en-visor .boceto-barra {
+  display: none;
+}
+
 .boceto-etiqueta {
   flex: none;
   padding: 5px 8px;

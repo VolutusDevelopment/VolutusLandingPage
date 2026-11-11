@@ -1,9 +1,11 @@
 import { BOCETOS } from '../src/lib/brief/bocetos.js'
 import { BRIEF } from '../src/lib/brief/preguntas.js'
 import {
+  ARCHIVO_BRIEF,
   ESCALA,
   LIMITES_BRIEF,
   REACCIONES,
+  SVG_CON_CODIGO,
   TELEFONO_VALIDO,
   TIEMPO_MINIMO,
   TURNSTILE_ACCION_BRIEF,
@@ -13,8 +15,10 @@ import {
   campoEstrella,
   campoNotaBoceto,
   campoOtro,
+  peso,
   respondibles,
   textoDeEscala,
+  tipoDeArchivo,
 } from '../src/lib/brief/reglas.js'
 import { CORREO_DE_CONTACTO, CORREO_VALIDO, NOMBRE_VALIDO } from '../src/lib/contacto.js'
 import {
@@ -47,15 +51,21 @@ import {
  * de que el correo a Volutus salió: todo abuso pasa primero por la bandeja de
  * Volutus.
  *
+ * El logo que se sube viaja adjunto solo en el correo a Volutus, y solo si sus
+ * bytes son de un formato aceptado (`tipoDeArchivo`) y, si es SVG, no trae
+ * código. La copia dice que llegó, pero no lo lleva: así el envío no sirve para
+ * mandarle archivos a una dirección cualquiera.
+ *
  * Al correo de Volutus se suma lo que identifica el envío: el número al azar
  * del navegador, su pantalla, zona horaria e idioma, la IP, el lugar y el
  * proveedor que informa Cloudflare, el navegador y el tiempo de llenado. La
  * copia no lleva nada de eso. Lo explica /privacidad.
  */
 
-// Un brief entero a su máximo, con sus textos largos llenos, no llega a esto;
-// lo que pase no es una persona escribiendo.
-const TOPE_CUERPO = 64 * 1024
+// Un brief entero a su máximo, con sus textos largos llenos, no llega a 64 KB;
+// lo que pase no es una persona escribiendo. Encima, el logo y lo que suma el
+// formato multipart.
+const TOPE_CUERPO = 64 * 1024 + ARCHIVO_BRIEF.tope + 16 * 1024
 
 // Más enlaces que esto en las respuestas es una señal (no una regla) de spam:
 // va en el correo para que se mire con calma.
@@ -71,16 +81,9 @@ const MENSAJES = {
   silencio: 'Recibimos tu brief.',
 }
 
-// El nombre de cada dirección de estilo, para decir el de cada boceto.
-const ESTILOS = new Map(
-  BRIEF.pasos
-    .flatMap(respondibles)
-    .find(({ id }) => id === 'estilo')
-    .opciones.map(({ v, l }) => [v, l])
-)
-
 // Lo respondido en una pregunta, en una o varias líneas. Vacío si no tiene.
-function respuestaDe(pregunta, datos) {
+// `archivos` dice, por pregunta, lo que llegó en cada archivo (`leerLogo`).
+function respuestaDe(pregunta, datos, archivos) {
   const { id, tipo } = pregunta
   const texto = (nombre, tope = LIMITES_BRIEF.texto) => limpiar(datos.get(nombre), tope)
 
@@ -135,14 +138,28 @@ function respuestaDe(pregunta, datos) {
         })
         .filter(Boolean)
         .join(', ')
-    case 'bocetos':
-      return BOCETOS.map(({ slug, nombre, estilo }) => {
-        const reaccion = REACCIONES.find(([valor]) => valor === datos.get(campoBoceto(slug)))?.[1]
-        const nota = texto(campoNotaBoceto(slug), LIMITES_BRIEF.nota)
-        return (reaccion || nota) && `${nombre} (${ESTILOS.get(estilo)}): ${[reaccion, nota].filter(Boolean).join(' — ')}`
-      })
+    case 'bocetos': {
+      // Los estilos que le gustan van primero, en una línea; después cada
+      // estilo calificado, de «Me gusta» a «No me gusta», con su nota.
+      const calificados = BOCETOS.map((boceto) => ({
+        ...boceto,
+        orden: REACCIONES.findIndex(([valor]) => valor === datos.get(campoBoceto(boceto.slug))),
+        nota: texto(campoNotaBoceto(boceto.slug), LIMITES_BRIEF.nota),
+      }))
+        .filter(({ orden, nota }) => orden >= 0 || nota)
+        .sort((a, b) => (a.orden < 0 ? 9 : a.orden) - (b.orden < 0 ? 9 : b.orden))
+      const gustan = calificados.filter(({ orden }) => orden === 0).map(({ titulo }) => titulo)
+      return [
+        gustan.length && `Le gustan: ${gustan.join(', ')}`,
+        ...calificados.map(
+          ({ titulo, nombre, orden, nota }) => `${titulo} (boceto ${nombre}): ${[REACCIONES[orden]?.[1], nota].filter(Boolean).join(' — ')}`
+        ),
+      ]
         .filter(Boolean)
         .join('\n')
+    }
+    case 'archivo':
+      return archivos.get(id)?.texto ?? ''
     default:
       return ''
   }
@@ -150,11 +167,11 @@ function respuestaDe(pregunta, datos) {
 
 // Las respuestas, por paso: el título del paso en mayúscula y, debajo, cada
 // pregunta con lo respondido. Lo que quedó en blanco no va.
-function respuestasEnTexto(datos) {
+function respuestasEnTexto(datos, archivos) {
   return BRIEF.pasos
     .map((paso, i) => {
       const lineas = respondibles(paso)
-        .map((pregunta) => [pregunta.etiqueta, respuestaDe(pregunta, datos)])
+        .map((pregunta) => [pregunta.etiqueta, respuestaDe(pregunta, datos, archivos)])
         .filter(([, respuesta]) => respuesta)
         .map(([pregunta, respuesta]) => `${pregunta}\n${respuesta}`)
       return lineas.length ? `${String(i + 1).padStart(2, '0')} · ${paso.titulo.toUpperCase()}\n\n${lineas.join('\n\n')}` : ''
@@ -204,6 +221,21 @@ function envioYDispositivo(request, datos, { referencia, ip, transcurrido, verif
     .join('\n')
 }
 
+// El logo que se subió: lo que dice el correo y, si se acepta, el adjunto, con
+// un nombre puesto aquí (el del archivo lo escribió quien lo subió).
+async function leerLogo(archivo, referencia) {
+  if (!(archivo instanceof File) || !archivo.size) return null
+  const rechazo = { texto: 'Llegó un archivo que no pudimos leer: no es de un formato aceptado, pesa demasiado o trae código.' }
+  if (archivo.size > ARCHIVO_BRIEF.tope) return rechazo
+  const bytes = new Uint8Array(await archivo.arrayBuffer())
+  const tipo = tipoDeArchivo(bytes)
+  if (!tipo || (tipo.ext === 'svg' && SVG_CON_CODIGO.test(new TextDecoder().decode(bytes)))) return rechazo
+  return {
+    texto: `${tipo.ext.toUpperCase()} de ${peso(bytes.length)}, recibido`,
+    adjunto: { nombre: `logo-${referencia}.${tipo.ext}`, bytes },
+  }
+}
+
 export async function manejarBrief(request, env) {
   if (request.method !== 'POST') return noPermitido()
   if (!esMismoOrigen(request)) return responder(request, MENSAJES.fallo, 403)
@@ -238,10 +270,11 @@ export async function manejarBrief(request, env) {
   // `pasaTurnstile` deja pasar sin secreto (en local). La copia no.
   const verificado = Boolean(env.TURNSTILE_SECRET)
 
-  const respuestas = respuestasEnTexto(datos)
   const empresa = limpiar(datos.get('empresa'), LIMITES_BRIEF.texto)
   const quiereCopia = datos.get('copia') === 'si' && Boolean(correo)
   const referencia = `B-${new Date().toISOString().slice(2, 10).replaceAll('-', '')}-${crypto.randomUUID().slice(0, 4).toUpperCase()}`
+  const logo = await leerLogo(datos.get('logo_archivo'), referencia)
+  const respuestas = respuestasEnTexto(datos, new Map(logo ? [['logo_archivo', logo]] : []))
 
   const llego = await enviarCorreo(
     env,
@@ -263,6 +296,7 @@ export async function manejarBrief(request, env) {
           enlaces: (respuestas.match(/https?:\/\/|www\./gi) ?? []).length,
         })}`,
       ].join('\n\n\n'),
+      adjuntos: logo?.adjunto ? [logo.adjunto] : [],
     },
     'brief'
   )

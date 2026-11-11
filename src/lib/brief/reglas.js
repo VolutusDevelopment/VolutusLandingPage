@@ -88,6 +88,49 @@ export const REACCIONES = [
 // pestaña.
 export const CLAVE_BOCETOS = 'volutus:brief:bocetos'
 
+// ---- El logo que se sube (pregunta `archivo`) ----
+
+// Hasta 5 MB, en los formatos con que se trabaja una marca. `aceptados` es lo
+// que ofrece el selector de archivos; lo que vale es lo que dicen sus bytes
+// (`tipoDeArchivo`), que miran el brief y el Worker.
+export const ARCHIVO_BRIEF = {
+  tope: 5 * 1024 * 1024,
+  aceptados: '.svg,.pdf,.ai,.eps,.png,.jpg,.jpeg,.webp',
+}
+
+// Los primeros bytes de cada formato. Un AI de hoy es un PDF por dentro, y
+// uno antiguo, un PostScript, como el EPS.
+const FIRMAS = [
+  ['png', 'image/png', [0x89, 0x50, 0x4e, 0x47]],
+  ['jpg', 'image/jpeg', [0xff, 0xd8, 0xff]],
+  ['pdf', 'application/pdf', [0x25, 0x50, 0x44, 0x46]],
+  ['eps', 'application/postscript', [0x25, 0x21, 0x50, 0x53]],
+]
+
+const ascii = (bytes, desde, hasta) => String.fromCharCode(...bytes.slice(desde, hasta))
+
+/**
+ * El formato de un archivo según sus primeros bytes (bastan los primeros 1024),
+ * nunca según su nombre ni el tipo que declara el navegador: `{ ext, tipo }`,
+ * o `null` si no es uno de los aceptados.
+ */
+export function tipoDeArchivo(bytes) {
+  const firma = FIRMAS.find(([, , inicio]) => inicio.every((byte, i) => bytes[i] === byte))
+  if (firma) return { ext: firma[0], tipo: firma[1] }
+  if (ascii(bytes, 0, 4) === 'RIFF' && ascii(bytes, 8, 12) === 'WEBP') return { ext: 'webp', tipo: 'image/webp' }
+  const texto = new TextDecoder().decode(bytes.slice(0, 1024)).trimStart()
+  if (/^(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*)*(<!DOCTYPE[^>]*>\s*)?<svg[\s>]/i.test(texto)) return { ext: 'svg', tipo: 'image/svg+xml' }
+  return null
+}
+
+// Un SVG abierto en el navegador ejecuta lo que traiga: con código, eventos o
+// contenido incrustado no se acepta. Un logo no necesita nada de eso.
+export const SVG_CON_CODIGO = /<script|<foreignObject|<iframe|<embed|<object|\son[a-z]+\s*=|javascript:/i
+
+// El peso de un archivo, como lo dice una persona: «120 KB», «2,4 MB».
+export const peso = (bytes) =>
+  bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toLocaleString('es-CL', { maximumFractionDigits: 1 })} MB`
+
 // Una celda de una tabla: la fila empieza en 1.
 export const campoCelda = (id, fila, columna) => `${id}_${fila}_${columna}`
 

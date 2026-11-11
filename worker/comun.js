@@ -152,14 +152,15 @@ export async function pasaTurnstile(token, ip, env, accion) {
 }
 
 /**
- * Manda un correo de texto por Resend. Devuelve si salió.
+ * Manda un correo de texto por Resend. Devuelve si salió. `adjuntos` son
+ * `{ nombre, bytes }` (un `Uint8Array`), y Resend los recibe en base64.
  *
  * Sin clave no hay envío posible: se registra, porque fallar en silencio aquí
  * significa perder mensajes sin que nadie se entere. De Resend se registra
  * solo el estado: su cuerpo puede repetir el correo y el texto de quien
  * escribió, y eso no debe quedar en los logs.
  */
-export async function enviarCorreo(env, { para, responderA, asunto, texto }, registro) {
+export async function enviarCorreo(env, { para, responderA, asunto, texto, adjuntos = [] }, registro) {
   if (!env.RESEND_API_KEY) {
     console.error(`${registro}: falta RESEND_API_KEY`)
     return false
@@ -177,6 +178,9 @@ export async function enviarCorreo(env, { para, responderA, asunto, texto }, reg
         ...(responderA && { reply_to: responderA }),
         subject: asunto,
         text: texto,
+        ...(adjuntos.length && {
+          attachments: adjuntos.map(({ nombre, bytes }) => ({ filename: nombre, content: enBase64(bytes) })),
+        }),
       }),
     })
     if (!envio.ok) console.error(`${registro}: Resend respondió`, envio.status)
@@ -185,4 +189,12 @@ export async function enviarCorreo(env, { para, responderA, asunto, texto }, reg
     console.error(`${registro}: falló la llamada a Resend`, error)
     return false
   }
+}
+
+// Base64 de unos bytes, por tramos: `String.fromCharCode` con un archivo de
+// megas entero desborda la pila.
+function enBase64(bytes) {
+  let binario = ''
+  for (let i = 0; i < bytes.length; i += 0x8000) binario += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+  return btoa(binario)
 }

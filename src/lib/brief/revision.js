@@ -16,10 +16,13 @@ const numero = (r, nombre) => Number(r.todos(nombre)[0] ?? 0)
 const elegido = (r, nombre, valor) => r.todos(nombre).includes(valor)
 const enLista = (nombres) => (nombres.length > 1 ? `${nombres.slice(0, -1).join(', ')} y ${nombres.at(-1)}` : nombres[0])
 
+// Un estilo es elegido si le gusta su boceto (bocetos.js).
+const leGusta = (r, estilo) => elegido(r, campoBoceto(BOCETOS.find((boceto) => boceto.estilo === estilo).slug), 'si')
+
 // Un estilo elegido junto a una escala que tira para el otro lado.
 const estiloContraEscala = (estilo, escala, choca, titulo, texto) => ({
   pregunta: escala,
-  revisar: (r) => elegido(r, 'estilo', estilo) && choca(numero(r, escala)) && { titulo, texto },
+  revisar: (r) => leGusta(r, estilo) && choca(numero(r, escala)) && { titulo, texto },
 })
 
 export const INCOHERENCIAS = [
@@ -40,28 +43,28 @@ export const INCOHERENCIAS = [
     'densidad',
     (n) => n >= 4,
     'Minimalista, pero con mucha información',
-    'Elegiste el estilo Minimalista y dejaste la cantidad de cosas en pantalla hacia «Completo». Puede funcionar, pero conviene conversarlo.'
+    'Te gustó el estilo Minimalista y dejaste la cantidad de cosas en pantalla hacia «Completo». Puede funcionar, pero conviene conversarlo.'
   ),
   estiloContraEscala(
     'zen',
     'movimiento_escala',
     (n) => n >= 4,
     'Zen, pero con mucho movimiento',
-    'Elegiste Zen / japonés, que es calma, y pediste animaciones protagonistas.'
+    'Te gustó Zen / japonés, que es calma, y pediste animaciones protagonistas.'
   ),
   estiloContraEscala(
     'ludico',
     'actitud',
     (n) => n > 0 && n <= 2,
     'Lúdico, pero serio',
-    'Elegiste el estilo Lúdico y dejaste la actitud hacia «Serio».'
+    'Te gustó el estilo Lúdico y dejaste la actitud hacia «Serio».'
   ),
   estiloContraEscala(
     'brutalista',
     'formas',
     (n) => n >= 4,
     'Brutalista, pero redondeado',
-    'Elegiste Brutalista, que es de bordes duros, y pediste formas redondeadas.'
+    'Te gustó Brutalista, que es de bordes duros, y pediste formas redondeadas.'
   ),
   {
     pregunta: 'movimiento',
@@ -98,18 +101,6 @@ export const INCOHERENCIAS = [
         titulo: '¿Nombre nuevo o el de siempre?',
         texto: 'Dijiste que mantienes tu nombre y también elegiste qué tipo de nombre nuevo te gusta.',
       },
-  },
-  {
-    pregunta: 'estilo',
-    revisar(r) {
-      const sueltos = BOCETOS.filter(({ slug, estilo }) => elegido(r, campoBoceto(slug), 'si') && !elegido(r, 'estilo', estilo))
-      return (
-        sueltos.length > 0 && {
-          titulo: 'Te gustaron bocetos de estilos que no marcaste',
-          texto: `Te gustó ${enLista(sueltos.map(({ nombre, estilo }) => `${nombre} (${r.etiqueta('estilo', estilo)})`))}. ¿Sumamos ${sueltos.length > 1 ? 'esos estilos' : 'ese estilo'} a tu elección?`,
-        }
-      )
-    },
   },
 ]
 

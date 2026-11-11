@@ -15,6 +15,9 @@
  *   comprobación en un iframe (`frame-src`). Los
  *   datos estructurados van en `<script type="application/ld+json">`, que el
  *   navegador no ejecuta y por eso no necesita permiso.
+ * - `frame-src 'self'` y `frame-ancestors 'self'`: el visor del brief muestra
+ *   en un iframe los bocetos, que son páginas de este mismo sitio. Ningún
+ *   sitio ajeno puede enmarcar una página de aquí.
  * - `style-src 'unsafe-inline'`: el CSS va incrustado en el HTML para no
  *   bloquear el primer pintado, y React escribe variables en `style=""`.
  * - `img-src data:`: el favicon y el mapa de la lente de la barra son SVG en
@@ -23,7 +26,7 @@
 const POLITICA = [
   "default-src 'self'",
   "script-src 'self' https://challenges.cloudflare.com",
-  "frame-src https://challenges.cloudflare.com",
+  "frame-src 'self' https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
@@ -32,7 +35,7 @@ const POLITICA = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
+  "frame-ancestors 'self'",
 ].join('; ')
 
 export const CABECERAS = {

@@ -1,15 +1,16 @@
 /* Las muestras de «Cómo se ve» en el brief (src/components/MuestraBrief.jsx y
- * PreguntaBrief.jsx): las direcciones de estilo, las tipografías, la portada
- * de muestra que siguen las escalas y las tarjetas de los bocetos.
+ * PreguntaBrief.jsx): las direcciones de estilo con sus bocetos y el visor que
+ * los muestra, las tipografías, los tipos de logo y el logo que se sube, y la
+ * portada de muestra que siguen las escalas, que encajan de a una.
  *
  * Va aparte del CSS del sitio, que entra en cada página: esto solo lo usa
  * /brief. Sus fuentes están recortadas a las letras del español (pocos KB
  * cada una) y el navegador las baja recién cuando la parte se muestra.
  *
- * Al pasar el cursor (o con el foco) cada muestra se mueve; al marcarla, el
- * nombre se viste con la letra y los colores de su estilo y aparece su marca
- * de elegido, como el chip de WhatsApp del contacto. Con el movimiento
- * reducido no se mueve nada.
+ * Al pasar el cursor (o con el foco) cada muestra se mueve; al marcarla (al
+ * estilo, con «Me gusta»), el nombre se viste con la letra y los colores de su
+ * estilo y aparece su marca de elegido, como el chip de WhatsApp del
+ * contacto. Con el movimiento reducido no se mueve nada.
  *
  * Al final, las pastillas de una empresa (Google, Instagram…). */
 
@@ -45,8 +46,7 @@
 @font-face { font-family: 'Muestra Zilla'; src: url('/fonts/brief/zilla-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'Muestra Yellowtail'; src: url('/fonts/brief/yellowtail.woff2') format('woff2'); font-display: swap; }
 
-/* La letra de cada estilo: la de su boceto. La usan su muestra marcada y la
-   miniatura de su boceto. */
+/* La letra de cada estilo: la de su boceto. La usa su nombre cuando gusta. */
 .estilo-minimalista { --letra: 300 1em 'Muestra Hanken', sans-serif; }
 .estilo-tecnologico { --letra: 600 1em 'Muestra Plex Mono', monospace; }
 .estilo-corporativo { --letra: 800 1em 'Muestra Manrope', sans-serif; }
@@ -78,18 +78,16 @@
   gap: var(--e-3);
 }
 
-.brief-muestras-estilo {
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-}
-
-.brief-muestras-tipografia {
+.brief-muestras-tipografia,
+.brief-muestras-logo {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
 }
 
-/* En S, de a dos: el arte se dibuja igual, más chico. */
+/* En S, de a dos. La palabra de cada tipografía y cada logo se achican con
+   el ancho de su tarjeta (ver abajo), y entran enteros aun a 320 px. */
 @media (max-width: 559px) {
-  .brief-muestras-estilo,
-  .brief-muestras-tipografia {
+  .brief-muestras-tipografia,
+  .brief-muestras-logo {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--e-2);
   }
@@ -98,15 +96,11 @@
     grid-template-rows: auto auto;
   }
 
-  .brief-muestra .brief-muestra-arte {
-    height: 150px;
-    zoom: 0.68;
+  .brief-tipo .brief-muestra-arte,
+  .brief-logo .brief-muestra-arte {
+    height: 116px;
   }
 
-  .brief-tipo .brief-muestra-arte {
-    height: 116px;
-    zoom: 0.75;
-  }
 
   .brief-muestra-pie {
     padding: var(--e-2) 36px var(--e-2) var(--e-3);
@@ -118,12 +112,18 @@
   }
 }
 
-.brief-muestra {
+.brief-muestra,
+.brief-estilo {
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --masa: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.brief-muestra {
   position: relative;
   display: grid;
-  grid-template-rows: 150px auto;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 116px auto;
+  min-width: 0;
   border: 1px solid var(--linea);
   border-radius: var(--radio-tarjeta);
   overflow: hidden;
@@ -133,10 +133,6 @@
     transform 260ms var(--masa),
     box-shadow 260ms var(--ease),
     border-color 200ms var(--ease);
-}
-
-.brief-tipo {
-  grid-template-rows: 116px auto;
 }
 
 /* La casilla nativa cubre la tarjeta, transparente. */
@@ -155,7 +151,8 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .brief-muestra:hover {
+  .brief-muestra:hover,
+  .brief-estilo:hover {
     transform: translateY(-2px);
     box-shadow: 0 16px 30px -22px rgb(10 26 42 / 0.5);
   }
@@ -202,6 +199,7 @@
   font-size: var(--texto-xs);
   line-height: 1.35;
   color: var(--texto-suave);
+  overflow-wrap: break-word;
 }
 
 .brief-muestra:has(input:checked) .brief-muestra-detalle {
@@ -209,11 +207,6 @@
   opacity: 0.8;
 }
 
-/* Marcado, el nombre toma la letra del estilo. */
-.brief-estilo:has(input:checked) .brief-muestra-nombre {
-  font: var(--letra);
-  font-size: 17px;
-}
 
 .brief-sello {
   position: absolute;
@@ -233,7 +226,8 @@
     transform 320ms var(--masa);
 }
 
-.brief-muestra:has(input:checked) .brief-sello > * {
+.brief-muestra:has(input:checked) .brief-sello > *,
+.brief-estilo:has([value='si']:checked) .brief-sello > * {
   opacity: 1;
 }
 
@@ -244,12 +238,12 @@
 .estilo-minimalista .brief-muestra-arte { background: #fafaf8; }
 .estilo-minimalista .brief-muestra-arte::before { content: ''; position: absolute; left: 26px; right: 26px; top: 50%; border-top: 1px solid #141414; }
 .estilo-minimalista .brief-muestra-arte::after { content: ''; position: absolute; left: 26px; top: calc(50% - 4px); width: 9px; height: 9px; border-radius: 50%; background: #141414; transition: left 900ms var(--ease); }
-.estilo-minimalista:is(:hover, :focus-within, :has(input:checked)) .brief-muestra-arte::after { left: calc(100% - 35px); }
+.estilo-minimalista:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { left: calc(100% - 35px); }
 .estilo-minimalista .rot { position: absolute; left: 26px; bottom: 22px; font: 300 11px/1 'Muestra Hanken', sans-serif; letter-spacing: 0.3em; text-transform: uppercase; color: #141414; }
-.estilo-minimalista:has(input:checked) .brief-muestra-pie { background: #fafaf8; color: #141414; }
-.estilo-minimalista:has(input:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; font-size: 14px; }
+.estilo-minimalista:has([value='si']:checked) .brief-muestra-pie { background: #fafaf8; color: #141414; }
+.estilo-minimalista:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; font-size: 14px; }
 .estilo-minimalista .brief-sello svg { width: 22px; fill: none; stroke: #141414; stroke-width: 1.4; stroke-dasharray: 30; stroke-dashoffset: 30; }
-.estilo-minimalista:has(input:checked) .brief-sello svg { stroke-dashoffset: 0; transition: stroke-dashoffset 600ms var(--ease), opacity 100ms; }
+.estilo-minimalista:has([value='si']:checked) .brief-sello svg { stroke-dashoffset: 0; transition: stroke-dashoffset 600ms var(--ease), opacity 100ms; }
 
 /* Tecnológico: una terminal sobre su grilla. */
 .estilo-tecnologico { --marcado: #2ee6a6; }
@@ -257,8 +251,8 @@
 .estilo-tecnologico .brief-muestra-arte b { display: block; margin: 8px 0; font: 600 21px/1.1 'Muestra Plex Mono', monospace; color: #e8fff6; }
 .estilo-tecnologico .brief-muestra-arte i { display: inline-block; width: 7px; height: 13px; background: #2ee6a6; vertical-align: -2px; }
 .estilo-tecnologico .brief-muestra-arte::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 40%; background: linear-gradient(transparent, rgb(46 230 166 / 0.14), transparent); transform: translateY(-100%); }
-.estilo-tecnologico:has(input:checked) .brief-muestra-pie { background: #06121b; color: #2ee6a6; }
-.estilo-tecnologico:has(input:checked) .brief-muestra-nombre { font-size: 14px; }
+.estilo-tecnologico:has([value='si']:checked) .brief-muestra-pie { background: #06121b; color: #2ee6a6; }
+.estilo-tecnologico:has([value='si']:checked) .brief-muestra-nombre { font-size: 14px; }
 .estilo-tecnologico .brief-sello span { font: 600 13px/1 'Muestra Plex Mono', monospace; color: #2ee6a6; }
 
 /* Corporativo: su banda y sus cifras. */
@@ -270,21 +264,21 @@
 .estilo-corporativo .cols > span { display: grid; align-content: start; gap: 5px; padding: 8px; border: 1px solid #dbe1ea; background: #ffffff; }
 .estilo-corporativo .cols b { font: 800 17px/1 'Muestra Manrope', sans-serif; color: #10284f; }
 .estilo-corporativo .cols i { height: 4px; background: #dbe1ea; transform-origin: left; transform: scaleX(0.45); transition: transform 700ms var(--ease); }
-.estilo-corporativo:is(:hover, :focus-within, :has(input:checked)) .cols i { transform: scaleX(1); background: #9fb2cf; }
-.estilo-corporativo:has(input:checked) .brief-muestra-pie { background: #10284f; color: #ffffff; }
+.estilo-corporativo:is(:hover, :focus-within, :has([value='si']:checked)) .cols i { transform: scaleX(1); background: #9fb2cf; }
+.estilo-corporativo:has([value='si']:checked) .brief-muestra-pie { background: #10284f; color: #ffffff; }
 .estilo-corporativo .brief-sello span { padding: 4px 5px; background: #ffffff; color: #10284f; font: 800 9px/1 'Muestra Manrope', sans-serif; letter-spacing: 0.06em; transform: translateX(10px); }
-.estilo-corporativo:has(input:checked) .brief-sello span { transform: none; }
+.estilo-corporativo:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Editorial: una página de revista. */
 .estilo-editorial { --marcado: #1c2a2e; }
 .estilo-editorial .brief-muestra-arte { display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 6px 12px; padding: 14px 16px; background: #f2ede3; color: #1c2a2e; }
 .estilo-editorial .folio { grid-column: 1 / -1; display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #1c2a2e; font: 500 9px/1 'Muestra Newsreader', serif; letter-spacing: 0.14em; text-transform: uppercase; }
 .estilo-editorial .titular { grid-column: 1 / -1; margin-top: 4px; font: italic 500 26px/1 'Muestra Newsreader', serif; background: linear-gradient(#1c2a2e, #1c2a2e) 0 100% / 0 1px no-repeat; transition: background-size 800ms var(--ease); }
-.estilo-editorial:is(:hover, :focus-within, :has(input:checked)) .titular { background-size: 100% 1px; }
+.estilo-editorial:is(:hover, :focus-within, :has([value='si']:checked)) .titular { background-size: 100% 1px; }
 .estilo-editorial .parrafo { font: 500 9px/1.45 'Muestra Newsreader', serif; color: #4a4a44; }
 .estilo-editorial .parrafo:first-of-type::first-letter { float: left; margin: 2px 4px 0 0; font: italic 500 22px/0.8 'Muestra Newsreader', serif; color: #1c2a2e; }
-.estilo-editorial:has(input:checked) .brief-muestra-pie { background: #f2ede3; color: #1c2a2e; }
-.estilo-editorial:has(input:checked) .brief-muestra-nombre { font-size: 20px; }
+.estilo-editorial:has([value='si']:checked) .brief-muestra-pie { background: #f2ede3; color: #1c2a2e; }
+.estilo-editorial:has([value='si']:checked) .brief-muestra-nombre { font-size: 20px; }
 .estilo-editorial .brief-sello span { padding: 3px 0; border-block: 1px solid; font: 500 9px/1.1 'Muestra Newsreader', serif; letter-spacing: 0.1em; text-transform: uppercase; color: #1c2a2e; }
 
 /* Cálido y cercano: formas blandas que se mueven con masa. */
@@ -294,12 +288,12 @@
 .estilo-calido .b1 { left: -20px; bottom: -40px; width: 120px; height: 120px; background: #e49b6a; }
 .estilo-calido .b2 { right: 30px; top: 26px; width: 70px; height: 70px; background: #d0643a; }
 .estilo-calido .b3 { right: 90px; bottom: 26px; width: 40px; height: 40px; background: #f7c873; }
-.estilo-calido:is(:hover, :focus-within, :has(input:checked)) .b2 { transform: translateY(-8px) scale(1.05); }
-.estilo-calido:is(:hover, :focus-within, :has(input:checked)) .b3 { transform: translate(-6px, 4px); }
+.estilo-calido:is(:hover, :focus-within, :has([value='si']:checked)) .b2 { transform: translateY(-8px) scale(1.05); }
+.estilo-calido:is(:hover, :focus-within, :has([value='si']:checked)) .b3 { transform: translate(-6px, 4px); }
 .estilo-calido .rot { position: absolute; left: 20px; top: 22px; max-width: 9ch; font: 700 21px/1.05 'Muestra Fraunces', Georgia, serif; color: #4f2614; }
-.estilo-calido:has(input:checked) .brief-muestra-pie { background: #f6e4d0; color: #4f2614; }
+.estilo-calido:has([value='si']:checked) .brief-muestra-pie { background: #f6e4d0; color: #4f2614; }
 .estilo-calido .brief-sello span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #d0643a; color: #ffffff; font-size: 13px; transform: scale(0.4); }
-.estilo-calido:has(input:checked) .brief-sello span { transform: none; }
+.estilo-calido:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Premium: dorado sobre negro, con un destello. */
 .estilo-premium { --marcado: #c9a24a; }
@@ -309,21 +303,21 @@
 .estilo-premium .brief-muestra-arte::before { top: 32px; }
 .estilo-premium .brief-muestra-arte::after { bottom: 32px; }
 .estilo-premium .rot { font: 500 30px/1 'Muestra Bodoni', Didot, serif; letter-spacing: 0.18em; color: transparent; background: linear-gradient(100deg, #8a6a2c 20%, #f3dc9a 45%, #8a6a2c 70%) 100% 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; transition: background-position 1.4s var(--ease); }
-.estilo-premium:is(:hover, :focus-within, :has(input:checked)) .rot { background-position: 0 0; }
-.estilo-premium:has(input:checked) .brief-muestra-pie { background: #0b0a09; color: #efe3c2; }
-.estilo-premium:has(input:checked) .brief-muestra-nombre { letter-spacing: 0.1em; text-transform: uppercase; }
+.estilo-premium:is(:hover, :focus-within, :has([value='si']:checked)) .rot { background-position: 0 0; }
+.estilo-premium:has([value='si']:checked) .brief-muestra-pie { background: #0b0a09; color: #efe3c2; }
+.estilo-premium:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.1em; text-transform: uppercase; }
 .estilo-premium .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #c9a24a; border-radius: 50%; color: #c9a24a; transform: rotate(-90deg); }
-.estilo-premium:has(input:checked) .brief-sello span { transform: none; }
+.estilo-premium:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Audaz: una palabra enorme. */
 .estilo-audaz { --marcado: #111111; }
 .estilo-audaz .brief-muestra-arte { display: grid; align-items: end; padding: 0 12px; background: #ffe14d; }
 .estilo-audaz .rot { font: 400 104px/0.8 'Muestra Anton', Impact, sans-serif; letter-spacing: -0.02em; color: #111111; transform: translateY(10px); transform-origin: left bottom; transition: transform 400ms var(--masa); }
-.estilo-audaz:is(:hover, :focus-within, :has(input:checked)) .rot { transform: translateY(0) scale(1.05); }
-.estilo-audaz:has(input:checked) .brief-muestra-pie { background: #111111; color: #ffe14d; }
-.estilo-audaz:has(input:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.02em; text-transform: uppercase; }
+.estilo-audaz:is(:hover, :focus-within, :has([value='si']:checked)) .rot { transform: translateY(0) scale(1.05); }
+.estilo-audaz:has([value='si']:checked) .brief-muestra-pie { background: #111111; color: #ffe14d; }
+.estilo-audaz:has([value='si']:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.02em; text-transform: uppercase; }
 .estilo-audaz .brief-sello span { font: 400 24px/1 'Muestra Anton', Impact, sans-serif; color: #ffe14d; transform: scale(2); }
-.estilo-audaz:has(input:checked) .brief-sello span { transform: none; }
+.estilo-audaz:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Lúdico: formas de colores que saltan. */
 .estilo-ludico { --marcado: #6d3cff; }
@@ -333,13 +327,13 @@
 .estilo-ludico .p2 { left: 110px; top: 60px; width: 0; height: 0; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 44px solid #ffc531; }
 .estilo-ludico .p3 { right: 30px; top: 30px; width: 40px; height: 40px; border-radius: 10px; background: #6d3cff; transform: rotate(18deg); }
 .estilo-ludico .p4 { right: 54px; bottom: 26px; width: 64px; height: 18px; border-radius: 9px; background: #19c6a7; transform: rotate(-10deg); }
-.estilo-ludico:is(:hover, :focus-within, :has(input:checked)) .p1 { transform: translateY(-12px); }
-.estilo-ludico:is(:hover, :focus-within, :has(input:checked)) .p2 { transform: rotate(-14deg) translateY(4px); }
-.estilo-ludico:is(:hover, :focus-within, :has(input:checked)) .p3 { transform: rotate(60deg); }
-.estilo-ludico:is(:hover, :focus-within, :has(input:checked)) .p4 { transform: rotate(10deg) translateX(-8px); }
-.estilo-ludico:has(input:checked) .brief-muestra-pie { background: #6d3cff; color: #ffffff; }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p1 { transform: translateY(-12px); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p2 { transform: rotate(-14deg) translateY(4px); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p3 { transform: rotate(60deg); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p4 { transform: rotate(10deg) translateX(-8px); }
+.estilo-ludico:has([value='si']:checked) .brief-muestra-pie { background: #6d3cff; color: #ffffff; }
 .estilo-ludico .brief-sello span { padding: 6px; border-radius: 8px; background: #ffc531; color: #3a1d8a; font: 700 10px/1 'Muestra Fredoka', sans-serif; transform: rotate(-30deg) scale(0.3); }
-.estilo-ludico:has(input:checked) .brief-sello span { transform: rotate(-10deg); }
+.estilo-ludico:has([value='si']:checked) .brief-sello span { transform: rotate(-10deg); }
 
 /* Brutalista: sin suavizado, todo de golpe. */
 .estilo-brutalista { --marcado: #000000; }
@@ -351,8 +345,8 @@
 @media (hover: hover) {
   .estilo-brutalista:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 #000000; }
 }
-.estilo-brutalista:has(input:checked) .brief-muestra-pie { background: #000000; color: #ffffff; }
-.estilo-brutalista:has(input:checked) .brief-muestra-nombre { text-transform: uppercase; }
+.estilo-brutalista:has([value='si']:checked) .brief-muestra-pie { background: #000000; color: #ffffff; }
+.estilo-brutalista:has([value='si']:checked) .brief-muestra-nombre { text-transform: uppercase; }
 .estilo-brutalista .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 3px solid #ffffff; color: #ffffff; font: 700 18px/1 'Times New Roman', serif; transition: none; }
 
 /* Retro: un sol y sus franjas setenteras. */
@@ -360,56 +354,56 @@
 .estilo-retro .brief-muestra-arte { background: #f3e1bf; }
 .estilo-retro .sol { position: absolute; right: 26px; top: 16px; width: 74px; height: 74px; border-radius: 50%; background: #e8a33d; transition: transform 700ms var(--masa); }
 .estilo-retro .rayas { position: absolute; left: -10px; right: -10px; bottom: 18px; height: 54px; background: linear-gradient(#e8a33d 0 33%, #d86a26 33% 66%, #8c3b1d 66%); transform: skewY(-6deg); transition: transform 700ms var(--ease); }
-.estilo-retro:is(:hover, :focus-within, :has(input:checked)) .sol { transform: translateY(-10px) scale(1.08); }
-.estilo-retro:is(:hover, :focus-within, :has(input:checked)) .rayas { transform: skewY(-6deg) translateX(-10px); }
+.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .sol { transform: translateY(-10px) scale(1.08); }
+.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .rayas { transform: skewY(-6deg) translateX(-10px); }
 .estilo-retro .rot { position: absolute; left: 16px; top: 20px; font: 400 32px/1 'Muestra Shrikhand', serif; color: #8c3b1d; text-shadow: 3px 3px 0 #e8a33d; }
-.estilo-retro:has(input:checked) .brief-muestra-pie { background: #8c3b1d; color: #f3e1bf; }
+.estilo-retro:has([value='si']:checked) .brief-muestra-pie { background: #8c3b1d; color: #f3e1bf; }
 .estilo-retro .brief-sello svg { width: 30px; fill: #e8a33d; transform: rotate(-60deg) scale(0.6); }
-.estilo-retro:has(input:checked) .brief-sello svg { transform: none; }
+.estilo-retro:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Suizo: la grilla y su cuadrado rojo. */
 .estilo-suizo { --marcado: #e2231a; }
 .estilo-suizo .brief-muestra-arte { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); padding: 14px; background: #ffffff; }
 .estilo-suizo .cua { grid-column: 1 / 3; grid-row: 1 / 3; background: #e2231a; transform-origin: top left; transition: transform 600ms var(--ease); }
-.estilo-suizo:is(:hover, :focus-within, :has(input:checked)) .cua { transform: scale(0.5); }
+.estilo-suizo:is(:hover, :focus-within, :has([value='si']:checked)) .cua { transform: scale(0.5); }
 .estilo-suizo .rot { grid-column: 3 / 5; grid-row: 2 / 4; align-self: end; font: 700 21px/0.95 'Muestra Archivo', Helvetica, sans-serif; letter-spacing: -0.03em; color: #111111; }
 .estilo-suizo .reg { grid-column: 1 / 3; grid-row: 3; align-self: end; font: 700 9px/1.2 'Muestra Archivo', Helvetica, sans-serif; color: #111111; }
-.estilo-suizo:has(input:checked) .brief-muestra-pie { background: #ffffff; color: #111111; }
+.estilo-suizo:has([value='si']:checked) .brief-muestra-pie { background: #ffffff; color: #111111; }
 .estilo-suizo .brief-sello span { display: grid; place-items: center; width: 24px; height: 24px; background: #e2231a; color: #ffffff; font: 700 14px/1 'Muestra Archivo', sans-serif; transform: translate(10px, -10px); }
-.estilo-suizo:has(input:checked) .brief-sello span { transform: none; }
+.estilo-suizo:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Natural: hojas que se mecen. */
 .estilo-natural { --marcado: #23412b; }
 .estilo-natural .brief-muestra-arte { background: #e9ecdf; }
 .estilo-natural .hoja { position: absolute; left: 30px; top: 18px; width: 90px; height: 140px; border-radius: 0 100% 0 100%; background: #6f9a5b; transform: rotate(18deg); transform-origin: bottom left; transition: transform 800ms var(--masa); }
 .estilo-natural .h2 { left: 70px; top: 40px; width: 70px; height: 110px; background: #23412b; transform: rotate(48deg); }
-.estilo-natural:is(:hover, :focus-within, :has(input:checked)) .hoja { transform: rotate(8deg); }
-.estilo-natural:is(:hover, :focus-within, :has(input:checked)) .h2 { transform: rotate(58deg); }
+.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .hoja { transform: rotate(8deg); }
+.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .h2 { transform: rotate(58deg); }
 .estilo-natural .rot { position: absolute; right: 18px; bottom: 20px; font: 400 19px/1.1 'Muestra Young Serif', Georgia, serif; text-align: right; color: #23412b; }
-.estilo-natural:has(input:checked) .brief-muestra-pie { background: #23412b; color: #eef2e2; }
+.estilo-natural:has([value='si']:checked) .brief-muestra-pie { background: #23412b; color: #eef2e2; }
 .estilo-natural .brief-sello span { width: 20px; height: 26px; border-radius: 0 100% 0 100%; background: #b9d39c; transform: rotate(-30deg) scale(0.2); transform-origin: bottom left; }
-.estilo-natural:has(input:checked) .brief-sello span { transform: rotate(20deg); }
+.estilo-natural:has([value='si']:checked) .brief-sello span { transform: rotate(20deg); }
 
 /* Futurista: vidrio sobre luz. */
 .estilo-futurista { --marcado: #7a5cff; }
 .estilo-futurista .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(60% 80% at 30% 30%, #7a5cff 0, transparent 70%), radial-gradient(60% 80% at 80% 70%, #00c2ff 0, transparent 70%), #0b0c1e; }
 .estilo-futurista .vidrio { display: grid; place-items: center; width: 70%; height: 58%; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 16px; background: rgb(255 255 255 / 0.1); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #ffffff; font: 700 15px/1 'Muestra Unbounded', sans-serif; transition: transform 500ms var(--ease); }
-.estilo-futurista:is(:hover, :focus-within, :has(input:checked)) .vidrio { transform: translateY(-4px) scale(1.04); }
-.estilo-futurista:has(input:checked) .brief-muestra-pie { background: #0b0c1e; color: #ffffff; }
-.estilo-futurista:has(input:checked) .brief-muestra-nombre { font-size: 13px; }
+.estilo-futurista:is(:hover, :focus-within, :has([value='si']:checked)) .vidrio { transform: translateY(-4px) scale(1.04); }
+.estilo-futurista:has([value='si']:checked) .brief-muestra-pie { background: #0b0c1e; color: #ffffff; }
+.estilo-futurista:has([value='si']:checked) .brief-muestra-nombre { font-size: 13px; }
 .estilo-futurista .brief-sello span { width: 26px; height: 26px; border: 2px solid transparent; border-top-color: #00c2ff; border-right-color: #7a5cff; border-radius: 50%; }
 
 /* Artesanal: una etiqueta de papel con su sello. */
 .estilo-artesanal { --marcado: #b4462b; }
 .estilo-artesanal .brief-muestra-arte { display: grid; place-items: center; background: #e9dcc4 radial-gradient(rgb(122 75 42 / 0.08) 1px, transparent 1.4px) 0 0 / 6px 6px; }
 .estilo-artesanal .etiqueta { padding: 10px 16px; border: 2px solid #7a4b2a; border-radius: 4px; color: #7a4b2a; text-align: center; transform: rotate(-3deg); transition: transform 500ms var(--masa); }
-.estilo-artesanal:is(:hover, :focus-within, :has(input:checked)) .etiqueta { transform: rotate(0) scale(1.05); }
+.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .etiqueta { transform: rotate(0) scale(1.05); }
 .estilo-artesanal .etiqueta b { display: block; font: 700 30px/1 'Muestra Caveat', cursive; }
 .estilo-artesanal .etiqueta small { font: 700 9px/1 'Muestra Zilla', serif; letter-spacing: 0.2em; text-transform: uppercase; }
-.estilo-artesanal:has(input:checked) .brief-muestra-pie { background: #e9dcc4; color: #4a2817; }
-.estilo-artesanal:has(input:checked) .brief-muestra-nombre { font-size: 22px; }
+.estilo-artesanal:has([value='si']:checked) .brief-muestra-pie { background: #e9dcc4; color: #4a2817; }
+.estilo-artesanal:has([value='si']:checked) .brief-muestra-nombre { font-size: 22px; }
 .estilo-artesanal .brief-sello span { display: grid; place-items: center; width: 34px; height: 34px; border: 2px dashed #b4462b; border-radius: 50%; color: #b4462b; font: 700 10px/1 'Muestra Zilla', serif; text-transform: uppercase; transform: scale(1.8) rotate(-30deg); }
-.estilo-artesanal:has(input:checked) .brief-sello span { transform: rotate(-12deg); }
+.estilo-artesanal:has([value='si']:checked) .brief-sello span { transform: rotate(-12deg); }
 
 /* Zen: un ensō que se dibuja de un trazo. */
 .estilo-zen { --marcado: #23231f; }
@@ -418,36 +412,36 @@
 .estilo-zen svg circle { fill: none; stroke: #23231f; stroke-linecap: round; }
 .estilo-zen .brief-muestra-arte circle { stroke-width: 7; stroke-dasharray: 230 300; }
 .estilo-zen .rojo { position: absolute; right: 28px; bottom: 26px; width: 10px; height: 10px; border-radius: 50%; background: #b8342c; }
-.estilo-zen:has(input:checked) .brief-muestra-pie { background: #f2efe8; color: #23231f; }
-.estilo-zen:has(input:checked) .brief-muestra-nombre { font-size: 19px; letter-spacing: 0.06em; }
+.estilo-zen:has([value='si']:checked) .brief-muestra-pie { background: #f2efe8; color: #23231f; }
+.estilo-zen:has([value='si']:checked) .brief-muestra-nombre { font-size: 19px; letter-spacing: 0.06em; }
 .estilo-zen .brief-sello svg { width: 28px; height: 28px; }
 .estilo-zen .brief-sello circle { stroke-width: 3; stroke-dasharray: 60 80; stroke-dashoffset: 60; transition: stroke-dashoffset 900ms var(--ease); }
-.estilo-zen:has(input:checked) .brief-sello circle { stroke-dashoffset: 0; }
+.estilo-zen:has([value='si']:checked) .brief-sello circle { stroke-dashoffset: 0; }
 
 /* Industrial: plancha, remaches y cinta de peligro. */
 .estilo-industrial { --marcado: #f2b705; }
 .estilo-industrial .brief-muestra-arte { background: linear-gradient(180deg, #2c3136, #1b1d1f); }
 .estilo-industrial .rot { position: absolute; left: 16px; top: 18px; font: 800 44px/0.9 'Muestra Stencil', Impact, sans-serif; letter-spacing: 0.02em; color: #e5e1d8; }
 .estilo-industrial .cinta { position: absolute; left: -20px; right: -20px; bottom: 20px; height: 22px; background: repeating-linear-gradient(-45deg, #f2b705 0 14px, #111111 14px 28px); transform: rotate(-4deg); transition: background-position 1s linear; }
-.estilo-industrial:is(:hover, :focus-within, :has(input:checked)) .cinta { background-position: 80px 0; }
+.estilo-industrial:is(:hover, :focus-within, :has([value='si']:checked)) .cinta { background-position: 80px 0; }
 .estilo-industrial .remache { position: absolute; top: 14px; width: 6px; height: 6px; border-radius: 50%; background: #5d656c; }
 .estilo-industrial .r1 { right: 14px; }
 .estilo-industrial .r2 { right: 28px; }
-.estilo-industrial:has(input:checked) .brief-muestra-pie { background: #1b1d1f; color: #f2b705; }
-.estilo-industrial:has(input:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.04em; text-transform: uppercase; }
+.estilo-industrial:has([value='si']:checked) .brief-muestra-pie { background: #1b1d1f; color: #f2b705; }
+.estilo-industrial:has([value='si']:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.04em; text-transform: uppercase; }
 .estilo-industrial .brief-sello span { padding: 5px 5px 4px; background: #f2b705; color: #111111; font: 800 16px/1 'Muestra Stencil', Impact, sans-serif; transform: translateY(14px); }
-.estilo-industrial:has(input:checked) .brief-sello span { transform: none; }
+.estilo-industrial:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Art déco: un abanico dorado que se despliega. */
 .estilo-artdeco { --marcado: #d4af37; }
 .estilo-artdeco .brief-muestra-arte { display: grid; place-items: center; background: #0f1f1c; }
 .estilo-artdeco .abanico { position: absolute; left: 50%; bottom: -150px; width: 240px; height: 240px; margin-left: -120px; border-radius: 50%; background: repeating-conic-gradient(from -90deg, #d4af37 0 2deg, transparent 2deg 12deg); -webkit-mask: radial-gradient(circle, transparent 32%, #000 33%); mask: radial-gradient(circle, transparent 32%, #000 33%); transform: scale(0.7); transition: transform 900ms var(--masa); }
-.estilo-artdeco:is(:hover, :focus-within, :has(input:checked)) .abanico { transform: scale(1) rotate(6deg); }
+.estilo-artdeco:is(:hover, :focus-within, :has([value='si']:checked)) .abanico { transform: scale(1) rotate(6deg); }
 .estilo-artdeco .rot { position: relative; margin-top: -30px; padding: 8px 0 8px 0.32em; border-block: 1px solid #d4af37; font: 400 26px/1 'Muestra Poiret', sans-serif; letter-spacing: 0.32em; color: #e9d7a5; }
-.estilo-artdeco:has(input:checked) .brief-muestra-pie { background: #0f1f1c; color: #e9d7a5; }
-.estilo-artdeco:has(input:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; }
+.estilo-artdeco:has([value='si']:checked) .brief-muestra-pie { background: #0f1f1c; color: #e9d7a5; }
+.estilo-artdeco:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; }
 .estilo-artdeco .brief-sello span { width: 16px; height: 16px; background: #d4af37; transform: rotate(45deg) scale(0.2); }
-.estilo-artdeco:has(input:checked) .brief-sello span { transform: rotate(45deg); }
+.estilo-artdeco:has([value='si']:checked) .brief-sello span { transform: rotate(45deg); }
 
 /* Bauhaus: círculo, cuadrado y triángulo que se reordenan. */
 .estilo-bauhaus { --marcado: #d6312b; }
@@ -457,13 +451,13 @@
 .estilo-bauhaus .q { left: 110px; top: 74px; width: 60px; height: 60px; background: #1f4fa3; }
 .estilo-bauhaus .t { right: 26px; top: 30px; width: 0; height: 0; border-left: 34px solid transparent; border-right: 34px solid transparent; border-bottom: 60px solid #f2b705; }
 .estilo-bauhaus .b { right: 18px; bottom: 24px; width: 120px; height: 10px; background: #141414; }
-.estilo-bauhaus:is(:hover, :focus-within, :has(input:checked)) .c { transform: translateX(96px); }
-.estilo-bauhaus:is(:hover, :focus-within, :has(input:checked)) .q { transform: translateX(-86px) rotate(90deg); }
-.estilo-bauhaus:is(:hover, :focus-within, :has(input:checked)) .t { transform: translateY(46px) rotate(180deg); }
-.estilo-bauhaus:has(input:checked) .brief-muestra-pie { background: #141414; color: #f1ead8; }
-.estilo-bauhaus:has(input:checked) .brief-muestra-nombre { letter-spacing: 0.06em; text-transform: uppercase; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .c { transform: translateX(96px); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .q { transform: translateX(-86px) rotate(90deg); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .t { transform: translateY(46px) rotate(180deg); }
+.estilo-bauhaus:has([value='si']:checked) .brief-muestra-pie { background: #141414; color: #f1ead8; }
+.estilo-bauhaus:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.06em; text-transform: uppercase; }
 .estilo-bauhaus .brief-sello span { width: 22px; height: 22px; border-radius: 50%; background: #d6312b; transform: translateX(14px); }
-.estilo-bauhaus:has(input:checked) .brief-sello span { transform: none; }
+.estilo-bauhaus:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Memphis: patrones y formas que se menean. */
 .estilo-memphis { --marcado: #ff5aa5; }
@@ -473,48 +467,48 @@
 .estilo-memphis .ci { right: 34px; top: 22px; width: 58px; height: 58px; border: 3px solid #1a1a1a; border-radius: 50%; background: #ffd23f; }
 .estilo-memphis .tr { left: 40px; bottom: 18px; width: 70px; height: 70px; border: 3px solid #1a1a1a; background: #19c6c6; clip-path: polygon(0 100%, 50% 0, 100% 100%); }
 .estilo-memphis .pi { right: 30px; bottom: 30px; width: 90px; height: 26px; border: 3px solid #1a1a1a; border-radius: 4px; background: #ff5aa5; transform: rotate(-12deg); }
-.estilo-memphis:is(:hover, :focus-within, :has(input:checked)) .ci { transform: translate(-14px, 10px); }
-.estilo-memphis:is(:hover, :focus-within, :has(input:checked)) .tr { transform: rotate(-18deg); }
-.estilo-memphis:is(:hover, :focus-within, :has(input:checked)) .pi { transform: rotate(10deg) translateX(-10px); }
-.estilo-memphis:is(:hover, :focus-within, :has(input:checked)) .zz { transform: translateX(10px) skewX(-10deg); }
-.estilo-memphis:has(input:checked) .brief-muestra-pie { background: #19c6c6; color: #1a1a1a; }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .ci { transform: translate(-14px, 10px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .tr { transform: rotate(-18deg); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .pi { transform: rotate(10deg) translateX(-10px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .zz { transform: translateX(10px) skewX(-10deg); }
+.estilo-memphis:has([value='si']:checked) .brief-muestra-pie { background: #19c6c6; color: #1a1a1a; }
 .estilo-memphis .brief-sello span { width: 26px; height: 26px; border: 2px solid #1a1a1a; border-radius: 50%; background: #ffd23f; transform: scale(0.3); }
-.estilo-memphis:has(input:checked) .brief-sello span { transform: none; }
+.estilo-memphis:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Y2K: cromo y destellos. */
 .estilo-y2k { --marcado: #9b7bff; }
 .estilo-y2k .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(50% 60% at 20% 30%, #ffb8e6, transparent), radial-gradient(50% 60% at 80% 70%, #b8d4ff, transparent), #e9dcff; }
 .estilo-y2k .rot { font: 800 40px/1 'Muestra Syne', sans-serif; letter-spacing: -0.03em; color: transparent; background: linear-gradient(180deg, #ffffff 0%, #9aa3b5 45%, #3d4458 52%, #e7ebf3 80%) 0 0 / 100% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 1px #2a1660; transition: background-position 800ms var(--ease); }
-.estilo-y2k:is(:hover, :focus-within, :has(input:checked)) .rot { background-position: 0 100%; }
+.estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .rot { background-position: 0 100%; }
 .estilo-y2k .chispa { position: absolute; color: #ffffff; font-size: 18px; text-shadow: 0 0 8px #ffffff; opacity: 0.5; }
 .estilo-y2k .ch1 { left: 24px; top: 22px; }
 .estilo-y2k .ch2 { right: 30px; top: 40px; font-size: 12px; }
 .estilo-y2k .ch3 { right: 60px; bottom: 22px; }
-.estilo-y2k:has(input:checked) .brief-muestra-pie { background: #2a1660; color: #e9dcff; }
+.estilo-y2k:has([value='si']:checked) .brief-muestra-pie { background: #2a1660; color: #e9dcff; }
 .estilo-y2k .brief-sello span { color: #ffb8e6; font-size: 22px; transform: scale(0.2) rotate(-90deg); }
-.estilo-y2k:has(input:checked) .brief-sello span { transform: none; }
+.estilo-y2k:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Andino: la greca que se teje. */
 .estilo-andino { --marcado: #b5442b; }
 .estilo-andino .brief-muestra-arte { display: grid; align-content: center; gap: 10px; background: #b5442b; }
 .estilo-andino .greca { display: block; height: 26px; background: linear-gradient(90deg, #fbf1e1 0 25%, transparent 25% 50%, #e2a33a 50% 75%, transparent 75%) 0 0 / 52px 13px repeat-x, linear-gradient(90deg, transparent 0 25%, #fbf1e1 25% 50%, transparent 50% 75%, #1f5c5a 75%) 0 13px / 52px 13px repeat-x; transition: background-position 1.2s linear; }
 .estilo-andino .g2 { height: 10px; background: repeating-linear-gradient(45deg, #fbf1e1 0 4px, transparent 4px 8px); }
-.estilo-andino:is(:hover, :focus-within, :has(input:checked)) .greca:not(.g2) { background-position: 104px 0, 104px 13px; }
+.estilo-andino:is(:hover, :focus-within, :has([value='si']:checked)) .greca:not(.g2) { background-position: 104px 0, 104px 13px; }
 .estilo-andino .rot { padding-left: 18px; font: 700 30px/1 'Muestra Alegreya', Georgia, serif; color: #fbf1e1; }
-.estilo-andino:has(input:checked) .brief-muestra-pie { background: #1f5c5a; color: #fbf1e1; }
+.estilo-andino:has([value='si']:checked) .brief-muestra-pie { background: #1f5c5a; color: #fbf1e1; }
 .estilo-andino .brief-sello span { width: 22px; height: 22px; border: 3px solid #e2a33a; transform: rotate(45deg) scale(0.2); }
-.estilo-andino:has(input:checked) .brief-sello span { transform: rotate(45deg); }
+.estilo-andino:has([value='si']:checked) .brief-sello span { transform: rotate(45deg); }
 
 /* Letterpress: la letra hundida en el papel. */
 .estilo-letterpress { --marcado: #2b2a6b; }
 .estilo-letterpress .brief-muestra-arte { display: grid; place-items: center; align-content: center; gap: 4px; background: #f4efe6; }
 .estilo-letterpress .rot { font: 400 40px/1 'Muestra Abril', Georgia, serif; color: #2b2a6b; text-shadow: 0 1px 0 rgb(255 255 255 / 0.9), 0 -1px 0 rgb(43 42 107 / 0.25); transition: transform 180ms ease-in, text-shadow 180ms; }
-.estilo-letterpress:is(:hover, :focus-within, :has(input:checked)) .rot { transform: translateY(1px) scale(0.98); text-shadow: 0 2px 0 #ffffff, 0 -1px 1px rgb(43 42 107 / 0.45); }
+.estilo-letterpress:is(:hover, :focus-within, :has([value='si']:checked)) .rot { transform: translateY(1px) scale(0.98); text-shadow: 0 2px 0 #ffffff, 0 -1px 1px rgb(43 42 107 / 0.45); }
 .estilo-letterpress .brief-muestra-arte small { font: 400 11px/1 'Muestra Newsreader', serif; letter-spacing: 0.2em; text-transform: uppercase; color: #c0392b; }
-.estilo-letterpress:has(input:checked) .brief-muestra-pie { background: #f4efe6; color: #2b2a6b; }
-.estilo-letterpress:has(input:checked) .brief-muestra-nombre { font-size: 19px; }
+.estilo-letterpress:has([value='si']:checked) .brief-muestra-pie { background: #f4efe6; color: #2b2a6b; }
+.estilo-letterpress:has([value='si']:checked) .brief-muestra-nombre { font-size: 19px; }
 .estilo-letterpress .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 1.5px solid #c0392b; border-radius: 50%; color: #c0392b; transform: scale(1.6); }
-.estilo-letterpress:has(input:checked) .brief-sello span { transform: none; }
+.estilo-letterpress:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Collage / zine: recortes con cinta. */
 .estilo-collage { --marcado: #ff3b1f; }
@@ -524,12 +518,12 @@
 .estilo-collage .r2 { left: 120px; top: 30px; padding: 3px 6px; background: #ffffff; color: #0d0d0d; font: 400 24px/1 'Muestra Special Elite', monospace; transform: rotate(3deg); }
 .estilo-collage .r3 { left: 40px; top: 80px; padding: 2px 8px; background: #ff3b1f; color: #0d0d0d; font: 400 30px/1 'Muestra Archivo Black', sans-serif; transform: rotate(2deg); }
 .estilo-collage .cinta { position: absolute; right: 30px; top: 18px; width: 60px; height: 18px; background: rgb(255 240 170 / 0.8); transform: rotate(24deg); }
-.estilo-collage:is(:hover, :focus-within, :has(input:checked)) .r1 { transform: rotate(3deg) translateY(4px); }
-.estilo-collage:is(:hover, :focus-within, :has(input:checked)) .r2 { transform: rotate(-5deg) translateX(-6px); }
-.estilo-collage:is(:hover, :focus-within, :has(input:checked)) .r3 { transform: rotate(-3deg) translateX(10px); }
-.estilo-collage:has(input:checked) .brief-muestra-pie { background: #0d0d0d; color: #e6e3dc; }
+.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r1 { transform: rotate(3deg) translateY(4px); }
+.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r2 { transform: rotate(-5deg) translateX(-6px); }
+.estilo-collage:is(:hover, :focus-within, :has([value='si']:checked)) .r3 { transform: rotate(-3deg) translateX(10px); }
+.estilo-collage:has([value='si']:checked) .brief-muestra-pie { background: #0d0d0d; color: #e6e3dc; }
 .estilo-collage .brief-sello span { width: 34px; height: 14px; background: rgb(255 240 170 / 0.9); transform: rotate(-20deg) scale(0.3); }
-.estilo-collage:has(input:checked) .brief-sello span { transform: rotate(-20deg); }
+.estilo-collage:has([value='si']:checked) .brief-sello span { transform: rotate(-20deg); }
 
 /* Clínico / limpio: un pulso tranquilo y una hora disponible. */
 .estilo-clinico { --marcado: #0f9b8e; }
@@ -538,23 +532,23 @@
 .estilo-clinico .brief-muestra-arte path { fill: none; stroke: #0f9b8e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 320; }
 .estilo-clinico .tarjeta { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #f1f8f7; color: #0f2b3a; font: 700 12px/1 'Muestra Jakarta', sans-serif; transition: transform 400ms var(--ease), box-shadow 400ms; }
 .estilo-clinico .tarjeta i { width: 10px; height: 10px; border-radius: 50%; background: #0f9b8e; }
-.estilo-clinico:is(:hover, :focus-within, :has(input:checked)) .tarjeta { transform: translateY(-4px); box-shadow: 0 10px 20px -12px rgb(15 155 142 / 0.6); }
-.estilo-clinico:has(input:checked) .brief-muestra-pie { background: #0f9b8e; color: #ffffff; }
+.estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .tarjeta { transform: translateY(-4px); box-shadow: 0 10px 20px -12px rgb(15 155 142 / 0.6); }
+.estilo-clinico:has([value='si']:checked) .brief-muestra-pie { background: #0f9b8e; color: #ffffff; }
 .estilo-clinico .brief-sello span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; color: #0f9b8e; font-weight: 700; transform: scale(0.3); }
-.estilo-clinico:has(input:checked) .brief-sello span { transform: none; }
+.estilo-clinico:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Lo que se mueve en bucle o se dibuja al pasar: solo sin el movimiento
    reducido. */
 @media (prefers-reduced-motion: no-preference) {
   .estilo-tecnologico .brief-muestra-arte i { animation: muestra-parpadeo 1s steps(1) infinite; }
   .estilo-tecnologico:is(:hover, :focus-within) .brief-muestra-arte::after { animation: muestra-barrido 1.4s linear infinite; }
-  .estilo-zen:is(:hover, :focus-within, :has(input:checked)) .brief-muestra-arte circle { animation: muestra-enso 1.6s var(--ease) both; }
-  .estilo-retro:has(input:checked) .brief-sello svg { animation: muestra-gira 8s linear infinite; }
-  .estilo-futurista:has(input:checked) .brief-sello span { animation: muestra-gira 1.4s linear infinite; }
-  .estilo-y2k:is(:hover, :focus-within, :has(input:checked)) .chispa { animation: muestra-titila 0.9s ease-in-out infinite alternate; }
-  .estilo-y2k:is(:hover, :focus-within, :has(input:checked)) .ch2 { animation-delay: 0.3s; }
-  .estilo-y2k:is(:hover, :focus-within, :has(input:checked)) .ch3 { animation-delay: 0.6s; }
-  .estilo-clinico:is(:hover, :focus-within, :has(input:checked)) .brief-muestra-arte path { animation: muestra-pulso 1.6s var(--ease) both; }
+  .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte circle { animation: muestra-enso 1.6s var(--ease) both; }
+  .estilo-retro:has([value='si']:checked) .brief-sello svg { animation: muestra-gira 8s linear infinite; }
+  .estilo-futurista:has([value='si']:checked) .brief-sello span { animation: muestra-gira 1.4s linear infinite; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 0.9s ease-in-out infinite alternate; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch2 { animation-delay: 0.3s; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch3 { animation-delay: 0.6s; }
+  .estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte path { animation: muestra-pulso 1.6s var(--ease) both; }
 }
 
 @keyframes muestra-parpadeo { 50% { opacity: 0; } }
@@ -566,6 +560,7 @@
 
 /* ==================== Las tipografías ==================== */
 .brief-tipo .brief-muestra-arte {
+  container-type: inline-size;
   display: grid;
   place-items: center;
   white-space: nowrap;
@@ -573,7 +568,11 @@
   color: var(--texto);
 }
 
+/* La palabra mide su tamaño de diseño (`--tam`) o, si la tarjeta es más
+   angosta, el que la deja en el 82 % de su ancho: `--em` es su ancho en `em`,
+   medido en cada letra. */
 .brief-tipo .brief-muestra-arte > span {
+  font-size: min(var(--tam, 40px), calc(82cqi / var(--em, 4.5)));
   display: inline-block;
   transition:
     transform 500ms var(--masa),
@@ -611,16 +610,23 @@
 .tipo-expresiva { --letra: 800 1em 'Muestra Syne', sans-serif; }
 .tipo-ancha { --letra: 700 1em 'Muestra Unbounded', sans-serif; }
 
-.brief-tipo .brief-muestra-arte { font: var(--letra); font-size: 40px; line-height: 1; }
-.tipo-display .brief-muestra-arte { font-size: 48px; letter-spacing: -0.04em; }
-.tipo-tecnica .brief-muestra-arte,
-.tipo-ancha .brief-muestra-arte { font-size: 28px; }
-.tipo-didona .brief-muestra-arte,
-.tipo-clasica-fina .brief-muestra-arte { font-size: 44px; }
-.tipo-condensada .brief-muestra-arte { font-size: 52px; text-transform: uppercase; }
-.tipo-manuscrita .brief-muestra-arte { font-size: 50px; }
-.tipo-script .brief-muestra-arte { font-size: 46px; }
-.tipo-expresiva .brief-muestra-arte { font-size: 34px; }
+.brief-tipo .brief-muestra-arte { font: var(--letra); line-height: 1; }
+.tipo-moderna { --em: 4.45; }
+.tipo-geometrica { --em: 3.91; }
+.tipo-serif { --em: 4.04; }
+.tipo-redondeada { --em: 4.12; }
+.tipo-display { --tam: 48px; --em: 4.28; }
+.tipo-display .brief-muestra-arte { letter-spacing: -0.04em; }
+.tipo-tecnica { --tam: 28px; --em: 4.8; }
+.tipo-didona { --tam: 44px; --em: 4.4; }
+.tipo-clasica-fina { --tam: 44px; --em: 3.62; }
+.tipo-slab { --em: 4.22; }
+.tipo-condensada { --tam: 52px; --em: 3.53; }
+.tipo-condensada .brief-muestra-arte { text-transform: uppercase; }
+.tipo-manuscrita { --tam: 50px; --em: 3.15; }
+.tipo-script { --tam: 46px; --em: 3.31; }
+.tipo-expresiva { --tam: 34px; --em: 7.75; }
+.tipo-ancha { --tam: 28px; --em: 5.95; }
 .tipo-expresiva .brief-muestra-arte i { display: inline-block; font-style: normal; white-space: pre; transition: transform 400ms var(--masa); }
 
 /* Lo que hace cada una al pasar o al marcarse. */
@@ -657,47 +663,138 @@
 @keyframes muestra-sella { from { transform: translateY(-18px) scale(1.15); opacity: 0.4; } }
 @keyframes muestra-escribe { from { clip-path: inset(0 100% 0 0); } }
 
-/* ==================== La portada de muestra ==================== */
+/* ==================== La portada de muestra ====================
+ * Las escalas encajan de a una, como los socios de /nosotros (Nosotros.css) y
+ * las fases de la tienda (Tienda.css): cada gesto, cada flecha, cae en una
+ * escala y ninguna se salta, con la portada de muestra siempre a la vista. Se
+ * ve una sola escala a la vez: cada parada mide lo que queda libre.
+ *
+ * En XL la portada va al lado, centrada en la pantalla, y cada escala se
+ * centra junto a ella. Más angosto, la portada va arriba, fija bajo la barra
+ * del sitio, y cada escala se centra en lo que queda entre ella y la guía de
+ * abajo (`--pie-brief`, Brief.css). Para saber cuánto queda, la portada tiene su
+ * ancho fijo, y de él sale su alto (`.mk` va en 16:10,5, más su barra): en un
+ * teléfono bajo se angosta, para que siempre quepa una escala entera.
+ *
+ * El encaje vale mientras se ve esta parte: arriba encajan el comienzo de la
+ * página y el de la parte; abajo, la pregunta que sigue, y desde ella se baja
+ * libre (su zona de encaje llega al final de la página, y src/encaje.js lo
+ * apaga ahí por la rueda del ratón). Con movimiento reducido no encaja. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.brief-pantalla-escalas:target):not(.libre) {
+    scroll-snap-type: y mandatory;
+  }
+
+  /* Chrome mide la parada con el desplazamiento del momento y no la vuelve a
+     medir: la parte entra sin subir, solo con la opacidad (Brief.css). */
+  .brief-pantalla-escalas:target {
+    animation-name: brief-asoma;
+  }
+}
+
+@keyframes brief-asoma {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Las paradas de arriba son la portada del brief y la cabecera de la parte,
+   no la parte entera: una parada más alta que la pantalla deja parar en
+   cualquier punto de ella, y con la flecha Chrome saltaba al final de la
+   página. */
+.brief-portada,
+.brief-pantalla-escalas > .brief-pantalla-cabeza {
+  scroll-snap-align: start;
+}
+
+.brief-escalas + * {
+  scroll-snap-align: start;
+  scroll-margin-bottom: 100000px;
+}
+
 .brief-escalas {
+  container-type: inline-size;
   display: grid;
-  gap: var(--e-6);
+  gap: var(--e-4);
   align-items: start;
 }
 
 .brief-escalas-lista {
   display: flex;
   flex-direction: column;
-  gap: var(--e-6);
   min-width: 0;
 }
 
-/* La portada de muestra se queda a la vista mientras se mueven los puntos:
-   al lado desde XL; arriba, fija sobre las escalas, en lo más angosto. */
+.brief-escala-parada {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-stop: always;
+}
+
 @media (min-width: 1200px) {
   .brief-escalas {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: var(--e-8);
+  }
+
+  .brief-escala-parada {
+    min-height: calc(100svh - var(--bajo-barra) - var(--pie-brief));
+    scroll-snap-align: center;
   }
 
   .brief-mockup-columna {
     position: sticky;
-    top: calc(var(--bajo-barra) + var(--e-4));
+    top: var(--bajo-barra);
+    height: calc(100svh - var(--bajo-barra) - var(--pie-brief));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 
 @media (max-width: 1199px) {
+  .brief-escalas > * {
+    --mockup-ancho: min(100cqw, 30rem, (100svh - var(--barra-alto) - var(--pie-brief) - 17rem) * 1.52);
+    --mockup-alto: calc(var(--mockup-ancho) / 1.524 + 43px + var(--e-4));
+  }
+
   .brief-mockup-columna {
     position: sticky;
-    top: calc(var(--barra-alto) + 3.75rem);
+    top: var(--barra-alto);
     z-index: 1;
     order: -1;
-    width: min(100%, 30rem);
+    width: var(--mockup-ancho);
     justify-self: center;
-    padding-bottom: var(--e-2);
+    padding-bottom: var(--e-4);
     background: var(--fondo);
+  }
+
+  /* La parada mide lo que encaja (la pantalla sin la barra ni la guía), ni
+     un píxel más: más alta, la flecha la recorrería por dentro en vez de
+     pasar a la siguiente. Arriba, bajo la portada, su relleno; la escala va
+     centrada en lo que queda, y la anterior queda entera fuera de la
+     pantalla: nada asoma detrás de la barra. */
+  .brief-escala-parada {
+    min-height: calc(100svh - var(--bajo-barra) - var(--pie-brief));
+    padding-top: calc(var(--mockup-alto) - var(--e-4));
+    scroll-snap-align: end;
+  }
+
+  /* La primera sube su relleno sobre el lugar de la portada: al llegar a la
+     parte, «Luz» sigue a la portada sin un hueco de una pantalla. */
+  .brief-escala-parada:first-child {
+    margin-top: calc(-1 * var(--mockup-alto) - var(--e-4));
   }
 
   .brief-mockup-nota {
     display: none;
+  }
+
+  /* El foco con teclado deja la escala bajo la portada, no detrás: cuenta
+     también sin encaje (movimiento reducido). */
+  .brief-escala-parada input {
+    scroll-margin-top: calc(var(--mockup-alto) + var(--e-8));
   }
 }
 
@@ -893,16 +990,167 @@
 @keyframes mk-cinta { to { transform: translateX(-100%); } }
 @keyframes mk-pulso { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--m-c1) 25%, transparent); } }
 
-/* ==================== Los bocetos ==================== */
-.brief-bocetos {
+/* ==================== Los estilos y sus bocetos ====================
+ * Una tarjeta por estilo (PreguntaBrief.jsx): arriba su arte, que lleva a su
+ * boceto; debajo su nombre, lo que es y la marca del boceto; y la reacción,
+ * que es la elección. «Me gusta» la viste con los colores y la letra de su
+ * estilo, como marcar una muestra; las otras dos solo tiñen el borde. En S,
+ * de a una y apaisada: el arte al lado del nombre y la reacción a todo el
+ * ancho, con sus palabras enteras. */
+/* La invitación a recorrerlos: un abanico de tres bocetos que se abre al
+   pasar, lo que es, cuántos van y el botón que empieza o retoma donde se
+   quedó. La cuenta y el botón cambian de texto con su espacio reservado. */
+.brief-recorrer {
+  --masa: cubic-bezier(0.34, 1.4, 0.64, 1);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e-4) var(--e-8);
+  margin-bottom: var(--e-6);
+  padding: var(--e-4) var(--e-8) var(--e-4) var(--e-6);
+  border: 1px solid color-mix(in srgb, var(--area) 30%, var(--linea));
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in srgb, var(--area) 5%, var(--superficie));
+}
+
+.brief-recorrer[hidden] {
+  display: none;
+}
+
+.brief-recorrer-abanico {
+  position: relative;
+  width: 172px;
+  height: 100px;
+}
+
+.brief-recorrer-abanico span {
+  position: absolute;
+  left: 52px;
+  top: 4px;
+  display: grid;
+  align-content: start;
+  width: 68px;
+  height: 90px;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px -12px rgb(10 26 42 / 0.55);
+  font: var(--letra);
+  font-size: 15px;
+  line-height: 1;
+  transform-origin: 50% 120%;
+  transition: transform 520ms var(--masa);
+}
+
+.brief-recorrer-abanico .estilo-zen {
+  background: #f2efe8;
+  color: #23231f;
+  transform: translateX(-30px) rotate(-16deg);
+}
+
+.brief-recorrer-abanico .estilo-audaz {
+  z-index: 1;
+  align-content: end;
+  background: #ffe14d;
+  color: #111111;
+  font-size: 22px;
+  transform: translateY(-4px);
+}
+
+.brief-recorrer-abanico .estilo-tecnologico {
+  justify-items: end;
+  background: #06121b;
+  color: #2ee6a6;
+  font-size: 13px;
+  transform: translateX(30px) rotate(16deg);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .brief-recorrer:hover .estilo-zen {
+    transform: translateX(-36px) rotate(-24deg);
+  }
+
+  .brief-recorrer:hover .estilo-audaz {
+    transform: translateY(-10px);
+  }
+
+  .brief-recorrer:hover .estilo-tecnologico {
+    transform: translateX(36px) rotate(24deg);
+  }
+}
+
+.brief-recorrer-texto {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-recorrer-texto b {
+  font-size: var(--texto-lg);
+  line-height: 1.25;
+  color: var(--texto);
+}
+
+.brief-recorrer-cuenta {
+  margin-top: 2px;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--area);
+  white-space: nowrap;
+}
+
+.brief-recorrer .boton {
+  min-width: 16rem;
+  justify-content: center;
+  gap: var(--e-2);
+}
+
+/* Según el ancho que le deja la página (con o sin el índice al lado), no el
+   de la pantalla: el botón baja a su propia fila, y en lo más angosto todo se
+   apila. */
+.brief-pantallas {
+  container: pantallas / inline-size;
+}
+
+@container pantallas (max-width: 820px) {
+  .brief-recorrer {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding-right: var(--e-6);
+  }
+
+  .brief-recorrer .boton {
+    grid-column: 1 / -1;
+  }
+}
+
+@container pantallas (max-width: 520px) {
+  .brief-recorrer {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding: var(--e-6) var(--e-4) var(--e-4);
+    text-align: center;
+  }
+
+  .brief-recorrer .boton {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.brief-estilos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
   gap: var(--e-3);
 }
 
-.brief-boceto {
-  display: flex;
-  flex-direction: column;
+.brief-estilo {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
   min-width: 0;
   margin: 0;
   padding: 0 0 var(--e-3);
@@ -910,105 +1158,134 @@
   border-radius: var(--radio-tarjeta);
   overflow: hidden;
   background: var(--superficie);
-  transition: border-color 200ms ease;
+  transition:
+    transform 260ms var(--masa),
+    box-shadow 260ms var(--ease),
+    border-color 200ms var(--ease);
 }
 
-.brief-boceto:has(input:checked) {
-  border-color: color-mix(in srgb, var(--area) 45%, var(--linea));
+.brief-estilo:has([value='si']:checked) {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--marcado, var(--area));
 }
 
-/* La miniatura: la marca en su letra y sus colores; lleva a su página. */
-.brief-boceto-miniatura {
-  position: relative;
-  display: grid;
-  align-content: end;
-  gap: 4px;
-  aspect-ratio: 16 / 10;
-  padding: var(--e-4);
-  overflow: hidden;
-  background: var(--fondo-boceto);
-  color: var(--tinta-boceto);
+.brief-estilo:has([value='medio']:checked) {
+  border-color: color-mix(in srgb, var(--medio) 55%, var(--linea));
+}
+
+.brief-estilo:has([value='no']:checked) {
+  border-color: color-mix(in srgb, var(--nogusta) 55%, var(--linea));
+}
+
+/* El arte es el enlace al boceto: su dibujo y, debajo, sin taparlo, «Ver el
+   boceto». */
+.brief-estilo-enlace {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
   text-decoration: none;
 }
 
-.brief-boceto-miniatura::before {
-  content: '';
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--acento-boceto);
-  transition: transform 600ms cubic-bezier(0.34, 1.4, 0.64, 1);
+.brief-estilo-cuadro {
+  position: relative;
+  display: block;
+  overflow: hidden;
 }
 
-.brief-boceto-miniatura:is(:hover, :focus-visible)::before {
-  transform: scale(1.5) translate(-6px, 6px);
+.brief-estilo .brief-muestra-arte {
+  height: 150px;
 }
 
-.brief-boceto-miniatura:focus-visible {
+.brief-estilo-enlace:focus-visible {
   outline: 3px solid var(--foco);
   outline-offset: -3px;
 }
 
-.brief-boceto-marca {
-  font: var(--letra);
-  font-size: 27px;
-  line-height: 1;
+.brief-estilo-ver {
+  display: block;
+  padding: 9px var(--e-4);
+  border-block: 1px solid var(--linea);
+  background: color-mix(in srgb, var(--accion) 5%, var(--superficie));
+  color: var(--accion);
+  font: 600 12.5px/1.2 var(--fuente-texto);
 }
 
-.brief-boceto-rubro {
+.brief-estilo-ver::after {
+  content: '→';
+  display: inline-block;
+  margin-left: 6px;
+  transition: transform 260ms var(--masa);
+}
+
+.brief-estilo-enlace:hover .brief-estilo-ver {
+  background: color-mix(in srgb, var(--accion) 10%, var(--superficie));
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .brief-estilo-enlace:hover .brief-estilo-ver::after {
+    transform: translateX(3px);
+  }
+}
+
+.brief-estilo-boceto {
+  margin-top: 2px;
   font-family: var(--fuente-datos);
   font-size: 10.5px;
-  letter-spacing: 0.06em;
-  line-height: 1.3;
-  text-transform: uppercase;
-  opacity: 0.85;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  opacity: 0.75;
 }
 
-.brief-boceto-abrir {
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: rgb(10 26 42 / 0.82);
-  color: #ffffff;
-  font: 400 11.5px/1 var(--fuente-texto);
+/* Gusta: el nombre toma la letra del estilo. */
+.brief-estilo:has([value='si']:checked) .brief-muestra-nombre {
+  font: var(--letra);
+  font-size: 17px;
 }
 
-/* Me gusta, más o menos o no: tres botones en una fila. */
+/* Me gusta, más o menos o no: tres círculos con su dibujo y su nombre. Al
+   pasar, el círculo toma el color de su reacción; al marcarse, se llena con
+   él y salta, y el corazón se rellena. Los tres colores dan 5:1 o más con el
+   blanco. */
+.brief-estilos,
+.brief-visor {
+  --gusta: #c2364f;
+  --medio: #905500;
+  --nogusta: #47607a;
+}
+
 .brief-boceto-reacciones {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin: var(--e-3) var(--e-3) 0;
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
-  overflow: hidden;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e-1);
+  margin: var(--e-3) var(--e-2) 0;
 }
 
 .brief-reaccion {
+  --color: var(--gusta);
   position: relative;
   display: grid;
-  place-items: center;
-  gap: 2px;
-  min-height: 52px;
-  padding: 6px 4px;
-  font-size: 12.5px;
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  padding: 4px 2px;
+  border-radius: var(--radio);
+  color: var(--texto-suave);
+  font-size: 12px;
   line-height: 1.15;
   text-align: center;
   cursor: pointer;
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+  transition: color 160ms ease;
 }
 
-.brief-reaccion + .brief-reaccion {
-  border-left: 1px solid var(--linea);
+.brief-reaccion-medio {
+  --color: var(--medio);
 }
 
-.brief .brief-reaccion input {
+.brief-reaccion-no {
+  --color: var(--nogusta);
+}
+
+.brief-reaccion input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1021,79 +1298,75 @@
   cursor: pointer;
 }
 
-.brief-reaccion span {
-  font-size: 15px;
-  transition: transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1);
+.brief-reaccion-icono {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--linea);
+  border-radius: 50%;
+  background: var(--superficie);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 160ms ease;
 }
 
-.brief-reaccion:has(input:checked) span {
-  transform: scale(1.25);
+.brief-reaccion-icono svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.brief-reaccion:has(input:focus-visible) {
+@media (hover: hover) {
+  .brief-reaccion:hover {
+    color: var(--color);
+  }
+
+  .brief-reaccion:hover .brief-reaccion-icono {
+    border-color: var(--color);
+    background: color-mix(in srgb, var(--color) 8%, var(--superficie));
+  }
+}
+
+.brief-reaccion:active .brief-reaccion-icono {
+  transform: scale(0.94);
+}
+
+.brief-reaccion:has(input:focus-visible) .brief-reaccion-icono {
   outline: 2px solid var(--foco);
-  outline-offset: -2px;
+  outline-offset: 2px;
 }
 
-.brief-reaccion-si:has(input:checked) {
-  background: color-mix(in srgb, var(--listo) 13%, transparent);
-  color: var(--listo);
+.brief-reaccion:has(input:checked) {
+  color: var(--color);
+  font-weight: 600;
 }
 
-.brief-reaccion-medio:has(input:checked) {
-  background: color-mix(in srgb, var(--clave) 13%, transparent);
-  color: var(--clave);
+.brief-reaccion:has(input:checked) .brief-reaccion-icono {
+  border-color: var(--color);
+  background: var(--color);
+  color: #ffffff;
 }
 
-.brief-reaccion-no:has(input:checked) {
-  background: color-mix(in srgb, var(--obligatorio) 11%, transparent);
-  color: var(--obligatorio);
+.brief-reaccion-si:has(input:checked) .brief-reaccion-icono svg {
+  fill: currentColor;
 }
 
-/* En S, de a dos, con la miniatura y los botones más compactos. */
-@media (max-width: 559px) {
-  .brief-bocetos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--e-2);
+@media (prefers-reduced-motion: no-preference) {
+  .brief-reaccion:has(input:checked) .brief-reaccion-icono {
+    animation: reaccion-salta 460ms cubic-bezier(0.34, 1.4, 0.64, 1);
   }
+}
 
-  .brief-boceto-miniatura {
-    aspect-ratio: 1;
-    padding: var(--e-3);
-  }
-
-  .brief-boceto-miniatura::before {
-    right: 10px;
-    top: 10px;
-    width: 22px;
-    height: 22px;
-  }
-
-  .brief-boceto-marca {
-    font-size: 20px;
-  }
-
-  .brief-boceto-rubro {
-    font-size: 9.5px;
-  }
-
-  .brief-boceto-abrir {
-    left: 8px;
-    top: 8px;
-    font-size: 10.5px;
-  }
-
-  .brief-boceto-reacciones {
-    margin: var(--e-2) var(--e-2) 0;
-  }
-
-  .brief-reaccion {
-    min-height: 48px;
-    font-size: 10.5px;
-  }
-
-  .brief .brief-boceto-nota {
-    margin: var(--e-2) var(--e-2) 0;
+@keyframes reaccion-salta {
+  40% {
+    transform: scale(1.16);
   }
 }
 
@@ -1103,7 +1376,870 @@
   margin: var(--e-2) var(--e-3) 0;
 }
 
-.brief-boceto:not(:has(input[type='radio']:checked)) .brief-boceto-nota:placeholder-shown {
+.brief-estilo:not(:has(input[type='radio']:checked)) .brief-boceto-nota:placeholder-shown {
+  display: none;
+}
+
+@media (max-width: 559px) {
+  .brief-estilos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brief-estilo {
+    grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .brief-estilo-cuadro {
+    flex: 1;
+    min-height: 6rem;
+  }
+
+  .brief-estilo-ver {
+    padding-inline: var(--e-3);
+    border-bottom: 0;
+    font-size: 12px;
+  }
+
+  /* El arte se dibuja igual, a la mitad, y llena su cuadro. */
+  .brief-estilo .brief-muestra-arte {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+  }
+
+  .brief-estilo .brief-muestra-pie {
+    align-content: center;
+    padding: var(--e-3) 40px var(--e-3) var(--e-4);
+  }
+
+  .brief-boceto-reacciones,
+  .brief .brief-boceto-nota {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ==================== El visor de los bocetos ====================
+ * Cada boceto a pantalla completa (src/brief-visor.js), entre dos franjas que
+ * no lo tapan: arriba volver, el estilo y cuánto va; abajo la pregunta, la
+ * reacción, la nota y el paso al anterior o al siguiente. Mientras carga se ve el color del
+ * boceto, y el boceto aparece con un fundido. Las franjas respetan las zonas
+ * seguras del teléfono. */
+html:has(.brief-visor[open]) {
+  overflow: hidden;
+}
+
+.brief-visor {
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--fondo-visor, #ffffff);
+  color: var(--texto);
+}
+
+.brief-visor[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.brief-visor::backdrop {
+  background: rgb(10 26 42 / 0.5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brief-visor[open] {
+    animation: visor-entra 320ms var(--ease);
+  }
+}
+
+@keyframes visor-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* Las dos franjas van en la zona oscura del sitio (`zona-plano`, en
+   Brief.jsx): un marco de tinta que separa el boceto de los controles, sea
+   claro u oscuro el boceto, y sobre el que los controles resaltan. */
+.brief-visor-cabeza,
+.brief-visor-pie {
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+.brief-visor-cabeza {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e-3);
+  padding: calc(var(--e-2) + env(safe-area-inset-top, 0px)) max(var(--e-4), env(safe-area-inset-right, 0px)) var(--e-2)
+    max(var(--e-4), env(safe-area-inset-left, 0px));
+}
+
+.brief-visor-cerrar {
+  min-height: 44px;
+  padding: 0 var(--e-4);
+  border: 1px solid color-mix(in srgb, var(--texto) 35%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto);
+  font: 600 var(--texto-sm) / 1 var(--fuente-texto);
+  cursor: pointer;
+  transition: border-color 160ms ease;
+}
+
+.brief-visor-cerrar:hover {
+  border-color: var(--texto);
+}
+
+.brief-visor-cerrar:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.brief-visor-titulo {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.brief-visor-titulo b,
+.brief-visor-titulo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brief-visor-titulo span {
+  font-size: var(--texto-xs);
+  color: var(--texto-suave);
+}
+
+/* Cuánto va, con el ancho de «24 de 24» reservado: no mueve el título. */
+.brief-visor-cuenta {
+  min-width: 5.5em;
+  margin: 0;
+  font-family: var(--fuente-datos);
+  font-size: var(--texto-xs);
+  text-align: right;
+  color: var(--texto-suave);
+}
+
+.brief-visor-marco {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--fondo-visor, #ffffff);
+  transition: opacity 300ms var(--ease);
+}
+
+.brief-visor-marco.cargando {
+  opacity: 0;
+}
+
+/* Sobre la tinta, los colores de las reacciones van más claros: dan 6:1 o
+   más con ella, también como relleno bajo el dibujo en tinta. */
+.brief-visor-pie {
+  --gusta: #ff7a93;
+  --medio: #f0b44f;
+  --nogusta: #b8c8d8;
+  --masa: cubic-bezier(0.34, 1.4, 0.64, 1);
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 30rem) minmax(0, 1fr) auto;
+  grid-template-areas: 'anterior pregunta reacciones nota siguiente';
+  align-items: center;
+  gap: var(--e-3) var(--e-4);
+  padding: var(--e-3) max(var(--e-4), env(safe-area-inset-right, 0px)) calc(var(--e-3) + env(safe-area-inset-bottom, 0px))
+    max(var(--e-4), env(safe-area-inset-left, 0px));
+}
+
+.brief-visor-pregunta {
+  grid-area: pregunta;
+  max-width: none;
+  margin: 0;
+  font-size: var(--texto-base);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.brief-visor-reacciones {
+  grid-area: reacciones;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* El círculo al lado de su nombre, en una línea: la franja queda baja. */
+.brief-visor .brief-reaccion {
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  color: var(--texto);
+  font-size: var(--texto-sm);
+  white-space: nowrap;
+}
+
+.brief-visor .brief-reaccion-icono {
+  width: 48px;
+  height: 48px;
+  border: 2px solid color-mix(in srgb, var(--texto) 45%, transparent);
+  background: transparent;
+  color: var(--texto);
+}
+
+.brief-visor .brief-reaccion-icono svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (hover: hover) {
+  .brief-visor .brief-reaccion:hover .brief-reaccion-icono {
+    border-color: var(--color);
+    background: color-mix(in srgb, var(--color) 18%, transparent);
+    color: var(--color);
+  }
+}
+
+.brief-visor .brief-reaccion:has(input:checked) .brief-reaccion-icono {
+  border-color: var(--color);
+  background: var(--color);
+  color: var(--fondo);
+  box-shadow:
+    0 0 0 3px var(--fondo),
+    0 0 0 5px var(--color);
+}
+
+/* Un boceto sin calificar, al terminar de cargar: las reacciones saltan una
+   vez, de a una, y llaman la mirada (brief-visor.js). */
+@media (prefers-reduced-motion: no-preference) {
+  .brief-visor.invita .brief-reaccion-icono {
+    animation: reaccion-invita 900ms var(--masa) both;
+  }
+
+  .brief-visor.invita .brief-reaccion:nth-of-type(2) .brief-reaccion-icono {
+    animation-delay: 110ms;
+  }
+
+  .brief-visor.invita .brief-reaccion:nth-of-type(3) .brief-reaccion-icono {
+    animation-delay: 220ms;
+  }
+}
+
+@keyframes reaccion-invita {
+  35% {
+    transform: scale(1.14);
+  }
+
+  65% {
+    transform: scale(0.97);
+  }
+}
+
+/* A 16 px: iOS no hace zoom al escribir. */
+.brief-visor-nota {
+  grid-area: nota;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 var(--e-4);
+  border: 1px solid color-mix(in srgb, var(--texto) 30%, transparent);
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--texto) 6%, transparent);
+  color: var(--texto);
+  font: 400 16px/1.2 var(--fuente-texto);
+}
+
+.brief-visor-nota::placeholder {
+  color: var(--texto-suave);
+}
+
+.brief-visor-nota:focus {
+  border-color: var(--accion);
+  outline: none;
+  background: color-mix(in srgb, var(--texto) 10%, transparent);
+}
+
+.brief-visor-paso[data-paso='-1'] {
+  grid-area: anterior;
+}
+
+.brief-visor-paso[data-paso='1'] {
+  grid-area: siguiente;
+}
+
+@media (max-width: 1199px) {
+  .brief-visor-pie {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'pregunta pregunta pregunta'
+      'anterior reacciones siguiente'
+      'nota nota nota';
+  }
+
+  .brief-visor-pregunta {
+    text-align: center;
+  }
+}
+
+/* En lo angosto, «Volver» a secas: el nombre del estilo cabe entero. */
+@media (max-width: 559px) {
+  .brief-visor-cerrar-largo {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .brief-visor-pie {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'pregunta pregunta'
+      'reacciones reacciones'
+      'nota nota'
+      'anterior siguiente';
+    gap: var(--e-2);
+  }
+
+  .brief-visor-pregunta {
+    font-size: var(--texto-sm);
+  }
+
+  .brief-visor-nota,
+  .brief-visor-paso {
+    min-height: 44px;
+  }
+}
+
+/* Hasta M, el nombre bajo el círculo: al lado, «Más o menos» no cabe entre
+   los botones de paso. */
+@media (max-width: 1023px) {
+  .brief-visor .brief-reaccion {
+    grid-auto-flow: row;
+    gap: 6px;
+    font-size: 12px;
+    white-space: normal;
+  }
+}
+
+/* ==================== Los tipos de logo ====================
+ * Cada tipo dibujado con el nombre del negocio (MuestraBrief.jsx y
+ * src/brief-logo.js), en tinta y un acento, sin la voz de Volutus: son
+ * muestras de su marca, no de la nuestra. El nombre se achica con su largo
+ * (`--largo`) para entrar en su cuadro. Al pasar o marcarse, cada uno hace lo
+ * suyo: el aro se dibuja, el sol sale, el personaje guiña. */
+.brief-muestras-logo {
+  --largo: 8;
+  --tinta-logo: #1d2430;
+  --acento-logo: #c8553d;
+  --suave-logo: #7a8594;
+}
+
+.brief-logo {
+  grid-template-rows: 140px auto;
+}
+
+.brief-logo .brief-muestra-arte {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  padding: 12px;
+  background: #f7f5f1;
+  color: var(--tinta-logo);
+  text-align: center;
+}
+
+.brief-logo .brief-sello span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--area);
+  color: #ffffff;
+  font-size: 12px;
+}
+
+/* El nombre se achica con su largo y, si es muy largo, baja a una segunda
+   línea pareja; más allá, se corta con puntos suspensivos. */
+.brief-logo .nombre {
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(13px, calc(150cqi / var(--largo)), 26px);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.brief-logo .picto {
+  width: min(46px, 30cqi);
+  height: min(46px, 30cqi);
+  overflow: visible;
+}
+
+.brief-logo .picto .sol {
+  fill: var(--acento-logo);
+  transition: transform 700ms var(--masa);
+}
+
+.brief-logo .picto .cerro {
+  fill: var(--tinta-logo);
+}
+
+.brief-logo:is(:hover, :focus-within, :has(input:checked)) .picto .sol {
+  transform: translateY(-5px);
+}
+
+/* Logotipo: el nombre solo, con su letra, que se ajusta al pasar. */
+.logo-nombre .nombre {
+  font: 700 clamp(15px, calc(160cqi / var(--largo)), 30px) / 1.1 'Muestra Jakarta', sans-serif;
+  letter-spacing: -0.02em;
+  transition: letter-spacing 600ms var(--ease);
+}
+
+.logo-nombre:is(:hover, :focus-within, :has(input:checked)) .nombre {
+  letter-spacing: -0.05em;
+}
+
+/* Monograma: las iniciales enlazadas dentro de un aro que se dibuja. */
+.logo-monograma .brief-muestra-arte {
+  position: relative;
+}
+
+.logo-monograma .aro {
+  position: absolute;
+  width: min(96px, 70cqi);
+  height: min(96px, 70cqi);
+  fill: none;
+  stroke: var(--tinta-logo);
+  stroke-width: 1.5;
+  stroke-dasharray: 290;
+  stroke-dashoffset: 90;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 900ms var(--ease);
+}
+
+.logo-monograma:is(:hover, :focus-within, :has(input:checked)) .aro {
+  stroke-dashoffset: 0;
+}
+
+.logo-monograma .iniciales {
+  font: 500 min(44px, 32cqi) / 1 'Muestra Bodoni', Didot, serif;
+  letter-spacing: -0.12em;
+  margin-left: -0.12em;
+}
+
+/* Símbolo: solo el dibujo, más grande. */
+.logo-simbolo .picto {
+  width: min(72px, 50cqi);
+  height: min(72px, 50cqi);
+}
+
+/* Abstracto: tres formas que se reacomodan. */
+.logo-abstracto .formas {
+  position: relative;
+  width: min(76px, 55cqi);
+  aspect-ratio: 1;
+}
+
+.logo-abstracto .formas i {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  mix-blend-mode: multiply;
+  transition: transform 700ms var(--masa);
+}
+
+.logo-abstracto .formas i:nth-child(1) {
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background: var(--acento-logo);
+}
+
+.logo-abstracto .formas i:nth-child(2) {
+  right: 0;
+  top: 10%;
+  border-radius: 0 50% 50% 50%;
+  background: #e8b04a;
+}
+
+.logo-abstracto .formas i:nth-child(3) {
+  left: 20%;
+  bottom: 0;
+  border-radius: 50% 50% 0 50%;
+  background: #3d6f8f;
+}
+
+.logo-abstracto:is(:hover, :focus-within, :has(input:checked)) .formas i:nth-child(1) {
+  transform: translate(6px, 4px);
+}
+
+.logo-abstracto:is(:hover, :focus-within, :has(input:checked)) .formas i:nth-child(2) {
+  transform: translate(-6px, 2px) rotate(90deg);
+}
+
+.logo-abstracto:is(:hover, :focus-within, :has(input:checked)) .formas i:nth-child(3) {
+  transform: translateY(-6px) rotate(-90deg);
+}
+
+/* Símbolo + nombre: el dibujo y la palabra, separados. */
+.logo-simbolo-y-nombre .brief-muestra-arte {
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+
+.logo-simbolo-y-nombre .picto {
+  flex: none;
+  width: 36px;
+  height: 36px;
+}
+
+.logo-simbolo-y-nombre .nombre {
+  font: 700 clamp(13px, calc(120cqi / var(--largo)), 22px) / 1.1 'Muestra Jakarta', sans-serif;
+  text-align: left;
+}
+
+/* Fundidos: la inicial es el símbolo, y el nombre sigue desde ella. */
+.logo-fundidos .fundido {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  font: 800 clamp(14px, calc(150cqi / var(--largo)), 26px) / 1 'Muestra Manrope', sans-serif;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.logo-fundidos .fundido > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logo-fundidos .inicial {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.6em;
+  height: 1.6em;
+  margin-right: 0.08em;
+  border-radius: 0.36em;
+  background: var(--acento-logo);
+  color: #ffffff;
+  transition: border-radius 600ms var(--masa);
+}
+
+.logo-fundidos:is(:hover, :focus-within, :has(input:checked)) .inicial {
+  border-radius: 50%;
+}
+
+/* Emblema: el nombre dentro de un sello con doble borde. */
+.logo-emblema .insignia {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+  width: min(112px, 84cqi);
+  aspect-ratio: 1;
+  padding: 10px;
+  border: 2px solid var(--tinta-logo);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 3px #f7f5f1,
+    inset 0 0 0 4px var(--tinta-logo);
+  transition: transform 700ms var(--masa);
+}
+
+.logo-emblema .insignia small {
+  font: 600 7.5px/1 var(--fuente-datos);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--suave-logo);
+}
+
+.logo-emblema .nombre {
+  max-width: 76%;
+  font: 400 clamp(10px, calc(70cqi / var(--largo)), 15px) / 1.1 'Muestra Alegreya', Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.logo-emblema:is(:hover, :focus-within, :has(input:checked)) .insignia {
+  transform: rotate(-8deg);
+}
+
+/* Mascota: un personaje que da la cara y guiña. */
+.logo-mascota .brief-muestra-arte {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.logo-mascota .cara {
+  width: min(60px, 40cqi);
+  height: min(60px, 40cqi);
+}
+
+.logo-mascota .cabeza,
+.logo-mascota .oreja {
+  fill: #e8b04a;
+}
+
+.logo-mascota .ojo {
+  fill: var(--tinta-logo);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 200ms ease;
+}
+
+.logo-mascota .boca {
+  fill: none;
+  stroke: var(--tinta-logo);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.logo-mascota:is(:hover, :focus-within, :has(input:checked)) .guino {
+  transform: scaleY(0.15);
+}
+
+.logo-mascota .nombre {
+  font: 700 clamp(12px, calc(120cqi / var(--largo)), 18px) / 1.1 'Muestra Fredoka', sans-serif;
+}
+
+/* Firma: el nombre escrito a mano y subrayado de un trazo. */
+.logo-firma .brief-muestra-arte {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.logo-firma .nombre {
+  padding-inline: 4px;
+  font: 400 clamp(18px, calc(190cqi / var(--largo)), 36px) / 1.2 'Muestra Yellowtail', cursive;
+}
+
+.logo-firma .subraya {
+  width: 70%;
+  height: 12px;
+  fill: none;
+  stroke: var(--acento-logo);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  transition: stroke-dashoffset 900ms var(--ease);
+}
+
+.logo-firma:is(:hover, :focus-within, :has(input:checked)) .subraya {
+  stroke-dashoffset: 0;
+}
+
+/* Variable: la misma marca en tres formas y colores, que se turnan. */
+.logo-variable .variantes {
+  display: flex;
+  gap: min(8px, 4cqi);
+}
+
+.logo-variable .variantes span {
+  display: grid;
+  place-items: center;
+  width: min(44px, 26cqi);
+  aspect-ratio: 1;
+  font: 800 min(22px, 13cqi) / 1 'Muestra Manrope', sans-serif;
+  transition:
+    border-radius 600ms var(--masa),
+    transform 600ms var(--masa);
+}
+
+.logo-variable .v1 {
+  border-radius: 50%;
+  background: var(--acento-logo);
+  color: #ffffff;
+}
+
+.logo-variable .v2 {
+  border-radius: 10px;
+  background: var(--tinta-logo);
+  color: #ffffff;
+}
+
+.logo-variable .v3 {
+  border: 2px solid var(--tinta-logo);
+  border-radius: 0;
+  color: var(--tinta-logo);
+}
+
+.logo-variable:is(:hover, :focus-within, :has(input:checked)) .v1 {
+  border-radius: 10px;
+  transform: rotate(-8deg);
+}
+
+.logo-variable:is(:hover, :focus-within, :has(input:checked)) .v2 {
+  border-radius: 50%;
+  transform: translateY(-4px);
+}
+
+.logo-variable:is(:hover, :focus-within, :has(input:checked)) .v3 {
+  border-radius: 14px;
+  transform: rotate(8deg);
+}
+
+/* ==================== El logo que se sube ====================
+ * La casilla nativa cubre la zona, transparente: tocarla abre el selector y
+ * soltar un archivo encima lo elige, sin JavaScript. Con él (src/brief-logo.js)
+ * se ve la vista previa y el estado dice qué pasó. */
+.brief-archivo {
+  display: grid;
+  gap: var(--e-2);
+}
+
+.brief-archivo-zona {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--e-4);
+  min-height: 112px;
+  padding: var(--e-4);
+  border: 2px dashed color-mix(in srgb, var(--area) 45%, var(--linea));
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in srgb, var(--area) 4%, var(--superficie));
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.brief-archivo-zona:hover,
+.brief-archivo-zona.encima {
+  border-color: var(--area);
+  background: color-mix(in srgb, var(--area) 9%, var(--superficie));
+}
+
+.brief-archivo-zona:has(input:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: 3px;
+}
+
+.brief .brief-archivo-zona input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.brief-archivo-vista {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radio);
+  background: var(--superficie);
+  box-shadow: 0 0 0 1px var(--linea);
+  overflow: hidden;
+}
+
+.brief-archivo-vista img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+/* Sin archivo, una flecha hacia arriba; con un PDF o un EPS, su formato. */
+.brief-archivo-icono {
+  font: 600 13px/1 var(--fuente-datos);
+  letter-spacing: 0.06em;
+  color: var(--area);
+}
+
+.brief-archivo:not(.con-archivo) .brief-archivo-icono::before {
+  content: '↑';
+  font-size: 26px;
+}
+
+.brief-archivo-vista:has(img:not([hidden])) .brief-archivo-icono {
+  display: none;
+}
+
+.brief-archivo-texto {
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+.brief-archivo-texto b {
+  display: block;
+  color: var(--texto);
+}
+
+/* Dos líneas reservadas: el mensaje cambia sin mover lo de abajo. */
+.brief-archivo-estado {
+  min-height: calc(2 * 1.4em);
+  margin: 0;
+  font-size: var(--texto-xs);
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+
+.brief-archivo.con-archivo .brief-archivo-estado {
+  color: var(--listo);
+}
+
+.brief-archivo.con-error .brief-archivo-estado {
+  color: var(--obligatorio);
+}
+
+.brief-archivo-quitar {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 var(--e-4);
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--texto);
+  font: 600 var(--texto-sm) / 1 var(--fuente-texto);
+  cursor: pointer;
+}
+
+.brief-archivo-quitar:hover {
+  border-color: var(--obligatorio);
+  color: var(--obligatorio);
+}
+
+.brief-archivo-quitar[hidden] {
   display: none;
 }
 
@@ -1207,7 +2343,10 @@
   .brief-muestra *::after,
   .mk,
   .mk *,
-  .brief-boceto-miniatura::before {
+  .brief-estilo,
+  .brief-estilo *,
+  .brief-estilo *::before,
+  .brief-estilo *::after {
     transition: none !important;
   }
 }

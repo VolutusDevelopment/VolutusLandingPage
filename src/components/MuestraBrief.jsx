@@ -1,9 +1,10 @@
 /**
  * Las muestras de «Cómo se ve» en el brief (PreguntaBrief.jsx): cada dirección
- * de estilo se dibuja en su propio estilo, y cada tipografía escribe la misma
- * palabra en su letra. Funcionan como el chip de WhatsApp del contacto: al
- * marcarse, el nombre se viste con la letra y los colores del estilo y aparece
- * su propia marca de elegido; al pasar el cursor, el arte se mueve.
+ * de estilo se dibuja en su propio estilo, cada tipografía escribe la misma
+ * palabra en su letra y cada tipo de logo se dibuja con el nombre del negocio.
+ * Funcionan como el chip de WhatsApp del contacto: al marcarse (al estilo, con
+ * «Me gusta»), el nombre se viste con la letra y los colores del estilo y
+ * aparece su propia marca de elegido; al pasar el cursor, el arte se mueve.
  *
  * Las pastillas de una empresa (Google, Instagram…) hacen lo mismo en chico:
  * al marcarse toman sus colores y su letra y, en vez del ✓, su logotipo.
@@ -13,8 +14,8 @@
  * ninguna otra.
  */
 
-// El arte de cada estilo y su marca de elegido. Todo es decorado: la casilla
-// se llama por el nombre y la descripción del estilo.
+// El arte de cada estilo y su marca de elegido. Todo es decorado: la tarjeta
+// se llama por la leyenda de su estilo.
 const ESTILOS = {
   minimalista: [<span className="rot">menos</span>, <Trazo d="M3 13l6 6L21 5" caja="0 0 24 24" />],
   tecnologico: [
@@ -239,12 +240,107 @@ function Especimen({ tipo }) {
   )
 }
 
+// El arte de un estilo y su marca de elegido, para su tarjeta (los bocetos de
+// PreguntaBrief.jsx).
+export function muestraDeEstilo(estilo) {
+  const [arte, sello] = ESTILOS[estilo]
+  return { arte, sello }
+}
+
+// El nombre del negocio en las muestras de logo. Sin nombre, «Tu marca»:
+// brief-logo.js pone el que se escribió en la primera parte, y sus iniciales
+// donde van (`data-iniciales`, `data-inicial` y `data-resto`).
+const Nombre = () => (
+  <span className="nombre" data-nombre-marca>
+    Tu marca
+  </span>
+)
+
+// El dibujo de las muestras con símbolo: la cordillera con su sol.
+const Cordillera = () => (
+  <svg className="picto" viewBox="0 0 48 48">
+    <circle className="sol" cx="33" cy="15" r="6" />
+    <path className="cerro" d="M3 41L17 17l8 12 6-8 14 20z" />
+  </svg>
+)
+
+// Cada tipo de logo, dibujado con el nombre del negocio.
+const TIPOS_DE_LOGO = {
+  nombre: <Nombre />,
+  monograma: (
+    <>
+      <svg className="aro" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" />
+      </svg>
+      <span className="iniciales" data-iniciales>
+        TM
+      </span>
+    </>
+  ),
+  simbolo: <Cordillera />,
+  abstracto: (
+    <span className="formas">
+      <i />
+      <i />
+      <i />
+    </span>
+  ),
+  'simbolo-y-nombre': (
+    <>
+      <Cordillera />
+      <Nombre />
+    </>
+  ),
+  fundidos: (
+    <span className="fundido">
+      <span className="inicial" data-inicial>
+        T
+      </span>
+      <span data-resto>u marca</span>
+    </span>
+  ),
+  emblema: (
+    <span className="insignia">
+      <small>Desde 2026</small>
+      <Nombre />
+      <small>★ ★ ★</small>
+    </span>
+  ),
+  mascota: (
+    <>
+      <svg className="cara" viewBox="0 0 64 64">
+        <circle className="oreja" cx="14" cy="16" r="8" />
+        <circle className="oreja" cx="50" cy="16" r="8" />
+        <circle className="cabeza" cx="32" cy="34" r="24" />
+        <ellipse className="ojo" cx="23" cy="31" rx="3" ry="4" />
+        <ellipse className="ojo guino" cx="41" cy="31" rx="3" ry="4" />
+        <path className="boca" d="M23 42q9 8 18 0" />
+      </svg>
+      <Nombre />
+    </>
+  ),
+  firma: (
+    <>
+      <Nombre />
+      <svg className="subraya" viewBox="0 0 120 12" preserveAspectRatio="none">
+        <path d="M3 9C35 3 80 2 117 6" />
+      </svg>
+    </>
+  ),
+  variable: (
+    <span className="variantes">
+      {['v1', 'v2', 'v3'].map((v) => (
+        <span key={v} className={v} data-inicial>
+          T
+        </span>
+      ))}
+    </span>
+  ),
+}
+
 const MUESTRAS = {
-  estilo: (v) => {
-    const [arte, sello] = ESTILOS[v]
-    return { clase: `brief-muestra brief-estilo estilo-${v}`, arte, sello }
-  },
   tipografia: (v) => ({ clase: `brief-muestra brief-tipo tipo-${v}`, arte: <Especimen tipo={v} />, sello: <span>✓</span> }),
+  logo: (v) => ({ clase: `brief-muestra brief-logo logo-${v}`, arte: TIPOS_DE_LOGO[v], sello: <span>✓</span> }),
 }
 
 // Una opción de una pregunta con `muestras`: su casilla nativa cubre la
@@ -265,6 +361,25 @@ export default function MuestraBrief({ muestras, casilla, opcion }) {
         </span>
       </span>
     </label>
+  )
+}
+
+// El dibujo de cada reacción a un estilo (reglas.js), en su círculo: el
+// corazón, la onda del «más o menos» y la cruz. Al marcarse, el círculo se
+// llena con su color (muestras.css).
+const TRAZOS_DE_REACCION = {
+  si: 'M12 20.2s-7.6-4.6-7.6-10.4A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.6 2.5c0 5.8-7.6 10.4-7.6 10.4z',
+  medio: 'M4.5 12.5c2.5-3.3 5-3.3 7.5 0s5 3.3 7.5 0',
+  no: 'M7.5 7.5l9 9M16.5 7.5l-9 9',
+}
+
+export function IconoReaccion({ valor }) {
+  return (
+    <span className="brief-reaccion-icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d={TRAZOS_DE_REACCION[valor]} />
+      </svg>
+    </span>
   )
 }
 

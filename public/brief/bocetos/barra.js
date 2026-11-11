@@ -8,6 +8,10 @@
  * Es un `<form>` anotado para WebMCP: un agente puede calificar el boceto, y
  * como no le envía nada a nadie, lleva `toolautosubmit`.
  *
+ * Dentro del visor del brief (un iframe del mismo sitio, src/brief-visor.js)
+ * la barra no va: el visor ya dice qué es y deja calificarlo. El visor muestra
+ * el boceto recién al cargar, cuando esto ya corrió, así que no asoma.
+ *
  * También hace lo que comparten los bocetos al bajar: lo que tiene
  * `data-aparece` entra al verse, y lo que tiene `data-cuenta` cuenta hasta su
  * número.
@@ -22,7 +26,10 @@ const REACCIONES = [
 const LARGO_DE_LA_NOTA = 200
 const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches
 
+const enElVisor = window.self !== window.top
+
 document.documentElement.classList.add('con-js')
+if (enElVisor) document.documentElement.classList.add('en-visor')
 
 const leer = () => {
   try {
@@ -166,5 +173,5 @@ function montarEntradas() {
   cuentan.forEach((elemento) => observador.observe(elemento))
 }
 
-montarBarra()
+if (!enElVisor) montarBarra()
 montarEntradas()

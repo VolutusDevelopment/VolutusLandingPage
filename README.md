@@ -92,8 +92,12 @@ baja en esa página, guarda las respuestas en el navegador mientras se llenan,
 pide nombre y un contacto, arma la revisión y envía a `POST /api/brief`
 ([worker/brief.js](worker/brief.js)). El Worker valida cada respuesta según su
 pregunta, manda el brief a contacto@volutus.cl con los datos del envío (IP,
-lugar, navegador, pantalla, id al azar del navegador y tiempo de llenado) y,
-si se pidió y Turnstile se verificó, una copia al cliente. Defensas: Turnstile
+lugar, navegador, pantalla, id al azar del navegador y tiempo de llenado), con
+el logo que se subió adjunto si sus bytes son de un formato aceptado (hasta 5
+MB, y un SVG sin código), y, si se pidió y Turnstile se verificó, una copia al
+cliente, sin el adjunto. Los bocetos de cada estilo se abren en un visor dentro
+del brief, un iframe del mismo sitio (por eso la política permite `frame-src`
+y `frame-ancestors` a `'self'`). Defensas: Turnstile
 con su propia acción, trampa, menos de 8 s descarta en silencio y dos envíos
 por minuto por IP (`LIMITE_BRIEF`). Lo que comparten los dos formularios del
 Worker vive en [worker/comun.js](worker/comun.js).

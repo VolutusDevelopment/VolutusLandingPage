@@ -1,5 +1,7 @@
+import { IconoReaccion } from '../components/MuestraBrief.jsx'
 import Pagina from '../components/Pagina.jsx'
 import PreguntaBrief from '../components/PreguntaBrief.jsx'
+import { LIMITES_BRIEF, REACCIONES } from '../lib/brief/reglas.js'
 import { BRIEF as brief } from '../lib/brief/preguntas.js'
 import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
 
@@ -25,8 +27,9 @@ import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
  * scroll de la parte, pide los dos datos obligatorios, trae lo calificado en
  * los bocetos, arma la revisión y envía.
  *
- * Las muestras de «Cómo se ve» (estilos, tipografías, portada de muestra y
- * bocetos) se dibujan con public/brief/muestras.css, que solo baja esta página.
+ * Las muestras de «Cómo se ve» (estilos con sus bocetos, tipografías, tipos de
+ * logo y la portada de muestra) y el visor de los bocetos se dibujan con
+ * public/brief/muestras.css, que solo baja esta página.
  *
  * Solo el nombre y una forma de responder (correo o WhatsApp) son
  * obligatorios: lo demás se puede saltar y se conversa en la reunión.
@@ -46,6 +49,52 @@ function Figura({ area, className }) {
     <svg className={`brief-figura ${className ?? ''}`} viewBox="0 0 40 40" aria-hidden="true" focusable="false">
       {area === 'marca' ? <circle cx="20" cy="20" r="16" /> : <rect x="5" y="5" width="30" height="30" />}
     </svg>
+  )
+}
+
+// El visor de los bocetos (brief-visor.js): cada boceto a pantalla completa,
+// en un marco oscuro que lo separa de los controles, con su reacción y el paso
+// al siguiente. Va fuera del `<form>`: sus controles
+// reflejan los de la tarjeta, que son los que se envían, y no son un
+// formulario más para WebMCP. Sin JavaScript no se abre: el arte de cada
+// tarjeta abre el boceto en otra pestaña.
+function Visor() {
+  return (
+    <dialog className="brief-visor zona-cielo" aria-labelledby="visor-titulo">
+      <div className="brief-visor-cabeza zona-plano">
+        <button className="brief-visor-cerrar" type="button" data-cerrar>
+          <span aria-hidden="true">←</span> Volver<span className="brief-visor-cerrar-largo"> al brief</span>
+        </button>
+        <p className="brief-visor-titulo" id="visor-titulo">
+          <b data-visor-estilo />
+          <span data-visor-marca />
+        </p>
+        <p className="brief-visor-cuenta" data-visor-cuenta />
+      </div>
+      <iframe className="brief-visor-marco" title="Boceto de la dirección de estilo" />
+      <div className="brief-visor-pie zona-plano">
+        <p className="brief-visor-pregunta" aria-hidden="true">
+          ¿Te gusta este estilo?
+        </p>
+        <fieldset className="brief-visor-reacciones">
+          <legend className="solo-lectores">¿Te gusta este estilo?</legend>
+          {REACCIONES.map(([valor, texto]) => (
+            <label key={valor} className={`brief-reaccion brief-reaccion-${valor}`}>
+              <input type="radio" name="visor-reaccion" value={valor} />
+              <IconoReaccion valor={valor} />
+              <span className="brief-reaccion-texto">{texto}</span>
+            </label>
+          ))}
+        </fieldset>
+        <input className="brief-visor-nota" type="text" maxLength={LIMITES_BRIEF.nota} placeholder="¿Qué te gustó o qué no? (opcional)" aria-label="Qué te gustó o qué no de este estilo" />
+        <button className="boton boton-secundario brief-visor-paso" type="button" data-paso="-1">
+          <span aria-hidden="true">←</span> Anterior
+        </button>
+        <button className="boton boton-secundario brief-visor-paso" type="button" data-paso="1">
+          Siguiente <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </dialog>
   )
 }
 
@@ -72,7 +121,7 @@ export default function Brief() {
   const pasosDe = (area) => pasos.map((paso, i) => [paso, i]).filter(([paso]) => paso.area === area)
 
   return (
-    <Pagina className="brief-pagina">
+    <Pagina className="brief-pagina" pieDeDia>
       <section className="seccion zona-cielo brief-portada" aria-labelledby="brief-titulo">
         <div className="contenedor brief-contenedor">
           <p className="antetitulo">{brief.antetitulo}</p>
@@ -105,6 +154,7 @@ export default function Brief() {
             className="brief"
             method="post"
             action="/api/brief"
+            encType="multipart/form-data"
             noValidate
             toolname={brief.toolname}
             tooldescription={brief.tooldescription}
@@ -198,7 +248,7 @@ export default function Brief() {
                 <section
                   key={paso.corto}
                   id={`paso-${i + 1}`}
-                  className={`brief-pantalla brief-area-${paso.area}`}
+                  className={`brief-pantalla brief-area-${paso.area}${paso.preguntas.some(({ tipo }) => tipo === 'mockup') ? ' brief-pantalla-escalas' : ''}`}
                   data-area={paso.area}
                   aria-labelledby={`paso-${i + 1}-titulo`}
                 >
@@ -316,6 +366,7 @@ export default function Brief() {
           </section>
         </div>
       </section>
+      <Visor />
       {/* Las muestras de «Cómo se ve»: solo las usa esta página. */}
       <link rel="stylesheet" href="/brief/muestras.css" />
     </Pagina>

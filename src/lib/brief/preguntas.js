@@ -15,9 +15,10 @@
  * - tabla: filas numeradas con sus columnas;
  * - frase: una frase con huecos;
  * - colores: el código o el nombre de cada color;
+ * - archivo: un archivo para subir (el logo), que viaja adjunto en el correo;
+ * - bocetos: las direcciones de estilo de bocetos.js, cada una con su boceto
+ *   y su reacción;
  * - consejo y comparar: no se responden, orientan.
- *
- * - bocetos: las 24 landing pages de bocetos.js, cada una con su reacción.
  *
  * Cada paso es de un `area`, marca o diseño: el índice los agrupa así y la
  * página toma su color.
@@ -26,7 +27,7 @@
  * lado; `conMockup(...)` junta escalas con la portada de muestra que las
  * sigue. `clave` marca lo que más nos sirve: lleva una pastilla y la revisión
  * lo pide si quedó en blanco. `muestras` dibuja las opciones de una pregunta
- * en su propio estilo o en su propia letra (MuestraBrief.jsx), y `marca`
+ * en su propia letra o en su tipo de logo (MuestraBrief.jsx), y `marca`
  * viste la pastilla de una empresa con sus colores al marcarla.
  */
 
@@ -518,45 +519,11 @@ export const BRIEF = {
           escala('movimiento_escala', 'Movimiento', ['Quieto', 'nada se mueve'], ['Dinámico', 'animaciones protagonistas'])
         ),
         {
-          id: 'estilo',
-          tipo: 'varias',
-          etiqueta: 'Elige hasta 3 direcciones de estilo',
-          ayuda: 'Pasa el cursor (o toca) para verlas moverse. Cada una tiene su boceto más abajo.',
-          clave: true,
-          max: 3,
-          muestras: 'estilo',
-          opciones: [
-            o('minimalista', 'Minimalista', 'Poco, preciso, mucho aire'),
-            o('tecnologico', 'Tecnológico', 'Grilla, datos, precisión'),
-            o('corporativo', 'Corporativo', 'Estructura, respaldo, orden'),
-            o('editorial', 'Editorial', 'Como una revista, pausado'),
-            o('calido', 'Cálido y cercano', 'Tonos tierra, formas suaves'),
-            o('premium', 'Premium', 'Oscuro, dorado, exclusivo'),
-            o('audaz', 'Audaz', 'Contraste, letras enormes'),
-            o('ludico', 'Lúdico', 'Color, formas, humor'),
-            o('brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir'),
-            o('retro', 'Retro', 'Nostalgia de los 70'),
-            o('suizo', 'Suizo / gráfico', 'Grilla, rojo, tipografía'),
-            o('natural', 'Natural', 'Formas orgánicas, tonos de tierra'),
-            o('futurista', 'Futurista', 'Degradados, vidrio, luz'),
-            o('artesanal', 'Artesanal', 'Papel, sellos, a mano'),
-            o('zen', 'Zen / japonés', 'Silencio, aire, calma'),
-            o('industrial', 'Industrial', 'Fuerte, oscuro, de taller'),
-            o('artdeco', 'Art déco', 'Dorado, simetría, años 20'),
-            o('bauhaus', 'Bauhaus', 'Formas puras, colores primarios'),
-            o('memphis', 'Memphis', 'Patrones, color, desorden alegre'),
-            o('y2k', 'Y2K', 'Cromo, brillos, años 2000'),
-            o('andino', 'Andino / folclórico', 'Grecas, tejidos, colores de la tierra'),
-            o('letterpress', 'Letterpress', 'Papel grueso, tinta hundida'),
-            o('collage', 'Collage / zine', 'Recortes, fotocopia, cinta'),
-            o('clinico', 'Clínico / limpio', 'Blanco, claro, confiable'),
-          ],
-        },
-        {
           id: 'bocetos',
           tipo: 'bocetos',
-          etiqueta: '24 bocetos de página: ¿cuáles te gustan?',
-          ayuda: 'Cada uno es la página de una marca inventada, con uno de los estilos de arriba. Se abren en otra pestaña: califícalos ahí o aquí mismo.',
+          etiqueta: 'Direcciones de estilo: ¿cuáles te gustan?',
+          ayuda:
+            'Cada estilo tiene su boceto: la página entera de una marca inventada. Ábrelo, recórrelo y dinos qué te parece. Los que te gustan son tu elección.',
           clave: true,
         },
         {
@@ -573,15 +540,42 @@ export const BRIEF = {
             conImagen('portada-historia', 'historia', 'Historia al bajar', 'Secciones que se alternan al hacer scroll'),
           ],
         },
+        columnas(
+          [
+            {
+              id: 'logo',
+              tipo: 'una',
+              etiqueta: '¿Ya tienes logo?',
+              opciones: [o('si', 'Sí, en buena calidad (SVG, AI o PDF)'), o('imagen', 'Solo en imagen (PNG o JPG)'), o('no', 'No tengo logo')],
+            },
+          ],
+          [
+            {
+              id: 'logo_archivo',
+              tipo: 'archivo',
+              etiqueta: 'Si lo tienes, súbelo',
+              ayuda: 'SVG, PDF, AI, EPS, PNG, JPG o WEBP, hasta 5 MB. Nos llega adjunto con tu brief.',
+            },
+          ]
+        ),
         {
           id: 'tipo_logo',
-          tipo: 'una',
-          etiqueta: '¿Qué tipo de logo imaginas?',
+          tipo: 'varias',
+          etiqueta: '¿Qué tipo de logo imaginas? Elige hasta 2',
+          ayuda: 'Las muestras usan el nombre de tu negocio. Si mantienes tu logo actual, puedes saltarla.',
+          max: 2,
+          muestras: 'logo',
           opciones: [
-            conImagen('logo-simbolo', 'simbolo', 'Solo símbolo', 'Sin texto'),
-            conImagen('logo-nombre', 'nombre', 'Solo nombre', 'La palabra con su letra'),
-            conImagen('logo-simbolo-y-nombre', 'simbolo-y-nombre', 'Símbolo + nombre', 'Separados, funcionan aparte'),
-            conImagen('logo-fundidos', 'fundidos', 'Fundidos', 'Símbolo y texto en una pieza'),
+            o('nombre', 'Logotipo', 'Solo el nombre, con su letra'),
+            o('monograma', 'Monograma', 'Las iniciales, entrelazadas'),
+            o('simbolo', 'Símbolo', 'Un dibujo que se reconoce solo'),
+            o('abstracto', 'Abstracto', 'Una forma propia, sin dibujo literal'),
+            o('simbolo-y-nombre', 'Símbolo + nombre', 'Separados, funcionan aparte'),
+            o('fundidos', 'Fundidos', 'Símbolo y texto en una pieza'),
+            o('emblema', 'Emblema', 'El nombre dentro de un sello o escudo'),
+            o('mascota', 'Mascota', 'Un personaje que da la cara'),
+            o('firma', 'Firma', 'Escrito a mano, personal'),
+            o('variable', 'Variable', 'Cambia de forma o color según dónde va'),
           ],
         },
         {
@@ -768,12 +762,6 @@ export const BRIEF = {
               tipo: 'una',
               etiqueta: '¿Quién escribe los textos?',
               opciones: [o('yo', 'Yo los tengo'), o('ideas', 'Tengo ideas, necesito ayuda'), o('ustedes', 'Que los escriban ustedes')],
-            },
-            {
-              id: 'logo',
-              tipo: 'una',
-              etiqueta: '¿Tienes tu logo en buena calidad (SVG, AI o PDF)?',
-              opciones: [o('si', 'Sí'), o('imagen', 'Solo en imagen (PNG/JPG)'), o('no', 'No tengo logo')],
             },
             { id: 'plazo', tipo: 'texto', etiqueta: '¿Para cuándo lo necesitas?', clave: true, ph: 'Una fecha o un evento (lanzamiento, feria…)' },
           ],

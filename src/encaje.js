@@ -1,5 +1,6 @@
-// El encaje de la portada, de /nosotros y de la tienda (Servicios.css,
-// Nosotros.css y Tienda.css) deja bajar libre en sus zonas más altas que la
+// El encaje de la portada, de /nosotros, de la tienda y de las escalas del
+// brief (Servicios.css, Nosotros.css, Tienda.css y public/brief/muestras.css)
+// deja bajar libre en sus zonas más altas que la
 // pantalla: desde el borde de arriba de una de `ABAJO` hasta el final de la
 // página, y desde el principio hasta el borde de abajo de una de `ARRIBA`.
 // Pero con la rueda del ratón Chrome encaja cada tick al terminar, por
@@ -8,7 +9,7 @@
 // quedó. Por eso, adentro de una zona libre la página no encaja (`.libre`). Se
 // apaga un cuarto de pantalla pasado el borde y no en él: al volver, el encaje
 // se prende donde la página todavía puede quedarse, y no la mueve.
-const ABAJO = ['.servicios + .seccion', '.atardecer + .seccion > .contenedor', '.tienda-incluye + .seccion']
+const ABAJO = ['.servicios + .seccion', '.atardecer + .seccion > .contenedor', '.tienda-incluye + .seccion', '.brief-escalas + *']
 const ARRIBA = ['.tienda-incluye .titular']
 
 export default function initEncaje() {

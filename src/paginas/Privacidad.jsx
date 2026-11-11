@@ -20,7 +20,8 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * política.** Volutus no vende por la web, no tiene cuentas, no perfila y no
  * mide nada: el único dato personal que entra es el del formulario, y la IP con
  * que Cloudflare frena a los robots. El brief para clientes (/brief), que se
- * manda por link, suma lo que identifica el envío (worker/brief.js). En el
+ * manda por link, suma lo que identifica el envío y el logo que se sube, que
+ * llega adjunto (worker/brief.js). En el
  * navegador se guardan el modo desbloqueado del juego de los patos
  * (lib/odio.js) y, en el brief, las respuestas a medio llenar; también se dice.
  *
@@ -80,7 +81,8 @@ const APARTADOS = [
         '**Un número al azar** que se guarda en tu navegador para saber si dos briefs vienen del mismo equipo. No dice quién eres ni te sigue fuera de esta página.',
         '**Cuánto tardaste** en llenarlo.',
       ],
-      'Mientras lo llenas, tus respuestas se guardan **solo en tu navegador**, para que no se pierdan si cierras la página, y se borran de ahí al enviarlo. La copia que te llega no lleva los datos del envío. La base legal es la misma del formulario, más nuestro interés legítimo en protegerlo de abusos.',
+      'Si subes **tu logo**, nos llega adjunto en ese mismo correo, con un nombre que le ponemos nosotros. No queda guardado en el sitio, y la copia que te llega no lo lleva.',
+      'Mientras lo llenas, tus respuestas se guardan **solo en tu navegador**, para que no se pierdan si cierras la página, y se borran de ahí al enviarlo. El logo no se guarda ahí. La copia que te llega no lleva los datos del envío. La base legal es la misma del formulario, más nuestro interés legítimo en protegerlo de abusos.',
     ],
   },
   {

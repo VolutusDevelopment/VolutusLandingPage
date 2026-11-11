@@ -28,10 +28,38 @@
  * rebotar el scroll, también blanco (`--fondo-de-arriba`, index.css). */
 html:has(.brief-pagina) {
   --fondo-de-arriba: #ffffff;
+  /* Lo que tapa abajo: la guía en S y M, y aire. Ahí no cae el foco ni un
+     ancla, y las escalas lo descuentan (muestras.css). */
+  --guia-alto: 56px;
+  --pie-brief: var(--e-4);
+  scroll-padding-bottom: var(--pie-brief);
+}
+
+@media (max-width: 1023px) {
+  html:has(.brief-pagina) {
+    --pie-brief: calc(var(--guia-alto) + var(--e-2) + var(--e-4) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .brief-pagina .zona-cielo {
   --fondo: #ffffff;
+}
+
+/* El pie es el de la portada, con su cielo (`pieDeDia`). Allá el cierre se
+   lleva el tramo del blanco al celeste y el pie empieza ya en azul; aquí no
+   hay cierre, así que ese tramo es aire propio (`--tramo`), desde el blanco
+   del brief, y el pie arranca en el mismo azul, donde su texto blanco se lee
+   igual que allá. Como el de /privacidad antes de su cierre. */
+:root main.brief-pagina + .caida {
+  --tramo: calc(var(--e-24) * 2);
+  padding-top: var(--tramo);
+  background: linear-gradient(
+    #ffffff,
+    #c2e1f8 calc(var(--tramo) * 0.3),
+    #7cbcf1 calc(var(--tramo) * 0.65),
+    #4d9fea var(--tramo),
+    #2b8de4
+  );
 }
 
 /* Los colores del brief, cada uno con una sola función. Las dos áreas (su
@@ -251,8 +279,14 @@ html:has(.brief-pagina) {
 
 /* ---- La guía: dónde estoy, cuánto falta y que está guardado ----
  *
- * En S y M, una franja que se queda arriba al bajar por un paso largo. Desde
- * L, al costado y fija, con el índice entero en un cuadro por área. */
+ * En S y M, una píldora pegada al pie de la pantalla, como el mapa de los
+ * artículos (Mapa.css): arriba quedan la barra del sitio y, en «Cómo se ve»,
+ * la portada de muestra, y nada se apila. Es opaca y mide 22rem como mucho:
+ * a casi todo el ancho, Safari en iOS la tomaría por una barra y pintaría de
+ * su color la franja de abajo (ver Barra.css). Su sitio en el formulario no
+ * ocupa alto (el margen negativo), y el formulario deja abajo el hueco donde
+ * se posa al final, para que no tape los botones del último paso. Desde L, al
+ * costado y fija, con el índice entero en un cuadro por área. */
 .brief-guia {
   display: flex;
   flex-direction: column;
@@ -261,21 +295,43 @@ html:has(.brief-pagina) {
 }
 
 @media (max-width: 1023px) {
-  .brief-guia {
-    position: sticky;
-    top: calc(var(--barra-alto) + var(--e-1));
-    z-index: 2;
-    margin-inline: calc(-1 * var(--e-3));
-    padding: var(--e-2) var(--e-3) var(--e-3);
-    border-radius: var(--radio-tarjeta);
-    background: color-mix(in srgb, var(--fondo) 92%, transparent);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+  .brief {
+    padding-bottom: calc(var(--guia-alto) + var(--e-4));
   }
 
-  /* La franja queda arriba de la pantalla al saltar a ella. */
-  .brief-pantalla {
-    scroll-margin-top: 4.5rem;
+  .brief-guia {
+    position: sticky;
+    top: calc(100dvh - var(--guia-alto) - var(--e-2) - env(safe-area-inset-bottom, 0px));
+    z-index: 3;
+    justify-content: center;
+    width: 100%;
+    max-width: 22rem;
+    height: var(--guia-alto);
+    margin: 0 auto calc(-1 * var(--guia-alto));
+    padding: 0 var(--e-4);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-panel);
+    background: var(--superficie);
+    box-shadow: 0 8px 24px rgb(10 26 42 / 0.12);
+  }
+
+  /* En una fila, también a 320 px: dónde se está cede su ancho, y «Se guarda
+     solo» guarda el suyo, que es el de «✓ Guardado» cuando cambia. */
+  .brief-guia .brief-guia-fila {
+    flex-wrap: nowrap;
+    gap: var(--e-2);
+  }
+
+  .brief-guia .brief-guardado {
+    min-width: 6.6em;
+    text-align: right;
+  }
+}
+
+@media (max-width: 374px) {
+
+  .brief-guia .brief-donde-parte {
+    display: none;
   }
 }
 
