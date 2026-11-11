@@ -49,14 +49,32 @@ html:has(.brief-pagina) {
    lleva el tramo del blanco al celeste y el pie empieza ya en azul; aquí no
    hay cierre, así que ese tramo es aire propio (`--tramo`), desde el blanco
    del brief, y el pie arranca en el mismo azul, donde su texto blanco se lee
-   igual que allá. Como el de /privacidad antes de su cierre. */
+   igual que allá. Como el de /privacidad antes de su cierre.
+
+   El tramo es una parábola de ida y vuelta en dieciséis pasos de 12 px,
+   plana al salir del blanco y al llegar al azul: en tramos rectos, el quiebre
+   donde el degradado se aplanaba al llegar al azul se veía como una raya
+   oscura. */
 :root main.brief-pagina + .caida {
   --tramo: calc(var(--e-24) * 2);
   padding-top: var(--tramo);
   background: linear-gradient(
     #ffffff,
-    #c2e1f8 calc(var(--tramo) * 0.3),
-    #7cbcf1 calc(var(--tramo) * 0.65),
+    #fefeff calc(var(--tramo) * 1 / 16),
+    #f9fcfe calc(var(--tramo) * 2 / 16),
+    #f2f8fe calc(var(--tramo) * 3 / 16),
+    #e9f3fc calc(var(--tramo) * 4 / 16),
+    #dcecfb calc(var(--tramo) * 5 / 16),
+    #cde4f9 calc(var(--tramo) * 6 / 16),
+    #bbdaf7 calc(var(--tramo) * 7 / 16),
+    #a6cff5 calc(var(--tramo) * 8 / 16),
+    #91c4f2 calc(var(--tramo) * 9 / 16),
+    #7fbaf0 calc(var(--tramo) * 10 / 16),
+    #70b2ee calc(var(--tramo) * 11 / 16),
+    #63abed calc(var(--tramo) * 12 / 16),
+    #5aa6eb calc(var(--tramo) * 13 / 16),
+    #53a2eb calc(var(--tramo) * 14 / 16),
+    #4ea0ea calc(var(--tramo) * 15 / 16),
     #4d9fea var(--tramo),
     #2b8de4
   );

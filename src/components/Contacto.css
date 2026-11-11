@@ -16,19 +16,26 @@
    ver su fondo. Arranca en el blanco de la sección anterior y vuelve al azul
    del cielo de la mañana por los mismos colores que la portada, al revés: en
    una curva suave que sale plana del blanco, porque en tramos rectos el
-   quiebre al salir se veía como una raya. */
+   quiebre al salir se veía como una raya. Va en dieciséis pasos, como el
+   tramo del pie del brief (Brief.css). */
 :root .caida {
   background: linear-gradient(
     #f6f9fc,
-    #eaf3fb 10%,
-    #cce6f9 20%,
-    #a5d1f5 30%,
-    #7cbcf1 40%,
-    #5ca9ec 50%,
-    #4b9eea 60%,
-    #4198e8 70%,
-    #3994e6 80%,
-    #3291e5 90%,
+    #f0f6fb calc(100% * 1 / 16),
+    #e4f0fb calc(100% * 2 / 16),
+    #d0e8f9 calc(100% * 3 / 16),
+    #b9dcf7 calc(100% * 4 / 16),
+    #a0cef5 calc(100% * 5 / 16),
+    #86c1f2 calc(100% * 6 / 16),
+    #6fb4ef calc(100% * 7 / 16),
+    #5ca9ec calc(100% * 8 / 16),
+    #50a1eb calc(100% * 9 / 16),
+    #489cea calc(100% * 10 / 16),
+    #4299e8 calc(100% * 11 / 16),
+    #3d96e7 calc(100% * 12 / 16),
+    #3894e6 calc(100% * 13 / 16),
+    #3492e5 calc(100% * 14 / 16),
+    #2f90e5 calc(100% * 15 / 16),
     #2b8de4
   );
 }
