@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Kōen · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Kōen, centro de yoga y casa de té, para mostrar el estilo Zen / japonés.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'Cormorant Garamond'; src: url('/fonts/bocetos/cormorant-garamond.woff2') format('woff2'); font-weight: 300 600; font-display: swap; }
+@font-face { font-family: 'Karla'; src: url('/fonts/bocetos/karla.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+* { box-sizing: border-box; }
+html { background: #f2efe8; }
+body { margin: 0; background: #f2efe8; color: #23231f; font: 400 17px/1.7 'Karla', system-ui, sans-serif; }
+a { color: inherit; }
+.ancho { max-width: 1080px; margin: 0 auto; padding-inline: max(24px, env(safe-area-inset-left, 0px)); }
+h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; line-height: 1.05; margin: 0; text-wrap: balance; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding-block: 28px; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; }
+.nav a { text-decoration: none; }
+.nav ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; }
+.marca { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0.4em; }
+.heroe { display: grid; justify-items: center; gap: 28px; padding-block: 72px 120px; text-align: center; position: relative; }
+.enso { width: min(240px, 52vw); height: auto; }
+.enso circle { fill: none; stroke: #23231f; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 520 640; }
+.sello { position: absolute; right: 12%; top: 22%; width: 14px; height: 14px; border-radius: 50%; background: #b8342c; }
+.heroe h1 { font-size: clamp(44px, 7vw, 84px); }
+.heroe p { max-width: 42ch; margin: 0; color: #5e5b52; }
+.cta { display: inline-block; padding-bottom: 6px; border-bottom: 1px solid currentColor; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; text-decoration: none; }
+.respira { font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a867b; }
+.respira span { display: inline-block; min-width: 6em; }
+section { padding-block: 96px; border-top: 1px solid #dcd7cb; }
+.titulo { display: grid; grid-template-columns: 9rem 1fr; gap: 24px; margin-bottom: 56px; }
+.titulo small { font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a867b; padding-top: 14px; }
+.titulo h2 { font-size: clamp(34px, 4.6vw, 54px); }
+.clases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 48px; }
+.clase h3 { font-size: 30px; margin-bottom: 10px; }
+.clase p { margin: 0; color: #5e5b52; }
+.clase .nivel { display: block; margin-top: 14px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #b8342c; }
+.te { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 64px; align-items: center; }
+.taza { position: relative; aspect-ratio: 1; max-width: 340px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #7b8a5a 0 38%, #e7e2d6 39% 44%, #f2efe8 45%); box-shadow: inset 0 0 0 1px #dcd7cb; }
+.te p { color: #5e5b52; }
+.horario { width: 100%; border-collapse: collapse; font-size: 15px; }
+.horario th, .horario td { padding: 14px 8px; border-bottom: 1px solid #dcd7cb; text-align: left; font-weight: 400; }
+.horario th { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a867b; }
+.horario td:first-child { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+.tabla { overflow-x: auto; }
+.reserva { text-align: center; display: grid; justify-items: center; gap: 24px; }
+.reserva h2 { font-size: clamp(40px, 6vw, 72px); }
+footer { padding-block: 48px; border-top: 1px solid #dcd7cb; font-size: 13px; color: #8a867b; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+@media (max-width: 640px) {
+  .nav ul { display: none; }
+  .titulo { grid-template-columns: 1fr; gap: 8px; }
+  section { padding-block: 64px; }
+}
+/* El ensō se dibuja al ritmo de una respiración: 4 s se dibuja, 4 s se borra.
+   El texto de abajo acompaña. Nada más se mueve. */
+@media (prefers-reduced-motion: no-preference) {
+  .enso circle { animation: respira 8s ease-in-out infinite; }
+  .respira .inhala { animation: inhala 8s steps(1) infinite; }
+  .respira .exhala { animation: exhala 8s steps(1) infinite; }
+}
+.respira .exhala { display: none; }
+@media (prefers-reduced-motion: no-preference) { .respira .exhala { display: inline-block; } }
+@keyframes respira { 0%, 100% { stroke-dashoffset: 520; } 50% { stroke-dashoffset: 0; } }
+@keyframes inhala { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes exhala { 0% { opacity: 0; } 50% { opacity: 1; } }
+.respira { display: grid; }
+.respira > span { grid-area: 1 / 1; }
+</style>
+</head>
+<body data-boceto="koen">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Kōen</b> es una marca inventada por Volutus para mostrarte el estilo <b>Zen / japonés</b>.</p></div>
+
+<header class="ancho nav">
+  <a class="marca" href="#">KŌEN</a>
+  <nav aria-label="Secciones"><ul><li><a href="#clases">Clases</a></li><li><a href="#te">Casa de té</a></li><li><a href="#horario">Horario</a></li></ul></nav>
+</header>
+
+<main>
+  <div class="ancho heroe">
+    <span class="sello" aria-hidden="true"></span>
+    <svg class="enso" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="82" transform="rotate(-80 100 100)"/></svg>
+    <p class="respira" aria-hidden="true"><span class="inhala">Inhala</span><span class="exhala">Exhala</span></p>
+    <h1>Respira. Después, el té.</h1>
+    <p>Clases de yoga para todos los cuerpos y una casa de té donde quedarse un rato más. Providencia, a pasos del metro Los Leones.</p>
+    <a class="cta" href="#reserva">Reserva tu primera clase</a>
+  </div>
+
+  <section id="clases">
+    <div class="ancho">
+      <div class="titulo" data-aparece><small>Las clases</small><h2>Una práctica para cada día de la semana</h2></div>
+      <div class="clases">
+        <article class="clase" data-aparece><h3>Hatha lento</h3><p>Posturas sostenidas y respiración consciente. Una hora para bajar el ritmo.</p><span class="nivel">Para empezar</span></article>
+        <article class="clase" data-aparece style="--retraso: 120ms"><h3>Vinyasa</h3><p>Movimiento que sigue a la respiración, con secuencias que cambian cada mes.</p><span class="nivel">Intermedio</span></article>
+        <article class="clase" data-aparece style="--retraso: 240ms"><h3>Yin y meditación</h3><p>Posturas en el suelo, largas y quietas. Termina con veinte minutos de silencio.</p><span class="nivel">Todos los niveles</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="te">
+    <div class="ancho te">
+      <div class="taza" aria-hidden="true" data-aparece></div>
+      <div data-aparece>
+        <div class="titulo" style="grid-template-columns: 1fr; gap: 8px; margin-bottom: 24px"><small>La casa de té</small><h2>Sencha, matcha y genmaicha, servidos sin apuro</h2></div>
+        <p>Después de cada clase, la casa de té queda abierta para quien quiera quedarse. Preparamos el matcha a la vista y vendemos las hojas por gramo, con la temperatura y el tiempo anotados en cada bolsa.</p>
+        <p>Los sábados hay ceremonia del té a las 17:00, con cupo para ocho personas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="horario">
+    <div class="ancho">
+      <div class="titulo" data-aparece><small>Horario</small><h2>Lunes a sábado</h2></div>
+      <div class="tabla" data-aparece>
+        <table class="horario">
+          <thead><tr><th scope="col">Clase</th><th scope="col">Mañana</th><th scope="col">Tarde</th><th scope="col">Duración</th></tr></thead>
+          <tbody>
+            <tr><td>Hatha lento</td><td>08:00</td><td>19:30</td><td>60 min</td></tr>
+            <tr><td>Vinyasa</td><td>07:00</td><td>18:30</td><td>75 min</td></tr>
+            <tr><td>Yin y meditación</td><td>10:00</td><td>20:30</td><td>90 min</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="reserva">
+    <div class="ancho reserva" data-aparece>
+      <h2>La primera clase va por nuestra cuenta.</h2>
+      <p>Trae ropa cómoda. La esterilla y el té, los ponemos nosotros.</p>
+      <a class="cta" href="#">Elegir un horario</a>
+    </div>
+  </section>
+</main>
+
+<footer class="ancho"><span>Kōen · Av. Providencia 2124, Providencia</span><span>Boceto de Volutus · marca inventada</span></footer>
+</body>
+</html>

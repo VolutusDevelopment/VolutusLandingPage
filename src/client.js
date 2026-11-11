@@ -38,10 +38,10 @@ import {
   LIMITES,
   NOMBRE_VALIDO,
   TURNSTILE_ACCION,
-  TURNSTILE_SITEKEY,
   enlaceDeWhatsapp,
   mensajeDeWhatsapp,
 } from './lib/contacto.js'
+import { montarTurnstile } from './lib/turnstile.js'
 
 // Título y texto del toast con el resultado del envío. El del fallo no lleva
 // el correo en el texto: va debajo, como enlace (ver Contacto.jsx). La marca
@@ -182,33 +182,9 @@ function initFormulario() {
     form.classList.toggle('formulario-cabe', form.offsetHeight + barra.offsetHeight <= document.documentElement.clientHeight)
   ).observe(form)
 
-  // Turnstile se descarga al primer contacto con el formulario: así no pesa
-  // en la carga ni en Lighthouse. Se monta a mano (`render=explicit`) para
-  // guardar su id: el token vale un envío, y tras cada intento hay que pedir
-  // otro. Añade `cf-turnstile-response` al FormData.
-  let widget
-  form.addEventListener(
-    'focusin',
-    () => {
-      const script = document.createElement('script')
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-      script.async = true
-      script.onload = () => {
-        const hueco = form.querySelector('.turnstile')
-        widget = window.turnstile.render(hueco, {
-          sitekey: TURNSTILE_SITEKEY,
-          action: TURNSTILE_ACCION,
-          appearance: 'interaction-only',
-          // El reto normal mide 300 px fijos, más que el formulario en casi
-          // todos los celulares, y se salía de la tarjeta. Donde no cabe va el
-          // compacto, de 150 × 140.
-          size: hueco.clientWidth >= 300 ? 'normal' : 'compact',
-        })
-      }
-      document.head.append(script)
-    },
-    { once: true }
-  )
+  // Turnstile se descarga al primer contacto con el formulario
+  // (lib/turnstile.js).
+  const turnstile = montarTurnstile(form, TURNSTILE_ACCION)
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault()
@@ -274,8 +250,7 @@ function initFormulario() {
     } catch {
       mostrarToast('error')
     } finally {
-      // Cada token de Turnstile vale un solo envío.
-      if (widget !== undefined) window.turnstile.reset(widget)
+      turnstile.reiniciar()
       clearTimeout(avisarQueEnvia)
       boton.disabled = false
       boton.textContent = 'Enviar mensaje'
@@ -317,6 +292,13 @@ function empezarSolo(boton, alternar) {
   boton.addEventListener('click', () => nube.removeEventListener('vivo', alternar), { once: true })
 }
 
+// El brief para clientes (paginas/Brief.jsx) baja su código solo en su
+// página: el resto del sitio no paga por un formulario de 80 preguntas.
+function initBrief() {
+  const form = document.querySelector('.brief')
+  if (form) import('./brief.js').then((modulo) => modulo.default(form))
+}
+
 // Operación Venganza baja su código solo en sus páginas; el combate lo baja
 // el juego mientras carga. El índice no baja nada.
 function initOperacionVenganza() {
@@ -354,6 +336,7 @@ export default function init() {
     initTienda,
     initTitularDelContacto,
     initFondoDelMar,
+    initBrief,
     initOperacionVenganza,
   ]) {
     try {

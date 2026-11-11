@@ -515,10 +515,13 @@ writeFileSync(
 // puede quedarse en caché para siempre: si cambia, cambia de nombre.
 // llms.txt lleva tildes y Cloudflare lo sirve como `text/plain` sin charset,
 // que algunos clientes (`requests` de Python) leen como Latin-1.
+// Los bocetos del brief (public/brief/bocetos/) son páginas sueltas, fuera del
+// prerender: su `noindex` va también en la cabecera, por si un buscador llega
+// a ellas por un enlace compartido.
 const reglas = Object.entries(CABECERAS).map(([nombre, valor]) => `  ${nombre}: ${valor}`)
 writeFileSync(
   `${dist}_headers`,
-  `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n`
+  `/*\n${reglas.join('\n')}\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/llms.txt\n  Content-Type: text/plain; charset=utf-8\n\n/brief/bocetos/*\n  X-Robots-Tag: noindex, nofollow\n`
 )
 
 // Las páginas de servicio vivían en la raíz (/desarrollo-web) hasta que

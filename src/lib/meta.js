@@ -16,7 +16,8 @@ import { CARGAS } from './cargas.js'
  *
  * `indexar: false` es para las páginas de error, la 404 y la de los 5xx, que
  * se sirven en cualquier dirección y no tienen una URL propia que declarar.
- * Ninguna debe aparecer en un buscador.
+ * Ninguna debe aparecer en un buscador. También el brief para clientes
+ * (/brief), que Volutus manda por link a quien va a llenarlo.
  *
  * `actualizada` (AAAA-MM-DD) es la fecha del último cambio del contenido de la
  * página: texto, datos o enlaces, no colores ni animaciones. Va al `<lastmod>`
@@ -270,7 +271,7 @@ export const PAGINAS = {
   },
   '/privacidad': {
     archivo: 'privacidad.html',
-    actualizada: '2026-10-18',
+    actualizada: '2026-11-10',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',
@@ -296,6 +297,16 @@ export const PAGINAS = {
     titulo: 'Error del servidor — Volutus',
     descripcion: 'No fue nada que hicieras: el servidor tuvo un problema. Prueba de nuevo en un momento.',
     indexar: false,
+  },
+  // El brief que Volutus le manda a un cliente por link (paginas/Brief.jsx).
+  // No se enlaza desde el sitio ni va al sitemap.
+  '/brief': {
+    archivo: 'brief.html',
+    titulo: 'Brief de marca y sitio — Volutus',
+    descripcion:
+      'Lo que necesitamos saber de tu negocio para construir tu marca y tu sitio web. Se llena por partes y se guarda solo.',
+    indexar: false,
+    fondo: '#ffffff',
   },
   '/patos': {
     archivo: 'patos.html',
