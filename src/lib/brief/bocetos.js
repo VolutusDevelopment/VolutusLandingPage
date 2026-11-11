@@ -24,7 +24,7 @@ export const BOCETOS = [
   b('marea', 'Marea', 'Viajes por la costa chilena', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
   b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#f6e4d0'),
   b('onix', 'Ónix', 'Joyería contemporánea de autor', 'premium', 'Premium', 'Oscuro, dorado, exclusivo', '#0b0a09'),
-  b('golpe', 'Golpe', 'Club de boxeo', 'audaz', 'Audaz', 'Contraste, letras enormes', '#ffe14d'),
+  b('golpe', 'Golpe', 'Club de boxeo', 'audaz', 'Audaz', 'Contraste, letras enormes', '#0d0d0d'),
   b('pinpon', 'Pinpón', 'Heladería de barrio', 'ludico', 'Lúdico', 'Color, formas, humor', '#ffe0ea'),
   b('bloque', 'Bloque', 'Galería de arte independiente', 'brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir', '#d9d9d4'),
   b('disco', 'Disco Sur', 'Tienda de vinilos', 'retro', 'Retro', 'Nostalgia de los 70', '#f3e1bf'),

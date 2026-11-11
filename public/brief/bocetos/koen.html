@@ -8,135 +8,386 @@
 <meta name="description" content="Boceto de página de una marca inventada, Kōen, centro de yoga y casa de té, para mostrar el estilo Zen / japonés.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/koen/portada-1400.webp" imagesrcset="/image/bocetos/koen/portada-800.webp 800w, /image/bocetos/koen/portada-1400.webp 1400w" imagesizes="(min-width: 960px) 52vw, 100vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
-@font-face { font-family: 'Cormorant Garamond'; src: url('/fonts/bocetos/cormorant-garamond.woff2') format('woff2'); font-weight: 300 600; font-display: swap; }
-@font-face { font-family: 'Karla'; src: url('/fonts/bocetos/karla.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Cormorant Garamond'; src: url('/fonts/bocetos/cormorant-garamond.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Karla'; src: url('/fonts/bocetos/karla.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+
+:root {
+  --papel: #f2efe8;
+  --papel-2: #e9e4d9;
+  --tinta: #23231f;
+  --gris: #625e54;
+  --linea: #d6d0c3;
+  --sello: #b0322a;
+  --musgo: #56623e;
+  --ancho: 1240px;
+  --margen: clamp(20px, 5vw, 64px);
+  --suave: cubic-bezier(0.23, 1, 0.32, 1);
+}
 * { box-sizing: border-box; }
-html { background: #f2efe8; }
-body { margin: 0; background: #f2efe8; color: #23231f; font: 400 17px/1.7 'Karla', system-ui, sans-serif; }
+html { background: var(--papel); scroll-behavior: smooth; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.7 'Karla', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
 a { color: inherit; }
-.ancho { max-width: 1080px; margin: 0 auto; padding-inline: max(24px, env(safe-area-inset-left, 0px)); }
-h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; line-height: 1.05; margin: 0; text-wrap: balance; }
-.nav { display: flex; align-items: center; justify-content: space-between; padding-block: 28px; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; }
-.nav a { text-decoration: none; }
-.nav ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; }
-.marca { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0.4em; }
-.heroe { display: grid; justify-items: center; gap: 28px; padding-block: 72px 120px; text-align: center; position: relative; }
-.enso { width: min(240px, 52vw); height: auto; }
-.enso circle { fill: none; stroke: #23231f; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 520 640; }
-.sello { position: absolute; right: 12%; top: 22%; width: 14px; height: 14px; border-radius: 50%; background: #b8342c; }
-.heroe h1 { font-size: clamp(44px, 7vw, 84px); }
-.heroe p { max-width: 42ch; margin: 0; color: #5e5b52; }
-.cta { display: inline-block; padding-bottom: 6px; border-bottom: 1px solid currentColor; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; text-decoration: none; }
-.respira { font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a867b; }
-.respira span { display: inline-block; min-width: 6em; }
-section { padding-block: 96px; border-top: 1px solid #dcd7cb; }
-.titulo { display: grid; grid-template-columns: 9rem 1fr; gap: 24px; margin-bottom: 56px; }
-.titulo small { font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a867b; padding-top: 14px; }
-.titulo h2 { font-size: clamp(34px, 4.6vw, 54px); }
-.clases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 48px; }
-.clase h3 { font-size: 30px; margin-bottom: 10px; }
-.clase p { margin: 0; color: #5e5b52; }
-.clase .nivel { display: block; margin-top: 14px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #b8342c; }
-.te { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 64px; align-items: center; }
-.taza { position: relative; aspect-ratio: 1; max-width: 340px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #7b8a5a 0 38%, #e7e2d6 39% 44%, #f2efe8 45%); box-shadow: inset 0 0 0 1px #dcd7cb; }
-.te p { color: #5e5b52; }
-.horario { width: 100%; border-collapse: collapse; font-size: 15px; }
-.horario th, .horario td { padding: 14px 8px; border-bottom: 1px solid #dcd7cb; text-align: left; font-weight: 400; }
-.horario th { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a867b; }
-.horario td:first-child { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
-.tabla { overflow-x: auto; }
-.reserva { text-align: center; display: grid; justify-items: center; gap: 24px; }
-.reserva h2 { font-size: clamp(40px, 6vw, 72px); }
-footer { padding-block: 48px; border-top: 1px solid #dcd7cb; font-size: 13px; color: #8a867b; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
-@media (max-width: 640px) {
-  .nav ul { display: none; }
-  .titulo { grid-template-columns: 1fr; gap: 8px; }
-  section { padding-block: 64px; }
+:focus-visible { outline: 2px solid var(--sello); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; line-height: 1.04; letter-spacing: -0.01em; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.rotulo { font-size: 12px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gris); }
+.enlace { display: inline-block; padding-block: 4px; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: background-size 500ms var(--suave); }
+.enlace:hover { background-size: 30% 1px; }
+.boton { display: inline-flex; align-items: center; min-height: 48px; padding: 0 26px; border: 1px solid var(--tinta); border-radius: 999px; background: var(--tinta); color: var(--papel); font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background 300ms, color 300ms; }
+.boton:hover { background: transparent; color: var(--tinta); }
+figcaption { margin-top: 12px; font-size: 13px; color: var(--gris); }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 26px; }
+.marca { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 400; letter-spacing: 0.42em; text-decoration: none; }
+.o-largo { position: relative; }
+.o-largo::before { content: ''; position: absolute; left: 14%; right: 14%; top: 0.06em; height: 0.05em; background: currentColor; }
+.o-largo.min::before { left: 24%; right: 0; top: 0.36em; height: 0.045em; }
+.cabecera nav ul { display: flex; gap: 36px; margin: 0; padding: 0; list-style: none; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; }
+.cabecera nav a { text-decoration: none; }
+.cabecera nav a:hover { color: var(--sello); }
+.cabecera .boton { min-height: 40px; padding: 0 18px; font-size: 12px; }
+
+/* ---- Portada asimétrica ---- */
+.portada { display: grid; grid-template-columns: 2.5rem minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(24px, 4vw, 64px); align-items: start; padding-block: clamp(32px, 6vw, 72px) clamp(72px, 10vw, 140px); }
+.vertical { grid-column: 1; grid-row: 1 / 3; align-self: stretch; writing-mode: vertical-rl; font-size: 12px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--gris); border-left: 1px solid var(--linea); padding-left: 10px; }
+.portada-texto { grid-column: 2; grid-row: 1; display: grid; gap: 28px; align-content: start; padding-top: clamp(8px, 4vw, 56px); }
+.portada h1 { font-size: clamp(54px, 7.4vw, 108px); }
+.bajada { max-width: 34ch; color: var(--gris); }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 4px; }
+.portada-foto { grid-column: 3; grid-row: 1 / 3; margin: clamp(0px, 6vw, 96px) 0 0; position: relative; }
+.portada-foto img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; }
+.portada-foto figcaption { display: flex; justify-content: space-between; gap: 16px; }
+.respiro { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 18px; margin-top: clamp(40px, 6vw, 88px); }
+.enso { width: 92px; height: 92px; flex: none; }
+.enso circle { fill: none; stroke: var(--tinta); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 470 600; }
+.sello { width: 10px; height: 10px; border-radius: 50%; background: var(--sello); }
+.respira { display: grid; font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gris); }
+.respira span { grid-area: 1 / 1; }
+.respira .exhala { visibility: hidden; }
+
+/* ---- Lema ---- */
+.lema { padding-block: clamp(72px, 11vw, 150px); border-top: 1px solid var(--linea); text-align: center; }
+.lema p { max-width: 24ch; margin-inline: auto; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(30px, 4.2vw, 52px); font-style: italic; font-weight: 300; line-height: 1.2; text-wrap: balance; }
+.lema small { display: block; margin-top: 28px; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gris); font-family: 'Karla', sans-serif; font-style: normal; }
+
+/* ---- Secciones ---- */
+.seccion { padding-block: clamp(80px, 11vw, 150px); border-top: 1px solid var(--linea); }
+.titulo { display: grid; gap: 14px; margin-bottom: clamp(40px, 6vw, 72px); }
+.titulo h2 { font-size: clamp(38px, 5vw, 64px); max-width: 16ch; }
+
+/* Clases: la lista a la izquierda; la foto de la que se mira, a la derecha. */
+.clases { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); }
+.lista-clases { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--linea); counter-reset: clase; }
+.clase { position: static; display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: 8px 20px; padding-block: 28px; border-bottom: 1px solid var(--linea); counter-increment: clase; }
+.clase::before { content: '0' counter(clase); padding-top: 10px; font-size: 12px; letter-spacing: 0.2em; color: var(--gris); }
+.clase h3 { font-size: clamp(30px, 3.4vw, 42px); transition: transform 600ms var(--suave), color 300ms; }
+.clase p { grid-column: 2; max-width: 40ch; color: var(--gris); }
+.clase .datos { grid-column: 3; grid-row: 1 / 3; align-self: start; padding-top: 10px; text-align: right; font-size: 13px; letter-spacing: 0.08em; color: var(--gris); white-space: nowrap; }
+.clase .datos b { display: block; font-weight: 500; color: var(--musgo); }
+.clase a { grid-column: 2; justify-self: start; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }
+.clase img { position: absolute; top: 0; right: 0; width: calc((100% - clamp(32px, 6vw, 96px)) * 5 / 12); aspect-ratio: 4 / 5; object-fit: cover; opacity: 0; transition: opacity 700ms var(--suave); }
+.clase:first-child img { opacity: 1; }
+.clase:hover img, .clase:focus-within img { opacity: 1; z-index: 1; }
+.lista-clases:has(.clase:hover, .clase:focus-within) .clase:first-child:not(:hover, :focus-within) img { opacity: 0; }
+.clase:hover h3, .clase:focus-within h3 { transform: translateX(10px); color: var(--sello); }
+
+/* Horario: un día a la vez, elegido con pestañas que son radios. */
+.horario-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 6vw, 96px); }
+.dias { margin: 0; padding: 0; border: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-bottom: 1px solid var(--linea); }
+.dias label { position: relative; display: grid; place-items: center; min-height: 52px; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gris); cursor: pointer; transition: color 300ms; }
+.dias label::after { content: ''; position: absolute; left: 20%; right: 20%; bottom: -1px; height: 2px; background: var(--sello); transform: scaleX(0); transition: transform 500ms var(--suave); }
+.dias input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.dias label:has(input:checked) { color: var(--tinta); }
+.dias label:has(input:checked)::after { transform: scaleX(1); }
+.dias label:has(input:focus-visible) { outline: 2px solid var(--sello); outline-offset: -2px; }
+.dia { display: none; margin: 0; padding: 0; list-style: none; }
+.dia li { display: grid; grid-template-columns: 6rem minmax(0, 1fr) auto; align-items: baseline; gap: 16px; padding-block: 18px; border-bottom: 1px solid var(--linea); }
+.dia time { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; font-variant-numeric: tabular-nums; }
+.dia span { color: var(--gris); font-size: 15px; }
+.horario-dias:has([value="lun"]:checked) [data-dia="lun"],
+.horario-dias:has([value="mar"]:checked) [data-dia="mar"],
+.horario-dias:has([value="mie"]:checked) [data-dia="mie"],
+.horario-dias:has([value="jue"]:checked) [data-dia="jue"],
+.horario-dias:has([value="vie"]:checked) [data-dia="vie"],
+.horario-dias:has([value="sab"]:checked) [data-dia="sab"] { display: block; animation: entra 700ms var(--suave); }
+@supports not selector(:has(*)) { .dia { display: block; } .dias { display: none; } }
+.horario-nota { margin-top: 24px; max-width: 36ch; color: var(--gris); }
+
+/* Casa de té: galería asimétrica con sus pies de foto. */
+.te-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); align-items: start; }
+.te-sala { grid-column: 1 / 8; }
+.te-texto { grid-column: 9 / 13; display: grid; gap: 20px; align-self: center; }
+.te-texto h2 { font-size: clamp(36px, 4.2vw, 56px); }
+.te-texto p { color: var(--gris); }
+.ceremonia { padding-top: 20px; border-top: 1px solid var(--linea); display: grid; gap: 4px; font-size: 14px; }
+.ceremonia b { font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; font-size: 12px; color: var(--sello); }
+.te-matcha { grid-column: 1 / 5; margin-top: clamp(0px, 4vw, 48px); }
+.te-tetera { grid-column: 6 / 9; margin-top: clamp(40px, 12vw, 180px); }
+.te-dulces { grid-column: 9 / 13; margin-top: clamp(20px, 4vw, 48px); }
+.te-grid img { width: 100%; object-fit: cover; }
+.te-sala img { aspect-ratio: 3 / 2; }
+.te-matcha img { aspect-ratio: 4 / 5; }
+.te-tetera img { aspect-ratio: 1; }
+.te-dulces img { aspect-ratio: 4 / 3; }
+
+/* Pases: tres columnas separadas por un filete. */
+.pases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+.pase { display: grid; gap: 14px; align-content: start; padding: 36px clamp(16px, 3vw, 40px) 40px; }
+.pase + .pase { border-left: 1px solid var(--linea); }
+.pase h3 { font-size: 26px; font-weight: 400; }
+.pase .precio { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(44px, 5vw, 64px); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+.pase p { color: var(--gris); font-size: 15px; }
+.pase.destacado { background: var(--papel-2); }
+.pase.destacado h3::after { content: ' · el más elegido'; font-family: 'Karla', sans-serif; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sello); }
+
+/* Reserva */
+.reserva-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 7vw, 120px); align-items: start; }
+.reserva-grid h2 { font-size: clamp(40px, 5.4vw, 72px); margin-block: 16px 24px; }
+.reserva-grid > div p:last-child { color: var(--gris); max-width: 34ch; }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 24px; }
+.formulario label { display: grid; gap: 8px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select { width: 100%; min-height: 48px; padding: 0 2px; border: 0; border-bottom: 1px solid var(--tinta); border-radius: 0; background: transparent; color: var(--tinta); font: 400 17px/1.4 'Karla', system-ui, sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; }
+.formulario select { background: linear-gradient(45deg, transparent 50%, var(--tinta) 50%) calc(100% - 12px) 50% / 6px 6px no-repeat, linear-gradient(-45deg, transparent 50%, var(--tinta) 50%) calc(100% - 6px) 50% / 6px 6px no-repeat; }
+.formulario input:focus-visible, .formulario select:focus-visible { outline: none; border-bottom: 2px solid var(--sello); }
+.formulario .boton { justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--musgo); }
+
+/* Pie */
+.pie { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; padding-block: 56px 48px; border-top: 1px solid var(--linea); font-size: 14px; color: var(--gris); }
+.pie .marca { display: block; margin-bottom: 12px; color: var(--tinta); }
+.pie b { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: var(--tinta); }
+.pie-final { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid var(--linea); font-size: 13px; }
+
+/* ---- M: 640 a 959 ---- */
+@media (max-width: 959px) {
+  .portada { grid-template-columns: 2rem minmax(0, 1fr); }
+  .portada-foto { grid-column: 1 / -1; grid-row: 3; margin-top: 48px; }
+  .vertical { grid-row: 1 / 3; }
+  .respiro { margin-top: 40px; }
+  .clases, .horario-grid, .reserva-grid { grid-template-columns: 1fr; }
+  .clase { grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 32%); }
+  .clase .datos { grid-column: 2; grid-row: auto; text-align: left; padding-top: 0; }
+  .clase .datos b { display: inline; margin-right: 10px; }
+  .clase img { position: static; grid-column: 3; grid-row: 1 / 5; width: 100%; opacity: 1; }
+  .lista-clases:has(.clase:hover, .clase:focus-within) .clase:first-child:not(:hover, :focus-within) img { opacity: 1; }
+  .te-sala { grid-column: 1 / -1; }
+  .te-texto { grid-column: 1 / -1; grid-row: auto; }
+  .te-matcha { grid-column: 1 / 7; margin-top: 0; }
+  .te-tetera { grid-column: 7 / 13; margin-top: 64px; }
+  .te-dulces { grid-column: 3 / 13; margin-top: 0; }
+  .pie { grid-template-columns: 1fr 1fr; }
+  .pie > div:first-child { grid-column: 1 / -1; }
 }
-/* El ensō se dibuja al ritmo de una respiración: 4 s se dibuja, 4 s se borra.
-   El texto de abajo acompaña. Nada más se mueve. */
+
+/* ---- S: hasta 639 ---- */
+@media (max-width: 639px) {
+  .cabecera nav { display: none; }
+  .portada { grid-template-columns: 1fr; }
+  .vertical { display: none; }
+  .portada-texto, .respiro { grid-column: 1; }
+  .portada-foto { margin-inline: calc(var(--margen) * -1); }
+  .portada-foto figcaption { padding-inline: var(--margen); }
+  .clase { grid-template-columns: minmax(0, 1fr) 34%; }
+  .clase::before { grid-column: 1; padding-top: 0; }
+  .clase h3, .clase p, .clase .datos, .clase a { grid-column: 1; }
+  .clase img { grid-column: 2; grid-row: 1 / 6; }
+  .dias label { min-height: 48px; font-size: 12px; letter-spacing: 0.08em; }
+  .dia li { grid-template-columns: 4.5rem minmax(0, 1fr) auto; gap: 12px; }
+  .dia time { font-size: 26px; }
+  .te-matcha, .te-tetera, .te-dulces { grid-column: 1 / -1; margin-top: 0; }
+  .te-tetera { width: 70%; justify-self: end; }
+  .pases { grid-template-columns: 1fr; }
+  .pase + .pase { border-left: 0; border-top: 1px solid var(--linea); }
+  .formulario { grid-template-columns: 1fr; }
+  .pie { grid-template-columns: 1fr; }
+}
+
+/* ---- Movimiento ----
+   El ensō se dibuja al ritmo de una respiración: 4 s se dibuja, 4 s se borra,
+   y la palabra de al lado acompaña. Lo demás solo entra al bajar. */
+@keyframes entra { from { opacity: 0; transform: translateY(10px); } }
+@keyframes respira { 0%, 100% { stroke-dashoffset: 470; } 50% { stroke-dashoffset: 0; } }
+@keyframes inhala { 0%, 46% { opacity: 1; } 54%, 96% { opacity: 0; } }
+@keyframes exhala { 0%, 46% { opacity: 0; } 54%, 96% { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
-  .enso circle { animation: respira 8s ease-in-out infinite; }
-  .respira .inhala { animation: inhala 8s steps(1) infinite; }
-  .respira .exhala { animation: exhala 8s steps(1) infinite; }
+  .enso circle { animation: respira 8s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+  .respira .exhala { visibility: visible; }
+  .respira .inhala { animation: inhala 8s ease-in-out infinite; }
+  .respira .exhala { animation: exhala 8s ease-in-out infinite; }
 }
-.respira .exhala { display: none; }
-@media (prefers-reduced-motion: no-preference) { .respira .exhala { display: inline-block; } }
-@keyframes respira { 0%, 100% { stroke-dashoffset: 520; } 50% { stroke-dashoffset: 0; } }
-@keyframes inhala { 0% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes exhala { 0% { opacity: 0; } 50% { opacity: 1; } }
-.respira { display: grid; }
-.respira > span { grid-area: 1 / 1; }
+@media (prefers-reduced-motion: reduce) {
+  .horario-dias [data-dia] { animation: none !important; }
+}
 </style>
 </head>
 <body data-boceto="koen">
 <div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Kōen</b> es una marca inventada por Volutus para mostrarte el estilo <b>Zen / japonés</b>.</p></div>
 
-<header class="ancho nav">
-  <a class="marca" href="#">KŌEN</a>
-  <nav aria-label="Secciones"><ul><li><a href="#clases">Clases</a></li><li><a href="#te">Casa de té</a></li><li><a href="#horario">Horario</a></li></ul></nav>
+<header class="ancho cabecera">
+  <a class="marca" href="#inicio" aria-label="Kōen, inicio">K<span class="o-largo">O</span>EN</a>
+  <nav aria-label="Secciones"><ul><li><a href="#clases">Clases</a></li><li><a href="#horario">Horario</a></li><li><a href="#te">Casa de té</a></li><li><a href="#pases">Pases</a></li></ul></nav>
+  <a class="boton" href="#reserva">Reservar</a>
 </header>
 
 <main>
-  <div class="ancho heroe">
-    <span class="sello" aria-hidden="true"></span>
-    <svg class="enso" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="82" transform="rotate(-80 100 100)"/></svg>
-    <p class="respira" aria-hidden="true"><span class="inhala">Inhala</span><span class="exhala">Exhala</span></p>
-    <h1>Respira. Después, el té.</h1>
-    <p>Clases de yoga para todos los cuerpos y una casa de té donde quedarse un rato más. Providencia, a pasos del metro Los Leones.</p>
-    <a class="cta" href="#reserva">Reserva tu primera clase</a>
-  </div>
+  <section class="ancho portada" id="inicio">
+    <p class="vertical" aria-hidden="true">Respira hondo</p>
+    <div class="portada-texto">
+      <p class="rotulo">Yoga y casa de té · Providencia</p>
+      <h1>Respira. Después, el té.</h1>
+      <p class="bajada">Clases de yoga para todos los cuerpos y una casa de té donde quedarse un rato más, a pasos del metro Los Leones.</p>
+      <div class="acciones">
+        <a class="boton" href="#reserva">Tu primera clase</a>
+        <a class="enlace" href="#horario">Ver el horario</a>
+      </div>
+    </div>
+    <div class="respiro" aria-hidden="true">
+      <svg class="enso" viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" transform="rotate(-80 100 100)"/></svg>
+      <p class="respira"><span class="inhala">Inhala</span><span class="exhala">Exhala</span></p>
+      <span class="sello"></span>
+    </div>
+    <figure class="portada-foto">
+      <img src="/image/bocetos/koen/portada-1400.webp" srcset="/image/bocetos/koen/portada-800.webp 800w, /image/bocetos/koen/portada-1400.webp 1400w" sizes="(min-width: 960px) 52vw, 100vw" width="1400" height="1120" alt="Un jardín japonés de musgo y pinos, visto desde el piso de madera de una sala abierta" fetchpriority="high">
+      <figcaption><span>El jardín, desde la sala de té.</span><span>Providencia</span></figcaption>
+    </figure>
+  </section>
 
-  <section id="clases">
+  <section class="lema" aria-label="Qué es Kōen">
+    <div class="ancho" data-aparece>
+      <p>K<span class="o-largo min">o</span>en quiere decir parque: un lugar de todos, hecho para detenerse.</p>
+      <small>Abierto desde 2019</small>
+    </div>
+  </section>
+
+  <section class="seccion" id="clases">
     <div class="ancho">
-      <div class="titulo" data-aparece><small>Las clases</small><h2>Una práctica para cada día de la semana</h2></div>
-      <div class="clases">
-        <article class="clase" data-aparece><h3>Hatha lento</h3><p>Posturas sostenidas y respiración consciente. Una hora para bajar el ritmo.</p><span class="nivel">Para empezar</span></article>
-        <article class="clase" data-aparece style="--retraso: 120ms"><h3>Vinyasa</h3><p>Movimiento que sigue a la respiración, con secuencias que cambian cada mes.</p><span class="nivel">Intermedio</span></article>
-        <article class="clase" data-aparece style="--retraso: 240ms"><h3>Yin y meditación</h3><p>Posturas en el suelo, largas y quietas. Termina con veinte minutos de silencio.</p><span class="nivel">Todos los niveles</span></article>
+      <header class="titulo" data-aparece><p class="rotulo">Las clases</p><h2>Tres prácticas, un mismo ritmo</h2></header>
+      <div class="clases" data-aparece>
+        <ol class="lista-clases">
+          <li class="clase">
+            <h3>Hatha lento</h3>
+            <p>Posturas sostenidas y respiración consciente. Una hora para bajar el ritmo del día.</p>
+            <span class="datos"><b>Para empezar</b>60 min</span>
+            <a class="enlace" href="#horario">Ver horarios</a>
+            <img src="/image/bocetos/koen/hatha-500.webp" srcset="/image/bocetos/koen/hatha-500.webp 500w, /image/bocetos/koen/hatha-900.webp 900w" sizes="(min-width: 960px) 34vw, 34vw" width="900" height="1125" loading="lazy" alt="Sala de yoga de madera con las esterillas en fila y luz de tarde">
+          </li>
+          <li class="clase">
+            <h3>Vinyasa</h3>
+            <p>Movimiento que sigue a la respiración. La secuencia cambia cada mes, así que nunca es la misma clase.</p>
+            <span class="datos"><b>Intermedio</b>75 min</span>
+            <a class="enlace" href="#horario">Ver horarios</a>
+            <img src="/image/bocetos/koen/vinyasa-500.webp" srcset="/image/bocetos/koen/vinyasa-500.webp 500w, /image/bocetos/koen/vinyasa-900.webp 900w" sizes="(min-width: 960px) 34vw, 34vw" width="900" height="1125" loading="lazy" alt="Un grupo estira las piernas sobre sus esterillas en una sala luminosa">
+          </li>
+          <li class="clase">
+            <h3>Yin y meditación</h3>
+            <p>Posturas largas y quietas en el suelo. Termina con veinte minutos de silencio.</p>
+            <span class="datos"><b>Todos los niveles</b>90 min</span>
+            <a class="enlace" href="#horario">Ver horarios</a>
+            <img src="/image/bocetos/koen/yin-500.webp" srcset="/image/bocetos/koen/yin-500.webp 500w, /image/bocetos/koen/yin-900.webp 900w" sizes="(min-width: 960px) 34vw, 34vw" width="900" height="1125" loading="lazy" alt="Una mujer sentada con las piernas cruzadas sobre su esterilla, frente a una pared blanca">
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <section id="te">
-    <div class="ancho te">
-      <div class="taza" aria-hidden="true" data-aparece></div>
+  <section class="seccion" id="horario">
+    <div class="ancho horario-grid">
+      <header class="titulo" data-aparece>
+        <p class="rotulo">Horario</p>
+        <h2>La semana, día por día</h2>
+        <p class="horario-nota">Las clases empiezan a la hora en punto: la puerta se cierra cinco minutos después.</p>
+      </header>
+      <div class="horario-dias" data-aparece>
+        <fieldset class="dias">
+          <legend class="oculto">Elige un día</legend>
+          <label><input type="radio" name="dia-horario" value="lun" checked>Lun</label>
+          <label><input type="radio" name="dia-horario" value="mar">Mar</label>
+          <label><input type="radio" name="dia-horario" value="mie">Mié</label>
+          <label><input type="radio" name="dia-horario" value="jue">Jue</label>
+          <label><input type="radio" name="dia-horario" value="vie">Vie</label>
+          <label><input type="radio" name="dia-horario" value="sab">Sáb</label>
+        </fieldset>
+        <ul class="dia" data-dia="lun" aria-label="Lunes"><li><time>07:00</time>Vinyasa<span>75 min</span></li><li><time>10:00</time>Yin y meditación<span>90 min</span></li><li><time>19:30</time>Hatha lento<span>60 min</span></li></ul>
+        <ul class="dia" data-dia="mar" aria-label="Martes"><li><time>08:00</time>Hatha lento<span>60 min</span></li><li><time>18:30</time>Vinyasa<span>75 min</span></li><li><time>20:30</time>Yin y meditación<span>90 min</span></li></ul>
+        <ul class="dia" data-dia="mie" aria-label="Miércoles"><li><time>07:00</time>Vinyasa<span>75 min</span></li><li><time>13:00</time>Hatha lento<span>60 min</span></li><li><time>19:30</time>Yin y meditación<span>90 min</span></li></ul>
+        <ul class="dia" data-dia="jue" aria-label="Jueves"><li><time>08:00</time>Hatha lento<span>60 min</span></li><li><time>18:30</time>Vinyasa<span>75 min</span></li><li><time>20:30</time>Hatha lento<span>60 min</span></li></ul>
+        <ul class="dia" data-dia="vie" aria-label="Viernes"><li><time>07:00</time>Vinyasa<span>75 min</span></li><li><time>18:00</time>Yin y meditación<span>90 min</span></li></ul>
+        <ul class="dia" data-dia="sab" aria-label="Sábado"><li><time>09:30</time>Vinyasa<span>75 min</span></li><li><time>11:30</time>Hatha lento<span>60 min</span></li><li><time>17:00</time>Ceremonia del té<span>60 min</span></li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="te">
+    <div class="ancho te-grid">
+      <figure class="te-sala" data-aparece>
+        <img src="/image/bocetos/koen/sala-1400.webp" srcset="/image/bocetos/koen/sala-800.webp 800w, /image/bocetos/koen/sala-1400.webp 1400w" sizes="(min-width: 960px) 56vw, 100vw" width="1400" height="933" loading="lazy" alt="Una tetera de hierro sobre su brasero en una sala de tatami, con dos cuencos al lado">
+        <figcaption>La sala de té, con la tetera de hierro encendida desde las 10:00.</figcaption>
+      </figure>
+      <div class="te-texto" data-aparece>
+        <p class="rotulo">La casa de té</p>
+        <h2>Sencha, matcha y genmaicha, servidos sin apuro</h2>
+        <p>Después de cada clase la casa de té queda abierta para quien quiera quedarse. Preparamos el matcha a la vista y vendemos las hojas por gramo, con la temperatura y el tiempo anotados en cada bolsa.</p>
+        <p class="ceremonia"><b>Ceremonia del té</b>Sábados a las 17:00 · ocho cupos</p>
+      </div>
+      <figure class="te-matcha" data-aparece>
+        <img src="/image/bocetos/koen/matcha-500.webp" srcset="/image/bocetos/koen/matcha-500.webp 500w, /image/bocetos/koen/matcha-900.webp 900w" sizes="(min-width: 960px) 22vw, 50vw" width="900" height="1125" loading="lazy" alt="Unas manos baten matcha con un batidor de bambú en un cuenco de cerámica">
+        <figcaption>Matcha batido a mano.</figcaption>
+      </figure>
+      <figure class="te-tetera" data-aparece style="--retraso: 120ms">
+        <img src="/image/bocetos/koen/tetera-500.webp" srcset="/image/bocetos/koen/tetera-500.webp 500w, /image/bocetos/koen/tetera-900.webp 900w" sizes="(min-width: 960px) 22vw, 50vw" width="900" height="900" loading="lazy" alt="Agua caliente que cae de una tetera oscura, con vapor, sobre tazas blancas">
+        <figcaption>Agua a 80 °C para el sencha.</figcaption>
+      </figure>
+      <figure class="te-dulces" data-aparece style="--retraso: 240ms">
+        <img src="/image/bocetos/koen/dulces-500.webp" srcset="/image/bocetos/koen/dulces-500.webp 500w, /image/bocetos/koen/dulces-900.webp 900w" sizes="(min-width: 960px) 30vw, 80vw" width="900" height="675" loading="lazy" alt="Tetera blanca, dos tazas y dulces japoneses en una bandeja de madera">
+        <figcaption>Wagashi de la temporada, para acompañar.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="seccion" id="pases">
+    <div class="ancho">
+      <header class="titulo" data-aparece><p class="rotulo">Pases</p><h2>Sin matrícula ni contratos</h2></header>
+      <div class="pases" data-aparece>
+        <div class="pase"><h3>Clase suelta</h3><p class="precio">$12.000</p><p>Para venir cuando se pueda. Incluye un té en la casa.</p></div>
+        <div class="pase destacado"><h3>Ocho clases</h3><p class="precio">$72.000</p><p>Vence en dos meses. Se puede compartir con una persona más.</p></div>
+        <div class="pase"><h3>Mes libre</h3><p class="precio">$95.000</p><p>Todas las clases del mes y un cupo en la ceremonia del té.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="reserva">
+    <div class="ancho reserva-grid">
       <div data-aparece>
-        <div class="titulo" style="grid-template-columns: 1fr; gap: 8px; margin-bottom: 24px"><small>La casa de té</small><h2>Sencha, matcha y genmaicha, servidos sin apuro</h2></div>
-        <p>Después de cada clase, la casa de té queda abierta para quien quiera quedarse. Preparamos el matcha a la vista y vendemos las hojas por gramo, con la temperatura y el tiempo anotados en cada bolsa.</p>
-        <p>Los sábados hay ceremonia del té a las 17:00, con cupo para ocho personas.</p>
+        <p class="rotulo">Primera clase</p>
+        <h2>La primera va por nuestra cuenta</h2>
+        <p>Trae ropa cómoda. La esterilla y el té los ponemos nosotros.</p>
       </div>
-    </div>
-  </section>
-
-  <section id="horario">
-    <div class="ancho">
-      <div class="titulo" data-aparece><small>Horario</small><h2>Lunes a sábado</h2></div>
-      <div class="tabla" data-aparece>
-        <table class="horario">
-          <thead><tr><th scope="col">Clase</th><th scope="col">Mañana</th><th scope="col">Tarde</th><th scope="col">Duración</th></tr></thead>
-          <tbody>
-            <tr><td>Hatha lento</td><td>08:00</td><td>19:30</td><td>60 min</td></tr>
-            <tr><td>Vinyasa</td><td>07:00</td><td>18:30</td><td>75 min</td></tr>
-            <tr><td>Yin y meditación</td><td>10:00</td><td>20:30</td><td>90 min</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section id="reserva">
-    <div class="ancho reserva" data-aparece>
-      <h2>La primera clase va por nuestra cuenta.</h2>
-      <p>Trae ropa cómoda. La esterilla y el té, los ponemos nosotros.</p>
-      <a class="cta" href="#">Elegir un horario</a>
+      <form class="formulario" data-muestra data-aparece toolname="reservar_primera_clase" tooldescription="Reserva la primera clase gratis en Kōen, un centro de yoga inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto." toolautosubmit>
+        <label>Tu nombre<input name="nombre" autocomplete="name" required></label>
+        <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+        <label>Clase<select name="clase" toolparamdescription="La clase que quiere probar: Hatha lento, Vinyasa o Yin y meditación"><option>Hatha lento</option><option>Vinyasa</option><option>Yin y meditación</option></select></label>
+        <label>Día<select name="dia" toolparamdescription="El día de la semana en que quiere venir, de lunes a sábado"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option><option>Sábado</option></select></label>
+        <button class="boton todo" type="submit">Reservar mi clase</button>
+      </form>
     </div>
   </section>
 </main>
 
-<footer class="ancho"><span>Kōen · Av. Providencia 2124, Providencia</span><span>Boceto de Volutus · marca inventada</span></footer>
+<footer class="ancho pie">
+  <div><span class="marca">K<span class="o-largo">O</span>EN</span>Av. Providencia 2124, Providencia<br>A dos cuadras del metro Los Leones</div>
+  <div><b>Abierto</b>Lunes a viernes, 7:00 a 22:00<br>Sábados, 9:00 a 19:00</div>
+  <div><b>Escríbenos</b>hola@koen.cl<br>+56 2 2345 6789</div>
+  <p class="pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
 </body>
 </html>

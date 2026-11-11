@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Ónix · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Ónix, joyería contemporánea de autor, para mostrar el estilo Premium.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/onix/portada-ancho-1800.webp" media="(min-width: 700px)" imagesrcset="/image/bocetos/onix/portada-ancho-1000.webp 1000w, /image/bocetos/onix/portada-ancho-1800.webp 1800w" imagesizes="100vw">
+<link rel="preload" as="image" href="/image/bocetos/onix/portada-alto-800.webp" media="(max-width: 699px)">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'Bodoni Moda'; src: url('/fonts/bocetos/bodoni-moda.woff2') format('woff2'); font-weight: 400 900; font-display: swap; }
+@font-face { font-family: 'Bodoni Moda'; src: url('/fonts/bocetos/bodoni-moda-italica.woff2') format('woff2'); font-weight: 400 900; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Jost'; src: url('/fonts/bocetos/jost.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --negro: #0b0a09;
+  --carbon: #14120f;
+  --oro: #c9a24a;
+  --oro-claro: #f3e2b4;
+  --marfil: #efe9de;
+  --gris: #9d9688;
+  --linea: #2b2720;
+  --margen: clamp(20px, 4vw, 56px);
+  --lento: cubic-bezier(0.25, 1, 0.5, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--negro); scroll-behavior: smooth; }
+body { margin: 0; background: var(--negro); color: var(--marfil); font: 300 16px/1.7 'Jost', system-ui, sans-serif; letter-spacing: 0.01em; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--oro); outline-offset: 4px; }
+h1, h2, h3 { margin: 0; font-family: 'Bodoni Moda', Didot, Georgia, serif; font-weight: 400; font-variation-settings: 'opsz' 96; line-height: 1.02; letter-spacing: -0.01em; text-wrap: balance; }
+p { margin: 0; }
+em { font-style: italic; }
+.ancho { max-width: 1360px; margin-inline: auto; padding-inline: var(--margen); }
+.versalita { font-size: 11px; font-weight: 400; letter-spacing: 0.34em; text-transform: uppercase; color: var(--gris); }
+.enlace { display: inline-block; padding-block: 6px; font-size: 11px; font-weight: 400; letter-spacing: 0.32em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--oro); transition: color 400ms, letter-spacing 600ms var(--lento); }
+.enlace:hover { color: var(--oro-claro); letter-spacing: 0.4em; }
+
+/* ---- Cabecera sobre la foto ---- */
+.cabecera { position: absolute; z-index: 2; inset: 0 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; padding-block: 26px; }
+.cabecera nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; }
+.cabecera nav a { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: #d7d0c2; transition: color 300ms; }
+.cabecera nav a:hover { color: var(--oro-claro); }
+.marca { font: 400 22px/1 'Bodoni Moda', Didot, serif; letter-spacing: 0.56em; margin-right: -0.56em; text-decoration: none; }
+.cabecera .enlace { justify-self: end; }
+
+/* ---- Portada: la foto completa, oscura ---- */
+.portada { position: relative; isolation: isolate; display: grid; align-items: end; min-height: 640px; overflow: hidden; text-align: center; }
+@supports (height: 100svh) { .portada { min-height: max(640px, min(100svh, 940px)); } }
+.portada picture { position: absolute; inset: 0; z-index: -2; }
+.portada img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(11 10 9 / 0.5), transparent 25%, transparent 48%, rgb(11 10 9 / 0.9) 88%, var(--negro)); }
+.portada-texto { display: grid; justify-items: center; gap: 22px; padding-block: 120px clamp(56px, 8vw, 104px); }
+.portada h1 { font-size: clamp(48px, 7.6vw, 124px); }
+.dorado { color: var(--oro); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .dorado { background: linear-gradient(105deg, var(--oro) 0%, var(--oro) 38%, var(--oro-claro) 50%, var(--oro) 62%, var(--oro) 100%) 100% 0 / 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+}
+
+/* ---- Firma del taller ---- */
+.firma { padding-block: clamp(96px, 13vw, 190px); text-align: center; }
+.firma .frase { max-width: 26ch; margin-inline: auto; font: italic 400 clamp(26px, 3.4vw, 46px)/1.3 'Bodoni Moda', Didot, serif; font-variation-settings: 'opsz' 40; }
+.firma .versalita { margin-top: 32px; }
+.filete { width: 1px; height: 72px; margin: 0 auto 40px; background: linear-gradient(transparent, var(--oro)); }
+
+/* ---- Colección: una pieza grande y después pares ---- */
+.coleccion { padding-bottom: clamp(96px, 13vw, 190px); }
+.coleccion-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; padding-bottom: 18px; margin-bottom: clamp(48px, 7vw, 96px); border-bottom: 1px solid var(--linea); }
+.coleccion-cabeza h2 { font-size: clamp(34px, 4.2vw, 60px); }
+.piezas { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2.4vw, 36px); row-gap: clamp(64px, 9vw, 128px); }
+.pieza a { display: block; text-decoration: none; }
+.pieza .marco { position: relative; overflow: hidden; background: var(--carbon); }
+.pieza img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: opacity 900ms var(--lento), transform 1600ms var(--lento); }
+.pieza .uso { position: absolute; inset: 0; height: 100%; opacity: 0; }
+.pieza a:hover .uso, .pieza a:focus-visible .uso { opacity: 1; }
+.pieza a:hover img:first-child { transform: scale(1.04); }
+.pieza figcaption { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--linea); }
+.pieza h3 { font-size: 22px; }
+.pieza .precio { font-family: 'Bodoni Moda', Didot, serif; font-size: 18px; font-variant-numeric: lining-nums; }
+.pieza .versalita { grid-column: 1 / -1; }
+.p-anillo { grid-column: 4 / 10; }
+.p-colgante { grid-column: 1 / 6; }
+.p-argollas { grid-column: 7 / 13; margin-top: clamp(64px, 12vw, 200px); }
+
+/* ---- El taller ---- */
+.taller { padding-block: clamp(96px, 12vw, 170px); background: var(--carbon); }
+.taller-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2.4vw, 36px); align-items: start; }
+.taller-foto { grid-column: 1 / 8; }
+.taller-foto img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.taller-foto figcaption, .orfebre figcaption { margin-top: 14px; }
+.taller-texto { grid-column: 9 / 13; display: grid; gap: 28px; }
+.taller-texto h2 { font-size: clamp(34px, 3.8vw, 56px); }
+.pasos { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.pasos li { display: grid; grid-template-columns: 3rem 1fr; gap: 4px 16px; padding-block: 20px; border-top: 1px solid var(--linea); }
+.pasos li:last-child { border-bottom: 1px solid var(--linea); }
+.pasos span { grid-row: 1 / 3; font: 400 24px/1 'Bodoni Moda', Didot, serif; letter-spacing: 0.04em; color: var(--oro); }
+.pasos b { font-weight: 400; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; }
+.pasos p { color: var(--gris); }
+.orfebre { grid-column: 3 / 6; margin-top: clamp(48px, 7vw, 96px); }
+.orfebre img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.cita-orfebre { grid-column: 7 / 12; align-self: center; margin-top: clamp(48px, 7vw, 96px); font: italic 400 clamp(22px, 2.4vw, 32px)/1.35 'Bodoni Moda', Didot, serif; font-variation-settings: 'opsz' 30; }
+.cita-orfebre small { display: block; margin-top: 20px; font: 400 11px/1.4 'Jost', sans-serif; letter-spacing: 0.34em; text-transform: uppercase; color: var(--gris); font-style: normal; }
+
+/* ---- Cita privada ---- */
+.cita { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 7vw, 120px); align-items: center; padding-block: clamp(96px, 12vw, 170px); }
+.cita figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.cita h2 { font-size: clamp(38px, 4.6vw, 68px); margin-block: 18px 18px; }
+.cita-intro { max-width: 40ch; color: var(--gris); }
+.agenda { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 24px; margin-top: 40px; }
+.agenda label, .agenda legend { display: grid; gap: 8px; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gris); }
+.agenda .todo { grid-column: 1 / -1; }
+.agenda input:not([type="radio"]), .agenda select { width: 100%; min-height: 48px; padding: 0 2px; border: 0; border-bottom: 1px solid #4a443a; border-radius: 0; background: transparent; color: var(--marfil); font: 300 17px/1.4 'Jost', sans-serif; letter-spacing: 0.02em; text-transform: none; color-scheme: dark; -webkit-appearance: none; appearance: none; transition: border-color 300ms; }
+.agenda select { background: linear-gradient(45deg, transparent 50%, var(--oro) 50%) calc(100% - 10px) 55% / 5px 5px no-repeat, linear-gradient(-45deg, transparent 50%, var(--oro) 50%) calc(100% - 5px) 55% / 5px 5px no-repeat; }
+.agenda select option { background: var(--carbon); color: var(--marfil); }
+.agenda input:focus-visible, .agenda select:focus-visible { outline: none; border-bottom-color: var(--oro); }
+.horas { margin: 0; padding: 0; border: 0; }
+.horas legend { margin-bottom: 12px; padding: 0; }
+.horas div { display: flex; flex-wrap: wrap; gap: 10px; }
+.horas label { position: relative; display: inline-grid; place-items: center; min-width: 88px; min-height: 46px; padding: 0 16px; border: 1px solid #4a443a; font: 300 16px/1 'Jost', sans-serif; letter-spacing: 0.04em; color: var(--marfil); text-transform: none; cursor: pointer; transition: border-color 300ms, background 300ms, color 300ms; }
+.horas input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.horas label:hover { border-color: var(--oro); }
+.horas label:has(input:checked) { border-color: var(--oro); background: var(--oro); color: var(--negro); }
+.horas label:has(input:focus-visible) { outline: 1px solid var(--oro); outline-offset: 3px; }
+.horas .ocupada { opacity: 0.35; text-decoration: line-through; cursor: not-allowed; }
+.agenda button { justify-self: start; min-height: 52px; padding: 0 32px; border: 1px solid var(--oro); background: transparent; color: var(--oro-claro); font: 400 11px/1 'Jost', sans-serif; letter-spacing: 0.34em; text-transform: uppercase; cursor: pointer; transition: background 400ms, color 400ms; }
+.agenda button:hover { background: var(--oro); color: var(--negro); }
+.agenda .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--oro-claro); font-size: 14px; letter-spacing: 0.04em; }
+
+/* ---- Pie ---- */
+.pie { padding-block: 72px 40px; border-top: 1px solid var(--linea); text-align: center; color: var(--gris); font-size: 14px; }
+.pie .marca { display: inline-block; margin-bottom: 24px; color: var(--marfil); font-size: 30px; }
+.pie p + p { margin-top: 6px; }
+.pie-final { margin-top: 40px !important; font-size: 12px; letter-spacing: 0.1em; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera { grid-template-columns: 1fr auto; }
+  .cabecera nav { display: none; }
+  .marca { justify-self: start; }
+  .p-anillo { grid-column: 2 / 12; }
+  .p-colgante { grid-column: 1 / 7; }
+  .p-argollas { grid-column: 7 / 13; margin-top: 96px; }
+  .taller-foto, .taller-texto { grid-column: 1 / -1; }
+  .taller-texto { margin-top: 48px; }
+  .orfebre { grid-column: 1 / 6; }
+  .cita-orfebre { grid-column: 6 / 13; }
+  .cita { grid-template-columns: minmax(0, 1fr); }
+  .cita figure { max-width: 440px; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera .enlace { font-size: 10px; letter-spacing: 0.24em; }
+  .p-anillo, .p-colgante, .p-argollas { grid-column: 1 / -1; margin-top: 0; }
+  .p-argollas { width: 84%; justify-self: end; }
+  .orfebre { grid-column: 1 / 8; }
+  .cita-orfebre { grid-column: 1 / -1; margin-top: 32px; }
+  .agenda { grid-template-columns: minmax(0, 1fr); }
+  .horas label { min-width: calc(50% - 5px); }
+}
+
+/* ---- Movimiento: la luz cruza el dorado ----
+   Un brillo recorre la palabra dorada de lado a lado y descansa, como cuando
+   una pieza gira bajo la lámpara de la vitrina. Las fotos de la colección
+   cambian a la pieza puesta al pasar el cursor. */
+@keyframes brillo { 0% { background-position: 100% 0; } 45%, 100% { background-position: 0% 0; } }
+@keyframes acercar { from { transform: scale(1.08); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dorado { animation: brillo 6s var(--lento) 900ms infinite; }
+  .portada img { animation: acercar 3200ms var(--lento) both; }
+}
+</style>
+</head>
+<body data-boceto="onix">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Ónix</b> es una marca inventada por Volutus para mostrarte el estilo <b>Premium</b>.</p></div>
+
+<main>
+  <section class="portada" id="inicio">
+    <header class="ancho cabecera">
+      <nav aria-label="Secciones"><ul><li><a href="#coleccion">Colección</a></li><li><a href="#taller">Taller</a></li></ul></nav>
+      <a class="marca" href="#inicio">ÓNIX</a>
+      <a class="enlace" href="#cita">Cita privada</a>
+    </header>
+    <picture>
+      <source media="(max-width: 699px)" srcset="/image/bocetos/onix/portada-alto-800.webp" width="800" height="1000">
+      <img src="/image/bocetos/onix/portada-ancho-1800.webp" srcset="/image/bocetos/onix/portada-ancho-1000.webp 1000w, /image/bocetos/onix/portada-ancho-1800.webp 1800w" sizes="100vw" width="1800" height="1013" alt="Un collar plano de oro sobre el cuello de una mujer vestida con una chaqueta negra" fetchpriority="high">
+    </picture>
+    <div class="ancho portada-texto">
+      <p class="versalita">Colección Obsidiana · Otoño 2026</p>
+      <h1>Piezas que se <em class="dorado">heredan</em></h1>
+      <a class="enlace" href="#coleccion">Ver la colección</a>
+    </div>
+  </section>
+
+  <section class="ancho firma" aria-label="El taller">
+    <div class="filete" aria-hidden="true"></div>
+    <p class="frase" data-aparece>Cada pieza se funde, se lima y se pule a mano en nuestro taller de Lastarria, en tiradas de no más de doce.</p>
+    <p class="versalita" data-aparece>Oro de 18 quilates reciclado · plata 950</p>
+  </section>
+
+  <section class="ancho coleccion" id="coleccion">
+    <div class="coleccion-cabeza" data-aparece><h2>Obsidiana</h2><p class="versalita">Tres piezas · de una a doce copias</p></div>
+    <div class="piezas">
+      <figure class="pieza p-anillo" data-aparece>
+        <a href="#cita">
+          <div class="marco">
+            <img src="/image/bocetos/onix/anillo-1000.webp" srcset="/image/bocetos/onix/anillo-600.webp 600w, /image/bocetos/onix/anillo-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un anillo ancho de oro de forma ondulada, reflejado en un espejo">
+            <img class="uso" src="/image/bocetos/onix/anillo-uso-1000.webp" srcset="/image/bocetos/onix/anillo-uso-600.webp 600w, /image/bocetos/onix/anillo-uso-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
+          </div>
+          <figcaption><h3>Anillo Marea</h3><span class="precio">$480.000</span><span class="versalita">Oro de 18 quilates · hecho a tu medida</span></figcaption>
+        </a>
+      </figure>
+      <figure class="pieza p-colgante" data-aparece>
+        <a href="#cita">
+          <div class="marco">
+            <img src="/image/bocetos/onix/colgante-1000.webp" srcset="/image/bocetos/onix/colgante-600.webp 600w, /image/bocetos/onix/colgante-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante ovalado de oro sobre arena, con su cadena">
+            <img class="uso" src="/image/bocetos/onix/colgante-uso-1000.webp" srcset="/image/bocetos/onix/colgante-uso-600.webp 600w, /image/bocetos/onix/colgante-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
+          </div>
+          <figcaption><h3>Colgante Órbita</h3><span class="precio">$620.000</span><span class="versalita">Oro de 18 quilates · cadena de 45 cm</span></figcaption>
+        </a>
+      </figure>
+      <figure class="pieza p-argollas" data-aparece style="--retraso: 120ms">
+        <a href="#cita">
+          <div class="marco">
+            <img src="/image/bocetos/onix/argollas-1000.webp" srcset="/image/bocetos/onix/argollas-600.webp 600w, /image/bocetos/onix/argollas-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="Un par de argollas de oro trenzado apoyadas en piedras blancas, con sombras largas">
+            <img class="uso" src="/image/bocetos/onix/argollas-uso-1000.webp" srcset="/image/bocetos/onix/argollas-uso-600.webp 600w, /image/bocetos/onix/argollas-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="">
+          </div>
+          <figcaption><h3>Argollas Trenza</h3><span class="precio">$390.000</span><span class="versalita">Oro de 18 quilates · el par</span></figcaption>
+        </a>
+      </figure>
+    </div>
+  </section>
+
+  <section class="taller" id="taller">
+    <div class="ancho taller-grid">
+      <figure class="taller-foto" data-aparece>
+        <img src="/image/bocetos/onix/banco-1400.webp" srcset="/image/bocetos/onix/banco-800.webp 800w, /image/bocetos/onix/banco-1400.webp 1400w" sizes="(min-width: 900px) 56vw, 100vw" width="1400" height="933" loading="lazy" alt="Unas manos trabajan una pieza de metal sobre un banco de joyero, con herramientas alrededor">
+        <figcaption class="versalita">El banco de trabajo, Lastarria 70</figcaption>
+      </figure>
+      <div class="taller-texto" data-aparece>
+        <p class="versalita">El taller</p>
+        <h2>Tres semanas para cada pieza</h2>
+        <ol class="pasos">
+          <li><span aria-hidden="true">I</span><b>Fundición</b><p>El oro reciclado se funde y se vierte en un molde de arena hecho para esa pieza.</p></li>
+          <li><span aria-hidden="true">II</span><b>Limado</b><p>Se trabaja a mano con limas finas, hasta que la forma queda como en el dibujo.</p></li>
+          <li><span aria-hidden="true">III</span><b>Pulido</b><p>Tres pasadas de pulido, de la más gruesa a la más fina, y el sello del taller.</p></li>
+        </ol>
+      </div>
+      <figure class="orfebre" data-aparece>
+        <img src="/image/bocetos/onix/orfebre-1000.webp" srcset="/image/bocetos/onix/orfebre-600.webp 600w, /image/bocetos/onix/orfebre-1000.webp 1000w" sizes="(min-width: 900px) 22vw, 50vw" width="1000" height="1250" loading="lazy" alt="Una orfebre joven sentada en su banco de trabajo, mirando a cámara">
+        <figcaption class="versalita">Isidora Vial, orfebre</figcaption>
+      </figure>
+      <blockquote class="cita-orfebre" data-aparece>«Una joya buena se nota en la parte que no se ve: el interior de un anillo, el cierre de un collar.»<small>Isidora Vial, fundadora</small></blockquote>
+    </div>
+  </section>
+
+  <section class="ancho cita" id="cita">
+    <figure data-aparece>
+      <img src="/image/bocetos/onix/estuche-1000.webp" srcset="/image/bocetos/onix/estuche-600.webp 600w, /image/bocetos/onix/estuche-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante dorado de barra, colgado de un estuche oscuro">
+    </figure>
+    <div data-aparece>
+      <p class="versalita">Cita privada</p>
+      <h2>Una hora, solo para ti</h2>
+      <p class="cita-intro">Te recibimos en el taller para probar las piezas, ver el oro en tu piel y conversar una pieza a medida. Sin costo y sin compromiso.</p>
+      <form class="agenda" data-muestra toolname="agendar_cita_privada" tooldescription="Agenda una cita privada en Ónix, una joyería inventada por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto." toolautosubmit>
+        <label>Nombre<input name="nombre" autocomplete="name" required></label>
+        <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+        <label>Día<input type="date" name="dia" toolparamdescription="Día de la cita, de martes a sábado"></label>
+        <label>Motivo<select name="motivo" toolparamdescription="Para qué es la cita: anillo de compromiso, regalo, pieza a medida o reparación"><option>Anillo de compromiso</option><option>Un regalo</option><option>Pieza a medida</option><option>Reparación</option></select></label>
+        <fieldset class="horas todo" toolparamdescription="Hora de la cita: 11:00, 12:30 o 17:30; las 16:00 están ocupadas">
+          <legend>Hora</legend>
+          <div>
+            <label><input type="radio" name="hora" value="11:00" checked>11:00</label>
+            <label><input type="radio" name="hora" value="12:30">12:30</label>
+            <label class="ocupada"><input type="radio" name="hora" value="16:00" disabled>16:00</label>
+            <label><input type="radio" name="hora" value="17:30">17:30</label>
+          </div>
+        </fieldset>
+        <button class="todo" type="submit">Pedir la cita</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <span class="marca">ÓNIX</span>
+  <p>José Victorino Lastarria 70, Santiago · Martes a sábado, 11:00 a 19:00</p>
+  <p>citas@onix.cl</p>
+  <p class="pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
+</body>
+</html>

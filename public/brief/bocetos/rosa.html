@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>La Mesa de Rosa · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, La Mesa de Rosa, cocina casera y banquetería, para mostrar el estilo Cálido y cercano.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/rosa/mesa-1300.webp" imagesrcset="/image/bocetos/rosa/mesa-700.webp 700w, /image/bocetos/rosa/mesa-1300.webp 1300w" imagesizes="(min-width: 900px) 46vw, 100vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'Fraunces'; src: url('/fonts/bocetos/fraunces.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Nunito Sans'; src: url('/fonts/bocetos/nunito-sans.woff2') format('woff2'); font-weight: 200 1000; font-display: swap; }
+
+:root {
+  --crema: #f6e4d0;
+  --crema-2: #fcf2e6;
+  --cafe: #3b2418;
+  --cafe-suave: #6e4a36;
+  --terracota: #c4542c;
+  --terracota-texto: #a3401c;
+  --mostaza: #eaa93f;
+  --oliva: #5f6a2c;
+  --margen: clamp(20px, 4vw, 56px);
+  --suave: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --calma: cubic-bezier(0.25, 1, 0.5, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--crema); scroll-behavior: smooth; }
+body { margin: 0; background: var(--crema); color: var(--cafe); font: 400 17px/1.6 'Nunito Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--terracota); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-variation-settings: 'opsz' 144; line-height: 0.98; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: 1320px; margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--terracota-texto); }
+.rotulo::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px; border: 2px solid var(--cafe); border-radius: 999px; background: var(--terracota); color: #fff8ef; font: 800 16px/1 'Nunito Sans', sans-serif; text-decoration: none; cursor: pointer; box-shadow: 0 4px 0 var(--cafe); transition: transform 200ms var(--calma), box-shadow 200ms var(--calma); }
+.boton:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--cafe); }
+.boton:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--cafe); }
+.boton.claro { background: var(--crema-2); color: var(--cafe); }
+
+/* ---- Aviso y cabecera ---- */
+.aviso { padding: 10px var(--margen); background: var(--mostaza); color: var(--cafe); font-size: 14px; font-weight: 700; text-align: center; }
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 20px; }
+.marca { display: flex; align-items: center; gap: 10px; font: 700 24px/1 'Fraunces', Georgia, serif; text-decoration: none; letter-spacing: -0.02em; }
+.marca svg { width: 34px; height: 34px; color: var(--terracota); }
+.cabecera nav ul { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.cabecera nav a { display: inline-flex; min-height: 40px; align-items: center; padding: 0 16px; border-radius: 999px; font-weight: 700; text-decoration: none; transition: background 200ms; }
+.cabecera nav a:hover { background: var(--crema-2); }
+.cabecera .boton { min-height: 44px; padding: 0 20px; font-size: 15px; }
+
+/* ---- Portada en mosaico ---- */
+.portada { padding-block: clamp(24px, 4vw, 48px) clamp(64px, 9vw, 120px); }
+.portada h1 { font-size: clamp(54px, 9vw, 150px); }
+.portada h1 span { display: block; }
+.portada h1 .baja { padding-left: clamp(0px, 18vw, 320px); color: var(--terracota); }
+.portada-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 40px; margin-block: clamp(24px, 3vw, 40px) clamp(32px, 5vw, 56px); }
+.portada-fila p { max-width: 44ch; font-size: 19px; color: var(--cafe-suave); }
+.acciones { display: flex; flex-wrap: wrap; gap: 14px; }
+.mosaico { --fila: clamp(170px, 17vw, 250px); position: relative; display: grid; grid-template-columns: 1.15fr 1.15fr 0.8fr 1fr; grid-template-rows: repeat(2, var(--fila)); grid-template-areas: "mesa mesa cazuela verano" "mesa mesa pan verano"; gap: clamp(12px, 1.6vw, 22px); }
+.mosaico figure { position: relative; min-width: 0; }
+.mosaico img { width: 100%; height: 100%; object-fit: cover; }
+.m-mesa { grid-area: mesa; }
+.m-mesa img { border-radius: 32px; }
+.m-verano { grid-area: verano; }
+.m-verano img { border-radius: 999px 999px 32px 32px; }
+.m-cazuela { grid-area: cazuela; }
+.m-pan { grid-area: pan; }
+.redonda { display: grid; place-items: center; }
+.mosaico .redonda img { width: min(100%, var(--fila)); height: auto; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--cafe); }
+.sello { position: absolute; z-index: 1; left: calc(50% - 10px); top: -34px; display: grid; place-items: center; width: clamp(104px, 10vw, 136px); aspect-ratio: 1; padding: 12px; border: 2px solid var(--cafe); border-radius: 50%; background: var(--mostaza); text-align: center; font: 700 15px/1.1 'Fraunces', Georgia, serif; transform: rotate(-10deg); }
+.sello b { display: block; font-size: 1.6em; }
+.m-mesa figcaption { position: absolute; left: 18px; bottom: 18px; padding: 8px 14px; border: 2px solid var(--cafe); border-radius: 999px; background: var(--crema-2); font-weight: 700; font-size: 14px; }
+
+/* ---- Promesas ---- */
+.promesas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 56px); padding-block: clamp(56px, 7vw, 96px); border-block: 2px dashed #d9b99c; }
+.promesa { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; align-items: start; }
+.promesa svg { width: 64px; height: 64px; color: var(--cafe); }
+.promesa h3 { font-size: 24px; margin-bottom: 6px; }
+.promesa p { color: var(--cafe-suave); font-size: 16px; }
+
+/* ---- La carta de la semana ---- */
+.carta { padding-block: clamp(80px, 10vw, 140px); }
+.carta-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(32px, 4vw, 56px); }
+.carta-cabeza h2 { font-size: clamp(40px, 5.6vw, 84px); margin-top: 12px; }
+.dias { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+.dias label { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 2px solid var(--cafe); border-radius: 999px; font-weight: 800; cursor: pointer; transition: background 200ms, color 200ms, transform 300ms var(--suave); }
+.dias input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.dias label:hover { transform: translateY(-2px); }
+.dias label:has(input:checked) { background: var(--cafe); color: var(--crema-2); }
+.dias label:has(input:focus-visible) { outline: 3px solid var(--terracota); outline-offset: 3px; }
+.plato { display: none; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); align-items: center; padding: clamp(24px, 4vw, 56px); border: 2px solid var(--cafe); border-radius: 36px; background: var(--crema-2); }
+.plato img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--cafe); }
+.plato h3 { font-size: clamp(36px, 4.6vw, 64px); margin-block: 10px 18px; }
+.plato p { color: var(--cafe-suave); max-width: 42ch; }
+.plato .incluye { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.plato .incluye span { padding: 6px 12px; border-radius: 999px; background: var(--crema); font-size: 14px; font-weight: 700; }
+.plato .pie-plato { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 28px; }
+.plato .precio { font: 700 clamp(36px, 3.6vw, 48px)/1 'Fraunces', Georgia, serif; font-variant-numeric: tabular-nums; }
+.carta-dias:has([value="lun"]:checked) [data-dia="lun"],
+.carta-dias:has([value="mar"]:checked) [data-dia="mar"],
+.carta-dias:has([value="mie"]:checked) [data-dia="mie"],
+.carta-dias:has([value="jue"]:checked) [data-dia="jue"],
+.carta-dias:has([value="vie"]:checked) [data-dia="vie"] { display: grid; animation: servir 600ms var(--calma); }
+@supports not selector(:has(*)) { .plato { display: grid; margin-bottom: 20px; } .dias { display: none; } }
+
+/* ---- Banquetería ---- */
+.banquete { padding-block: clamp(80px, 10vw, 140px); background: var(--terracota); color: #fff6ec; }
+.banquete-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.banquete .rotulo { color: #fff1df; }
+.banquete h2 { font-size: clamp(40px, 5.2vw, 76px); margin-block: 14px 20px; }
+.banquete-foto img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 32px; border: 3px solid var(--cafe); }
+.banquete-lista { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin: 28px 0 0; padding: 0; list-style: none; font-weight: 700; }
+.banquete-lista li { display: flex; gap: 10px; }
+.banquete-lista li::before { content: ''; flex: none; width: 10px; height: 10px; margin-top: 8px; border-radius: 50%; background: var(--mostaza); }
+.cotizar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: clamp(24px, 3vw, 36px); border: 2px solid var(--cafe); border-radius: 32px; background: var(--crema-2); color: var(--cafe); box-shadow: 8px 8px 0 var(--cafe); }
+.cotizar h3 { grid-column: 1 / -1; font-size: 32px; }
+.cotizar label { display: grid; gap: 6px; font-size: 14px; font-weight: 800; }
+.cotizar .todo { grid-column: 1 / -1; }
+.cotizar input[type="number"] { -moz-appearance: textfield; }
+.cotizar input::-webkit-inner-spin-button, .cotizar input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.cotizar input, .cotizar select { width: 100%; min-height: 50px; padding: 0 16px; border: 2px solid var(--cafe); border-radius: 14px; background: #fff; color: var(--cafe); font: 600 16px/1.2 'Nunito Sans', sans-serif; -webkit-appearance: none; appearance: none; }
+.cotizar select { background: #fff linear-gradient(45deg, transparent 50%, var(--cafe) 50%) calc(100% - 20px) 55% / 6px 6px no-repeat; background-image: linear-gradient(45deg, transparent 50%, var(--cafe) 50%), linear-gradient(-45deg, transparent 50%, var(--cafe) 50%); background-position: calc(100% - 22px) 55%, calc(100% - 16px) 55%; background-size: 6px 6px; background-repeat: no-repeat; }
+.cotizar input:focus-visible, .cotizar select:focus-visible { outline: 3px solid var(--terracota); outline-offset: 2px; }
+.cotizar .boton { justify-self: start; }
+.cotizar .boceto-aviso { grid-column: 1 / -1; margin: 0; font-weight: 700; color: var(--oliva); }
+
+/* ---- Opiniones ---- */
+.opiniones { padding-block: clamp(80px, 10vw, 140px); }
+.opiniones h2 { font-size: clamp(40px, 5.2vw, 76px); margin-block: 12px clamp(32px, 5vw, 64px); max-width: 14ch; }
+.notas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 32px); }
+.nota { display: grid; gap: 22px; align-content: space-between; padding: 30px; border: 2px solid var(--cafe); border-radius: 28px; background: var(--crema-2); transform: rotate(-1.6deg); transition: transform 500ms var(--suave); }
+.nota:nth-child(2) { transform: rotate(1.2deg); background: #fde7c4; }
+.nota:nth-child(3) { transform: rotate(-0.6deg); }
+.nota:hover { transform: rotate(0) translateY(-4px); }
+.nota blockquote { margin: 0; font: 500 22px/1.3 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 40; }
+.nota footer { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+.nota footer span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--terracota); color: #fff6ec; font: 700 18px 'Fraunces', serif; }
+.nota footer small { display: block; font-weight: 600; color: var(--cafe-suave); }
+
+/* ---- Rosa ---- */
+.rosa { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); align-items: center; padding-block: clamp(40px, 6vw, 80px) clamp(80px, 10vw, 140px); }
+.rosa img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 999px 999px 32px 32px; border: 3px solid var(--cafe); }
+.rosa h2 { font-size: clamp(36px, 4.4vw, 64px); margin-block: 12px 20px; }
+.rosa p:not(.rotulo) { max-width: 46ch; color: var(--cafe-suave); }
+.rosa p + p { margin-top: 14px; }
+.firma { margin-top: 28px !important; font: 600 30px 'Fraunces', Georgia, serif; color: var(--terracota-texto) !important; }
+
+/* ---- Pie ---- */
+.pie { background: var(--cafe); color: #f3dcc4; }
+.pie-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; padding-block: 64px 40px; font-size: 15px; }
+.pie .marca { color: #fff3e6; margin-bottom: 14px; }
+.pie .marca svg { color: var(--mostaza); }
+.pie b { display: block; margin-bottom: 8px; font-weight: 800; color: #fff3e6; }
+.pie-final { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid #5c3d2c; font-size: 13px; }
+
+/* ---- WhatsApp flotante ---- */
+.whatsapp { position: fixed; z-index: 50; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; width: 60px; height: 60px; border: 2px solid var(--cafe); border-radius: 50%; background: #25d366; color: #fff; box-shadow: 0 4px 0 var(--cafe); transition: transform 300ms var(--suave); }
+.whatsapp:hover { transform: translateY(-3px) rotate(-6deg); }
+.whatsapp svg { width: 30px; height: 30px; }
+
+/* ---- M ---- */
+@media (max-width: 1023px) {
+  .cabecera nav { display: none; }
+  .banquete-grid, .rosa { grid-template-columns: minmax(0, 1fr); }
+  .plato { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  .notas { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+  .promesas { grid-template-columns: minmax(0, 1fr); }
+  .rosa figure { max-width: 420px; }
+}
+
+/* ---- S ---- */
+@media (max-width: 639px) {
+  .cabecera .boton { display: none; }
+  .mosaico { --fila: 40vw; grid-template-columns: 1fr 1fr; grid-template-rows: 62vw 40vw 40vw; grid-template-areas: "mesa mesa" "cazuela verano" "pan verano"; }
+  .sello { left: auto; right: -6px; top: -30px; width: 96px; font-size: 13px; }
+  .plato { grid-template-columns: minmax(0, 1fr); padding: 20px; border-radius: 28px; }
+  .plato figure { max-width: 240px; }
+  .banquete-lista { grid-template-columns: 1fr; }
+  .cotizar { grid-template-columns: minmax(0, 1fr); box-shadow: 5px 5px 0 var(--cafe); }
+  .pie-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Movimiento: las fotos redondas flotan ----
+   Suben y bajan unos píxeles, cada una a su ritmo, como el vapor de una olla.
+   Lo demás entra al bajar y la carta aparece al elegir el día. */
+@keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes servir { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .m-cazuela img { animation: flotar 5.6s ease-in-out infinite; }
+  .m-pan img { animation: flotar 6.4s ease-in-out -2s infinite; }
+  .sello { animation: flotar 7s ease-in-out -1s infinite; }
+  .plato img { animation: flotar 6s ease-in-out infinite; }
+  .rosa img { animation: flotar 8s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) { .carta-dias [data-dia] { animation: none !important; } }
+</style>
+</head>
+<body data-boceto="rosa">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>La Mesa de Rosa</b> es una marca inventada por Volutus para mostrarte el estilo <b>Cálido y cercano</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="olla" viewBox="0 0 40 40"><path d="M6 17h28v9a9 9 0 0 1-9 9H15a9 9 0 0 1-9-9z M3 17h34 M15 9c0-3 3-3 3-6 M21 11c0-3 3-3 3-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<p class="aviso">Pedidos para mañana hasta las 18:00 · despacho en Ñuñoa, Providencia y La Reina</p>
+
+<header class="ancho cabecera">
+  <a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#olla"/></svg>La Mesa de Rosa</a>
+  <nav aria-label="Secciones"><ul><li><a href="#carta">La carta</a></li><li><a href="#banqueteria">Banquetería</a></li><li><a href="#opiniones">Opiniones</a></li><li><a href="#rosa">Rosa</a></li></ul></nav>
+  <a class="boton" href="#carta">Pedir para mañana</a>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio">
+    <h1><span>Comida de casa,</span> <span class="baja">para tu mesa.</span></h1>
+    <div class="portada-fila">
+      <p>Cocinamos cada mañana un plato distinto, como en la casa de la abuela, y te lo llevamos tibio a la hora de almuerzo.</p>
+      <div class="acciones"><a class="boton" href="#carta">Ver la carta de la semana</a><a class="boton claro" href="#banqueteria">Cotizar un evento</a></div>
+    </div>
+    <div class="mosaico">
+      <figure class="m-mesa">
+        <img src="/image/bocetos/rosa/mesa-1300.webp" srcset="/image/bocetos/rosa/mesa-700.webp 700w, /image/bocetos/rosa/mesa-1300.webp 1300w" sizes="(min-width: 640px) 46vw, 100vw" width="1300" height="975" alt="Una mesa larga de madera, vista desde arriba, con platos de guisos, ensaladas y pan para compartir" fetchpriority="high">
+        <figcaption>Almuerzo del domingo, para doce</figcaption>
+      </figure>
+      <figure class="m-cazuela redonda"><img src="/image/bocetos/rosa/cazuela-400.webp" srcset="/image/bocetos/rosa/cazuela-400.webp 400w, /image/bocetos/rosa/cazuela-700.webp 700w" sizes="(min-width: 640px) 16vw, 40vw" width="700" height="700" alt="Un plato hondo de guiso con papas y zanahorias, junto a una cuchara"></figure>
+      <figure class="m-pan redonda"><img src="/image/bocetos/rosa/pan-400.webp" srcset="/image/bocetos/rosa/pan-400.webp 400w, /image/bocetos/rosa/pan-700.webp 700w" sizes="(min-width: 640px) 16vw, 40vw" width="700" height="700" loading="lazy" alt="Panes caseros recién horneados sobre un paño"></figure>
+      <figure class="m-verano">
+        <span class="sello" aria-hidden="true"><span>Menú del día<b>$6.900</b></span></span>
+        <img src="/image/bocetos/rosa/verano-900.webp" srcset="/image/bocetos/rosa/verano-500.webp 500w, /image/bocetos/rosa/verano-900.webp 900w" sizes="(min-width: 640px) 22vw, 50vw" width="900" height="1200" loading="lazy" alt="Choclos asados, verduras y fruta en una mesa de verano">
+      </figure>
+    </div>
+  </section>
+
+  <section class="ancho promesas" aria-label="Cómo cocinamos">
+    <div class="promesa" data-aparece>
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 28h40v14a12 12 0 0 1-12 12H24a12 12 0 0 1-12-12z M7 28h50 M26 18c0-4 4-4 4-8 M36 20c0-4 4-4 4-8"/></svg>
+      <div><h3>Cocinado esa mañana</h3><p>Nada se recalienta del día anterior. Lo que sobra va al comedor de la parroquia.</p></div>
+    </div>
+    <div class="promesa" data-aparece style="--retraso: 100ms">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 22 32 12l22 10v22L32 54 10 44z M10 22l22 10 22-10 M32 32v22 M44 40l4-2"/></svg>
+      <div><h3>En caja que vuelve</h3><p>Llega en ollas de loza que retiramos al día siguiente, cuando dejamos el próximo pedido.</p></div>
+    </div>
+    <div class="promesa" data-aparece style="--retraso: 200ms">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 48C16 26 30 14 50 14c0 20-12 34-34 34z M16 48l18-18 M8 56l8-8"/></svg>
+      <div><h3>De la feria del barrio</h3><p>Las verduras las compramos el día antes en la feria de Exequiel Fernández.</p></div>
+    </div>
+  </section>
+
+  <section class="ancho carta" id="carta">
+    <div class="carta-dias">
+      <div class="carta-cabeza" data-aparece>
+        <div><p class="rotulo">La carta de la semana</p><h2>¿Qué comemos hoy?</h2></div>
+        <fieldset class="dias">
+          <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Elige un día</legend>
+          <label><input type="radio" name="dia-carta" value="lun" checked>Lunes</label>
+          <label><input type="radio" name="dia-carta" value="mar">Martes</label>
+          <label><input type="radio" name="dia-carta" value="mie">Miércoles</label>
+          <label><input type="radio" name="dia-carta" value="jue">Jueves</label>
+          <label><input type="radio" name="dia-carta" value="vie">Viernes</label>
+        </fieldset>
+      </div>
+      <article class="plato" data-dia="lun" data-aparece>
+        <figure><img src="/image/bocetos/rosa/lunes-400.webp" srcset="/image/bocetos/rosa/lunes-400.webp 400w, /image/bocetos/rosa/lunes-700.webp 700w" sizes="(min-width: 1024px) 34vw, (min-width: 640px) 36vw, 240px" width="700" height="700" loading="lazy" alt="Guiso de pollo con arvejas y pimentón en una olla de greda"></figure>
+        <div><p class="rotulo">Lunes</p><h3>Pollo arvejado en olla de greda</h3><p>Trutro deshuesado, arvejas frescas, zanahoria y un sofrito que empieza a las siete de la mañana.</p><div class="incluye"><span>Arroz graneado</span><span>Ensalada chilena</span><span>Leche asada</span></div><div class="pie-plato"><span class="precio">$6.900</span><a class="boton" href="#carta">Pedir el lunes</a></div></div>
+      </article>
+      <article class="plato" data-dia="mar">
+        <figure><img src="/image/bocetos/rosa/martes-400.webp" srcset="/image/bocetos/rosa/martes-400.webp 400w, /image/bocetos/rosa/martes-700.webp 700w" sizes="(min-width: 1024px) 34vw, (min-width: 640px) 36vw, 240px" width="700" height="700" loading="lazy" alt="Cazuela de carne con papas en un plato hondo naranjo, sobre un mantel a cuadros"></figure>
+        <div><p class="rotulo">Martes</p><h3>Cazuela de vacuno</h3><p>Osobuco, zapallo camote, papa entera y choclo. Con su cilantro picado aparte, para quien no lo quiera.</p><div class="incluye"><span>Pan amasado</span><span>Pebre</span><span>Mote con huesillo</span></div><div class="pie-plato"><span class="precio">$6.900</span><a class="boton" href="#carta">Pedir el martes</a></div></div>
+      </article>
+      <article class="plato" data-dia="mie">
+        <figure><img src="/image/bocetos/rosa/miercoles-400.webp" srcset="/image/bocetos/rosa/miercoles-400.webp 400w, /image/bocetos/rosa/miercoles-700.webp 700w" sizes="(min-width: 1024px) 34vw, (min-width: 640px) 36vw, 240px" width="700" height="700" loading="lazy" alt="Carbonada con trozos de carne y verduras junto a un pan casero"></figure>
+        <div><p class="rotulo">Miércoles</p><h3>Carbonada con pan amasado</h3><p>Carne picada a cuchillo, papas, porotos verdes y zapallo, espesa como para comer con tenedor.</p><div class="incluye"><span>Pan amasado</span><span>Ensalada de repollo</span><span>Sémola con leche</span></div><div class="pie-plato"><span class="precio">$6.900</span><a class="boton" href="#carta">Pedir el miércoles</a></div></div>
+      </article>
+      <article class="plato" data-dia="jue">
+        <figure><img src="/image/bocetos/rosa/jueves-400.webp" srcset="/image/bocetos/rosa/jueves-400.webp 400w, /image/bocetos/rosa/jueves-700.webp 700w" sizes="(min-width: 1024px) 34vw, (min-width: 640px) 36vw, 240px" width="700" height="700" loading="lazy" alt="Un plato blanco con estofado de cordero, zanahorias y romero"></figure>
+        <div><p class="rotulo">Jueves</p><h3>Estofado de cordero al romero</h3><p>Cordero de Magallanes cocinado tres horas con vino tinto, romero y zanahorias baby.</p><div class="incluye"><span>Puré rústico</span><span>Ensalada verde</span><span>Kuchen de manzana</span></div><div class="pie-plato"><span class="precio">$7.400</span><a class="boton" href="#carta">Pedir el jueves</a></div></div>
+      </article>
+      <article class="plato" data-dia="vie">
+        <figure><img src="/image/bocetos/rosa/viernes-400.webp" srcset="/image/bocetos/rosa/viernes-400.webp 400w, /image/bocetos/rosa/viernes-700.webp 700w" sizes="(min-width: 1024px) 34vw, (min-width: 640px) 36vw, 240px" width="700" height="700" loading="lazy" alt="Plateada al jugo, brillante, servida en un bol oscuro"></figure>
+        <div><p class="rotulo">Viernes</p><h3>Plateada al jugo</h3><p>El plato del viernes desde hace veinte años. Se deshace con la cuchara y el jugo se toma con pan.</p><div class="incluye"><span>Papas doradas</span><span>Ensalada chilena</span><span>Flan casero</span></div><div class="pie-plato"><span class="precio">$7.900</span><a class="boton" href="#carta">Pedir el viernes</a></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="banquete" id="banqueteria">
+    <div class="ancho banquete-grid">
+      <div data-aparece>
+        <p class="rotulo">Banquetería</p>
+        <h2>Tu celebración, con sabor a casa</h2>
+        <p>Cumpleaños, bautizos, matrimonios chicos y almuerzos de empresa, de 20 a 150 personas. Llevamos la comida, la loza y a quien sirva.</p>
+        <ul class="banquete-lista"><li>Menú a elección</li><li>Loza y mantelería</li><li>Garzones y montaje</li><li>Postres de la casa</li></ul>
+        <figure class="banquete-foto" style="margin-top: 36px"><img src="/image/bocetos/rosa/banquete-1400.webp" srcset="/image/bocetos/rosa/banquete-800.webp 800w, /image/bocetos/rosa/banquete-1400.webp 1400w" sizes="(min-width: 1024px) 50vw, 100vw" width="1400" height="933" loading="lazy" alt="Un grupo de personas prepara comida alrededor de una mesa, con luz cálida"></figure>
+      </div>
+      <form class="cotizar" data-muestra data-aparece toolname="cotizar_banqueteria" tooldescription="Pide una cotización de banquetería a La Mesa de Rosa, una cocina inventada por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto." toolautosubmit>
+        <h3>Cotiza tu evento</h3>
+        <label class="todo">Tu nombre<input name="nombre" autocomplete="name" required></label>
+        <label>Teléfono<input type="tel" name="telefono" autocomplete="tel" inputmode="tel"></label>
+        <label>Fecha<input type="date" name="fecha" toolparamdescription="Fecha del evento"></label>
+        <label>Personas<input type="number" name="personas" min="20" max="150" inputmode="numeric" toolparamdescription="Cuántas personas van al evento, entre 20 y 150"></label>
+        <label>Evento<select name="evento" toolparamdescription="Qué se celebra: cumpleaños, bautizo, matrimonio, empresa u otro"><option>Cumpleaños</option><option>Bautizo</option><option>Matrimonio</option><option>Empresa</option><option>Otro</option></select></label>
+        <button class="boton todo" type="submit">Pedir cotización</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="ancho opiniones" id="opiniones">
+    <p class="rotulo" data-aparece>Opiniones</p>
+    <h2 data-aparece>Lo que dicen en el barrio</h2>
+    <div class="notas">
+      <figure class="nota" data-aparece><blockquote>«La cazuela del martes es la de mi mamá. No exagero: lloré un poco en la oficina.»</blockquote><footer><span aria-hidden="true">C</span><p>Carolina M.<small>Providencia</small></p></footer></figure>
+      <figure class="nota" data-aparece style="--retraso: 100ms"><blockquote>«Hicieron el almuerzo del bautizo para 60 personas y nadie se fue con hambre. Ni con espacio para el postre.»</blockquote><footer><span aria-hidden="true">J</span><p>Jorge y Paula<small>La Reina</small></p></footer></figure>
+      <figure class="nota" data-aparece style="--retraso: 200ms"><blockquote>«Pedimos los viernes para toda la oficina. La plateada ya es tradición.»</blockquote><footer><span aria-hidden="true">E</span><p>Estudio Lira<small>Ñuñoa</small></p></footer></figure>
+    </div>
+  </section>
+
+  <section class="ancho rosa" id="rosa">
+    <figure data-aparece><img src="/image/bocetos/rosa/cocineras-1000.webp" srcset="/image/bocetos/rosa/cocineras-600.webp 600w, /image/bocetos/rosa/cocineras-1000.webp 1000w" sizes="(min-width: 1024px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="Dos mujeres cocinan juntas en una cocina con flores en la mesa"></figure>
+    <div data-aparece>
+      <p class="rotulo">La cocinera</p>
+      <h2>Rosa cocina para el barrio desde 1998</h2>
+      <p>Empezó vendiendo almuerzos por la ventana de su casa en Ñuñoa. Hoy la acompañan su hija Daniela y tres cocineras, pero las recetas siguen siendo las mismas, anotadas a mano en un cuaderno que ya no cierra.</p>
+      <p>Si algún día quieres probar algo que no está en la carta, pídelo: casi siempre se puede.</p>
+      <p class="firma">Rosa Pizarro</p>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho pie-grid">
+    <div><span class="marca"><svg aria-hidden="true"><use href="#olla"/></svg>La Mesa de Rosa</span><p>Av. Grecia 2840, Ñuñoa · Retiro en el local de 12:30 a 15:00</p></div>
+    <div><b>Pedidos</b>Hasta las 18:00 del día anterior<br>Lunes a viernes</div>
+    <div><b>Contacto</b>+56 9 8765 4321<br>hola@lamesaderosa.cl</div>
+    <p class="pie-final">Boceto de Volutus · marca inventada</p>
+  </div>
+</footer>
+
+<a class="whatsapp" href="#banqueteria" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4a12 12 0 0 0-10.4 18L4 28l6.2-1.6A12 12 0 1 0 16 4z"/><path d="M11.5 11.5c0 5 4 9 9 9l1.5-2.5-3-1.5-1.2 1.2a6 6 0 0 1-3.5-3.5l1.2-1.2-1.5-3z" fill="currentColor" stroke-width="1"/></svg>
+</a>
+</body>
+</html>

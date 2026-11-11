@@ -171,6 +171,16 @@
   }
 }
 
+/* El aviso de los formularios de muestra (barra.js): su alto está reservado
+ * para que, al aparecer, no empuje lo de abajo. La letra y el color son los
+ * del boceto. */
+.boceto-aviso {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
 /* Lo que entra al bajar (data-aparece). Sin JavaScript, o con el movimiento
  * reducido, todo está a la vista desde el principio. */
 @media (prefers-reduced-motion: no-preference) {

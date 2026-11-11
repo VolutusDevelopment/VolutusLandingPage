@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Nodo · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Nodo, software de despacho para pymes, para mostrar el estilo Tecnológico.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/ibm-plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'IBM Plex Sans'; src: url('/fonts/bocetos/ibm-plex-sans.woff2') format('woff2'); font-weight: 100 700; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+  --fondo: #06121b;
+  --panel: #0a1924;
+  --panel-2: #0f2130;
+  --borde: #1a3141;
+  --texto: #e8f0f4;
+  --gris: #8ea3b0;
+  --apagado: #5f7a8a;
+  --menta: #2ee6a6;
+  --ambar: #ffb547;
+  --azul: #72b7ff;
+  --ancho: 1200px;
+  --margen: clamp(20px, 4vw, 48px);
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--fondo); scroll-behavior: smooth; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font: 400 17px/1.6 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--menta); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); }
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 1px solid var(--menta); border-radius: 8px; background: var(--menta); color: #04231a; font: 500 15px/1 'IBM Plex Sans', sans-serif; text-decoration: none; cursor: pointer; transition: background 200ms, border-color 200ms, transform 160ms var(--suave); }
+.boton:hover { background: #6af0c2; border-color: #6af0c2; }
+.boton:active { transform: scale(0.97); }
+.boton.fantasma { background: transparent; color: var(--texto); border-color: var(--borde); }
+.boton.fantasma:hover { background: var(--panel-2); border-color: #2a4a5e; }
+.flechita { width: 14px; height: 14px; }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; gap: 32px; padding-block: 18px; border-bottom: 1px solid var(--borde); }
+.marca { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.02em; text-decoration: none; }
+.marca svg { width: 24px; height: 24px; }
+.cabecera nav { flex: 1; }
+.cabecera nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; font-size: 15px; color: var(--gris); }
+.cabecera nav a { text-decoration: none; transition: color 160ms; }
+.cabecera nav a:hover { color: var(--texto); }
+.cabecera .acceso { display: flex; align-items: center; gap: 18px; font-size: 15px; }
+.cabecera .acceso a:not(.boton) { text-decoration: none; color: var(--gris); }
+.cabecera .boton { min-height: 38px; padding: 0 14px; font-size: 14px; }
+
+/* ---- Portada centrada ---- */
+.portada { position: relative; padding-block: clamp(64px, 9vw, 120px) 0; text-align: center; }
+.portada::before { content: ''; position: absolute; inset: 0 0 auto; height: 640px; z-index: -1; background-image: linear-gradient(var(--borde) 1px, transparent 1px), linear-gradient(90deg, var(--borde) 1px, transparent 1px); background-size: 56px 56px; background-position: center top; -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 20%, transparent 75%); opacity: 0.55; }
+.novedad { display: inline-flex; align-items: center; gap: 10px; min-height: 34px; padding: 0 14px; border: 1px solid var(--borde); border-radius: 999px; background: var(--panel); font-family: var(--mono); font-size: 13px; color: var(--gris); text-decoration: none; transition: border-color 200ms; }
+.novedad b { color: var(--menta); font-weight: 600; }
+.novedad:hover { border-color: #2a4a5e; }
+.portada h1 { max-width: 15ch; margin: 28px auto 0; font-size: clamp(42px, 6.6vw, 86px); letter-spacing: -0.045em; background: linear-gradient(180deg, #ffffff 30%, #9db4c0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bajada { max-width: 46ch; margin: 24px auto 0; font-size: clamp(17px, 1.6vw, 20px); color: var(--gris); }
+.acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
+
+/* El panel del producto, dibujado en HTML. */
+.app { position: relative; display: grid; grid-template-columns: 200px minmax(0, 1fr); margin-top: clamp(56px, 7vw, 88px); border: 1px solid var(--borde); border-radius: 14px; background: var(--panel); text-align: left; overflow: hidden; box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.8); }
+.app::after { content: ''; position: absolute; inset: auto 0 0; height: 30%; background: linear-gradient(transparent, var(--fondo)); pointer-events: none; }
+.app-lado { display: grid; align-content: start; gap: 2px; padding: 16px 10px; border-right: 1px solid var(--borde); font-size: 14px; color: var(--gris); }
+.app-lado .bodega { display: flex; align-items: center; gap: 8px; padding: 6px 8px 14px; color: var(--texto); font-weight: 500; }
+.app-lado .bodega i { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, var(--menta), var(--azul)); }
+.app-lado span { display: flex; justify-content: space-between; padding: 7px 8px; border-radius: 6px; }
+.app-lado span.activo { background: var(--panel-2); color: var(--texto); }
+.app-lado small { font-family: var(--mono); font-size: 12px; color: var(--apagado); }
+.app-centro { min-width: 0; }
+.app-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 14px 18px; border-bottom: 1px solid var(--borde); font-size: 14px; }
+.app-barra b { font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; font-family: var(--mono); font-size: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1px solid var(--borde); border-radius: 999px; color: var(--gris); white-space: nowrap; }
+.chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.ok { color: var(--menta); }
+.chip.ruta { color: var(--ambar); }
+.app-cuerpo { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.mapa { position: relative; border-right: 1px solid var(--borde); background-color: #081621; background-image: linear-gradient(#0f2433 1px, transparent 1px), linear-gradient(90deg, #0f2433 1px, transparent 1px); background-size: 30px 30px; }
+.mapa svg { display: block; width: 100%; height: auto; }
+.calle { fill: none; stroke: #16303f; stroke-width: 6; stroke-linecap: round; }
+.ruta { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ruta.r1 { stroke: var(--menta); }
+.ruta.r2 { stroke: var(--ambar); }
+.ruta.r3 { stroke: var(--azul); }
+.parada { stroke: var(--panel); stroke-width: 3; }
+.bodega-punto { fill: var(--texto); }
+.camion { fill: var(--ambar); }
+.halo { fill: var(--ambar); opacity: 0.25; }
+.paradas { margin: 0; padding: 6px 0; list-style: none; font-size: 14px; }
+.paradas li { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--borde); }
+.paradas time { font-family: var(--mono); font-size: 12px; color: var(--apagado); }
+.paradas b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.paradas small { grid-column: 2; color: var(--apagado); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.paradas .chip { grid-column: 3; grid-row: 1 / 3; }
+
+/* ---- Logos ---- */
+.logos { padding-block: clamp(56px, 7vw, 88px) 0; text-align: center; }
+.logos ul { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: center; gap: 24px; margin: 28px 0 0; padding: 0; list-style: none; color: var(--gris); }
+.logos li { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 40px; white-space: nowrap; }
+.l1 { font: 600 15px var(--mono); letter-spacing: 0.08em; }
+.l2 { font-weight: 300; font-size: 22px; letter-spacing: -0.03em; }
+.l3 { font-weight: 700; font-size: 18px; letter-spacing: 0.18em; }
+.l4 { font-weight: 500; font-size: 19px; }
+.l5 { font: 400 16px var(--mono); }
+.l6 { font-weight: 600; font-size: 20px; letter-spacing: -0.04em; }
+.logos svg { width: 16px; height: 16px; }
+
+/* ---- Lo que hace, en dos tonos ---- */
+.declaracion { padding-block: clamp(96px, 13vw, 180px) clamp(56px, 7vw, 96px); }
+.declaracion > p { max-width: 30ch; font-size: clamp(26px, 3.3vw, 44px); font-weight: 500; line-height: 1.18; letter-spacing: -0.03em; }
+.declaracion > p span { color: #6b8796; }
+.figuras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--borde); }
+.figura { display: grid; gap: 14px; align-content: start; padding: 28px clamp(16px, 3vw, 36px) 8px; }
+.figura:first-child { padding-left: 0; }
+.figura + .figura { border-left: 1px solid var(--borde); }
+.figura svg { width: 100%; max-width: 260px; height: auto; margin: 18px 0 18px; color: #3f6377; }
+.figura h3 { font-size: 18px; letter-spacing: -0.01em; }
+.figura p { color: var(--gris); font-size: 15px; }
+
+/* ---- Cifras ---- */
+.cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-block: clamp(80px, 10vw, 140px); }
+.cifra { padding-top: 22px; border-top: 1px solid var(--menta); }
+.cifra b { display: block; font: 600 clamp(44px, 5.4vw, 72px)/1 var(--mono); letter-spacing: -0.04em; color: var(--texto); font-variant-numeric: tabular-nums; }
+.cifra b small { font-size: 0.5em; color: var(--menta); }
+.cifra p { margin-top: 12px; max-width: 26ch; color: var(--gris); }
+
+/* ---- La calle ---- */
+.calle-seccion { padding-bottom: clamp(80px, 10vw, 140px); }
+.calle-seccion header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: end; margin-bottom: 40px; }
+.calle-seccion h2 { font-size: clamp(32px, 4vw, 52px); }
+.calle-seccion header p { color: var(--gris); max-width: 44ch; }
+.fotos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.fotos figure { position: relative; border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; background: var(--panel); }
+.fotos .ancha { grid-column: 1 / -1; }
+.fotos img { width: 100%; object-fit: cover; transition: transform 1200ms var(--suave); }
+.fotos figure:hover img { transform: scale(1.03); }
+.fotos .ancha img { aspect-ratio: 21 / 9; }
+.fotos figure:not(.ancha) img { aspect-ratio: 4 / 3; }
+.fotos figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--borde); font-family: var(--mono); font-size: 12px; color: var(--gris); }
+
+/* ---- Planes, mensual o anual ---- */
+.planes-seccion { padding-block: clamp(80px, 10vw, 140px); border-top: 1px solid var(--borde); }
+.planes-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 40px; }
+.planes-cabeza h2 { font-size: clamp(32px, 4vw, 52px); }
+.periodo { display: inline-flex; margin: 0; padding: 4px; border: 1px solid var(--borde); border-radius: 10px; background: var(--panel); }
+.periodo label { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border-radius: 7px; font-size: 14px; color: var(--gris); cursor: pointer; transition: background 200ms, color 200ms; }
+.periodo input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.periodo label:has(input:checked) { background: var(--panel-2); color: var(--texto); box-shadow: inset 0 0 0 1px var(--borde); }
+.periodo label:has(input:focus-visible) { outline: 2px solid var(--menta); }
+.periodo small { font-family: var(--mono); font-size: 11px; color: var(--menta); }
+.planes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.plan { display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 14px; padding: 28px; border: 1px solid var(--borde); border-radius: 14px; background: var(--panel); }
+.plan.destacado { border-color: #1f6b56; background: linear-gradient(180deg, #0b2422, var(--panel) 60%); }
+.plan h3 { font-size: 18px; letter-spacing: -0.01em; display: flex; justify-content: space-between; gap: 8px; }
+.plan h3 small { font: 600 11px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--menta); }
+.plan .precio { display: grid; font: 600 clamp(32px, 3.4vw, 42px)/1.1 var(--mono); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.plan .precio span { grid-area: 1 / 1; transition: opacity 300ms, transform 400ms var(--suave); }
+.plan .precio small { font: 400 14px 'IBM Plex Sans', sans-serif; letter-spacing: 0; color: var(--gris); }
+.plan .precio .anual { opacity: 0; transform: translateY(6px); }
+.planes-seccion:has(input[value="anual"]:checked) .precio .mensual { opacity: 0; transform: translateY(-6px); }
+.planes-seccion:has(input[value="anual"]:checked) .precio .anual { opacity: 1; transform: none; }
+@supports not selector(:has(*)) { .periodo { display: none; } }
+.plan > p { color: var(--gris); font-size: 15px; }
+.plan ul { display: grid; gap: 10px; align-content: start; margin: 6px 0 0; padding: 18px 0 0; border-top: 1px solid var(--borde); list-style: none; font-size: 15px; }
+.plan li { display: flex; gap: 10px; }
+.plan li::before { content: ''; flex: none; width: 10px; height: 5px; margin-top: 8px; border-left: 2px solid var(--menta); border-bottom: 2px solid var(--menta); transform: rotate(-45deg); }
+.plan .boton { margin-top: 8px; }
+
+/* ---- Preguntas ---- */
+.preguntas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: clamp(32px, 6vw, 96px); padding-block: clamp(80px, 10vw, 140px); border-top: 1px solid var(--borde); }
+.preguntas h2 { font-size: clamp(32px, 4vw, 52px); }
+.preguntas > div > p { margin-top: 16px; color: var(--gris); }
+.preguntas details { border-bottom: 1px solid var(--borde); }
+.preguntas details:first-child { border-top: 1px solid var(--borde); }
+.preguntas summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; cursor: pointer; list-style: none; font-weight: 500; }
+.preguntas summary::-webkit-details-marker { display: none; }
+.preguntas summary::after { content: ''; flex: none; width: 12px; height: 12px; background: linear-gradient(currentColor, currentColor) center / 12px 1.5px no-repeat, linear-gradient(currentColor, currentColor) center / 1.5px 12px no-repeat; color: var(--gris); transition: transform 300ms var(--suave); }
+.preguntas details[open] summary::after { transform: rotate(45deg); color: var(--menta); }
+.preguntas details p { padding-bottom: 22px; max-width: 60ch; color: var(--gris); }
+
+/* ---- Demo ---- */
+.demo { position: relative; padding-block: clamp(80px, 11vw, 160px); border-top: 1px solid var(--borde); text-align: center; overflow: hidden; }
+.demo::before { content: ''; position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(var(--borde) 1px, transparent 1px), linear-gradient(90deg, var(--borde) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 100%, #000 10%, transparent 70%); mask-image: radial-gradient(ellipse 50% 60% at 50% 100%, #000 10%, transparent 70%); opacity: 0.5; }
+.demo h2 { max-width: 18ch; margin-inline: auto; font-size: clamp(34px, 4.6vw, 60px); }
+.demo > div > p { margin: 18px auto 32px; max-width: 44ch; color: var(--gris); }
+.demo form { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 520px; margin-inline: auto; }
+.demo input { flex: 1 1 240px; min-height: 48px; padding: 0 14px; border: 1px solid var(--borde); border-radius: 8px; background: var(--panel); color: var(--texto); font: 400 16px 'IBM Plex Sans', sans-serif; }
+.demo input::placeholder { color: var(--apagado); }
+.demo input:focus-visible { outline: 2px solid var(--menta); outline-offset: 0; }
+.demo .boton { min-height: 48px; }
+.demo .boceto-aviso { flex-basis: 100%; color: var(--menta); font-family: var(--mono); font-size: 13px; }
+
+/* ---- Pie ---- */
+.pie { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; padding-block: 56px 40px; border-top: 1px solid var(--borde); font-size: 14px; color: var(--gris); }
+.pie ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pie b { display: block; margin-bottom: 12px; color: var(--texto); font-weight: 500; }
+.pie a { text-decoration: none; }
+.pie a:hover { color: var(--texto); }
+.pie-final { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 24px; border-top: 1px solid var(--borde); }
+
+/* ---- L y M ---- */
+@media (max-width: 1023px) {
+  .cabecera nav { display: none; }
+  .cabecera { justify-content: space-between; }
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .app-lado { display: none; }
+  .logos ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .planes { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+  .preguntas, .calle-seccion header { grid-template-columns: minmax(0, 1fr); }
+  .pie { grid-template-columns: 1fr 1fr; }
+  .pie > div:first-child { grid-column: 1 / -1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 699px) {
+  .cabecera .acceso a:not(.boton) { display: none; }
+  .app-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .mapa { border-right: 0; border-bottom: 1px solid var(--borde); }
+  .paradas li:nth-child(n + 4) { display: none; }
+  .logos ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .figuras, .cifras { grid-template-columns: minmax(0, 1fr); }
+  .figura, .figura:first-child { padding: 28px 0 8px; }
+  .figura + .figura { border-left: 0; border-top: 1px solid var(--borde); }
+  .fotos { grid-template-columns: minmax(0, 1fr); }
+  .fotos .ancha img { aspect-ratio: 16 / 10; }
+  .pie { grid-template-columns: 1fr; }
+}
+
+/* ---- Movimiento: las rutas se trazan ----
+   Al aparecer el panel, las tres rutas se dibujan desde la bodega, una tras
+   otra, y el camión de la ruta ámbar avanza por la suya. */
+@keyframes trazar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes latir { 0%, 100% { transform: scale(1); opacity: 0.25; } 50% { transform: scale(1.8); opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .con-js .app .ruta { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .con-js .app.visto .ruta { animation: trazar 1600ms var(--suave) forwards; }
+  .con-js .app.visto .r2 { animation-delay: 250ms; }
+  .con-js .app.visto .r3 { animation-delay: 500ms; }
+  .halo { transform-box: fill-box; transform-origin: center; animation: latir 2400ms ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) { .movil { display: none; } }
+</style>
+</head>
+<body data-boceto="nodo">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Nodo</b> es una marca inventada por Volutus para mostrarte el estilo <b>Tecnológico</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 24 24"><circle cx="5" cy="18" r="3" fill="#2ee6a6"/><circle cx="19" cy="6" r="3" fill="#72b7ff"/><circle cx="19" cy="18" r="2" fill="#e8f0f4"/><path d="M7.5 16.2 16.5 7.8M8 18h9" stroke="#e8f0f4" stroke-width="1.6" fill="none"/></symbol>
+  <symbol id="flecha" viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg>nodo</a>
+  <nav aria-label="Secciones"><ul><li><a href="#producto">Producto</a></li><li><a href="#clientes">Clientes</a></li><li><a href="#planes">Precios</a></li><li><a href="#preguntas">Preguntas</a></li></ul></nav>
+  <div class="acceso"><a href="#demo">Entrar</a><a class="boton" href="#demo">Pedir demo</a></div>
+</header>
+
+<main>
+  <section class="portada" id="inicio">
+    <div class="ancho">
+      <a class="novedad" href="#producto"><b>Nuevo</b> Ventanas horarias por cliente <svg class="flechita" aria-hidden="true"><use href="#flecha"/></svg></a>
+      <h1>Todo el despacho de tu pyme, en una pantalla</h1>
+      <p class="bajada">Pedidos, rutas y choferes en el mismo lugar. Tus clientes ven dónde va su pedido sin tener que llamarte.</p>
+      <div class="acciones">
+        <a class="boton" href="#demo">Pedir una demo <svg class="flechita" aria-hidden="true"><use href="#flecha"/></svg></a>
+        <a class="boton fantasma" href="#producto">Ver cómo funciona</a>
+      </div>
+
+      <div class="app" data-aparece role="img" aria-label="Vista del panel de Nodo: un mapa con tres rutas que salen de la bodega y la lista de paradas del día, con su estado">
+        <div class="app-lado" aria-hidden="true">
+          <span class="bodega"><i></i>Bodega Quilicura</span>
+          <span class="activo">Hoy <small>20</small></span>
+          <span>Rutas <small>3</small></span>
+          <span>Pedidos <small>148</small></span>
+          <span>Choferes <small>6</small></span>
+          <span>Clientes</span>
+          <span>Reportes</span>
+        </div>
+        <div class="app-centro" aria-hidden="true">
+          <div class="app-barra"><b>Martes 14 · Rutas de hoy</b><span class="chips"><span class="chip ok">12 entregadas</span><span class="chip ruta">3 en ruta</span><span class="chip">5 pendientes</span></span></div>
+          <div class="app-cuerpo">
+            <div class="mapa">
+              <svg viewBox="0 0 600 380">
+                <path class="calle" d="M20 300H580M20 210H580M20 120H580M20 60H580M70 20V360M170 20V360M300 20V360M440 20V360M540 20V360"/>
+                <path class="ruta r3" pathLength="1" d="M70 300V210H170V120H300V60"/>
+                <path class="ruta r1" pathLength="1" d="M70 300H170V210H300V120H440V60H540"/>
+                <path class="ruta r2" pathLength="1" d="M70 300H300V210H440V120H540"/>
+                <circle class="parada" cx="170" cy="210" r="7" fill="#2ee6a6"/>
+                <circle class="parada" cx="300" cy="120" r="7" fill="#2ee6a6"/>
+                <circle class="parada" cx="540" cy="60" r="7" fill="#2ee6a6"/>
+                <circle class="parada" cx="300" cy="60" r="7" fill="#72b7ff"/>
+                <circle class="parada" cx="170" cy="120" r="7" fill="#72b7ff"/>
+                <circle class="parada" cx="440" cy="210" r="7" fill="#ffb547"/>
+                <circle class="parada" cx="540" cy="120" r="7" fill="#ffb547"/>
+                <rect class="bodega-punto" x="58" y="288" width="24" height="24" rx="6"/>
+                <g class="movil">
+                  <circle class="halo" cx="0" cy="0" r="14"><animateMotion dur="9s" repeatCount="indefinite" begin="0s" path="M70 300H300V210H440V120H540" calcMode="linear"/></circle>
+                  <circle class="camion" cx="0" cy="0" r="7"><animateMotion dur="9s" repeatCount="indefinite" begin="0s" path="M70 300H300V210H440V120H540" calcMode="linear"/></circle>
+                </g>
+              </svg>
+            </div>
+            <ol class="paradas">
+              <li><time>09:10</time><b>Ferretería Sur</b><small>Av. Matta 1220</small><span class="chip ok">Entregado</span></li>
+              <li><time>09:45</time><b>Botica Lira</b><small>Lira 455</small><span class="chip ok">Entregado</span></li>
+              <li><time>10:20</time><b>Café Orión</b><small>Bustamante 76</small><span class="chip ruta">En camino</span></li>
+              <li><time>11:05</time><b>Vinos Elqui</b><small>Condell 1340</small><span class="chip">Pendiente</span></li>
+              <li><time>11:40</time><b>Panadería Rulo</b><small>Seminario 210</small><span class="chip">Pendiente</span></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho logos" id="clientes" aria-labelledby="logos-titulo">
+    <p class="mono" id="logos-titulo">Despachan con Nodo más de 400 pymes</p>
+    <ul data-aparece>
+      <li class="l1">FERRETERÍA SUR</li>
+      <li class="l2">botica lira</li>
+      <li class="l3">ORIÓN</li>
+      <li class="l4"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 15 15H1z" fill="currentColor"/></svg>Vinos Elqui</li>
+      <li class="l5">rulo/panadería</li>
+      <li class="l6"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>maule</li>
+    </ul>
+  </section>
+
+  <section class="ancho declaracion" id="producto">
+    <p data-aparece>Nodo ordena pedidos, rutas y choferes. <span>Sin planillas que se cruzan, sin llamadas para preguntar dónde va el camión y sin guías de papel que se pierden en la cabina.</span></p>
+    <div class="figuras">
+      <article class="figura" data-aparece>
+        <p class="mono">Fig 0.1</p>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="30" cy="120" r="8"/><circle cx="110" cy="40" r="8"/><circle cx="170" cy="100" r="8"/><circle cx="230" cy="30" r="8"/><circle cx="90" cy="110" r="5"/><circle cx="200" cy="130" r="5"/><path d="M36 114 104 46M118 44l46 50M176 94l48-58" stroke="#2ee6a6" stroke-width="1.6"/><path d="M38 120h44M95 108l70-6M176 106l20 20" stroke-dasharray="3 4"/></svg>
+        <h3>Rutas que se arman solas</h3>
+        <p>Cargas los pedidos y Nodo ordena las paradas según la distancia, la ventana horaria de cada cliente y lo que cabe en el vehículo.</p>
+      </article>
+      <article class="figura" data-aparece style="--retraso: 100ms">
+        <p class="mono">Fig 0.2</p>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="90" y="10" width="80" height="136" rx="14"/><path d="M118 20h24"/><path d="M130 50c-14 0-22 10-22 21 0 16 22 37 22 37s22-21 22-37c0-11-8-21-22-21z" stroke="#2ee6a6" stroke-width="1.6"/><circle cx="130" cy="71" r="7" stroke="#2ee6a6"/><path d="M104 124h52M104 132h34"/><path d="M20 70h50M190 70h50" stroke-dasharray="3 4"/></svg>
+        <h3>Seguimiento para tu cliente</h3>
+        <p>Cada cliente recibe un enlace con la hora estimada de llegada, que se actualiza sola mientras el chofer avanza.</p>
+      </article>
+      <article class="figura" data-aparece style="--retraso: 200ms">
+        <p class="mono">Fig 0.3</p>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M70 50l60-30 60 30-60 30z"/><path d="M70 50v60l60 30 60-30V50M130 80v60"/><path d="M100 35l60 30" stroke-dasharray="3 4"/><path d="M196 118c10-14 18-14 22-4s12 8 22-6" stroke="#2ee6a6" stroke-width="1.6"/><path d="M20 128h40" stroke-dasharray="3 4"/></svg>
+        <h3>Prueba de entrega</h3>
+        <p>La foto, la firma y la hora quedan guardadas en el pedido. Se acabaron las guías perdidas y las discusiones por una entrega.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="ancho cifras" aria-label="Resultados">
+    <div class="cifra" data-aparece><b><span data-cuenta="38">38</span><small>%</small></b><p>menos kilómetros recorridos en el primer mes, en promedio.</p></div>
+    <div class="cifra" data-aparece style="--retraso: 100ms"><b><span data-cuenta="2400">2.400</span></b><p>despachos al día en el cliente más grande, con seis choferes.</p></div>
+    <div class="cifra" data-aparece style="--retraso: 200ms"><b><span data-cuenta="11">11</span><small>min</small></b><p>menos por parada, porque nadie busca la dirección ni llama para confirmar.</p></div>
+  </section>
+
+  <section class="ancho calle-seccion" aria-labelledby="calle-titulo">
+    <header data-aparece>
+      <h2 id="calle-titulo">Hecho para la calle, no para la oficina</h2>
+      <p>La aplicación del chofer funciona sin señal, guarda todo en el teléfono y lo sube cuando vuelve la conexión. En la bodega, cada bulto sale con su etiqueta y su ruta.</p>
+    </header>
+    <div class="fotos">
+      <figure class="ancha" data-aparece>
+        <img src="/image/bocetos/nodo/calle-1600.webp" srcset="/image/bocetos/nodo/calle-1000.webp 1000w, /image/bocetos/nodo/calle-1600.webp 1600w" sizes="(min-width: 1200px) 1104px, 100vw" width="1600" height="686" loading="lazy" alt="Una autopista curva de noche, vista desde lo alto, con la ciudad iluminada al fondo">
+        <figcaption><span>Fig 0.4 — Ruta nocturna</span><span>Promedio 14 paradas por chofer</span></figcaption>
+      </figure>
+      <figure data-aparece>
+        <img src="/image/bocetos/nodo/carga-600.webp" srcset="/image/bocetos/nodo/carga-600.webp 600w, /image/bocetos/nodo/carga-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Un repartidor carga cajas de cartón en una furgoneta azul frente a un edificio de ladrillo">
+        <figcaption><span>Fig 0.5 — Carga</span><span>07:30</span></figcaption>
+      </figure>
+      <figure data-aparece style="--retraso: 100ms">
+        <img src="/image/bocetos/nodo/bodega-600.webp" srcset="/image/bocetos/nodo/bodega-600.webp 600w, /image/bocetos/nodo/bodega-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Una bodega con cintas transportadoras y cajas plásticas ordenadas por ruta">
+        <figcaption><span>Fig 0.6 — Bodega</span><span>Etiquetas por ruta</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="planes-seccion" id="planes">
+    <div class="ancho">
+      <div class="planes-cabeza" data-aparece>
+        <div><p class="mono">Precios</p><h2>Paga por vehículo, no por pedido</h2></div>
+        <fieldset class="periodo">
+          <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Cómo pagar</legend>
+          <label><input type="radio" name="periodo" value="mensual" checked>Mensual</label>
+          <label><input type="radio" name="periodo" value="anual">Anual <small>−20%</small></label>
+        </fieldset>
+      </div>
+      <div class="planes" data-aparece>
+        <article class="plan">
+          <h3>Emprende</h3>
+          <p class="precio"><span class="mensual">$29.990 <small>/ mes</small></span><span class="anual">$23.990 <small>/ mes</small></span></p>
+          <p>Para quien reparte con su propio auto.</p>
+          <ul><li>1 vehículo</li><li>Hasta 300 pedidos al mes</li><li>Seguimiento para clientes</li></ul>
+          <a class="boton fantasma" href="#demo">Empezar</a>
+        </article>
+        <article class="plan destacado">
+          <h3>Pyme <small>El más usado</small></h3>
+          <p class="precio"><span class="mensual">$89.990 <small>/ mes</small></span><span class="anual">$71.990 <small>/ mes</small></span></p>
+          <p>Para equipos con bodega y varios choferes.</p>
+          <ul><li>Hasta 10 vehículos</li><li>Pedidos sin límite</li><li>Rutas con ventanas horarias</li><li>Prueba de entrega con foto y firma</li></ul>
+          <a class="boton" href="#demo">Pedir demo</a>
+        </article>
+        <article class="plan">
+          <h3>Flota</h3>
+          <p class="precio"><span class="mensual">A medida</span><span class="anual">A medida</span></p>
+          <p>Para distribuidoras con más de diez vehículos.</p>
+          <ul><li>Vehículos sin límite</li><li>Conexión con tu sistema de ventas</li><li>Soporte con nombre y apellido</li></ul>
+          <a class="boton fantasma" href="#demo">Hablemos</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho preguntas" id="preguntas">
+    <div data-aparece><p class="mono">Preguntas</p><h2>Lo que nos preguntan antes de partir</h2><p>¿Otra duda? Escríbenos a hola@nodo.cl y te responde una persona.</p></div>
+    <div data-aparece>
+      <details name="preguntas" open><summary>¿Necesito instalar algo?</summary><p>No. Nodo funciona en el navegador y los choferes usan una aplicación para Android y iPhone que se descarga en un minuto.</p></details>
+      <details name="preguntas"><summary>¿Puedo subir mis pedidos desde una planilla?</summary><p>Sí. Arrastras la planilla tal como la tienes y Nodo reconoce las columnas de dirección, cliente y horario.</p></details>
+      <details name="preguntas"><summary>¿Qué pasa si el chofer pierde la señal?</summary><p>La aplicación sigue funcionando y guarda las entregas en el teléfono. Cuando vuelve la señal, todo se sube solo.</p></details>
+      <details name="preguntas"><summary>¿Hay permanencia mínima?</summary><p>No. Pagas mes a mes y puedes cancelar cuando quieras. El plan anual tiene descuento, pero no es obligatorio.</p></details>
+      <details name="preguntas"><summary>¿Mis datos quedan en Chile?</summary><p>Los datos se guardan cifrados y puedes descargarlos completos en cualquier momento, en un formato que se abre con cualquier planilla.</p></details>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="ancho" data-aparece>
+      <h2>Prueba Nodo con tus rutas de mañana</h2>
+      <p>Déjanos tu correo y te mostramos, en media hora y con tus propios pedidos, cuánto se acortan tus rutas.</p>
+      <form data-muestra toolname="pedir_demo" tooldescription="Pide una demostración de Nodo, un software de despacho inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto." toolautosubmit>
+        <label class="oculto" for="demo-correo" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Tu correo de trabajo</label>
+        <input id="demo-correo" type="email" name="correo" placeholder="tu@empresa.cl" autocomplete="email" required toolparamdescription="Correo de trabajo de quien pide la demostración">
+        <button class="boton" type="submit">Pedir demo</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <div><a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg>nodo</a><p style="margin-top:12px; max-width: 30ch">Software de despacho para pymes, hecho en Santiago.</p></div>
+  <div><b>Producto</b><ul><li><a href="#producto">Rutas</a></li><li><a href="#producto">Seguimiento</a></li><li><a href="#planes">Precios</a></li></ul></div>
+  <div><b>Empresa</b><ul><li><a href="#clientes">Clientes</a></li><li><a href="#demo">Contacto</a></li></ul></div>
+  <div><b>Ayuda</b><ul><li><a href="#preguntas">Preguntas</a></li><li><a href="#demo">Estado del servicio</a></li></ul></div>
+  <p class="pie-final"><span>Boceto de Volutus · marca inventada</span><span class="mono">Todos los sistemas operativos</span></p>
+</footer>
+</body>
+</html>

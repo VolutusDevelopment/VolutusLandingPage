@@ -15,6 +15,11 @@
  * También hace lo que comparten los bocetos al bajar: lo que tiene
  * `data-aparece` entra al verse, y lo que tiene `data-cuenta` cuenta hasta su
  * número.
+ *
+ * Y lo que los bocetos no pueden hacer solos, porque la política de contenido
+ * no deja scripts en línea: los formularios de muestra (`form[data-muestra]`)
+ * avisan que no envían nada, también al agente que los use, y el deslizador
+ * del antes y después (`input[data-comparar]`) mueve su corte (`--corte`).
  */
 
 const CLAVE = 'volutus:brief:bocetos'
@@ -173,5 +178,39 @@ function montarEntradas() {
   cuentan.forEach((elemento) => observador.observe(elemento))
 }
 
+// Los formularios de un boceto son de muestra: se llenan, pero al enviarlos
+// solo avisan que no salió nada. Su aviso (`.boceto-aviso`) tiene su lugar
+// reservado en el CSS, así que aparecer no mueve la página.
+function montarMuestras() {
+  const AVISO = 'Es un boceto: no se envió nada.'
+  for (const form of document.querySelectorAll('form[data-muestra]')) {
+    let aviso = form.querySelector('.boceto-aviso')
+    if (!aviso) {
+      aviso = document.createElement('p')
+      aviso.className = 'boceto-aviso'
+      form.append(aviso)
+    }
+    aviso.setAttribute('role', 'status')
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault()
+      aviso.textContent = AVISO
+      if (evento.agentInvoked)
+        evento.respondWith(Promise.resolve(`${AVISO} La marca es inventada por Volutus para mostrar un estilo de página.`))
+    })
+  }
+}
+
+function montarComparadores() {
+  for (const control of document.querySelectorAll('input[data-comparar]')) {
+    const marco = control.closest('[data-comparar-marco]')
+    if (!marco) continue
+    const mover = () => marco.style.setProperty('--corte', `${control.value}%`)
+    control.addEventListener('input', mover)
+    mover()
+  }
+}
+
 if (!enElVisor) montarBarra()
 montarEntradas()
+montarMuestras()
+montarComparadores()

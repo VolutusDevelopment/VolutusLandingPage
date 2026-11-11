@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Golpe · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Golpe, club de boxeo, para mostrar el estilo Audaz.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/anton.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/golpe/portada-ancho-1600.webp" media="(min-width: 700px)" imagesrcset="/image/bocetos/golpe/portada-ancho-960.webp 960w, /image/bocetos/golpe/portada-ancho-1600.webp 1600w" imagesizes="100vw">
+<link rel="preload" as="image" href="/image/bocetos/golpe/portada-alto-800.webp" media="(max-width: 699px)">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'Anton'; src: url('/fonts/bocetos/anton.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Barlow'; src: url('/fonts/bocetos/barlow-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Barlow'; src: url('/fonts/bocetos/barlow-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+  --amarillo: #ffe14d;
+  --negro: #0d0d0d;
+  --carbon: #1a1a1a;
+  --blanco: #f5f3ec;
+  --gris: #a9a79f;
+  --margen: clamp(20px, 4vw, 56px);
+  --golpe: cubic-bezier(0.16, 1, 0.3, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--negro); scroll-behavior: smooth; }
+body { margin: 0; background: var(--negro); color: var(--blanco); font: 400 18px/1.55 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Anton', Impact, sans-serif; font-weight: 400; line-height: 0.9; text-transform: uppercase; }
+p { margin: 0; }
+.ancho { max-width: 1440px; margin-inline: auto; padding-inline: var(--margen); }
+.etiqueta { font-weight: 600; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; }
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 56px; padding: 0 28px; border: 2px solid var(--amarillo); background: var(--amarillo); color: var(--negro); font: 600 15px/1 'Barlow', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: transform 200ms var(--golpe), background 200ms, color 200ms; }
+.boton:hover { transform: translateY(-3px); }
+.boton:active { transform: translateY(1px) scale(0.98); }
+.boton.hueco { background: transparent; color: var(--blanco); border-color: var(--blanco); }
+.boton.hueco:hover { background: var(--blanco); color: var(--negro); }
+.boton svg { width: 18px; height: 18px; }
+
+/* ---- Cabecera sobre la foto ---- */
+.cabecera { position: absolute; inset: 0 0 auto; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; }
+.marca { font-family: 'Anton', Impact, sans-serif; font-size: 34px; line-height: 1; color: var(--amarillo); text-decoration: none; letter-spacing: 0.02em; }
+.cabecera nav ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; }
+.cabecera nav a { font-weight: 600; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; }
+.cabecera nav a:hover { color: var(--amarillo); }
+.cabecera .boton { min-height: 44px; padding: 0 18px; font-size: 13px; }
+
+/* ---- Portada: foto completa en blanco y negro ---- */
+.portada { position: relative; display: grid; align-items: end; min-height: 640px; overflow: hidden; isolation: isolate; }
+@supports (height: 100svh) { .portada { min-height: max(640px, min(100svh, 980px)); } }
+.portada picture, .portada > img { position: absolute; inset: 0; z-index: -2; }
+.portada img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%; }
+.portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(13 13 13 / 0.6) 0%, transparent 22%, transparent 40%, rgb(13 13 13 / 0.94) 100%), linear-gradient(90deg, rgb(13 13 13 / 0.88) 0%, rgb(13 13 13 / 0.6) 50%, transparent 85%); }
+.portada-texto { display: grid; gap: 28px; padding-block: 140px clamp(48px, 7vw, 96px); }
+.portada h1 { font-size: clamp(66px, 13.4vw, 216px); letter-spacing: -0.005em; }
+.portada h1 span { display: block; }
+.portada h1 .amarillo { color: var(--amarillo); }
+.portada-pie { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 28px 48px; }
+.portada-pie p { max-width: 42ch; font-size: 19px; color: #d9d7cf; }
+.acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---- Cifras sobre amarillo ---- */
+.cifras { background: var(--amarillo); color: var(--negro); padding-block: clamp(64px, 9vw, 120px); overflow: hidden; }
+.cifras h2 { font-size: clamp(48px, 8.6vw, 140px); max-width: 12ch; }
+.numeros { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(48px, 7vw, 96px); border-top: 4px solid var(--negro); }
+.numero { padding: 24px 24px 0 0; }
+.numero + .numero { padding-left: 24px; border-left: 4px solid var(--negro); }
+.numero b { display: block; font: 400 clamp(56px, 7vw, 104px)/1 'Anton', Impact, sans-serif; font-variant-numeric: tabular-nums; }
+.numero span { display: block; margin-top: 10px; font-weight: 600; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ---- Franja de fotos de borde a borde ---- */
+.franja { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.franja figure { position: relative; overflow: hidden; }
+.franja img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform 900ms var(--golpe), filter 900ms; filter: contrast(1.05); }
+.franja figure:hover img { transform: scale(1.05); filter: contrast(1.25); }
+.franja figcaption { position: absolute; left: 0; bottom: 0; padding: 10px 16px 8px; background: var(--amarillo); color: var(--negro); font: 400 clamp(22px, 2.2vw, 32px)/1 'Anton', Impact, sans-serif; text-transform: uppercase; transform: translateY(0); transition: padding 400ms var(--golpe); }
+.franja figure:hover figcaption { padding-bottom: 20px; }
+
+/* ---- Títulos de sección que entran de lado ---- */
+.seccion { padding-block: clamp(80px, 11vw, 160px); overflow: hidden; }
+.gran-titulo { font-size: clamp(72px, 15vw, 240px); line-height: 0.82; margin-bottom: clamp(40px, 6vw, 80px); }
+.gran-titulo .borde { color: transparent; -webkit-text-stroke: 2px var(--blanco); }
+.titulo-fila { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; }
+.titulo-fila p { max-width: 36ch; color: var(--gris); margin-bottom: clamp(40px, 6vw, 80px); }
+
+/* ---- Horario ---- */
+.horario { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.horario th, .horario td { padding: 18px 14px; border-bottom: 1px solid #333; text-align: left; vertical-align: top; }
+.horario thead th { font: 400 clamp(22px, 2.4vw, 34px)/1 'Anton', Impact, sans-serif; text-transform: uppercase; color: var(--amarillo); border-bottom: 4px solid var(--amarillo); }
+.horario tbody th { font: 400 clamp(28px, 3vw, 44px)/1 'Anton', Impact, sans-serif; }
+.horario td { font-weight: 600; font-size: 16px; transition: background 200ms, color 200ms; }
+.horario td small { display: block; font-weight: 400; font-size: 13px; color: var(--gris); }
+.horario td:hover { background: var(--amarillo); color: var(--negro); }
+.horario td:hover small { color: var(--negro); }
+.horario .libre { color: #555; }
+.leyenda { margin-top: 24px; color: var(--gris); font-size: 15px; }
+
+/* ---- Equipo ---- */
+.equipo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); }
+.entrenador img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: filter 600ms; filter: contrast(1.05) brightness(0.92); }
+.entrenador:hover img { filter: contrast(1.25) brightness(1); }
+.entrenador h3 { display: inline-block; margin-top: -28px; position: relative; padding: 10px 14px 6px; background: var(--amarillo); color: var(--negro); font-size: clamp(30px, 3vw, 44px); }
+.entrenador p { margin-top: 14px; color: var(--gris); }
+.entrenador p b { display: block; color: var(--blanco); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 14px; }
+
+/* ---- Planes sobre amarillo ---- */
+.planes-seccion { background: var(--amarillo); color: var(--negro); }
+.planes-seccion .gran-titulo .borde { -webkit-text-stroke-color: var(--negro); }
+.planes-seccion .titulo-fila p { color: #3d3a20; }
+.planes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 4px solid var(--negro); }
+.plan { display: grid; gap: 18px; align-content: start; padding: clamp(24px, 3vw, 40px); background: var(--amarillo); }
+.plan + .plan { border-left: 4px solid var(--negro); }
+.plan h3 { font-size: clamp(30px, 3vw, 44px); }
+.plan .precio { font: 400 clamp(54px, 6vw, 88px)/1 'Anton', Impact, sans-serif; font-variant-numeric: tabular-nums; }
+.plan .precio small { font: 600 16px 'Barlow', sans-serif; letter-spacing: 0.04em; }
+.plan ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; font-weight: 600; }
+.plan li { display: flex; gap: 12px; align-items: baseline; }
+.plan li::before { content: ''; flex: none; width: 10px; height: 10px; background: currentColor; transform: translateY(-1px); }
+.plan.fuerte { background: var(--negro); color: var(--blanco); }
+.plan.fuerte .precio, .plan.fuerte h3 { color: var(--amarillo); }
+.plan .sello { justify-self: start; padding: 6px 10px; background: var(--amarillo); color: var(--negro); font-weight: 600; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+.plan .boton { justify-self: start; margin-top: 8px; background: var(--negro); color: var(--amarillo); border-color: var(--negro); }
+.plan.fuerte .boton { background: var(--amarillo); color: var(--negro); border-color: var(--amarillo); }
+
+/* ---- Cierre con la velada ---- */
+.cierre { position: relative; isolation: isolate; display: grid; place-items: center; min-height: clamp(480px, 60vw, 760px); text-align: center; overflow: hidden; }
+.cierre img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.cierre::after { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(13 13 13 / 0.66); }
+.cierre h2 { font-size: clamp(60px, 11vw, 180px); }
+.cierre h2 span { display: block; }
+.cierre h2 .amarillo { color: var(--amarillo); }
+.cierre p { margin: 24px auto 32px; max-width: 40ch; color: #d9d7cf; }
+
+/* ---- Pie ---- */
+.pie { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; padding-block: 64px 40px; color: var(--gris); font-size: 15px; }
+.pie .marca { display: block; margin-bottom: 14px; }
+.pie b { display: block; margin-bottom: 8px; color: var(--blanco); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; font-size: 13px; }
+.pie-final { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid #333; font-size: 13px; }
+
+/* ---- M ---- */
+@media (max-width: 1023px) {
+  .cabecera nav { display: none; }
+  .numeros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .numero:nth-child(3) { padding-left: 0; border-left: 0; }
+  .numero:nth-child(n + 3) { border-top: 4px solid var(--negro); margin-top: 24px; }
+  .franja { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .equipo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .planes { grid-template-columns: 1fr; }
+  .plan + .plan { border-left: 0; border-top: 4px solid var(--negro); }
+}
+
+/* ---- S: el horario pasa a bloques por hora ---- */
+@media (max-width: 699px) {
+  .cabecera .boton { display: none; }
+  .portada-pie p { font-size: 17px; }
+  .acciones .boton { flex: 1 1 100%; }
+  .numero { padding-right: 12px; }
+  .numero + .numero { padding-left: 12px; }
+  .numero span { font-size: 13px; }
+  .equipo { grid-template-columns: 1fr; }
+  .horario thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .horario, .horario tbody, .horario tr { display: block; }
+  .horario tr { padding-block: 20px 8px; border-bottom: 4px solid var(--amarillo); }
+  .horario tbody th { display: block; padding: 0 0 12px; border: 0; color: var(--amarillo); }
+  .horario td { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0 12px; padding: 10px 0; }
+  .horario td::before { content: attr(data-dia); font: 400 18px/1.2 'Anton', Impact, sans-serif; text-transform: uppercase; color: var(--gris); }
+  .horario td small { grid-column: 2; }
+  .horario td.libre { display: none; }
+  .pie { grid-template-columns: 1fr; }
+}
+
+/* ---- Movimiento: las palabras grandes entran de lado ----
+   En la portada, al cargar; en los títulos, al aparecer. Sin rebote: entran
+   rápido y frenan suave, como un golpe que se detiene en el saco. */
+@keyframes desde-izquierda { from { opacity: 0; transform: translateX(-18%); } }
+@keyframes desde-derecha { from { opacity: 0; transform: translateX(18%); } }
+@media (prefers-reduced-motion: no-preference) {
+  .portada h1 span { animation: desde-izquierda 900ms var(--golpe) both; }
+  .portada h1 span:nth-child(2) { animation-name: desde-derecha; animation-delay: 120ms; }
+  .portada h1 span:nth-child(3) { animation-delay: 240ms; }
+  .portada-pie { animation: desde-izquierda 900ms var(--golpe) 380ms both; }
+  .con-js .de-lado[data-aparece] { transition-duration: 1000ms; transition-timing-function: var(--golpe); }
+  .con-js .de-lado[data-aparece]:not(.visto) { transform: translateX(-14%); }
+  .con-js .de-lado.derecha[data-aparece]:not(.visto) { transform: translateX(14%); }
+}
+</style>
+</head>
+<body data-boceto="golpe">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Golpe</b> es una marca inventada por Volutus para mostrarte el estilo <b>Audaz</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="flecha" viewBox="0 0 24 24"><path d="M4 12h15M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5"/></symbol></svg>
+
+<main>
+  <section class="portada" id="inicio">
+    <header class="ancho cabecera">
+      <a class="marca" href="#inicio">GOLPE</a>
+      <nav aria-label="Secciones"><ul><li><a href="#horario">Horario</a></li><li><a href="#equipo">Equipo</a></li><li><a href="#planes">Planes</a></li></ul></nav>
+      <a class="boton" href="#planes">Clase gratis</a>
+    </header>
+    <picture>
+      <source media="(max-width: 699px)" srcset="/image/bocetos/golpe/portada-alto-800.webp" width="800" height="1000">
+      <img src="/image/bocetos/golpe/portada-ancho-1600.webp" srcset="/image/bocetos/golpe/portada-ancho-960.webp 960w, /image/bocetos/golpe/portada-ancho-1600.webp 1600w" sizes="100vw" width="1600" height="900" alt="Un boxeador de perfil, en sombra, bajo un foco blanco en el gimnasio" fetchpriority="high">
+    </picture>
+    <div class="ancho portada-texto">
+      <p class="etiqueta" style="color: var(--amarillo)">Club de boxeo · Barrio Italia</p>
+      <h1><span>Pega más</span> <span class="amarillo">fuerte que</span> <span>ayer.</span></h1>
+      <div class="portada-pie">
+        <p>Técnica de verdad, guantes incluidos y entrenadores que subieron al ring. Desde los 16 años y sin experiencia previa.</p>
+        <div class="acciones">
+          <a class="boton" href="#planes">Primera clase gratis <svg aria-hidden="true"><use href="#flecha"/></svg></a>
+          <a class="boton hueco" href="#horario">Ver horario</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cifras" aria-labelledby="cifras-titulo">
+    <div class="ancho">
+      <h2 id="cifras-titulo" class="de-lado" data-aparece>Boxeo de verdad para gente común.</h2>
+      <div class="numeros">
+        <p class="numero" data-aparece><b data-cuenta="12">12</b><span>Rounds por clase</span></p>
+        <p class="numero" data-aparece style="--retraso: 80ms"><b data-cuenta="4">4</b><span>Entrenadores</span></p>
+        <p class="numero" data-aparece style="--retraso: 160ms"><b data-cuenta="380">380</b><span>m² de ring y sacos</span></p>
+        <p class="numero" data-aparece style="--retraso: 240ms"><b data-cuenta="26">26</b><span>Clases a la semana</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="franja" aria-label="El gimnasio">
+    <figure><img src="/image/bocetos/golpe/franja-1-500.webp" srcset="/image/bocetos/golpe/franja-1-500.webp 500w, /image/bocetos/golpe/franja-1-800.webp 800w" sizes="(min-width: 1024px) 25vw, 50vw" width="800" height="1067" loading="lazy" alt="Un boxeador lanza un golpe al saco en blanco y negro"><figcaption>Técnica</figcaption></figure>
+    <figure><img src="/image/bocetos/golpe/franja-2-500.webp" srcset="/image/bocetos/golpe/franja-2-500.webp 500w, /image/bocetos/golpe/franja-2-800.webp 800w" sizes="(min-width: 1024px) 25vw, 50vw" width="800" height="1067" loading="lazy" alt="Dos boxeadores frente a frente en pleno sparring"><figcaption>Sparring</figcaption></figure>
+    <figure><img src="/image/bocetos/golpe/franja-3-500.webp" srcset="/image/bocetos/golpe/franja-3-500.webp 500w, /image/bocetos/golpe/franja-3-800.webp 800w" sizes="(min-width: 1024px) 25vw, 50vw" width="800" height="1067" loading="lazy" alt="Un entrenador sostiene las manoplas mientras un alumno golpea"><figcaption>Manoplas</figcaption></figure>
+    <figure><img src="/image/bocetos/golpe/franja-4-500.webp" srcset="/image/bocetos/golpe/franja-4-500.webp 500w, /image/bocetos/golpe/franja-4-800.webp 800w" sizes="(min-width: 1024px) 25vw, 50vw" width="800" height="1067" loading="lazy" alt="Una fila de sacos de boxeo colgados en un gimnasio vacío"><figcaption>Sacos</figcaption></figure>
+  </section>
+
+  <section class="seccion" id="horario">
+    <div class="ancho">
+      <div class="titulo-fila">
+        <h2 class="gran-titulo de-lado" data-aparece>Hora<span class="borde">rio</span></h2>
+        <p data-aparece>Clases de 60 minutos. Los guantes y las vendas los prestamos; las ganas las traes tú.</p>
+      </div>
+      <table class="horario" data-aparece>
+        <thead><tr><th scope="col">Hora</th><th scope="col">Lun</th><th scope="col">Mar</th><th scope="col">Mié</th><th scope="col">Jue</th><th scope="col">Vie</th><th scope="col">Sáb</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">07:00</th><td data-dia="Lun">Técnica<small>Todos</small></td><td data-dia="Mar">Acondicionamiento<small>Todos</small></td><td data-dia="Mié">Técnica<small>Todos</small></td><td data-dia="Jue">Acondicionamiento<small>Todos</small></td><td data-dia="Vie">Técnica<small>Todos</small></td><td class="libre" data-dia="Sáb">—</td></tr>
+          <tr><th scope="row">13:00</th><td data-dia="Lun">Box fit<small>Express, 45 min</small></td><td class="libre" data-dia="Mar">—</td><td data-dia="Mié">Box fit<small>Express, 45 min</small></td><td class="libre" data-dia="Jue">—</td><td data-dia="Vie">Box fit<small>Express, 45 min</small></td><td class="libre" data-dia="Sáb">—</td></tr>
+          <tr><th scope="row">19:00</th><td data-dia="Lun">Técnica<small>Inicial</small></td><td data-dia="Mar">Manoplas<small>Intermedio</small></td><td data-dia="Mié">Técnica<small>Inicial</small></td><td data-dia="Jue">Manoplas<small>Intermedio</small></td><td data-dia="Vie">Técnica<small>Inicial</small></td><td data-dia="Sáb">Sparring<small>Con evaluación, 11:00</small></td></tr>
+          <tr><th scope="row">20:30</th><td data-dia="Lun">Sparring<small>Avanzado</small></td><td data-dia="Mar">Técnica<small>Inicial</small></td><td data-dia="Mié">Sparring<small>Avanzado</small></td><td data-dia="Jue">Técnica<small>Inicial</small></td><td data-dia="Vie">Acondicionamiento<small>Todos</small></td><td class="libre" data-dia="Sáb">—</td></tr>
+        </tbody>
+      </table>
+      <p class="leyenda">Inicial: nunca has boxeado. Intermedio: ya sabes vendarte. Avanzado: con permiso del entrenador.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="equipo" style="padding-top: 0">
+    <div class="ancho">
+      <div class="titulo-fila">
+        <h2 class="gran-titulo de-lado derecha" data-aparece>El <span class="borde">equipo</span></h2>
+        <p data-aparece>Cuatro entrenadores, todos con peleas en el cuerpo. Ninguno grita: explican.</p>
+      </div>
+      <div class="equipo">
+        <article class="entrenador" data-aparece>
+          <img src="/image/bocetos/golpe/coach-1-500.webp" srcset="/image/bocetos/golpe/coach-1-500.webp 500w, /image/bocetos/golpe/coach-1-800.webp 800w" sizes="(min-width: 1024px) 31vw, (min-width: 700px) 48vw, 100vw" width="800" height="1000" loading="lazy" alt="Retrato en blanco y negro de un entrenador con guantes, mirando a cámara">
+          <h3>Tomás Ulloa</h3>
+          <p><b>Técnica y competencia</b>Doce años en el ring amateur. Arma los planes de quienes quieren pelear.</p>
+        </article>
+        <article class="entrenador" data-aparece style="--retraso: 100ms">
+          <img src="/image/bocetos/golpe/coach-2-500.webp" srcset="/image/bocetos/golpe/coach-2-500.webp 500w, /image/bocetos/golpe/coach-2-800.webp 800w" sizes="(min-width: 1024px) 31vw, (min-width: 700px) 48vw, 100vw" width="800" height="1000" loading="lazy" alt="Un boxeador con guantes claros en guardia, en blanco y negro">
+          <h3>Ignacio Paz</h3>
+          <p><b>Manoplas y sparring</b>Exboxeador profesional. Corrige la guardia antes de que te des cuenta.</p>
+        </article>
+        <article class="entrenador" data-aparece style="--retraso: 200ms">
+          <img src="/image/bocetos/golpe/coach-3-500.webp" srcset="/image/bocetos/golpe/coach-3-500.webp 500w, /image/bocetos/golpe/coach-3-800.webp 800w" sizes="(min-width: 1024px) 31vw, (min-width: 700px) 48vw, 100vw" width="800" height="1000" loading="lazy" alt="Un boxeador joven en guardia dentro del ring">
+          <h3>Bruno Sáez</h3>
+          <p><b>Inicial y box fit</b>El primero que vas a ver. Hace que la primera clase no dé miedo.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion planes-seccion" id="planes">
+    <div class="ancho">
+      <div class="titulo-fila">
+        <h2 class="gran-titulo de-lado" data-aparece>Pla<span class="borde">nes</span></h2>
+        <p data-aparece>Sin matrícula. La primera clase es gratis y no tienes que decidir nada antes.</p>
+      </div>
+      <div class="planes" data-aparece>
+        <div class="plan">
+          <h3>Clase suelta</h3>
+          <p class="precio">$8.000</p>
+          <ul><li>Cualquier horario</li><li>Guantes y vendas</li><li>Sin compromiso</li></ul>
+          <a class="boton" href="#horario">Elegir horario</a>
+        </div>
+        <div class="plan fuerte">
+          <span class="sello">El que más se elige</span>
+          <h3>Ilimitado</h3>
+          <p class="precio">$59.000 <small>al mes</small></p>
+          <ul><li>Todas las clases</li><li>Sparring de los sábados</li><li>Evaluación cada mes</li></ul>
+          <a class="boton" href="#horario">Empezar</a>
+        </div>
+        <div class="plan">
+          <h3>Ocho clases</h3>
+          <p class="precio">$45.000</p>
+          <ul><li>Válido por 30 días</li><li>Guantes y vendas</li><li>Se puede congelar</li></ul>
+          <a class="boton" href="#horario">Elegir horario</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cierre" aria-labelledby="cierre-titulo">
+    <img src="/image/bocetos/golpe/velada-1600.webp" srcset="/image/bocetos/golpe/velada-1000.webp 1000w, /image/bocetos/golpe/velada-1600.webp 1600w" sizes="100vw" width="1600" height="686" loading="lazy" alt="">
+    <div class="ancho">
+      <h2 id="cierre-titulo" class="de-lado" data-aparece><span>La primera</span> <span class="amarillo">va gratis.</span></h2>
+      <p data-aparece>Ven con ropa de deporte y una botella de agua. Del resto nos encargamos.</p>
+      <a class="boton" href="#horario" data-aparece>Reservar mi clase <svg aria-hidden="true"><use href="#flecha"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <div><span class="marca">GOLPE</span>Av. Italia 1450, Ñuñoa<br>Estacionamiento para bicicletas</div>
+  <div><b>Abierto</b>Lunes a viernes, 6:30 a 22:00<br>Sábados, 9:00 a 14:00</div>
+  <div><b>Síguenos</b>@golpe.club<br>hola@golpe.cl</div>
+  <p class="pie-final">Boceto de Volutus · marca inventada</p>
+</footer>
+</body>
+</html>

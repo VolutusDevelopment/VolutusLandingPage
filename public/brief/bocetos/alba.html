@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Alba Interiores · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Alba Interiores, estudio de interiorismo, para mostrar el estilo Minimalista.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/alba/portada-1300.webp" imagesrcset="/image/bocetos/alba/portada-700.webp 700w, /image/bocetos/alba/portada-1300.webp 1300w" imagesizes="(min-width: 900px) 46vw, 100vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+@font-face { font-family: 'Hanken Grotesk'; src: url('/fonts/bocetos/hanken-grotesk.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --papel: #fafaf8;
+  --arena: #efede7;
+  --tinta: #141414;
+  --gris: #66655f;
+  --linea: #e2e0da;
+  --ancho: 1360px;
+  --margen: clamp(20px, 4vw, 56px);
+  --calma: cubic-bezier(0.25, 1, 0.5, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--papel); scroll-behavior: smooth; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.65 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--tinta); outline-offset: 4px; }
+h1, h2, h3 { margin: 0; font-weight: 300; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { font-size: 11px; font-weight: 500; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gris); }
+.meta { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gris); }
+.meta span + span::before { content: '|'; margin-inline: 10px; opacity: 0.6; }
+.enlace { justify-self: start; display: inline-flex; gap: 10px; align-items: center; padding-block: 6px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid currentColor; transition: gap 400ms var(--calma); }
+.enlace:hover { gap: 18px; }
+
+/* ---- Cabecera ---- */
+.cabecera { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; padding-block: 26px; }
+.marca { font-size: 13px; font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase; text-decoration: none; }
+.cabecera nav ul { display: flex; gap: 34px; margin: 0; padding: 0; list-style: none; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; }
+.cabecera nav a { text-decoration: none; color: var(--gris); transition: color 300ms; }
+.cabecera nav a:hover { color: var(--tinta); }
+.cabecera .enlace { justify-self: end; font-size: 12px; }
+
+/* ---- Portada asimétrica ---- */
+.portada { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); padding-block: clamp(32px, 5vw, 64px) clamp(80px, 10vw, 140px); }
+.portada-texto { grid-column: 1 / 6; grid-row: 1; display: grid; gap: 28px; align-content: start; padding-top: clamp(16px, 6vw, 96px); }
+.portada h1 { font-size: clamp(44px, 5.6vw, 88px); }
+.portada-texto > p:not(.rotulo) { max-width: 36ch; color: var(--gris); }
+.portada-foto { grid-column: 7 / 13; grid-row: 1 / 3; overflow: hidden; }
+.portada-foto img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.portada-foto figcaption, .proyecto figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-top: 14px; }
+.portada-detalle { grid-column: 2 / 5; grid-row: 2; align-self: end; }
+.portada-detalle img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+.portada-detalle figcaption { margin-top: 12px; }
+
+/* ---- Estudio ---- */
+.estudio { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); padding-block: clamp(80px, 11vw, 160px); border-top: 1px solid var(--linea); }
+.vertical { writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.6em; text-transform: uppercase; color: var(--gris); }
+.estudio .lema { max-width: 30ch; font-size: clamp(26px, 3.2vw, 46px); font-weight: 300; line-height: 1.22; letter-spacing: -0.025em; }
+.estudio .lema span { color: #8a8983; }
+
+/* ---- Proyectos ---- */
+.proyectos { padding-bottom: clamp(80px, 11vw, 160px); }
+.encabezado { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; padding-top: 28px; margin-bottom: clamp(40px, 6vw, 80px); border-top: 1px solid var(--tinta); }
+.encabezado h2 { font-size: clamp(32px, 4vw, 56px); }
+.grilla { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); row-gap: clamp(56px, 8vw, 120px); }
+.proyecto a { display: block; text-decoration: none; }
+.proyecto .marco { overflow: hidden; background: var(--arena); }
+.proyecto img { width: 100%; object-fit: cover; transition: transform 1600ms var(--calma); }
+.proyecto a:hover img { transform: scale(1.035); }
+.proyecto h3, .titulo-proyecto { font-size: 13px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; }
+.proyecto p { margin-top: 10px; max-width: 40ch; color: var(--gris); }
+.p-matta { grid-column: 1 / 9; }
+.p-matta img { aspect-ratio: 3 / 2; }
+.p-matta-texto { grid-column: 10 / 13; align-self: end; display: grid; gap: 14px; }
+.p-lastarria { grid-column: 2 / 6; }
+.p-lastarria img { aspect-ratio: 3 / 4; }
+.p-vitacura { grid-column: 8 / 12; margin-top: clamp(80px, 14vw, 220px); }
+.p-vitacura img { aspect-ratio: 4 / 5; }
+.p-pirque { grid-column: 5 / 10; }
+.p-pirque img { aspect-ratio: 1; }
+
+/* ---- Antes y después: del plano a la obra ---- */
+.comparar-seccion { padding-block: clamp(80px, 11vw, 160px); background: var(--arena); }
+.comparar-cabeza { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 64px); align-items: end; margin-bottom: clamp(32px, 5vw, 56px); }
+.comparar-cabeza h2 { font-size: clamp(32px, 4vw, 56px); }
+.comparar-cabeza p:last-child { max-width: 44ch; color: var(--gris); justify-self: end; }
+.comparar { --corte: 50%; position: relative; overflow: hidden; background: #fff; touch-action: pan-y; }
+.comparar img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.comparar .antes { position: absolute; inset: 0; height: 100%; clip-path: inset(0 calc(100% - var(--corte)) 0 0); }
+.comparar .linea-corte { position: absolute; top: 0; bottom: 0; left: var(--corte); width: 1px; background: var(--tinta); pointer-events: none; }
+.comparar .manija { position: absolute; top: 50%; left: var(--corte); display: grid; place-items: center; width: 52px; height: 52px; margin: -26px 0 0 -26px; border: 1px solid var(--tinta); border-radius: 50%; background: var(--papel); pointer-events: none; transition: transform 300ms var(--calma); }
+.comparar .manija svg { width: 22px; height: 22px; }
+.comparar input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+.comparar:has(input:focus-visible) .manija { outline: 1px solid var(--tinta); outline-offset: 4px; }
+.comparar:has(input:active) .manija { transform: scale(0.92); }
+.comparar .etiqueta { position: absolute; bottom: 16px; padding: 6px 10px; background: var(--papel); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; pointer-events: none; }
+.comparar .e-antes { left: 16px; }
+.comparar .e-despues { right: 16px; }
+
+/* ---- Proceso ---- */
+.proceso { padding-block: clamp(80px, 11vw, 160px); }
+.pasos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: 0; padding: 0; list-style: none; counter-reset: paso; }
+.paso { display: grid; gap: 14px; align-content: start; padding-top: 22px; border-top: 1px solid var(--linea); counter-increment: paso; transition: border-color 500ms; }
+.paso::before { content: '0' counter(paso); font-size: 11px; letter-spacing: 0.3em; color: var(--gris); }
+.paso:hover { border-color: var(--tinta); }
+.paso h3 { font-size: clamp(22px, 2vw, 28px); }
+.paso p { color: var(--gris); }
+.paso .meta { margin-top: 6px; }
+
+/* ---- Contacto ---- */
+.contacto { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 7vw, 120px); padding-block: clamp(80px, 11vw, 160px); border-top: 1px solid var(--linea); }
+.contacto h2 { font-size: clamp(36px, 4.6vw, 68px); margin-block: 18px 24px; }
+.contacto .datos { display: grid; gap: 22px; margin-top: 40px; color: var(--gris); }
+.contacto .datos b { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--tinta); }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 28px; align-content: start; }
+.formulario label { display: grid; gap: 6px; font-size: 11px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gris); }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select, .formulario textarea { width: 100%; min-height: 46px; padding: 8px 0; border: 0; border-bottom: 1px solid #bdbbb4; border-radius: 0; background: transparent; color: var(--tinta); font: 300 18px/1.4 'Hanken Grotesk', system-ui, sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; transition: border-color 300ms; }
+.formulario textarea { min-height: 110px; resize: vertical; }
+.formulario input[type="number"] { -moz-appearance: textfield; }
+.formulario input::-webkit-inner-spin-button, .formulario input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.formulario select { background: linear-gradient(45deg, transparent 50%, var(--tinta) 50%) calc(100% - 10px) 55% / 5px 5px no-repeat, linear-gradient(-45deg, transparent 50%, var(--tinta) 50%) calc(100% - 5px) 55% / 5px 5px no-repeat; }
+.formulario input:focus-visible, .formulario select:focus-visible, .formulario textarea:focus-visible { outline: none; border-bottom-color: var(--tinta); }
+.formulario button { justify-self: start; display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 30px; border: 1px solid var(--tinta); background: var(--tinta); color: var(--papel); font: 500 12px/1 'Hanken Grotesk', sans-serif; letter-spacing: 0.26em; text-transform: uppercase; cursor: pointer; transition: background 300ms, color 300ms; }
+.formulario button:hover { background: transparent; color: var(--tinta); }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--tinta); }
+
+/* ---- Pie ---- */
+.pie { padding-block: 40px; border-top: 1px solid var(--linea); }
+.pie-marca { display: block; font-size: clamp(40px, 9.4vw, 150px); font-weight: 200; letter-spacing: -0.05em; line-height: 0.9; }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 32px; font-size: 13px; color: var(--gris); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera { grid-template-columns: 1fr auto; }
+  .cabecera nav { display: none; }
+  .portada-texto { grid-column: 1 / -1; padding-top: 16px; }
+  .portada-foto { grid-column: 1 / 10; grid-row: 2; margin-top: 48px; }
+  .portada-detalle { grid-column: 10 / 13; grid-row: 2; align-self: end; }
+  .p-matta, .p-matta-texto { grid-column: 1 / -1; }
+  .p-lastarria { grid-column: 1 / 7; }
+  .p-vitacura { grid-column: 7 / 13; }
+  .p-pirque { grid-column: 3 / 11; }
+  .comparar-cabeza, .contacto { grid-template-columns: minmax(0, 1fr); }
+  .comparar-cabeza p:last-child { justify-self: start; }
+  .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera .enlace { font-size: 11px; letter-spacing: 0.14em; }
+  .portada-foto { grid-column: 1 / -1; }
+  .portada-detalle { display: none; }
+  .estudio { grid-template-columns: 1fr; }
+  .vertical { writing-mode: horizontal-tb; letter-spacing: 0.32em; }
+  .p-lastarria, .p-vitacura, .p-pirque { grid-column: 1 / -1; margin-top: 0; }
+  .p-vitacura { width: 82%; justify-self: end; }
+  .comparar img { aspect-ratio: 4 / 3; }
+  .pasos { grid-template-columns: minmax(0, 1fr); }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento: las fotos se descubren como una cortina que sube ----
+   La foto grande de la portada no se tapa (es lo primero que se pinta):
+   solo se asienta. Las demás se destapan de abajo hacia arriba al aparecer. */
+@keyframes asentar { from { transform: scale(1.06); } }
+@media (prefers-reduced-motion: no-preference) {
+  .portada-foto img { animation: asentar 2200ms var(--calma) both; }
+  .con-js .revela[data-aparece] { opacity: 1; transform: none; }
+  .con-js .revela .marco, .con-js .revela.marco { clip-path: inset(0 0 0 0); transition: clip-path 1500ms var(--calma); }
+  .con-js .revela:not(.visto) .marco, .con-js .revela.marco:not(.visto) { clip-path: inset(100% 0 0 0); }
+  .con-js .revela img { transition: transform 1800ms var(--calma); }
+  .con-js .revela:not(.visto) img { transform: scale(1.12); }
+}
+</style>
+</head>
+<body data-boceto="alba">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Alba Interiores</b> es una marca inventada por Volutus para mostrarte el estilo <b>Minimalista</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="flecha" viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol></svg>
+
+<header class="ancho cabecera">
+  <a class="marca" href="#inicio">Alba Interiores</a>
+  <nav aria-label="Secciones"><ul><li><a href="#proyectos">Proyectos</a></li><li><a href="#obra">Del plano a la obra</a></li><li><a href="#proceso">Proceso</a></li></ul></nav>
+  <a class="enlace" href="#contacto">Escríbenos</a>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio">
+    <div class="portada-texto">
+      <p class="rotulo">Estudio de interiorismo · Santiago</p>
+      <h1>Espacios en calma, hechos para vivirlos</h1>
+      <p>Diseñamos casas, departamentos y consultas pensando primero en la luz, después en los materiales y al final en los muebles.</p>
+      <a class="enlace" href="#proyectos">Ver proyectos <svg width="18" height="18" aria-hidden="true"><use href="#flecha"/></svg></a>
+    </div>
+    <figure class="portada-foto">
+      <img src="/image/bocetos/alba/portada-1300.webp" srcset="/image/bocetos/alba/portada-700.webp 700w, /image/bocetos/alba/portada-1300.webp 1300w" sizes="(min-width: 900px) 46vw, 100vw" width="1300" height="1733" alt="Una sala blanca bajo un arco, con un sofá oscuro, una mesa baja y una rama seca en un florero" fetchpriority="high">
+      <figcaption><span class="rotulo" style="color: var(--tinta)">Casa Alta</span><span class="meta"><span>Residencial</span><span>Lo Barnechea</span><span>2025</span></span></figcaption>
+    </figure>
+    <figure class="portada-detalle revela" data-aparece>
+      <div class="marco"><img src="/image/bocetos/alba/cortina-500.webp" srcset="/image/bocetos/alba/cortina-500.webp 500w, /image/bocetos/alba/cortina-900.webp 900w" sizes="22vw" width="900" height="1200" loading="lazy" alt="Luz de la tarde que atraviesa una cortina de lino"></div>
+      <figcaption class="meta">Lino, luz de poniente</figcaption>
+    </figure>
+  </section>
+
+  <section class="ancho estudio" aria-label="El estudio">
+    <p class="vertical" aria-hidden="true">Estudio</p>
+    <p class="lema" data-aparece>Somos tres personas y un taller. <span>Tomamos pocos proyectos al año para poder estar en cada uno, desde el primer plano hasta el último cuadro colgado.</span></p>
+  </section>
+
+  <section class="ancho proyectos" id="proyectos">
+    <div class="encabezado" data-aparece><h2>Proyectos recientes</h2><p class="meta"><span>12 proyectos</span><span>2021 — 2025</span></p></div>
+    <div class="grilla">
+      <figure class="proyecto p-matta revela" data-aparece>
+        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/matta-1400.webp" srcset="/image/bocetos/alba/matta-800.webp 800w, /image/bocetos/alba/matta-1400.webp 1400w" sizes="(min-width: 900px) 62vw, 100vw" width="1400" height="933" loading="lazy" alt="Una sala vacía de muros de ladrillo y una gran ventana de fierro, con una banca de madera al centro"></div></a>
+      </figure>
+      <div class="p-matta-texto" data-aparece>
+        <h3 class="titulo-proyecto">Galpón Matta</h3>
+        <p style="color: var(--gris)">Un taller de 1940 convertido en vivienda. Se mantuvo el ladrillo, el piso de cemento y la ventana original.</p>
+        <p class="meta"><span>Vivienda</span><span>Santiago Centro</span><span>2025</span></p>
+      </div>
+      <figure class="proyecto p-lastarria revela" data-aparece>
+        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/lastarria-600.webp" srcset="/image/bocetos/alba/lastarria-600.webp 600w, /image/bocetos/alba/lastarria-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1333" loading="lazy" alt="Una escalera de cemento claro que sube hacia la luz, con un jarrón en el descanso"></div>
+        <figcaption><h3>Lastarria</h3><span class="meta"><span>Departamento</span><span>2024</span></span></figcaption></a>
+      </figure>
+      <figure class="proyecto p-vitacura revela" data-aparece>
+        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/vitacura-600.webp" srcset="/image/bocetos/alba/vitacura-600.webp 600w, /image/bocetos/alba/vitacura-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1250" loading="lazy" alt="Un sillón de bouclé blanco junto a un puf, contra un muro claro"></div>
+        <figcaption><h3>Consulta Vitacura</h3><span class="meta"><span>Salud</span><span>2024</span></span></figcaption></a>
+      </figure>
+      <figure class="proyecto p-pirque revela" data-aparece>
+        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/pirque-600.webp" srcset="/image/bocetos/alba/pirque-600.webp 600w, /image/bocetos/alba/pirque-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 100vw" width="1000" height="1000" loading="lazy" alt="Una escalera de caracol blanca vista desde abajo, con curvas suaves"></div>
+        <figcaption><h3>Casa Pirque</h3><span class="meta"><span>Residencial</span><span>2023</span></span></figcaption></a>
+      </figure>
+    </div>
+  </section>
+
+  <section class="comparar-seccion" id="obra">
+    <div class="ancho">
+      <div class="comparar-cabeza" data-aparece>
+        <div><p class="rotulo">Antes y después</p><h2 style="margin-top: 14px">Del plano a la obra</h2></div>
+        <p>Cada proyecto empieza como un dibujo a escala. Mueve el corte para ver cómo el plano del living de Casa Alta se volvió la sala terminada.</p>
+      </div>
+      <div class="comparar" data-comparar-marco data-aparece>
+        <img class="despues" src="/image/bocetos/alba/living-1500.webp" srcset="/image/bocetos/alba/living-900.webp 900w, /image/bocetos/alba/living-1500.webp 1500w" sizes="(min-width: 1360px) 1248px, 100vw" width="1500" height="938" loading="lazy" alt="La sala terminada: sofás claros, una mesa baja de madera, repisas iluminadas y un cuadro de línea">
+        <img class="antes" src="/image/bocetos/alba/living-plano-1500.webp" srcset="/image/bocetos/alba/living-plano-900.webp 900w, /image/bocetos/alba/living-plano-1500.webp 1500w" sizes="(min-width: 1360px) 1248px, 100vw" width="1500" height="938" loading="lazy" alt="El plano de la misma sala, dibujado a línea">
+        <span class="linea-corte" aria-hidden="true"></span>
+        <span class="manija" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+        <span class="etiqueta e-antes" aria-hidden="true">Plano</span><span class="etiqueta e-despues" aria-hidden="true">Obra</span>
+        <input type="range" min="0" max="100" value="50" data-comparar aria-label="Corte entre el plano y la obra terminada">
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho proceso" id="proceso">
+    <div class="encabezado" data-aparece><h2>Cómo trabajamos</h2><p class="meta"><span>De 8 a 20 semanas</span></p></div>
+    <ol class="pasos">
+      <li class="paso" data-aparece><h3>Escuchar</h3><p>Visitamos el espacio y conversamos sobre cómo lo vives hoy y qué te falta.</p><p class="meta">1 semana</p></li>
+      <li class="paso" data-aparece style="--retraso: 100ms"><h3>Medir y dibujar</h3><p>Levantamos el espacio y te mostramos dos propuestas en planta y en 3D.</p><p class="meta">2 a 3 semanas</p></li>
+      <li class="paso" data-aparece style="--retraso: 200ms"><h3>Elegir materiales</h3><p>Muestras reales en tu casa, con la luz que tiene a cada hora del día.</p><p class="meta">2 semanas</p></li>
+      <li class="paso" data-aparece style="--retraso: 300ms"><h3>Acompañar la obra</h3><p>Coordinamos a los maestros y vamos a la obra dos veces por semana.</p><p class="meta">4 a 14 semanas</p></li>
+    </ol>
+  </section>
+
+  <section class="ancho contacto" id="contacto">
+    <div data-aparece>
+      <p class="rotulo">Contacto</p>
+      <h2>Cuéntanos de tu espacio</h2>
+      <p style="color: var(--gris); max-width: 36ch">Respondemos en dos días hábiles con una primera idea de alcance y plazos.</p>
+      <div class="datos">
+        <p><b>Estudio</b>José Victorino Lastarria 307, Santiago</p>
+        <p><b>Correo</b>estudio@albainteriores.cl</p>
+      </div>
+    </div>
+    <form class="formulario" data-muestra data-aparece toolname="contar_proyecto" tooldescription="Cuenta un proyecto de interiorismo a Alba Interiores, un estudio inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto." toolautosubmit>
+      <label>Nombre<input name="nombre" autocomplete="name" required></label>
+      <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+      <label>Tipo de espacio<select name="espacio" toolparamdescription="Qué espacio quiere diseñar: casa, departamento, oficina o consulta, o local"><option>Casa</option><option>Departamento</option><option>Oficina o consulta</option><option>Local</option></select></label>
+      <label>Metros cuadrados<input type="number" name="metros" min="10" max="2000" inputmode="numeric" toolparamdescription="Superficie aproximada del espacio, en metros cuadrados"></label>
+      <label class="todo">Qué te gustaría cambiar<textarea name="mensaje" rows="3" maxlength="800" toolparamdescription="Lo que quiere cambiar en el espacio, en pocas frases"></textarea></label>
+      <button class="todo" type="submit">Enviar <svg width="18" height="18" aria-hidden="true"><use href="#flecha"/></svg></button>
+    </form>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <span class="pie-marca" aria-hidden="true">alba interiores</span>
+  <div class="pie-fila"><span>Lastarria 307, Santiago · Lunes a viernes, 9:30 a 18:00</span><span>Boceto de Volutus · marca inventada</span></div>
+</footer>
+</body>
+</html>
