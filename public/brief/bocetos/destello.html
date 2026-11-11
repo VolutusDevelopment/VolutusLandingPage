@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Destello · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Destello, cámaras digitales compactas de los 2000 revisadas y con garantía, para mostrar el estilo Y2K.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/syne.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/destello/leopardo-640.webp" imagesrcset="/image/bocetos/destello/leopardo-400.webp 400w, /image/bocetos/destello/leopardo-640.webp 640w" imagesizes="(min-width: 900px) 27vw, 58vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/destello.js" type="module"></script>
+<style>
+/* Destello · Y2K. Inspiración: Retrospekt (retrospekt.com), del mismo rubro,
+   y el archivo de CARI. Se toma: 1) el catálogo donde cada aparato dice su
+   estado y la garantía está a la vista, con titulares grandes en mayúscula
+   sobre las fotos; 2) el cromo, el lila, el hielo y el rosa de los 2000, con
+   destellos ✦ y formas de plástico; 3) el cariño por el objeto: cada cámara
+   se muestra como un producto de vitrina, colgada en su blíster. La idea
+   propia: el flash. Las fotos llevan la fecha naranja de siete segmentos
+   estampada en la esquina, la portada es la pantallita de la cámara (con su
+   disparador), y las copias salen del sobre de revelado. */
+@font-face { font-family: 'Syne'; src: url('/fonts/bocetos/syne.woff2') format('woff2'); font-weight: 400 800; font-display: swap; }
+/* La de respaldo ocupa lo mismo que Syne (Arial, 1,48 veces más ancha): el
+   título corta igual antes y después de cargar la letra y no mueve la página. */
+@font-face { font-family: 'Syne respaldo'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Arial'); size-adjust: 148%; }
+@font-face { font-family: 'Figtree'; src: url('/fonts/bocetos/figtree.woff2') format('woff2'); font-weight: 300 900; font-display: swap; }
+
+:root {
+  --lila: #e9dcff;
+  --lila-hondo: #d6c4fb;
+  --plata: #c9ced8;
+  --hielo: #9fd8ff;
+  --rosa: #ff9ad5;
+  --fecha: #ff8a1f;
+  --tinta: #15131c;
+  --gris: #4a4558;
+  --blanco: #ffffff;
+  --lcd: #1c2230;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.7, 0, 0.3, 1);
+  --cromo: linear-gradient(180deg, #ffffff 0%, #e2e5ec 20%, #979eb0 42%, #2c3140 50%, #687083 60%, #d0d5df 80%, #ffffff 100%);
+}
+* { box-sizing: border-box; }
+html { background: var(--lila); scroll-behavior: smooth; }
+body { margin: 0; background: var(--lila); color: var(--tinta); font: 400 18px/1.6 'Figtree', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: 'Syne', 'Syne respaldo', sans-serif; font-weight: 800; letter-spacing: -0.03em; line-height: 0.98; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.titulo { font-size: clamp(32px, 4.8vw, 66px); text-transform: uppercase; }
+.bajada { max-width: 40ch; margin-top: 18px; color: var(--gris); }
+.cromo { color: var(--tinta); background: var(--cromo) 0 0 / 100% 220%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px var(--tinta); }
+.boton { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 28px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--tinta); color: var(--lila); font: 700 17px/1 'Figtree', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.boton:hover { background: var(--rosa); color: var(--tinta); }
+.enlace { font-weight: 700; text-underline-offset: 6px; text-decoration-thickness: 2px; text-decoration-color: var(--fecha); }
+.fecha { position: absolute; right: 7%; bottom: 7%; display: block; width: 25%; fill: var(--fecha); opacity: 0.94; filter: blur(0.25px); }
+.fecha svg { display: block; width: 100%; height: auto; }
+.chispa { position: absolute; width: var(--t, 26px); fill: var(--blanco); }
+
+/* ---- Cabecera: el dial de modos ---- */
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-block: 22px; }
+.logo { display: inline-flex; align-items: center; gap: 8px; font: 800 30px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: -0.05em; text-decoration: none; }
+.logo svg { width: 28px; height: 28px; fill: var(--tinta); }
+.dial ul { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 0; padding: 4px; list-style: none; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(180deg, #f6f7fa, var(--plata) 55%, #aeb4c2); box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.8); }
+.dial li:first-child { padding: 0 12px; font: 800 12px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: 0.08em; }
+.dial a { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: background-color 400ms var(--curva); }
+.dial a:hover { background: var(--hielo); }
+.dial svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* ---- Portada: la cámara ---- */
+.portada { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(24px, 4vw, 56px) clamp(80px, 10vw, 140px); }
+.portada-texto { display: grid; gap: 26px; justify-items: start; }
+.portada h1 { font-size: clamp(44px, 6vw, 92px); text-transform: uppercase; line-height: 0.9; }
+.portada-texto > p { max-width: 34ch; font-size: 20px; color: var(--gris); }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.camara { position: relative; width: min(100%, 37rem); justify-self: center; }
+.cam-cuerpo { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 2fr); gap: 6%; padding: 7% 6% 8%; border: 2px solid var(--tinta); border-radius: 34px; background: linear-gradient(160deg, #fbfbfd 0%, #dfe2e9 32%, #b7bdca 60%, #e6e9ef 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 0.9), inset 0 -6px 14px rgb(60 66 84 / 0.25), 0 30px 50px -30px rgb(21 19 28 / 0.6); }
+.cam-tope { position: absolute; right: 14%; top: -18px; display: flex; gap: 12px; align-items: end; }
+.cam-tope i { display: block; width: 34px; height: 10px; border: 2px solid var(--tinta); border-bottom: 0; border-radius: 8px 8px 0 0; background: var(--plata); }
+.disparador { position: relative; display: none; width: 58px; height: 24px; margin-bottom: -2px; border: 2px solid var(--tinta); border-bottom: 0; border-radius: 30px 30px 0 0; background: linear-gradient(180deg, var(--rosa), #e27bb8); cursor: pointer; transition: translate 300ms var(--curva); }
+.con-js .disparador { display: block; }
+.disparador:active { translate: 0 4px; }
+.disparador span { position: absolute; right: calc(100% + 12px); bottom: 26px; padding: 6px 12px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--blanco); font: 700 14px/1 'Figtree', sans-serif; white-space: nowrap; }
+.lcd { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 3px solid var(--tinta); border-radius: 10px; background: #0c0e14; }
+.toma { position: absolute; inset: 0; display: none; }
+.toma.actual { display: block; }
+.toma img { width: 100%; height: 100%; object-fit: cover; }
+.lcd-hud { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; padding: 6px 9px; font: 700 11px/1 'Figtree', sans-serif; letter-spacing: 0.06em; color: var(--blanco); text-shadow: 0 1px 2px rgb(0 0 0 / 0.7); pointer-events: none; }
+.contador { min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
+.flash { position: absolute; inset: -40%; z-index: 3; background: radial-gradient(circle, #ffffff 0 30%, rgb(255 255 255 / 0) 70%); opacity: 0; pointer-events: none; }
+.cam-botones { display: grid; align-content: center; justify-items: center; gap: 18%; }
+.cruceta { position: relative; width: 100%; aspect-ratio: 1; border: 2px solid var(--tinta); border-radius: 50%; background: radial-gradient(circle, var(--plata) 0 26%, var(--tinta) 27% 30%, #eef0f4 31%); }
+.cam-botones i { display: block; width: 72%; height: 14px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--hielo); }
+.cam-botones i + i { background: var(--blanco); }
+.cam-leyenda { margin-top: 14px; font: 700 12px/1.3 'Figtree', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); text-align: center; }
+.portada .chispa:nth-of-type(1) { left: -2%; top: 8%; --t: 34px; }
+.portada .chispa:nth-of-type(2) { right: 3%; top: 2%; --t: 22px; }
+.portada .chispa:nth-of-type(3) { right: 1%; bottom: 20%; --t: 40px; }
+.portada .chispa:nth-of-type(4) { left: 44%; bottom: 10%; --t: 18px; }
+
+/* ---- El catálogo: blísteres en el tablero ---- */
+.catalogo { background: radial-gradient(circle, #b3a3dc 2.2px, transparent 2.8px) 0 0 / 26px 26px, var(--lila-hondo); }
+.blisteres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(16px, 2.4vw, 32px); margin: 56px 0 0; padding: 0; list-style: none; }
+.blister { position: relative; display: grid; gap: 16px; padding: 52px 16px 20px; border: 2px solid var(--tinta); border-radius: 22px; background: var(--c); }
+.blister::before { content: ''; position: absolute; left: 50%; top: 16px; width: 48px; height: 14px; translate: -50% 0; border: 2px solid var(--tinta); border-radius: 999px; background: var(--lila-hondo); }
+.burbuja { position: relative; overflow: hidden; padding: 10px; border: 2px solid rgb(255 255 255 / 0.95); border-radius: 26px; background: rgb(255 255 255 / 0.4); box-shadow: inset 0 0 0 5px rgb(255 255 255 / 0.3), 0 14px 18px -14px rgb(21 19 28 / 0.6); }
+.burbuja img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+.burbuja::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgb(255 255 255 / 0.7) 46%, rgb(255 255 255 / 0.15) 54%, transparent 64%) 130% 0 / 260% 100% no-repeat; transition: background-position 600ms var(--curva); pointer-events: none; }
+.blister:hover .burbuja::after { background-position: -30% 0; }
+.precio { position: absolute; right: 8px; top: 58px; display: grid; place-items: center; width: 78px; height: 78px; border: 2px solid var(--tinta); border-radius: 50%; background: var(--fecha); font: 800 15px/1.05 'Figtree', sans-serif; font-variant-numeric: tabular-nums; text-align: center; rotate: 12deg; }
+.blister h3 { font-size: 22px; letter-spacing: -0.02em; }
+.blister h3 small { display: block; margin-top: 4px; font: 600 14px 'Figtree', sans-serif; letter-spacing: 0; color: var(--gris); }
+.ficha { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 15px; }
+.ficha dt { color: var(--gris); }
+.ficha dd { margin: 0; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.estado { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--tinta); color: var(--lila); font-size: 13px; }
+
+/* ---- Cómo revisamos: la batería ---- */
+.bateria { display: flex; align-items: center; gap: 8px; margin-block: 56px 40px; }
+.pila { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; flex: 1; height: clamp(64px, 9vw, 110px); padding: 10px; border: 3px solid var(--tinta); border-radius: 18px; background: var(--blanco); }
+.celda { border-radius: 8px; background: linear-gradient(180deg, #c6ebff, var(--hielo) 60%, #7cc6f4); transform-origin: left center; --entrada: destello-carga; }
+.borne { width: 16px; height: 40%; border: 3px solid var(--tinta); border-left: 0; border-radius: 0 8px 8px 0; background: var(--plata); }
+.pruebas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px clamp(16px, 2vw, 28px); margin: 0; padding: 0; list-style: none; counter-reset: prueba; }
+.pruebas li { counter-increment: prueba; }
+.pruebas li::before { content: '0' counter(prueba); display: block; margin-bottom: 10px; font: 800 15px/1 'Syne', 'Syne respaldo', sans-serif; color: var(--gris); }
+.pruebas h3 { font-size: 24px; margin-bottom: 8px; }
+.pruebas p { font-size: 16px; color: var(--gris); }
+@keyframes destello-carga { from { transform: scaleX(0); opacity: 0.4; } }
+
+/* ---- Galería: el sobre de revelado ---- */
+.galeria { background: var(--tinta); color: var(--lila); }
+.galeria .bajada { color: #c3bad8; }
+.galeria .titulo { color: var(--lila); }
+.revelado { position: relative; max-width: 980px; margin: 64px auto 0; }
+.copias { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding-inline: 4%; }
+.copia { position: relative; z-index: 1; margin-inline: -6%; padding: 8px 8px 34px; background: var(--blanco); color: var(--tinta); box-shadow: 0 18px 30px -16px rgb(0 0 0 / 0.7); rotate: var(--giro); translate: 0 var(--alto, 0); --entrada: destello-sale; }
+.copia > div { position: relative; }
+.copia img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.copia figcaption { position: absolute; left: 10px; right: 10px; bottom: 8px; font-size: 13px; line-height: 1.25; }
+.sobre { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px 24px; margin-top: -5%; padding: 10% 32px 28px; border: 2px solid var(--tinta); border-radius: 6px 6px 18px 18px; background: linear-gradient(180deg, var(--rosa) 0 26%, #ffd0ec 26%); color: var(--tinta); clip-path: polygon(0 12%, 50% 0, 100% 12%, 100% 100%, 0 100%); }
+.sobre b { font: 800 clamp(26px, 4vw, 44px)/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: -0.03em; text-transform: uppercase; }
+.sobre span { font-size: 15px; font-weight: 600; }
+@keyframes destello-sale { from { transform: translateY(42%); filter: brightness(0.15) saturate(0); } }
+
+/* ---- Garantía ---- */
+.garantia { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; }
+.certificado { position: relative; padding: clamp(28px, 4vw, 52px); border: 2px solid var(--tinta); border-radius: 8px; background: repeating-radial-gradient(circle at 0 100%, transparent 0 14px, rgb(123 92 255 / 0.08) 14px 15px), repeating-radial-gradient(circle at 100% 0, transparent 0 14px, rgb(255 154 213 / 0.14) 14px 15px), var(--blanco); box-shadow: inset 0 0 0 8px var(--blanco), inset 0 0 0 10px var(--tinta); }
+.cert-cabeza { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); }
+.certificado h2 { margin-block: 14px 28px; font-size: clamp(36px, 4.6vw, 60px); }
+.certificado dl { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 14px 20px; margin: 0; }
+.certificado dt { font-weight: 700; }
+.certificado dd { margin: 0; color: var(--gris); }
+.sello-cert { position: absolute; right: -28px; bottom: -34px; display: grid; place-items: center; width: 120px; height: 120px; }
+.sello-cert svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sello-cert b { position: relative; font: 800 18px/1 'Figtree', sans-serif; text-align: center; }
+.envios { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
+.envios li { padding-left: 34px; position: relative; }
+.envios li::before { content: '✦'; position: absolute; left: 0; top: 0; color: var(--fecha); font-size: 20px; }
+.envios b { display: block; font-family: 'Syne', 'Syne respaldo', sans-serif; font-size: 20px; }
+.envios span { color: var(--gris); font-size: 16px; }
+
+/* ---- Vender: el menú de la pantalla ---- */
+.vender { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.vender figure { position: relative; margin-top: 36px; }
+.vender figure img { width: min(100%, 22rem); aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--tinta); border-radius: 26px; }
+.menu-lcd { display: grid; gap: 0; padding: 0; overflow: hidden; border: 3px solid var(--tinta); border-radius: 22px; background: var(--lcd); color: #e6f2ff; box-shadow: 0 0 0 10px var(--plata), 0 0 0 12px var(--tinta); }
+.menu-barra { display: flex; justify-content: space-between; padding: 14px 22px; background: #2b3448; font-weight: 800; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
+.menu-barra span:last-child { color: var(--hielo); letter-spacing: 0.02em; }
+.fila { display: grid; grid-template-columns: 9rem minmax(0, 1fr); align-items: center; gap: 12px; padding: 14px 22px; border-bottom: 1px solid #364056; font-weight: 600; font-size: 16px; }
+.menu-lcd input:not([type='radio']), .menu-lcd select { width: 100%; min-height: 48px; padding: 8px 14px; border: 2px solid #46536c; border-radius: 10px; background: #11161f; color: #ffffff; font: 400 18px/1.3 'Figtree', sans-serif; -webkit-appearance: none; appearance: none; }
+.menu-lcd select { padding-right: 40px; background: #11161f url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%239fd8ff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") right 14px center / 14px 9px no-repeat; }
+.menu-lcd :is(input, select):focus-visible { outline: 2px solid var(--hielo); outline-offset: 2px; }
+.estados { margin: 0; padding: 14px 22px; border: 0; border-bottom: 1px solid #364056; }
+.estados legend { float: left; width: 100%; margin-bottom: 8px; font-weight: 600; font-size: 16px; }
+.estado-fila { position: relative; display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px 0 34px; border-radius: 10px; cursor: pointer; transition: background-color 300ms var(--curva), color 300ms var(--curva); }
+.estado-fila input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.estado-fila::before { content: '▶'; position: absolute; left: 12px; font-size: 12px; opacity: 0; transition: opacity 300ms var(--curva); }
+.estado-fila small { margin-left: auto; font-size: 14px; opacity: 0.75; }
+.estado-fila:has(input:checked) { background: var(--hielo); color: var(--tinta); }
+.estado-fila:has(input:checked)::before { opacity: 1; }
+.estado-fila:has(input:focus-visible) { outline: 2px solid var(--hielo); outline-offset: 2px; }
+.menu-pie { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 18px 22px 22px; }
+.menu-pie .boton { background: var(--hielo); border-color: var(--hielo); color: var(--tinta); }
+.menu-pie .boton:hover { background: var(--rosa); border-color: var(--rosa); }
+.menu-pie .boceto-aviso { margin: 0; color: #e6f2ff; }
+
+/* ---- Pie: la tarjeta de memoria ---- */
+.pie { padding-block: 24px 48px; }
+.sd { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 40px; align-items: end; padding: 64px clamp(24px, 4vw, 48px) 32px; background: var(--tinta); color: var(--lila); clip-path: polygon(0 0, calc(100% - 64px) 0, 100% 64px, 100% 100%, 0 100%); border-radius: 0 0 22px 22px; }
+.sd::before { content: ''; position: absolute; left: clamp(24px, 4vw, 48px); top: 0; width: min(60%, 420px); height: 34px; background: repeating-linear-gradient(90deg, var(--plata) 0 26px, transparent 26px 36px); }
+.sd .sd-marca { font: 800 clamp(48px, 8vw, 104px)/0.9 'Syne', 'Syne respaldo', sans-serif; letter-spacing: -0.05em; }
+.sd-marca b { color: var(--hielo); font-size: 0.5em; vertical-align: super; letter-spacing: 0; }
+.sd p { font-size: 16px; }
+.sd-datos { display: grid; gap: 4px; justify-items: end; text-align: right; color: #c3bad8; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada, .garantia, .vender { grid-template-columns: minmax(0, 1fr); }
+  .blisteres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pruebas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .copias { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
+  .copia { margin-inline: 2%; }
+  .sobre { margin-top: -8%; padding-top: 16%; }
+  .sd { grid-template-columns: minmax(0, 1fr); }
+  .sd-datos { justify-items: start; text-align: left; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .dial li:first-child { display: none; }
+  .dial a { padding: 0 10px; font-size: 14px; min-height: 38px; }
+  .dial svg { display: none; }
+  .cam-tope { right: 10%; }
+  .disparador span { font-size: 13px; }
+  .blisteres { gap: 28px 14px; }
+  .blister { padding: 46px 10px 14px; gap: 12px; }
+  .precio { width: 62px; height: 62px; font-size: 12.5px; right: 4px; top: 50px; }
+  .blister h3 { font-size: 18px; }
+  .ficha { font-size: 14px; grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ficha dd { text-align: left; margin-bottom: 6px; }
+  .pruebas { grid-template-columns: minmax(0, 1fr); }
+  .pila { gap: 5px; padding: 7px; }
+  .copia { padding: 6px 6px 30px; }
+  .copia figcaption { font-size: 12px; }
+  .certificado dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .certificado dd { margin-bottom: 12px; }
+  .sello-cert { right: -8px; width: 96px; height: 96px; }
+  .sello-cert b { font-size: 15px; }
+  .fila { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .menu-lcd { box-shadow: 0 0 0 6px var(--plata), 0 0 0 8px var(--tinta); }
+  .sd .sd-marca { font-size: min(40px, 10vw); }
+}
+
+/* ---- Movimiento ----
+   El cromo de las letras se corre de ida y vuelta, despacio. Los destellos
+   crecen y se apagan, cada uno a su ritmo, sin parpadear. Al disparar
+   (destello.js), el flash crece y se apaga y la foto siguiente se revela
+   en la pantallita, de negra a nítida. Las celdas de la batería se cargan
+   una tras otra al bajar, y las copias salen del sobre, revelándose. */
+[data-aparece] { --entrada: destello-llega; --tramo: 36svh; --duracion: 1300ms; }
+@keyframes destello-llega { from { opacity: 0; translate: 0 28px; } }
+@keyframes destello-cromo { to { background-position: 0 100%; } }
+@keyframes destello-titila { from { transform: scale(0.35) rotate(-20deg); opacity: 0.25; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes destello-revela { from { filter: brightness(0.05) contrast(1.6) saturate(0); } }
+@keyframes destello-flash { 0% { opacity: 0; } 28% { opacity: 0.85; } 100% { opacity: 0; } }
+@keyframes destello-gira { to { rotate: 1turn; } }
+@media (prefers-reduced-motion: no-preference) {
+  .cromo { animation: destello-cromo 9s var(--curva) infinite alternate; }
+  .chispa { animation: destello-titila var(--d, 6s) var(--curva) infinite alternate; }
+  .chispa:nth-of-type(2n) { --d: 7.5s; animation-delay: -2s; }
+  .chispa:nth-of-type(3n) { --d: 9s; animation-delay: -4s; }
+  .toma.actual img { animation: destello-revela 1600ms var(--curva) both; }
+  .dispara .flash { animation: destello-flash 900ms var(--curva); }
+  .sello-cert svg { animation: destello-gira 40s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boton, .dial a, .burbuja::after, .estado-fila, .disparador { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="destello">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Destello</b> es una marca inventada por Volutus para mostrarte el estilo <b>Y2K</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="chispa" viewBox="0 0 24 24"><path d="M12 0C12.9 7.6 16.4 11.1 24 12C16.4 12.9 12.9 16.4 12 24C11.1 16.4 7.6 12.9 0 12C7.6 11.1 11.1 7.6 12 0Z"/></symbol>
+  <symbol id="d0" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/><rect x="0" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/></symbol>
+  <symbol id="d1" viewBox="0 0 10 18"><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/></symbol>
+  <symbol id="d2" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/><rect x="0" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/></symbol>
+  <symbol id="d3" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/></symbol>
+  <symbol id="d4" viewBox="0 0 10 18"><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/></symbol>
+  <symbol id="d5" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/></symbol>
+  <symbol id="d6" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/><rect x="0" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/></symbol>
+  <symbol id="d7" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/></symbol>
+  <symbol id="d8" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/><rect x="0" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/></symbol>
+  <symbol id="d9" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#chispa"/></svg>destello</a>
+  <nav class="dial" aria-label="Secciones">
+    <ul>
+      <li aria-hidden="true">AUTO</li>
+      <li><a href="#catalogo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="13" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6.5l1.5-2.5h5L16 6.5"/></svg>Catálogo</a></li>
+      <li><a href="#revision"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/></svg>Revisión</a></li>
+      <li><a href="#galeria"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="15" height="12" rx="1.5"/><path d="M7 20h14V9"/></svg>Galería</a></li>
+      <li><a href="#vender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M16.5 7.5C16 6 14.4 5 12 5S7.5 6.2 7.5 8.2c0 4.6 9 2.6 9 7.4 0 2-2 3.4-4.5 3.4s-4.3-1-4.9-2.8"/></svg>Vender</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <div class="portada-texto">
+      <h1 id="titulo" class="cromo">Fotos con flash, como en 2006</h1>
+      <p>Cámaras digitales compactas de los 2000, revisadas una por una, con batería nueva y seis meses de garantía.</p>
+      <div class="acciones"><a class="boton" href="#catalogo">Ver el catálogo</a><a class="enlace" href="#vender">Vender la tuya</a></div>
+    </div>
+    <div class="camara">
+      <div class="cam-tope"><i></i><button class="disparador" type="button" aria-controls="pantallita"><span>Sacar foto</span></button></div>
+      <div class="cam-cuerpo">
+        <div class="lcd" id="pantallita" role="group" aria-label="La pantalla de la cámara">
+          <figure class="toma actual">
+            <img src="/image/bocetos/destello/leopardo-640.webp" srcset="/image/bocetos/destello/leopardo-400.webp 400w, /image/bocetos/destello/leopardo-640.webp 640w" sizes="(min-width: 900px) 27vw, 58vw" width="640" height="480" alt="Una persona con peluca rubia, gorro verde y abrigo de leopardo mira seria a la cámara con un plato en la mano, iluminada por el flash" fetchpriority="high">
+            <span class="fecha" role="img" aria-label="24 de diciembre de 2005"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d5" x="17" width="10" height="18"/><use href="#d1" x="35" width="10" height="18"/><use href="#d2" x="48" width="10" height="18"/><use href="#d2" x="66" width="10" height="18"/><use href="#d4" x="79" width="10" height="18"/></svg></span>
+          </figure>
+          <figure class="toma">
+            <img src="/image/bocetos/destello/amigos-640.webp" srcset="/image/bocetos/destello/amigos-400.webp 400w, /image/bocetos/destello/amigos-640.webp 640w" sizes="(min-width: 900px) 27vw, 58vw" width="640" height="480" loading="lazy" alt="Tres amigos abrazados ríen muy cerca de la cámara en una fiesta, con el flash en la cara">
+            <span class="fecha" role="img" aria-label="18 de septiembre de 2006"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d6" x="17" width="10" height="18"/><use href="#d0" x="35" width="10" height="18"/><use href="#d9" x="48" width="10" height="18"/><use href="#d1" x="66" width="10" height="18"/><use href="#d8" x="79" width="10" height="18"/></svg></span>
+          </figure>
+          <figure class="toma">
+            <img src="/image/bocetos/destello/lentes-640.webp" srcset="/image/bocetos/destello/lentes-400.webp 400w, /image/bocetos/destello/lentes-640.webp 640w" sizes="(min-width: 900px) 27vw, 58vw" width="640" height="480" loading="lazy" alt="Un hombre de barba con lentes rojos saluda con la mano abierta, de noche y con flash">
+            <span class="fecha" role="img" aria-label="1 de enero de 2007"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d7" x="17" width="10" height="18"/><use href="#d0" x="35" width="10" height="18"/><use href="#d1" x="48" width="10" height="18"/><use href="#d0" x="66" width="10" height="18"/><use href="#d1" x="79" width="10" height="18"/></svg></span>
+          </figure>
+          <p class="lcd-hud" aria-hidden="true"><span>⚡ AUTO · 7M</span><span class="contador">1/3</span></p>
+          <span class="flash"></span>
+        </div>
+        <div class="cam-botones" aria-hidden="true"><span class="cruceta"></span><i></i><i></i></div>
+      </div>
+      <p class="cam-leyenda">Fotos tomadas con cámaras del catálogo</p>
+    </div>
+    <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
+    <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
+    <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
+    <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
+  </section>
+
+  <section class="seccion catalogo" id="catalogo" aria-labelledby="catalogo-titulo">
+    <div class="ancho">
+      <div data-aparece>
+        <h2 class="titulo" id="catalogo-titulo">En la vitrina</h2>
+        <p class="bajada">Cada una trae su estado escrito, sin letra chica. A es como nueva; B tiene marcas de uso que no afectan las fotos.</p>
+      </div>
+      <ul class="blisteres">
+        <li class="blister" data-aparece style="--c: #ff9ad5">
+          <div class="burbuja"><img src="/image/bocetos/destello/g3-400.webp" srcset="/image/bocetos/destello/g3-400.webp 400w, /image/bocetos/destello/g3-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una cámara Canon PowerShot G3 plateada sobre una mesa de madera"></div>
+          <p class="precio">$89.000</p>
+          <h3>PowerShot G3<small>Canon · 2002</small></h3>
+          <dl class="ficha"><dt>Sensor</dt><dd>4 MP</dd><dt>Zoom</dt><dd>4× óptico</dd><dt>Estado</dt><dd><span class="estado">A</span></dd></dl>
+        </li>
+        <li class="blister" data-aparece style="--c: #9fd8ff; --orden: 1">
+          <div class="burbuja"><img src="/image/bocetos/destello/lumix-400.webp" srcset="/image/bocetos/destello/lumix-400.webp 400w, /image/bocetos/destello/lumix-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una cámara compacta Panasonic Lumix plateada, de frente sobre una mesa"></div>
+          <p class="precio">$64.000</p>
+          <h3>Lumix FX<small>Panasonic · 2005</small></h3>
+          <dl class="ficha"><dt>Sensor</dt><dd>6 MP</dd><dt>Zoom</dt><dd>3× óptico</dd><dt>Estado</dt><dd><span class="estado">A</span></dd></dl>
+        </li>
+        <li class="blister" data-aparece style="--c: #ffffff; --orden: 2">
+          <div class="burbuja"><img src="/image/bocetos/destello/ixus-400.webp" srcset="/image/bocetos/destello/ixus-400.webp 400w, /image/bocetos/destello/ixus-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una cámara compacta Canon IXUS plateada frente a luces rojas y azules desenfocadas"></div>
+          <p class="precio">$72.000</p>
+          <h3>IXUS<small>Canon · 2007</small></h3>
+          <dl class="ficha"><dt>Sensor</dt><dd>7 MP</dd><dt>Zoom</dt><dd>3× óptico</dd><dt>Estado</dt><dd><span class="estado">A</span></dd></dl>
+        </li>
+        <li class="blister" data-aparece style="--c: #c9ced8; --orden: 3">
+          <div class="burbuja"><img src="/image/bocetos/destello/cybershot-400.webp" srcset="/image/bocetos/destello/cybershot-400.webp 400w, /image/bocetos/destello/cybershot-640.webp 640w" sizes="(min-width: 900px) 20vw, 42vw" width="640" height="640" loading="lazy" alt="Una cámara compacta Sony Cyber-shot de color turquesa con su correa"></div>
+          <p class="precio">$49.000</p>
+          <h3>Cyber-shot W<small>Sony · 2006</small></h3>
+          <dl class="ficha"><dt>Sensor</dt><dd>7,2 MP</dd><dt>Zoom</dt><dd>3× óptico</dd><dt>Estado</dt><dd><span class="estado">B</span></dd></dl>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="revision" aria-labelledby="revision-titulo">
+    <div data-aparece>
+      <h2 class="titulo" id="revision-titulo">Cinco pruebas antes de la vitrina</h2>
+      <p class="bajada">Si una cámara no pasa las cinco, se desarma para repuestos. Ninguna sale a la venta a medias.</p>
+    </div>
+    <div class="bateria" data-aparece aria-hidden="true">
+      <div class="pila"><span class="celda" data-sigue></span><span class="celda" data-sigue style="--orden: 1"></span><span class="celda" data-sigue style="--orden: 2"></span><span class="celda" data-sigue style="--orden: 3"></span><span class="celda" data-sigue style="--orden: 4"></span></div>
+      <span class="borne"></span>
+    </div>
+    <ol class="pruebas">
+      <li><h3>Sensor</h3><p>Fotos con la tapa puesta y contra una pared blanca, para encontrar píxeles muertos.</p></li>
+      <li><h3>Lente</h3><p>El zoom de punta a punta veinte veces, sin ruidos ni trabas, y el foco en tres distancias.</p></li>
+      <li><h3>Flash</h3><p>Cincuenta disparos seguidos. Si tarda más de cinco segundos en cargar, no pasa.</p></li>
+      <li><h3>Batería</h3><p>Un ciclo completo. Si no llega al 80 % de su carga, va con una nueva.</p></li>
+      <li><h3>Tarjeta</h3><p>Lee y escribe en la tarjeta, y pasa las fotos por cable al computador.</p></li>
+    </ol>
+  </section>
+
+  <section class="seccion galeria" id="galeria" aria-labelledby="galeria-titulo">
+    <div class="ancho">
+      <div data-aparece>
+        <h2 class="titulo" id="galeria-titulo">Recién reveladas</h2>
+        <p class="bajada">Fotos que nos mandan quienes compraron. La fecha la puso la cámara, como entonces.</p>
+      </div>
+      <div class="revelado" data-aparece>
+        <div class="copias">
+          <figure class="copia" data-sigue style="--giro: -8deg; --alto: 16px">
+            <div><img src="/image/bocetos/destello/sillon-400.webp" srcset="/image/bocetos/destello/sillon-400.webp 400w, /image/bocetos/destello/sillon-640.webp 640w" sizes="(min-width: 900px) 24vw, 46vw" width="640" height="427" loading="lazy" alt="Una persona de rojo descansa en un sillón blanco junto a un árbol de Navidad, con flash"><span class="fecha" role="img" aria-label="25 de diciembre de 2005"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d5" x="17" width="10" height="18"/><use href="#d1" x="35" width="10" height="18"/><use href="#d2" x="48" width="10" height="18"/><use href="#d2" x="66" width="10" height="18"/><use href="#d5" x="79" width="10" height="18"/></svg></span></div>
+            <figcaption>Navidad, con una Lumix FX</figcaption>
+          </figure>
+          <figure class="copia" data-sigue style="--giro: 3deg; --alto: -10px; --orden: 1">
+            <div><img src="/image/bocetos/destello/confeti-400.webp" srcset="/image/bocetos/destello/confeti-400.webp 400w, /image/bocetos/destello/confeti-640.webp 640w" sizes="(min-width: 900px) 24vw, 46vw" width="640" height="427" loading="lazy" alt="Gente bailando bajo una lluvia de confeti de colores en una fiesta"><span class="fecha" role="img" aria-label="31 de diciembre de 2004"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d4" x="17" width="10" height="18"/><use href="#d1" x="35" width="10" height="18"/><use href="#d2" x="48" width="10" height="18"/><use href="#d3" x="66" width="10" height="18"/><use href="#d1" x="79" width="10" height="18"/></svg></span></div>
+            <figcaption>Año Nuevo, con una IXUS</figcaption>
+          </figure>
+          <figure class="copia" data-sigue style="--giro: -2deg; --alto: 6px; --orden: 2">
+            <div><img src="/image/bocetos/destello/cumple-400.webp" srcset="/image/bocetos/destello/cumple-400.webp 400w, /image/bocetos/destello/cumple-640.webp 640w" sizes="(min-width: 900px) 24vw, 46vw" width="640" height="427" loading="lazy" alt="Un grupo celebra un cumpleaños con bengalas frente a un arco de globos dorados"><span class="fecha" role="img" aria-label="22 de marzo de 2008"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d8" x="17" width="10" height="18"/><use href="#d0" x="35" width="10" height="18"/><use href="#d3" x="48" width="10" height="18"/><use href="#d2" x="66" width="10" height="18"/><use href="#d2" x="79" width="10" height="18"/></svg></span></div>
+            <figcaption>Cumpleaños, con una G3</figcaption>
+          </figure>
+          <figure class="copia" data-sigue style="--giro: 7deg; --alto: 20px; --orden: 3">
+            <div><img src="/image/bocetos/destello/brindis-400.webp" srcset="/image/bocetos/destello/brindis-400.webp 400w, /image/bocetos/destello/brindis-640.webp 640w" sizes="(min-width: 900px) 24vw, 46vw" width="640" height="427" loading="lazy" alt="Amigos levantan los brazos y brindan en una fiesta de noche"><span class="fecha" role="img" aria-label="10 de junio de 2006"><svg viewBox="0 0 89 18"><rect x="0.5" y="0" width="1.8" height="5" rx="0.6"/><use href="#d0" x="4" width="10" height="18"/><use href="#d6" x="17" width="10" height="18"/><use href="#d0" x="35" width="10" height="18"/><use href="#d6" x="48" width="10" height="18"/><use href="#d1" x="66" width="10" height="18"/><use href="#d0" x="79" width="10" height="18"/></svg></span></div>
+            <figcaption>Un viernes, con una Cyber-shot</figcaption>
+          </figure>
+        </div>
+        <p class="sobre"><b>Revelado</b><span>Destello · 24 copias 10 × 15 · brillante · sobre Nº 0611</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion garantia" aria-labelledby="garantia-titulo">
+    <div class="certificado" data-aparece>
+      <p class="cert-cabeza">Certificado de garantía Nº 06-1111</p>
+      <h2 id="garantia-titulo">Seis meses, por escrito</h2>
+      <dl>
+        <dt>Cubre</dt><dd>Sensor, lente, flash, pantalla, batería y botones. Si falla, la reparamos o te devolvemos el dinero.</dd>
+        <dt>No cubre</dt><dd>Golpes, agua y arena de playa. Las tres matan cámaras desde 2003.</dd>
+        <dt>Viene con</dt><dd>Batería, cargador, correa y una tarjeta de 2 GB, que alcanza para unas 800 fotos.</dd>
+      </dl>
+      <span class="sello-cert" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#ff8a1f" stroke="#15131c" stroke-width="2"/><g fill="#15131c"><use href="#chispa" x="52" y="8" width="16" height="16"/><use href="#chispa" x="52" y="96" width="16" height="16"/><use href="#chispa" x="8" y="52" width="16" height="16"/><use href="#chispa" x="96" y="52" width="16" height="16"/></g></svg><b>6<br>meses</b></span>
+    </div>
+    <ul class="envios" data-aparece>
+      <li><b>Retiro gratis</b><span>Huérfanos 1055, oficina 504, Santiago Centro. Lunes a sábado de 11:00 a 19:00.</span></li>
+      <li><b>Envío a todo Chile</b><span>$3.990 por Chilexpress, de dos a cuatro días hábiles, en caja con espuma.</span></li>
+      <li><b>Siete días para probarla</b><span>Si no te convence, la devuelves sin explicar por qué.</span></li>
+    </ul>
+  </section>
+
+  <section class="ancho seccion vender" id="vender" aria-labelledby="vender-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="vender-titulo">¿Tienes una en un cajón?</h2>
+      <p class="bajada">Te la compramos aunque no tenga cargador. Mándanos los datos y en 48 horas te respondemos con una oferta.</p>
+      <figure><img src="/image/bocetos/destello/noche-500.webp" srcset="/image/bocetos/destello/noche-500.webp 500w, /image/bocetos/destello/noche-800.webp 800w" sizes="(min-width: 900px) 22rem, 80vw" width="800" height="1000" loading="lazy" alt="Una mano sostiene de noche una cámara compacta plateada con la foto en su pantalla, frente a luces desenfocadas"></figure>
+    </div>
+    <form class="menu-lcd" data-muestra data-aparece toolname="tasar_camara" tooldescription="Pide a Destello una oferta por una cámara digital compacta usada. Destello es una tienda inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+      <p class="menu-barra"><span>Ajustes › Vender</span><span aria-hidden="true">▮▮▮▯</span></p>
+      <label class="fila">Marca<select name="marca" toolparamdescription="Marca de la cámara: Canon, Sony, Nikon, Panasonic, Olympus, Kodak, Fujifilm, Casio u otra"><option>Canon</option><option>Sony</option><option>Nikon</option><option>Panasonic</option><option>Olympus</option><option>Kodak</option><option>Fujifilm</option><option>Casio</option><option>Otra</option></select></label>
+      <label class="fila">Modelo<input name="modelo" maxlength="60" placeholder="Por ejemplo, IXUS 70" toolparamdescription="El modelo de la cámara, como aparece en su cuerpo"></label>
+      <fieldset class="estados" toolparamdescription="Estado de la cámara: como nueva, con uso, funciona a medias o no enciende">
+        <legend>Estado</legend>
+        <label class="estado-fila"><input type="radio" name="estado" value="como nueva">Como nueva<small>A</small></label>
+        <label class="estado-fila"><input type="radio" name="estado" value="con uso" checked>Con uso<small>B</small></label>
+        <label class="estado-fila"><input type="radio" name="estado" value="funciona a medias">Funciona a medias<small>C</small></label>
+        <label class="estado-fila"><input type="radio" name="estado" value="no enciende">No enciende<small>Repuestos</small></label>
+      </fieldset>
+      <label class="fila">Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+      <div class="menu-pie"><button class="boton" type="submit">OK · Pedir oferta</button></div>
+    </form>
+  </section>
+</main>
+
+<footer class="ancho pie">
+  <div class="sd">
+    <p class="sd-marca" aria-hidden="true">destello<b>2GB</b></p>
+    <div class="sd-datos">
+      <p>Huérfanos 1055, of. 504, Santiago Centro</p>
+      <p>hola@destello.cl</p>
+      <p>Boceto de Volutus · marca inventada</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

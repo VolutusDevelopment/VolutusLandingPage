@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Tablero · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Tablero, café de juegos de mesa en Providencia, para mostrar el estilo Memphis.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/rubik.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/tablero/portada-760.webp" imagesrcset="/image/bocetos/tablero/portada-560.webp 560w, /image/bocetos/tablero/portada-760.webp 760w" imagesizes="(min-width: 900px) 36vw, 78vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/tablero.js" type="module"></script>
+<style>
+/* Tablero · Memphis. Inspiración: Walala Studio (camillewalala.com), de
+   Camille Walala, y Memphis Milano. Se toma: 1) la figura gigante y plana que
+   entra sola en una página casi vacía, sin marco ni adorno alrededor; 2) el
+   negro, el blanco y cuatro colores planos, con el patrón (puntos, rayas,
+   zigzag) como material y no como fondo; 3) el movimiento como juego: las
+   figuras sueltas encuentran su lugar. La idea propia: el desorden alegre que
+   se ordena. Las figuras de la portada caen cada una en su casilla del
+   tablero al bajar, los juegos viven en un estante de lomos y el pie es el
+   dorso de la caja. */
+@font-face { font-family: 'Rubik'; src: url('/fonts/bocetos/rubik.woff2') format('woff2'); font-weight: 300 900; font-display: swap; }
+/* El respaldo ocupa lo mismo que Rubik, para que la página no se mueva al cargarla. */
+@font-face { font-family: 'Rubik respaldo'; src: local('Arial'), local('ArialMT'); font-weight: 300 500; size-adjust: 103%; }
+@font-face { font-family: 'Rubik respaldo'; src: local('Arial Bold'), local('Arial-BoldMT'); font-weight: 600 900; size-adjust: 105.4%; }
+
+:root {
+  --blanco: #ffffff;
+  --negro: #111111;
+  --gris: #4d4d4d;
+  --rosa: #ff6fa8;
+  --turquesa: #2ec4b6;
+  --amarillo: #ffd23f;
+  --violeta: #7b5cff;
+  --linea: 3px solid var(--negro);
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.65, 0, 0.35, 1);
+  --puntos: radial-gradient(var(--negro) 1.4px, transparent 1.8px) 0 0 / 14px 14px;
+  --rayas: repeating-linear-gradient(-45deg, var(--negro) 0 3px, transparent 3px 10px);
+}
+* { box-sizing: border-box; }
+html { background: var(--blanco); scroll-behavior: smooth; }
+body { margin: 0; background: var(--blanco); color: var(--negro); font: 400 18px/1.6 'Rubik', 'Rubik respaldo', sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--violeta); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.03em; line-height: 1; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.titulo { font-size: clamp(40px, 5.4vw, 72px); }
+.bajada { max-width: 38ch; margin-top: 18px; color: var(--gris); }
+.boton { display: inline-flex; align-items: center; min-height: 54px; padding: 0 28px; border: var(--linea); border-radius: 999px; background: var(--negro); color: var(--blanco); font: 700 18px/1 'Rubik', 'Rubik respaldo', sans-serif; text-decoration: none; cursor: pointer; box-shadow: 6px 6px 0 var(--rosa); transition: box-shadow 400ms var(--curva), translate 400ms var(--curva); }
+.boton:hover { box-shadow: 2px 2px 0 var(--rosa); translate: 4px 4px; }
+.enlace { font-weight: 700; text-underline-offset: 6px; text-decoration-thickness: 3px; text-decoration-color: var(--turquesa); }
+
+/* ---- Cabecera: la marca y los turnos del menú ---- */
+.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-block: 22px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font: 800 30px/1 'Rubik', 'Rubik respaldo', sans-serif; letter-spacing: -0.04em; text-decoration: none; }
+.logo svg { width: 36px; height: 36px; }
+.turnos { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; padding: 0; list-style: none; font-weight: 600; font-size: 16px; }
+.turnos a { display: inline-flex; align-items: center; gap: 8px; padding-block: 6px; text-decoration: none; }
+.turnos a::before { content: ''; width: 14px; height: 14px; border: 2px solid var(--negro); transition: rotate 500ms var(--curva); }
+.turnos li:nth-child(1) a::before { border-radius: 50%; background: var(--amarillo); }
+.turnos li:nth-child(2) a::before { background: var(--turquesa); }
+.turnos li:nth-child(3) a::before { border: 0; width: 16px; background: var(--rosa); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.turnos li:nth-child(4) a::before { border-radius: 4px; width: 22px; height: 10px; background: var(--violeta); }
+.turnos a:hover::before { rotate: 90deg; }
+.abierto { font-size: 15px; color: var(--gris); }
+.abierto b { color: var(--negro); }
+
+/* ---- Portada: el desorden que se ordena ---- */
+.portada-bloque { container-type: inline-size; --k: 1; }
+.portada { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(24px, 4vw, 48px) clamp(40px, 5vw, 64px); }
+.portada-texto { position: relative; z-index: 1; display: grid; gap: 24px; justify-items: start; }
+.portada h1 { font-size: clamp(50px, 7.4vw, 108px); line-height: 0.92; }
+.portada h1 em { font-style: normal; background: linear-gradient(transparent 62%, var(--amarillo) 62% 92%, transparent 92%); }
+.portada-texto > p { max-width: 34ch; font-size: 20px; color: var(--gris); }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.mesa { position: relative; justify-self: center; width: min(100%, 30rem); aspect-ratio: 1; }
+.mesa::before { content: ''; position: absolute; inset: 0; translate: 5% 5%; border-radius: 50%; background: var(--turquesa); }
+.mesa::after { content: ''; position: absolute; left: -9%; top: -6%; width: 34%; aspect-ratio: 1; border-radius: 50%; background: var(--puntos); }
+.mesa img { position: relative; z-index: 1; width: 100%; aspect-ratio: 1; object-fit: cover; border: var(--linea); border-radius: 50%; }
+.garabato { position: absolute; right: -6%; bottom: 6%; z-index: 2; width: 46%; overflow: visible; fill: none; stroke: var(--negro); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Los dados: dos cubos de CSS que giran despacio. */
+.dados { position: absolute; left: 47%; top: 7%; z-index: 2; display: flex; gap: 22px; perspective: 600px; }
+.dado { position: relative; width: 54px; height: 54px; transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(32deg); }
+.dado + .dado { width: 44px; height: 44px; margin-top: 46px; }
+.dado i { position: absolute; inset: 0; border: 3px solid var(--negro); border-radius: 10px; background-color: var(--blanco); --p: radial-gradient(circle, var(--negro) 0 4.2px, transparent 4.8px); }
+.dado + .dado i { background-color: var(--amarillo); --p: radial-gradient(circle, var(--negro) 0 3.4px, transparent 3.9px); }
+.dado i:nth-child(1) { transform: translateZ(calc(var(--l) / 2)); background-image: var(--p); background-size: 100% 100%; }
+.dado i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--l) / 2)); background-image: var(--p), var(--p); background-size: 50% 50%; background-position: 0 0, 100% 100%; background-repeat: no-repeat; }
+.dado i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--l) / 2)); background-image: var(--p), var(--p), var(--p); background-size: 33.3% 33.3%; background-position: 0 0, 50% 50%, 100% 100%; background-repeat: no-repeat; }
+.dado i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--l) / 2)); background-image: var(--p), var(--p), var(--p), var(--p); background-size: 50% 50%; background-position: 0 0, 100% 0, 0 100%, 100% 100%; background-repeat: no-repeat; }
+.dado i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--l) / 2)); background-image: var(--p), var(--p), var(--p), var(--p), var(--p); background-size: 33.3% 33.3%; background-position: 0 0, 100% 0, 50% 50%, 0 100%, 100% 100%; background-repeat: no-repeat; }
+.dado i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--l) / 2)); background-image: var(--p), var(--p), var(--p), var(--p), var(--p), var(--p); background-size: 50% 33.3%; background-position: 0 0, 100% 0, 0 50%, 100% 50%, 0 100%, 100% 100%; background-repeat: no-repeat; }
+.dado { --l: 54px; }
+.dado + .dado { --l: 44px; }
+
+/* El tablero: ocho casillas, cada una con su figura. Al cargar, las figuras
+   están sueltas por la portada (`--dx`, `--dy` y `--r`, en anchos de la
+   portada); al bajar, caen en su casilla. */
+.tablero-fila { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border: var(--linea); --entrada: none; --tramo: 64svh; --duracion: 1600ms; }
+.casilla { position: relative; display: grid; place-items: center; aspect-ratio: 1; }
+.casilla + .casilla { border-left: var(--linea); }
+.casilla:nth-child(even) { background: var(--puntos); background-color: #f4f1ea; }
+.flota { display: grid; place-items: center; width: 62%; aspect-ratio: 1; }
+.pieza { --entrada: tablero-ordena; display: block; width: 100%; height: 100%; }
+.p1 { border: var(--linea); border-radius: 50%; background: var(--amarillo); }
+.p2 { height: 34%; background: linear-gradient(135deg, transparent 33%, var(--negro) 33% 50%, transparent 50%) 0 0 / 25% 100%, linear-gradient(45deg, transparent 33%, var(--negro) 33% 50%, transparent 50%) 0 0 / 25% 100%; }
+.p3 { background: var(--turquesa); clip-path: polygon(50% 4%, 100% 96%, 0 96%); }
+.p4 { height: 38%; border: var(--linea); border-radius: 999px; background: var(--rosa); rotate: -24deg; }
+.p5 { height: 50%; background: none; }
+.p5 svg { width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--violeta); stroke-width: 9; stroke-linecap: round; }
+.p6 { border: var(--linea); background: var(--rayas); background-color: var(--blanco); }
+.p7 { height: 50%; border-radius: 999px 999px 0 0; background: var(--rosa); }
+.p8 { background: linear-gradient(var(--negro), var(--negro)) center / 100% 26% no-repeat, linear-gradient(var(--negro), var(--negro)) center / 26% 100% no-repeat; rotate: 45deg; }
+@keyframes tablero-ordena { from { transform: translate(var(--dx), calc(var(--dy) * var(--k))) rotate(var(--r)) scale(1.15); } }
+
+/* ---- Reglamento ---- */
+.reglamento { border: var(--linea); border-radius: 28px; overflow: hidden; }
+.regl-cabeza { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 48px; padding: clamp(28px, 4vw, 48px); background: var(--amarillo); border-bottom: var(--linea); }
+.regl-datos { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; }
+.regl-datos div { display: grid; padding: 10px 16px; border: var(--linea); border-radius: 14px; background: var(--blanco); }
+.regl-datos dt { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gris); }
+.regl-datos dd { margin: 0; font-weight: 800; font-size: 20px; }
+.regl-cuerpo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 72px); padding: clamp(28px, 4vw, 56px); }
+.reglas { display: grid; gap: 36px; margin: 0; padding: 0; list-style: none; counter-reset: regla; }
+.reglas li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 20px; counter-increment: regla; }
+.reglas li::before { content: counter(regla); display: grid; place-items: center; width: 64px; height: 64px; border: var(--linea); font: 800 30px/1 'Rubik', 'Rubik respaldo', sans-serif; }
+.reglas li:nth-child(1)::before { border-radius: 50%; background: var(--turquesa); }
+.reglas li:nth-child(2)::before { background: var(--rosa); }
+.reglas li:nth-child(3)::before { border-radius: 18px 18px 18px 0; background: var(--violeta); }
+.reglas h3 { font-size: 28px; margin-bottom: 6px; }
+.reglas p { color: var(--gris); max-width: 42ch; }
+.regla-oro { margin-top: 36px; padding: 18px 22px; border: 3px dashed var(--negro); border-radius: 16px; font-weight: 600; }
+.explica { align-self: start; display: grid; gap: 12px; }
+.explica img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: var(--linea); border-radius: 22px; }
+.explica figcaption { font-size: 15px; color: var(--gris); }
+
+/* ---- La ludoteca: el estante ---- */
+.ludoteca { background: var(--negro); color: var(--blanco); }
+.ludoteca .bajada { color: #c9c9c9; }
+.ludoteca-cabeza { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 32px clamp(32px, 5vw, 80px); align-items: end; }
+.ludoteca-cabeza img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 3px solid var(--blanco); border-radius: 50% 50% 22px 22px; }
+.filtro { display: flex; flex-wrap: wrap; gap: 24px 40px; margin-block: 40px 48px; }
+.filtro fieldset { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; border: 0; }
+.filtro legend { width: 100%; margin-bottom: 10px; font-weight: 700; font-size: 16px; }
+.opcion { position: relative; display: inline-flex; align-items: center; min-height: 46px; padding: 0 18px; border: 3px solid var(--blanco); border-radius: 999px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.opcion input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.opcion:has(input:checked) { background: var(--amarillo); border-color: var(--amarillo); color: var(--negro); }
+.opcion:has(input:focus-visible) { outline: 3px solid var(--turquesa); outline-offset: 3px; }
+.estante { --fila: 268px; display: flex; flex-wrap: wrap; align-items: flex-end; margin: 0; padding: 0 12px; list-style: none; background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--fila) - 14px), var(--amarillo) calc(var(--fila) - 14px) var(--fila)); }
+.estante li { display: flex; align-items: flex-end; height: var(--fila); padding-bottom: 14px; }
+.lomo { display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: var(--w, 56px); height: var(--h, 200px); margin-right: 6px; padding: 12px 4px 10px; border: 3px solid var(--blanco); border-radius: 6px 6px 2px 2px; background: var(--c); color: var(--negro); transition: opacity 500ms var(--curva), transform 500ms var(--curva), filter 500ms var(--curva); }
+.lomo b { padding: 6px 2px; border-radius: 4px; background: var(--c); writing-mode: vertical-rl; rotate: 180deg; font-weight: 800; font-size: 17px; line-height: 1.05; letter-spacing: -0.01em; white-space: nowrap; }
+.lomo small { display: grid; gap: 2px; padding: 4px 2px; border-radius: 4px; background: var(--blanco); font-size: 11px; font-weight: 700; line-height: 1.1; text-align: center; font-variant-numeric: tabular-nums; }
+.lomo.puntos { background: var(--puntos); background-color: var(--c); }
+.lomo.rayas { background: repeating-linear-gradient(0deg, var(--c) 0 12px, var(--blanco) 12px 16px); }
+.lomo:hover { transform: translateY(-10px); }
+.ludoteca:has(#j-2:checked) .lomo:not([data-j~='2']),
+.ludoteca:has(#j-34:checked) .lomo:not([data-j~='34']),
+.ludoteca:has(#j-5:checked) .lomo:not([data-j~='5']),
+.ludoteca:has(#d-corto:checked) .lomo:not([data-d='corto']),
+.ludoteca:has(#d-medio:checked) .lomo:not([data-d='medio']),
+.ludoteca:has(#d-largo:checked) .lomo:not([data-d='largo']) { opacity: 0.18; filter: grayscale(1); transform: translateY(16px) rotate(-7deg); }
+.estante-nota { margin-top: 28px; font-size: 16px; color: #c9c9c9; }
+
+/* ---- La carta: hoja de puntaje ---- */
+.carta { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.hoja { border: var(--linea); border-radius: 6px; background: var(--blanco); box-shadow: 12px 12px 0 var(--turquesa); }
+.hoja-cabeza { display: flex; justify-content: space-between; gap: 16px; padding: 14px 20px; background: var(--rosa); border-bottom: var(--linea); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 15px; }
+.hoja table { width: 100%; border-collapse: collapse; }
+.hoja th, .hoja td { padding: 11px 16px; border-bottom: 1px solid #b9b9b9; text-align: left; }
+.hoja thead th { padding-top: 18px; border-bottom: var(--linea); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gris); }
+.hoja tbody td:first-child { width: 3ch; color: var(--gris); font-variant-numeric: tabular-nums; border-right: 1px solid #b9b9b9; }
+.hoja td:last-child, .hoja th:last-child { text-align: right; white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hoja tbody tr:last-child > * { border-bottom: 0; }
+.hoja-pie { padding: 16px 20px; border-top: var(--linea); background: var(--amarillo); font-weight: 600; }
+.carta figure { display: grid; gap: 12px; }
+.carta img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: var(--linea); border-radius: 50% 50% 22px 22px; }
+.carta figcaption { font-size: 15px; color: var(--gris); }
+
+/* ---- Torneos: la llave ---- */
+.torneos-marco { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; }
+.torneos { display: grid; gap: 18px; margin: 32px 0 0; padding: 0; list-style: none; }
+.torneo { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 18px; align-items: center; padding-bottom: 18px; border-bottom: var(--linea); }
+.fecha { display: grid; place-items: center; width: 76px; height: 76px; border: var(--linea); border-radius: 50%; background: var(--c); font-weight: 800; line-height: 1; text-align: center; }
+.fecha small { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+.fecha span { font-size: 28px; }
+.torneo h3 { font-size: 22px; margin-bottom: 4px; }
+.torneo p { font-size: 16px; color: var(--gris); }
+.llave { position: relative; }
+.llave svg { display: block; width: 100%; height: auto; overflow: visible; }
+.llave .trazo { fill: none; stroke: var(--negro); stroke-width: 3; stroke-dasharray: 1; --entrada: tablero-traza; }
+.llave .mesa-llave { fill: var(--blanco); stroke: var(--negro); stroke-width: 3; }
+.llave text { font: 700 14px 'Rubik', 'Rubik respaldo', sans-serif; fill: var(--negro); }
+.campeon { position: absolute; right: 0; top: 50%; width: 31%; aspect-ratio: 1; translate: 0 -50%; }
+.campeon img { width: 100%; height: 100%; object-fit: cover; border: var(--linea); border-radius: 50%; }
+.campeon figcaption { position: absolute; left: 50%; bottom: -16px; translate: -50% 0; padding: 4px 14px; border: var(--linea); border-radius: 999px; background: var(--amarillo); font-weight: 800; font-size: 14px; white-space: nowrap; }
+@keyframes tablero-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* ---- Reservar mesa ---- */
+.reservar { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.reservar figure { display: grid; gap: 12px; margin-top: 32px; }
+.reservar figure img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: var(--linea); border-radius: 22px 22px 22px 50%; }
+.datos { display: grid; gap: 4px; margin-top: 28px; font-size: 16px; }
+.datos b { font-weight: 700; }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; padding: clamp(24px, 3.5vw, 40px); border: var(--linea); border-radius: 28px; background: var(--blanco); box-shadow: 12px 12px 0 var(--violeta); }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario label, .formulario legend { display: grid; gap: 8px; font-weight: 700; font-size: 16px; }
+.formulario input:not([type='radio']), .formulario select { width: 100%; min-height: 54px; padding: 10px 16px; border: var(--linea); border-radius: 14px; background: var(--blanco); color: var(--negro); font: 400 18px/1.3 'Rubik', 'Rubik respaldo', sans-serif; -webkit-appearance: none; appearance: none; }
+.formulario select { padding-right: 44px; background: var(--blanco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%23111111' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") right 18px center / 14px 9px no-repeat; }
+.formulario :is(input, select):focus-visible { outline: 3px solid var(--violeta); outline-offset: 2px; }
+.fichas { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; border: 0; }
+.fichas legend { margin-bottom: 4px; }
+.ficha { position: relative; display: grid !important; place-items: center; width: 58px; height: 58px; border: var(--linea); border-radius: 50%; background: var(--c); font-size: 20px !important; font-weight: 800 !important; cursor: pointer; transition: transform 400ms var(--curva), box-shadow 400ms var(--curva); }
+.ficha input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.ficha:has(input:checked) { transform: translateY(-6px); box-shadow: 0 6px 0 var(--negro); }
+.ficha:has(input:focus-visible) { outline: 3px solid var(--violeta); outline-offset: 3px; }
+.formulario .boton { justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- Pie: el dorso de la caja ---- */
+.dorso { margin-top: clamp(40px, 6vw, 80px); border-top: var(--linea); background: var(--puntos); background-color: var(--amarillo); }
+.dorso-caja { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr); gap: 36px clamp(24px, 4vw, 56px); padding-block: 56px 40px; }
+.dorso-panel { padding: 22px 24px; border: var(--linea); border-radius: 18px; background: var(--blanco); }
+.dorso h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.dorso ul { margin: 0; padding: 0 0 0 1.1em; font-size: 16px; }
+.dorso p { font-size: 16px; }
+.sellos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.sellos span { display: grid; place-items: center; min-width: 64px; height: 64px; padding: 0 10px; border: var(--linea); border-radius: 50%; background: var(--blanco); font-weight: 800; font-size: 15px; line-height: 1.05; text-align: center; }
+.barras { display: grid; gap: 6px; justify-items: start; }
+.barras svg { width: 168px; height: 64px; padding: 8px; background: var(--blanco); border: var(--linea); }
+.barras small { font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: 0.2em; }
+.dorso-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px; padding-block: 18px 28px; border-top: var(--linea); font-size: 15px; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .portada-bloque { --k: 1.6; }
+  .portada, .regl-cuerpo, .carta, .torneos-marco, .reservar, .ludoteca-cabeza { grid-template-columns: minmax(0, 1fr); }
+  .ludoteca-cabeza img { max-width: 24rem; }
+  .mesa { width: min(84%, 26rem); }
+  .dados { left: auto; right: 4%; top: auto; bottom: calc(100% - 40px); }
+  .dorso-caja { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dorso-caja .barras { grid-column: 1 / -1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .portada-bloque { --k: 1.45; }
+  .cabecera { padding-block: 16px; }
+  .turnos { gap: 4px 16px; font-size: 15px; }
+  .abierto { display: none; }
+  .dados { display: none; }
+  .tablero-fila { border-width: 2px; }
+  .casilla + .casilla { border-left-width: 2px; }
+  .reglas li { grid-template-columns: 52px minmax(0, 1fr); gap: 16px; }
+  .reglas li::before { width: 52px; height: 52px; font-size: 24px; }
+  .estante { --fila: 228px; padding-inline: 6px; }
+  .lomo { width: calc(var(--w, 56px) * 0.8); height: calc(var(--h, 200px) * 0.85); margin-right: 4px; }
+  .lomo b { font-size: 15px; }
+  .formulario { grid-template-columns: minmax(0, 1fr); box-shadow: 8px 8px 0 var(--violeta); }
+  .hoja th, .hoja td { padding-inline: 10px; }
+  .dorso-caja { grid-template-columns: minmax(0, 1fr); }
+  .campeon figcaption { left: auto; right: 0; translate: 0 0; font-size: 12px; }
+}
+
+/* ---- Movimiento ----
+   Las figuras de la portada flotan de ida y vuelta, cada una a su ritmo, y al
+   bajar caen en su casilla del tablero (`tablero-ordena`, atada al scroll
+   donde se puede). Los dados giran una vuelta completa a velocidad pareja.
+   En la ludoteca, los juegos que no calzan con el filtro se inclinan y bajan
+   en el estante, como sacados a medias. La llave del torneo se dibuja al
+   llegar. Todo lo demás entra subiendo, con la curva de la marca. */
+[data-aparece] { --entrada: tablero-llega; --tramo: 34svh; --duracion: 1200ms; }
+.tablero-fila { --entrada: none; }
+@keyframes tablero-llega { from { opacity: 0; translate: 0 30px; } }
+@keyframes tablero-flota { to { translate: var(--fx, 0) var(--fy, -8px); } }
+@keyframes tablero-gira-a { from { transform: rotateX(-24deg) rotateY(32deg); } to { transform: rotateX(336deg) rotateY(392deg); } }
+@keyframes tablero-gira-b { from { transform: rotateX(18deg) rotateY(-20deg); } to { transform: rotateX(-342deg) rotateY(340deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  .flota { animation: tablero-flota var(--t, 7s) var(--curva) infinite alternate; }
+  .dado { animation: tablero-gira-a 26s linear infinite; }
+  .dado + .dado { animation: tablero-gira-b 34s linear infinite; }
+  @supports (animation-timeline: view()) {
+    .con-js .tablero-fila [data-sigue] { animation-range: cover 18svh cover 66svh; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lomo, .ficha, .opcion, .boton, .turnos a::before { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="tablero">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Tablero</b> es una marca inventada por Volutus para mostrarte el estilo <b>Memphis</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="dado-logo" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="8" fill="#111111"/><circle cx="11" cy="11" r="3.6" fill="#ffd23f"/><circle cx="25" cy="11" r="3.6" fill="#ff6fa8"/><circle cx="11" cy="25" r="3.6" fill="#2ec4b6"/><circle cx="25" cy="25" r="3.6" fill="#7b5cff"/></symbol>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#dado-logo"/></svg>tablero</a>
+  <nav aria-label="Secciones"><ul class="turnos"><li><a href="#reglamento">Cómo funciona</a></li><li><a href="#ludoteca">Ludoteca</a></li><li><a href="#carta">Carta</a></li><li><a href="#torneos">Torneos</a></li></ul></nav>
+  <p class="abierto"><b>Hoy abierto</b> de 15:00 a 00:00</p>
+</header>
+
+<main>
+  <div class="portada-bloque">
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <div class="portada-texto">
+      <h1 id="titulo">Hay 400 juegos. <em>Alguien</em> te los explica.</h1>
+      <p>Café de juegos de mesa en Providencia. Tú traes a los amigos; nosotros, el juego justo para ellos y las reglas contadas en cinco minutos.</p>
+      <div class="acciones"><a class="boton" href="#reservar">Reservar mesa</a><a class="enlace" href="#ludoteca">Ver la ludoteca</a></div>
+    </div>
+    <figure class="mesa">
+      <img src="/image/bocetos/tablero/portada-760.webp" srcset="/image/bocetos/tablero/portada-560.webp 560w, /image/bocetos/tablero/portada-760.webp 760w" sizes="(min-width: 900px) 36vw, 78vw" width="760" height="760" alt="Cuatro amigas ríen alrededor de una mesa mientras juegan a las cartas" fetchpriority="high">
+      <svg class="garabato" viewBox="0 0 200 60" aria-hidden="true"><path d="M6 40c14-28 28-28 38 0s24 28 36 0 26-28 38 0 24 28 36 0 22-24 40-8"/></svg>
+    </figure>
+    <div class="dados" aria-hidden="true">
+      <span class="dado"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="dado"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+  </section>
+  <div class="ancho">
+    <div class="tablero-fila" data-aparece aria-hidden="true">
+      <span class="casilla"><span class="flota" style="--t: 7s"><i class="pieza p1" data-sigue style="--dx: 6cqw; --dy: -30cqw; --r: -30deg"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 9s; --fx: 6px"><i class="pieza p2" data-sigue style="--dx: 14cqw; --dy: -12cqw; --r: 28deg; --orden: 1"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 8s; --fy: 10px"><i class="pieza p3" data-sigue style="--dx: 20cqw; --dy: -38cqw; --r: -50deg; --orden: 2"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 10s"><i class="pieza p4" data-sigue style="--dx: 24cqw; --dy: -14cqw; --r: 70deg; --orden: 3"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 6.5s; --fx: -6px"><i class="pieza p5" data-sigue style="--dx: 4cqw; --dy: -46cqw; --r: -20deg; --orden: 4"><svg viewBox="0 0 100 50"><path d="M6 30c10-22 22-22 30 0s20 22 30 0 20-22 28-4"/></svg></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 11s; --fy: 9px"><i class="pieza p6" data-sigue style="--dx: -4cqw; --dy: -14cqw; --r: 36deg; --orden: 5"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 7.5s"><i class="pieza p7" data-sigue style="--dx: 2cqw; --dy: -52cqw; --r: -80deg; --orden: 6"></i></span></span>
+      <span class="casilla"><span class="flota" style="--t: 9.5s; --fx: 5px"><i class="pieza p8" data-sigue style="--dx: -11cqw; --dy: -30cqw; --r: 40deg; --orden: 7"></i></span></span>
+    </div>
+  </div>
+  </div>
+
+  <section class="ancho seccion" id="reglamento" aria-labelledby="reglamento-titulo">
+    <div class="reglamento" data-aparece>
+      <div class="regl-cabeza">
+        <h2 class="titulo" id="reglamento-titulo">Reglamento de la casa</h2>
+        <dl class="regl-datos"><div><dt>Jugadores</dt><dd>1 a 12</dd></div><div><dt>Duración</dt><dd>Lo que quieras</dd></div><div><dt>Edad</dt><dd>+6</dd></div></dl>
+      </div>
+      <div class="regl-cuerpo">
+        <div>
+        <ol class="reglas">
+          <li><div><h3>Llegas</h3><p>Con reserva o sin ella. Pagas $4.000 por persona y la mesa es tuya toda la tarde, juegues uno o diez.</p></div></li>
+          <li><div><h3>Eliges</h3><p>Hay 400 juegos en el estante. Si no sabes cuál, dinos cuántos son, cuánto tiempo tienen y si les gusta pelear o colaborar.</p></div></li>
+          <li><div><h3>Te enseñamos</h3><p>Alguien del equipo se sienta con ustedes y explica las reglas jugando la primera ronda. Lo único que tienes que hacer es perder con dignidad.</p></div></li>
+        </ol>
+        <p class="regla-oro">Regla de oro: el que gana guarda las piezas en la caja.</p>
+        </div>
+        <figure class="explica">
+          <img src="/image/bocetos/tablero/explica-800.webp" srcset="/image/bocetos/tablero/explica-500.webp 500w, /image/bocetos/tablero/explica-800.webp 800w" sizes="(min-width: 900px) 34vw, 90vw" width="800" height="600" loading="lazy" alt="Tres personas mayores miran un tablero de ajedrez en una mesa, frente a una pared pintada de colores">
+          <figcaption>Los jueves en la tarde viene un club de ajedrez de Ñuñoa. Ellos no necesitan explicación.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion ludoteca" id="ludoteca" aria-labelledby="ludoteca-titulo">
+    <div class="ancho">
+      <div class="ludoteca-cabeza" data-aparece>
+        <div>
+          <h2 class="titulo" id="ludoteca-titulo">El estante</h2>
+          <p class="bajada">Una muestra de los 400. Dinos cuántos juegan y cuánto tiempo tienen: los que no calzan se corren solos.</p>
+        </div>
+        <img src="/image/bocetos/tablero/fichas-500.webp" srcset="/image/bocetos/tablero/fichas-500.webp 500w, /image/bocetos/tablero/fichas-800.webp 800w" sizes="(min-width: 900px) 30vw, 90vw" width="800" height="600" loading="lazy" alt="Fichas de colores y un dado sobre un tablero de juego, muy de cerca">
+      </div>
+      <form class="filtro" toolname="filtrar_juegos" tooldescription="Filtra la ludoteca de Tablero, un café de juegos de mesa inventado por Volutus como boceto de página, por número de jugadores y duración. No envía nada a nadie: responde los juegos de la muestra que calzan." toolautosubmit>
+        <fieldset toolparamdescription="Cuántas personas van a jugar: todos (sin filtro), 2, 3 a 4, o 5 o más">
+          <legend>¿Cuántos juegan?</legend>
+          <label class="opcion"><input type="radio" name="jugadores" value="todos" checked>Da igual</label>
+          <label class="opcion"><input type="radio" name="jugadores" value="2" id="j-2">2</label>
+          <label class="opcion"><input type="radio" name="jugadores" value="34" id="j-34">3 a 4</label>
+          <label class="opcion"><input type="radio" name="jugadores" value="5" id="j-5">5 o más</label>
+        </fieldset>
+        <fieldset toolparamdescription="Cuánto tiempo tienen para jugar: todas (sin filtro), corto (menos de 30 minutos), medio (de 30 a 60 minutos) o largo (más de una hora)">
+          <legend>¿Cuánto tiempo tienen?</legend>
+          <label class="opcion"><input type="radio" name="duracion" value="todas" checked>Da igual</label>
+          <label class="opcion"><input type="radio" name="duracion" value="corto" id="d-corto">Menos de 30 min</label>
+          <label class="opcion"><input type="radio" name="duracion" value="medio" id="d-medio">30 a 60 min</label>
+          <label class="opcion"><input type="radio" name="duracion" value="largo" id="d-largo">Más de 1 hora</label>
+        </fieldset>
+      </form>
+      <ul class="estante" data-aparece>
+        <li><span class="lomo" data-j="2 34 5" data-d="corto" style="--c: #ffd23f; --h: 168px; --w: 50px"><b>Dobble</b><small>2–8<br>15′</small></span></li>
+        <li><span class="lomo puntos" data-j="34 5" data-d="corto" style="--c: #ff6fa8; --h: 196px"><b>Codenames</b><small>4–8<br>15′</small></span></li>
+        <li><span class="lomo" data-j="34" data-d="largo" style="--c: #2ec4b6; --h: 238px; --w: 70px"><b>Catan</b><small>3–4<br>90′</small></span></li>
+        <li><span class="lomo rayas" data-j="2 34 5" data-d="medio" style="--c: #7b5cff; --h: 222px; --w: 62px"><b>Carcassonne</b><small>2–5<br>40′</small></span></li>
+        <li><span class="lomo" data-j="2 34" data-d="medio" style="--c: #ffffff; --h: 184px; --w: 60px"><b>Azul</b><small>2–4<br>40′</small></span></li>
+        <li><span class="lomo puntos" data-j="34 5" data-d="medio" style="--c: #ffd23f; --h: 212px"><b>Dixit</b><small>3–8<br>30′</small></span></li>
+        <li><span class="lomo" data-j="2 34" data-d="medio" style="--c: #ff6fa8; --h: 230px; --w: 64px"><b>Pandemic</b><small>2–4<br>45′</small></span></li>
+        <li><span class="lomo rayas" data-j="2" data-d="medio" style="--c: #2ec4b6; --h: 160px; --w: 48px"><b>Patchwork</b><small>2<br>30′</small></span></li>
+        <li><span class="lomo" data-j="34 5" data-d="medio" style="--c: #7b5cff; --h: 240px; --w: 72px"><b>7 Wonders</b><small>3–7<br>30′</small></span></li>
+        <li><span class="lomo puntos" data-j="2 34 5" data-d="medio" style="--c: #ffffff; --h: 236px; --w: 66px"><b>Aventureros al tren</b><small>2–5<br>60′</small></span></li>
+        <li><span class="lomo" data-j="2 34 5" data-d="corto" style="--c: #ffd23f; --h: 150px; --w: 46px"><b>Jenga</b><small>2–8<br>20′</small></span></li>
+        <li><span class="lomo rayas" data-j="2 34 5" data-d="largo" style="--c: #ff6fa8; --h: 240px; --w: 70px"><b>Terraforming Mars</b><small>1–5<br>120′</small></span></li>
+        <li><span class="lomo" data-j="2 34 5" data-d="corto" style="--c: #2ec4b6; --h: 234px; --w: 52px"><b>Exploding Kittens</b><small>2–5<br>15′</small></span></li>
+        <li><span class="lomo puntos" data-j="2" data-d="medio" style="--c: #ffffff; --h: 190px; --w: 54px"><b>Ajedrez</b><small>2<br>45′</small></span></li>
+        <li><span class="lomo" data-j="2 34 5" data-d="largo" style="--c: #7b5cff; --h: 226px; --w: 64px"><b>Wingspan</b><small>1–5<br>70′</small></span></li>
+        <li><span class="lomo rayas" data-j="2 34 5" data-d="corto" style="--c: #ffd23f; --h: 158px; --w: 46px"><b>Love Letter</b><small>2–6<br>20′</small></span></li>
+      </ul>
+      <p class="estante-nota">¿No está el que buscas? Pregunta en el mesón: puede que esté en la bodega o prestado a otra mesa.</p>
+    </div>
+  </section>
+
+  <section class="ancho seccion carta" id="carta" aria-labelledby="carta-titulo">
+    <div data-aparece>
+      <h2 class="titulo" id="carta-titulo">La carta</h2>
+      <p class="bajada">Para jugar con hambre no se juega bien. Todo se puede comer con una mano, para no ensuciar las cartas.</p>
+      <div class="hoja" style="margin-top: 40px">
+        <p class="hoja-cabeza"><span>Hoja de puntaje</span><span>Mesa __</span></p>
+        <table>
+          <thead><tr><th scope="col">Nº</th><th scope="col">Lo que pides</th><th scope="col">Precio</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><th scope="row">Café de grano, americano o espresso</th><td>$2.400</td></tr>
+            <tr><td>2</td><th scope="row">Cortado o capuchino</th><td>$2.900</td></tr>
+            <tr><td>3</td><th scope="row">Chocolate caliente con malvaviscos</th><td>$3.400</td></tr>
+            <tr><td>4</td><th scope="row">Té en hebras, tetera para dos</th><td>$3.000</td></tr>
+            <tr><td>5</td><th scope="row">Barros luco en marraqueta</th><td>$6.900</td></tr>
+            <tr><td>6</td><th scope="row">Tostado de queso y tomate</th><td>$4.800</td></tr>
+            <tr><td>7</td><th scope="row">Papas fritas para la mesa</th><td>$4.500</td></tr>
+            <tr><td>8</td><th scope="row">Torta del día</th><td>$3.800</td></tr>
+          </tbody>
+        </table>
+        <p class="hoja-pie">Entrada a la ludoteca: $4.000 por persona, la tarde completa.</p>
+      </div>
+    </div>
+    <figure data-aparece>
+      <img src="/image/bocetos/tablero/postre-800.webp" srcset="/image/bocetos/tablero/postre-500.webp 500w, /image/bocetos/tablero/postre-800.webp 800w" sizes="(min-width: 900px) 34vw, 90vw" width="800" height="600" loading="lazy" alt="Un postre con crema y frutos rojos junto a un café, sobre una mesa de madera con cartas de un juego">
+      <figcaption>La torta del día llega a la mesa sin interrumpir la partida.</figcaption>
+    </figure>
+  </section>
+
+  <section class="seccion" id="torneos" aria-labelledby="torneos-titulo" style="padding-top: 0">
+    <div class="ancho torneos-marco">
+      <div data-aparece>
+        <h2 class="titulo" id="torneos-titulo">Torneos de noviembre</h2>
+        <ol class="torneos">
+          <li class="torneo"><p class="fecha" style="--c: #2ec4b6"><small>Jue</small><span>19</span></p><div><h3>Catan, liga de primavera</h3><p>16 cupos · $6.000 · el campeón se lleva la expansión de navegantes</p></div></li>
+          <li class="torneo"><p class="fecha" style="--c: #ff6fa8"><small>Sáb</small><span>21</span></p><div><h3>Codenames por parejas</h3><p>12 parejas · $5.000 por pareja · premio: la cuenta de la mesa</p></div></li>
+          <li class="torneo"><p class="fecha" style="--c: #ffd23f"><small>Jue</small><span>26</span></p><div><h3>Azul, eliminación directa</h3><p>8 cupos · $5.000 · para principiantes, se explica antes</p></div></li>
+        </ol>
+      </div>
+      <div class="llave" data-aparece>
+        <svg viewBox="0 0 600 420" role="img" aria-label="Llave de un torneo de ocho mesas: cuartos de final, semifinal y final">
+          <g>
+            <path class="trazo" data-sigue pathLength="1" d="M96 40H140V95H184M96 150H140V95M96 260H140V315H184M96 370H140V315"/>
+            <path class="trazo" data-sigue pathLength="1" style="--orden: 1" d="M272 95H316V205H360M272 315H316V205"/>
+            <path class="trazo" data-sigue pathLength="1" style="--orden: 2" d="M448 205H414"/>
+          </g>
+          <g>
+            <rect class="mesa-llave" x="8" y="22" width="88" height="36" rx="18"/><text x="52" y="45" text-anchor="middle">Mesa 1</text>
+            <rect class="mesa-llave" x="8" y="132" width="88" height="36" rx="18"/><text x="52" y="155" text-anchor="middle">Mesa 2</text>
+            <rect class="mesa-llave" x="8" y="242" width="88" height="36" rx="18"/><text x="52" y="265" text-anchor="middle">Mesa 3</text>
+            <rect class="mesa-llave" x="8" y="352" width="88" height="36" rx="18"/><text x="52" y="375" text-anchor="middle">Mesa 4</text>
+            <rect class="mesa-llave" x="184" y="77" width="88" height="36" rx="4"/><text x="228" y="100" text-anchor="middle">Semi</text>
+            <rect class="mesa-llave" x="184" y="297" width="88" height="36" rx="4"/><text x="228" y="320" text-anchor="middle">Semi</text>
+            <rect class="mesa-llave" x="360" y="187" width="54" height="36" rx="0"/><text x="387" y="210" text-anchor="middle">Final</text>
+          </g>
+        </svg>
+        <figure class="campeon">
+          <img src="/image/bocetos/tablero/ajedrez-600.webp" srcset="/image/bocetos/tablero/ajedrez-600.webp 600w, /image/bocetos/tablero/ajedrez-1000.webp 1000w" sizes="(min-width: 900px) 18vw, 30vw" width="600" height="400" loading="lazy" alt="Dos hombres mayores juegan ajedrez en una mesa con café y galletas">
+          <figcaption>Campeón de octubre</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion reservar" id="reservar" aria-labelledby="reservar-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="reservar-titulo">Reserva tu mesa</h2>
+      <p class="bajada">Te confirmamos por correo en menos de una hora. Si vienen más de ocho, juntamos dos mesas.</p>
+      <div class="datos">
+        <p><b>Dónde:</b> Av. Manuel Montt 1236, Providencia</p>
+        <p><b>Horario:</b> martes a jueves de 15:00 a 00:00; viernes y sábado de 13:00 a 02:00; domingo de 13:00 a 21:00</p>
+        <p><b>Correo:</b> mesas@tablerocafe.cl</p>
+      </div>
+      <figure>
+        <img src="/image/bocetos/tablero/mantel-600.webp" srcset="/image/bocetos/tablero/mantel-600.webp 600w, /image/bocetos/tablero/mantel-1000.webp 1000w" sizes="(min-width: 900px) 34vw, 90vw" width="1000" height="667" loading="lazy" alt="Manos con cartas y un pocillo de papas sobre un mantel a cuadros rojos, vistos desde arriba">
+      </figure>
+    </div>
+    <form class="formulario" data-muestra data-aparece toolname="reservar_mesa" tooldescription="Reserva una mesa en Tablero, un café de juegos de mesa inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto.">
+      <fieldset class="fichas todo" toolparamdescription="Cuántas personas vienen: 2, 3, 4, 5, 6 o 7 o más">
+        <legend>¿Cuántos vienen?</legend>
+        <label class="ficha" style="--c: #ffd23f"><input type="radio" name="personas" value="2">2</label>
+        <label class="ficha" style="--c: #ff6fa8"><input type="radio" name="personas" value="3">3</label>
+        <label class="ficha" style="--c: #2ec4b6"><input type="radio" name="personas" value="4" checked>4</label>
+        <label class="ficha" style="--c: #7b5cff"><input type="radio" name="personas" value="5">5</label>
+        <label class="ficha" style="--c: #ffffff"><input type="radio" name="personas" value="6">6</label>
+        <label class="ficha" style="--c: #ffd23f"><input type="radio" name="personas" value="7 o más" aria-label="7 o más">7+</label>
+      </fieldset>
+      <label>Fecha<input type="date" name="fecha" min="2026-11-12" required toolparamdescription="El día que quieren venir"></label>
+      <label>Hora<select name="hora" toolparamdescription="A qué hora llegan, entre las 15:00 y las 22:00"><option>15:00</option><option>17:00</option><option selected>19:00</option><option>20:30</option><option>22:00</option></select></label>
+      <label>Tu nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+      <label>Tu correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+      <button class="boton todo" type="submit">Reservar mesa</button>
+    </form>
+  </section>
+</main>
+
+<footer class="dorso">
+  <div class="ancho dorso-caja">
+    <div class="dorso-panel">
+      <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#dado-logo"/></svg>tablero</a>
+      <h2 style="margin-top: 18px">Contenido de la caja</h2>
+      <ul><li>400 juegos de mesa</li><li>32 mesas y un mesón</li><li>Café que se rellena</li><li>Alguien que explica las reglas</li></ul>
+    </div>
+    <div class="dorso-panel">
+      <h2>Instrucciones</h2>
+      <p>Av. Manuel Montt 1236, Providencia. A dos cuadras del metro Manuel Montt. Martes a domingo desde las 13:00 o las 15:00.</p>
+      <div class="sellos"><span>1–12<br>jug.</span><span>+6</span><span>Sin<br>apuro</span></div>
+    </div>
+    <div class="barras">
+      <svg viewBox="0 0 150 48" aria-hidden="true"><g fill="#111111"><rect x="0" width="4" height="48"/><rect x="7" width="2" height="48"/><rect x="12" width="6" height="48"/><rect x="21" width="2" height="48"/><rect x="26" width="4" height="48"/><rect x="34" width="2" height="48"/><rect x="38" width="8" height="48"/><rect x="49" width="2" height="48"/><rect x="54" width="4" height="48"/><rect x="61" width="2" height="48"/><rect x="66" width="6" height="48"/><rect x="75" width="2" height="48"/><rect x="80" width="2" height="48"/><rect x="86" width="6" height="48"/><rect x="95" width="4" height="48"/><rect x="102" width="2" height="48"/><rect x="107" width="8" height="48"/><rect x="118" width="2" height="48"/><rect x="123" width="4" height="48"/><rect x="131" width="2" height="48"/><rect x="136" width="6" height="48"/><rect x="146" width="4" height="48"/></g></svg>
+      <small>7 801234 400002</small>
+      <p>Hecho en Providencia</p>
+    </div>
+  </div>
+  <div class="ancho dorso-fila"><span>mesas@tablerocafe.cl</span><span>Boceto de Volutus · marca inventada</span></div>
+</footer>
+</body>
+</html>

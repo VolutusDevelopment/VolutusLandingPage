@@ -56,6 +56,52 @@ const HUELLA = (
 const ABANICO = 'M18 20L2 14.5A16 16 0 0 1 4.6 9zM18 20L5.4 7.9A16 16 0 0 1 9.4 4.4zM18 20L10.6 3.7A16 16 0 0 1 15.6 2.2zM18 20L17 2h2zM18 20L20.4 2.2A16 16 0 0 1 25.4 3.7zM18 20L26.6 4.4A16 16 0 0 1 30.6 7.9zM18 20L31.4 9A16 16 0 0 1 34 14.5z'
 const ACENTO = 'M2 15L9 1H15L5 15Z'
 
+// El dado de Tablero (Memphis): su logo, con un punto de cada color.
+const DADO = (
+  <>
+    <rect x="2" y="2" width="32" height="32" rx="8" fill="#111111" />
+    <circle cx="11" cy="11" r="3.6" fill="#ffd23f" />
+    <circle cx="25" cy="11" r="3.6" fill="#ff6fa8" />
+    <circle cx="11" cy="25" r="3.6" fill="#2ec4b6" />
+    <circle cx="25" cy="25" r="3.6" fill="#7b5cff" />
+  </>
+)
+
+// El destello de Destello (Y2K), la estrella de ocho puntas de Cénit
+// (futurista) y la flecha de Rumbo (suizo): los mismos de sus bocetos.
+const CHISPA = 'M12 0C12.9 7.6 16.4 11.1 24 12C16.4 12.9 12.9 16.4 12 24C11.1 16.4 7.6 12.9 0 12C7.6 11.1 11.1 7.6 12 0Z'
+const ESTRELLA = 'M12 0l1.6 7.2L20.5 3.5l-3.7 6.9L24 12l-7.2 1.6 3.7 6.9-6.9-3.7L12 24l-1.6-7.2-6.9 3.7 3.7-6.9L0 12l7.2-1.6L3.5 3.5l6.9 3.7z'
+const FLECHA = 'M8 42h58L40 16l12-12 46 46-46 46-12-12 26-26H8z'
+
+// La fecha naranja de Destello en siete segmentos, como la estampaban las
+// cámaras: cada dígito enciende sus trazos.
+const SEGMENTOS = { a: [2, 0, 6, 2], b: [8, 1.6, 2, 6.6], c: [8, 9.8, 2, 6.6], d: [2, 16, 6, 2], e: [0, 9.8, 2, 6.6], f: [0, 1.6, 2, 6.6], g: [2, 8, 6, 2] }
+const DIGITOS = ['abcdef', 'bc', 'abged', 'abgcd', 'fgbc', 'afgcd', 'afgedc', 'abc', 'abcdefg', 'abcdfg']
+
+function Fecha({ texto }) {
+  let x = 0
+  const trazos = []
+  for (const [i, caracter] of [...texto].entries()) {
+    if (caracter === "'") {
+      trazos.push(<rect key={i} x={x + 0.5} y="0" width="1.8" height="5" />)
+      x += 4
+    } else if (caracter === ' ') {
+      x += 5
+    } else {
+      for (const segmento of DIGITOS[caracter]) {
+        const [sx, sy, ancho, alto] = SEGMENTOS[segmento]
+        trazos.push(<rect key={`${i}${segmento}`} x={x + sx} y={sy} width={ancho} height={alto} />)
+      }
+      x += 13
+    }
+  }
+  return (
+    <svg className="fecha" viewBox={`0 0 ${x - 3} 18`}>
+      {trazos}
+    </svg>
+  )
+}
+
 // El arte de cada estilo y su marca de elegido. Todo es decorado: la tarjeta
 // se llama por la leyenda de su estilo.
 const ESTILOS = {
@@ -160,10 +206,15 @@ const ESTILOS = {
     <svg viewBox="0 0 24 24">{HUELLA}</svg>,
   ],
   brutalista: [
-    <>
-      <b>Sin filtro</b>Lo que ves es lo que hay. <u>index.html</u>
-    </>,
-    <span>X</span>,
+    <span className="cartel">
+      <b>SÓTANO</b>
+      <span className="fila">
+        <span>VIE 21:00</span>
+        <span>35MM</span>
+      </span>
+      <u>La batalla de Chile</u>
+    </span>,
+    <span>[x]</span>,
   ],
   retro: [
     <>
@@ -187,10 +238,13 @@ const ESTILOS = {
   suizo: [
     <>
       <span className="cua" />
-      <span className="rot">Forma sigue a función</span>
-      <span className="reg">Zürich 1957</span>
+      <svg className="flecha" viewBox="0 0 100 100">
+        <path d={FLECHA} />
+      </svg>
+      <span className="rot">Rumbo</span>
+      <span className="reg">Que nadie se pierda</span>
     </>,
-    <span>+</span>,
+    <Trazo d={FLECHA} caja="0 0 100 100" />,
   ],
   natural: [
     <>
@@ -220,7 +274,16 @@ const ESTILOS = {
       <path d="M4 26C4 14 12 6 26 4C24 18 16 26 4 26Z" />
     </svg>,
   ],
-  futurista: [<span className="vidrio">NEXT/26</span>, <span />],
+  futurista: [
+    <>
+      <span className="estelas" />
+      <svg className="cerros" viewBox="0 0 300 40" preserveAspectRatio="none">
+        <path d="M0 30C40 22 70 12 110 16S170 34 210 28 270 8 300 14V40H0Z" />
+      </svg>
+      <span className="rot">CÉNIT</span>
+    </>,
+    <Trazo d={ESTRELLA} caja="0 0 24 24" />,
+  ],
   artesanal: [
     <>
       <span className="etiqueta">
@@ -279,30 +342,41 @@ const ESTILOS = {
   ],
   bauhaus: [
     <>
-      <i className="c" />
-      <i className="q" />
       <i className="t" />
+      <i className="q" />
       <i className="b" />
+      <i className="c" />
+      <i className="h" />
+      <span className="rot">bisagra</span>
     </>,
     <span />,
   ],
   memphis: [
     <>
-      <i className="zz" />
-      <i className="ci" />
-      <i className="tr" />
+      <svg className="garabato" viewBox="0 0 100 50">
+        <path d="M6 30c10-22 22-22 30 0s20 22 30 0 20-22 28-4" />
+      </svg>
       <i className="pi" />
+      <i className="tr" />
+      <i className="ci" />
+      <svg className="dado" viewBox="0 0 36 36">
+        {DADO}
+      </svg>
+      <span className="rot">tablero</span>
     </>,
-    <span />,
+    <svg viewBox="0 0 36 36">{DADO}</svg>,
   ],
   y2k: [
     <>
-      <span className="rot">brillo</span>
-      <span className="chispa ch1">✦</span>
-      <span className="chispa ch2">✦</span>
-      <span className="chispa ch3">✦</span>
+      <span className="rot">destello</span>
+      {['ch1', 'ch2', 'ch3'].map((chispa) => (
+        <svg key={chispa} className={`chispa ${chispa}`} viewBox="0 0 24 24">
+          <path d={CHISPA} />
+        </svg>
+      ))}
+      <Fecha texto="'06 11 11" />
     </>,
-    <span>✦</span>,
+    <Trazo d={CHISPA} caja="0 0 24 24" />,
   ],
   andino: [
     <>

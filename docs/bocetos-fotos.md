@@ -188,6 +188,79 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | bola | https://images.unsplash.com/photo-1759906219378-9c1accdc32c9 |
 | historia | https://images.unsplash.com/photo-1785088561527-3b48824b5eb5 |
 
+## tablero
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1660807304251-9e2012336d19 |
+| fichas | https://images.unsplash.com/photo-1629760946220-5693ee4c46ac |
+| postre | https://images.unsplash.com/photo-1763683943834-cc07ccbcc65c |
+| ajedrez | https://images.unsplash.com/photo-1758691031257-09efdf77f392 |
+| mantel | https://images.unsplash.com/photo-1607438802263-ada36dae55c5 |
+| explica | https://images.unsplash.com/photo-1758691031288-eda755f22a94 |
+
+## destello
+
+| Archivo | Foto original |
+| --- | --- |
+| leopardo | https://images.unsplash.com/photo-1667328167872-24cdb3e2437e |
+| amigos | https://images.unsplash.com/photo-1763651963595-ce388d5dbba6 |
+| lentes | https://images.unsplash.com/photo-1773853431084-eceaebe061c9 |
+| confeti | https://images.unsplash.com/photo-1731475761133-75038b642b4d |
+| cumple | https://images.unsplash.com/photo-1662677029694-f63eafe35e36 |
+| brindis | https://images.unsplash.com/photo-1655461849899-851069875e4d |
+| sillon | https://images.unsplash.com/photo-1767016451814-159914e32b48 |
+| g3 | https://images.unsplash.com/photo-1602209397980-9aeb268ecedb |
+| lumix | https://images.unsplash.com/photo-1762720598493-b629870b86f4 |
+| ixus | https://images.unsplash.com/photo-1648988216370-1e942cef17a1 |
+| cybershot | https://images.unsplash.com/photo-1789827260340-0ecb7dd85255 |
+| noche | https://images.unsplash.com/photo-1455811378943-2f2f583f7f4c |
+
+## cenit
+
+| Archivo | Foto original |
+| --- | --- |
+| guiada | https://images.unsplash.com/photo-1654441895019-62a3d20846dd |
+| astrofoto | https://images.unsplash.com/photo-1604728890708-631078e3eab7 |
+| domo | https://images.unsplash.com/photo-1505579962197-df174377e13f |
+| telescopio | https://images.unsplash.com/photo-1698677364363-50cfadf64be7 |
+| domos | https://images.unsplash.com/photo-1592860475958-6d6dd04b34b4 |
+| mirar | https://images.unsplash.com/photo-1578166658131-b4dd7490b85e |
+
+## sotano
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1708497351913-71254998ed1a |
+| haz | https://images.unsplash.com/photo-1774967550635-182fb37cf31f |
+| butaca | https://images.unsplash.com/photo-1513106580091-1d82408b8cd6 |
+| proyector | https://images.unsplash.com/photo-1713514116709-4aa2d13e7b0c |
+| rollos | https://images.unsplash.com/photo-1659497559069-c7df574dff75 |
+| marquesina | https://images.unsplash.com/photo-1784644318350-9596c3a47b4f |
+
+## rumbo
+
+| Archivo | Foto original |
+| --- | --- |
+| hospital | https://images.unsplash.com/photo-1777269749032-d8d458ae594d |
+| linea | https://images.unsplash.com/photo-1791932925637-f3db7614d78c |
+| aeropuerto | https://images.unsplash.com/photo-1678036934657-cfe9f54e139b |
+| escalera | https://images.unsplash.com/photo-1788492641162-ed3cab093745 |
+| flecha | https://images.unsplash.com/photo-1618623266812-f5075ba99663 |
+| dos | https://images.unsplash.com/photo-1584143257262-bf516a6a3877 |
+
+## bisagra
+
+| Archivo | Foto original |
+| --- | --- |
+| disco | https://images.unsplash.com/photo-1753932847231-7949af383b98 |
+| codo | https://images.unsplash.com/photo-1570974802254-4b0ad1a755f5 |
+| cono | https://images.unsplash.com/photo-1590003689662-0773d48b6417 |
+| esfera | https://images.unsplash.com/photo-1604610728890-6f4b631ed081 |
+| torneado | https://images.unsplash.com/photo-1551868561-f2cdee310ecf |
+| plegado | https://images.unsplash.com/photo-1738162837340-da3e7a323a09 |
+| encendida | https://images.unsplash.com/photo-1621177555452-bedbe4c28879 |
+
 ## marfil
 
 | Archivo | Foto original |

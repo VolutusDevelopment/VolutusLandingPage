@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Bisagra · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Bisagra, lámparas de diseño hechas a mano en San Joaquín, para mostrar el estilo Bauhaus.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/jost.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/bisagra.js" type="module"></script>
+<style>
+/* Bisagra · Bauhaus. Inspiración: Tecnolumen (tecnolumen.com), que fabrica
+   las lámparas clásicas de la Bauhaus, la Stiftung Bauhaus Dessau y Vitra.
+   Se toma: 1) cada lámpara como un objeto aislado sobre fondo liso, con su
+   ficha sobria; 2) el círculo, el cuadrado y el triángulo en rojo, azul y
+   amarillo, con negro y crema, y una sola letra geométrica; 3) la forma que
+   sigue a la función: nada que no haga algo. La idea propia: tres formas y
+   una bisagra. El logo se arma en una lámpara al bajar (el círculo es la
+   pantalla, el cuadrado la base, la línea el brazo y el triángulo, la luz),
+   se enciende con su interruptor y cada lámpara de la colección muestra el
+   dibujo de sus formas. */
+@font-face { font-family: 'Jost'; src: url('/fonts/bocetos/jost.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --crema: #f1ead8;
+  --crema-tibia: #f7e2ad;
+  --rojo: #d7261e;
+  --azul: #1f4aa8;
+  --amarillo: #f2b705;
+  --negro: #111111;
+  --gris: #4f4a40;
+  --ancho: 1280px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.83, 0, 0.17, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--crema); scroll-behavior: smooth; }
+body { margin: 0; background: var(--crema); color: var(--negro); font: 400 18px/1.6 'Jost', 'Futura', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.02em; line-height: 1; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.seccion { padding-block: clamp(88px, 11vw, 160px); }
+.titulo { font-size: clamp(44px, 6vw, 88px); font-weight: 500; }
+.bajada { max-width: 40ch; margin-top: 20px; color: var(--gris); }
+.rotulo { font-size: 14px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+.boton { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--negro); color: var(--crema); font: 500 18px/1 'Jost', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 500ms var(--curva); }
+.boton::after { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--amarillo); transition: scale 500ms var(--curva); }
+.boton:hover { background: var(--azul); }
+.boton:hover::after { scale: 1.4; }
+
+/* ---- Cabecera: la regla ---- */
+.regla { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)); border-bottom: 2px solid var(--negro); }
+.regla > * { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 0 18px; text-decoration: none; }
+.regla > * + * { border-left: 2px solid var(--negro); }
+.logo { font-size: 26px; font-weight: 600; letter-spacing: -0.03em; }
+.logo svg { width: 54px; height: 22px; }
+.regla a:not(.logo) { font-size: 16px; font-weight: 500; transition: background-color 500ms var(--curva), color 500ms var(--curva); }
+.regla a:not(.logo) span { font-size: 13px; font-weight: 600; color: var(--gris); transition: color 500ms var(--curva); font-variant-numeric: tabular-nums; }
+.regla a:not(.logo):hover { background: var(--negro); color: var(--crema); }
+.regla a:not(.logo):hover span { color: var(--amarillo); }
+
+/* ---- Portada: el logo que se arma en lámpara ---- */
+.portada { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(40px, 6vw, 88px) clamp(80px, 10vw, 140px); }
+.portada-texto { display: grid; gap: 26px; justify-items: start; }
+.portada h1 { font-size: clamp(50px, 6.6vw, 100px); font-weight: 500; line-height: 0.96; }
+.portada h1 b { font-weight: 700; }
+.portada-texto > p:not(.rotulo) { max-width: 34ch; font-size: 20px; color: var(--gris); }
+.escena { position: relative; container-type: inline-size; aspect-ratio: 1; width: min(100%, 36rem); justify-self: center; background: var(--crema); transition: background-color 800ms var(--curva); }
+.escena::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 60% 62%, rgb(242 183 5 / 0.42), transparent 58%); opacity: 0; transition: opacity 800ms var(--curva); }
+.escena::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 2px; background: var(--negro); }
+.forma { position: absolute; display: block; }
+.base { left: 12cqw; top: 80cqw; width: 20cqw; height: 20cqw; background: var(--azul); }
+.brazo { left: 21.5cqw; top: 34cqw; width: 3cqw; height: 48cqw; background: var(--negro); transform-origin: 50% 100%; transform: translate(0, 0) rotate(26deg) scaleY(1); }
+.articulacion { left: 40.5cqw; top: 35.5cqw; width: 7cqw; height: 7cqw; border-radius: 50%; background: var(--negro); box-shadow: inset 0 0 0 1.6cqw var(--negro), inset 0 0 0 2.4cqw var(--crema); }
+.pantalla { left: 41cqw; top: 23cqw; width: 38cqw; height: 38cqw; border-radius: 50%; background: var(--rojo); clip-path: inset(0 0 50% 0); }
+.luz { left: 38cqw; top: 42cqw; width: 44cqw; height: 58cqw; background: var(--amarillo); clip-path: polygon(50% 0, 100% 100%, 0 100%); opacity: 0.3; transition: opacity 800ms var(--curva); }
+.escena:has(.interruptor input:checked) { background: var(--crema-tibia); }
+.escena:has(.interruptor input:checked)::before { opacity: 1; }
+.escena:has(.interruptor input:checked) .luz { opacity: 0.92; }
+.interruptor { position: absolute; right: 0; top: 0; z-index: 2; display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 6px 0 16px; border: 2px solid var(--negro); border-radius: 999px; background: var(--crema); font-size: 16px; font-weight: 500; cursor: pointer; }
+.interruptor input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.interruptor i { position: relative; width: 52px; height: 30px; border-radius: 999px; background: var(--negro); }
+.interruptor i::after { content: ''; position: absolute; left: 4px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--crema); transition: translate 500ms var(--curva), background-color 500ms var(--curva); }
+.interruptor input:checked + i::after { translate: 22px 0; background: var(--amarillo); }
+.interruptor:has(input:focus-visible) { outline: 3px solid var(--azul); outline-offset: 3px; }
+.estado-luz { display: grid; }
+.estado-luz span { grid-area: 1 / 1; transition: opacity 400ms var(--curva); }
+.estado-luz span:last-child, .interruptor:has(input:checked) .estado-luz span:first-child { opacity: 0; }
+.interruptor:has(input:checked) .estado-luz span:last-child { opacity: 1; }
+@keyframes bisagra-pantalla { from { transform: translate(-36cqw, 4cqw) scale(0.79); clip-path: inset(0 0 0 0); } }
+@keyframes bisagra-base { from { transform: translate(30cqw, -44cqw) scale(1.2); } }
+@keyframes bisagra-luz { from { transform: translate(18cqw, -25cqw) scale(0.59, 0.45); opacity: 1; } }
+@keyframes bisagra-brazo { from { transform: translate(-13cqw, -18cqw) rotate(90deg) scaleY(1.67); } }
+@keyframes bisagra-articulacion { from { transform: translate(46cqw, 25cqw); } }
+
+/* ---- La colección ---- */
+.coleccion { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(48px, 6vw, 80px) clamp(24px, 4vw, 56px); margin: 64px 0 0; padding: 0; list-style: none; }
+.lampara { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 20px 24px; align-items: end; }
+.lampara:nth-child(even) { margin-top: clamp(0px, 8vw, 120px); }
+.lampara figure { grid-column: 1 / -1; position: relative; overflow: hidden; }
+.lampara img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: scale 900ms var(--curva); }
+.lampara:hover img { scale: 1.04; }
+.dibujo { position: absolute; left: 16px; bottom: 16px; width: 76px; height: 76px; padding: 8px; background: var(--crema); }
+.dibujo svg { display: block; width: 100%; height: 100%; }
+.lampara h3 { font-size: clamp(36px, 4vw, 56px); }
+.lampara dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; font-size: 16px; }
+.lampara dt { color: var(--gris); }
+.lampara dd { margin: 0; text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* ---- El taller: un afiche ---- */
+.afiche { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: auto auto; gap: 0; margin-top: 64px; border: 2px solid var(--negro); }
+.paso { position: relative; display: grid; align-content: space-between; gap: 24px; min-height: 340px; padding: clamp(20px, 3vw, 36px); }
+.paso b { font-size: clamp(96px, 12vw, 180px); font-weight: 700; line-height: 0.75; }
+.paso h3 { font-size: clamp(28px, 3vw, 40px); margin-bottom: 8px; }
+.paso p { font-size: 16px; max-width: 32ch; }
+.paso-1 { grid-column: 1 / span 2; background: var(--rojo); color: var(--crema); }
+.paso-1 p { color: #fff6ea; }
+.foto-1 { grid-column: 3 / span 4; border-left: 2px solid var(--negro); }
+.foto-2 { grid-column: 1 / span 3; border-top: 2px solid var(--negro); }
+.paso-2 { grid-column: 4 / span 1; background: var(--azul); color: var(--crema); border-top: 2px solid var(--negro); border-left: 2px solid var(--negro); }
+.paso-2 p { color: #eef1fb; }
+.paso-3 { grid-column: 5 / span 2; background: var(--amarillo); border-top: 2px solid var(--negro); border-left: 2px solid var(--negro); }
+.afiche figure img { width: 100%; height: 100%; min-height: 340px; object-fit: cover; }
+.polvos { display: flex; gap: 8px; }
+.polvos i { width: 30px; height: 30px; border: 2px solid var(--negro); border-radius: 50%; }
+
+/* ---- A medida: el configurador ---- */
+.medida { --pantalla: var(--rojo); --pie: var(--azul); display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; margin-top: 64px; }
+.lienzo { position: relative; display: grid; place-items: center; aspect-ratio: 1; background: #faf6ec; border: 2px solid var(--negro); }
+.lienzo svg { width: 78%; height: auto; overflow: visible; }
+.lienzo .cfg-pantalla { fill: var(--pantalla); transition: fill 500ms var(--curva); }
+.lienzo .cfg-base { fill: var(--pie); transition: fill 500ms var(--curva); }
+.lienzo .cfg-linea { fill: none; stroke: var(--negro); stroke-width: 10; stroke-linecap: square; }
+.lienzo .cfg-eje { fill: var(--negro); }
+.resumen { position: absolute; left: 0; bottom: 0; display: grid; padding: 10px 16px; background: var(--negro); color: var(--crema); font-size: 15px; font-weight: 500; }
+.opciones { display: grid; gap: 28px; margin: 0; }
+.opciones fieldset { margin: 0; padding: 0; border: 0; }
+.opciones legend { margin-bottom: 12px; font-size: 16px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.colores { display: flex; flex-wrap: wrap; gap: 12px; }
+.color { position: relative; display: grid; place-items: center; width: 64px; height: 64px; border: 2px solid var(--negro); background: var(--c); cursor: pointer; transition: border-radius 500ms var(--curva), transform 500ms var(--curva); }
+.color input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.color span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.color:has(input:checked) { border-radius: 50%; transform: translateY(-4px); }
+.color:has(input:focus-visible) { outline: 3px solid var(--azul); outline-offset: 3px; }
+.precio-cfg { font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.precio-cfg small { display: block; font-size: 15px; color: var(--gris); }
+.medida:has([name='pantalla'][value='rojo']:checked) { --pantalla: var(--rojo); }
+.medida:has([name='pantalla'][value='azul']:checked) { --pantalla: var(--azul); }
+.medida:has([name='pantalla'][value='amarillo']:checked) { --pantalla: var(--amarillo); }
+.medida:has([name='pantalla'][value='negro']:checked) { --pantalla: var(--negro); }
+.medida:has([name='pantalla'][value='crema']:checked) { --pantalla: #e7dcc0; }
+.medida:has([name='base'][value='rojo']:checked) { --pie: var(--rojo); }
+.medida:has([name='base'][value='azul']:checked) { --pie: var(--azul); }
+.medida:has([name='base'][value='amarillo']:checked) { --pie: var(--amarillo); }
+.medida:has([name='base'][value='negro']:checked) { --pie: var(--negro); }
+.medida:has([name='base'][value='crema']:checked) { --pie: #e7dcc0; }
+.medida:has([name='pantalla'][value='rojo']:checked) .r-p-rojo, .medida:has([name='pantalla'][value='azul']:checked) .r-p-azul, .medida:has([name='pantalla'][value='amarillo']:checked) .r-p-amarillo, .medida:has([name='pantalla'][value='negro']:checked) .r-p-negro, .medida:has([name='pantalla'][value='crema']:checked) .r-p-crema,
+.medida:has([name='base'][value='rojo']:checked) .r-b-rojo, .medida:has([name='base'][value='azul']:checked) .r-b-azul, .medida:has([name='base'][value='amarillo']:checked) .r-b-amarillo, .medida:has([name='base'][value='negro']:checked) .r-b-negro, .medida:has([name='base'][value='crema']:checked) .r-b-crema { opacity: 1; }
+.resumen-fila { display: flex; gap: 6px; }
+.resumen-fila > span { display: grid; }
+.resumen-fila > span > span { grid-area: 1 / 1; opacity: 0; transition: opacity 400ms var(--curva); white-space: nowrap; }
+
+/* ---- Pedido ---- */
+.pedido { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px clamp(32px, 5vw, 80px); align-items: start; }
+.pedido figure { margin-top: 36px; }
+.pedido figure img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.pedido figcaption { margin-top: 12px; font-size: 15px; color: var(--gris); }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 20px; padding: clamp(24px, 3.5vw, 44px); border: 2px solid var(--negro); background: #f7f1e2; }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario label { display: grid; gap: 8px; font-size: 15px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.formulario :is(input, select) { width: 100%; min-height: 54px; padding: 10px 16px; border: 2px solid var(--negro); border-radius: 0; background: var(--crema); color: var(--negro); font: 400 18px/1.3 'Jost', sans-serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; }
+.formulario select { padding-right: 44px; background: var(--crema) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M1 3h12L7 12z' fill='%23111111'/%3E%3C/svg%3E") right 16px center / 12px 12px no-repeat; }
+.formulario :is(input, select):focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
+.formulario .boton { justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- Pie ---- */
+.pie { border-top: 2px solid var(--negro); }
+.pie-cuerpo { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 24px 40px; align-items: start; padding-block: 40px 48px; font-size: 16px; }
+.pie-formas { display: flex; gap: 8px; align-items: end; }
+.pie-formas i { width: 34px; height: 34px; }
+.pie-formas i:nth-child(1) { border-radius: 50%; background: var(--rojo); }
+.pie-formas i:nth-child(2) { background: var(--azul); }
+.pie-formas i:nth-child(3) { background: var(--amarillo); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.pie b { display: block; font-weight: 600; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .regla { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .regla .logo { grid-column: 1 / -1; border-bottom: 2px solid var(--negro); }
+  .regla > a:nth-child(2) { border-left: 0; }
+  .portada, .medida, .pedido { grid-template-columns: minmax(0, 1fr); }
+  .coleccion { grid-template-columns: minmax(0, 1fr); max-width: 34rem; margin-inline: auto; }
+  .lampara:nth-child(even) { margin-top: 0; }
+  .afiche { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .paso-1, .foto-1, .foto-2, .paso-2, .paso-3 { grid-column: auto; border-left: 0; border-top: 2px solid var(--negro); }
+  .paso-1 { border-top: 0; }
+  .foto-1 { border-left: 2px solid var(--negro); border-top: 0; }
+  .paso-2 { border-left: 2px solid var(--negro); }
+  .paso-3 { grid-column: 1 / -1; }
+  .pie-cuerpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .regla > * { min-height: 52px; padding: 0 10px; }
+  .regla a:not(.logo) { flex-direction: column; justify-content: center; align-items: flex-start; gap: 0; font-size: 14px; }
+  .interruptor { font-size: 15px; }
+  .lampara { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .afiche { grid-template-columns: minmax(0, 1fr); }
+  .foto-1, .paso-2 { border-left: 0; border-top: 2px solid var(--negro); }
+  .paso { min-height: 260px; }
+  .afiche figure img { min-height: 240px; }
+  .color { width: 54px; height: 54px; }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+  .pie-cuerpo { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento ----
+   En la portada, las tres formas del logo y su línea se trasladan y giran
+   hasta ser la lámpara mientras se baja, y vuelven si se sube (donde el
+   navegador no ata animaciones al scroll, se arman una vez al cargar). El
+   interruptor la enciende: el triángulo se vuelve luz y la portada se
+   entibia. En el configurador, los colores cambian con una transición corta
+   y la casilla elegida se vuelve círculo. Lo demás entra con la curva de la
+   marca, firme al partir y al llegar. */
+[data-aparece] { --entrada: bisagra-llega; --tramo: 34svh; --duracion: 1200ms; }
+@keyframes bisagra-llega { from { opacity: 0; translate: 0 40px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .pantalla { animation: bisagra-pantalla 1800ms var(--curva) 700ms both; }
+  .base { animation: bisagra-base 1800ms var(--curva) 760ms both; }
+  .luz { animation: bisagra-luz 1800ms var(--curva) 820ms both; }
+  .brazo { animation: bisagra-brazo 1800ms var(--curva) 880ms both; }
+  .articulacion { animation: bisagra-articulacion 1800ms var(--curva) 940ms both; }
+  @supports (animation-timeline: scroll()) {
+    .escena .forma { animation-duration: auto; animation-delay: 0s; animation-timeline: scroll(root); animation-range: 2svh 46svh; }
+    @media (max-width: 899px) {
+      .escena .forma { animation-range: 30svh 90svh; }
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .escena, .escena::before, .luz, .interruptor i::after, .estado-luz span, .lampara img, .color, .lienzo *, .resumen-fila > span > span, .boton, .boton::after, .regla a, .regla a span { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="bisagra">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Bisagra</b> es una marca inventada por Volutus para mostrarte el estilo <b>Bauhaus</b>.</p></div>
+
+<header>
+  <nav class="regla" aria-label="Secciones">
+    <a class="logo" href="#inicio"><svg viewBox="0 0 54 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="#d7261e"/><rect x="25" y="2" width="18" height="18" fill="#1f4aa8"/><path d="M46 22 50 10 54 22z" fill="#f2b705"/><circle cx="43" cy="20" r="2" fill="#111111"/></svg>bisagra</a>
+    <a href="#coleccion"><span>01</span>Colección</a>
+    <a href="#taller"><span>02</span>El taller</a>
+    <a href="#medida"><span>03</span>A medida</a>
+    <a href="#pedido"><span>04</span>Pedido</a>
+  </nav>
+</header>
+
+<main>
+  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+    <div class="portada-texto">
+      <p class="rotulo">Lámparas hechas a mano · San Joaquín</p>
+      <h1 id="titulo">Tres formas <b>y una bisagra</b></h1>
+      <p>Un círculo que da sombra, un cuadrado que pesa y un brazo que se dobla. Cada lámpara se tornea, se pliega y se pinta en nuestro taller.</p>
+      <a class="boton" href="#coleccion">Ver la colección</a>
+    </div>
+    <div class="escena">
+      <label class="interruptor"><span class="estado-luz" aria-hidden="true"><span>Encender</span><span>Apagar</span></span><input type="checkbox" role="switch" aria-label="Encender la lámpara"><i aria-hidden="true"></i></label>
+      <span class="forma luz" aria-hidden="true"></span>
+      <span class="forma base" aria-hidden="true"></span>
+      <span class="forma brazo" aria-hidden="true"></span>
+      <span class="forma pantalla" aria-hidden="true"></span>
+      <span class="forma articulacion" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="coleccion" aria-labelledby="coleccion-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="coleccion-titulo">La colección</h2>
+      <p class="bajada">Cuatro lámparas, cada una armada con las mismas formas en otro orden. Al lado de cada foto, su dibujo.</p>
+    </div>
+    <ul class="coleccion">
+      <li class="lampara" data-aparece>
+        <figure><img src="/image/bocetos/bisagra/disco-500.webp" srcset="/image/bocetos/bisagra/disco-500.webp 500w, /image/bocetos/bisagra/disco-800.webp 800w" sizes="(min-width: 900px) 42vw, 90vw" width="800" height="1000" loading="lazy" alt="Una lámpara de mesa blanca con forma de hongo, encendida, sobre un mueble oscuro"><span class="dibujo" aria-hidden="true"><svg viewBox="0 0 60 60"><path d="M6 30a24 24 0 0 1 48 0z" fill="#d7261e"/><rect x="26" y="30" width="8" height="22" fill="#111111"/><rect x="18" y="52" width="24" height="6" fill="#1f4aa8"/></svg></span></figure>
+        <h3>Disco</h3>
+        <dl><dt>Mesa</dt><dd>38 cm</dd><dt>Precio</dt><dd>$149.000</dd></dl>
+      </li>
+      <li class="lampara" data-aparece style="--orden: 1">
+        <figure><img src="/image/bocetos/bisagra/codo-500.webp" srcset="/image/bocetos/bisagra/codo-500.webp 500w, /image/bocetos/bisagra/codo-800.webp 800w" sizes="(min-width: 900px) 42vw, 90vw" width="800" height="1000" loading="lazy" alt="Una lámpara de escritorio crema con brazo curvo de bronce, sobre una mesa clara"><span class="dibujo" aria-hidden="true"><svg viewBox="0 0 60 60"><rect x="6" y="48" width="14" height="10" fill="#1f4aa8"/><path d="M13 48 22 20 40 14" fill="none" stroke="#111111" stroke-width="4"/><circle cx="22" cy="20" r="3.5" fill="#111111"/><path d="M34 6a14 14 0 0 1 20 20z" fill="#d7261e"/></svg></span></figure>
+        <h3>Codo</h3>
+        <dl><dt>Escritorio</dt><dd>52 cm</dd><dt>Precio</dt><dd>$189.000</dd></dl>
+      </li>
+      <li class="lampara" data-aparece>
+        <figure><img src="/image/bocetos/bisagra/cono-500.webp" srcset="/image/bocetos/bisagra/cono-500.webp 500w, /image/bocetos/bisagra/cono-800.webp 800w" sizes="(min-width: 900px) 42vw, 90vw" width="800" height="1000" loading="lazy" alt="Una lámpara colgante negra en forma de cono, encendida, frente a un muro turquesa"><span class="dibujo" aria-hidden="true"><svg viewBox="0 0 60 60"><path d="M30 2V20" stroke="#111111" stroke-width="3"/><path d="M30 18 52 46H8z" fill="#111111"/><path d="M14 46h32L30 60z" fill="#f2b705"/></svg></span></figure>
+        <h3>Cono</h3>
+        <dl><dt>Colgante</dt><dd>Ø 32 cm</dd><dt>Precio</dt><dd>$129.000</dd></dl>
+      </li>
+      <li class="lampara" data-aparece style="--orden: 1">
+        <figure><img src="/image/bocetos/bisagra/esfera-500.webp" srcset="/image/bocetos/bisagra/esfera-500.webp 500w, /image/bocetos/bisagra/esfera-800.webp 800w" sizes="(min-width: 900px) 42vw, 90vw" width="800" height="1000" loading="lazy" alt="Una lámpara colgante esférica oscura con el interior dorado, frente a un fondo naranja"><span class="dibujo" aria-hidden="true"><svg viewBox="0 0 60 60"><path d="M30 0V14" stroke="#111111" stroke-width="3"/><circle cx="30" cy="34" r="20" fill="#d7261e"/><rect x="18" y="44" width="24" height="10" fill="#f2b705"/></svg></span></figure>
+        <h3>Esfera</h3>
+        <dl><dt>Colgante</dt><dd>Ø 28 cm</dd><dt>Precio</dt><dd>$139.000</dd></dl>
+      </li>
+    </ul>
+  </section>
+
+  <section class="ancho seccion" id="taller" aria-labelledby="taller-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="taller-titulo">El taller</h2>
+      <p class="bajada">Tres oficios en una nave de San Joaquín. Una lámpara tarda tres semanas, y casi todo ese tiempo es esperar a que la pintura cure.</p>
+    </div>
+    <div class="afiche" data-aparece>
+      <div class="paso paso-1"><b>1</b><div><h3>Torneado</h3><p>La pantalla nace de un disco de aluminio que se empuja contra un molde en el torno, sin soldaduras.</p></div></div>
+      <figure class="foto-1"><img src="/image/bocetos/bisagra/torneado-800.webp" srcset="/image/bocetos/bisagra/torneado-500.webp 500w, /image/bocetos/bisagra/torneado-800.webp 800w" sizes="(min-width: 900px) 56vw, 100vw" width="800" height="600" loading="lazy" alt="Virutas de metal sobre una pieza que gira en el torno, con la broca encima"></figure>
+      <figure class="foto-2"><img src="/image/bocetos/bisagra/plegado-800.webp" srcset="/image/bocetos/bisagra/plegado-500.webp 500w, /image/bocetos/bisagra/plegado-800.webp 800w" sizes="(min-width: 900px) 42vw, 100vw" width="800" height="600" loading="lazy" alt="Una plegadora de metal dobla una plancha de acero en el taller"></figure>
+      <div class="paso paso-2"><b>2</b><div><h3>Plegado</h3><p>La base se corta y se pliega de una plancha de acero de 4 mm. Pesa lo justo para no volcarse.</p></div></div>
+      <div class="paso paso-3"><b>3</b><div><h3>Pintura en polvo</h3><p>Cinco colores, horneados a 200 °C. No se descascaran ni con los años ni con los gatos.</p><p class="polvos" aria-hidden="true" style="margin-top: 16px"><i style="background: #d7261e"></i><i style="background: #1f4aa8"></i><i style="background: #f2b705"></i><i style="background: #111111"></i><i style="background: #e7dcc0"></i></p></div></div>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="medida" aria-labelledby="medida-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="medida-titulo">A medida</h2>
+      <p class="bajada">Elige el color de la pantalla y el de la base del modelo Codo. Cualquiera de las veinticinco combinaciones cuesta lo mismo.</p>
+    </div>
+    <div class="medida">
+      <div class="lienzo" data-aparece>
+        <svg viewBox="0 0 300 300" role="img" aria-label="Dibujo de la lámpara Codo con los colores elegidos">
+          <rect class="cfg-base" x="40" y="246" width="80" height="44"/>
+          <path class="cfg-linea" d="M80 246 116 110 206 82"/>
+          <circle class="cfg-eje" cx="116" cy="110" r="13"/>
+          <circle cx="116" cy="110" r="5" fill="#faf6ec"/>
+          <path class="cfg-pantalla" d="M176 54a62 62 0 0 1 98 76z"/>
+        </svg>
+        <p class="resumen resumen-fila" aria-hidden="true"><span><span class="r-p-rojo">Pantalla roja</span><span class="r-p-azul">Pantalla azul</span><span class="r-p-amarillo">Pantalla amarilla</span><span class="r-p-negro">Pantalla negra</span><span class="r-p-crema">Pantalla crema</span></span>·<span><span class="r-b-rojo">base roja</span><span class="r-b-azul">base azul</span><span class="r-b-amarillo">base amarilla</span><span class="r-b-negro">base negra</span><span class="r-b-crema">base crema</span></span></p>
+      </div>
+      <form class="opciones configurador" toolname="configurar_lampara" tooldescription="Elige los colores de la pantalla y de la base de la lámpara Codo de Bisagra, una marca inventada por Volutus como boceto de página, y muestra cómo queda. No envía nada a nadie: responde la combinación elegida y su precio." toolautosubmit>
+        <fieldset toolparamdescription="Color de la pantalla: rojo, azul, amarillo, negro o crema">
+          <legend>Pantalla</legend>
+          <div class="colores">
+            <label class="color" style="--c: #d7261e"><input type="radio" name="pantalla" value="rojo" checked><span>Rojo</span></label>
+            <label class="color" style="--c: #1f4aa8"><input type="radio" name="pantalla" value="azul"><span>Azul</span></label>
+            <label class="color" style="--c: #f2b705"><input type="radio" name="pantalla" value="amarillo"><span>Amarillo</span></label>
+            <label class="color" style="--c: #111111"><input type="radio" name="pantalla" value="negro"><span>Negro</span></label>
+            <label class="color" style="--c: #e7dcc0"><input type="radio" name="pantalla" value="crema"><span>Crema</span></label>
+          </div>
+        </fieldset>
+        <fieldset toolparamdescription="Color de la base: rojo, azul, amarillo, negro o crema">
+          <legend>Base</legend>
+          <div class="colores">
+            <label class="color" style="--c: #d7261e"><input type="radio" name="base" value="rojo"><span>Rojo</span></label>
+            <label class="color" style="--c: #1f4aa8"><input type="radio" name="base" value="azul" checked><span>Azul</span></label>
+            <label class="color" style="--c: #f2b705"><input type="radio" name="base" value="amarillo"><span>Amarillo</span></label>
+            <label class="color" style="--c: #111111"><input type="radio" name="base" value="negro"><span>Negro</span></label>
+            <label class="color" style="--c: #e7dcc0"><input type="radio" name="base" value="crema"><span>Crema</span></label>
+          </div>
+        </fieldset>
+        <p class="precio-cfg">$189.000<small>Codo, en los colores que elijas · tres semanas</small></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="ancho seccion pedido" id="pedido" aria-labelledby="pedido-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <h2 class="titulo" id="pedido-titulo">Pedido</h2>
+      <p class="bajada">La hacemos cuando la pides. Te escribimos para confirmar los colores y la despachamos a todo Chile, o la retiras en el taller.</p>
+      <figure><img src="/image/bocetos/bisagra/encendida-600.webp" srcset="/image/bocetos/bisagra/encendida-600.webp 600w, /image/bocetos/bisagra/encendida-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 90vw" width="1000" height="667" loading="lazy" alt="Una lámpara de mesa con pantalla naranja encendida, que tiñe de luz cálida un muro oscuro"><figcaption>Una Disco en naranja, del pedido especial de octubre.</figcaption></figure>
+    </div>
+    <form class="formulario" data-muestra data-aparece toolname="pedir_lampara" tooldescription="Pide una lámpara a Bisagra, un taller de lámparas inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto.">
+      <label class="todo">Lámpara<select name="lampara" toolparamdescription="Qué lámpara quiere: Disco, Codo, Cono o Esfera"><option>Codo · $189.000</option><option>Disco · $149.000</option><option>Cono · $129.000</option><option>Esfera · $139.000</option></select></label>
+      <label>Pantalla<select name="pantalla" toolparamdescription="Color de la pantalla: rojo, azul, amarillo, negro o crema"><option>Rojo</option><option>Azul</option><option>Amarillo</option><option>Negro</option><option>Crema</option></select></label>
+      <label>Base<select name="base" toolparamdescription="Color de la base: rojo, azul, amarillo, negro o crema"><option>Azul</option><option>Rojo</option><option>Amarillo</option><option>Negro</option><option>Crema</option></select></label>
+      <label>Nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+      <label>Comuna<input name="comuna" autocomplete="address-level2" maxlength="60" toolparamdescription="Comuna a la que se despacha, o «retiro» para retirarla en el taller"></label>
+      <label class="todo">Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+      <button class="boton todo" type="submit">Pedir la lámpara</button>
+    </form>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho pie-cuerpo">
+    <p class="pie-formas" aria-hidden="true"><i></i><i></i><i></i></p>
+    <p><b>Taller</b>Av. Santa Rosa 4120, San Joaquín, Santiago. Visitas el primer sábado de cada mes.</p>
+    <p><b>Correo</b>taller@bisagra.cl</p>
+    <p><b>Bisagra</b>Boceto de Volutus · marca inventada</p>
+  </div>
+</footer>
+</body>
+</html>

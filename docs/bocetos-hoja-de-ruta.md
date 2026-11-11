@@ -44,12 +44,12 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 | Natural | Quillay | 2 | hecho | hecho | hecho | segunda vuelta |
 | Lúdico | Pelusa | 3 | aprobado | aprobado | hecho | aprobado |
 | Retro | Pista Lucero | 3 | hecho | hecho | hecho | segunda vuelta |
-| Memphis | Tablero | 3 | pendiente | pendiente | pendiente | pendiente |
-| Y2K | Destello | 3 | pendiente | pendiente | pendiente | pendiente |
-| Futurista | Cénit | 3 | pendiente | pendiente | pendiente | pendiente |
-| Brutalista | Sótano | 4 | pendiente | pendiente | pendiente | pendiente |
-| Suizo / gráfico | Rumbo | 4 | pendiente | pendiente | pendiente | pendiente |
-| Bauhaus | Foco | 4 | pendiente | pendiente | pendiente | pendiente |
+| Memphis | Tablero | 3 | hecho | hecho | hecho | pendiente |
+| Y2K | Destello | 3 | hecho | hecho | hecho | pendiente |
+| Futurista | Cénit | 3 | hecho | hecho | hecho | pendiente |
+| Brutalista | Sótano | 4 | hecho | hecho | hecho | pendiente |
+| Suizo / gráfico | Rumbo | 4 | hecho | hecho | hecho | pendiente |
+| Bauhaus | Bisagra | 4 | hecho | hecho | hecho | pendiente |
 | Art déco | Bar Marfil | 4 | hecho | hecho | hecho | pendiente |
 | Artesanal | Libar | 5 | hecho | hecho | hecho | pendiente |
 | Industrial | Remache | 5 | hecho | hecho | hecho | pendiente |
@@ -65,9 +65,9 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 
 1. **Cauce y Kiri**, que reemplazan a Nodo y Kōen, con sus tarjetas. En la misma tanda se borran `public/brief/bocetos/nodo.html` y `koen.html`, `public/image/bocetos/nodo/` y `koen/` y sus tablas en [bocetos-fotos.md](bocetos-fotos.md), y el abanico de [PreguntaBrief.jsx](../src/components/PreguntaBrief.jsx) (`ABANICO`, línea 345) pasa a `['kiri', 'golpe', 'cauce']`.
 2. **Basal, Ladera, Iris y Quillay**: los estilos que más piden las pymes. *Hecha el 11 de noviembre, junto con Pelusa y Lucero.*
-3. **Pelusa, Lucero, Tablero, Destello y Cénit**: los de color, luz y humor. *Pelusa y Lucero, hechos; siguen Tablero, Destello y Cénit.*
-4. **Sótano, Rumbo, Foco y Marfil**: los de tipografía y geometría. *Marfil, hecho el 11 de noviembre junto con la tanda 5; siguen Sótano, Rumbo y Foco.*
-5. **Libar, Remache, Parina, Tilde y Rampa**: los de material y oficio. *Hecha el 11 de noviembre, junto con Marfil.*
+3. **Pelusa, Lucero, Tablero, Destello y Cénit**: los de color, luz y humor. *Hecha el 11 de noviembre.*
+4. **Sótano, Rumbo, Bisagra y Marfil**: los de tipografía y geometría. *Hecha el 11 de noviembre.*
+5. **Libar, Remache, Parina, Tilde y Rampa**: los de material y oficio. *Hecha el 11 de noviembre.*
 6. **Las tarjetas de Alba, Rosa, Ónix y Golpe**, sacadas de sus páginas, y una revisión de conjunto de /brief-web con las 24 tarjetas y el recorrido del visor de principio a fin.
 
 ## Pendientes conocidos
@@ -86,6 +86,15 @@ Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el u
 - **Lección de Nodo y Kōen.** Los dos eran una secuencia de secciones de plantilla: logos de clientes, cifras, planes, preguntas frecuentes, en un caso, y clases, horario, pases y reserva, en el otro. Cada boceto nuevo parte de una idea propia de su marca, y las secciones salen de esa idea, no de una lista.
 - **2026-11-11, tanda 1.** Cauce y Kiri quedaron hechos, con sus fotos y sus tarjetas, y el abanico pasó a `['kiri', 'golpe', 'cauce']`. Al ver Cauce, el usuario dijo que le gustaba mucho y pidió más interacción o componentes 3D de su producto. Se sumó, sin librerías: el sensor como modelo 3D de caras de CSS que se mece, se gira al arrastrarlo o con las flechas, se despieza con el scroll y enciende la pieza que se señala en la lista; un cursor que lee la gráfica del panel, y una calculadora de ahorro de agua (`calcular_ahorro_agua`, con `toolautosubmit`). Todo eso vive en `cauce.js`, que va como módulo para no chocar con las constantes de barra.js.
 - **Pendiente de la tanda 1.** El borrado de `nodo.html`, `koen.html`, `public/image/bocetos/nodo/` y `koen/`, y de sus tablas en bocetos-fotos.md, no se aprobó en la sesión: queda para que el usuario lo haga o lo autorice. El WebKit de Playwright en Windows aplana `transform-style: preserve-3d` (también en un cubo mínimo), así que el sensor 3D se confirma en un iPhone o iPad real. En S, la barra de los bocetos puede dar un CLS de hasta 0,05: barra.js le agrega el formulario de calificar después del primer cuadro, según cuánto tarde la página en pintar. Es de la barra común, no de un boceto.
+- **2026-11-11, tandas 3 y 4.** El usuario pidió Tablero, Destello, Cénit, Sótano, Rumbo y Foco, cada uno único, con personalidad marcada y animaciones que aporten. Quedaron hechos, con sus fotos, sus tarjetas y sus entradas en bocetos.js (reemplazan a Garabato, Brillo, Helio, Bloque, Grilla y Forma). Foco pasó a llamarse **Bisagra**: ya existe Tienda Foco, del mismo rubro. Cada página sale de su idea y sus piezas no repiten las de otros bocetos:
+  - **Tablero:** la cabecera son los turnos del menú, cada uno con una figura, y el horario de hoy. En la portada, las figuras Memphis flotan sueltas y, al bajar, caen cada una en su casilla de un tablero; dos dados de CSS 3D giran. Siguen el reglamento de la caja, la ludoteca como estante de lomos filtrable con `:has()` (`filtrar_juegos`), la carta como hoja de puntaje, la llave del torneo que se dibuja y termina en la foto del campeón, la reserva con fichas de colores y el pie como dorso de la caja.
+  - **Destello:** la cabecera es el dial de modos de la cámara. La portada es una compacta plateada con la foto en su pantallita y un disparador que dispara el flash y revela la foto siguiente. Las fechas son dígitos de siete segmentos en SVG. Siguen los blísteres colgados en un tablero perforado, la revisión como una batería que se carga, las copias que salen del sobre de revelado, el certificado de garantía, la venta como menú de la pantalla LCD (`tasar_camara`) y el pie como tarjeta de memoria.
+  - **Cénit:** la cabecera son las coordenadas, con la marca al centro. En la portada, el cielo gira alrededor del polo sur celeste con sus estelas de degradé cónico, sobre los cerros. Siguen un planisferio que gira con la hora elegida, las experiencias en vidrio neutro con la duración como exposición, el camino de la luz por el espejo del telescopio, el perfil de altura desde La Serena, la reserva por fase de la luna y el pie como horizonte con sus coordenadas.
+  - **Sótano:** una columna fija con el nombre apilado. La función de hoy va en Times gigante, la cartelera es una tabla cuyas filas se invierten (en M y S, cada función pasa a ser un bloque), y siguen los ciclos en lista cruda, el plano de las 80 butacas, el precio de socio en Times gigante, un formulario con bordes del navegador y un pie de texto crudo. Las fotos entran con un corte de cortina, salvo la de la portada.
+  - **Rumbo:** la grilla de doce columnas a la vista. La cabecera es el directorio del edificio. En la portada, una flecha gigante entra girando y, al bajar, se vuelve hacia abajo. Cada sección es un piso con su número pegado al costado, como en un ascensor. Siguen el método como letrero negro con pictogramas, los proyectos con ficha, el sistema como página de manual, los clientes en texto, el contacto con campos numerados y un pie de «volver al inicio».
+  - **Bisagra:** la cabecera es una regla de cinco celdas. En la portada, el logo se arma en lámpara al bajar y un interruptor la enciende. Siguen la colección con el dibujo de las formas de cada lámpara, el taller como afiche de tres bloques, el configurador de colores con `:has()` (`configurar_lampara`) y el pedido.
+- **Letras de respaldo.** Destello, Tablero y Cénit llevan un respaldo de Arial con `size-adjust` medido contra su letra (Syne, 148 %; Rubik, 103 y 105 %; Unbounded, 129 %; Sora, 110 %). Sin él, el título cambiaba de líneas al llegar la letra y movía la página: en Destello, el CLS era de 0,08 y el rendimiento de 95. Las fotos que esperan su turno en la pantallita de Destello no bajan hasta el `load`. Lighthouse en teléfono, en las seis: Performance, Accessibility, Best Practices y Agentic Search en 100; SEO en 66, por el `noindex`. Rumbo marca a veces el 0,048 de CLS de la barra (ver los pendientes).
+- **Por confirmar en un iPhone o iPad real:** los dados 3D de Tablero (el WebKit de Playwright en Windows aplana `preserve-3d`) y el giro de las formas de Bisagra con el scroll, que en Safari 18 se arma una vez al cargar.
 
 ## Reglas comunes
 
@@ -116,7 +125,7 @@ El esqueleto de [alba.html](../public/brief/bocetos/alba.html):
 ### Formularios
 
 - Cada boceto tiene al menos un formulario de muestra: `<form data-muestra>` con `toolname` (snake_case, con verbo), `tooldescription` (que diga que la marca es inventada y que no envía nada) y `toolparamdescription` donde la etiqueta no baste. barra.js responde al agente y avisa que es un boceto.
-- `toolautosubmit` solo en los que no envían nada a nadie (el configurador de Foco, el filtro de Tablero). Los demás los rellena el agente y los envía la persona.
+- `toolautosubmit` solo en los que no envían nada a nadie (el configurador de Bisagra, el filtro de Tablero). Los demás los rellena el agente y los envía la persona.
 - Los que solo consultan algo de la página (filtran, configuran, buscan) llevan `data-consulta` en vez de `data-muestra`, y lo que muestran, `data-respuesta`: barra.js le responde al agente el texto de las respuestas visibles. Lo usa el rastreador de lotes de Libar.
 - Letra de 16 px o más en los campos, etiquetas reales y foco visible.
 - Correos y teléfonos van como texto, sin `mailto:` ni `tel:`.
@@ -224,7 +233,7 @@ Cada boceto tiene una página real en la que inspirarse, elegida por su estilo y
 | Cénit | [Apple Vision Pro](https://www.apple.com/apple-vision-pro/) | Luz, vidrio neutro y scroll |
 | Sótano | [Anthology Film Archives](https://www.anthologyfilmarchives.org) | Cine independiente, cartelera cruda |
 | Rumbo | [Mijksenaar](https://www.mijksenaar.com) | Mismo rubro: señalética |
-| Foco | [Tecnolumen](https://tecnolumen.com) | Lámparas de la Bauhaus |
+| Bisagra | [Tecnolumen](https://tecnolumen.com) | Lámparas de la Bauhaus |
 | Marfil | [American Bar del Savoy](https://www.thesavoylondon.com/restaurants-and-bars/american-bar) | Bar art déco y su carta |
 | Libar | [Diaspora Co.](https://www.diasporaco.com) | Origen y lotes como historia |
 | Remache | [Deus Ex Machina](https://deuscustoms.com) | Mismo rubro: motos custom |
@@ -352,7 +361,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Secciones:** portada; cómo funciona (llegas, eliges, te enseñamos); la ludoteca, filtrable por número de jugadores y duración con radios y `:has()`, sin JavaScript (formulario `filtrar_juegos`, con `toolautosubmit`); la carta (café, sándwiches, precios); torneos del mes; reservar mesa (formulario: personas, fecha, hora).
 - **Fotos:** juegos sobre una mesa vistos desde arriba, amigos jugando y riendo, dados y fichas, café junto a un tablero.
 - **Página de inspiración:** [Walala Studio](https://www.camillewalala.com), de Camille Walala. Se toma el patrón como arquitectura, los bloques de color plano y la alegría ordenada. También: [Memphis Milano](https://memphis.it), el origen del estilo.
-- **Tarjeta:** el patrón Memphis, un dado y «TABLERO» en Rubik. Al pasar el cursor, los garabatos se desplazan. Sello: el dado.
+- **Tarjeta:** el patrón Memphis, un dado y «tablero» en Rubik. Al pasar el cursor, los garabatos se desplazan. Sello: el dado.
+- **Usa** `tablero.js`, como módulo: solo le responde al agente del filtro los juegos que calzan. El filtro mismo es CSS.
 
 ### Destello · Y2K
 
@@ -366,6 +376,7 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Fotos:** cámaras compactas plateadas, fotos de fiesta con flash, persona sacando una foto con una compacta, objetos de los 2000.
 - **Página de inspiración:** [Retrospekt](https://retrospekt.com), del mismo rubro: aparatos de antes, revisados y con garantía. Se toma el catálogo con el estado de cada equipo, la garantía a la vista y el cariño por el objeto. También: [CARI](https://cari.institute), el archivo de la estética Y2K, para el cromo, los destellos y las formas.
 - **Tarjeta:** «destello» en cromo, tres destellos y una fecha naranja. Al pasar el cursor, los destellos titilan. Sello: ✦.
+- **Usa** `destello.js`, como módulo: el disparador de la cámara de la portada (foto siguiente, flash y revelado). Sin JavaScript, el botón no aparece y se ve la primera foto.
 
 ### Cénit · futurista
 
@@ -406,18 +417,19 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 - **Página de inspiración:** [Mijksenaar](https://www.mijksenaar.com), del mismo rubro: la señalética de Schiphol, entre otros. Se toma cómo cuenta cada proyecto, los pictogramas y la promesa de que nadie se pierda. La grilla y la letra se van a lo suizo con las otras dos. También: [Swissted](https://www.swissted.com), por la grilla y el rojo, y [Standards Manual](https://standardsmanual.com), por el manual de señalética como pieza.
 - **Tarjeta:** grilla visible, un bloque rojo, una flecha grande y «Rumbo» en Archivo. Al pasar el cursor, la flecha gira 90°. Sello: la flecha.
 
-### Foco · Bauhaus
+### Bisagra · Bauhaus
 
-- **Slug y marca:** `foco` · Foco.
+- **Slug y marca:** `bisagra` · Bisagra. Se iba a llamar Foco, pero ya existe Tienda Foco, que vende veladores de diseño hechos a mano.
 - **Rubro:** lámparas de diseño hechas a mano. Taller en San Joaquín, Santiago.
-- **Idea:** círculo, cuadrado y triángulo forman el logo y, al bajar, se reacomodan en cada lámpara: la pantalla es el círculo, la base el cuadrado y el brazo una línea.
-- **Movimiento:** las formas se trasladan y giran a su lugar con el scroll y curva suave. En el configurador, el color cambia con una transición corta.
+- **Idea:** círculo, cuadrado y triángulo, una línea y una bisagra forman el logo y, al bajar, se reacomodan en una lámpara: la pantalla es el círculo, la base el cuadrado, el brazo la línea y el triángulo, la luz.
+- **Movimiento:** las formas se trasladan y giran a su lugar con el scroll y curva suave (donde el navegador no ata animaciones al scroll, se arman una vez al cargar). Un interruptor enciende la lámpara: el triángulo se vuelve luz y la portada se entibia. En el configurador, el color cambia con una transición corta.
 - **Letras:** Jost.
 - **Paleta:** crema `#f1ead8`, rojo `#d7261e`, azul `#1f4aa8`, amarillo `#f2b705`, negro `#111111`. `fondo`: `#f1ead8`.
 - **Secciones:** portada; la colección (cuatro lámparas, cada una con su foto y el dibujo de sus formas); el taller (torneado, plegado, pintura en polvo); a medida: un configurador de color de pantalla y de base con radios y `:has()`, sin JavaScript (formulario `configurar_lampara`, con `toolautosubmit`, que no envía nada); pedido (formulario: lámpara, colores, correo).
 - **Fotos:** lámpara de escritorio sobre una mesa, lámpara colgante, taller de metal, interior con una lámpara encendida.
 - **Página de inspiración:** [Tecnolumen](https://tecnolumen.com), que fabrica las lámparas clásicas de la Bauhaus. Se toma cada lámpara como objeto aislado, con su historia y su ficha. También: [Stiftung Bauhaus Dessau](https://bauhaus-dessau.de), por la geometría y los colores primarios, y [Vitra](https://www.vitra.com).
-- **Tarjeta:** crema con un círculo rojo, un cuadrado azul, un triángulo amarillo y «foco» en Jost. Al pasar el cursor, las formas se arman en lámpara. Sello: el círculo.
+- **Tarjeta:** crema con un círculo rojo, un cuadrado azul, un triángulo amarillo, la línea con su bisagra y «bisagra» en Jost. Al pasar el cursor, las formas se arman en lámpara. Sello: el círculo.
+- **Usa** `bisagra.js`, como módulo: solo le responde al agente del configurador la combinación y su precio. Los colores cambian con CSS.
 
 ### Bar Marfil · art déco
 

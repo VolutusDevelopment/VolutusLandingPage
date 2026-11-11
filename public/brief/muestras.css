@@ -357,19 +357,19 @@
 .estilo-ludico .brief-sello svg { width: 26px; fill: #ff7a59; transform: rotate(-30deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-ludico:has([value='si']:checked) .brief-sello svg { transform: rotate(-10deg); }
 
-/* Brutalista: sin suavizado, todo de golpe. */
+/* Brutalista · Sótano: la cartelera cruda en Times, con bordes negros y el
+   enlace azul. Al pasar, la fila de la función se invierte. */
 .estilo-brutalista { --marcado: #000000; }
-.estilo-brutalista .brief-muestra-arte { padding: 12px; background: #d9d9d4; color: #000000; font: 400 12px/1.3 'Times New Roman', Times, serif; }
-.estilo-brutalista .brief-muestra-arte b { display: block; margin-bottom: 8px; padding: 6px; border: 3px solid #000000; background: #ffffff; font: 700 30px/0.95 'Times New Roman', Times, serif; text-transform: uppercase; }
-.estilo-brutalista .brief-muestra-arte u { font: 600 10px/1 'Muestra Plex Mono', monospace; color: #0000ee; }
-.estilo-brutalista,
-.estilo-brutalista * { transition-timing-function: steps(1) !important; }
-@media (hover: hover) {
-  .estilo-brutalista:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 #000000; }
-}
+.estilo-brutalista .brief-muestra-arte { padding: 14px; background: #ffffff; color: #000000; }
+.estilo-brutalista .cartel { display: grid; border: 2px solid #000000; }
+.estilo-brutalista .cartel b { padding: 7px 8px 4px; font: 700 34px/0.9 'Times New Roman', Times, serif; letter-spacing: -0.03em; }
+.estilo-brutalista .fila { display: flex; justify-content: space-between; padding: 6px 8px; border-block: 2px solid #000000; font: 600 12px/1 'Muestra Plex Mono', monospace; transition: background-color 300ms var(--calma), color 300ms var(--calma); }
+.estilo-brutalista .cartel u { padding: 6px 8px; font: 400 15px/1.2 'Times New Roman', Times, serif; color: #0000ee; }
+.estilo-brutalista:is(:hover, :focus-within, :has([value='si']:checked)) .fila { background: #000000; color: #ffffff; }
 .estilo-brutalista:has([value='si']:checked) .brief-muestra-pie { background: #000000; color: #ffffff; }
 .estilo-brutalista:has([value='si']:checked) .brief-muestra-nombre { text-transform: uppercase; }
-.estilo-brutalista .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 3px solid #ffffff; color: #ffffff; font: 700 18px/1 'Times New Roman', serif; transition: none; }
+.estilo-brutalista .brief-sello span { color: #ffffff; font: 700 18px/1 'Times New Roman', serif; transform: translateY(6px); transition: opacity 300ms, transform 300ms var(--calma); }
+.estilo-brutalista:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Retro · Pista Lucero: la pista de noche, la cinta de franjas y el patín en
    su anillo. Al pasar, la cinta se mece y el anillo gira un poco. */
@@ -392,16 +392,18 @@
 .estilo-retro .brief-sello svg { width: 26px; fill: #e0a526; transform: rotate(-45deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-retro:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Suizo: la grilla y su cuadrado rojo. */
-.estilo-suizo { --marcado: #e2231a; }
-.estilo-suizo .brief-muestra-arte { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); padding: 14px; background: #ffffff; }
-.estilo-suizo .cua { grid-column: 1 / 3; grid-row: 1 / 3; background: #e2231a; transform-origin: top left; transition: transform 600ms var(--ease); }
-.estilo-suizo:is(:hover, :focus-within, :has([value='si']:checked)) .cua { transform: scale(0.5); }
-.estilo-suizo .rot { grid-column: 3 / 5; grid-row: 2 / 4; align-self: end; font: 700 21px/0.95 'Muestra Archivo', Helvetica, sans-serif; letter-spacing: -0.03em; color: #111111; }
-.estilo-suizo .reg { grid-column: 1 / 3; grid-row: 3; align-self: end; font: 700 9px/1.2 'Muestra Archivo', Helvetica, sans-serif; color: #111111; }
-.estilo-suizo:has([value='si']:checked) .brief-muestra-pie { background: #ffffff; color: #111111; }
-.estilo-suizo .brief-sello span { display: grid; place-items: center; width: 24px; height: 24px; background: #e2231a; color: #ffffff; font: 700 14px/1 'Muestra Archivo', sans-serif; transform: translate(10px, -10px); }
-.estilo-suizo:has([value='si']:checked) .brief-sello span { transform: none; }
+/* Suizo · Rumbo: la grilla a la vista, un bloque rojo, la flecha y su nombre.
+   Al pasar, la flecha gira un cuarto de vuelta. */
+.estilo-suizo { --marcado: #e3001b; }
+.estilo-suizo .brief-muestra-arte { background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgb(227 0 27 / 0.2) calc(25% - 1px) 25%), #ffffff; }
+.estilo-suizo .cua { position: absolute; left: 0; top: 0; width: 25%; height: 36%; background: #e3001b; }
+.estilo-suizo .flecha { position: absolute; right: 14px; top: 16px; width: 76px; height: 76px; fill: #111111; transition: rotate 700ms var(--calma); }
+.estilo-suizo:is(:hover, :focus-within, :has([value='si']:checked)) .flecha { rotate: 90deg; }
+.estilo-suizo .rot { position: absolute; left: 12px; bottom: 28px; font: 700 34px/1 'Muestra Archivo', Helvetica, sans-serif; letter-spacing: -0.04em; color: #111111; }
+.estilo-suizo .reg { position: absolute; left: 12px; bottom: 13px; font: 700 10px/1 'Muestra Archivo', Helvetica, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: #111111; }
+.estilo-suizo:has([value='si']:checked) .brief-muestra-pie { background: #111111; color: #ffffff; }
+.estilo-suizo .brief-sello svg { width: 22px; fill: #e3001b; transform: rotate(-90deg) scale(0.5); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-suizo:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Natural · Quillay: una forma de tierra, una rama de quillay dibujada a
    línea, el jabón con su sello hundido y su nombre. Al pasar, la rama se
@@ -419,14 +421,19 @@
 .estilo-natural .brief-sello svg { width: 24px; fill: #f0eadb; transform: rotate(-40deg) scale(0.3); transform-origin: 15% 85%; transition: opacity 300ms, transform 700ms var(--calma); }
 .estilo-natural:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Futurista: vidrio sobre luz. */
-.estilo-futurista { --marcado: #7a5cff; }
-.estilo-futurista .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(60% 80% at 30% 30%, #7a5cff 0, transparent 70%), radial-gradient(60% 80% at 80% 70%, #00c2ff 0, transparent 70%), #0b0c1e; }
-.estilo-futurista .vidrio { display: grid; place-items: center; width: 70%; height: 58%; border: 1px solid rgb(255 255 255 / 0.3); border-radius: 16px; background: rgb(255 255 255 / 0.1); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #ffffff; font: 700 15px/1 'Muestra Unbounded', sans-serif; transition: transform 500ms var(--ease); }
-.estilo-futurista:is(:hover, :focus-within, :has([value='si']:checked)) .vidrio { transform: translateY(-4px) scale(1.04); }
-.estilo-futurista:has([value='si']:checked) .brief-muestra-pie { background: #0b0c1e; color: #ffffff; }
+/* Futurista · Cénit: la noche en exposición larga, con las estelas
+   alrededor del polo, los cerros y su nombre. Al pasar, las estelas giran un
+   poco. */
+.estilo-futurista { --marcado: #8d90b8; }
+.estilo-futurista .brief-muestra-arte { background: radial-gradient(120% 90% at 50% 100%, #2a2f6a, #1b1f4a 34%, #0b0c1e 74%); }
+.estilo-futurista .estelas { position: absolute; left: 50%; top: 16%; width: 440px; height: 440px; margin: -220px 0 0 -220px; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 9px, rgb(233 232 255 / 0.42) 9px 10px, transparent 10px 19px), repeating-radial-gradient(circle, transparent 0 14px, rgb(206 212 255 / 0.26) 14px 15px, transparent 15px 31px); -webkit-mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.4) 320deg, #000000 360deg); mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.4) 320deg, #000000 360deg); transition: rotate 1400ms var(--calma); }
+.estilo-futurista:is(:hover, :focus-within, :has([value='si']:checked)) .estelas { rotate: 24deg; }
+.estilo-futurista .cerros { position: absolute; left: 0; bottom: 0; width: 100%; height: 34px; fill: #05060f; }
+.estilo-futurista .rot { position: absolute; left: 0; right: 0; top: 52%; padding-left: 0.24em; text-align: center; font: 700 26px/1 'Muestra Unbounded', sans-serif; letter-spacing: 0.24em; color: #e9e8ff; }
+.estilo-futurista:has([value='si']:checked) .brief-muestra-pie { background: #0b0c1e; color: #e9e8ff; }
 .estilo-futurista:has([value='si']:checked) .brief-muestra-nombre { font-size: 13px; }
-.estilo-futurista .brief-sello span { width: 26px; height: 26px; border: 2px solid transparent; border-top-color: #00c2ff; border-right-color: #7a5cff; border-radius: 50%; }
+.estilo-futurista .brief-sello svg { width: 24px; fill: #e9e8ff; transform: rotate(-45deg) scale(0.4); transition: opacity 300ms, transform 900ms var(--calma); }
+.estilo-futurista:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Artesanal · Libar: la etiqueta del frasco y su timbre, que espera arriba.
    Al pasar, el timbre baja y deja la tinta. */
@@ -491,50 +498,62 @@
 .estilo-artdeco .brief-sello svg { width: 30px; fill: #c9a24a; transform: scale(0.3); transform-origin: 50% 100%; transition: opacity 300ms, transform 700ms var(--calma); }
 .estilo-artdeco:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Bauhaus: círculo, cuadrado y triángulo que se reordenan. */
-.estilo-bauhaus { --marcado: #d6312b; }
+/* Bauhaus · Bisagra: el logo de tres formas, la línea y su bisagra. Al pasar,
+   se arma en lámpara: el círculo es la pantalla, la línea el brazo, el
+   cuadrado la base y el triángulo, la luz. */
+.estilo-bauhaus { --marcado: #d7261e; }
 .estilo-bauhaus .brief-muestra-arte { background: #f1ead8; }
-.estilo-bauhaus .brief-muestra-arte i { position: absolute; transition: transform 800ms var(--masa); }
-.estilo-bauhaus .c { left: 24px; top: 26px; width: 74px; height: 74px; border-radius: 50%; background: #d6312b; }
-.estilo-bauhaus .q { left: 110px; top: 74px; width: 60px; height: 60px; background: #1f4fa3; }
-.estilo-bauhaus .t { right: 26px; top: 30px; width: 0; height: 0; border-left: 34px solid transparent; border-right: 34px solid transparent; border-bottom: 60px solid #f2b705; }
-.estilo-bauhaus .b { right: 18px; bottom: 24px; width: 120px; height: 10px; background: #141414; }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .c { transform: translateX(96px); }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .q { transform: translateX(-86px) rotate(90deg); }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .t { transform: translateY(46px) rotate(180deg); }
+.estilo-bauhaus .brief-muestra-arte i { position: absolute; transition: transform 900ms var(--calma), clip-path 900ms var(--calma), opacity 900ms var(--calma); }
+.estilo-bauhaus .c { left: 22px; top: 30px; width: 52px; height: 52px; border-radius: 50%; background: #d7261e; clip-path: inset(0 0 0 0); }
+.estilo-bauhaus .q { left: 84px; top: 34px; width: 44px; height: 44px; background: #1f4aa8; }
+.estilo-bauhaus .t { left: 138px; top: 30px; width: 50px; height: 48px; background: #f2b705; clip-path: polygon(50% 0, 100% 100%, 0 100%); transform-origin: 50% 0; }
+.estilo-bauhaus .b { left: 22px; top: 92px; width: 168px; height: 6px; background: #141414; transform-origin: 0 50%; }
+.estilo-bauhaus .h { left: 186px; top: 88px; width: 14px; height: 14px; border-radius: 50%; background: #f1ead8; box-shadow: inset 0 0 0 4px #141414; }
+.estilo-bauhaus .rot { position: absolute; left: 22px; bottom: 12px; font: 500 22px/1 'Muestra Jost', sans-serif; letter-spacing: -0.02em; color: #141414; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .c { transform: translate(156px, 10px) rotate(20deg); clip-path: inset(0 0 50% 0); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .q { transform: translate(59px, 63px) scale(0.68); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .t { transform: translate(41px, 36px) scale(1.12, 1.38); opacity: 0.7; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .b { transform: translate(143px, 9px) rotate(-68.4deg) scaleX(0.307); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .h { transform: translate(-9px, -39px); }
 .estilo-bauhaus:has([value='si']:checked) .brief-muestra-pie { background: #141414; color: #f1ead8; }
-.estilo-bauhaus:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.06em; text-transform: uppercase; }
-.estilo-bauhaus .brief-sello span { width: 22px; height: 22px; border-radius: 50%; background: #d6312b; transform: translateX(14px); }
+.estilo-bauhaus .brief-sello span { width: 22px; height: 22px; border-radius: 50%; background: #d7261e; transform: translateX(14px); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-bauhaus:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Memphis: patrones y formas que se menean. */
-.estilo-memphis { --marcado: #ff5aa5; }
-.estilo-memphis .brief-muestra-arte { background: #ffffff radial-gradient(#1a1a1a 1.2px, transparent 1.6px) 0 0 / 14px 14px; }
-.estilo-memphis .brief-muestra-arte i { position: absolute; transition: transform 600ms var(--masa); }
-.estilo-memphis .zz { left: 20px; top: 30px; width: 110px; height: 22px; background: linear-gradient(135deg, transparent 33%, #1a1a1a 33% 45%, transparent 45%) 0 0 / 22px 22px, linear-gradient(45deg, transparent 33%, #1a1a1a 33% 45%, transparent 45%) 11px 0 / 22px 22px; }
-.estilo-memphis .ci { right: 34px; top: 22px; width: 58px; height: 58px; border: 3px solid #1a1a1a; border-radius: 50%; background: #ffd23f; }
-.estilo-memphis .tr { left: 40px; bottom: 18px; width: 70px; height: 70px; border: 3px solid #1a1a1a; background: #19c6c6; clip-path: polygon(0 100%, 50% 0, 100% 100%); }
-.estilo-memphis .pi { right: 30px; bottom: 30px; width: 90px; height: 26px; border: 3px solid #1a1a1a; border-radius: 4px; background: #ff5aa5; transform: rotate(-12deg); }
-.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .ci { transform: translate(-14px, 10px); }
-.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .tr { transform: rotate(-18deg); }
-.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .pi { transform: rotate(10deg) translateX(-10px); }
-.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .zz { transform: translateX(10px) skewX(-10deg); }
-.estilo-memphis:has([value='si']:checked) .brief-muestra-pie { background: #19c6c6; color: #1a1a1a; }
-.estilo-memphis .brief-sello span { width: 26px; height: 26px; border: 2px solid #1a1a1a; border-radius: 50%; background: #ffd23f; transform: scale(0.3); }
-.estilo-memphis:has([value='si']:checked) .brief-sello span { transform: none; }
+/* Memphis · Tablero: el patrón de puntos, figuras sueltas, el dado y su
+   nombre. Al pasar, el garabato y las figuras se desplazan. */
+.estilo-memphis { --marcado: #ff6fa8; }
+.estilo-memphis .brief-muestra-arte { background: #ffffff radial-gradient(#111111 1.2px, transparent 1.6px) 0 0 / 14px 14px; }
+.estilo-memphis .brief-muestra-arte > * { position: absolute; transition: transform 700ms var(--calma); }
+.estilo-memphis .garabato { left: 14px; top: 14px; width: 92px; height: 46px; overflow: visible; fill: none; stroke: #7b5cff; stroke-width: 9; stroke-linecap: round; }
+.estilo-memphis .pi { right: 18px; top: 18px; width: 66px; height: 24px; border: 3px solid #111111; border-radius: 999px; background: #ff6fa8; transform: rotate(-16deg); }
+.estilo-memphis .tr { right: 72px; bottom: 50px; width: 44px; height: 40px; background: #2ec4b6; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.estilo-memphis .ci { right: 18px; bottom: 22px; width: 44px; height: 44px; border: 3px solid #111111; border-radius: 50%; background: #ffd23f; }
+.estilo-memphis .dado { left: 118px; top: 22px; width: 38px; height: 38px; transform: rotate(-12deg); }
+.estilo-memphis .rot { left: 14px; bottom: 12px; padding: 2px 8px; background: #ffffff; font: 800 30px/1 'Muestra Rubik', sans-serif; letter-spacing: -0.04em; color: #111111; }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .garabato { transform: translate(12px, 4px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .pi { transform: rotate(8deg) translateX(-8px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .tr { transform: rotate(-18deg) translateY(-6px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .ci { transform: translate(-8px, -8px); }
+.estilo-memphis:is(:hover, :focus-within, :has([value='si']:checked)) .dado { transform: rotate(14deg); }
+.estilo-memphis:has([value='si']:checked) .brief-muestra-pie { background: #ffd23f; color: #111111; }
+.estilo-memphis .brief-sello svg { width: 26px; height: 26px; transform: rotate(-30deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-memphis:has([value='si']:checked) .brief-sello svg { transform: rotate(-8deg); }
 
-/* Y2K: cromo y destellos. */
+/* Y2K · Destello: «destello» en cromo, sus destellos y la fecha naranja
+   estampada como en las fotos de esas cámaras. Al pasar, el cromo se corre
+   y los destellos crecen y se apagan, despacio. */
 .estilo-y2k { --marcado: #9b7bff; }
-.estilo-y2k .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(50% 60% at 20% 30%, #ffb8e6, transparent), radial-gradient(50% 60% at 80% 70%, #b8d4ff, transparent), #e9dcff; }
-.estilo-y2k .rot { font: 800 40px/1 'Muestra Syne', sans-serif; letter-spacing: -0.03em; color: transparent; background: linear-gradient(180deg, #ffffff 0%, #9aa3b5 45%, #3d4458 52%, #e7ebf3 80%) 0 0 / 100% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 1px #2a1660; transition: background-position 800ms var(--ease); }
+.estilo-y2k .brief-muestra-arte { display: grid; place-items: center; background: #e9dcff; }
+.estilo-y2k .rot { font: 800 38px/1 'Muestra Syne', sans-serif; letter-spacing: -0.04em; color: transparent; background: linear-gradient(180deg, #ffffff 0%, #e2e5ec 20%, #979eb0 42%, #2c3140 50%, #687083 60%, #d0d5df 80%, #ffffff 100%) 0 0 / 100% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 1px #15131c; transition: background-position 900ms var(--calma); }
 .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .rot { background-position: 0 100%; }
-.estilo-y2k .chispa { position: absolute; color: #ffffff; font-size: 18px; text-shadow: 0 0 8px #ffffff; opacity: 0.5; }
-.estilo-y2k .ch1 { left: 24px; top: 22px; }
-.estilo-y2k .ch2 { right: 30px; top: 40px; font-size: 12px; }
-.estilo-y2k .ch3 { right: 60px; bottom: 22px; }
-.estilo-y2k:has([value='si']:checked) .brief-muestra-pie { background: #2a1660; color: #e9dcff; }
-.estilo-y2k .brief-sello span { color: #ffb8e6; font-size: 22px; transform: scale(0.2) rotate(-90deg); }
-.estilo-y2k:has([value='si']:checked) .brief-sello span { transform: none; }
+.estilo-y2k .chispa { position: absolute; width: 22px; height: 22px; fill: #ffffff; stroke: #15131c; stroke-width: 1; opacity: 0.7; }
+.estilo-y2k .ch1 { left: 20px; top: 18px; width: 28px; height: 28px; }
+.estilo-y2k .ch2 { right: 26px; top: 24px; width: 18px; height: 18px; }
+.estilo-y2k .ch3 { left: 40px; bottom: 20px; width: 20px; height: 20px; }
+.estilo-y2k .fecha { position: absolute; right: 14px; bottom: 12px; width: 72px; height: auto; fill: #ff8a1f; }
+.estilo-y2k:has([value='si']:checked) .brief-muestra-pie { background: #15131c; color: #e9dcff; }
+.estilo-y2k .brief-sello svg { width: 22px; fill: #ff9ad5; transform: scale(0.2) rotate(-90deg); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-y2k:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Andino · Parina: dos franjas tejidas y el flamenco hecho de rombos. A la
    segunda le falta su fila de rombos: al pasar, se teje. */
@@ -618,17 +637,15 @@
   .estilo-tecnologico .sensor::after { animation: muestra-late 6s var(--precisa) infinite alternate; }
   .estilo-zen .brief-muestra-arte::after { transition: opacity 1600ms var(--calma), transform 2600ms var(--calma); }
   .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { opacity: 1; transform: translateY(-20%); }
-  .estilo-futurista:has([value='si']:checked) .brief-sello span { animation: muestra-gira 1.4s linear infinite; }
-  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 0.9s ease-in-out infinite alternate; }
-  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch2 { animation-delay: 0.3s; }
-  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch3 { animation-delay: 0.6s; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 6s var(--calma) infinite alternate; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch2 { animation-delay: -2s; }
+  .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch3 { animation-delay: -4s; }
   .estilo-corporativo .suelo { animation: muestra-sismo 6s var(--calma) infinite paused; }
   .estilo-corporativo .ais { animation: muestra-aislador 6s var(--calma) infinite paused; }
   .estilo-corporativo:is(:hover, :focus-within) :is(.suelo, .ais) { animation-play-state: running; }
 }
 
 @keyframes muestra-late { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.5); opacity: 0; } }
-@keyframes muestra-gira { to { transform: rotate(1turn); } }
 @keyframes muestra-titila { to { opacity: 1; transform: scale(1.4) rotate(20deg); } }
 /* El suelo de Basal se mece y se amortigua; los aisladores se inclinan lo
    que el suelo se corre. Cada tramo frena en su extremo. Si el cursor se va a

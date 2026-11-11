@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Cénit · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Cénit, observatorio turístico y astroturismo en Pisco Elqui, para mostrar el estilo Futurista.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/unbounded.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Cénit · futurista. Inspiración: Apple Vision Pro (apple.com/apple-vision-pro),
+   ESO (eso.org) y Lusion (lusion.co). Se toma: 1) una sola frase grande por
+   pantalla, centrada, que se revela al bajar, y secciones oscuras con el
+   título sobre la imagen; 2) la luz sobre negro, los degradés de la noche y el
+   vidrio neutro (blanco, sin color) para los datos; 3) la profundidad: la
+   portada es un cielo que se mueve detrás del horizonte. La idea propia: el
+   cielo en exposición larga. Las estrellas giran alrededor del polo sur
+   celeste, muy lento, y dejan su estela; el planisferio gira con la hora que
+   se elige, y el telescopio muestra el camino de la luz. */
+@font-face { font-family: 'Unbounded'; src: url('/fonts/bocetos/unbounded.woff2') format('woff2'); font-weight: 200 900; font-display: swap; }
+/* Los respaldos ocupan lo mismo que Unbounded y Sora, para que la portada no
+   se mueva al cargarlas. */
+@font-face { font-family: 'Unbounded respaldo'; src: local('Arial'), local('ArialMT'); size-adjust: 128.6%; }
+@font-face { font-family: 'Sora respaldo'; src: local('Arial'), local('ArialMT'); size-adjust: 109.8%; }
+@font-face { font-family: 'Sora'; src: url('/fonts/bocetos/sora.woff2') format('woff2'); font-weight: 100 800; font-display: swap; }
+
+:root {
+  --noche: #0b0c1e;
+  --indigo: #1b1f4a;
+  --polvo: #8d90b8;
+  --luz: #e9e8ff;
+  --blanco: #ffffff;
+  --cerro: #05060f;
+  --ancho: 1240px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.37, 0, 0.63, 1);
+  --vidrio: rgb(255 255 255 / 0.07);
+  --borde-vidrio: rgb(255 255 255 / 0.16);
+}
+* { box-sizing: border-box; }
+html { background: var(--noche); scroll-behavior: smooth; color-scheme: dark; }
+body { margin: 0; background: var(--noche); color: var(--luz); font: 300 18px/1.65 'Sora', 'Sora respaldo', sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--luz); outline-offset: 4px; }
+h1, h2, h3 { margin: 0; font-family: 'Unbounded', 'Unbounded respaldo', sans-serif; font-weight: 500; letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.seccion { padding-block: clamp(96px, 12vw, 180px); }
+.rotulo { font: 400 13px/1.3 'Sora', 'Sora respaldo', sans-serif; letter-spacing: 0.22em; text-transform: uppercase; color: var(--polvo); }
+.frase { max-width: 18ch; margin-inline: auto; font-size: clamp(34px, 4.6vw, 64px); text-align: center; }
+.frase + p { max-width: 46ch; margin: 24px auto 0; text-align: center; color: var(--polvo); }
+.boton { display: inline-flex; align-items: center; min-height: 54px; padding: 0 30px; border: 1px solid var(--luz); border-radius: 999px; background: var(--luz); color: var(--noche); font: 500 16px/1 'Sora', 'Sora respaldo', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 500ms var(--curva), color 500ms var(--curva); }
+.boton:hover { background: transparent; color: var(--luz); }
+.vidrio { border: 1px solid var(--borde-vidrio); border-radius: 22px; background: rgb(27 31 74 / 0.88); }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .vidrio { background: var(--vidrio); -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2); }
+}
+
+/* ---- Cabecera: las coordenadas y la marca al centro ---- */
+.cabecera { position: absolute; inset: 0 0 auto; z-index: 3; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding-block: 24px; }
+.coordenadas { font: 400 13px/1.3 'Sora', 'Sora respaldo', sans-serif; letter-spacing: 0.14em; color: var(--polvo); font-variant-numeric: tabular-nums; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font: 500 22px/1 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: 0.24em; text-decoration: none; text-transform: uppercase; }
+.logo svg { width: 22px; height: 22px; fill: var(--luz); }
+.cabecera .reservar-enlace { justify-self: end; font-size: 15px; font-weight: 400; text-underline-offset: 6px; text-decoration-color: var(--polvo); }
+
+/* ---- Portada: el cielo en exposición larga ---- */
+.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(100svh, 1000px)); overflow: hidden; background: radial-gradient(120% 80% at 50% 100%, #2a2f6a 0%, var(--indigo) 30%, var(--noche) 72%); isolation: isolate; }
+.polo { position: absolute; left: 50%; top: 22%; width: 0; height: 0; z-index: -1; }
+.cielo, .estelas { position: absolute; left: 0; top: 0; width: 170vmax; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; }
+.cielo {
+  background:
+    radial-gradient(circle at 37px 53px, #ffffff 0 1.2px, transparent 1.8px) 0 0 / 127px 131px,
+    radial-gradient(circle at 91px 17px, #dfe4ff 0 0.9px, transparent 1.5px) 0 0 / 151px 113px,
+    radial-gradient(circle at 12px 88px, #fff4e8 0 1px, transparent 1.6px) 0 0 / 173px 167px,
+    radial-gradient(circle at 140px 60px, #ffffff 0 1.5px, transparent 2.2px) 0 0 / 211px 197px,
+    radial-gradient(circle at 70px 150px, #cdd6ff 0 0.8px, transparent 1.4px) 0 0 / 89px 179px,
+    radial-gradient(circle at 20px 20px, #ffffff 0 0.7px, transparent 1.2px) 0 0 / 61px 73px,
+    radial-gradient(circle at 200px 240px, #ffffff 0 2px, transparent 2.8px) 0 0 / 331px 307px;
+}
+.estelas {
+  background:
+    repeating-radial-gradient(circle, transparent 0 13px, rgb(233 232 255 / 0.32) 13px 14px, transparent 14px 31px),
+    repeating-radial-gradient(circle, transparent 0 22px, rgb(206 212 255 / 0.2) 22px 23px, transparent 23px 47px),
+    repeating-radial-gradient(circle, transparent 0 7px, rgb(255 236 220 / 0.12) 7px 8px, transparent 8px 59px);
+  -webkit-mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.35) 320deg, #000 360deg);
+  mask: conic-gradient(from 210deg, transparent 0 250deg, rgb(0 0 0 / 0.35) 320deg, #000 360deg);
+}
+.horizonte { position: absolute; left: 0; right: 0; bottom: -2px; z-index: 1; width: 100%; height: auto; fill: var(--cerro); }
+.portada-texto { position: relative; z-index: 2; display: grid; gap: 22px; justify-items: center; padding: 120px var(--margen) 18svh; text-align: center; }
+.portada h1 { max-width: 13ch; font-size: clamp(42px, 6.4vw, 96px); font-weight: 400; line-height: 1.02; }
+.portada-texto > p:not(.rotulo) { max-width: 40ch; color: #c9cae6; }
+
+/* ---- La noche de esta semana: el planisferio ---- */
+.noche-semana { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 48px clamp(32px, 6vw, 96px); align-items: center; margin-top: 72px; }
+.planisferio { position: relative; width: min(100%, 34rem); justify-self: center; }
+.planisferio svg { display: block; width: 100%; height: auto; overflow: visible; }
+.disco { transform-box: view-box; transform-origin: 50% 50%; rotate: 0deg; transition: rotate 1400ms var(--curva); }
+.planisferio:has(#h-23:checked) .disco { rotate: 30deg; }
+.planisferio:has(#h-01:checked) .disco { rotate: 60deg; }
+.planisferio:has(#h-03:checked) .disco { rotate: 90deg; }
+.disco .fondo { fill: #141842; stroke: var(--polvo); stroke-width: 1; }
+.disco .linea { fill: none; stroke: rgb(233 232 255 / 0.45); stroke-width: 0.8; }
+.disco .estrella { fill: var(--luz); }
+.disco .nube { fill: rgb(233 232 255 / 0.18); }
+.disco text { font: 400 8.5px 'Sora', 'Sora respaldo', sans-serif; fill: var(--polvo); letter-spacing: 0.04em; }
+.marco { fill: var(--noche); fill-opacity: 0.86; fill-rule: evenodd; }
+.marco-borde { fill: none; stroke: var(--luz); stroke-width: 1; stroke-dasharray: 2 4; }
+.planisferio .punto { font: 500 9px 'Sora', 'Sora respaldo', sans-serif; letter-spacing: 0.2em; fill: var(--luz); text-transform: uppercase; }
+.horas { display: flex; justify-content: center; gap: 8px; margin: 28px 0 0; padding: 0; border: 0; }
+.horas legend { width: 100%; margin-bottom: 12px; text-align: center; font-size: 15px; color: var(--polvo); }
+.hora { position: relative; display: grid; place-items: center; min-width: 74px; min-height: 46px; border: 1px solid var(--borde-vidrio); border-radius: 999px; font-size: 16px; font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 500ms var(--curva), color 500ms var(--curva); }
+.hora input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.hora:has(input:checked) { background: var(--luz); color: var(--noche); }
+.hora:has(input:focus-visible) { outline: 2px solid var(--luz); outline-offset: 3px; }
+.panel { display: grid; gap: 22px; padding: clamp(24px, 3vw, 40px); }
+.panel h3 { font-size: 22px; }
+.panel dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 20px; margin: 0; padding-bottom: 22px; border-bottom: 1px solid var(--borde-vidrio); }
+.panel dt { color: var(--polvo); }
+.panel dd { margin: 0; text-align: right; font-weight: 400; font-variant-numeric: tabular-nums; }
+.luna-dato { display: inline-flex; align-items: center; gap: 10px; }
+.que-se-ve { display: grid; }
+.que-se-ve p { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity 600ms var(--curva), visibility 600ms; }
+.noche-semana:has(#h-21:checked) .ve-21, .noche-semana:has(#h-23:checked) .ve-23, .noche-semana:has(#h-01:checked) .ve-01, .noche-semana:has(#h-03:checked) .ve-03 { opacity: 1; visibility: visible; }
+.que-se-ve b { display: block; margin-bottom: 4px; font: 500 15px 'Unbounded', 'Unbounded respaldo', sans-serif; font-variant-numeric: tabular-nums; }
+.muestra { font-size: 13px; color: var(--polvo); }
+.luna { --f: 30%; display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at calc(50% + var(--f)) 50%, transparent 0 46%, #0b0c1e 47%), var(--luz); box-shadow: inset 0 0 0 1px rgb(233 232 255 / 0.4); }
+
+/* ---- Experiencias: la duración es la exposición ---- */
+.experiencias { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px clamp(16px, 2.4vw, 32px); margin: 72px 0 0; padding: 0; list-style: none; }
+.experiencia { display: grid; }
+.experiencia img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 22px; }
+.experiencia .vidrio { position: relative; display: grid; gap: 10px; margin: -22% 14px 0; padding: 24px; }
+.exposicion { font: 300 clamp(44px, 5vw, 68px)/1 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.exposicion small { margin-left: 6px; font-size: 0.32em; letter-spacing: 0.16em; text-transform: uppercase; color: var(--polvo); }
+.experiencia h3 { font-size: 19px; }
+.experiencia p { font-size: 16px; color: #c9cae6; }
+.experiencia .precio { margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--borde-vidrio); font-weight: 400; color: var(--luz); font-variant-numeric: tabular-nums; }
+
+/* ---- El telescopio: el camino de la luz ---- */
+.telescopio { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr); gap: 40px clamp(24px, 4vw, 64px); align-items: center; margin-top: 72px; }
+.optica svg { display: block; width: 100%; max-width: 360px; margin-inline: auto; height: auto; overflow: visible; }
+.optica .tubo { fill: none; stroke: var(--polvo); stroke-width: 1.5; }
+.optica .espejo { fill: none; stroke: var(--luz); stroke-width: 4; stroke-linecap: round; }
+.optica .rayo { fill: none; stroke: #fff6d8; stroke-width: 1.4; stroke-dasharray: 1; --entrada: cenit-rayo; }
+.optica text { font: 400 11px 'Sora', 'Sora respaldo', sans-serif; fill: var(--polvo); letter-spacing: 0.06em; }
+.ficha { display: grid; gap: 0; margin: 0; }
+.ficha div { display: grid; gap: 2px; padding-block: 14px; border-bottom: 1px solid var(--borde-vidrio); }
+.ficha dt { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--polvo); }
+.ficha dd { margin: 0; font: 400 20px/1.3 'Unbounded', 'Unbounded respaldo', sans-serif; font-variant-numeric: tabular-nums; }
+.telescopio figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 22px; }
+.telescopio figcaption { margin-top: 12px; font-size: 14px; color: var(--polvo); }
+@keyframes cenit-rayo { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* ---- Cómo llegar ---- */
+.llegar { position: relative; }
+.banda { position: relative; margin-top: 72px; overflow: hidden; border-radius: 28px; }
+.banda img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.perfil { position: absolute; inset: auto 0 0; padding: 24px clamp(16px, 3vw, 40px) 20px; background: linear-gradient(transparent, rgb(5 6 15 / 0.92) 40%); }
+.perfil svg { display: block; width: 100%; height: auto; overflow: visible; }
+.perfil .ruta { fill: none; stroke: var(--luz); stroke-width: 2; stroke-dasharray: 1; --entrada: cenit-rayo; }
+.perfil .bajo { fill: url(#degrade-perfil); opacity: 0.5; }
+.perfil circle { fill: var(--luz); }
+.paradas { display: grid; grid-template-columns: 62fr 30fr 12fr 12fr; gap: 12px; margin: 14px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--polvo); font-variant-numeric: tabular-nums; }
+.paradas b { display: block; font-weight: 500; color: var(--luz); }
+.paradas li:nth-child(n+3) { text-align: right; }
+.llevar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px clamp(16px, 2.4vw, 32px); margin: 48px 0 0; padding: 0; list-style: none; }
+.llevar li { padding-top: 18px; border-top: 1px solid var(--borde-vidrio); }
+.llevar b { display: block; margin-bottom: 6px; font: 500 16px 'Unbounded', 'Unbounded respaldo', sans-serif; }
+.llevar span { font-size: 16px; color: #c9cae6; }
+
+/* ---- Reservar: las noches por su luna ---- */
+.reservar { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 48px clamp(32px, 6vw, 96px); align-items: start; margin-top: 72px; }
+.reservar figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 22px; }
+.reservar figcaption { margin-top: 12px; font-size: 14px; color: var(--polvo); }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 20px; padding: clamp(24px, 3.5vw, 44px); }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario label, .formulario legend { display: grid; gap: 8px; font-size: 15px; font-weight: 400; color: #c9cae6; }
+.formulario input:not([type='radio']), .formulario select { width: 100%; min-height: 54px; padding: 10px 16px; border: 1px solid var(--borde-vidrio); border-radius: 14px; background: rgb(11 12 30 / 0.6); color: var(--luz); font: 300 18px/1.3 'Sora', 'Sora respaldo', sans-serif; -webkit-appearance: none; appearance: none; }
+.formulario select { padding-right: 44px; background: rgb(11 12 30 / 0.6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%23e9e8ff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") right 18px center / 14px 9px no-repeat; }
+.formulario :is(input, select):focus-visible { outline: 2px solid var(--luz); outline-offset: 2px; }
+.lunas { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; border: 0; }
+.lunas legend { margin-bottom: 4px; }
+.noche-op { position: relative; display: grid !important; justify-items: center; gap: 6px !important; padding: 12px 4px; border: 1px solid var(--borde-vidrio); border-radius: 16px; cursor: pointer; text-align: center; font-variant-numeric: tabular-nums; transition: background-color 500ms var(--curva), border-color 500ms var(--curva); }
+.noche-op input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.noche-op .luna { width: 26px; height: 26px; }
+.noche-op b { font-weight: 500; color: var(--luz); font-size: 15px; }
+.noche-op small { font-size: 12px; color: var(--polvo); }
+.noche-op:has(input:checked) { border-color: var(--luz); background: rgb(233 232 255 / 0.1); }
+.noche-op:has(input:focus-visible) { outline: 2px solid var(--luz); outline-offset: 3px; }
+.nota-luna { font-size: 14px; color: var(--polvo); }
+.formulario .boton { justify-self: start; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- Pie: el horizonte ---- */
+.pie { position: relative; margin-top: clamp(64px, 8vw, 120px); background: var(--cerro); }
+.pie-cerros { display: block; width: 100%; height: auto; margin-bottom: -1px; fill: var(--cerro); background: var(--noche); }
+.pie-cuerpo { display: grid; gap: 28px; padding-block: 24px 40px; }
+.pie-coord { font: 300 clamp(26px, 5vw, 64px)/1.1 'Unbounded', 'Unbounded respaldo', sans-serif; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px; font-size: 15px; color: var(--polvo); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .noche-semana, .reservar { grid-template-columns: minmax(0, 1fr); }
+  .experiencias { grid-template-columns: minmax(0, 1fr); max-width: 34rem; margin-inline: auto; }
+  .telescopio { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .telescopio figure { grid-column: 1 / -1; max-width: 26rem; }
+  .llevar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .perfil { position: static; background: var(--cerro); }
+  .paradas { grid-template-columns: 1fr 1fr; }
+  .paradas li:nth-child(n+3) { text-align: left; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .cabecera { grid-template-columns: 1fr auto; }
+  .coordenadas { display: none; }
+  .logo { font-size: 18px; letter-spacing: 0.18em; }
+  .polo { top: 26%; }
+  .horas { flex-wrap: wrap; }
+  .hora { min-width: 64px; }
+  .telescopio { grid-template-columns: minmax(0, 1fr); }
+  .llevar { grid-template-columns: minmax(0, 1fr); }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+  .lunas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---- Movimiento ----
+   El cielo de la portada aparece con un fundido largo y gira una vuelta
+   completa alrededor del polo, a velocidad pareja, en cuatro minutos: las
+   estelas giran con él. Al bajar, el horizonte se hunde un poco. El disco
+   del planisferio gira al elegir la hora, frenando al llegar. Los rayos de
+   luz del telescopio y el camino a Pisco Elqui se dibujan al llegar, y todo
+   lo demás aparece con un fundido que sube apenas. */
+[data-aparece] { --entrada: cenit-llega; --tramo: 40svh; --duracion: 1600ms; }
+@keyframes cenit-llega { from { opacity: 0; translate: 0 20px; } }
+@keyframes cenit-fundido { from { opacity: 0; } }
+@keyframes cenit-gira { to { rotate: 1turn; } }
+@keyframes cenit-hunde { to { translate: 0 12%; } }
+@media (prefers-reduced-motion: no-preference) {
+  .polo { animation: cenit-fundido 4s var(--curva) both, cenit-gira 240s linear infinite; }
+  .portada-texto > * { animation: cenit-llega 1600ms var(--curva) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 300ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 600ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 900ms; }
+  @supports (animation-timeline: scroll()) {
+    .horizonte { animation: cenit-hunde var(--curva) both; animation-timeline: scroll(root); animation-range: 0 90svh; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .disco, .que-se-ve p, .hora, .noche-op, .boton { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="cenit">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Cénit</b> es una marca inventada por Volutus para mostrarte el estilo <b>Futurista</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="estrella-8" viewBox="0 0 24 24"><path d="M12 0l1.6 7.2L20.5 3.5l-3.7 6.9L24 12l-7.2 1.6 3.7 6.9-6.9-3.7L12 24l-1.6-7.2-6.9 3.7 3.7-6.9L0 12l7.2-1.6L3.5 3.5l6.9 3.7z"/></symbol>
+</svg>
+
+<main>
+  <section class="portada" id="inicio" aria-labelledby="titulo">
+    <header class="ancho cabecera">
+      <p class="coordenadas">30°07′ S · 70°29′ O</p>
+      <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#estrella-8"/></svg>Cénit</a>
+      <a class="reservar-enlace" href="#reservar">Reservar una noche</a>
+    </header>
+    <div class="polo" aria-hidden="true"><span class="estelas"></span><span class="cielo"></span></div>
+    <div class="portada-texto">
+      <p class="rotulo">Observatorio turístico · Pisco Elqui</p>
+      <h1 id="titulo">El cielo, en exposición larga</h1>
+      <p>Una noche con un telescopio de 16 pulgadas, a 1.250 metros de altura y sin una luz alrededor.</p>
+      <a class="boton" href="#reservar">Reservar una noche</a>
+    </div>
+    <svg class="horizonte" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true"><path d="M0 150C90 120 150 92 240 104S380 160 470 140 600 70 700 82 820 150 930 132 1060 60 1150 72 1270 128 1350 118 1420 96 1440 100V220H0Z"/><path d="M1120 76a16 16 0 0 1 32 0z M1122 76h28v6h-28z"/></svg>
+  </section>
+
+  <section class="ancho seccion" id="noche" aria-labelledby="noche-titulo">
+    <div data-aparece>
+      <p class="rotulo" style="text-align: center">La noche de esta semana</p>
+      <h2 class="frase" id="noche-titulo" style="margin-top: 18px">Gira el cielo y mira qué sale</h2>
+      <p>Elige una hora y el planisferio gira como gira el cielo, quince grados por hora alrededor del polo sur.</p>
+    </div>
+    <div class="noche-semana">
+      <div class="planisferio" data-aparece>
+        <svg viewBox="-200 -200 400 400" role="img" aria-label="Planisferio del cielo austral con la Cruz del Sur, Alfa y Beta Centauro, Canopus, Achernar, Sirio, Orión, las Pléyades y las Nubes de Magallanes">
+          <g class="disco">
+            <circle class="fondo" r="190"/>
+            <ellipse class="nube" cx="5" cy="31.6" rx="13" ry="8" transform="rotate(30 5 31.6)"/>
+            <ellipse class="nube" cx="26.5" cy="6.2" rx="7" ry="4.5"/>
+            <path class="linea" d="M-51.6 -7.1L-42.3 -4.9M-46.9 -10L-49.5 -3.2M11.7 139L14.7 139.8 17.4 141M3.2 154.2L14.7 139.8 25.6 127"/>
+            <g class="estrella">
+              <circle cx="-42.3" cy="-4.9" r="3.2"/><circle cx="-46.9" cy="-10" r="2.6"/><circle cx="-51.6" cy="-7.1" r="2.6"/><circle cx="-49.5" cy="-3.2" r="1.8"/>
+              <circle cx="-35.5" cy="-29.7" r="3.4"/><circle cx="-40.2" cy="-24.1" r="3"/>
+              <circle cx="-6.2" cy="58.7" r="3.6"/><circle cx="47.3" cy="21.5" r="3"/><circle cx="-22.6" cy="113.8" r="3.8"/>
+              <circle cx="25.6" cy="127" r="2.8"/><circle cx="3.2" cy="154.2" r="2.8"/><circle cx="14.7" cy="139.8" r="2"/><circle cx="11.7" cy="139" r="2"/><circle cx="17.4" cy="141" r="2"/>
+              <circle cx="92.1" cy="-25.7" r="2.6"/><circle cx="-38.8" cy="-92.9" r="2.8"/><circle cx="60.4" cy="157.4" r="2.6"/>
+              <circle cx="96" cy="150" r="1.2"/><circle cx="99" cy="152.5" r="1.4"/><circle cx="101" cy="150" r="1.1"/><circle cx="98" cy="148" r="1"/>
+              <circle cx="31.3" cy="-42.4" r="2.2"/><circle cx="-24" cy="21.4" r="2.2"/><circle cx="-28.2" cy="39.2" r="2"/><circle cx="-53.9" cy="50.4" r="2"/>
+              <circle cx="-80" cy="60" r="1"/><circle cx="70" cy="-90" r="1.2"/><circle cx="120" cy="40" r="1"/><circle cx="-120" cy="-40" r="1.2"/><circle cx="-90" cy="130" r="1"/><circle cx="140" cy="-60" r="1"/><circle cx="-140" cy="80" r="1.2"/><circle cx="40" cy="-150" r="1"/><circle cx="-60" cy="-150" r="1.1"/><circle cx="150" cy="100" r="1"/>
+            </g>
+            <text x="-70" y="-14">Cruz del Sur</text>
+            <text x="-34" y="-36">Centauro</text>
+            <text x="2" y="70">Canopus</text>
+            <text x="53" y="18">Achernar</text>
+            <text x="-52" y="120">Sirio</text>
+            <text x="22" y="150">Orión</text>
+            <text x="94" y="168">Pléyades</text>
+            <text x="-4" y="48">Nube Grande</text>
+            <text x="30" y="2">Nube Chica</text>
+            <text x="-62" y="-98">Antares</text>
+            <text x="98" y="-30">Fomalhaut</text>
+          </g>
+          <path class="marco" d="M-200-200H200V200H-200Z M-140 70a140 118 0 1 0 280 0a140 118 0 1 0-280 0Z"/>
+          <ellipse class="marco-borde" cx="0" cy="70" rx="140" ry="118"/>
+          <circle r="2.4" fill="#e9e8ff"/>
+          <text class="punto" x="0" y="-58" text-anchor="middle">Sur</text>
+          <text class="punto" x="0" y="200" text-anchor="middle">Norte</text>
+        </svg>
+        <fieldset class="horas">
+          <legend>Hora de la noche</legend>
+          <label class="hora"><input type="radio" name="hora" id="h-21" checked>21:00</label>
+          <label class="hora"><input type="radio" name="hora" id="h-23">23:00</label>
+          <label class="hora"><input type="radio" name="hora" id="h-01">01:00</label>
+          <label class="hora"><input type="radio" name="hora" id="h-03">03:00</label>
+        </fieldset>
+      </div>
+      <div class="panel vidrio" data-aparece>
+        <h3>Del 9 al 15 de noviembre</h3>
+        <dl>
+          <dt>Luna</dt><dd><span class="luna-dato"><span class="luna" style="--f: 42%" aria-hidden="true"></span>Creciente, 12 %</span></dd>
+          <dt>Oscurece</dt><dd>21:42</dd>
+          <dt>Sale la luna</dt><dd>10:58</dd>
+          <dt>Temperatura de noche</dt><dd>9 °C</dd>
+        </dl>
+        <div class="que-se-ve" aria-live="polite">
+          <p class="ve-21"><b>21:00</b>Saturno alto hacia el norte. La Nube Grande de Magallanes sube por el sureste.</p>
+          <p class="ve-23"><b>23:00</b>Las Pléyades salen por el noreste y Achernar queda casi sobre la cabeza.</p>
+          <p class="ve-01"><b>01:00</b>Orión entero al este, de cabeza, como se ve desde el sur. Canopus brilla al sureste.</p>
+          <p class="ve-03"><b>03:00</b>Sirio y Canopus en lo alto. La Cruz del Sur vuelve a asomar, baja, sobre los cerros.</p>
+        </div>
+        <p class="muestra">Datos de muestra para este boceto, no son una efeméride real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="experiencias" aria-labelledby="experiencias-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <p class="rotulo" style="text-align: center">Las experiencias</p>
+      <h2 class="frase" id="experiencias-titulo" style="margin-top: 18px">Elige cuánto tiempo quieres mirar</h2>
+    </div>
+    <ul class="experiencias">
+      <li class="experiencia" data-aparece>
+        <img src="/image/bocetos/cenit/guiada-600.webp" srcset="/image/bocetos/cenit/guiada-600.webp 600w, /image/bocetos/cenit/guiada-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 90vw" width="1000" height="750" loading="lazy" alt="Dos personas junto a un telescopio en un campo de noche, una apunta al cielo bajo la Vía Láctea">
+        <div class="vidrio"><p class="exposicion">2<small>horas</small></p><h3>Observación guiada</h3><p>Grupos de doce, con un guía que te muestra el cielo a ojo, con láser y en el telescopio grande.</p><p class="precio">$28.000 por persona</p></div>
+      </li>
+      <li class="experiencia" data-aparece style="--orden: 1">
+        <img src="/image/bocetos/cenit/astrofoto-600.webp" srcset="/image/bocetos/cenit/astrofoto-600.webp 600w, /image/bocetos/cenit/astrofoto-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 90vw" width="1000" height="750" loading="lazy" alt="Un trípode con cámara sobre unas rocas apunta a la Vía Láctea, de noche">
+        <div class="vidrio"><p class="exposicion">4<small>horas</small></p><h3>Astrofotografía</h3><p>Trae tu cámara; nosotros ponemos la montura con seguimiento y te enseñamos a procesar la foto.</p><p class="precio">$65.000 por persona</p></div>
+      </li>
+      <li class="experiencia" data-aparece style="--orden: 2">
+        <img src="/image/bocetos/cenit/domo-600.webp" srcset="/image/bocetos/cenit/domo-600.webp 600w, /image/bocetos/cenit/domo-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 90vw" width="1000" height="750" loading="lazy" alt="Un domo de observatorio abierto bajo un cielo lleno de estrellas">
+        <div class="vidrio"><p class="exposicion">6<small>horas</small></p><h3>Domo privado</h3><p>El domo y el telescopio para tu grupo, de la puesta de sol a medianoche, con chocolate caliente.</p><p class="precio">$240.000 hasta seis personas</p></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="ancho seccion" id="telescopio" aria-labelledby="telescopio-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <p class="rotulo" style="text-align: center">El telescopio</p>
+      <h2 class="frase" id="telescopio-titulo" style="margin-top: 18px">Junta 3.400 veces más luz que tu ojo</h2>
+      <p>Un espejo de 406 milímetros recoge la luz de galaxias que salieron hace millones de años y la lleva entera a tu ocular.</p>
+    </div>
+    <div class="telescopio">
+      <div class="optica" data-aparece>
+        <svg viewBox="0 0 300 420" role="img" aria-label="Corte de un telescopio reflector: la luz entra por arriba, baja hasta el espejo principal, sube hasta el espejo secundario y sale hacia el ocular">
+          <rect class="tubo" x="80" y="40" width="140" height="340" rx="4"/>
+          <path class="espejo" d="M88 368Q150 356 212 368"/>
+          <path class="espejo" d="M136 92L164 120" style="stroke-width: 3"/>
+          <rect class="tubo" x="220" y="96" width="46" height="20" rx="3"/>
+          <path class="rayo" data-sigue pathLength="1" d="M100 0V366M200 0V366M125 0V362M175 0V362"/>
+          <path class="rayo" data-sigue pathLength="1" style="--orden: 1" d="M100 366L146 108M200 366L154 108M125 362L148 110M175 362L152 110"/>
+          <path class="rayo" data-sigue pathLength="1" style="--orden: 2" d="M150 106H262"/>
+          <text x="232" y="138">Ocular</text>
+          <text x="96" y="404">Espejo principal, 406 mm</text>
+          <text x="20" y="96">Secundario</text>
+        </svg>
+      </div>
+      <dl class="ficha" data-aparece>
+        <div><dt>Espejo</dt><dd>406 mm (16″)</dd></div>
+        <div><dt>Distancia focal</dt><dd>1.800 mm, f/4,4</dd></div>
+        <div><dt>Aumentos</dt><dd>De 45× a 400×</dd></div>
+        <div><dt>Montura</dt><dd>Con seguimiento automático</dd></div>
+        <div><dt>Llega hasta</dt><dd>Magnitud 15</dd></div>
+      </dl>
+      <figure data-aparece>
+        <img src="/image/bocetos/cenit/telescopio-460.webp" srcset="/image/bocetos/cenit/telescopio-460.webp 460w, /image/bocetos/cenit/telescopio-720.webp 720w" sizes="(min-width: 900px) 22vw, 80vw" width="720" height="900" loading="lazy" alt="Un telescopio grande dentro de un domo de madera, con la abertura del domo hacia el cielo de noche">
+        <figcaption>En su domo de madera, que se abre de a un gajo.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ancho seccion llegar" id="llegar" aria-labelledby="llegar-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <p class="rotulo" style="text-align: center">Cómo llegar y qué traer</p>
+      <h2 class="frase" id="llegar-titulo" style="margin-top: 18px">Ciento cuatro kilómetros hacia arriba</h2>
+    </div>
+    <div class="banda" data-aparece>
+      <img src="/image/bocetos/cenit/domos-800.webp" srcset="/image/bocetos/cenit/domos-800.webp 800w, /image/bocetos/cenit/domos-1400.webp 1400w" sizes="(min-width: 1280px) 1130px, 92vw" width="1400" height="788" loading="lazy" alt="Dos domos de observatorio sobre un cerro, recortados contra el cielo azul del anochecer">
+      <div class="perfil">
+        <svg viewBox="0 0 1000 170" role="img" aria-label="Perfil de altura del camino: La Serena a nivel del mar, Vicuña a 650 metros en el kilómetro 62, Paihuano a 900 metros en el 92 y Pisco Elqui a 1.250 metros en el 104">
+          <defs><linearGradient id="degrade-perfil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e8ff" stop-opacity="0.6"/><stop offset="1" stop-color="#e9e8ff" stop-opacity="0"/></linearGradient></defs>
+          <path class="bajo" d="M20 140C200 136 420 104 610 80S860 54 880 48 940 28 980 20V150H20Z"/>
+          <path class="ruta" data-sigue pathLength="1" d="M20 140C200 136 420 104 610 80S860 54 880 48 940 28 980 20"/>
+          <circle cx="20" cy="140" r="4"/><circle cx="610" cy="80" r="4"/><circle cx="880" cy="48" r="4"/><circle cx="980" cy="20" r="5"/>
+                  </svg>
+        <ol class="paradas"><li><b>La Serena</b>km 0 · 0 m</li><li><b>Vicuña</b>km 62 · 650 m</li><li><b>Paihuano</b>km 92 · 900 m</li><li><b>Pisco Elqui</b>km 104 · 1.250 m</li></ol>
+      </div>
+    </div>
+    <ul class="llevar">
+      <li data-aparece><b>Abrigo de verdad</b><span>De noche baja a 8 °C, también en enero. Prestamos mantas.</span></li>
+      <li data-aparece style="--orden: 1"><b>Linterna roja</b><span>La luz blanca ciega por veinte minutos. Si no tienes, te pasamos una.</span></li>
+      <li data-aparece style="--orden: 2"><b>Zapatos cerrados</b><span>Del estacionamiento al domo son 300 metros de cerro, sin luces.</span></li>
+      <li data-aparece style="--orden: 3"><b>El celular, oscuro</b><span>Brillo al mínimo y sin flash. El cielo se ve mejor que cualquier foto.</span></li>
+    </ul>
+  </section>
+
+  <section class="ancho seccion" id="reservar" aria-labelledby="reservar-titulo" style="padding-top: 0">
+    <div data-aparece>
+      <p class="rotulo" style="text-align: center">Reservar</p>
+      <h2 class="frase" id="reservar-titulo" style="margin-top: 18px">Elige tu noche por su luna</h2>
+      <p>Cuanto más chica la luna, más oscuro el cielo y más estrellas. La luna nueva es la mejor noche del mes.</p>
+    </div>
+    <div class="reservar">
+      <figure data-aparece>
+        <img src="/image/bocetos/cenit/mirar-460.webp" srcset="/image/bocetos/cenit/mirar-460.webp 460w, /image/bocetos/cenit/mirar-720.webp 720w" sizes="(min-width: 900px) 28vw, 90vw" width="720" height="900" loading="lazy" alt="Una persona de chaqueta blanca apunta con el brazo a la Vía Láctea, de pie sobre el pasto de noche">
+        <figcaption>Te confirmamos por correo y te avisamos si la noche viene nublada.</figcaption>
+      </figure>
+      <form class="formulario vidrio" data-muestra data-aparece toolname="reservar_observacion" tooldescription="Reserva una noche de observación en Cénit, un observatorio turístico inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto.">
+        <fieldset class="lunas todo" toolparamdescription="La noche que quieren venir, del lunes 9 al domingo 15 de noviembre. Cada una dice cuánto de la luna se ilumina: menos luna, más estrellas">
+          <legend>La noche</legend>
+          <label class="noche-op"><input type="radio" name="noche" value="lunes 9 de noviembre, luna nueva"><span class="luna" style="--f: 100%" aria-hidden="true"></span><b>Lun 9</b><small>0 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="martes 10 de noviembre, 2 % de luna" checked><span class="luna" style="--f: 70%" aria-hidden="true"></span><b>Mar 10</b><small>2 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="miércoles 11 de noviembre, 6 % de luna"><span class="luna" style="--f: 55%" aria-hidden="true"></span><b>Mié 11</b><small>6 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="jueves 12 de noviembre, 12 % de luna"><span class="luna" style="--f: 42%" aria-hidden="true"></span><b>Jue 12</b><small>12 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="viernes 13 de noviembre, 20 % de luna"><span class="luna" style="--f: 32%" aria-hidden="true"></span><b>Vie 13</b><small>20 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="sábado 14 de noviembre, 29 % de luna"><span class="luna" style="--f: 24%" aria-hidden="true"></span><b>Sáb 14</b><small>29 %</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="domingo 15 de noviembre, 39 % de luna"><span class="luna" style="--f: 16%" aria-hidden="true"></span><b>Dom 15</b><small>39 %</small></label>
+        </fieldset>
+        <p class="nota-luna todo">Datos de muestra para este boceto.</p>
+        <label>Experiencia<select name="experiencia" toolparamdescription="Qué experiencia quieren: observación guiada (2 horas), astrofotografía (4 horas) o domo privado (6 horas, hasta seis personas)"><option>Observación guiada · 2 h</option><option>Astrofotografía · 4 h</option><option>Domo privado · 6 h</option></select></label>
+        <label>Personas<input type="number" name="personas" value="2" min="1" max="12" inputmode="numeric" required toolparamdescription="Cuántas personas vienen, de 1 a 12"></label>
+        <label>Tu nombre<input name="nombre" autocomplete="name" maxlength="80" required></label>
+        <label>Tu correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+        <button class="boton todo" type="submit">Reservar la noche</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <svg class="pie-cerros" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V82C110 70 190 40 290 50S430 96 540 84 700 26 800 34 930 88 1040 80 1210 30 1300 38 1400 60 1440 56V120Z"/></svg>
+  <div class="ancho pie-cuerpo">
+    <p class="pie-coord">30°07′ S · 70°29′ O · 1.250 m</p>
+    <div class="pie-fila"><span>Camino a Horcón km 2, Pisco Elqui, Paihuano · noche@cenitelqui.cl</span><span>Boceto de Volutus · marca inventada</span></div>
+  </div>
+</footer>
+</body>
+</html>

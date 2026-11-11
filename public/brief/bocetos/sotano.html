@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Sótano · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Sótano, cine club y sala independiente de 80 butacas en Barrio Brasil, para mostrar el estilo Brutalista.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/ibm-plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/sotano/portada-1400.webp" imagesrcset="/image/bocetos/sotano/portada-800.webp 800w, /image/bocetos/sotano/portada-1400.webp 1400w" imagesizes="(min-width: 900px) 74vw, 100vw">
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Sótano · brutalista. Inspiración: Anthology Film Archives
+   (anthologyfilmarchives.org), Yale School of Art y la galería Brutalist
+   Websites. Se toma: 1) la columna fija a la izquierda con el nombre apilado
+   y la lista de secciones, y la función de hoy como lo primero; 2) la letra
+   del sistema, los enlaces azules subrayados y los bordes negros, sin
+   adornos; 3) la densidad: la programación entera a la vista, como una lista
+   cruda. La idea propia: la cartelera es la página. Una tabla enorme en
+   Times, filas que se invierten al pasar, el plano de las 80 butacas y las
+   fotos en blanco y negro duro, que entran con un corte de cortina. */
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('/fonts/bocetos/ibm-plex-mono-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+  --blanco: #ffffff;
+  --negro: #000000;
+  --gris: #d9d9d4;
+  --azul: #0000ee;
+  --rojo: #ff0000;
+  --times: 'Times New Roman', Times, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --borde: 2px solid var(--negro);
+  --curva: cubic-bezier(0.65, 0, 0.35, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--blanco); scroll-behavior: smooth; }
+body { margin: 0; background: var(--blanco); color: var(--negro); font: 400 19px/1.45 var(--times); }
+img { display: block; max-width: 100%; height: auto; }
+figure { margin: 0; }
+a { color: var(--azul); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { background: var(--azul); color: var(--blanco); text-decoration: none; }
+:focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; font-family: var(--times); font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
+p { margin: 0; }
+.mono { font-family: var(--mono); font-size: 15px; letter-spacing: 0; }
+hr { margin: 0; border: 0; border-top: var(--borde); }
+
+/* ---- El armazón: columna fija y contenido ---- */
+.armazon { display: grid; grid-template-columns: minmax(240px, 22vw) minmax(0, 1fr); min-height: 100svh; }
+.lado { position: sticky; top: 0; align-self: start; display: grid; align-content: start; gap: 28px; height: 100svh; padding: 24px 20px; overflow-y: auto; border-right: var(--borde); }
+.en-visor .lado { height: auto; }
+.logo { display: block; color: var(--negro); text-decoration: none; font: 700 clamp(56px, 6.4vw, 104px)/0.8 var(--times); letter-spacing: -0.04em; text-transform: uppercase; }
+.logo:hover { background: none; color: var(--negro); }
+.logo span { display: block; }
+.indice { margin: 0; padding: 0; list-style: none; font-size: 21px; line-height: 1.5; }
+.indice li::before { content: '→ '; }
+.lado-hoy { padding-top: 16px; border-top: var(--borde); }
+.lado-hoy b { display: block; font-size: 21px; }
+.contenido { min-width: 0; }
+.bloque { padding: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 48px); border-bottom: var(--borde); }
+.bloque-titulo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; margin-bottom: 28px; }
+.bloque-titulo h2 { font-size: clamp(48px, 6.4vw, 104px); text-transform: uppercase; }
+
+/* ---- Hoy ---- */
+.hoy-fecha { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-bottom: 20px; }
+.hoy-fecha span { padding: 2px 8px; background: var(--negro); color: var(--blanco); }
+.hoy h1 { font-size: clamp(64px, 11vw, 210px); text-transform: uppercase; overflow-wrap: anywhere; hyphens: manual; }
+.hoy-ficha { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-block: 24px 28px; font-size: 22px; }
+.hoy-acciones { display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 22px; }
+.hoy figure { margin-top: 36px; border: var(--borde); }
+.hoy figure img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.leyenda { padding: 8px 12px; border-top: var(--borde); font-family: var(--mono); font-size: 14px; }
+
+/* ---- La cartelera ---- */
+.tabla { overflow-x: auto; border: var(--borde); }
+table { width: 100%; min-width: 760px; border-collapse: collapse; }
+th, td { padding: 12px 14px; border: 1px solid var(--negro); text-align: left; vertical-align: top; }
+thead th { position: sticky; top: 0; background: var(--gris); font: 600 13px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+tbody tr { transition: background-color 300ms var(--curva), color 300ms var(--curva); }
+tbody tr:hover { background: var(--negro); color: var(--blanco); }
+tbody tr:hover a { color: var(--blanco); }
+tbody td:first-child, tbody td:nth-child(2) { font-family: var(--mono); font-size: 15px; white-space: nowrap; }
+tbody th { font-size: 23px; font-weight: 700; line-height: 1.1; }
+tbody th small { display: block; margin-top: 4px; font-size: 17px; font-weight: 400; font-style: italic; }
+.formato { font-family: var(--mono); font-size: 15px; white-space: nowrap; }
+.agotado { display: inline-block; padding: 1px 6px; background: var(--rojo); color: var(--negro); font: 600 13px/1.4 var(--mono); text-transform: uppercase; }
+tr.es-hoy > td:first-child::after { content: ' ← HOY'; font-weight: 600; }
+
+/* ---- Ciclos ---- */
+.ciclos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: var(--borde); }
+.ciclo-lista { margin: 0; padding: 0; list-style: none; counter-reset: ciclo; }
+.ciclo-lista li { display: grid; grid-template-columns: 3.4ch minmax(0, 1fr); gap: 4px 16px; padding: 18px; border-bottom: 1px solid var(--negro); counter-increment: ciclo; }
+.ciclo-lista li:last-child { border-bottom: 0; }
+.ciclo-lista li::before { content: counter(ciclo, decimal-leading-zero); grid-row: 1 / 4; font: 700 44px/0.9 var(--times); }
+.ciclo-lista h3 { font-size: 28px; line-height: 1; }
+.ciclo-lista p { font-size: 18px; }
+.ciclos-fotos { display: grid; grid-template-rows: 1fr 1fr; border-left: var(--borde); }
+.ciclos-fotos figure + figure { border-top: var(--borde); }
+.ciclos-fotos img { width: 100%; height: 100%; min-height: 220px; object-fit: cover; }
+
+/* ---- La sala ---- */
+.sala { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0; border: var(--borde); }
+.plano { padding: 20px; border-right: var(--borde); }
+.pantalla { margin: 0 8% 24px; padding: 4px; border: var(--borde); text-align: center; font: 600 13px/1 var(--mono); letter-spacing: 0.4em; }
+.butacas { display: grid; grid-template-columns: 2ch repeat(5, minmax(0, 1fr)) 10px repeat(5, minmax(0, 1fr)); gap: 5px; margin: 0; padding: 0; list-style: none; font: 600 12px/1 var(--mono); }
+.butacas .fila { display: grid; place-items: center; }
+.butaca { position: relative; display: grid; place-items: center; aspect-ratio: 1; border: 1.5px solid var(--negro); transition: background-color 300ms var(--curva), color 300ms var(--curva); }
+.butaca span { opacity: 0; transition: opacity 300ms var(--curva); }
+.butaca:hover { background: var(--negro); color: var(--blanco); }
+.butaca:hover span { opacity: 1; }
+.butaca.ocupada { background: var(--gris); }
+.pasillo { visibility: hidden; }
+.cabina { margin-top: 24px; padding: 10px; border: var(--borde); border-style: dashed; font: 400 14px/1.3 var(--mono); text-align: center; }
+.plano-nota { margin-top: 14px; font: 400 14px/1.4 var(--mono); }
+.sala-datos { display: grid; align-content: start; }
+.sala-datos dl { margin: 0; }
+.sala-datos div { display: grid; grid-template-columns: 9ch minmax(0, 1fr); gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--negro); }
+.sala-datos dt { font: 600 13px/1.6 var(--mono); text-transform: uppercase; }
+.sala-datos dd { margin: 0; font-size: 19px; }
+.sala-datos figure { border-bottom: var(--borde); }
+.sala-datos figure:last-child { border-bottom: 0; }
+.sala-datos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* ---- Socio ---- */
+.socio { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 48px; align-items: end; }
+.precio { font: 700 clamp(96px, 17vw, 300px)/0.8 var(--times); letter-spacing: -0.05em; }
+.precio small { display: block; margin-top: 12px; font: 400 22px/1.2 var(--times); letter-spacing: 0; }
+.socio ul { margin: 0 0 20px; padding-left: 1.2em; font-size: 21px; }
+.socio-haz { border: var(--borde); }
+.socio-haz img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+
+/* ---- Escribir ---- */
+.formulario { display: grid; gap: 20px; max-width: 46rem; }
+.formulario fieldset { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 0; padding: 12px 16px 16px; border: var(--borde); }
+.formulario legend { padding: 0 6px; font: 600 13px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.formulario fieldset label { display: inline-flex; align-items: center; gap: 8px; font-size: 20px; }
+.formulario input[type='radio'] { width: 20px; height: 20px; margin: 0; accent-color: var(--negro); }
+.formulario > label { display: grid; gap: 6px; font: 600 13px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.formulario input:not([type='radio']), .formulario textarea { width: 100%; padding: 10px 12px; border: 3px solid var(--negro); border-radius: 0; background: var(--blanco); color: var(--negro); font: 400 20px/1.3 var(--times); -webkit-appearance: none; appearance: none; }
+.formulario textarea { resize: vertical; }
+.formulario :is(input, textarea):focus-visible { outline: 3px solid var(--azul); outline-offset: 0; }
+.formulario button { justify-self: start; min-height: 48px; padding: 0 22px; border: 3px solid var(--negro); border-radius: 0; background: var(--gris); color: var(--negro); font: 700 20px/1 var(--times); cursor: pointer; box-shadow: 4px 4px 0 var(--negro); transition: box-shadow 300ms var(--curva), translate 300ms var(--curva); }
+.formulario button:hover { box-shadow: 0 0 0 var(--negro); translate: 4px 4px; }
+.formulario .boceto-aviso { margin: 0; font-family: var(--mono); }
+
+/* ---- Pie ---- */
+.pie { display: grid; gap: 6px; padding: 24px clamp(20px, 3vw, 48px) 40px; font: 400 14px/1.6 var(--mono); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .armazon { grid-template-columns: minmax(0, 1fr); }
+  .lado { position: static; height: auto; grid-template-columns: auto minmax(0, 1fr); align-items: end; gap: 16px 28px; border-right: 0; border-bottom: var(--borde); }
+  .lado-hoy { grid-column: 1 / -1; }
+  .logo { font-size: 64px; }
+  .ciclos, .sala, .socio { grid-template-columns: minmax(0, 1fr); }
+  .ciclos-fotos { grid-template-columns: 1fr 1fr; grid-template-rows: auto; border-left: 0; border-top: var(--borde); }
+  .ciclos-fotos figure + figure { border-top: 0; border-left: var(--borde); }
+  .plano { border-right: 0; border-bottom: var(--borde); }
+  .socio-haz { max-width: 22rem; }
+  /* La cartelera deja de ser tabla ancha: cada función es un bloque. */
+  table { min-width: 0; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  tbody tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 6px 14px; align-items: center; padding: 14px; border-bottom: 1px solid var(--negro); }
+  tbody tr:last-child { border-bottom: 0; }
+  tbody :is(th, td) { padding: 0; border: 0; }
+  tbody th { grid-column: 1 / -1; }
+  tbody td:last-child { justify-self: end; grid-column: 2 / -1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .lado { grid-template-columns: minmax(0, 1fr); }
+  .logo { font-size: 56px; }
+  .logo span { display: inline; }
+  .indice { display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 19px; }
+  .hoy-ficha, .hoy-acciones { font-size: 19px; }
+  .butacas { gap: 3px; grid-template-columns: 2ch repeat(5, minmax(0, 1fr)) 6px repeat(5, minmax(0, 1fr)); }
+  .ciclos-fotos { grid-template-columns: minmax(0, 1fr); }
+  .ciclos-fotos figure + figure { border-left: 0; border-top: var(--borde); }
+  .sala-datos div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+
+/* ---- Movimiento ----
+   Casi nada, a propósito. Las filas de la cartelera y las butacas se
+   invierten al pasar el cursor, en 300 ms. Las fotos entran con un corte de
+   cortina, de arriba abajo, sin fundido: aparecen enteras, como cuando se
+   abre el telón. */
+[data-aparece] { --entrada: sotano-telon; --tramo: 30svh; --duracion: 1000ms; }
+@keyframes sotano-telon { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@media (prefers-reduced-motion: reduce) {
+  tbody tr, .butaca, .butaca span, .formulario button { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="sotano">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Sótano</b> es una marca inventada por Volutus para mostrarte el estilo <b>Brutalista</b>.</p></div>
+
+<div class="armazon">
+  <header class="lado">
+    <a class="logo" href="#hoy" aria-label="Sótano, cine club"><span>Só</span><span>ta</span><span>no</span></a>
+    <nav aria-label="Secciones">
+      <ul class="indice"><li><a href="#cartelera">Cartelera</a></li><li><a href="#ciclos">Ciclos</a></li><li><a href="#sala">La sala</a></li><li><a href="#socio">Socios</a></li><li><a href="#escribir">Escribir</a></li></ul>
+    </nav>
+    <p class="lado-hoy"><b>Cine club · 80 butacas</b>Av. Brasil 214, subterráneo<br>Barrio Brasil, Santiago<br><span class="mono">MAR–DOM · DESDE 17:00</span></p>
+  </header>
+
+  <main class="contenido">
+    <section class="bloque hoy" id="hoy" aria-labelledby="titulo">
+      <p class="hoy-fecha mono"><span>HOY · VIE 13 NOV</span>21:00 · 35 MM · 191 MIN</p>
+      <h1 id="titulo">La batalla de Chile</h1>
+      <p class="hoy-ficha"><span>Patricio Guzmán</span><span>1975–1979</span><span><i>Primera parte: la insurrección de la burguesía</i></span></p>
+      <p class="hoy-acciones"><a href="#cartelera">[Entrada: $4.000]</a><a href="#cartelera">[Toda la semana]</a></p>
+      <figure>
+        <img src="/image/bocetos/sotano/portada-1400.webp" srcset="/image/bocetos/sotano/portada-800.webp 800w, /image/bocetos/sotano/portada-1400.webp 1400w" sizes="(min-width: 900px) 74vw, 100vw" width="1400" height="788" fetchpriority="high" alt="Una sala de cine a oscuras, en blanco y negro, con el haz del proyector que cruza por encima de las butacas vacías">
+        <figcaption class="leyenda">La sala, a las 20:52 de un viernes. Foto en blanco y negro, sin retoque.</figcaption>
+      </figure>
+    </section>
+
+    <section class="bloque" id="cartelera" aria-labelledby="cartelera-titulo">
+      <div class="bloque-titulo"><h2 id="cartelera-titulo">Cartelera</h2><p class="mono">SEMANA DEL 10 AL 15 DE NOVIEMBRE · ENTRADA $4.000 · SOCIOS GRATIS</p></div>
+      <div class="tabla" tabindex="0" role="region" aria-labelledby="cartelera-titulo">
+        <table>
+          <thead><tr><th scope="col">Día</th><th scope="col">Hora</th><th scope="col">Película</th><th scope="col">Formato</th><th scope="col">Estado</th></tr></thead>
+          <tbody>
+            <tr><td>MAR 10</td><td>19:00</td><th scope="row">Nostalgia de la luz<small>Patricio Guzmán, 2010</small></th><td class="formato">DCP</td><td><a href="#escribir">Quedan 31</a></td></tr>
+            <tr><td>MAR 10</td><td>21:30</td><th scope="row">Taxi Driver<small>Martin Scorsese, 1976</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 12</a></td></tr>
+            <tr><td>MIÉ 11</td><td>19:00</td><th scope="row">El chacal de Nahueltoro<small>Miguel Littin, 1969</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 44</a></td></tr>
+            <tr><td>MIÉ 11</td><td>21:30</td><th scope="row">Stalker<small>Andréi Tarkovski, 1979</small></th><td class="formato">35 mm</td><td><span class="agotado">Agotado</span></td></tr>
+            <tr><td>JUE 12</td><td>19:00</td><th scope="row">Cléo de 5 à 7<small>Agnès Varda, 1962</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 26</a></td></tr>
+            <tr><td>JUE 12</td><td>21:30</td><th scope="row">París, Texas<small>Wim Wenders, 1984</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 8</a></td></tr>
+            <tr><td>VIE 13</td><td>18:30</td><th scope="row">Tres tristes tigres<small>Raúl Ruiz, 1968</small></th><td class="formato">16 mm</td><td><a href="#escribir">Quedan 37</a></td></tr>
+            <tr class="es-hoy"><td>VIE 13</td><td>21:00</td><th scope="row">La batalla de Chile I<small>Patricio Guzmán, 1975</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 5</a></td></tr>
+            <tr><td>SÁB 14</td><td>17:00</td><th scope="row">Mi vecino Totoro<small>Hayao Miyazaki, 1988 · matiné</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 52</a></td></tr>
+            <tr><td>SÁB 14</td><td>21:30</td><th scope="row">Con ánimo de amar<small>Wong Kar-wai, 2000</small></th><td class="formato">35 mm</td><td><span class="agotado">Agotado</span></td></tr>
+            <tr><td>DOM 15</td><td>18:00</td><th scope="row">Valparaíso mi amor<small>Aldo Francia, 1969</small></th><td class="formato">16 mm</td><td><a href="#escribir">Quedan 40</a></td></tr>
+            <tr><td>DOM 15</td><td>20:30</td><th scope="row">Persona<small>Ingmar Bergman, 1966</small></th><td class="formato">35 mm</td><td><a href="#escribir">Quedan 19</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bloque" id="ciclos" aria-labelledby="ciclos-titulo">
+      <div class="bloque-titulo"><h2 id="ciclos-titulo">Ciclos</h2><p class="mono">NOVIEMBRE 2026</p></div>
+      <div class="ciclos">
+        <ol class="ciclo-lista">
+          <li><h3>Chile antes del golpe</h3><p>Seis películas de 1967 a 1973, en las copias que sobrevivieron.</p><p class="mono">VIERNES · 18:30 Y 21:00</p></li>
+          <li><h3>Ellas en la nueva ola</h3><p>Varda, Chytilová y Duras: el cine francés y checo que no salió en las fotos.</p><p class="mono">JUEVES · 19:00</p></li>
+          <li><h3>Tarkovski completo</h3><p>Las siete películas, en orden, una por semana hasta enero.</p><p class="mono">MIÉRCOLES · 21:30</p></li>
+          <li><h3>Matiné en 35 mm</h3><p>Animación para niños y grandes, con palomitas a $1.500.</p><p class="mono">SÁBADOS · 17:00</p></li>
+        </ol>
+        <div class="ciclos-fotos">
+          <figure data-aparece><img src="/image/bocetos/sotano/marquesina-600.webp" srcset="/image/bocetos/sotano/marquesina-600.webp 600w, /image/bocetos/sotano/marquesina-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 100vw" width="1000" height="667" loading="lazy" alt="Las letras negras de quita y pon de una marquesina de cine, en blanco y negro"></figure>
+          <figure data-aparece><img src="/image/bocetos/sotano/rollos-400.webp" srcset="/image/bocetos/sotano/rollos-400.webp 400w, /image/bocetos/sotano/rollos-640.webp 640w" sizes="(min-width: 900px) 36vw, 100vw" width="640" height="640" loading="lazy" alt="Un carrete de película rodeado de cinta de celuloide enredada, en blanco y negro"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" id="sala" aria-labelledby="sala-titulo">
+      <div class="bloque-titulo"><h2 id="sala-titulo">La sala</h2><p class="mono">SUBTERRÁNEO · 80 BUTACAS · 1 PANTALLA</p></div>
+      <div class="sala">
+        <div class="plano">
+          <p class="pantalla">PANTALLA</p>
+          <ul class="butacas" aria-hidden="true">
+            <li class="fila">A</li><li class="butaca"><span>1</span></li><li class="butaca"><span>2</span></li><li class="butaca"><span>3</span></li><li class="butaca"><span>4</span></li><li class="butaca"><span>5</span></li><li class="pasillo"></li><li class="butaca"><span>6</span></li><li class="butaca"><span>7</span></li><li class="butaca"><span>8</span></li><li class="butaca"><span>9</span></li><li class="butaca"><span>10</span></li>
+            <li class="fila">B</li><li class="butaca"><span>1</span></li><li class="butaca"><span>2</span></li><li class="butaca ocupada"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca"><span>5</span></li><li class="pasillo"></li><li class="butaca"><span>6</span></li><li class="butaca"><span>7</span></li><li class="butaca"><span>8</span></li><li class="butaca"><span>9</span></li><li class="butaca"><span>10</span></li>
+            <li class="fila">C</li><li class="butaca"><span>1</span></li><li class="butaca"><span>2</span></li><li class="butaca"><span>3</span></li><li class="butaca"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca"><span>8</span></li><li class="butaca"><span>9</span></li><li class="butaca"><span>10</span></li>
+            <li class="fila">D</li><li class="butaca ocupada"><span>1</span></li><li class="butaca ocupada"><span>2</span></li><li class="butaca"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca ocupada"><span>8</span></li><li class="butaca"><span>9</span></li><li class="butaca"><span>10</span></li>
+            <li class="fila">E</li><li class="butaca ocupada"><span>1</span></li><li class="butaca ocupada"><span>2</span></li><li class="butaca ocupada"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca ocupada"><span>8</span></li><li class="butaca ocupada"><span>9</span></li><li class="butaca ocupada"><span>10</span></li>
+            <li class="fila">F</li><li class="butaca ocupada"><span>1</span></li><li class="butaca ocupada"><span>2</span></li><li class="butaca ocupada"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca ocupada"><span>8</span></li><li class="butaca ocupada"><span>9</span></li><li class="butaca"><span>10</span></li>
+            <li class="fila">G</li><li class="butaca ocupada"><span>1</span></li><li class="butaca ocupada"><span>2</span></li><li class="butaca ocupada"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca ocupada"><span>8</span></li><li class="butaca ocupada"><span>9</span></li><li class="butaca ocupada"><span>10</span></li>
+            <li class="fila">H</li><li class="butaca ocupada"><span>1</span></li><li class="butaca ocupada"><span>2</span></li><li class="butaca ocupada"><span>3</span></li><li class="butaca ocupada"><span>4</span></li><li class="butaca ocupada"><span>5</span></li><li class="pasillo"></li><li class="butaca ocupada"><span>6</span></li><li class="butaca ocupada"><span>7</span></li><li class="butaca ocupada"><span>8</span></li><li class="butaca ocupada"><span>9</span></li><li class="butaca ocupada"><span>10</span></li>
+          </ul>
+          <p class="cabina">CABINA · DOS PROYECTORES DE 35 MM PARA CAMBIAR DE ROLLO SIN CORTAR</p>
+          <p class="plano-nota">80 butacas en 8 filas de 10, con un pasillo al medio. En gris, las vendidas para hoy a las 21:00: quedan 5. Las mejores son las de la fila E: ni muy cerca ni muy lejos.</p>
+        </div>
+        <div class="sala-datos">
+          <dl>
+            <div><dt>Pantalla</dt><dd>6 × 3,2 metros, sin bordes negros</dd></div>
+            <div><dt>Formatos</dt><dd>35 mm, 16 mm y DCP</dd></div>
+            <div><dt>Sonido</dt><dd>Óptico mono para las copias antiguas; 5.1 para lo demás</dd></div>
+            <div><dt>Acceso</dt><dd>Rampa por el pasaje lateral; dos espacios para silla de ruedas en la fila A</dd></div>
+          </dl>
+          <figure data-aparece><img src="/image/bocetos/sotano/proyector-500.webp" srcset="/image/bocetos/sotano/proyector-500.webp 500w, /image/bocetos/sotano/proyector-800.webp 800w" sizes="(min-width: 900px) 30vw, 100vw" width="800" height="600" loading="lazy" alt="Un proyector de cine antiguo con dos carretes de película, en blanco y negro"></figure>
+          <figure data-aparece><img src="/image/bocetos/sotano/butaca-500.webp" srcset="/image/bocetos/sotano/butaca-500.webp 500w, /image/bocetos/sotano/butaca-800.webp 800w" sizes="(min-width: 900px) 30vw, 100vw" width="800" height="600" loading="lazy" alt="El respaldo de una butaca de cine con el número 23, en blanco y negro"></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" id="socio" aria-labelledby="socio-titulo">
+      <div class="bloque-titulo"><h2 id="socio-titulo">Hacerse socio</h2><p class="mono">SIN CONTRATO · SE DEJA CUANDO QUIERAS</p></div>
+      <div class="socio">
+        <div>
+          <p class="precio">$9.000<small>al mes. Menos que tres entradas.</small></p>
+        </div>
+        <div>
+          <ul><li>Entrada libre a todas las funciones del mes.</li><li>Preventa de los ciclos, un día antes.</li><li>Un voto para elegir la película del último domingo.</li></ul>
+          <p style="font-size: 22px"><a href="#escribir">[Quiero ser socio]</a></p>
+        </div>
+      </div>
+      <figure class="socio-haz" data-aparece style="margin-top: 32px; max-width: 26rem"><img src="/image/bocetos/sotano/haz-500.webp" srcset="/image/bocetos/sotano/haz-500.webp 500w, /image/bocetos/sotano/haz-800.webp 800w" sizes="26rem" width="800" height="1067" loading="lazy" alt="El haz de luz de un proyector atraviesa el polvo de una sala oscura"></figure>
+    </section>
+
+    <section class="bloque" id="escribir" aria-labelledby="escribir-titulo">
+      <div class="bloque-titulo"><h2 id="escribir-titulo">Escribir</h2><p class="mono">LO LEE UNA PERSONA · RESPONDEMOS LOS MARTES</p></div>
+      <form class="formulario" data-muestra toolname="proponer_pelicula" tooldescription="Propone una película a Sótano, un cine club inventado por Volutus como boceto de página, o pide recibir su cartelera por correo. No envía nada a nadie: responde que es un boceto.">
+        <fieldset toolparamdescription="Qué quiere hacer: proponer una película para la cartelera o recibir la cartelera cada semana por correo">
+          <legend>Quiero</legend>
+          <label><input type="radio" name="motivo" value="proponer" checked>proponer una película</label>
+          <label><input type="radio" name="motivo" value="cartelera">recibir la cartelera</label>
+        </fieldset>
+        <label>Película (título, director y año)<input name="pelicula" maxlength="140" toolparamdescription="La película que propone, con su director y su año si los sabe"></label>
+        <label>Por qué (opcional)<textarea name="por-que" rows="3" maxlength="600" toolparamdescription="Por qué la propone, en pocas frases"></textarea></label>
+        <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <footer class="pie">
+      <p>SÓTANO — CINE CLUB. AV. BRASIL 214, SUBTERRÁNEO, SANTIAGO. HOLA@SOTANOCINE.CL</p>
+      <p>Última actualización: 11/11/2026. Esta página no usa cookies. <a href="#hoy">[Volver arriba]</a></p>
+      <p>Boceto de Volutus · marca inventada</p>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Rumbo · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Rumbo, señalética y orientación para hospitales, campus y aeropuertos, para mostrar el estilo Suizo / gráfico.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Rumbo · suizo / gráfico. Inspiración: Mijksenaar (mijksenaar.com), del mismo
+   rubro, Swissted y Standards Manual. Se toma: 1) el letrero como portada
+   (flecha, pictograma y texto en un solo bloque) y cada proyecto contado con
+   su ficha; 2) la grilla de doce columnas a la vista, una sola familia de
+   letra en dos pesos y el rojo como única señal; 3) el manual de señalética
+   como pieza: la letra, los pictogramas y los colores en una página. La idea
+   propia: que nadie se pierda. La cabecera es el directorio del edificio,
+   cada sección es un piso con su número pegado al costado, como en un
+   ascensor, y las flechas giran hasta su lugar en la grilla. */
+@font-face { font-family: 'Archivo'; src: url('/fonts/bocetos/archivo.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --blanco: #ffffff;
+  --negro: #111111;
+  --rojo: #e3001b;
+  --gris: #ececec;
+  --texto-suave: #555555;
+  --ancho: 1320px;
+  --margen: clamp(20px, 3vw, 48px);
+  --hueco: clamp(12px, 1.6vw, 24px);
+  --curva: cubic-bezier(0.76, 0, 0.24, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--blanco); scroll-behavior: smooth; }
+body { margin: 0; background: var(--blanco); color: var(--negro); font: 400 18px/1.5 'Archivo', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+main { overflow-x: clip; }
+figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--rojo); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.035em; line-height: 0.95; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.doce { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--hueco); }
+.flecha { display: block; fill: currentColor; }
+.chico { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* La grilla, a la vista: doce columnas por encima de todo, sin tapar. */
+.grilla { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+.grilla .doce { height: 100%; }
+.grilla span { box-shadow: inset 1px 0 rgb(227 0 27 / 0.1), inset -1px 0 rgb(227 0 27 / 0.1); }
+
+/* ---- Cabecera: el directorio del edificio ---- */
+.directorio { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px 40px; margin-top: 20px; padding: 18px 22px; border-radius: 6px; background: var(--negro); color: var(--blanco); }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 28px; letter-spacing: -0.04em; text-decoration: none; }
+.logo svg { width: 32px; height: 32px; }
+.destinos { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px 26px; margin: 0; padding: 0; list-style: none; }
+.destinos a { display: inline-flex; align-items: center; gap: 10px; min-height: 40px; font-weight: 700; font-size: 16px; text-decoration: none; }
+.destinos a span { display: grid; place-items: center; width: 26px; height: 26px; background: var(--blanco); color: var(--negro); font-size: 14px; font-variant-numeric: tabular-nums; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.destinos a svg { width: 16px; height: 16px; rotate: 90deg; fill: var(--rojo); transition: translate 400ms var(--curva); }
+.destinos a:hover span { background: var(--rojo); color: var(--blanco); }
+.destinos a:hover svg { translate: 0 3px; }
+
+/* ---- Portada ---- */
+.portada { align-items: end; row-gap: 40px; padding-block: clamp(48px, 8vw, 120px) clamp(64px, 9vw, 140px); }
+.portada h1 { grid-column: 1 / span 8; font-size: clamp(60px, 10.4vw, 168px); line-height: 0.86; letter-spacing: -0.055em; }
+.flecha-grande { grid-column: 9 / -1; align-self: center; justify-self: end; width: 100%; max-width: 420px; color: var(--rojo); }
+.flecha-gira { display: block; }
+.portada-pie { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: start; padding-top: 22px; border-top: 3px solid var(--negro); }
+.portada-pie .chico { grid-column: 1 / span 3; }
+.portada-pie p:not(.chico) { grid-column: 4 / span 5; font-size: 22px; line-height: 1.35; }
+.boton { display: inline-flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 24px; border: 0; background: var(--rojo); color: var(--blanco); font: 700 17px/1 'Archivo', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva); }
+.boton svg { width: 20px; height: 20px; fill: currentColor; transition: translate 400ms var(--curva); }
+.boton:hover { background: var(--negro); }
+.boton:hover svg { translate: 4px 0; }
+.portada-pie .boton { grid-column: 10 / -1; justify-self: end; }
+
+/* ---- Los pisos ---- */
+.piso { padding-block: clamp(64px, 8vw, 120px); border-top: 3px solid var(--negro); }
+.piso-marca { grid-column: 1 / span 2; }
+.indicador { position: sticky; top: 24px; display: grid; justify-items: center; width: clamp(72px, 7vw, 104px); padding: 10px 0 12px; background: var(--negro); color: var(--blanco); }
+.indicador small { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.indicador b { font-size: clamp(44px, 5vw, 72px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.indicador svg { width: 22px; height: 22px; margin-top: 4px; rotate: 90deg; fill: var(--rojo); }
+.piso-cuerpo { grid-column: 3 / -1; min-width: 0; }
+.piso-titulo { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: var(--hueco); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
+.piso-titulo h2 { grid-column: 1 / span 6; font-size: clamp(44px, 6vw, 96px); }
+.piso-titulo p { grid-column: 7 / -1; color: var(--texto-suave); }
+
+/* Método: el letrero negro */
+.letrero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--negro); color: var(--blanco); }
+.tramo { position: relative; display: grid; align-content: start; gap: 14px; padding: 26px 22px 30px; }
+.tramo + .tramo { border-left: 1px solid #444444; }
+.picto { width: 56px; height: 56px; fill: none; stroke: var(--blanco); stroke-width: 1.8; stroke-linecap: square; }
+.tramo .chico { color: #bdbdbd; }
+.tramo h3 { font-size: 30px; }
+.tramo p { font-size: 16px; color: #d4d4d4; }
+.tramo .paso { position: absolute; right: -16px; top: 38px; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; background: var(--rojo); --entrada: rumbo-flecha; }
+.tramo .paso svg { width: 18px; height: 18px; fill: var(--blanco); }
+.metodo-foto { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: var(--hueco); margin-top: var(--hueco); }
+.metodo-foto img { grid-column: 1 / span 7; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.metodo-foto figcaption { grid-column: 8 / -1; align-self: end; padding-top: 14px; border-top: 3px solid var(--negro); font-size: 16px; }
+
+/* Proyectos */
+.proyectos { display: grid; gap: clamp(48px, 6vw, 88px); margin: 0; padding: 0; list-style: none; }
+.proyecto { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: var(--hueco); row-gap: 20px; }
+.proyecto figure { grid-column: 1 / span 6; }
+.proyecto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.proyecto-ficha { grid-column: 7 / -1; display: grid; align-content: start; gap: 14px; }
+.proyecto-ficha .chico { color: var(--rojo); }
+.proyecto h3 { font-size: clamp(28px, 3vw, 40px); }
+.proyecto dl { display: grid; margin: 6px 0 0; border-top: 3px solid var(--negro); }
+.proyecto dl div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding-block: 10px; border-bottom: 1px solid var(--negro); }
+.proyecto dt { color: var(--texto-suave); }
+.proyecto dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+
+/* El sistema: una página del manual */
+.manual { border: 3px solid var(--negro); }
+.manual-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 12px 18px; border-bottom: 3px solid var(--negro); }
+.manual-cuerpo { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); }
+.especimen { grid-column: 1 / span 5; display: grid; align-content: space-between; gap: 24px; padding: 24px 18px; border-right: 3px solid var(--negro); }
+.especimen b { font-size: clamp(120px, 15vw, 240px); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em; }
+.especimen p:last-child { font-size: 22px; line-height: 1.3; overflow-wrap: anywhere; }
+.pictos { grid-column: 6 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--negro); }
+.pictos li { display: grid; justify-items: start; align-content: space-between; gap: 18px; min-height: 160px; padding: 16px; background: var(--blanco); transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.pictos .picto { width: 52px; height: 52px; stroke: currentColor; }
+.pictos li:hover { background: var(--negro); color: var(--blanco); }
+.colores { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) repeat(2, minmax(0, 1.2fr)); border-top: 3px solid var(--negro); }
+.color { display: grid; align-content: end; min-height: 150px; padding: 12px 14px; font-size: 14px; line-height: 1.3; }
+.color b { display: block; font-size: 17px; }
+.color + .color { border-left: 3px solid var(--negro); }
+.colores img { width: 100%; height: 100%; min-height: 150px; object-fit: cover; border-left: 3px solid var(--negro); }
+
+/* Clientes */
+.clientes { columns: 2; column-gap: var(--hueco); margin: 0; padding: 0; list-style: none; counter-reset: cliente; }
+.clientes li { display: grid; grid-template-columns: 3ch minmax(0, 1fr); gap: 12px; padding-block: 14px; border-top: 1px solid var(--negro); break-inside: avoid; font-size: 22px; line-height: 1.25; counter-increment: cliente; }
+.clientes li::before { content: counter(cliente, decimal-leading-zero); font-size: 14px; font-weight: 700; color: var(--rojo); padding-top: 5px; }
+
+/* Contacto */
+.formulario { display: grid; border-top: 3px solid var(--negro); }
+.campo { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: var(--hueco); align-items: center; padding-block: 14px; border-bottom: 1px solid var(--negro); }
+.campo > span { grid-column: 1 / span 1; font-size: 14px; font-weight: 700; color: var(--rojo); font-variant-numeric: tabular-nums; }
+.campo > b { grid-column: 2 / span 3; display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; }
+.campo > b svg { width: 16px; height: 16px; fill: var(--negro); }
+.campo :is(input, select) { grid-column: 5 / -1; width: 100%; min-height: 50px; padding: 8px 12px; border: 0; border-bottom: 3px solid var(--negro); border-radius: 0; background: var(--gris); color: var(--negro); font: 400 18px/1.3 'Archivo', sans-serif; -webkit-appearance: none; appearance: none; transition: background-color 400ms var(--curva); }
+.campo select { padding-right: 44px; background: var(--gris) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1.5 1.5l5.5 5.5 5.5-5.5' fill='none' stroke='%23111111' stroke-width='2.6'/%3E%3C/svg%3E") right 16px center / 14px 9px no-repeat; }
+.campo :is(input, select):focus-visible { outline: none; background-color: #ffe3e6; border-bottom-color: var(--rojo); }
+.formulario-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-top: 22px; }
+.formulario .boceto-aviso { margin: 0; }
+
+/* ---- Pie: la salida ---- */
+.pie { background: var(--negro); color: var(--blanco); }
+.pie .doce { align-items: end; row-gap: 32px; padding-block: 56px 40px; }
+.salida { grid-column: 1 / span 4; display: inline-flex; align-items: center; gap: 16px; justify-self: start; padding: 14px 20px 14px 14px; background: var(--blanco); color: var(--negro); font-size: 26px; font-weight: 800; text-decoration: none; }
+.salida span { display: grid; place-items: center; width: 48px; height: 48px; background: var(--rojo); }
+.salida svg { width: 28px; height: 28px; fill: var(--blanco); rotate: -90deg; transition: translate 400ms var(--curva); }
+.salida:hover svg { translate: 0 -4px; }
+.pie-datos { grid-column: 6 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px var(--hueco); font-size: 15px; color: #cfcfcf; }
+.pie-datos b { display: block; color: var(--blanco); }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .directorio { grid-template-columns: minmax(0, 1fr); }
+  .destinos { justify-content: flex-start; }
+  .portada h1 { grid-column: 1 / -1; }
+  .flecha-grande { grid-column: 7 / -1; max-width: 260px; }
+  .portada-pie .chico { grid-column: 1 / -1; margin-bottom: 12px; }
+  .portada-pie p:not(.chico) { grid-column: 1 / span 8; }
+  .portada-pie .boton { grid-column: 1 / -1; justify-self: start; margin-top: 24px; }
+  .piso-marca { grid-column: 1 / span 2; }
+  .piso-cuerpo { grid-column: 3 / -1; }
+  .piso-titulo h2, .piso-titulo p { grid-column: 1 / -1; }
+  .piso-titulo p { margin-top: 16px; }
+  .letrero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tramo:nth-child(3) { border-left: 0; }
+  .tramo:nth-child(n+3) { border-top: 1px solid #444444; }
+  .tramo:nth-child(2) .paso { right: auto; left: 22px; top: auto; bottom: -16px; rotate: 90deg; }
+  .proyecto figure, .proyecto-ficha { grid-column: 1 / -1; }
+  .especimen, .pictos { grid-column: 1 / -1; border-right: 0; }
+  .especimen { border-bottom: 3px solid var(--negro); }
+  .colores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .color:nth-child(3) { border-left: 0; }
+  .color:nth-child(n+3), .colores img { border-top: 3px solid var(--negro); }
+  .colores img:nth-of-type(1) { border-left: 0; }
+  .pie-datos { grid-column: 1 / -1; }
+  .salida { grid-column: 1 / -1; }
+  .clientes { columns: 1; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .grilla .doce span:nth-child(n+7) { display: none; }
+  .grilla .doce { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .destinos { gap: 4px 18px; }
+  .destinos a { font-size: 15px; }
+  .flecha-grande { grid-column: 5 / -1; max-width: 180px; }
+  .portada-pie p:not(.chico) { grid-column: 1 / -1; font-size: 19px; }
+  .piso-marca { grid-column: 1 / -1; margin-bottom: 24px; }
+  .indicador { position: static; grid-template-columns: auto auto auto; align-items: center; gap: 10px; width: auto; padding: 8px 14px; justify-self: start; }
+  .indicador svg { margin: 0; }
+  .indicador b { font-size: 36px; }
+  .piso-cuerpo { grid-column: 1 / -1; }
+  .letrero { grid-template-columns: minmax(0, 1fr); }
+  .tramo + .tramo { border-left: 0; border-top: 1px solid #444444; }
+  .tramo .paso { right: 22px; top: auto; bottom: -16px; rotate: 90deg; }
+  .tramo:nth-child(2) .paso { left: auto; }
+  .metodo-foto img, .metodo-foto figcaption { grid-column: 1 / -1; }
+  .pictos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pictos li { min-height: 132px; }
+  .colores { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .clientes li { font-size: 19px; }
+  .campo > span { grid-column: 1 / span 2; }
+  .campo > b { grid-column: 3 / -1; }
+  .campo :is(input, select) { grid-column: 1 / -1; margin-top: 10px; }
+  .pie-datos { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento ----
+   La flecha de la portada llega girando hasta su lugar en la grilla y, al
+   bajar, gira un cuarto de vuelta hasta apuntar hacia abajo: hacia el
+   contenido. Las flechas del letrero del método se deslizan y giran hasta
+   su sitio, una tras otra. Todo lo demás entra desde la izquierda, como se
+   lee, y se detiene en su columna. */
+[data-aparece] { --entrada: rumbo-llega; --tramo: 30svh; --duracion: 1100ms; }
+@keyframes rumbo-llega { from { opacity: 0; translate: -36px 0; } }
+@keyframes rumbo-flecha { from { opacity: 0; transform: translateX(-28px) rotate(-90deg); } }
+@keyframes rumbo-entra { from { opacity: 0; transform: translate(-24%, 30%) rotate(-135deg); } }
+@keyframes rumbo-baja { to { rotate: 90deg; } }
+@media (prefers-reduced-motion: no-preference) {
+  .flecha-grande { animation: rumbo-entra 1600ms var(--curva) 200ms both; }
+  .portada h1 { animation: rumbo-llega 1200ms var(--curva) both; }
+  @supports (animation-timeline: scroll()) {
+    .flecha-gira { animation: rumbo-baja var(--curva) both; animation-timeline: scroll(root); animation-range: 8svh 60svh; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .destinos a span, .destinos a svg, .boton, .boton svg, .pictos li, .campo :is(input, select), .salida svg { transition: none; }
+}
+</style>
+</head>
+<body data-boceto="rumbo">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Rumbo</b> es una marca inventada por Volutus para mostrarte el estilo <b>Suizo / gráfico</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flecha" viewBox="0 0 100 100"><path d="M8 42h58L40 16l12-12 46 46-46 46-12-12 26-26H8z"/></symbol>
+  <symbol id="logo-rumbo" viewBox="0 0 32 32"><rect width="32" height="32" fill="#e3001b"/><path d="M9.5 20.6 19 11.1h-6.4V8H24v11.4h-3.1V13.1l-9.5 9.5z" fill="#ffffff"/></symbol>
+</svg>
+
+<div class="grilla" aria-hidden="true"><div class="ancho doce"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+
+<header class="ancho">
+  <div class="directorio">
+    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#logo-rumbo"/></svg>Rumbo</a>
+    <nav aria-label="Directorio de la página">
+      <ul class="destinos">
+        <li><a href="#metodo"><span>1</span>Método<svg aria-hidden="true"><use href="#flecha"/></svg></a></li>
+        <li><a href="#proyectos"><span>2</span>Proyectos<svg aria-hidden="true"><use href="#flecha"/></svg></a></li>
+        <li><a href="#sistema"><span>3</span>El sistema<svg aria-hidden="true"><use href="#flecha"/></svg></a></li>
+        <li><a href="#clientes"><span>4</span>Clientes<svg aria-hidden="true"><use href="#flecha"/></svg></a></li>
+        <li><a href="#contacto"><span>5</span>Contacto<svg aria-hidden="true"><use href="#flecha"/></svg></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="ancho doce portada" id="inicio" aria-labelledby="titulo">
+    <h1 id="titulo">Que nadie se pierda</h1>
+    <div class="flecha-grande" aria-hidden="true"><span class="flecha-gira"><svg class="flecha" viewBox="0 0 100 100"><use href="#flecha"/></svg></span></div>
+    <div class="portada-pie">
+      <p class="chico">Señalética y orientación<br>Santiago, desde 2009</p>
+      <p>Diseñamos cómo se mueve la gente en hospitales, campus y aeropuertos: dónde mirar, qué leer y hacia dónde doblar, para que llegue sin preguntar.</p>
+      <a class="boton" href="#contacto">Cotizar un proyecto<svg aria-hidden="true"><use href="#flecha"/></svg></a>
+    </div>
+  </section>
+
+  <section class="piso" id="metodo" aria-labelledby="metodo-titulo">
+    <div class="ancho doce">
+      <div class="piso-marca"><p class="indicador"><small>Piso</small><b>1</b><svg aria-hidden="true"><use href="#flecha"/></svg></p></div>
+      <div class="piso-cuerpo">
+        <div class="piso-titulo" data-aparece><h2 id="metodo-titulo">El método</h2><p>Cuatro pasos, en este orden. Ningún letrero se dibuja antes de haber recorrido el edificio como lo recorre alguien que llega por primera vez.</p></div>
+        <ol class="letrero" data-aparece style="margin: 0; padding: 0; list-style: none">
+          <li class="tramo"><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><circle cx="30" cy="9" r="4.5"/><path d="M28 16l-6 14 8 6v14M22 30l-6 18M27 20l10 8 7-2M24 22l-8 4-3 8"/></svg><p class="chico">01</p><h3>Recorrer</h3><p>Caminamos el edificio con pacientes, alumnos o pasajeros reales y anotamos dónde dudan.</p><span class="paso" data-sigue><svg aria-hidden="true"><use href="#flecha"/></svg></span></li>
+          <li class="tramo"><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><path d="M8 12h40M8 24h28M8 36h40M8 48h20"/><circle cx="46" cy="24" r="3"/></svg><p class="chico">02</p><h3>Ordenar</h3><p>Ponemos nombre y número a cada lugar y decidimos qué se anuncia en cada cruce.</p><span class="paso" data-sigue style="--orden: 1"><svg aria-hidden="true"><use href="#flecha"/></svg></span></li>
+          <li class="tramo"><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><path d="M10 46l4-12L38 10l8 8-24 24z M34 14l8 8 M10 46l12-4"/></svg><p class="chico">03</p><h3>Dibujar</h3><p>Letreros, pictogramas y mapas, probados a escala real antes de fabricar uno solo.</p><span class="paso" data-sigue style="--orden: 2"><svg aria-hidden="true"><use href="#flecha"/></svg></span></li>
+          <li class="tramo"><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><rect x="8" y="10" width="40" height="22"/><path d="M28 32v16M18 48h20M16 21h20M30 16l6 5-6 5"/></svg><p class="chico">04</p><h3>Instalar</h3><p>Coordinamos la fabricación y la instalación, y volvemos a los tres meses a corregir.</p></li>
+        </ol>
+        <figure class="metodo-foto" data-aparece>
+          <img src="/image/bocetos/rumbo/linea-600.webp" srcset="/image/bocetos/rumbo/linea-600.webp 600w, /image/bocetos/rumbo/linea-1000.webp 1000w" sizes="(min-width: 900px) 52vw, 90vw" width="1000" height="667" loading="lazy" alt="Una línea roja pintada en el piso de un pasillo guía hacia una persona que camina a contraluz">
+          <figcaption>Una línea en el piso hace más que diez letreros: no hay que levantar la vista para seguirla.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="piso" id="proyectos" aria-labelledby="proyectos-titulo">
+    <div class="ancho doce">
+      <div class="piso-marca"><p class="indicador"><small>Piso</small><b>2</b><svg aria-hidden="true"><use href="#flecha"/></svg></p></div>
+      <div class="piso-cuerpo">
+        <div class="piso-titulo" data-aparece><h2 id="proyectos-titulo">Proyectos</h2><p>Tres edificios donde perderse era lo normal. Cada ficha dice cuánto se hizo y en cuánto tiempo.</p></div>
+        <ol class="proyectos">
+          <li class="proyecto" data-aparece>
+            <figure><img src="/image/bocetos/rumbo/hospital-600.webp" srcset="/image/bocetos/rumbo/hospital-600.webp 600w, /image/bocetos/rumbo/hospital-1000.webp 1000w" sizes="(min-width: 900px) 42vw, 90vw" width="1000" height="750" loading="lazy" alt="Un pasillo de hospital blanco y luminoso, con sillas de espera turquesa y letreros en las puertas"></figure>
+            <div class="proyecto-ficha"><p class="chico">2.1 · Salud</p><h3>Hospital regional, Talca</h3><p>Seis pisos, tres accesos y una urgencia que nadie encontraba de noche. Ahora se sigue el color azul desde la calle.</p>
+              <dl><div><dt>Superficie</dt><dd>42.000 m²</dd></div><div><dt>Letreros</dt><dd>1.140</dd></div><div><dt>Plazo</dt><dd>9 meses</dd></div><div><dt>Año</dt><dd>2024</dd></div></dl>
+            </div>
+          </li>
+          <li class="proyecto" data-aparece>
+            <figure><img src="/image/bocetos/rumbo/escalera-600.webp" srcset="/image/bocetos/rumbo/escalera-600.webp 600w, /image/bocetos/rumbo/escalera-1000.webp 1000w" sizes="(min-width: 900px) 42vw, 90vw" width="1000" height="750" loading="lazy" alt="El número 08 en blanco sobre un panel azul, en la pared de una escalera de hormigón"></figure>
+            <div class="proyecto-ficha"><p class="chico">2.2 · Educación</p><h3>Campus universitario, Concepción</h3><p>Dieciocho edificios con nombres de donantes que nadie recordaba. Les dimos una letra y un número a cada uno.</p>
+              <dl><div><dt>Edificios</dt><dd>18</dd></div><div><dt>Letreros</dt><dd>640</dd></div><div><dt>Plazo</dt><dd>7 meses</dd></div><div><dt>Año</dt><dd>2023</dd></div></dl>
+            </div>
+          </li>
+          <li class="proyecto" data-aparece>
+            <figure><img src="/image/bocetos/rumbo/aeropuerto-600.webp" srcset="/image/bocetos/rumbo/aeropuerto-600.webp 600w, /image/bocetos/rumbo/aeropuerto-1000.webp 1000w" sizes="(min-width: 900px) 42vw, 90vw" width="1000" height="750" loading="lazy" alt="Un letrero colgante de salidas con una flecha y un avión, bajo un techo de estructura blanca"></figure>
+            <div class="proyecto-ficha"><p class="chico">2.3 · Transporte</p><h3>Aeropuerto regional, Calama</h3><p>Pasajeros que llegan cansados de la faena, en tres idiomas. Una sola línea de letreros, del avión al taxi.</p>
+              <dl><div><dt>Terminal</dt><dd>14.000 m²</dd></div><div><dt>Idiomas</dt><dd>3</dd></div><div><dt>Plazo</dt><dd>11 meses</dd></div><div><dt>Año</dt><dd>2025</dd></div></dl>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="piso" id="sistema" aria-labelledby="sistema-titulo">
+    <div class="ancho doce">
+      <div class="piso-marca"><p class="indicador"><small>Piso</small><b>3</b><svg aria-hidden="true"><use href="#flecha"/></svg></p></div>
+      <div class="piso-cuerpo">
+        <div class="piso-titulo" data-aparece><h2 id="sistema-titulo">El sistema</h2><p>Cada proyecto termina en un manual: con él, el mantenedor del edificio puede hacer un letrero nuevo en diez años y que se vea igual.</p></div>
+        <div class="manual" data-aparece>
+          <p class="manual-cabeza chico"><span>Manual de señalética · Rumbo</span><span>Pág. 14 de 60</span></p>
+          <div class="manual-cuerpo">
+            <div class="especimen"><p class="chico">Letra · Archivo, dos pesos</p><b aria-hidden="true">Aa</b><p>ABCDEFGHIJKLMNÑOPQRSTUVWXYZ<br>0123456789 · Urgencia · Piso 3</p></div>
+            <ul class="pictos">
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><path d="M6 48h12v-10h10v-10h10v-10h12"/></svg>Escalera</li>
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><rect x="12" y="6" width="32" height="44"/><path d="M22 22l6-7 6 7M22 34l6 7 6-7"/></svg>Ascensor</li>
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><circle cx="17" cy="10" r="4"/><circle cx="39" cy="10" r="4"/><path d="M12 18h10v14h-3v16h-4V32h-3zM34 18h10l4 18h-5v12h-6V36h-5zM28 6v44"/></svg>Baños</li>
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><path d="M8 6h22v44H8z M38 28h14M46 22l6 6-6 6"/><circle cx="24" cy="29" r="1.5"/></svg>Salida</li>
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><path d="M10 24h30v10a12 12 0 0 1-12 12h-6a12 12 0 0 1-12-12z M40 28h4a5 5 0 0 1 0 10h-5M20 8c-3 4 3 6 0 10M30 8c-3 4 3 6 0 10"/></svg>Cafetería</li>
+              <li><svg class="picto" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="22"/><path d="M28 24v16M24 24h4M24 40h8"/><circle cx="28" cy="16" r="1.5"/></svg>Información</li>
+            </ul>
+            <div class="colores">
+              <p class="color" style="background: #111111; color: #ffffff"><b>Negro</b>Dirección. Todo lo que se sigue.</p>
+              <p class="color" style="background: #e3001b; color: #ffffff"><b>Rojo</b>Urgencia y salidas. Nada más.</p>
+              <p class="color" style="background: #ececec"><b>Gris</b>Información que se lee parado.</p>
+              <p class="color" style="background: #ffffff"><b>Blanco</b>Fondo, siempre mate.</p>
+              <img src="/image/bocetos/rumbo/flecha-500.webp" srcset="/image/bocetos/rumbo/flecha-500.webp 500w, /image/bocetos/rumbo/flecha-800.webp 800w" sizes="(min-width: 900px) 14vw, 45vw" width="800" height="800" loading="lazy" alt="Un letrero blanco con una flecha negra hacia la derecha, montado en un muro de piedra oscura">
+              <img src="/image/bocetos/rumbo/dos-500.webp" srcset="/image/bocetos/rumbo/dos-500.webp 500w, /image/bocetos/rumbo/dos-800.webp 800w" sizes="(min-width: 900px) 14vw, 45vw" width="800" height="800" loading="lazy" alt="Un número 2 negro pintado en un muro de hormigón, con un 02 chico en rojo debajo">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="piso" id="clientes" aria-labelledby="clientes-titulo">
+    <div class="ancho doce">
+      <div class="piso-marca"><p class="indicador"><small>Piso</small><b>4</b><svg aria-hidden="true"><use href="#flecha"/></svg></p></div>
+      <div class="piso-cuerpo">
+        <div class="piso-titulo" data-aparece><h2 id="clientes-titulo">Clientes</h2><p>Ciento cuarenta edificios desde 2009. Algunos de los que se pueden contar.</p></div>
+        <ol class="clientes" data-aparece>
+          <li>Un hospital regional en Talca</li>
+          <li>Dos universidades, en Concepción y Valdivia</li>
+          <li>Un aeropuerto regional en Calama</li>
+          <li>La red de clínicas de una mutual de seguridad</li>
+          <li>Tres centros comerciales en Santiago</li>
+          <li>Un parque urbano en Renca</li>
+          <li>Cuatro estaciones de un tren de cercanías</li>
+          <li>El edificio de un ministerio, en el centro</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="piso" id="contacto" aria-labelledby="contacto-titulo">
+    <div class="ancho doce">
+      <div class="piso-marca"><p class="indicador"><small>Piso</small><b>5</b><svg aria-hidden="true"><use href="#flecha"/></svg></p></div>
+      <div class="piso-cuerpo">
+        <div class="piso-titulo" data-aparece><h2 id="contacto-titulo">Contacto</h2><p>Con estos seis datos te devolvemos una propuesta y un plazo en una semana. Si el edificio aún no existe, mejor: llegamos a tiempo.</p></div>
+        <form class="formulario" data-muestra data-aparece toolname="cotizar_senaletica" tooldescription="Pide a Rumbo una propuesta de señalética para un edificio. Rumbo es una empresa inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+          <label class="campo"><span>01</span><b>Tipo de edificio<svg aria-hidden="true"><use href="#flecha"/></svg></b><select name="edificio" toolparamdescription="Qué tipo de edificio es: hospital o clínica, campus o colegio, aeropuerto o estación, oficinas, centro comercial u otro"><option>Hospital o clínica</option><option>Campus o colegio</option><option>Aeropuerto o estación</option><option>Oficinas</option><option>Centro comercial</option><option>Otro</option></select></label>
+          <label class="campo"><span>02</span><b>Superficie, en m²<svg aria-hidden="true"><use href="#flecha"/></svg></b><input type="number" name="superficie" min="100" max="500000" inputmode="numeric" toolparamdescription="Superficie del edificio, en metros cuadrados"></label>
+          <label class="campo"><span>03</span><b>Pisos<svg aria-hidden="true"><use href="#flecha"/></svg></b><input type="number" name="pisos" min="1" max="80" inputmode="numeric" toolparamdescription="Cuántos pisos tiene, contando los subterráneos"></label>
+          <label class="campo"><span>04</span><b>Plazo<svg aria-hidden="true"><use href="#flecha"/></svg></b><select name="plazo" toolparamdescription="Para cuándo lo necesita: menos de 3 meses, de 3 a 6 meses, más de 6 meses, o el edificio aún está en diseño"><option>Menos de 3 meses</option><option>De 3 a 6 meses</option><option>Más de 6 meses</option><option>El edificio aún está en diseño</option></select></label>
+          <label class="campo"><span>05</span><b>Nombre<svg aria-hidden="true"><use href="#flecha"/></svg></b><input name="nombre" autocomplete="name" maxlength="80" required></label>
+          <label class="campo"><span>06</span><b>Correo<svg aria-hidden="true"><use href="#flecha"/></svg></b><input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+          <div class="formulario-pie"><button class="boton" type="submit">Pedir propuesta<svg aria-hidden="true"><use href="#flecha"/></svg></button></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho doce">
+    <a class="salida" href="#inicio"><span><svg aria-hidden="true"><use href="#flecha"/></svg></span>Volver al inicio</a>
+    <div class="pie-datos">
+      <p><b>Estudio</b>Av. Italia 1350, Providencia, Santiago</p>
+      <p><b>Correo</b>proyectos@rumbo.cl</p>
+      <p><b>Rumbo</b>Boceto de Volutus · marca inventada</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
