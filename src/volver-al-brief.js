@@ -3,9 +3,9 @@
 // que quedó. Sale una vez por salida: brief.js marca la pestaña al irse y aquí
 // se consume, así que no persigue a nadie de página en página.
 //
-// Se arma aquí y no viene en el HTML: el brief no se enlaza desde el sitio
-// (lib/meta.js), y un enlace escondido en cada página se lo mostraría a los
-// buscadores y a los agentes. Los textos son fijos; de lo guardado solo se
+// Se arma aquí y no viene en el HTML: el brief solo se enlaza desde la página
+// de desarrollo web (lib/meta.js), y un enlace escondido en cada página se lo
+// mostraría a los buscadores y a los agentes. Los textos son fijos; de lo guardado solo se
 // toma el paso, y solo si tiene la forma de uno.
 
 import { almacen, sesion } from './lib/almacen.js'
@@ -38,7 +38,7 @@ export default function initVolverAlBrief() {
   aviso.className = 'volver-brief'
   aviso.setAttribute('aria-labelledby', 'volver-brief-titulo')
   aviso.innerHTML = AVISO
-  aviso.querySelector('a').href = PANTALLA.test(paso) ? `/brief#${paso}` : '/brief'
+  aviso.querySelector('a').href = PANTALLA.test(paso) ? `/brief-web#${paso}` : '/brief-web'
   aviso.querySelector('button').addEventListener('click', () => aviso.remove())
 
   // Después del enlace de salto, que sigue siendo lo primero al tabular.

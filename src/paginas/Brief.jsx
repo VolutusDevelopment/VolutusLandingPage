@@ -6,13 +6,13 @@ import { BRIEF as brief } from '../lib/brief/preguntas.js'
 import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
 
 /**
- * El brief para clientes (/brief): el cuestionario de marca y sitio web que
+ * El brief para clientes (/brief-web): el cuestionario de marca y sitio web que
  * Volutus le manda a un cliente por link. No se enlaza desde el sitio ni se
  * indexa (lib/meta.js). Las preguntas viven en lib/brief/preguntas.js.
  *
- * El protagonista es el formulario: la página es blanca, la portada es solo
- * el título y sus datos, y lo propio está en el formulario. Las partes se
- * reparten en dos áreas, Marca y Diseño, cada una con su color y su figura
+ * El protagonista es el formulario: la página es blanca y empieza por él. El
+ * nombre del brief es el `h1`, en una línea sobre el título del recorrido,
+ * que es el que manda y dice para qué es. Las partes se reparten en dos áreas, Marca y Diseño, cada una con su color y su figura
  * de puntos (círculo y cuadrado, como los puntos de la ola). El índice las
  * agrupa en dos cuadros con el nombre del área en el lomo.
  *
@@ -142,22 +142,10 @@ export default function Brief() {
   const anclaDe = (i) => (i < 0 ? '#inicio' : i >= total ? '#revisar' : `#paso-${i + 1}`)
   const numero = (i) => String(i + 1).padStart(2, '0')
   const pasosDe = (area) => pasos.map((paso, i) => [paso, i]).filter(([paso]) => paso.area === area)
+  const [antesDelAcento, despuesDelAcento] = intro.titulo.split(intro.acento)
 
   return (
     <Pagina className="brief-pagina" pieDeDia>
-      <section className="seccion zona-cielo brief-portada" aria-labelledby="brief-titulo">
-        <div className="contenedor brief-contenedor">
-          <p className="antetitulo">{brief.antetitulo}</p>
-          <h1 id="brief-titulo">{brief.nombre}</h1>
-          <ul className="brief-portada-datos">
-            {intro.datos.map(([dato]) => (
-              <li key={dato}>{dato}</li>
-            ))}
-            <li>Se guarda solo</li>
-          </ul>
-        </div>
-      </section>
-
       <section className="seccion zona-cielo brief-seccion" aria-label="El formulario">
         <div className="contenedor brief-contenedor">
           {/* Lo que dice brief.js al recuperar respuestas guardadas. */}
@@ -234,32 +222,22 @@ export default function Brief() {
             <div className="brief-pantallas">
               <section id="inicio" className="brief-pantalla" aria-labelledby="inicio-titulo">
                 <header className="brief-pantalla-cabeza">
-                  <p className="brief-pantalla-dato">El recorrido</p>
+                  <h1 className="brief-nombre">Volutus · {brief.nombre}</h1>
                   <h2 id="inicio-titulo" className="titular" tabIndex={-1}>
-                    {intro.titulo}
+                    {antesDelAcento}
+                    <span className="brief-acento brief-area-marca">{intro.acento}</span>
+                    {despuesDelAcento}
                   </h2>
                   <p className="brief-pantalla-entrada">{intro.texto}</p>
                 </header>
-                {AREAS.map((area) => (
-                  <div key={area.id} className={`brief-recorrido-area brief-area-${area.id}`}>
-                    <p className="brief-recorrido-titulo">
-                      <Figura area={area.id} />
-                      {area.nombre}
-                    </p>
-                    <ol className="brief-recorrido">
-                      {pasosDe(area.id).map(([paso, i]) => (
-                        <li key={paso.corto}>
-                          <a href={anclaDe(i)}>
-                            <span className="brief-recorrido-n">{numero(i)}</span>
-                            <span className="brief-recorrido-nombre">{paso.corto}</span>
-                            <span className="brief-recorrido-resumen">{paso.resumen}</span>
-                            <span className="brief-recorrido-tiempo">{paso.tiempo}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
+                <dl className="brief-datos">
+                  {intro.datos.map(([dato, detalle]) => (
+                    <div key={dato}>
+                      <dt>{dato}</dt>
+                      <dd>{detalle}</dd>
+                    </div>
+                  ))}
+                </dl>
                 <p className="brief-empezar">
                   <a className="boton boton-primario brief-siguiente" href="#paso-1" data-comenzar>
                     Empezar por la parte 1<span aria-hidden="true">→</span>

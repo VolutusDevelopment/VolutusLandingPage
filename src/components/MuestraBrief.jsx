@@ -10,7 +10,7 @@
  * al marcarse toman sus colores y su letra y, en vez del ✓, su logotipo.
  *
  * Los dibujos y sus letras viven en public/brief/muestras.css, que solo baja
- * /brief: el CSS del sitio va dentro de cada página y esto no le sirve a
+ * /brief-web: el CSS del sitio va dentro de cada página y esto no le sirve a
  * ninguna otra.
  */
 

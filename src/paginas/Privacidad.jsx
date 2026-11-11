@@ -19,7 +19,7 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * **Describe lo que el sitio hace de verdad, no lo que suele decir una
  * política.** Volutus no vende por la web, no tiene cuentas, no perfila y no
  * mide nada: el único dato personal que entra es el del formulario, y la IP con
- * que Cloudflare frena a los robots. El brief para clientes (/brief), que se
+ * que Cloudflare frena a los robots. El brief para clientes (/brief-web), que se
  * manda por link, suma lo que identifica el envío y el logo que se sube, que
  * llega adjunto (worker/brief.js). En el
  * navegador se guardan el modo desbloqueado del juego de los patos

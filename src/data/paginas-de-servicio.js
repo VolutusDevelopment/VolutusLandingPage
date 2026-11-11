@@ -26,6 +26,8 @@
  *   más valiosa: «¿qué tengo que entregarles yo?».
  * - `preguntas`: en texto plano, porque también van a los datos estructurados
  *   (FAQPage) del prerender. La primera va abierta.
+ * - `proyecto`: adónde lleva «Cuéntanos tu proyecto» de la cabecera, si no es
+ *   al formulario del final. El de la web lleva a su brief (paginas/Brief.jsx).
  */
 
 // La respuesta al precio es la misma en todos: lleva al estimado de la página
@@ -61,6 +63,7 @@ export const PAGINAS_DE_SERVICIO = {
     tipo: 'Desarrollo web',
     titular: 'Páginas web rápidas de verdad',
     entradilla: 'Rápidas en el celular, fáciles de encontrar en Google y con tu marca.',
+    proyecto: '/brief-web',
     // Lo que se ve, sobre la onda, y lo que no, debajo. `icono` es el dibujo
     // de cada punto en S y M (Web.jsx).
     incluye: [

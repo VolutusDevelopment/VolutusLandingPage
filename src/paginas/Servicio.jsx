@@ -86,7 +86,7 @@ export default function Servicio({ ruta }) {
                   desde <strong>{numero(precio)} UF</strong>
                 </span>
               </a>
-              <a className="boton boton-secundario" href="#contacto">
+              <a className="boton boton-secundario" href={pagina.proyecto ?? '#contacto'}>
                 Cuéntanos tu proyecto
               </a>
             </p>

@@ -96,34 +96,9 @@ html:has(.brief-pagina) {
   stroke-dasharray: 0 6.2;
 }
 
-/* ---- La portada: el título y sus datos, y el formulario enseguida ---- */
-.brief-portada {
-  padding-block: var(--e-12) var(--e-6);
-}
-
-.brief-portada h1 {
-  font-size: clamp(34px, 5vw, 60px);
-}
-
-.brief-portada-datos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-1) var(--e-4);
-  margin: var(--e-4) 0 0;
-  padding: 0;
-  list-style: none;
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
-  color: var(--texto-suave);
-}
-
-.brief-portada-datos li + li::before {
-  content: '·';
-  margin-right: var(--e-4);
-}
-
-.brief-portada + .brief-seccion {
-  padding-top: var(--e-6);
+/* La página empieza por el formulario, a la distancia de la barra. */
+.brief-seccion {
+  padding-top: var(--e-12);
 }
 
 @media (min-width: 1024px) {
@@ -159,9 +134,20 @@ html:has(.brief-pagina) {
     display: block;
   }
 
-  /* En las partes y la revisión el formulario va solo: sin la portada ni el
-     pie, que vuelven en el recorrido y al enviar (el formulario se esconde). */
-  html:has(.brief:not([hidden]) .brief-pantalla:target:not(#inicio)) :is(.brief-portada, .brief-pagina + .caida) {
+  /* En las partes y la revisión el formulario va solo, sin el pie, que vuelve
+     en el recorrido y al enviar (el formulario se esconde). */
+  html:has(.brief:not([hidden]) .brief-pantalla:target:not(#inicio)) .brief-pagina + .caida {
+    display: none;
+  }
+
+  /* El inicio va sin guía: el índice y la barra son de las partes. Sin ella
+     toma todo el ancho, y en S y M no deja abajo el hueco de la píldora. */
+  .brief:not(:has(.brief-pantalla:target:not(#inicio))) {
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 0;
+  }
+
+  .brief:not(:has(.brief-pantalla:target:not(#inicio))) .brief-guia {
     display: none;
   }
 }
@@ -553,87 +539,105 @@ html:has(.brief-pagina) {
   border-style: dashed;
 }
 
-/* ---- El recorrido ---- */
-.brief-recorrido-area + .brief-recorrido-area {
-  margin-top: var(--e-8);
-}
-
-.brief-recorrido-titulo {
-  display: flex;
-  align-items: center;
-  gap: var(--e-2);
-  margin-bottom: var(--e-3);
+/* ---- El inicio ----
+ * El título manda: grande, con lo que se hace (la página web) en el azul de
+ * Marca. Encima, el nombre del brief en una línea; debajo, lo que toma, en
+ * cuántas partes y qué es obligatorio, en una franja de puntos como los
+ * bordes del formulario, y el botón para empezar. */
+.brief-nombre {
+  margin: 0 0 var(--e-2);
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
+  font-style: normal;
+  font-weight: 400;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+
+#inicio .brief-pantalla-cabeza {
+  margin-bottom: var(--e-12);
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+#inicio h2 {
+  max-width: 14ch;
+  margin-bottom: var(--e-6);
+  font-size: clamp(46px, 8vw, 108px);
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.brief-acento {
   color: var(--area);
 }
 
-.brief-recorrido-titulo .brief-figura {
-  width: 18px;
-  height: 18px;
-}
-
-.brief-recorrido {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-  gap: var(--e-3);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.brief-recorrido a {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr auto;
-  column-gap: var(--e-4);
-  height: 100%;
-  padding: var(--e-4);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio-tarjeta);
-  background: var(--superficie);
+#inicio .brief-pantalla-entrada {
+  max-width: 54ch;
+  font-size: clamp(19px, 1.5vw, var(--texto-lg));
   color: var(--texto);
-  text-decoration: none;
-  transition:
-    border-color 180ms var(--ease-out),
-    transform 180ms var(--ease-out);
 }
 
-.brief-recorrido a:hover {
-  border-color: var(--area);
+.brief-datos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-block: 2px dotted var(--linea);
 }
 
-.brief-recorrido-n {
-  grid-row: span 3;
-  font-family: 'Archivo', 'Archivo respaldo', sans-serif;
-  font-size: 34px;
-  font-style: italic;
+.brief-datos > div {
+  padding: var(--e-6) var(--e-6) var(--e-6) 0;
+}
+
+.brief-datos > div + div {
+  padding-left: var(--e-6);
+  border-left: 2px dotted var(--linea);
+}
+
+.brief-datos dt {
+  font-size: clamp(24px, 2.2vw, 30px);
   font-weight: 800;
-  line-height: 1;
-  color: var(--area);
+  line-height: 1.15;
 }
 
-.brief-recorrido-nombre {
-  font-weight: 800;
-}
-
-.brief-recorrido-resumen {
-  font-size: var(--texto-sm);
+.brief-datos dd {
+  margin: var(--e-1) 0 0;
   color: var(--texto-suave);
 }
 
-.brief-recorrido-tiempo {
-  margin-top: var(--e-2);
-  font-family: var(--fuente-datos);
-  font-size: var(--texto-xs);
-  color: var(--texto-suave);
+@media (max-width: 767px) {
+  .brief-datos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brief-datos > div {
+    padding: var(--e-4) 0;
+  }
+
+  .brief-datos > div + div {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 2px dotted var(--linea);
+  }
 }
 
 .brief-empezar {
   max-width: none;
   margin-top: var(--e-12);
+}
+
+.brief-empezar .boton {
+  min-height: 58px;
+  padding-inline: var(--e-8);
+  font-size: 19px;
+}
+
+@media (max-width: 559px) {
+  .brief-empezar .boton {
+    width: 100%;
+  }
 }
 
 /* ---- Las preguntas ----
@@ -974,8 +978,7 @@ html:has(.brief-pagina) {
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .brief-tarjeta:hover,
-  .brief-recorrido a:hover {
+  .brief-tarjeta:hover {
     transform: translateY(-2px);
   }
 }

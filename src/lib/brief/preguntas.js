@@ -73,11 +73,13 @@ const conMockup = (...preguntas) => ({ tipo: 'mockup', preguntas })
 
 export const BRIEF = {
   nombre: 'Brief de marca y sitio',
-  antetitulo: 'Volutus · Marca y sitio web',
   intro: {
     texto:
-      'Antes del logo y de la primera pantalla, tu negocio. Estas preguntas nos ayudan a decidir contigo quién eres, a quién le hablas, qué prometes y cómo debe verse tu marca. No hay respuestas correctas, solo honestas: si dudas entre dos opciones, marca las dos.',
-    titulo: 'Antes del logo, tu negocio',
+      'Estas preguntas nos ayudan a decidir contigo quién eres, a quién le hablas, qué prometes y cómo debe verse tu marca. No hay respuestas correctas, solo honestas: si dudas entre dos opciones, marca las dos.',
+    // El título dice para qué es el brief, y `acento` (parte del título) va
+    // en el color de Marca.
+    titulo: 'Tu página web empieza por tu negocio',
+    acento: 'página web',
     datos: [
       ['35 a 45 min', 'Puedes hacerlo en partes: se guarda solo en este equipo.'],
       ['9 partes', 'De lo invisible (estrategia) a lo visible (logo, sitio y plazos).'],
@@ -91,7 +93,6 @@ export const BRIEF = {
     {
       corto: 'Tú y tu negocio',
       area: 'marca',
-      resumen: 'Contacto, rubro y punto de partida',
       tiempo: '≈ 4 min',
       titulo: 'Tú y tu negocio',
       entrada: 'Lo básico para conocerte y saber desde dónde partimos.',
@@ -165,7 +166,6 @@ export const BRIEF = {
     {
       corto: 'Dónde estás hoy',
       area: 'marca',
-      resumen: 'Fortalezas, debilidades y entorno',
       tiempo: '≈ 5 min',
       titulo: 'Dónde estás parado hoy',
       entrada: 'Escribe puntos concretos y verificables, no adjetivos sueltos.',
@@ -193,7 +193,6 @@ export const BRIEF = {
     {
       corto: 'Cliente y competencia',
       area: 'marca',
-      resumen: 'Quién compra, qué le duele y con quién te compara',
       tiempo: '≈ 8 min',
       titulo: 'Tu cliente y tu competencia',
       entrada:
@@ -298,7 +297,6 @@ export const BRIEF = {
     {
       corto: 'Promesa y esencia',
       area: 'marca',
-      resumen: 'Por qué tú, tu propósito, tus valores y tu personalidad',
       tiempo: '≈ 7 min',
       titulo: 'Lo que prometes y lo que eres',
       entrada:
@@ -393,7 +391,6 @@ export const BRIEF = {
     {
       corto: 'Nombre y voz',
       area: 'marca',
-      resumen: 'Cómo te llamas y cómo hablas',
       tiempo: '≈ 4 min',
       titulo: 'Nombre y voz',
       entrada:
@@ -440,7 +437,6 @@ export const BRIEF = {
     {
       corto: 'Qué debe lograr el sitio',
       area: 'diseno',
-      resumen: 'La acción principal y la primera impresión',
       tiempo: '≈ 3 min',
       titulo: 'Qué debe lograr tu sitio',
       entrada: 'Un sitio no es una vitrina: es una herramienta para que alguien haga algo. Empecemos por ahí.',
@@ -503,7 +499,6 @@ export const BRIEF = {
     {
       corto: 'Cómo se ve',
       area: 'diseno',
-      resumen: 'Personalidad visual, estilo, logo, color y letra',
       tiempo: '≈ 7 min',
       titulo: 'Cómo se ve',
       entrada:
@@ -643,7 +638,6 @@ export const BRIEF = {
     {
       corto: 'Imágenes y estructura',
       area: 'diseno',
-      resumen: 'Fotos, movimiento, páginas y bloques',
       tiempo: '≈ 5 min',
       titulo: 'Imágenes y estructura',
       entrada:
@@ -750,7 +744,6 @@ export const BRIEF = {
     {
       corto: 'Lo práctico',
       area: 'diseno',
-      resumen: 'Textos, funciones, piezas, dominio y plazos',
       tiempo: '≈ 4 min',
       titulo: 'Lo práctico',
       entrada: 'Quién pone qué, qué tiene que poder hacer el sitio, qué piezas necesitas para salir al mercado y para cuándo.',

@@ -26,9 +26,9 @@ Las páginas son `/`, `/nosotros`, `/privacidad`, `/ley21719` (la Ley 21.719
 explicada para un negocio), las de error —la 404 y la de los 5xx, en `/500`— y
 `/patos`, el juego al que lleva el pato que sale a nadar en el mar del pie al
 minuto de visita. `/404` y `/500` llevan `noindex`; `/patos` es indexable y
-aparece en el sitemap. `/brief` es el brief de marca y sitio web que Volutus
-le manda por link a un cliente: lleva `noindex`, no va al sitemap ni se enlaza
-desde el sitio. En las páginas de error el juego se carga al pulsar
+aparece en el sitemap. `/brief-web` es el brief de marca y sitio web que Volutus
+le manda por link a un cliente y al que lleva «Cuéntanos tu proyecto» en la
+página de desarrollo web: lleva `noindex` y no va al sitemap. En las páginas de error el juego se carga al pulsar
 «Jugar»; en `/patos` comienza automáticamente. La portada se compone de
 Portada, Servicios, Proyectos y Contacto; no tiene sección de métricas. Agregar
 una página es una entrada en `PAGINAS` (meta.js) y otra en `COMPONENTES`
@@ -155,7 +155,7 @@ public/
 - Meta description, canonical, Open Graph, Twitter Card y JSON-LD por página,
   desde [src/lib/meta.js](src/lib/meta.js): cada servicio es un `Service` con
   su `FAQPage`, y cada artículo un `Article` con su `BreadcrumbList`.
-- `sitemap.xml` contiene las páginas indexables; `/404`, `/500` y `/brief` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
+- `sitemap.xml` contiene las páginas indexables; `/404`, `/500` y `/brief-web` llevan `noindex`, mientras que `/patos` es indexable y aparece en el sitemap.
   Cada URL lleva `<lastmod>` desde `actualizada` en meta.js: hay que moverla
   al cambiar el contenido de la página.
 - `robots.txt` deja leer, citar y entrenar a buscadores y agentes de IA

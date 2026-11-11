@@ -4,7 +4,7 @@
  * portada de muestra que siguen las escalas, que encajan de a una.
  *
  * Va aparte del CSS del sitio, que entra en cada página: esto solo lo usa
- * /brief. Sus fuentes están recortadas a las letras del español (pocos KB
+ * /brief-web. Sus fuentes están recortadas a las letras del español (pocos KB
  * cada una) y el navegador las baja recién cuando la parte se muestra.
  *
  * Al pasar el cursor (o con el foco) cada muestra se mueve; al marcarla (al
@@ -702,7 +702,6 @@
    no la parte entera: una parada más alta que la pantalla deja parar en
    cualquier punto de ella, y con la flecha Chrome saltaba al final de la
    página. */
-.brief-portada,
 .brief-pantalla-escalas > .brief-pantalla-cabeza {
   scroll-snap-align: start;
 }

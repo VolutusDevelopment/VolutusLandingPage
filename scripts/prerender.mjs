@@ -538,6 +538,9 @@ traslados.push(
   '/articulos/ia-en-la-formula-1 /opiniones/ia-en-la-formula-1 301',
   '/articulos/lo-que-la-ia-cambia /opiniones/ia-en-la-formula-1 301'
 )
+// El brief para clientes se llamaba /brief: el link que ya se mandó sigue
+// llegando al formulario.
+traslados.push('/brief /brief-web 301')
 // La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
 // a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
 // `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare

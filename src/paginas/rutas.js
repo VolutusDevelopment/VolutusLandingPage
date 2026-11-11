@@ -77,7 +77,7 @@ export const COMPONENTES = {
   ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,
   '/ley21719': Ley21719,
-  '/brief': Brief,
+  '/brief-web': Brief,
   '/404': NoEncontrada,
   '/500': ErrorDelServidor,
   '/patos': CazaDePatos,
