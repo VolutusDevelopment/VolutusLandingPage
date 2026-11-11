@@ -158,6 +158,12 @@ html:has(.brief-pagina) {
   .brief:not(:has(.brief-pantalla:target)) #inicio {
     display: block;
   }
+
+  /* En las partes y la revisión el formulario va solo: sin la portada ni el
+     pie, que vuelven en el recorrido y al enviar (el formulario se esconde). */
+  html:has(.brief:not([hidden]) .brief-pantalla:target:not(#inicio)) :is(.brief-portada, .brief-pagina + .caida) {
+    display: none;
+  }
 }
 
 .brief-pantalla + .brief-pantalla {
@@ -1804,4 +1810,82 @@ html:has(.brief-pagina) {
 
 .brief-enviado-texto {
   font-size: var(--texto-lg);
+}
+
+/* ---- «¿Quieres volver?», en el resto del sitio (volver-al-brief.js) ----
+ *
+ * Fijo abajo y al centro, como el aviso del contacto, con su misma tarjeta
+ * clara sobre cualquier página. Mide menos del 90 % del ancho: más ancho,
+ * Safari en iOS lo tomaría por una barra y pintaría de su color la franja de
+ * abajo (Barra.css). Entra subiendo; con el movimiento reducido, aparece. */
+.volver-brief {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(var(--e-6) + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--e-2);
+  width: min(26rem, 100% - 2 * var(--e-6));
+  margin-inline: auto;
+  padding: var(--e-3) var(--e-2) var(--e-3) var(--e-4);
+  line-height: 1.4;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .volver-brief {
+    animation: volver-brief-sube 320ms var(--ease-out) both;
+  }
+}
+
+@keyframes volver-brief-sube {
+  from {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--e-6)));
+  }
+}
+
+.volver-brief-titulo {
+  margin: 0;
+  font-weight: 600;
+}
+
+.volver-brief-texto {
+  grid-column: 1;
+  margin: 0;
+  font-size: var(--texto-sm);
+  color: var(--texto-suave);
+}
+
+/* El ✕ al lado del título; el enlace, abajo, con su alto de toque. */
+.volver-brief-cerrar {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  color: inherit;
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-sm);
+  font-style: normal;
+}
+
+.volver-brief-ir {
+  grid-column: 1 / -1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1);
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--accion);
+  text-decoration: none;
+}
+
+.volver-brief-ir:hover {
+  text-decoration: underline;
 }

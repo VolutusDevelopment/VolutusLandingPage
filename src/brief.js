@@ -23,9 +23,12 @@
 // Las preguntas no están aquí: se leen del formulario, con el `data-etiqueta`
 // de cada control.
 
+import { almacen, sesion } from './lib/almacen.js'
 import { CORREO_VALIDO, NOMBRE_VALIDO } from './lib/contacto.js'
 import {
   CLAVE_BOCETOS,
+  CLAVE_BRIEF,
+  CLAVE_VISITA,
   ERRORES_BRIEF,
   LIMITES_BRIEF,
   REACCIONES,
@@ -46,39 +49,8 @@ const NO_SE_GUARDA = new Set(['hp_campo', 'cf-turnstile-response', 'dispositivo'
 
 const CLAVE_DEL_DISPOSITIVO = 'volutus:dispositivo'
 
-// Las respuestas guardadas. Si las preguntas cambian de forma, sube la versión
-// y lo guardado antes se ignora en vez de rellenar campos equivocados.
-const CLAVE = 'volutus:brief:v2'
-
 const FALLO =
   'No pudimos enviar tu brief. Tus respuestas siguen guardadas en este equipo: reintenta en un momento, o cópialas y mándalas por correo.'
-
-// El almacenamiento del navegador puede no estar (modo privado, cookies
-// bloqueadas): nada de esto debe romper el formulario.
-const almacen = {
-  leer(clave) {
-    try {
-      return localStorage.getItem(clave)
-    } catch {
-      return null
-    }
-  },
-  escribir(clave, valor) {
-    try {
-      localStorage.setItem(clave, valor)
-      return true
-    } catch {
-      return false
-    }
-  },
-  borrar(clave) {
-    try {
-      localStorage.removeItem(clave)
-    } catch {
-      // Sin almacenamiento no hay nada que borrar.
-    }
-  },
-}
 
 const nuevo = (etiqueta, clase, texto) => {
   const elemento = document.createElement(etiqueta)
@@ -138,7 +110,7 @@ function respuestaDe(contenedor) {
 }
 
 export default function iniciarBrief(form) {
-  const clave = CLAVE
+  const clave = CLAVE_BRIEF
   const pantallas = [...form.querySelectorAll('.brief-pantalla')]
   const pasos = pantallas.filter(({ id }) => id.startsWith('paso-'))
   const indice = [...form.querySelectorAll('.brief-indice a')]
@@ -209,8 +181,18 @@ export default function iniciarBrief(form) {
     espera = setTimeout(guardar, 300)
   }
 
+  // «Retomaste…» sale al volver en otra visita, no en cada recarga ni al
+  // regresar desde otra página del sitio en la misma pestaña. Al irse, la
+  // pestaña recuerda que dejó el brief, y la página a la que llega ofrece
+  // volver (volver-al-brief.js).
+  const otraVisita = !sesion.leer(CLAVE_VISITA)
+  sesion.escribir(CLAVE_VISITA, 'abierto')
+
   // Al cerrar o esconder la pestaña no se espera: es la última oportunidad.
-  addEventListener('pagehide', () => pendiente && guardar())
+  addEventListener('pagehide', () => {
+    if (pendiente) guardar()
+    sesion.escribir(CLAVE_VISITA, 'dejado')
+  })
   document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && pendiente && guardar())
 
   function rellenar(todas) {
@@ -765,8 +747,10 @@ export default function iniciarBrief(form) {
   })
 
   // El paso en que va también se guarda, pero solo si ya escribió algo: abrir
-  // el link y mirar no deja nada en el equipo.
+  // el link y mirar no deja nada en el equipo. «Retomaste…» es del recorrido:
+  // al moverse, se va.
   addEventListener('hashchange', () => {
+    aviso.hidden = true
     mostrar(true)
     if (pendiente || almacen.leer(clave)) guardar()
   })
@@ -781,7 +765,7 @@ export default function iniciarBrief(form) {
       boton.href = `#${paso}`
       boton.firstChild.textContent = 'Continuar donde quedé'
     })
-    mostrarAviso(`Retomaste las respuestas que dejaste el ${fechaLegible(guardado.fecha)}.`)
+    if (otraVisita) mostrarAviso(`Retomaste las respuestas que dejaste el ${fechaLegible(guardado.fecha)}.`)
   }
   traerBocetos()
   montarVisor(form)

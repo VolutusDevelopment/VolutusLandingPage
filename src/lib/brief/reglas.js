@@ -88,6 +88,15 @@ export const REACCIONES = [
 // pestaña.
 export const CLAVE_BOCETOS = 'volutus:brief:bocetos'
 
+// Las respuestas guardadas (brief.js), que también lee el aviso para volver
+// (volver-al-brief.js). Si las preguntas cambian de forma, sube la versión y
+// lo guardado antes se ignora en vez de rellenar campos equivocados.
+export const CLAVE_BRIEF = 'volutus:brief:v2'
+
+// Lo que sabe la pestaña del brief: que ya lo abrió en esta visita, que lo
+// dejó por otra página del sitio o que esa página ya le ofreció volver.
+export const CLAVE_VISITA = 'volutus:brief:visita'
+
 // ---- El logo que se sube (pregunta `archivo`) ----
 
 // Hasta 5 MB, en los formatos con que se trabaja una marca. `aceptados` es lo
