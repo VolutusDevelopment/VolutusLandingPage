@@ -20,16 +20,16 @@ const b = (slug, nombre, rubro, estilo, titulo, detalle, fondo) => ({ slug, nomb
 export const BOCETOS = [
   b('alba', 'Alba Interiores', 'Estudio de interiorismo', 'minimalista', 'Minimalista', 'Poco, preciso, mucho aire', '#fafaf8'),
   b('cauce', 'Cauce', 'Telemetría de riego para viñas y huertos', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#f3f4f1'),
-  b('roble', 'Roble & Asociados', 'Estudio contable y tributario', 'corporativo', 'Corporativo', 'Estructura, respaldo, orden', '#f3f6fa'),
-  b('marea', 'Marea', 'Viajes por la costa chilena', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
+  b('basal', 'Basal Ingeniería', 'Aislación sísmica y cálculo estructural', 'corporativo', 'Corporativo', 'Estructura, respaldo, orden', '#ffffff'),
+  b('ladera', 'Viña Ladera', 'Vinos de secano del Itata', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
   b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#f6e4d0'),
   b('onix', 'Ónix', 'Joyería contemporánea de autor', 'premium', 'Premium', 'Oscuro, dorado, exclusivo', '#0b0a09'),
   b('golpe', 'Golpe', 'Club de boxeo', 'audaz', 'Audaz', 'Contraste, letras enormes', '#0d0d0d'),
-  b('pinpon', 'Pinpón', 'Heladería de barrio', 'ludico', 'Lúdico', 'Color, formas, humor', '#ffe0ea'),
+  b('pelusa', 'Pelusa', 'Guardería y peluquería de perros', 'ludico', 'Lúdico', 'Color, formas, humor', '#fff6e6'),
   b('bloque', 'Bloque', 'Galería de arte independiente', 'brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir', '#d9d9d4'),
-  b('disco', 'Disco Sur', 'Tienda de vinilos', 'retro', 'Retro', 'Nostalgia de los 70', '#f3e1bf'),
+  b('lucero', 'Pista Lucero', 'Pista de patinaje y disco', 'retro', 'Retro', 'Nostalgia de los 70', '#24140c'),
   b('grilla', 'Grilla', 'Escuela de diseño gráfico', 'suizo', 'Suizo / gráfico', 'Grilla, rojo, tipografía', '#ffffff'),
-  b('raiz', 'Raíz', 'Vivero y paisajismo', 'natural', 'Natural', 'Formas orgánicas, tonos de tierra', '#e9ecdf'),
+  b('quillay', 'Quillay', 'Jabones de plantas nativas', 'natural', 'Natural', 'Formas orgánicas, tonos de tierra', '#f0eadb'),
   b('helio', 'Helio', 'Energía solar para casas', 'futurista', 'Futurista', 'Degradados, vidrio, luz', '#0b0c1e'),
   b('bruma', 'Bruma', 'Café de especialidad y tostaduría', 'artesanal', 'Artesanal', 'Papel, sellos, a mano', '#e9dcc4'),
   b('kiri', 'Kiri', 'Termas y ryokan junto al volcán Osorno', 'zen', 'Zen / japonés', 'Silencio, aire, calma', '#efeae0'),
@@ -41,7 +41,7 @@ export const BOCETOS = [
   b('telar', 'Telar', 'Textiles de alpaca del norte', 'andino', 'Andino / folclórico', 'Grecas, tejidos, colores de la tierra', '#b5442b'),
   b('valdes', 'Imprenta Valdés', 'Invitaciones y papelería fina', 'letterpress', 'Letterpress', 'Papel grueso, tinta hundida', '#f4efe6'),
   b('ruido', 'Ruido', 'Sello de música independiente', 'collage', 'Collage / zine', 'Recortes, fotocopia, cinta', '#e6e3dc'),
-  b('andes', 'Andes Dental', 'Clínica dental', 'clinico', 'Clínico / limpio', 'Blanco, claro, confiable', '#ffffff'),
+  b('iris', 'Iris Centro Visual', 'Oftalmología y óptica', 'clinico', 'Clínico / limpio', 'Blanco, claro, confiable', '#ffffff'),
 ]
 
 // Dónde vive cada boceto. Con `.html`: así abre igual en `vite` (que sirve

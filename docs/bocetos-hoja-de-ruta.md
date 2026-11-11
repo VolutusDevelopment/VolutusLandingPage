@@ -10,7 +10,7 @@
 
 El brief muestra 24 direcciones de estilo ([src/lib/brief/bocetos.js](../src/lib/brief/bocetos.js)). Cada una tiene una tarjeta en el brief y un boceto: la landing page entera de una marca inventada, en `public/brief/bocetos/<slug>.html`, para que el cliente vea el estilo puesto en una página real y lo califique.
 
-Hoy hay 6 bocetos (Alba, Cauce, Rosa, Ónix, Golpe y Kiri) y los otros 18 dan 404. Nodo y Kōen, los que reemplazaron Cauce y Kiri, siguen en `public/` hasta que se borren (ver la bitácora). Salvo las de Cauce y Kiri, las tarjetas dibujan cada estilo con un arte genérico que no se parece a su boceto.
+Al escribirse había 6 bocetos (Alba, Nodo, Rosa, Ónix, Golpe y Kōen) y los otros 18 daban 404. Las tarjetas dibujaban cada estilo con un arte genérico («$ ./tu-marca --deploy») que no se parecía a su boceto. El avance está en la [tabla de estado](#tabla-de-estado). Nodo y Kōen, ya reemplazados por Cauce y Kiri, siguen en `public/` hasta que se borren (ver la bitácora).
 
 El trabajo termina cuando:
 
@@ -32,18 +32,18 @@ El usuario prefiere revisar rápido sobre lo real: se entrega apenas la tanda fu
 
 ## Tabla de estado
 
-Estados: **pendiente**, **hecho** (listo para revisar) y **aprobado** (el usuario lo vio y quedó).
+Estados: **pendiente**, **hecho** (listo para revisar), **segunda vuelta** (el usuario lo vio, pidió cambios y ya se hicieron: falta que lo vuelva a ver) y **aprobado** (el usuario lo vio y quedó). La tarjeta de cada uno se revisa en la tanda 6, con las 24 juntas.
 
 | Estilo | Marca | Tanda | Página | Fotos | Tarjeta | Revisado |
 | --- | --- | --- | --- | --- | --- | --- |
 | Tecnológico | Cauce | 1 | hecho | hecho | hecho | pendiente |
 | Zen / japonés | Kiri | 1 | hecho | hecho | hecho | pendiente |
-| Corporativo | Basal Ingeniería | 2 | pendiente | pendiente | pendiente | pendiente |
-| Editorial | Viña Ladera | 2 | pendiente | pendiente | pendiente | pendiente |
-| Clínico / limpio | Iris Centro Visual | 2 | pendiente | pendiente | pendiente | pendiente |
-| Natural | Quillay | 2 | pendiente | pendiente | pendiente | pendiente |
-| Lúdico | Pelusa | 3 | pendiente | pendiente | pendiente | pendiente |
-| Retro | Pista Lucero | 3 | pendiente | pendiente | pendiente | pendiente |
+| Corporativo | Basal Ingeniería | 2 | aprobado | aprobado | hecho | aprobado |
+| Editorial | Viña Ladera | 2 | hecho | hecho | hecho | segunda vuelta |
+| Clínico / limpio | Iris Centro Visual | 2 | aprobado | aprobado | hecho | aprobado |
+| Natural | Quillay | 2 | hecho | hecho | hecho | segunda vuelta |
+| Lúdico | Pelusa | 3 | aprobado | aprobado | hecho | aprobado |
+| Retro | Pista Lucero | 3 | hecho | hecho | hecho | segunda vuelta |
 | Memphis | Tablero | 3 | pendiente | pendiente | pendiente | pendiente |
 | Y2K | Destello | 3 | pendiente | pendiente | pendiente | pendiente |
 | Futurista | Cénit | 3 | pendiente | pendiente | pendiente | pendiente |
@@ -64,15 +64,23 @@ Estados: **pendiente**, **hecho** (listo para revisar) y **aprobado** (el usuari
 ## Tandas
 
 1. **Cauce y Kiri**, que reemplazan a Nodo y Kōen, con sus tarjetas. En la misma tanda se borran `public/brief/bocetos/nodo.html` y `koen.html`, `public/image/bocetos/nodo/` y `koen/` y sus tablas en [bocetos-fotos.md](bocetos-fotos.md), y el abanico de [PreguntaBrief.jsx](../src/components/PreguntaBrief.jsx) (`ABANICO`, línea 345) pasa a `['kiri', 'golpe', 'cauce']`.
-2. **Basal, Ladera, Iris y Quillay**: los estilos que más piden las pymes.
-3. **Pelusa, Lucero, Tablero, Destello y Cénit**: los de color, luz y humor.
+2. **Basal, Ladera, Iris y Quillay**: los estilos que más piden las pymes. *Hecha el 11 de noviembre, junto con Pelusa y Lucero.*
+3. **Pelusa, Lucero, Tablero, Destello y Cénit**: los de color, luz y humor. *Pelusa y Lucero, hechos; siguen Tablero, Destello y Cénit.*
 4. **Sótano, Rumbo, Foco y Marfil**: los de tipografía y geometría.
 5. **Ulmo, Remache, Parina, Tilde y Rampa**: los de material y oficio.
 6. **Las tarjetas de Alba, Rosa, Ónix y Golpe**, sacadas de sus páginas, y una revisión de conjunto de /brief-web con las 24 tarjetas y el recorrido del visor de principio a fin.
 
+## Pendientes conocidos
+
+- **Ladera da 98 en rendimiento.** El LCP es la tapa: en la carga real llega en menos de 100 ms, pero la red simulada de Lighthouse reparte el ancho de banda entre sus tres letras (Newsreader, su itálica y Hanken Grotesk) y la foto, y lo estima en 2,3 s. Se probó con una tapa más liviana (540 px) sin cambio. Queda probar con una sola letra arriba del pliegue o precargando la itálica.
+- **Un desplazamiento de 0,048 al cargar**, que Lighthouse ve a veces en varios bocetos (también en Golpe, anterior a estas tandas). Parece la barra de calificar de barra.js, que se monta después del primer pintado. El rendimiento igual queda en 100.
+
 ## Bitácora de decisiones
 
 - **2026-11-11.** Al usuario no le gustaron Nodo ni Kōen y pidió marcas nuevas desde cero para tecnológico y zen. Para los 18 que faltaban eligió inventar todo: nombre, rubro e identidad, sin usar los nombres que traía bocetos.js (Roble, Marea, Pinpón…). Pidió referencias de galerías de diseño, fotos de stock y animaciones «sin nada brusco, siempre con un inicio y un final continuo». Su «portada» es la tarjeta de cada estilo en el brief, que debe ir con su estilo y su marca.
+- **2026-11-11, segunda sesión.** El usuario pidió seis páginas que no fueran zen ni tecnológico, así que la tanda 1 (Cauce y Kiri) sigue pendiente y se hicieron la tanda 2 entera y las dos primeras de la 3: Basal, Ladera, Iris, Quillay, Pelusa y Lucero, con sus fotos, sus tarjetas y sus entradas en bocetos.js (reemplazan a Roble, Marea, Andes Dental, Raíz, Pinpón y Disco Sur). Quedan para la tanda 3 Tablero, Destello y Cénit. Cambios respecto de las fichas: el `fondo` de Basal es `#ffffff`, porque la página es blanca y la niebla queda para sus bandas; la portada de Iris es una mujer probándose lentes en una óptica, porque la foto con la tabla de letras cortaba la cara; Ladera tiene una viticultora, Antonia Fuentealba; el patinador de Lucero da vueltas con `<animateMotion>` de SVG, que escala con el plano (con el movimiento reducido se cambia por uno quieto).
+- **2026-11-11, misma sesión.** Al ver los seis, el usuario pidió más variedad de componentes: tenían un formato demasiado parecido (cabecera con logo, menú y botón; portada partida en texto y foto; rótulo, título y párrafo en cada sección; filas de tarjetas; contacto con datos a la izquierda y formulario a la derecha; pie con la marca gigante). Se rehizo cada uno desde su marca: Ladera tiene mancheta de diario, tapa centrada con el sumario debajo y un cupón de recorte; Iris pone la tabla de Snellen como portada, el equipo en una agenda semanal y la reserva como turnero de días y horas, y titula con preguntas; Quillay va con el logo al centro y el menú a los lados, portada centrada con foto panorámica, productos en lista de botica y pie como etiqueta de herbario; Pelusa tiene la portada en un bloque amarillo con el perro que habla, la pandilla clavada en un corcho y el formulario como carnet de ingreso; Lucero es un afiche centrado, con tablero de precios con puntos guía, la historia en fundas de disco y la reserva como entrada con talón; Basal queda como el corporativo clásico, con secciones numeradas y pie institucional en columnas.
+- **2026-11-11, revisión de los seis.** Basal, Iris y Pelusa quedaron como estaban; del clínico le gustó mucho el desenfoque de las letras de distintos tamaños. Ladera suma fotos de sus vinos (una botella, una barrica y una copa, una por ficha). Quillay pidió una portada con más impacto, pensada para quien compra, con textos que lleguen y una presentación muy pulida de los jabones, con WebGL o un componente 3D: ahora es una vitrina donde el jabón elegido gira en 3D sobre su pedestal (quillay.js, WebGL propio sin dependencias, que arranca después de la carga y muestra la foto si no hay WebGL), con un selector de los tres jabones, su ficha y «Agregar al pedido», que deja el producto elegido en el formulario. Lucero no gustó ni en su orden ni en su estética y se rehízo: es la pista de noche, con fondo café oscuro, una cinta de cuatro franjas que cruza la página en curva y la foto dentro de un anillo de colores, y sigue el camino de quien llega por primera vez (la semana como cartel, tres pasos para empezar, la pista para grupos con su entrada y la historia en fundas de disco). Su `fondo` pasó a `#24140c` y las tarjetas de natural y retro se redibujaron con el jabón y la noche.
 - **Lección de Nodo y Kōen.** Los dos eran una secuencia de secciones de plantilla: logos de clientes, cifras, planes, preguntas frecuentes, en un caso, y clases, horario, pases y reserva, en el otro. Cada boceto nuevo parte de una idea propia de su marca, y las secciones salen de esa idea, no de una lista.
 - **2026-11-11, tanda 1.** Cauce y Kiri quedaron hechos, con sus fotos y sus tarjetas, y el abanico pasó a `['kiri', 'golpe', 'cauce']`. Al ver Cauce, el usuario dijo que le gustaba mucho y pidió más interacción o componentes 3D de su producto. Se sumó, sin librerías: el sensor como modelo 3D de caras de CSS que se mece, se gira al arrastrarlo o con las flechas, se despieza con el scroll y enciende la pieza que se señala en la lista; un cursor que lee la gráfica del panel, y una calculadora de ahorro de agua (`calcular_ahorro_agua`, con `toolautosubmit`). Todo eso vive en `cauce.js`, que va como módulo para no chocar con las constantes de barra.js.
 - **Pendiente de la tanda 1.** El borrado de `nodo.html`, `koen.html`, `public/image/bocetos/nodo/` y `koen/`, y de sus tablas en bocetos-fotos.md, no se aprobó en la sesión: queda para que el usuario lo haga o lo autorice. El WebKit de Playwright en Windows aplana `transform-style: preserve-3d` (también en un cubo mínimo), así que el sensor 3D se confirma en un iPhone o iPad real. En S, la barra de los bocetos puede dar un CLS de hasta 0,05: barra.js le agrega el formulario de calificar después del primer cuadro, según cuánto tarde la página en pintar. Es de la barra común, no de un boceto.
@@ -90,6 +98,7 @@ Todo boceto cumple [CLAUDE.md](../CLAUDE.md). Además:
 - Las entradas al bajar usan lo que ya traen [barra.css](../public/brief/bocetos/barra.css) y [barra.js](../public/brief/bocetos/barra.js): `data-aparece` y `data-sigue`, con la manera de cada marca en `--entrada` (sus `@keyframes`), `--curva`, `--tramo`, `--duracion` y `--orden`. Donde el navegador ata animaciones al scroll (Chrome, Safari 26), avanzan y retroceden con él. Donde no (Safari 18), barra.js les pone `visto` al verse y corren `--duracion`.
 - Con `prefers-reduced-motion: reduce` todo queda quieto y a la vista. Sin JavaScript, también.
 - Se revisa con el movimiento encendido, no solo con capturas quietas.
+- `--curva` no se redefine dentro de `[data-aparece]` con `var(--curva)`: es una referencia circular que deja la variable inválida y, con ella, toda animación que la use dentro de ese elemento. Si la marca tiene su curva, se declara una vez en `:root`.
 
 ### Estructura de cada página
 
@@ -112,6 +121,7 @@ El esqueleto de [alba.html](../public/brief/bocetos/alba.html):
 ### Fotos
 
 - Solo fotos de [Unsplash](https://unsplash.com/license) con su licencia gratuita, nunca Unsplash+. Se comprueba en la página de cada foto antes de usarla.
+- Unsplash pide pasar un desafío de navegador (Anubis) que el Chromium de Playwright sin ventana no pasa. Se busca con ventana (puede abrirse fuera de la pantalla, `--window-position=-3000,0`) en `unsplash.com/s/photos/<consulta>?license=free`, y de ahí se leen los `photo-<id>` de las miniaturas: con ese filtro y en `images.unsplash.com` (no en `plus.unsplash.com`) son de la licencia gratuita. Una hoja de miniaturas numeradas sirve para elegir sin abrir cada una.
 - Se bajan de `images.unsplash.com/photo-<id>` con los parámetros de imgix, ya recortadas y en WebP: `?fm=webp&q=70&w=<ancho>&fit=crop&ar=<proporción>&crop=entropy` (`crop=faces` si hay personas, `sat=-100` para blanco y negro, `flip=h` para espejo). Van dos anchos por foto, el que se muestra en teléfono y el de escritorio. Si un parámetro no responde, se baja la original y se codifica a WebP con Playwright (canvas, `toDataURL('image/webp', 0.7)`).
 - Se guardan en `public/image/bocetos/<slug>/<nombre>-<ancho>.webp` y se anotan en [bocetos-fotos.md](bocetos-fotos.md), con una tabla por boceto.
 - La foto de portada va con `fetchpriority="high"` y su precarga. Las demás, con `loading="lazy"`. Todas llevan `srcset`, `sizes`, `width`, `height` y un `alt` que describa lo que se ve.
@@ -127,6 +137,7 @@ El esqueleto de [alba.html](../public/brief/bocetos/alba.html):
 ### Diseño
 
 - Una idea fuerte por página, la de su ficha. Las secciones la sirven.
+- Ningún boceto repite la forma de otro en sus piezas comunes: cabecera, portada, encabezados de sección, listas de cosas (servicios, productos, equipo), formulario y pie. Antes de construir, se mira cómo resolvieron esas piezas los bocetos ya hechos y se elige otra forma que salga de la marca (un cupón, un turnero, una entrada, un carnet; una mancheta, un afiche, una etiqueta). Una sola página puede tener la cabecera «logo, menú y botón» y una sola el pie con la marca gigante.
 - Nada de lo que delata una plantilla o una IA: grillas bento, tarjetas de vidrio, marquesinas, contadores que suben, grillas genéricas de íconos con tres columnas, degradés de fondo porque sí.
 - Sin tiras que se deslizan de lado: lo que no cabe se reacomoda en filas.
 - Sin neón: ni halos de color detrás del texto ni bordes teñidos. El vidrio, si lo hay, es neutro.
@@ -279,8 +290,8 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 
 - **Slug y marca:** `iris` · Iris Centro Visual.
 - **Rubro:** oftalmología, cirugía láser y óptica. Providencia, Santiago.
-- **Idea:** el enfoque. La portada parte desenfocada y se enfoca, y una tabla de Snellen tipográfica (letras que achican fila por fila) es el índice de servicios.
-- **Movimiento:** el enfoque de la portada al cargar (de `blur` 8 px a nítido, 1,4 s). Las secciones se aclaran al llegar y las filas de la tabla se enfocan una tras otra al bajar.
+- **Idea:** el enfoque. La portada es una tabla de Snellen tipográfica (letras que achican fila por fila) y es el índice de servicios. Los títulos son preguntas («¿Quién te atiende?»), el equipo va en una agenda semanal y la reserva es un turnero de días y horas.
+- **Movimiento:** las filas de la tabla se enfocan una tras otra al cargar, de la letra más grande a la más chica (de `blur` a nítido, sin bajar la opacidad: el usuario lo aprobó). Las secciones se aclaran al llegar.
 - **Letras:** Plus Jakarta Sans.
 - **Paleta:** blanco `#ffffff`, tinta `#0f1c2b`, azul `#1e6fd9`, menta `#e6f5f1`, gris `#5b6b7a`. `fondo`: `#ffffff`.
 - **Secciones:** portada; la tabla de Snellen como índice (consulta, cirugía láser, lentes de contacto, niños, óptica); el equipo médico, con nombre, especialidad y foto; tu primera consulta, paso a paso y con lo que dura; convenios (Fonasa, isapres) y precios de referencia; dónde estamos y horarios; agendar hora (formulario: nombre, RUT, correo, especialidad, previsión, fecha).
@@ -292,14 +303,14 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 
 - **Slug y marca:** `quillay` · Quillay.
 - **Rubro:** jabones y cosmética de plantas nativas (quillay, maqui, rosa mosqueta). Lolol, Valle de Colchagua.
-- **Idea:** luz entre hojas. Una sombra moteada de hojas se mece sobre la portada, como la del bosque donde se recolecta.
-- **Movimiento:** la sombra de hojas (SVG o máscara) se mece de ida y vuelta, muy lenta. Las plantas, dibujadas a línea, se trazan con el scroll. Las fotos llegan dentro de formas orgánicas que se abren.
+- **Idea:** luz entre hojas. Una sombra moteada de hojas se mece sobre la portada, que es una vitrina: el jabón elegido gira en 3D (WebGL propio, `quillay.js`) sobre un pedestal de greda, con su sello hundido y la textura de su receta, junto a un selector de los tres jabones con su ficha, su precio y «Agregar al pedido».
+- **Movimiento:** el jabón flota, se balancea, se inclina hacia el cursor como con un resorte y da una vuelta al cambiar de jabón. La sombra de hojas (SVG) se mece de ida y vuelta, muy lenta. Las plantas, dibujadas a línea, se trazan con el scroll. Las fotos llegan dentro de formas orgánicas que se abren.
 - **Letras:** Young Serif (títulos) y Figtree (texto).
 - **Paleta:** crema `#f0eadb`, hoja `#5f6f45`, tierra `#a86b3c`, arcilla `#d7b89a`, tinta `#2b2a22`. `fondo`: `#f0eadb`.
 - **Secciones:** portada; las tres plantas, dibujadas, con para qué sirve cada una; del bosque al jabón (recolección, maceración, curado de seis semanas); los productos (cuatro, con precio y lo que llevan, sin letra chica); ingredientes, contados con honestidad; pedido o venta al por mayor (formulario).
 - **Fotos:** jabones artesanales cortados, hojas a contraluz, manos con espuma o greda, frascos de vidrio ámbar, ramas de rosa mosqueta.
 - **Página de inspiración:** [Aesop](https://www.aesop.com). Se toma la botánica sin cliché, los ingredientes contados con precisión, los tonos de tierra y la tienda tranquila. También: [Grown Alchemist](https://grownalchemist.com).
-- **Tarjeta:** una forma de tierra, una hoja de quillay dibujada a línea y «quillay» en Young Serif. Al pasar el cursor, la hoja se mece. Sello: la hoja.
+- **Tarjeta:** una forma de tierra, una rama de quillay dibujada a línea, el jabón con su sello hundido y «quillay» en Young Serif. Al pasar el cursor, la rama se mece y el jabón se levanta. Sello: la hoja.
 
 ### Pelusa · lúdico
 
@@ -318,14 +329,14 @@ Cada ficha fija lo que no se discute: la idea, el movimiento, la paleta y las se
 
 - **Slug y marca:** `lucero` · Pista Lucero.
 - **Rubro:** pista de patinaje y disco, abierta desde 1977. Viña del Mar.
-- **Idea:** las noches de los setenta: franjas en arco, letras gruesas y redondas, y la luz de la bola de disco.
-- **Movimiento:** las franjas en arco se mecen apenas. Las luces de la bola cruzan la portada despacio, como manchas suaves de luz cálida. Un patinador recorre la pista ovalada (el dibujo del plano) en un bucle sin costura.
+- **Idea:** una noche de pista de los setenta. El fondo es la pista a oscuras, una cinta de cuatro franjas cruza la página en curva, las letras son gruesas y redondas y pasa la luz de la bola. La página sigue el camino de quien llega por primera vez. (La primera versión, clara y con arcos, no gustó ni en su orden ni en su estética.)
+- **Movimiento:** la cinta de franjas se mece apenas y los rayos de la bola giran detrás de la foto, una vuelta por minuto. Las luces de la bola cruzan la portada despacio, como manchas suaves de luz cálida. Un patinador recorre la pista ovalada (el dibujo del plano) en un bucle sin costura.
 - **Letras:** Shrikhand (títulos) y Josefin Sans (texto).
-- **Paleta:** crema `#f3e1bf`, naranja `#e8742a`, mostaza `#e0a526`, café `#5a3520`, rosa `#d9677a`. `fondo`: `#f3e1bf`.
-- **Secciones:** portada; las noches de la semana (lunes de clases, viernes disco, domingo familiar); arriendo de patines (tallas y precios); clases para empezar; cumpleaños; la historia, desde 1977; reservar la pista (formulario).
+- **Paleta:** noche `#24140c`, pista `#3a2216`, crema `#f3e1bf`, naranja `#e8742a`, mostaza `#e0a526`, café `#5a3520`, rosa `#d9677a`. `fondo`: `#24140c`.
+- **Secciones:** portada (qué es y qué hay este viernes); la semana como cartel de concierto; «¿Primera vez sobre ruedas?» en tres pasos (arrendar patines con sus tallas, aprender un lunes, volver el viernes); la pista para grupos, con el plano y la reserva como entrada con talón (formulario); la historia desde 1977, en fundas de disco.
 - **Fotos:** patines de cuatro ruedas retro, bola de disco, gente patinando en una pista, luces de colores cálidos en una pista oscura.
 - **Página de inspiración:** [Moxi](https://www.moxiskates.com), patines de cuatro ruedas. Se toma la energía, los patines como objeto de deseo y la comunidad de la pista. La paleta y las letras se van a los setenta cálidos de la ficha, no a sus colores caramelo. También: [Fonts In Use](https://fontsinuse.com), buscando «1970s», para las letras y la gráfica de discos de esos años.
-- **Tarjeta:** franjas en arco con los cinco colores, «Lucero» en Shrikhand y un patín. Al pasar el cursor, las franjas se mecen. Sello: una estrella de cuatro puntas.
+- **Tarjeta:** la noche, la cinta de franjas, «Lucero» en Shrikhand y el patín dentro de su anillo de colores. Al pasar el cursor, la cinta se mece y el anillo gira un poco. Sello: una estrella de cuatro puntas.
 
 ### Tablero · Memphis
 

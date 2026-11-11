@@ -118,6 +118,7 @@
 .brief-estilo {
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --masa: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --calma: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 .brief-muestra {
@@ -263,31 +264,41 @@
 .estilo-tecnologico .brief-sello span { width: 14px; height: 14px; border-radius: 50%; background: #ff5b1f; box-shadow: 0 0 0 5px rgb(255 91 31 / 0.18); transform: scale(0.3); transition: opacity 400ms, transform 900ms var(--precisa); }
 .estilo-tecnologico:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Corporativo: su banda y sus cifras. */
-.estilo-corporativo { --marcado: #10284f; }
-.estilo-corporativo .brief-muestra-arte { display: grid; grid-template-rows: 30px 1fr; background: #f3f6fa; }
-.estilo-corporativo .banda { display: flex; align-items: center; gap: 8px; padding: 0 14px; background: #10284f; color: #ffffff; font: 800 10.5px/1 'Muestra Manrope', sans-serif; letter-spacing: 0.06em; }
-.estilo-corporativo .banda i { width: 12px; height: 12px; background: #ffffff; }
-.estilo-corporativo .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 14px; }
-.estilo-corporativo .cols > span { display: grid; align-content: start; gap: 5px; padding: 8px; border: 1px solid #dbe1ea; background: #ffffff; }
-.estilo-corporativo .cols b { font: 800 17px/1 'Muestra Manrope', sans-serif; color: #10284f; }
-.estilo-corporativo .cols i { height: 4px; background: #dbe1ea; transform-origin: left; transform: scaleX(0.45); transition: transform 700ms var(--ease); }
-.estilo-corporativo:is(:hover, :focus-within, :has([value='si']:checked)) .cols i { transform: scaleX(1); background: #9fb2cf; }
-.estilo-corporativo:has([value='si']:checked) .brief-muestra-pie { background: #10284f; color: #ffffff; }
-.estilo-corporativo .brief-sello span { padding: 4px 5px; background: #ffffff; color: #10284f; font: 800 9px/1 'Muestra Manrope', sans-serif; letter-spacing: 0.06em; transform: translateX(10px); }
-.estilo-corporativo:has([value='si']:checked) .brief-sello span { transform: none; }
+/* Corporativo · Basal: su banda y el corte del edificio sobre sus aisladores.
+   Al pasar, el suelo se mece y se calma; el edificio casi no se mueve. */
+.estilo-corporativo { --marcado: #0f2a44; }
+.estilo-corporativo .brief-muestra-arte { display: grid; grid-template-rows: 30px minmax(0, 1fr); background: #eef2f6; }
+.estilo-corporativo .banda { display: flex; align-items: center; gap: 8px; padding: 0 14px; background: #0f2a44; color: #ffffff; font: 800 10.5px/1 'Muestra Manrope', sans-serif; letter-spacing: 0.08em; }
+.estilo-corporativo .banda svg { width: 17px; height: 13px; fill: #ffffff; }
+.estilo-corporativo .banda .hueco { fill: none; stroke: #ffffff; stroke-width: 1.8; }
+.estilo-corporativo .corte { display: block; width: 100%; height: 120px; overflow: visible; }
+.estilo-corporativo .tierra { fill: #c3cdd8; }
+.estilo-corporativo .raya { fill: none; stroke: #0f2a44; stroke-width: 2; }
+.estilo-corporativo .edificio rect { fill: #ffffff; stroke: #0f2a44; stroke-width: 1.6; }
+.estilo-corporativo .edificio path { fill: none; stroke: #0f2a44; stroke-width: 1.2; }
+.estilo-corporativo .edificio .losa { fill: #0f2a44; stroke: none; }
+.estilo-corporativo .edificio .ais { fill: #1f5fbf; stroke: none; transform-box: fill-box; transform-origin: 50% 0; }
+.estilo-corporativo:has([value='si']:checked) .brief-muestra-pie { background: #0f2a44; color: #ffffff; }
+.estilo-corporativo .brief-sello svg { width: 26px; fill: #ffffff; transform: scale(0.4); transition: opacity 300ms, transform 500ms var(--calma); }
+.estilo-corporativo .brief-sello .goma { fill: #6fa0e6; }
+.estilo-corporativo:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Editorial: una página de revista. */
-.estilo-editorial { --marcado: #1c2a2e; }
-.estilo-editorial .brief-muestra-arte { display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 6px 12px; padding: 14px 16px; background: #f2ede3; color: #1c2a2e; }
-.estilo-editorial .folio { grid-column: 1 / -1; display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid #1c2a2e; font: 500 9px/1 'Muestra Newsreader', serif; letter-spacing: 0.14em; text-transform: uppercase; }
-.estilo-editorial .titular { grid-column: 1 / -1; margin-top: 4px; font: italic 500 26px/1 'Muestra Newsreader', serif; background: linear-gradient(#1c2a2e, #1c2a2e) 0 100% / 0 1px no-repeat; transition: background-size 800ms var(--ease); }
-.estilo-editorial:is(:hover, :focus-within, :has([value='si']:checked)) .titular { background-size: 100% 1px; }
-.estilo-editorial .parrafo { font: 500 9px/1.45 'Muestra Newsreader', serif; color: #4a4a44; }
-.estilo-editorial .parrafo:first-of-type::first-letter { float: left; margin: 2px 4px 0 0; font: italic 500 22px/0.8 'Muestra Newsreader', serif; color: #1c2a2e; }
-.estilo-editorial:has([value='si']:checked) .brief-muestra-pie { background: #f2ede3; color: #1c2a2e; }
+/* Editorial · Ladera: la tapa del número 12 y su sumario. Al pasar, la tapa
+   se levanta apenas, como una página que se da vuelta. */
+.estilo-editorial { --marcado: #6b1f2a; }
+.estilo-editorial .brief-muestra-arte { display: flex; align-items: center; gap: 16px; padding: 0 18px; background: #e6dfd0; perspective: 600px; }
+.estilo-editorial .tapa { position: relative; flex: none; display: grid; align-content: start; width: 92px; height: 118px; padding: 7px 7px 0; overflow: hidden; background: #f2ede3; color: #1d1a16; box-shadow: 0 10px 16px -10px rgb(29 26 22 / 0.55); transform-origin: left center; transition: transform 800ms var(--calma), box-shadow 800ms var(--calma); }
+.estilo-editorial .tapa b { font: 500 21px/0.9 'Muestra Newsreader', Georgia, serif; letter-spacing: 0.02em; text-align: center; }
+.estilo-editorial .numero { display: flex; justify-content: space-between; margin-top: 3px; padding-top: 3px; border-top: 1px solid currentColor; font: 500 6.5px/1 'Muestra Newsreader', Georgia, serif; letter-spacing: 0.08em; text-transform: uppercase; }
+.estilo-editorial .cerros { position: absolute; left: 0; bottom: 0; width: 100%; height: 64px; }
+.estilo-editorial .tapa i { position: absolute; left: 7px; right: 7px; bottom: 7px; font: italic 500 11px/1.05 'Muestra Newsreader', Georgia, serif; color: #f2ede3; }
+.estilo-editorial .sumario { display: grid; flex: 1; gap: 7px; min-width: 0; font: italic 500 13px/1.1 'Muestra Newsreader', Georgia, serif; color: #1d1a16; }
+.estilo-editorial .sumario span { display: flex; gap: 8px; align-items: baseline; padding-bottom: 6px; border-bottom: 1px solid #c9bfab; }
+.estilo-editorial .sumario small { flex: none; width: 2.6em; font: normal 500 9px/1 'Muestra Newsreader', Georgia, serif; color: #5d574d; }
+.estilo-editorial:is(:hover, :focus-within, :has([value='si']:checked)) .tapa { transform: rotateY(-20deg); box-shadow: 14px 12px 18px -12px rgb(29 26 22 / 0.5); }
+.estilo-editorial:has([value='si']:checked) .brief-muestra-pie { background: #f2ede3; color: #1d1a16; }
 .estilo-editorial:has([value='si']:checked) .brief-muestra-nombre { font-size: 20px; }
-.estilo-editorial .brief-sello span { padding: 3px 0; border-block: 1px solid; font: 500 9px/1.1 'Muestra Newsreader', serif; letter-spacing: 0.1em; text-transform: uppercase; color: #1c2a2e; }
+.estilo-editorial .brief-sello span { padding: 3px 0; border-block: 1px solid #6b1f2a; font: 500 10px/1.1 'Muestra Newsreader', Georgia, serif; letter-spacing: 0.08em; color: #6b1f2a; transition: opacity 300ms; }
 
 /* Cálido y cercano: formas blandas que se mueven con masa. */
 .estilo-calido { --marcado: #d0643a; }
@@ -327,21 +338,23 @@
 .estilo-audaz .brief-sello span { font: 400 24px/1 'Muestra Anton', Impact, sans-serif; color: #ffe14d; transform: scale(2); }
 .estilo-audaz:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Lúdico: formas de colores que saltan. */
-.estilo-ludico { --marcado: #6d3cff; }
-.estilo-ludico .brief-muestra-arte { background: #fff4fb; }
-.estilo-ludico .p { position: absolute; transition: transform 500ms var(--masa); }
-.estilo-ludico .p1 { left: 22px; top: 24px; width: 46px; height: 46px; border-radius: 50%; background: #ff5fa2; }
-.estilo-ludico .p2 { left: 110px; top: 60px; width: 0; height: 0; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 44px solid #ffc531; }
-.estilo-ludico .p3 { right: 30px; top: 30px; width: 40px; height: 40px; border-radius: 10px; background: #6d3cff; transform: rotate(18deg); }
-.estilo-ludico .p4 { right: 54px; bottom: 26px; width: 64px; height: 18px; border-radius: 9px; background: #19c6a7; transform: rotate(-10deg); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p1 { transform: translateY(-12px); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p2 { transform: rotate(-14deg) translateY(4px); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p3 { transform: rotate(60deg); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .p4 { transform: rotate(10deg) translateX(-8px); }
-.estilo-ludico:has([value='si']:checked) .brief-muestra-pie { background: #6d3cff; color: #ffffff; }
-.estilo-ludico .brief-sello span { padding: 6px; border-radius: 8px; background: #ffc531; color: #3a1d8a; font: 700 10px/1 'Muestra Fredoka', sans-serif; transform: rotate(-30deg) scale(0.3); }
-.estilo-ludico:has([value='si']:checked) .brief-sello span { transform: rotate(-10deg); }
+/* Lúdico · Pelusa: tres formas blandas, una huella y su nombre. Al pasar, las
+   formas se mecen y se acomodan frenando. */
+.estilo-ludico { --marcado: #ff7a59; }
+.estilo-ludico .brief-muestra-arte { background: #fff6e6; }
+.estilo-ludico .f { position: absolute; transition: transform 700ms var(--calma); }
+.estilo-ludico .f1 { left: 18px; top: 18px; width: 64px; height: 64px; border-radius: 50%; background: #6cc4ff; }
+.estilo-ludico .f2 { right: 40px; top: 20px; width: 46px; height: 46px; border-radius: 28%; background: #ff7a59; transform: rotate(14deg); }
+.estilo-ludico .f3 { right: -16px; bottom: -22px; width: 108px; height: 84px; border-radius: 52% 48% 46% 54% / 56% 50% 50% 44%; background: #ffd34d; }
+.estilo-ludico .huella { position: absolute; left: 92px; top: 30px; width: 30px; height: 30px; fill: #2a1f1a; transform: rotate(-14deg); transition: transform 700ms var(--calma); }
+.estilo-ludico .rot { position: absolute; left: 18px; bottom: 14px; font: 700 34px/1 'Muestra Fredoka', sans-serif; letter-spacing: -0.02em; color: #2a1f1a; }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f1 { transform: translate(6px, -6px); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f2 { transform: rotate(32deg); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f3 { transform: rotate(-8deg) translateX(-6px); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .huella { transform: rotate(4deg) translateY(-4px); }
+.estilo-ludico:has([value='si']:checked) .brief-muestra-pie { background: #ffd34d; color: #2a1f1a; }
+.estilo-ludico .brief-sello svg { width: 26px; fill: #ff7a59; transform: rotate(-30deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-ludico:has([value='si']:checked) .brief-sello svg { transform: rotate(-10deg); }
 
 /* Brutalista: sin suavizado, todo de golpe. */
 .estilo-brutalista { --marcado: #000000; }
@@ -357,16 +370,25 @@
 .estilo-brutalista:has([value='si']:checked) .brief-muestra-nombre { text-transform: uppercase; }
 .estilo-brutalista .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 3px solid #ffffff; color: #ffffff; font: 700 18px/1 'Times New Roman', serif; transition: none; }
 
-/* Retro: un sol y sus franjas setenteras. */
-.estilo-retro { --marcado: #d86a26; }
-.estilo-retro .brief-muestra-arte { background: #f3e1bf; }
-.estilo-retro .sol { position: absolute; right: 26px; top: 16px; width: 74px; height: 74px; border-radius: 50%; background: #e8a33d; transition: transform 700ms var(--masa); }
-.estilo-retro .rayas { position: absolute; left: -10px; right: -10px; bottom: 18px; height: 54px; background: linear-gradient(#e8a33d 0 33%, #d86a26 33% 66%, #8c3b1d 66%); transform: skewY(-6deg); transition: transform 700ms var(--ease); }
-.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .sol { transform: translateY(-10px) scale(1.08); }
-.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .rayas { transform: skewY(-6deg) translateX(-10px); }
-.estilo-retro .rot { position: absolute; left: 16px; top: 20px; font: 400 32px/1 'Muestra Shrikhand', serif; color: #8c3b1d; text-shadow: 3px 3px 0 #e8a33d; }
-.estilo-retro:has([value='si']:checked) .brief-muestra-pie { background: #8c3b1d; color: #f3e1bf; }
-.estilo-retro .brief-sello svg { width: 30px; fill: #e8a33d; transform: rotate(-60deg) scale(0.6); }
+/* Retro · Pista Lucero: la pista de noche, la cinta de franjas y el patín en
+   su anillo. Al pasar, la cinta se mece y el anillo gira un poco. */
+.estilo-retro { --marcado: #e0a526; }
+.estilo-retro .brief-muestra-arte { background: #24140c; }
+.estilo-retro .cinta { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke-linecap: round; transition: translate 900ms var(--calma); }
+.estilo-retro .cinta path:nth-child(1) { stroke: #d9677a; stroke-width: 30; }
+.estilo-retro .cinta path:nth-child(2) { stroke: #e8742a; stroke-width: 21; }
+.estilo-retro .cinta path:nth-child(3) { stroke: #e0a526; stroke-width: 12; }
+.estilo-retro .cinta path:nth-child(4) { stroke: #f3e1bf; stroke-width: 4; }
+.estilo-retro .rot { position: absolute; left: 16px; top: 22px; font: 400 36px/1 'Muestra Shrikhand', serif; color: #f3e1bf; text-shadow: 2px 2px 0 #e8742a, 4px 4px 0 #d9677a; rotate: -4deg; }
+.estilo-retro .disco { position: absolute; right: 24px; top: 20px; display: grid; place-items: center; width: 62px; height: 62px; border-radius: 50%; background: #fbf0da; box-shadow: 0 0 0 6px #e0a526, 0 0 0 12px #e8742a, 0 0 0 18px #d9677a; transition: rotate 900ms var(--calma); }
+.estilo-retro .disco svg { width: 38px; }
+.estilo-retro .bota { fill: #ffffff; stroke: #5a3520; stroke-width: 2; stroke-linejoin: round; }
+.estilo-retro .cordon { fill: none; stroke: #d9677a; stroke-width: 2; stroke-linecap: round; }
+.estilo-retro .disco circle { fill: #e8742a; stroke: #5a3520; stroke-width: 2; }
+.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .cinta { translate: 0 -8px; }
+.estilo-retro:is(:hover, :focus-within, :has([value='si']:checked)) .disco { rotate: 14deg; }
+.estilo-retro:has([value='si']:checked) .brief-muestra-pie { background: #24140c; color: #f3e1bf; }
+.estilo-retro .brief-sello svg { width: 26px; fill: #e0a526; transform: rotate(-45deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-retro:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Suizo: la grilla y su cuadrado rojo. */
@@ -380,17 +402,21 @@
 .estilo-suizo .brief-sello span { display: grid; place-items: center; width: 24px; height: 24px; background: #e2231a; color: #ffffff; font: 700 14px/1 'Muestra Archivo', sans-serif; transform: translate(10px, -10px); }
 .estilo-suizo:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Natural: hojas que se mecen. */
-.estilo-natural { --marcado: #23412b; }
-.estilo-natural .brief-muestra-arte { background: #e9ecdf; }
-.estilo-natural .hoja { position: absolute; left: 30px; top: 18px; width: 90px; height: 140px; border-radius: 0 100% 0 100%; background: #6f9a5b; transform: rotate(18deg); transform-origin: bottom left; transition: transform 800ms var(--masa); }
-.estilo-natural .h2 { left: 70px; top: 40px; width: 70px; height: 110px; background: #23412b; transform: rotate(48deg); }
-.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .hoja { transform: rotate(8deg); }
-.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .h2 { transform: rotate(58deg); }
-.estilo-natural .rot { position: absolute; right: 18px; bottom: 20px; font: 400 19px/1.1 'Muestra Young Serif', Georgia, serif; text-align: right; color: #23412b; }
-.estilo-natural:has([value='si']:checked) .brief-muestra-pie { background: #23412b; color: #eef2e2; }
-.estilo-natural .brief-sello span { width: 20px; height: 26px; border-radius: 0 100% 0 100%; background: #b9d39c; transform: rotate(-30deg) scale(0.2); transform-origin: bottom left; }
-.estilo-natural:has([value='si']:checked) .brief-sello span { transform: rotate(20deg); }
+/* Natural · Quillay: una forma de tierra, una rama de quillay dibujada a
+   línea, el jabón con su sello hundido y su nombre. Al pasar, la rama se
+   mece y el jabón se levanta, como en la vitrina de su portada. */
+.estilo-natural { --marcado: #5f6f45; }
+.estilo-natural .brief-muestra-arte { background: #f0eadb; }
+.estilo-natural .tierra { position: absolute; right: -24px; bottom: -36px; width: 160px; height: 140px; border-radius: 58% 42% 52% 48% / 46% 54% 46% 54%; background: #d7b89a; }
+.estilo-natural .rama { position: absolute; right: 96px; top: 2px; width: 96px; height: 104px; fill: none; stroke: #5f6f45; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transform-origin: 15% 95%; rotate: -5deg; transition: rotate 1100ms var(--calma); }
+.estilo-natural .jabon { position: absolute; right: 26px; bottom: 30px; display: grid; place-items: center; width: 104px; height: 60px; border-radius: 20px; background: linear-gradient(160deg, #f7eed9, #e2d1ae); box-shadow: inset -4px -6px 10px rgb(120 90 50 / 0.25), inset 3px 3px 6px rgb(255 255 255 / 0.6), 0 12px 14px -8px rgb(43 42 34 / 0.5); rotate: -8deg; transition: translate 900ms var(--calma); }
+.estilo-natural .jabon b { padding: 3px 10px 4px; border: 1.5px solid #cdb68b; border-radius: 50%; font: 400 13px/1 'Muestra Young Serif', Georgia, serif; color: #cdb68b; text-shadow: 1px 1px 0 rgb(255 255 255 / 0.7), -1px -1px 0 rgb(120 90 50 / 0.3); }
+.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .jabon { translate: 0 -6px; }
+.estilo-natural .rot { position: absolute; left: 18px; bottom: 18px; font: 400 30px/1 'Muestra Young Serif', Georgia, serif; color: #2b2a22; }
+.estilo-natural:is(:hover, :focus-within, :has([value='si']:checked)) .rama { rotate: 5deg; }
+.estilo-natural:has([value='si']:checked) .brief-muestra-pie { background: #5f6f45; color: #f7f3ea; }
+.estilo-natural .brief-sello svg { width: 24px; fill: #f0eadb; transform: rotate(-40deg) scale(0.3); transform-origin: 15% 85%; transition: opacity 300ms, transform 700ms var(--calma); }
+.estilo-natural:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Futurista: vidrio sobre luz. */
 .estilo-futurista { --marcado: #7a5cff; }
@@ -534,16 +560,22 @@
 .estilo-collage .brief-sello span { width: 34px; height: 14px; background: rgb(255 240 170 / 0.9); transform: rotate(-20deg) scale(0.3); }
 .estilo-collage:has([value='si']:checked) .brief-sello span { transform: rotate(-20deg); }
 
-/* Clínico / limpio: un pulso tranquilo y una hora disponible. */
-.estilo-clinico { --marcado: #0f9b8e; }
-.estilo-clinico .brief-muestra-arte { display: grid; align-content: center; gap: 10px; padding: 0 20px; background: #ffffff; }
-.estilo-clinico .brief-muestra-arte svg { width: 100%; height: 50px; }
-.estilo-clinico .brief-muestra-arte path { fill: none; stroke: #0f9b8e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 320; }
-.estilo-clinico .tarjeta { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #f1f8f7; color: #0f2b3a; font: 700 12px/1 'Muestra Jakarta', sans-serif; transition: transform 400ms var(--ease), box-shadow 400ms; }
-.estilo-clinico .tarjeta i { width: 10px; height: 10px; border-radius: 50%; background: #0f9b8e; }
-.estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .tarjeta { transform: translateY(-4px); box-shadow: 0 10px 20px -12px rgb(15 155 142 / 0.6); }
-.estilo-clinico:has([value='si']:checked) .brief-muestra-pie { background: #0f9b8e; color: #ffffff; }
-.estilo-clinico .brief-sello span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; color: #0f9b8e; font-weight: 700; transform: scale(0.3); }
+/* Clínico · Iris: su anillo y una tabla de Snellen que se lee cada vez peor
+   hacia abajo. Al pasar, las filas se enfocan una tras otra. */
+.estilo-clinico { --marcado: #1e6fd9; }
+.estilo-clinico .brief-muestra-arte { display: grid; place-items: center; background: #ffffff; }
+.estilo-clinico .marca { position: absolute; left: 14px; top: 12px; display: flex; align-items: center; gap: 6px; font: 700 13px/1 'Muestra Jakarta', sans-serif; color: #0f1c2b; }
+.estilo-clinico .marca i { width: 14px; height: 14px; border: 3.5px solid #1e6fd9; border-radius: 50%; }
+.estilo-clinico .tabla { display: grid; justify-items: center; gap: 7px; padding-top: 6px; color: #0f1c2b; }
+.estilo-clinico .tabla b { margin-right: -0.24em; font-family: 'Muestra Jakarta', sans-serif; font-weight: 700; line-height: 1; letter-spacing: 0.24em; transition: filter 700ms var(--calma); }
+.estilo-clinico .f1 { font-size: 44px; filter: blur(0.8px); }
+.estilo-clinico .f2 { font-size: 27px; filter: blur(2px); }
+.estilo-clinico .f3 { font-size: 17px; filter: blur(3.2px); }
+.estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .tabla b { filter: blur(0); }
+.estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .f2 { transition-delay: 140ms; }
+.estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .f3 { transition-delay: 280ms; }
+.estilo-clinico:has([value='si']:checked) .brief-muestra-pie { background: #1e6fd9; color: #ffffff; }
+.estilo-clinico .brief-sello span { width: 24px; height: 24px; border: 4px solid #ffffff; border-radius: 50%; transform: scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-clinico:has([value='si']:checked) .brief-sello span { transform: none; }
 
 /* Lo que se mueve en bucle o se dibuja al pasar: solo sin el movimiento
@@ -554,18 +586,23 @@
   .estilo-tecnologico .sensor::after { animation: muestra-late 6s var(--precisa) infinite alternate; }
   .estilo-zen .brief-muestra-arte::after { transition: opacity 1600ms var(--calma), transform 2600ms var(--calma); }
   .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { opacity: 1; transform: translateY(-20%); }
-  .estilo-retro:has([value='si']:checked) .brief-sello svg { animation: muestra-gira 8s linear infinite; }
   .estilo-futurista:has([value='si']:checked) .brief-sello span { animation: muestra-gira 1.4s linear infinite; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 0.9s ease-in-out infinite alternate; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch2 { animation-delay: 0.3s; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch3 { animation-delay: 0.6s; }
-  .estilo-clinico:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte path { animation: muestra-pulso 1.6s var(--ease) both; }
+  .estilo-corporativo .suelo { animation: muestra-sismo 6s var(--calma) infinite paused; }
+  .estilo-corporativo .ais { animation: muestra-aislador 6s var(--calma) infinite paused; }
+  .estilo-corporativo:is(:hover, :focus-within) :is(.suelo, .ais) { animation-play-state: running; }
 }
 
 @keyframes muestra-late { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.5); opacity: 0; } }
 @keyframes muestra-gira { to { transform: rotate(1turn); } }
 @keyframes muestra-titila { to { opacity: 1; transform: scale(1.4) rotate(20deg); } }
-@keyframes muestra-pulso { from { stroke-dashoffset: 320; } }
+/* El suelo de Basal se mece y se amortigua; los aisladores se inclinan lo
+   que el suelo se corre. Cada tramo frena en su extremo. Si el cursor se va a
+   mitad, se detiene donde está, sin saltar. */
+@keyframes muestra-sismo { 0% { transform: translateX(0); } 4% { transform: translateX(9px); } 10% { transform: translateX(-6.5px); } 16% { transform: translateX(4.5px); } 22% { transform: translateX(-3px); } 28% { transform: translateX(1.6px); } 34%, 100% { transform: translateX(0); } }
+@keyframes muestra-aislador { 0% { transform: skewX(0deg); } 4% { transform: skewX(34.7deg); } 10% { transform: skewX(-26.6deg); } 16% { transform: skewX(19.1deg); } 22% { transform: skewX(-13deg); } 28% { transform: skewX(7deg); } 34%, 100% { transform: skewX(0deg); } }
 
 /* ==================== Las tipografías ==================== */
 .brief-tipo .brief-muestra-arte {

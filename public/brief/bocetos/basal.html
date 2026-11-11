@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Basal Ingeniería · boceto de página de Volutus</title>
+<meta name="description" content="Boceto de página de una marca inventada, Basal Ingeniería, de aislación sísmica y cálculo estructural, para mostrar el estilo Corporativo.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/bocetos/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/brief/bocetos/barra.css">
+<script src="/brief/bocetos/barra.js" defer></script>
+<style>
+/* Basal · corporativo. Inspiración: Arup (arup.com). Se toma: 1) la
+   composición de sectores que llevan a proyectos, cada uno contado con su
+   ficha y su gente; 2) la sobriedad de una sola letra y un azul de
+   institución, con el color de acento reservado para una sola cosa; 3) las
+   fotos que se destapan al llegar, sin adornos. La idea propia: la prueba de
+   lo que venden. El corte del edificio sobre sus aisladores queda quieto a la
+   derecha mientras se lee, y al bajar el suelo se mece y se amortigua. */
+@font-face { font-family: 'Manrope'; src: url('/fonts/bocetos/manrope.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+
+:root {
+  --marino: #0f2a44;
+  --azul: #1f5fbf;
+  --niebla: #eef2f6;
+  --acero: #5a6b7d;
+  --ambar: #f2a900;
+  --blanco: #ffffff;
+  --linea: #d3dbe4;
+  --ancho: 1280px;
+  --margen: clamp(20px, 4vw, 56px);
+  --curva: cubic-bezier(0.65, 0, 0.35, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--blanco); scroll-behavior: smooth; }
+body { margin: 0; background: var(--blanco); color: var(--marino); font: 400 17px/1.6 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+figure, dl, dd { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--azul); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; text-wrap: balance; }
+p { margin: 0; }
+.ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+.rotulo { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--azul); }
+.suave { color: var(--acero); }
+main { counter-reset: seccion; }
+.num { counter-increment: seccion; }
+.num::before { content: counter(seccion, decimal-leading-zero); display: inline-block; margin-right: 12px; padding-right: 12px; border-right: 1px solid currentColor; font-variant-numeric: tabular-nums; }
+.boton { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border: 1px solid var(--marino); border-radius: 4px; font-weight: 700; font-size: 15px; text-decoration: none; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
+.boton-lleno { background: var(--marino); color: var(--blanco); }
+.boton-lleno:hover { background: var(--azul); border-color: var(--azul); }
+.boton-borde:hover { background: var(--marino); color: var(--blanco); }
+.enlace { font-weight: 700; font-size: 15px; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+
+/* ---- Cabecera ---- */
+.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; border-bottom: 1px solid var(--linea); }
+.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-size: 19px; letter-spacing: -0.01em; }
+.logo svg { width: 34px; height: 26px; flex: none; }
+.logo b { font-weight: 800; }
+.logo span span { font-weight: 400; color: var(--acero); }
+.cabecera nav ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 15px; font-weight: 600; }
+.cabecera nav a { text-decoration: none; color: var(--acero); transition: color 300ms; }
+.cabecera nav a:hover { color: var(--marino); }
+
+/* ---- Portada y ensayo: el corte queda quieto a la derecha ---- */
+.bloque { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(32px, 5vw, 80px); }
+.portada { display: grid; align-content: center; gap: 26px; min-height: calc(100svh - 160px); padding-block: 56px; }
+.portada h1 { font-size: clamp(38px, 4vw, 58px); }
+.portada p.suave { max-width: 40ch; font-size: 19px; }
+.acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.pasos-ensayo { display: grid; }
+.paso-ensayo { display: grid; align-content: center; gap: 18px; min-height: 80svh; max-width: 30rem; }
+.paso-ensayo h2 { font-size: clamp(28px, 3vw, 42px); }
+.cifra { font-size: clamp(56px, 6vw, 88px); font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.cifra small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; color: var(--acero); }
+.escena-col { grid-column: 2; grid-row: 1 / span 2; }
+.escena { position: sticky; top: 0; display: grid; align-content: start; gap: 20px; height: 100svh; padding-block: 88px 24px; }
+.corte { width: 100%; height: auto; max-height: 52svh; overflow: visible; }
+.corte .nota text { paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
+.corte text { font: 600 13px 'Manrope', sans-serif; fill: var(--acero); }
+.corte .titulo-plano { font-weight: 800; fill: var(--marino); letter-spacing: 0.06em; }
+.registro { display: grid; gap: 10px; padding: 16px 18px 12px; border: 1px solid var(--linea); border-radius: 4px; background: var(--niebla); }
+.registro-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 18px; font-size: 13px; font-weight: 700; }
+.registro-cabeza span:first-child { letter-spacing: 0.08em; text-transform: uppercase; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--acero); }
+.leyenda i { display: inline-block; width: 18px; height: 3px; margin-right: 8px; vertical-align: middle; border-radius: 2px; background: var(--ambar); }
+.leyenda .edificio i { background: var(--marino); }
+.traza { width: 100%; height: auto; }
+.traza path { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- Proyectos ---- */
+.seccion { padding-block: clamp(80px, 10vw, 140px); }
+.cabeza { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 16px clamp(32px, 5vw, 80px); align-items: end; margin-bottom: clamp(48px, 6vw, 80px); }
+.cabeza h2 { font-size: clamp(32px, 3.6vw, 52px); margin-top: 12px; }
+.cabeza p:last-child { max-width: 46ch; }
+.proyectos { background: var(--niebla); }
+.proyecto { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; }
+.proyecto + .proyecto { margin-top: clamp(64px, 8vw, 112px); }
+.proyecto:nth-child(even) .foto { order: 2; }
+.foto { overflow: hidden; border-radius: 4px; background: var(--linea); }
+.foto img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.proyecto-texto { display: grid; gap: 14px; align-content: start; }
+.proyecto h3 { font-size: clamp(24px, 2.4vw, 32px); }
+.ficha { display: grid; margin-top: 10px; border-top: 1px solid var(--marino); font-size: 15px; }
+.ficha div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 12px; padding-block: 10px; border-bottom: 1px solid var(--linea); }
+.ficha dt { color: var(--acero); }
+.ficha dd { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---- Cómo trabajamos: la carta Gantt ---- */
+.gantt { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--marino); }
+.gantt li { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 8px 32px; align-items: center; padding-block: 18px; border-bottom: 1px solid var(--linea); }
+.gantt h3 { font-size: 18px; letter-spacing: -0.01em; }
+.gantt .quien { font-size: 15px; color: var(--acero); }
+.pista { position: relative; display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); align-items: center; height: 34px; background: repeating-linear-gradient(90deg, var(--linea) 0 1px, transparent 1px calc(100% / 18)); }
+.barra { grid-row: 1; display: flex; align-items: center; height: 22px; padding-inline: 10px; border-radius: 3px; background: var(--azul); color: var(--blanco); font-size: 13px; font-weight: 700; white-space: nowrap; transform-origin: left center; }
+.barra.punteada { background: repeating-linear-gradient(90deg, var(--marino) 0 14px, transparent 14px 22px); color: var(--marino); }
+.barra.punteada span { padding: 0 6px; background: var(--blanco); }
+.semanas { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 32px; padding-top: 10px; font-size: 13px; color: var(--acero); }
+.semanas span:last-child { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+
+/* ---- Equipo y certificaciones ---- */
+.equipo { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 72px); }
+.equipo .foto img { aspect-ratio: 16 / 9; }
+.equipo figcaption { margin-top: 12px; font-size: 14px; color: var(--acero); }
+.personas { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--marino); }
+.personas li { display: grid; gap: 2px; padding-block: 14px; border-bottom: 1px solid var(--linea); }
+.personas b { font-size: 18px; }
+.personas span { font-size: 15px; color: var(--acero); }
+.certificaciones { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px clamp(32px, 5vw, 72px); align-items: center; margin-top: clamp(64px, 8vw, 104px); padding: clamp(24px, 4vw, 48px); border-radius: 4px; background: var(--marino); color: var(--blanco); }
+.certificaciones .foto { background: #1d3a57; }
+.certificaciones .foto img { aspect-ratio: 4 / 5; }
+.certificaciones h2 { font-size: clamp(28px, 3vw, 40px); }
+.certificaciones ul { display: grid; gap: 14px; margin: 24px 0 0; padding: 0; list-style: none; }
+.certificaciones li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; color: #d6e0ea; }
+.certificaciones li svg { width: 20px; height: 20px; margin-top: 3px; }
+.certificaciones li b { color: var(--blanco); }
+
+/* ---- Contacto ---- */
+.contacto { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px clamp(32px, 5vw, 80px); border-top: 1px solid var(--linea); }
+.contacto h2 { font-size: clamp(32px, 3.6vw, 52px); margin-block: 12px 20px; }
+.datos { display: grid; gap: 18px; margin-top: 36px; font-size: 15px; }
+.datos b { display: block; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--acero); }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; align-content: start; padding: clamp(24px, 3vw, 40px); border-radius: 4px; background: var(--niebla); }
+.formulario label { display: grid; gap: 8px; font-size: 14px; font-weight: 700; }
+.formulario .todo { grid-column: 1 / -1; }
+.formulario input, .formulario select, .formulario textarea { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #b9c4d0; border-radius: 4px; background: var(--blanco); color: var(--marino); font: 400 17px/1.4 'Manrope', system-ui, sans-serif; -webkit-appearance: none; appearance: none; transition: border-color 300ms; }
+.formulario textarea { min-height: 104px; resize: vertical; }
+.formulario select { padding-right: 36px; background: var(--blanco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230f2a44' stroke-width='1.6'/%3E%3C/svg%3E") right 14px center / 12px 8px no-repeat; }
+.formulario input:focus-visible, .formulario select:focus-visible, .formulario textarea:focus-visible { outline: 2px solid var(--azul); outline-offset: 0; border-color: var(--azul); }
+.formulario button { justify-self: start; cursor: pointer; font-family: inherit; }
+.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; }
+
+/* ---- Pie ---- */
+.pie { padding-block: 48px; background: var(--marino); color: #d6e0ea; }
+.pie .logo { color: var(--blanco); }
+.pie .logo span span { color: #b6c4d3; }
+.pie-grilla { display: grid; grid-template-columns: minmax(0, 4fr) repeat(3, minmax(0, 2fr)); gap: 32px clamp(24px, 4vw, 56px); font-size: 15px; }
+.pie-lema { max-width: 26ch; margin-top: 14px; }
+.pie-titulo { margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8fb0d6; }
+.pie ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.pie ul a { text-decoration: none; }
+.pie ul a:hover { text-decoration: underline; }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2c4864; font-size: 14px; }
+
+/* ---- M ---- */
+@media (max-width: 899px) {
+  .cabecera nav { display: none; }
+  .bloque { grid-template-columns: minmax(0, 1fr); }
+  .portada { min-height: 0; padding-block: 48px 32px; }
+  .escena-col { grid-column: 1; grid-row: 2; }
+  .escena { position: static; height: auto; padding-block: 0 24px; }
+  .paso-ensayo { min-height: 0; padding-block: 40px; border-bottom: 1px solid var(--linea); }
+  .cabeza, .proyecto, .equipo, .contacto, .certificaciones { grid-template-columns: minmax(0, 1fr); }
+  .pie-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proyecto:nth-child(even) .foto { order: 0; }
+  .certificaciones .foto img { aspect-ratio: 16 / 9; }
+  .gantt li, .semanas { grid-template-columns: minmax(0, 1fr); }
+  .semanas span:first-child { display: none; }
+}
+
+/* ---- S ---- */
+@media (max-width: 599px) {
+  .logo { font-size: 17px; }
+  .cabecera .boton { min-height: 44px; padding: 0 14px; font-size: 14px; }
+  .corte .nota { display: none; }
+  .ficha div { grid-template-columns: 7.5rem minmax(0, 1fr); }
+  .formulario { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Movimiento: el ensayo ----
+   El suelo se mece de un lado a otro y se amortigua hasta quedar quieto: cada
+   tramo va de un extremo al siguiente con una curva suave, así que frena en
+   cada vuelta como un péndulo. Los aisladores se inclinan lo que el suelo se
+   corre bajo ellos y el edificio casi no se mueve. En escritorio va atado al
+   scroll mientras se leen los tres pasos; en teléfono, mientras el corte está
+   a la vista. Donde el navegador no ata animaciones al scroll, el ensayo dura
+   8 s y empieza al llegar al primer paso (o al corte, en teléfono). */
+[data-aparece] { --entrada: basal-sube; --tramo: 34svh; --duracion: 1100ms; }
+.revela { --entrada: basal-cortina; --tramo: 50svh; --duracion: 1400ms; }
+.ficha [data-aparece] { --entrada: basal-escribe; --tramo: 22svh; --duracion: 900ms; }
+.gantt .barra[data-aparece] { --entrada: basal-crece; --tramo: 40svh; --duracion: 1300ms; }
+.escena[data-aparece] { --entrada: none; }
+@keyframes basal-sube { from { opacity: 0; translate: 0 16px; } }
+@keyframes basal-cortina { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes basal-escribe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes basal-crece { from { scale: 0 1; } }
+@keyframes basal-suelo { 0% { translate: 0 0; } 6% { translate: 16px 0; } 15% { translate: -11.5px 0; } 24% { translate: 8.3px 0; } 33% { translate: -6px 0; } 42% { translate: 4.3px 0; } 51% { translate: -3.1px 0; } 60% { translate: 2.2px 0; } 69% { translate: -1.6px 0; } 78% { translate: 1.2px 0; } 87% { translate: -0.8px 0; } 96%, 100% { translate: 0 0; } }
+@keyframes basal-edificio { 0% { translate: 0 0; } 6% { translate: 1.44px 0; } 15% { translate: -1.03px 0; } 24% { translate: 0.75px 0; } 33% { translate: -0.54px 0; } 42% { translate: 0.39px 0; } 51% { translate: -0.28px 0; } 60% { translate: 0.2px 0; } 69% { translate: -0.14px 0; } 78% { translate: 0.11px 0; } 87% { translate: -0.07px 0; } 96%, 100% { translate: 0 0; } }
+@keyframes basal-aislador { 0% { transform: skewX(0deg); } 6% { transform: skewX(33.5deg); } 15% { transform: skewX(-25.5deg); } 24% { transform: skewX(18.9deg); } 33% { transform: skewX(-13.9deg); } 42% { transform: skewX(10.1deg); } 51% { transform: skewX(-7.3deg); } 60% { transform: skewX(5.2deg); } 69% { transform: skewX(-3.8deg); } 78% { transform: skewX(2.8deg); } 87% { transform: skewX(-1.9deg); } 96%, 100% { transform: skewX(0deg); } }
+@keyframes basal-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.aislador { transform-box: fill-box; transform-origin: 50% 0; }
+.traza path { stroke-dasharray: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .portada > * { animation: basal-sube 1100ms var(--curva) both; }
+  .portada > :nth-child(2) { animation-delay: 120ms; }
+  .portada > :nth-child(3) { animation-delay: 240ms; }
+  .portada > :nth-child(4) { animation-delay: 360ms; }
+  .con-js .suelo { animation: basal-suelo 8s var(--curva) both paused; }
+  .con-js .edificio { animation: basal-edificio 8s var(--curva) both paused; }
+  .con-js .aislador { animation: basal-aislador 8s var(--curva) both paused; }
+  .con-js .traza path { animation: basal-traza 8s var(--curva) both paused; }
+  .con-js .bloque:has(.paso-ensayo.visto) :is(.suelo, .edificio, .aislador, .traza path) { animation-play-state: running; }
+  @media (max-width: 899px) {
+    .con-js .bloque:has(.escena.visto) :is(.suelo, .edificio, .aislador, .traza path) { animation-play-state: running; }
+  }
+  @supports (animation-timeline: view()) {
+    .con-js .bloque { view-timeline: --ensayo; }
+    .con-js :is(.suelo, .edificio, .aislador, .traza path) { animation-duration: auto; animation-play-state: running; animation-timeline: --ensayo; animation-range: contain 24% contain 92%; }
+    @media (max-width: 899px) {
+      .con-js .escena { view-timeline: --ensayo; }
+      .con-js :is(.suelo, .edificio, .aislador, .traza path) { animation-range: contain 0% contain 100%; }
+    }
+  }
+}
+</style>
+</head>
+<body data-boceto="basal">
+<div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Basal Ingeniería</b> es una marca inventada por Volutus para mostrarte el estilo <b>Corporativo</b>.</p></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 34 26"><rect x="1" y="3" width="32" height="4" rx="1" fill="currentColor"/><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="10" width="7" height="8" rx="1.5"/><rect x="21" y="10" width="7" height="8" rx="1.5"/><path d="M6 14h7M21 14h7"/></g><rect x="1" y="21" width="32" height="2" fill="currentColor"/></symbol>
+    <symbol id="visto" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#f2a900" stroke-width="1.6"/><path d="M6 10.5l2.6 2.6L14 7.6" fill="none" stroke="#ffffff" stroke-width="1.8"/></symbol>
+    <pattern id="tierra" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v10" stroke="#c3cdd8" stroke-width="1.2"/></pattern>
+    <pattern id="ventanas" x="140" y="60" width="70" height="40" patternUnits="userSpaceOnUse"><rect x="9" y="11" width="52" height="15" rx="1" fill="#ffffff" stroke="#0f2a44" stroke-width="1"/></pattern>
+    <g id="aislador"><rect x="-15" y="0" width="30" height="3" fill="#0f2a44"/><rect x="-13" y="3" width="26" height="16" rx="2" fill="#1f5fbf"/><path d="M-13 7.5h26M-13 11h26M-13 14.5h26" stroke="#eef2f6" stroke-width="1"/><rect x="-15" y="19" width="30" height="3" fill="#0f2a44"/></g>
+  </defs>
+</svg>
+
+<header class="ancho cabecera">
+  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><span><b>Basal</b> <span>Ingeniería</span></span></a>
+  <nav aria-label="Secciones"><ul><li><a href="#ensayo">El ensayo</a></li><li><a href="#proyectos">Proyectos</a></li><li><a href="#metodo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></nav>
+  <a class="boton boton-borde" href="#contacto">Conversemos</a>
+</header>
+
+<main>
+  <div class="ancho bloque" id="inicio">
+    <section class="portada" aria-labelledby="titulo">
+      <p class="rotulo">Aislación sísmica y cálculo estructural</p>
+      <h1 id="titulo">Edificios que siguen funcionando al día siguiente del terremoto</h1>
+      <p class="suave">Calculamos hospitales, edificios y puentes que se apoyan sobre aisladores. Cuando el suelo se mueve, ellos absorben el movimiento y la estructura queda casi quieta.</p>
+      <div class="acciones"><a class="boton boton-lleno" href="#contacto">Pedir una evaluación</a><a class="enlace" href="#ensayo">Ver el ensayo</a></div>
+    </section>
+
+    <div class="escena-col">
+      <div class="escena" data-aparece>
+        <svg class="corte" viewBox="0 0 560 400" role="img" aria-label="Corte de un hospital de cinco pisos y un subterráneo apoyado sobre cinco aisladores sísmicos, con la junta que lo separa del muro de contención">
+          <g class="suelo">
+            <path d="M-40 226H104V350H456V226H600V420H-40Z" fill="url(#tierra)"/>
+            <path d="M-40 226H104M456 226H600" stroke="#0f2a44" stroke-width="2"/>
+            <rect x="104" y="226" width="8" height="124" fill="#0f2a44"/>
+            <rect x="448" y="226" width="8" height="124" fill="#0f2a44"/>
+            <rect x="104" y="336" width="352" height="14" fill="#c3cdd8" stroke="#0f2a44"/>
+            <g fill="#ffffff" stroke="#0f2a44"><rect x="122" y="322" width="36" height="14"/><rect x="192" y="322" width="36" height="14"/><rect x="262" y="322" width="36" height="14"/><rect x="332" y="322" width="36" height="14"/><rect x="402" y="322" width="36" height="14"/></g>
+          </g>
+          <g class="edificio">
+            <rect x="140" y="60" width="280" height="160" fill="url(#ventanas)"/>
+            <g fill="none" stroke="#0f2a44" stroke-width="2"><rect x="140" y="60" width="280" height="232"/><path d="M140 100H420M140 140H420M140 180H420M140 220H420M140 260H420M210 60V292M280 60V292M350 60V292"/></g>
+            <rect x="128" y="290" width="304" height="10" fill="#0f2a44"/>
+            <g fill="none" stroke="#0f2a44" stroke-width="1.5"><circle cx="280" cy="44" r="13"/><path d="M274 37v14M286 37v14M274 44h12"/></g>
+            <path d="M154 60V48h22v12" fill="none" stroke="#0f2a44" stroke-width="1.5"/>
+            <g transform="translate(140 300)"><use href="#aislador" class="aislador"/></g>
+            <g transform="translate(210 300)"><use href="#aislador" class="aislador"/></g>
+            <g transform="translate(280 300)"><use href="#aislador" class="aislador"/></g>
+            <g transform="translate(350 300)"><use href="#aislador" class="aislador"/></g>
+            <g transform="translate(420 300)"><use href="#aislador" class="aislador"/></g>
+          </g>
+          <g class="nota" fill="none" stroke="#5a6b7d" stroke-width="1">
+            <path d="M120 262V196H40"/><path d="M438 311H560" stroke-dasharray="4 4"/><path d="M436 306L470 284H556"/>
+          </g>
+          <g class="nota"><text x="40" y="190">Junta sísmica</text><text x="40" y="206">40 cm</text><text x="478" y="262">Aislador</text><text x="478" y="278">Ø 900 mm</text><text x="478" y="330">Nivel −6,40</text></g>
+          <text class="titulo-plano" x="0" y="388">CORTE A–A · HOSPITAL MODELO · ESC. 1:200</text>
+        </svg>
+        <div class="registro">
+          <p class="registro-cabeza"><span>Ensayo · registro escalado</span><span class="suave">Mesa vibratoria · 30 s</span></p>
+          <svg class="traza" viewBox="0 0 600 100" aria-hidden="true">
+            <path d="M0 50H600M0 10V90" stroke="#c3cdd8" stroke-width="1"/>
+            <path pathLength="1" stroke="#f2a900" d="M0 50C13 50 23 8.4 36 8.4C55.4 8.4 70.6 79.9 90 79.9C109.4 79.9 124.6 28.4 144 28.4C163.4 28.4 178.6 65.6 198 65.6C217.4 65.6 232.6 38.8 252 38.8C271.4 38.8 286.6 58.1 306 58.1C325.4 58.1 340.6 44.3 360 44.3C379.4 44.3 394.6 54.2 414 54.2C433.4 54.2 448.6 46.9 468 46.9C487.4 46.9 502.6 52.1 522 52.1C541.4 52.1 556.6 50 576 50L600 50"/>
+            <path pathLength="1" stroke="#0f2a44" d="M0 50C13 50 23 46.3 36 46.3C55.4 46.3 70.6 52.7 90 52.7C109.4 52.7 124.6 48 144 48C163.4 48 178.6 51.4 198 51.4C217.4 51.4 232.6 49 252 49C271.4 49 286.6 50.7 306 50.7C325.4 50.7 340.6 49.5 360 49.5C379.4 49.5 394.6 50.4 414 50.4C433.4 50.4 448.6 49.7 468 49.7C487.4 49.7 502.6 50.2 522 50.2C541.4 50.2 556.6 50 576 50L600 50"/>
+          </svg>
+          <p class="leyenda"><span><i></i>Suelo: hasta 22 cm</span><span class="edificio"><i></i>Último piso: menos de 2 cm</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pasos-ensayo" id="ensayo">
+      <section class="paso-ensayo" data-aparece aria-labelledby="ensayo-1">
+        <p class="rotulo num">El ensayo</p>
+        <h2 id="ensayo-1">Cuando el suelo se mueve, el edificio casi no se entera</h2>
+        <p class="suave">Entre el edificio y sus fundaciones van aisladores de capas de goma y acero. Se deforman de lado para que el movimiento del suelo no suba por la estructura.</p>
+      </section>
+      <section class="paso-ensayo" data-aparece aria-labelledby="ensayo-2">
+        <p class="cifra" id="ensayo-2">22 → 2 <small>cm</small></p>
+        <p class="suave">En este registro de ensayo el suelo se desplaza hasta 22 centímetros. El último piso, menos de 2. Los equipos de un pabellón siguen en su lugar y nadie tiene que evacuar.</p>
+      </section>
+      <section class="paso-ensayo" data-aparece aria-labelledby="ensayo-3">
+        <h2 id="ensayo-3">Y todo vuelve a su sitio</h2>
+        <p class="suave">Los aisladores recuperan su forma y el edificio queda donde estaba. Lo revisamos en terreno después de cada sismo de magnitud 6 o más, sin costo para el mandante.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="seccion proyectos" id="proyectos">
+    <div class="ancho">
+      <div class="cabeza" data-aparece>
+        <div><p class="rotulo num">Proyectos</p><h2>Salud, vivienda e infraestructura</h2></div>
+        <p class="suave">Desde 1998 hemos aislado 214 estructuras en Chile, Perú y Colombia. Estos son tres de los últimos, con sus datos.</p>
+      </div>
+
+      <article class="proyecto">
+        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/hospital-1200.webp" srcset="/image/bocetos/basal/hospital-700.webp 700w, /image/bocetos/basal/hospital-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio hospitalario moderno de vidrio, con una entrada curva bajo el cielo azul"></figure>
+        <div class="proyecto-texto">
+          <p class="rotulo" data-aparece>Salud</p>
+          <h3 data-aparece>Hospital del Pacífico, San Antonio</h3>
+          <p class="suave" data-aparece>Doce pabellones y doscientas camas que tienen que seguir atendiendo justo cuando más se necesitan.</p>
+          <dl class="ficha">
+            <div data-aparece><dt>Aisladores</dt><dd>186 elastoméricos</dd></div>
+            <div data-aparece style="--orden: 1"><dt>Superficie</dt><dd>42.600 m²</dd></div>
+            <div data-aparece style="--orden: 2"><dt>Año</dt><dd>2024</dd></div>
+            <div data-aparece style="--orden: 3"><dt>Mandante</dt><dd>Concesionaria Hospital del Pacífico</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="proyecto">
+        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/obra-1200.webp" srcset="/image/bocetos/basal/obra-700.webp 700w, /image/bocetos/basal/obra-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio en obra gruesa junto a una grúa torre, contra un cielo con nubes"></figure>
+        <div class="proyecto-texto">
+          <p class="rotulo" data-aparece>Vivienda</p>
+          <h3 data-aparece>Edificio Parque Antumapu, La Florida</h3>
+          <p class="suave" data-aparece>Dieciocho pisos de departamentos. Con aisladores, la estructura usa menos acero y los muros no se fisuran.</p>
+          <dl class="ficha">
+            <div data-aparece><dt>Aisladores</dt><dd>64 elastoméricos</dd></div>
+            <div data-aparece style="--orden: 1"><dt>Superficie</dt><dd>21.300 m²</dd></div>
+            <div data-aparece style="--orden: 2"><dt>Año</dt><dd>2023</dd></div>
+            <div data-aparece style="--orden: 3"><dt>Mandante</dt><dd>Inmobiliaria Los Castaños</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <article class="proyecto">
+        <figure class="foto revela" data-aparece><img src="/image/bocetos/basal/puente-1200.webp" srcset="/image/bocetos/basal/puente-700.webp 700w, /image/bocetos/basal/puente-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un puente atirantado de varias torres que cruza el mar, con cerros al fondo"></figure>
+        <div class="proyecto-texto">
+          <p class="rotulo" data-aparece>Infraestructura</p>
+          <h3 data-aparece>Puente Seno Reloncaví, Los Lagos</h3>
+          <p class="suave" data-aparece>Seiscientos cuarenta metros sobre el agua. Los aisladores van en las cepas y en los estribos.</p>
+          <dl class="ficha">
+            <div data-aparece><dt>Aisladores</dt><dd>48 de péndulo friccional</dd></div>
+            <div data-aparece style="--orden: 1"><dt>Largo</dt><dd>640 m</dd></div>
+            <div data-aparece style="--orden: 2"><dt>Año</dt><dd>2025</dd></div>
+            <div data-aparece style="--orden: 3"><dt>Mandante</dt><dd>Concesión Vial Reloncaví</dd></div>
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="ancho seccion" id="metodo">
+    <div class="cabeza" data-aparece>
+      <div><p class="rotulo num">Cómo trabajamos</p><h2>Plazos con nombre y apellido</h2></div>
+      <p class="suave">Un edificio de mediana altura nos toma dieciséis semanas, de la mecánica de suelos a los planos firmados. Cada etapa tiene a alguien que responde por ella.</p>
+    </div>
+    <ol class="gantt">
+      <li><div><h3>Suelo y diagnóstico</h3><p class="quien">Carolina Méndez, socia</p></div><div class="pista"><span class="barra" data-aparece style="grid-column: 1 / 4">3 sem.</span></div></li>
+      <li><div><h3>Modelo y cálculo</h3><p class="quien">Tomás Arancibia, jefe de cálculo</p></div><div class="pista"><span class="barra" data-aparece style="grid-column: 3 / 11; --orden: 1">8 semanas</span></div></li>
+      <li><div><h3>Revisión independiente</h3><p class="quien">Revisor externo inscrito en el MINVU</p></div><div class="pista"><span class="barra" data-aparece style="grid-column: 10 / 14; --orden: 2">4 sem.</span></div></li>
+      <li><div><h3>Planos y especificaciones</h3><p class="quien">Ignacio Vera, aislación</p></div><div class="pista"><span class="barra" data-aparece style="grid-column: 11 / 17; --orden: 3">6 semanas</span></div></li>
+      <li><div><h3>Inspección en obra</h3><p class="quien">Paula Ríos, cada quince días</p></div><div class="pista"><span class="barra punteada" data-aparece style="grid-column: 16 / 19; --orden: 4"><span>obra</span></span></div></li>
+    </ol>
+    <p class="semanas" aria-hidden="true"><span></span><span><span>Sem. 1</span><span>6</span><span>12</span><span>18</span></span></p>
+  </section>
+
+  <section class="ancho seccion" id="equipo" style="padding-top: 0">
+    <div class="equipo">
+      <figure class="revela" data-aparece>
+        <div class="foto"><img src="/image/bocetos/basal/planos-1400.webp" srcset="/image/bocetos/basal/planos-800.webp 800w, /image/bocetos/basal/planos-1400.webp 1400w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1400" height="788" loading="lazy" alt="Dos ingenieras con casco revisan un plano junto a una ventana con edificios de fondo"></div>
+        <figcaption>Carolina Méndez y Paula Ríos revisan los planos del Hospital del Pacífico.</figcaption>
+      </figure>
+      <div data-aparece>
+        <p class="rotulo num">Equipo</p>
+        <h2 style="font-size: clamp(28px, 3vw, 40px); margin-block: 12px 24px">Veintiocho ingenieros, cuatro que firman</h2>
+        <ul class="personas">
+          <li><b>Carolina Méndez</b><span>Socia fundadora · ingeniera civil estructural, 26 años de oficio</span></li>
+          <li><b>Tomás Arancibia</b><span>Jefe de cálculo · modelos no lineales</span></li>
+          <li><b>Ignacio Vera</b><span>Aislación y ensayos · magíster en ingeniería sísmica</span></li>
+          <li><b>Paula Ríos</b><span>Inspección técnica de obras</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="certificaciones" data-aparece>
+      <figure class="foto"><img src="/image/bocetos/basal/fierro-800.webp" srcset="/image/bocetos/basal/fierro-500.webp 500w, /image/bocetos/basal/fierro-800.webp 800w" sizes="(min-width: 900px) 360px, 100vw" width="800" height="1000" loading="lazy" alt="Barras de acero de refuerzo que suben hacia el cielo, vistas desde abajo"></figure>
+      <div>
+        <h2>Lo que nos revisan a nosotros</h2>
+        <ul>
+          <li><svg aria-hidden="true"><use href="#visto"/></svg><span><b>ISO 9001:2015</b> en diseño estructural, con auditoría externa cada año.</span></li>
+          <li><svg aria-hidden="true"><use href="#visto"/></svg><span><b>Revisores de cálculo</b> inscritos en el registro del MINVU, primera categoría.</span></li>
+          <li><svg aria-hidden="true"><use href="#visto"/></svg><span><b>Diseño según NCh2745</b>, la norma chilena de edificios con aislación sísmica.</span></li>
+          <li><svg aria-hidden="true"><use href="#visto"/></svg><span><b>Seguro de responsabilidad profesional</b> por UF 60.000 en cada proyecto.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="ancho seccion contacto" id="contacto">
+    <div data-aparece>
+      <p class="rotulo num">Contacto</p>
+      <h2>Cuéntenos de su proyecto</h2>
+      <p class="suave" style="max-width: 38ch">Respondemos en tres días hábiles con una primera opinión: si conviene aislar, cuánto cuesta y cuánto se ahorra en estructura.</p>
+      <div class="datos">
+        <p><b>Oficina</b>Av. Apoquindo 3846, piso 9, Las Condes</p>
+        <p><b>Correo</b>proyectos@basalingenieria.cl</p>
+        <p><b>Horario</b>Lunes a viernes, 8:30 a 18:00</p>
+      </div>
+    </div>
+    <form class="formulario" data-muestra data-aparece toolname="pedir_evaluacion_estructural" tooldescription="Pide a Basal Ingeniería una evaluación de aislación sísmica o cálculo estructural para un proyecto. Basal es una empresa inventada por Volutus como boceto de página: el formulario no envía nada y responde que es un boceto.">
+      <label>Empresa<input name="empresa" autocomplete="organization" required></label>
+      <label>Correo<input type="email" name="correo" autocomplete="email" required></label>
+      <label>Tipo de proyecto<select name="tipo" toolparamdescription="Qué se va a construir: hospital o clínica, edificio de vivienda, oficinas, puente o infraestructura, o industria"><option>Hospital o clínica</option><option>Edificio de vivienda</option><option>Oficinas</option><option>Puente o infraestructura</option><option>Industria</option></select></label>
+      <label>Superficie (m²)<input type="number" name="superficie" min="100" max="500000" inputmode="numeric" toolparamdescription="Superficie construida aproximada, en metros cuadrados"></label>
+      <label class="todo">Etapa<select name="etapa" toolparamdescription="En qué etapa está el proyecto: idea, anteproyecto, proyecto, en obra o edificio existente"><option>Idea</option><option>Anteproyecto</option><option>Proyecto</option><option>En obra</option><option>Edificio existente</option></select></label>
+      <label class="todo">Comentarios<textarea name="mensaje" rows="3" maxlength="800" toolparamdescription="Lo que conviene saber del proyecto, en pocas frases: ubicación, pisos, plazos"></textarea></label>
+      <button class="boton boton-lleno todo" type="submit">Enviar solicitud</button>
+    </form>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="ancho pie-grilla">
+    <div><a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#logo"/></svg><span><b>Basal</b> <span>Ingeniería</span></span></a><p class="pie-lema">Aislación sísmica y cálculo estructural desde 1998.</p></div>
+    <div><p class="pie-titulo">Oficina</p><p>Av. Apoquindo 3846, piso 9<br>Las Condes, Santiago</p></div>
+    <div><p class="pie-titulo">Contacto</p><p>proyectos@basalingenieria.cl<br>Lunes a viernes, 8:30 a 18:00</p></div>
+    <nav aria-label="Pie"><p class="pie-titulo">Sitio</p><ul><li><a href="#ensayo">El ensayo</a></li><li><a href="#proyectos">Proyectos</a></li><li><a href="#metodo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></nav>
+  </div>
+  <div class="ancho pie-fila"><span>© 2026 Basal Ingeniería SpA · ISO 9001:2015 · Registro MINVU</span><span>Boceto de Volutus · marca inventada</span></div>
+</footer>
+</body>
+</html>

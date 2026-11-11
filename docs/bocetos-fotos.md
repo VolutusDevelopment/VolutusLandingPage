@@ -110,3 +110,80 @@ Las fotos de `public/image/bocetos/<boceto>/` vienen de [Unsplash](https://unspl
 | pozon-volcan | https://images.unsplash.com/photo-1578602857088-a6bca7b09710 |
 | habitacion | https://images.unsplash.com/photo-1757852823730-8bf5b66af780 |
 | cena | https://images.unsplash.com/photo-1587560555570-4d3f84dcee05 |
+
+## basal
+
+| Archivo | Foto original |
+| --- | --- |
+| obra | https://images.unsplash.com/photo-1644221150186-5d785a471f44 |
+| hospital | https://images.unsplash.com/photo-1764885517847-79d62138cc58 |
+| puente | https://images.unsplash.com/photo-1494867121604-060b20cba39c |
+| planos | https://images.unsplash.com/photo-1774600166818-e554a4d4c376 |
+| fierro | https://images.unsplash.com/photo-1530863506128-dc9eb5c3e0fc |
+
+## ladera
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1764438631347-af1911339a25 |
+| retrato | https://images.unsplash.com/photo-1771086061785-ac187f1969ad |
+| invierno | https://images.unsplash.com/photo-1706364057629-c22c600863d4 |
+| primavera | https://images.unsplash.com/photo-1618100789816-86508e3f2275 |
+| verano | https://images.unsplash.com/photo-1478116285712-2d465a7f29b5 |
+| vendimia | https://images.unsplash.com/photo-1602170284347-f9c28856f149 |
+| bodega | https://images.unsplash.com/photo-1561906814-23da9a8bfee0 |
+| mesa | https://images.unsplash.com/photo-1789676062016-fefd691a4c88 |
+| pais | https://images.unsplash.com/photo-1530367184358-c28b2007c3a1 |
+| cinsault | https://images.unsplash.com/photo-1790278136305-14291bc72615 |
+| moscatel | https://images.unsplash.com/photo-1597905722448-a1df7c00000a |
+
+## iris
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1604781099561-c70393a38a6d |
+| consulta | https://images.unsplash.com/photo-1766310549795-dd0fc75d499f |
+| conversa | https://images.unsplash.com/photo-1659989693492-242b1bd65784 |
+| sala | https://images.unsplash.com/photo-1759987383760-327efaf5522a |
+| soto | https://images.unsplash.com/photo-1758685847967-c598c3b176b0 |
+| herrera | https://images.unsplash.com/photo-1758691463582-11aea602cd4a |
+| pino | https://images.unsplash.com/photo-1757125736482-328a3cdd9743 |
+
+## quillay
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1618840152526-92682643af2d |
+| hojas | https://images.unsplash.com/photo-1610651445032-613d45fa8c66 |
+| espuma | https://images.unsplash.com/photo-1508759073847-9ca702cec7d2 |
+| jabon | https://images.unsplash.com/photo-1620567838715-4fc924689483 |
+| manos | https://images.unsplash.com/photo-1605264964528-06403738d6dc |
+| maqui | https://images.unsplash.com/photo-1584305574647-0cc949a2bb9f |
+| aceite | https://images.unsplash.com/photo-1671493235081-5842463637cd |
+| champu | https://images.unsplash.com/photo-1618840313409-66c0d92d6f26 |
+| mosqueta | https://images.unsplash.com/photo-1773968088738-3a572416221d |
+
+## pelusa
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1658337921250-10578c1372fa |
+| juego | https://images.unsplash.com/photo-1597046835715-16f81ac132c0 |
+| siesta | https://images.unsplash.com/photo-1601880348117-25c1127a95df |
+| bano | https://images.unsplash.com/photo-1698313790088-c59e134c75e8 |
+| peluqueria | https://images.unsplash.com/photo-1611173622933-91942d394b04 |
+| mostaza | https://images.unsplash.com/photo-1674224624366-b8c6cf5ac3d2 |
+| tuerca | https://images.unsplash.com/photo-1790172537408-3c6adbb2fc1f |
+| pimienta | https://images.unsplash.com/photo-1628884978036-35035df5968b |
+| charqui | https://images.unsplash.com/photo-1624956578877-4948166c5dcb |
+
+## lucero
+
+| Archivo | Foto original |
+| --- | --- |
+| portada | https://images.unsplash.com/photo-1784399620949-e7da143e02d1 |
+| noche | https://images.unsplash.com/photo-1593029352324-5d8a5230d224 |
+| arriendo | https://images.unsplash.com/photo-1682292508562-d93da8eaf271 |
+| clases | https://images.unsplash.com/photo-1578057183197-423269e14014 |
+| bola | https://images.unsplash.com/photo-1759906219378-9c1accdc32c9 |
+| historia | https://images.unsplash.com/photo-1785088561527-3b48824b5eb5 |
