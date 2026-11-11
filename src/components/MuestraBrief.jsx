@@ -367,7 +367,7 @@ export default function MuestraBrief({ muestras, casilla, opcion }) {
 // El dibujo de cada reacción a un estilo (reglas.js), en su círculo: el
 // corazón, la onda del «más o menos» y la cruz. Al marcarse, el círculo se
 // llena con su color (muestras.css).
-const TRAZOS_DE_REACCION = {
+export const TRAZOS_DE_REACCION = {
   si: 'M12 20.2s-7.6-4.6-7.6-10.4A4.1 4.1 0 0 1 12 7.3a4.1 4.1 0 0 1 7.6 2.5c0 5.8-7.6 10.4-7.6 10.4z',
   medio: 'M4.5 12.5c2.5-3.3 5-3.3 7.5 0s5 3.3 7.5 0',
   no: 'M7.5 7.5l9 9M16.5 7.5l-9 9',

@@ -22,7 +22,7 @@
   --linea: #e2e0da;
   --ancho: 1360px;
   --margen: clamp(20px, 4vw, 56px);
-  --calma: cubic-bezier(0.25, 1, 0.5, 1);
+  --calma: cubic-bezier(0.45, 0, 0.2, 1);
 }
 * { box-sizing: border-box; }
 html { background: var(--papel); scroll-behavior: smooth; }
@@ -57,6 +57,7 @@ p { margin: 0; }
 .portada-foto img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
 .portada-foto figcaption, .proyecto figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-top: 14px; }
 .portada-detalle { grid-column: 2 / 5; grid-row: 2; align-self: end; }
+.portada-detalle .marco { overflow: hidden; }
 .portada-detalle img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
 .portada-detalle figcaption { margin-top: 12px; }
 
@@ -168,17 +169,34 @@ p { margin: 0; }
   .formulario { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ---- Movimiento: las fotos se descubren como una cortina que sube ----
-   La foto grande de la portada no se tapa (es lo primero que se pinta):
-   solo se asienta. Las demás se destapan de abajo hacia arriba al aparecer. */
-@keyframes asentar { from { transform: scale(1.06); } }
+/* ---- Movimiento: una cortina que sube ----
+   Alba casi no se mueve: lo que aparece no viaja, se aclara. Las fotos se
+   destapan de abajo hacia arriba como una cortina que sube, y la imagen
+   sigue asentándose un poco más después de abierta, así que nada se detiene
+   de golpe. Todo va atado al scroll, con curvas lentas en las dos puntas. En
+   la portada, la foto grande no se tapa (es lo primero que se pinta): solo se
+   asienta y, al bajar, queda un poco atrás; la del detalle abre su cortina
+   después. */
+[data-aparece] { --entrada: alba-aclara; --curva: var(--calma); --tramo: 40svh; --duracion: 1400ms; }
+.revela { --entrada: none; }
+.revela .marco { --entrada: alba-cortina; --tramo: 50svh; --duracion: 1500ms; }
+.revela img { --entrada: alba-asienta; --tramo: 85svh; --duracion: 2200ms; }
+@keyframes alba-aclara { from { opacity: 0; translate: 0 8px; } }
+@keyframes alba-cortina { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes alba-asienta { from { scale: 1.14; } }
+@keyframes alba-queda { to { translate: 0 7%; } }
 @media (prefers-reduced-motion: no-preference) {
-  .portada-foto img { animation: asentar 2200ms var(--calma) both; }
-  .con-js .revela[data-aparece] { opacity: 1; transform: none; }
-  .con-js .revela .marco, .con-js .revela.marco { clip-path: inset(0 0 0 0); transition: clip-path 1500ms var(--calma); }
-  .con-js .revela:not(.visto) .marco, .con-js .revela.marco:not(.visto) { clip-path: inset(100% 0 0 0); }
-  .con-js .revela img { transition: transform 1800ms var(--calma); }
-  .con-js .revela:not(.visto) img { transform: scale(1.12); }
+  .portada-texto > * { animation: alba-aclara 1400ms var(--calma) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 150ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 300ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 450ms; }
+  .portada-foto img { animation: alba-asienta 2400ms var(--calma) both; }
+  .portada-detalle .marco { animation: alba-cortina 1600ms var(--calma) 700ms both; }
+  .portada-detalle img { animation: alba-asienta 2400ms var(--calma) 700ms both; }
+  .portada-detalle figcaption { animation: alba-aclara 1200ms var(--calma) 1300ms both; }
+  @supports (animation-timeline: scroll()) {
+    .portada-foto { animation: alba-queda linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+  }
 }
 </style>
 </head>
@@ -205,7 +223,7 @@ p { margin: 0; }
       <img src="/image/bocetos/alba/portada-1300.webp" srcset="/image/bocetos/alba/portada-700.webp 700w, /image/bocetos/alba/portada-1300.webp 1300w" sizes="(min-width: 900px) 46vw, 100vw" width="1300" height="1733" alt="Una sala blanca bajo un arco, con un sofá oscuro, una mesa baja y una rama seca en un florero" fetchpriority="high">
       <figcaption><span class="rotulo" style="color: var(--tinta)">Casa Alta</span><span class="meta"><span>Residencial</span><span>Lo Barnechea</span><span>2025</span></span></figcaption>
     </figure>
-    <figure class="portada-detalle revela" data-aparece>
+    <figure class="portada-detalle">
       <div class="marco"><img src="/image/bocetos/alba/cortina-500.webp" srcset="/image/bocetos/alba/cortina-500.webp 500w, /image/bocetos/alba/cortina-900.webp 900w" sizes="22vw" width="900" height="1200" loading="lazy" alt="Luz de la tarde que atraviesa una cortina de lino"></div>
       <figcaption class="meta">Lino, luz de poniente</figcaption>
     </figure>
@@ -220,7 +238,7 @@ p { margin: 0; }
     <div class="encabezado" data-aparece><h2>Proyectos recientes</h2><p class="meta"><span>12 proyectos</span><span>2021 — 2025</span></p></div>
     <div class="grilla">
       <figure class="proyecto p-matta revela" data-aparece>
-        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/matta-1400.webp" srcset="/image/bocetos/alba/matta-800.webp 800w, /image/bocetos/alba/matta-1400.webp 1400w" sizes="(min-width: 900px) 62vw, 100vw" width="1400" height="933" loading="lazy" alt="Una sala vacía de muros de ladrillo y una gran ventana de fierro, con una banca de madera al centro"></div></a>
+        <a href="#contacto"><div class="marco" data-sigue><img data-sigue src="/image/bocetos/alba/matta-1400.webp" srcset="/image/bocetos/alba/matta-800.webp 800w, /image/bocetos/alba/matta-1400.webp 1400w" sizes="(min-width: 900px) 62vw, 100vw" width="1400" height="933" loading="lazy" alt="Una sala vacía de muros de ladrillo y una gran ventana de fierro, con una banca de madera al centro"></div></a>
       </figure>
       <div class="p-matta-texto" data-aparece>
         <h3 class="titulo-proyecto">Galpón Matta</h3>
@@ -228,15 +246,15 @@ p { margin: 0; }
         <p class="meta"><span>Vivienda</span><span>Santiago Centro</span><span>2025</span></p>
       </div>
       <figure class="proyecto p-lastarria revela" data-aparece>
-        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/lastarria-600.webp" srcset="/image/bocetos/alba/lastarria-600.webp 600w, /image/bocetos/alba/lastarria-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1333" loading="lazy" alt="Una escalera de cemento claro que sube hacia la luz, con un jarrón en el descanso"></div>
+        <a href="#contacto"><div class="marco" data-sigue><img data-sigue src="/image/bocetos/alba/lastarria-600.webp" srcset="/image/bocetos/alba/lastarria-600.webp 600w, /image/bocetos/alba/lastarria-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1333" loading="lazy" alt="Una escalera de cemento claro que sube hacia la luz, con un jarrón en el descanso"></div>
         <figcaption><h3>Lastarria</h3><span class="meta"><span>Departamento</span><span>2024</span></span></figcaption></a>
       </figure>
       <figure class="proyecto p-vitacura revela" data-aparece>
-        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/vitacura-600.webp" srcset="/image/bocetos/alba/vitacura-600.webp 600w, /image/bocetos/alba/vitacura-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1250" loading="lazy" alt="Un sillón de bouclé blanco junto a un puf, contra un muro claro"></div>
+        <a href="#contacto"><div class="marco" data-sigue><img data-sigue src="/image/bocetos/alba/vitacura-600.webp" srcset="/image/bocetos/alba/vitacura-600.webp 600w, /image/bocetos/alba/vitacura-1000.webp 1000w" sizes="(min-width: 900px) 30vw, 100vw" width="1000" height="1250" loading="lazy" alt="Un sillón de bouclé blanco junto a un puf, contra un muro claro"></div>
         <figcaption><h3>Consulta Vitacura</h3><span class="meta"><span>Salud</span><span>2024</span></span></figcaption></a>
       </figure>
       <figure class="proyecto p-pirque revela" data-aparece>
-        <a href="#contacto"><div class="marco"><img src="/image/bocetos/alba/pirque-600.webp" srcset="/image/bocetos/alba/pirque-600.webp 600w, /image/bocetos/alba/pirque-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 100vw" width="1000" height="1000" loading="lazy" alt="Una escalera de caracol blanca vista desde abajo, con curvas suaves"></div>
+        <a href="#contacto"><div class="marco" data-sigue><img data-sigue src="/image/bocetos/alba/pirque-600.webp" srcset="/image/bocetos/alba/pirque-600.webp 600w, /image/bocetos/alba/pirque-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 100vw" width="1000" height="1000" loading="lazy" alt="Una escalera de caracol blanca vista desde abajo, con curvas suaves"></div>
         <figcaption><h3>Casa Pirque</h3><span class="meta"><span>Residencial</span><span>2023</span></span></figcaption></a>
       </figure>
     </div>
@@ -263,9 +281,9 @@ p { margin: 0; }
     <div class="encabezado" data-aparece><h2>Cómo trabajamos</h2><p class="meta"><span>De 8 a 20 semanas</span></p></div>
     <ol class="pasos">
       <li class="paso" data-aparece><h3>Escuchar</h3><p>Visitamos el espacio y conversamos sobre cómo lo vives hoy y qué te falta.</p><p class="meta">1 semana</p></li>
-      <li class="paso" data-aparece style="--retraso: 100ms"><h3>Medir y dibujar</h3><p>Levantamos el espacio y te mostramos dos propuestas en planta y en 3D.</p><p class="meta">2 a 3 semanas</p></li>
-      <li class="paso" data-aparece style="--retraso: 200ms"><h3>Elegir materiales</h3><p>Muestras reales en tu casa, con la luz que tiene a cada hora del día.</p><p class="meta">2 semanas</p></li>
-      <li class="paso" data-aparece style="--retraso: 300ms"><h3>Acompañar la obra</h3><p>Coordinamos a los maestros y vamos a la obra dos veces por semana.</p><p class="meta">4 a 14 semanas</p></li>
+      <li class="paso" data-aparece style="--orden: 1"><h3>Medir y dibujar</h3><p>Levantamos el espacio y te mostramos dos propuestas en planta y en 3D.</p><p class="meta">2 a 3 semanas</p></li>
+      <li class="paso" data-aparece style="--orden: 2"><h3>Elegir materiales</h3><p>Muestras reales en tu casa, con la luz que tiene a cada hora del día.</p><p class="meta">2 semanas</p></li>
+      <li class="paso" data-aparece style="--orden: 3"><h3>Acompañar la obra</h3><p>Coordinamos a los maestros y vamos a la obra dos veces por semana.</p><p class="meta">4 a 14 semanas</p></li>
     </ol>
   </section>
 

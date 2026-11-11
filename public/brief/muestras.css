@@ -1246,8 +1246,7 @@
    pasar, el círculo toma el color de su reacción; al marcarse, se llena con
    él y salta, y el corazón se rellena. Los tres colores dan 5:1 o más con el
    blanco. */
-.brief-estilos,
-.brief-visor {
+.brief-estilos {
   --gusta: #c2364f;
   --medio: #905500;
   --nogusta: #47607a;
@@ -1424,10 +1423,14 @@
 }
 
 /* ==================== El visor de los bocetos ====================
- * Cada boceto a pantalla completa (src/brief-visor.js), entre dos franjas que
- * no lo tapan: arriba volver, el estilo y cuánto va; abajo la pregunta, la
- * reacción, la nota y el paso al anterior o al siguiente. Mientras carga se ve el color del
- * boceto, y el boceto aparece con un fundido. Las franjas respetan las zonas
+ * Un mazo de cartas (src/brief-visor.js). Cada boceto es una carta casi a
+ * pantalla completa, sobre la tinta del sitio, con el siguiente esperando
+ * debajo, un poco más chico. Arriba va una franja fina con salir, el estilo y
+ * cuánto va; sobre la carta flotan cuatro botones redondos que no tapan más
+ * que su círculo: atrás, no, comentar y me gusta. Al arrastrar, la carta se
+ * corre y gira, aparece su sello y el botón de ese lado crece
+ * (`--avance`, de -1 a 1 en el umbral). El comentario sube en una hoja.
+ * Mientras carga, la carta tiene el color del boceto. Todo respeta las zonas
  * seguras del teléfono. */
 html:has(.brief-visor[open]) {
   overflow: hidden;
@@ -1435,6 +1438,8 @@ html:has(.brief-visor[open]) {
 
 .brief-visor {
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --margen: 8px;
+  --vidrio-visor: rgb(10 26 42 / 0.66);
   position: fixed;
   inset: 0;
   width: 100%;
@@ -1444,13 +1449,14 @@ html:has(.brief-visor[open]) {
   margin: 0;
   padding: 0;
   border: 0;
-  background: var(--fondo-visor, #ffffff);
+  overflow: hidden;
+  background: var(--fondo);
   color: var(--texto);
 }
 
 .brief-visor[open] {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .brief-visor::backdrop {
@@ -1470,41 +1476,38 @@ html:has(.brief-visor[open]) {
   }
 }
 
-/* Las dos franjas van en la zona oscura del sitio (`zona-plano`, en
-   Brief.jsx): un marco de tinta que separa el boceto de los controles, sea
-   claro u oscuro el boceto, y sobre el que los controles resaltan. */
-.brief-visor-cabeza,
-.brief-visor-pie {
-  background: var(--fondo);
-  color: var(--texto);
+@media (min-width: 768px) {
+  .brief-visor {
+    --margen: 14px;
+  }
 }
 
 .brief-visor-cabeza {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
   align-items: center;
   gap: var(--e-3);
-  padding: calc(var(--e-2) + env(safe-area-inset-top, 0px)) max(var(--e-4), env(safe-area-inset-right, 0px)) var(--e-2)
-    max(var(--e-4), env(safe-area-inset-left, 0px));
+  padding: calc(6px + env(safe-area-inset-top, 0px)) max(var(--margen), env(safe-area-inset-right, 0px)) 6px max(var(--margen), env(safe-area-inset-left, 0px));
 }
 
-.brief-visor-cerrar {
-  min-height: 44px;
-  padding: 0 var(--e-4);
-  border: 1px solid color-mix(in srgb, var(--texto) 35%, transparent);
+.brief-visor-salir {
+  justify-self: start;
+  min-height: 40px;
+  padding: 0 var(--e-3);
+  border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--texto);
   font: 600 var(--texto-sm) / 1 var(--fuente-texto);
   cursor: pointer;
-  transition: border-color 160ms ease;
+  transition: background-color 160ms ease;
 }
 
-.brief-visor-cerrar:hover {
-  border-color: var(--texto);
+.brief-visor-salir:hover {
+  background: color-mix(in srgb, var(--texto) 10%, transparent);
 }
 
-.brief-visor-cerrar:focus-visible {
+.brief-visor-salir:focus-visible {
   outline: 2px solid var(--foco);
   outline-offset: 2px;
 }
@@ -1514,6 +1517,7 @@ html:has(.brief-visor[open]) {
   min-width: 0;
   margin: 0;
   text-align: center;
+  font-size: var(--texto-sm);
   line-height: 1.25;
 }
 
@@ -1531,133 +1535,310 @@ html:has(.brief-visor[open]) {
 
 /* Cuánto va, con el ancho de «24 de 24» reservado: no mueve el título. */
 .brief-visor-cuenta {
+  justify-self: end;
   min-width: 5.5em;
   margin: 0;
+  padding-right: var(--e-2);
   font-family: var(--fuente-datos);
   font-size: var(--texto-xs);
   text-align: right;
   color: var(--texto-suave);
 }
 
-.brief-visor-marco {
+.brief-visor-mazo {
+  position: relative;
+  margin: 0 max(var(--margen), env(safe-area-inset-right, 0px)) max(var(--margen), env(safe-area-inset-bottom, 0px))
+    max(var(--margen), env(safe-area-inset-left, 0px));
+}
+
+/* La carta gira alrededor de un punto bajo (brief-visor.js lo repite para
+   leer el dedo). Sin boceto (`data-i`), no se ve: bajo la última no hay
+   nada. */
+.brief-visor-carta {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--fondo-carta, #ffffff);
+  box-shadow: 0 10px 36px rgb(0 0 0 / 0.35);
+  transform: scale(0.95);
+  transform-origin: 50% 90%;
+}
+
+.brief-visor-carta.arriba {
+  z-index: 1;
+  transform: none;
+}
+
+.brief-visor-carta:not([data-i]) {
+  visibility: hidden;
+}
+
+.brief-visor-carta iframe {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
-  background: var(--fondo-visor, #ffffff);
   transition: opacity 300ms var(--ease);
 }
 
-.brief-visor-marco.cargando {
+.brief-visor-carta.cargando iframe {
   opacity: 0;
 }
 
-/* Sobre la tinta, los colores de las reacciones van más claros: dan 6:1 o
-   más con ella, también como relleno bajo el dibujo en tinta. */
-.brief-visor-pie {
-  --gusta: #ff7a93;
-  --medio: #f0b44f;
-  --nogusta: #b8c8d8;
-  --masa: cubic-bezier(0.34, 1.4, 0.64, 1);
-  display: grid;
-  grid-template-columns: auto auto minmax(0, 30rem) minmax(0, 1fr) auto;
-  grid-template-areas: 'anterior pregunta reacciones nota siguiente';
+@media (prefers-reduced-motion: reduce) {
+  .brief-visor-carta {
+    transform: none;
+  }
+}
+
+/* Los sellos: «Me gusta» a la izquierda al ir a la derecha y «No» a la
+   derecha al ir a la izquierda, como un timbre sobre la página. Blanco sobre
+   sus colores: 5:1 o más. Solo los lleva la carta de arriba. */
+.brief-visor-sello {
+  position: absolute;
+  top: clamp(24px, 7vh, 64px);
+  padding: 6px 14px;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  font: 800 clamp(20px, 2.6vw, 28px) / 1.1 var(--fuente-texto);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.25);
+  pointer-events: none;
+  transition: opacity 120ms linear;
+}
+
+.brief-visor-sello-si {
+  left: 20px;
+  background: #c2364f;
+  opacity: clamp(0, var(--avance, 0), 1);
+  transform: rotate(-10deg);
+}
+
+.brief-visor-sello-no {
+  right: 20px;
+  background: #47607a;
+  opacity: clamp(0, calc(var(--avance, 0) * -1), 1);
+  transform: rotate(10deg);
+}
+
+.brief-visor-carta:not(.arriba) {
+  --avance: 0;
+}
+
+/* Los botones flotan sobre la carta, en vidrio neutro. El del lado al que va
+   la carta crece con el arrastre. */
+.brief-visor-botones {
+  position: absolute;
+  z-index: 2;
+  bottom: 14px;
+  left: 50%;
+  display: flex;
   align-items: center;
-  gap: var(--e-3) var(--e-4);
-  padding: var(--e-3) max(var(--e-4), env(safe-area-inset-right, 0px)) calc(var(--e-3) + env(safe-area-inset-bottom, 0px))
-    max(var(--e-4), env(safe-area-inset-left, 0px));
+  gap: 12px;
+  transform: translateX(-50%);
+  touch-action: none;
+  transition:
+    opacity 240ms ease,
+    transform 320ms var(--ease);
 }
 
-.brief-visor-pregunta {
-  grid-area: pregunta;
-  max-width: none;
-  margin: 0;
-  font-size: var(--texto-base);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.brief-visor-reacciones {
-  grid-area: reacciones;
+.brief-visor-boton {
+  --color: var(--texto);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--e-1);
-  min-width: 0;
-  margin: 0;
+  place-items: center;
+  width: 52px;
+  height: 52px;
   padding: 0;
-  border: 0;
-}
-
-/* El círculo al lado de su nombre, en una línea: la franja queda baja. */
-.brief-visor .brief-reaccion {
-  grid-auto-flow: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--e-2);
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 50%;
+  background: var(--vidrio-visor);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   color: var(--texto);
-  font-size: var(--texto-sm);
-  white-space: nowrap;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 160ms ease,
+    scale 120ms linear;
 }
 
-.brief-visor .brief-reaccion-icono {
-  width: 48px;
-  height: 48px;
-  border: 2px solid color-mix(in srgb, var(--texto) 45%, transparent);
-  background: transparent;
-  color: var(--texto);
-}
-
-.brief-visor .brief-reaccion-icono svg {
+.brief-visor-boton svg {
   width: 24px;
   height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brief-visor-boton[data-elegir] {
+  width: 60px;
+  height: 60px;
+}
+
+.brief-visor-boton[data-elegir] svg {
+  width: 28px;
+  height: 28px;
+}
+
+.brief-visor-boton[data-atras] {
+  width: 44px;
+  height: 44px;
+}
+
+.brief-visor-boton[data-atras] svg {
+  width: 20px;
+  height: 20px;
+}
+
+.brief-visor-boton[data-elegir='si'] {
+  --color: #ff7a93;
+  scale: calc(1 + 0.14 * clamp(0, var(--avance, 0), 1));
+}
+
+.brief-visor-boton[data-elegir='no'] {
+  --color: #b8c8d8;
+  scale: calc(1 + 0.14 * clamp(0, calc(var(--avance, 0) * -1), 1));
+}
+
+.brief-visor-boton[data-comentar] {
+  --color: var(--accion);
 }
 
 @media (hover: hover) {
-  .brief-visor .brief-reaccion:hover .brief-reaccion-icono {
+  .brief-visor-boton:not(:disabled):hover {
     border-color: var(--color);
-    background: color-mix(in srgb, var(--color) 18%, transparent);
     color: var(--color);
   }
 }
 
-.brief-visor .brief-reaccion:has(input:checked) .brief-reaccion-icono {
+.brief-visor-boton:not(:disabled):active {
+  transform: scale(0.92);
+}
+
+.brief-visor-boton:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 3px;
+}
+
+.brief-visor-boton[aria-pressed='true'] {
   border-color: var(--color);
   background: var(--color);
   color: var(--fondo);
-  box-shadow:
-    0 0 0 3px var(--fondo),
-    0 0 0 5px var(--color);
 }
 
-/* Un boceto sin calificar, al terminar de cargar: las reacciones saltan una
-   vez, de a una, y llaman la mirada (brief-visor.js). */
-@media (prefers-reduced-motion: no-preference) {
-  .brief-visor.invita .brief-reaccion-icono {
-    animation: reaccion-invita 900ms var(--masa) both;
+.brief-visor-boton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Cómo se usa, sobre los botones, hasta la primera decisión. */
+.brief-visor-ayuda {
+  position: absolute;
+  z-index: 2;
+  bottom: 88px;
+  left: 50%;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--vidrio-visor);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  font-size: var(--texto-xs);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%);
+  transition:
+    opacity 300ms ease,
+    visibility 0s 300ms;
+}
+
+.con-ayuda .brief-visor-ayuda {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 300ms ease;
+}
+
+.brief-visor-ayuda-tactil {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .brief-visor-ayuda-tactil {
+    display: inline;
   }
 
-  .brief-visor.invita .brief-reaccion:nth-of-type(2) .brief-reaccion-icono {
-    animation-delay: 110ms;
-  }
-
-  .brief-visor.invita .brief-reaccion:nth-of-type(3) .brief-reaccion-icono {
-    animation-delay: 220ms;
+  .brief-visor-ayuda-teclado {
+    display: none;
   }
 }
 
-@keyframes reaccion-invita {
-  35% {
-    transform: scale(1.14);
-  }
+/* Mientras se arrastra o se comenta, la ayuda no estorba; con la hoja
+   abierta, los botones bajan. */
+.arrastrando .brief-visor-ayuda,
+.con-hoja .brief-visor-ayuda {
+  opacity: 0;
+}
 
-  65% {
-    transform: scale(0.97);
+.con-hoja .brief-visor-botones {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 24px);
+}
+
+/* La hoja del comentario sube desde abajo, sobre la carta: el boceto se
+   sigue viendo mientras se escribe. A 16 px: iOS no hace zoom. */
+.brief-visor-hoja {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e-2) var(--e-3);
+  width: min(100%, 36rem);
+  margin-inline: auto;
+  padding: var(--e-4) max(var(--e-4), env(safe-area-inset-right, 0px)) calc(var(--e-4) + env(safe-area-inset-bottom, 0px))
+    max(var(--e-4), env(safe-area-inset-left, 0px));
+  border-radius: 18px 18px 0 0;
+  background: var(--superficie);
+  box-shadow: 0 -10px 40px rgb(0 0 0 / 0.35);
+  visibility: hidden;
+  transform: translateY(105%);
+  transition:
+    transform 360ms var(--ease),
+    visibility 0s 360ms;
+}
+
+.con-hoja .brief-visor-hoja {
+  visibility: visible;
+  transform: none;
+  transition: transform 360ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brief-visor-hoja,
+  .con-hoja .brief-visor-hoja {
+    transform: none;
   }
 }
 
-/* A 16 px: iOS no hace zoom al escribir. */
+.brief-visor-hoja label {
+  grid-column: 1 / -1;
+  font-weight: 700;
+}
+
 .brief-visor-nota {
-  grid-area: nota;
   min-width: 0;
   min-height: 48px;
   padding: 0 var(--e-4);
@@ -1676,67 +1857,6 @@ html:has(.brief-visor[open]) {
   border-color: var(--accion);
   outline: none;
   background: color-mix(in srgb, var(--texto) 10%, transparent);
-}
-
-.brief-visor-paso[data-paso='-1'] {
-  grid-area: anterior;
-}
-
-.brief-visor-paso[data-paso='1'] {
-  grid-area: siguiente;
-}
-
-@media (max-width: 1199px) {
-  .brief-visor-pie {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-      'pregunta pregunta pregunta'
-      'anterior reacciones siguiente'
-      'nota nota nota';
-  }
-
-  .brief-visor-pregunta {
-    text-align: center;
-  }
-}
-
-/* En lo angosto, «Volver» a secas: el nombre del estilo cabe entero. */
-@media (max-width: 559px) {
-  .brief-visor-cerrar-largo {
-    display: none;
-  }
-}
-
-@media (max-width: 767px) {
-  .brief-visor-pie {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas:
-      'pregunta pregunta'
-      'reacciones reacciones'
-      'nota nota'
-      'anterior siguiente';
-    gap: var(--e-2);
-  }
-
-  .brief-visor-pregunta {
-    font-size: var(--texto-sm);
-  }
-
-  .brief-visor-nota,
-  .brief-visor-paso {
-    min-height: 44px;
-  }
-}
-
-/* Hasta M, el nombre bajo el círculo: al lado, «Más o menos» no cabe entre
-   los botones de paso. */
-@media (max-width: 1023px) {
-  .brief-visor .brief-reaccion {
-    grid-auto-flow: row;
-    gap: 6px;
-    font-size: 12px;
-    white-space: normal;
-  }
 }
 
 /* ==================== Los tipos de logo ====================

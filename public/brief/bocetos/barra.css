@@ -181,18 +181,70 @@
   line-height: 1.5;
 }
 
-/* Lo que entra al bajar (data-aparece). Sin JavaScript, o con el movimiento
- * reducido, todo está a la vista desde el principio. */
-@media (prefers-reduced-motion: no-preference) {
-  .con-js [data-aparece] {
-    transition:
-      opacity 900ms cubic-bezier(0.23, 1, 0.32, 1),
-      transform 900ms cubic-bezier(0.23, 1, 0.32, 1);
-    transition-delay: var(--retraso, 0ms);
-  }
-
-  .con-js [data-aparece]:not(.visto) {
+/* Lo que entra al bajar (`data-aparece`) y lo de adentro que lo acompaña
+ * (`data-sigue`). Cada boceto pone su manera, de acuerdo con su carácter:
+ * los `@keyframes` en `--entrada` (por omisión, `aparece`: sube y se ve), la
+ * curva en `--curva`, el largo en `--tramo` y, en una fila, el lugar de cada
+ * uno en `--orden`.
+ *
+ * Donde el navegador ata animaciones al scroll (Chrome, Safari 26), la
+ * entrada avanza con él: llega a su sitio cuando el elemento subió `--tramo`
+ * desde el borde de abajo, y retrocede si se vuelve. No hay un instante en
+ * que algo salte. Donde no (Safari 18 y anteriores), barra.js la dispara al
+ * verse y dura `--duracion`. Sin JavaScript o con el movimiento reducido,
+ * todo está quieto y a la vista. */
+@keyframes aparece {
+  from {
     opacity: 0;
     transform: translateY(28px);
   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .con-js [data-aparece],
+  .con-js [data-aparece] [data-sigue] {
+    animation: var(--entrada, aparece) var(--duracion, 1000ms) var(--curva, cubic-bezier(0.25, 0.7, 0.3, 1)) calc(var(--orden, 0) * 120ms) both paused;
+  }
+
+  .con-js .visto,
+  .con-js .visto [data-sigue] {
+    animation-play-state: running;
+  }
+
+  @supports (animation-timeline: view()) {
+    .con-js [data-aparece] {
+      view-timeline: --aparece;
+    }
+
+    .con-js [data-aparece],
+    .con-js [data-aparece] [data-sigue] {
+      animation-duration: auto;
+      animation-delay: 0s;
+      animation-play-state: running;
+      animation-timeline: --aparece;
+      animation-range: cover calc(var(--orden, 0) * 4svh) cover calc(var(--tramo, 36svh) + var(--orden, 0) * 4svh);
+    }
+  }
+}
+
+/* En el visor del brief, la página es una carta que se arrastra de lado
+ * (src/brief-visor.js): el navegador solo la desplaza en vertical y no
+ * convierte el gesto lateral en «atrás». Al final queda aire para que los
+ * botones del visor no tapen el pie. La carta de abajo espera con todo en
+ * pausa: su portada entra cuando empieza a verse. */
+.en-visor {
+  touch-action: pan-y pinch-zoom;
+  overscroll-behavior-x: none;
+}
+
+.en-visor body::after {
+  content: '';
+  display: block;
+  height: 96px;
+}
+
+.en-espera *,
+.en-espera *::before,
+.en-espera *::after {
+  animation-play-state: paused !important;
 }

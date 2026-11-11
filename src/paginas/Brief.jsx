@@ -1,7 +1,7 @@
-import { IconoReaccion } from '../components/MuestraBrief.jsx'
+import { TRAZOS_DE_REACCION } from '../components/MuestraBrief.jsx'
 import Pagina from '../components/Pagina.jsx'
 import PreguntaBrief from '../components/PreguntaBrief.jsx'
-import { LIMITES_BRIEF, REACCIONES } from '../lib/brief/reglas.js'
+import { LIMITES_BRIEF } from '../lib/brief/reglas.js'
 import { BRIEF as brief } from '../lib/brief/preguntas.js'
 import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
 
@@ -52,18 +52,34 @@ function Figura({ area, className }) {
   )
 }
 
-// El visor de los bocetos (brief-visor.js): cada boceto a pantalla completa,
-// en un marco oscuro que lo separa de los controles, con su reacción y el paso
-// al siguiente. Va fuera del `<form>`: sus controles
-// reflejan los de la tarjeta, que son los que se envían, y no son un
-// formulario más para WebMCP. Sin JavaScript no se abre: el arte de cada
-// tarjeta abre el boceto en otra pestaña.
+// El visor de los bocetos (brief-visor.js): un mazo de cartas. Cada boceto es
+// una carta casi a pantalla completa, con el siguiente esperando debajo; se
+// recorre con el scroll y se decide arrastrándola de lado o con los botones
+// que flotan encima. El comentario sube en una hoja. Va fuera del `<form>`:
+// sus controles reflejan los de la tarjeta, que son los que se envían, y no
+// son un formulario más para WebMCP. Sin JavaScript no se abre: el arte de
+// cada tarjeta abre el boceto en otra pestaña.
+const TRAZOS_DEL_VISOR = {
+  atras: 'M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11',
+  comentar: 'M20 15a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z',
+}
+
+function BotonDelVisor({ trazo, texto, ...atributos }) {
+  return (
+    <button className="brief-visor-boton" type="button" aria-label={texto} title={texto} {...atributos}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d={trazo} />
+      </svg>
+    </button>
+  )
+}
+
 function Visor() {
   return (
-    <dialog className="brief-visor zona-cielo" aria-labelledby="visor-titulo">
-      <div className="brief-visor-cabeza zona-plano">
-        <button className="brief-visor-cerrar" type="button" data-cerrar>
-          <span aria-hidden="true">←</span> Volver<span className="brief-visor-cerrar-largo"> al brief</span>
+    <dialog className="brief-visor zona-plano" aria-labelledby="visor-titulo">
+      <div className="brief-visor-cabeza">
+        <button className="brief-visor-salir" type="button" data-cerrar>
+          <span aria-hidden="true">←</span> Salir
         </button>
         <p className="brief-visor-titulo" id="visor-titulo">
           <b data-visor-estilo />
@@ -71,27 +87,34 @@ function Visor() {
         </p>
         <p className="brief-visor-cuenta" data-visor-cuenta />
       </div>
-      <iframe className="brief-visor-marco" title="Boceto de la dirección de estilo" />
-      <div className="brief-visor-pie zona-plano">
-        <p className="brief-visor-pregunta" aria-hidden="true">
-          ¿Te gusta este estilo?
+      <div className="brief-visor-mazo">
+        {[0, 1].map((carta) => (
+          <div key={carta} className="brief-visor-carta">
+            <iframe title="Boceto de la dirección de estilo" />
+            <span className="brief-visor-sello brief-visor-sello-si" aria-hidden="true">
+              Me gusta
+            </span>
+            <span className="brief-visor-sello brief-visor-sello-no" aria-hidden="true">
+              No
+            </span>
+          </div>
+        ))}
+        <p className="brief-visor-ayuda" aria-hidden="true">
+          <span className="brief-visor-ayuda-tactil">Desliza: ← no · sí → · ↑ comentar</span>
+          <span className="brief-visor-ayuda-teclado">Con las flechas: ← no · sí → · ↑ comentar</span>
         </p>
-        <fieldset className="brief-visor-reacciones">
-          <legend className="solo-lectores">¿Te gusta este estilo?</legend>
-          {REACCIONES.map(([valor, texto]) => (
-            <label key={valor} className={`brief-reaccion brief-reaccion-${valor}`}>
-              <input type="radio" name="visor-reaccion" value={valor} />
-              <IconoReaccion valor={valor} />
-              <span className="brief-reaccion-texto">{texto}</span>
-            </label>
-          ))}
-        </fieldset>
-        <input className="brief-visor-nota" type="text" maxLength={LIMITES_BRIEF.nota} placeholder="¿Qué te gustó o qué no? (opcional)" aria-label="Qué te gustó o qué no de este estilo" />
-        <button className="boton boton-secundario brief-visor-paso" type="button" data-paso="-1">
-          <span aria-hidden="true">←</span> Anterior
-        </button>
-        <button className="boton boton-secundario brief-visor-paso" type="button" data-paso="1">
-          Siguiente <span aria-hidden="true">→</span>
+        <div className="brief-visor-botones" role="group" aria-label="¿Te gusta este estilo?">
+          <BotonDelVisor trazo={TRAZOS_DEL_VISOR.atras} texto="Volver al anterior" data-atras />
+          <BotonDelVisor trazo={TRAZOS_DE_REACCION.no} texto="No me gusta" aria-pressed="false" data-elegir="no" />
+          <BotonDelVisor trazo={TRAZOS_DEL_VISOR.comentar} texto="Comentar" aria-expanded="false" aria-controls="visor-hoja" data-comentar />
+          <BotonDelVisor trazo={TRAZOS_DE_REACCION.si} texto="Me gusta" aria-pressed="false" data-elegir="si" />
+        </div>
+      </div>
+      <div className="brief-visor-hoja" id="visor-hoja">
+        <label htmlFor="visor-nota">¿Qué te gustó o qué no de este estilo?</label>
+        <input className="brief-visor-nota" id="visor-nota" type="text" maxLength={LIMITES_BRIEF.nota} placeholder="Opcional" enterKeyHint="done" autoComplete="off" />
+        <button className="boton boton-primario" type="button" data-listo>
+          Listo
         </button>
       </div>
     </dialog>

@@ -12,9 +12,10 @@
  * la barra no va: el visor ya dice qué es y deja calificarlo. El visor muestra
  * el boceto recién al cargar, cuando esto ya corrió, así que no asoma.
  *
- * También hace lo que comparten los bocetos al bajar: lo que tiene
- * `data-aparece` entra al verse, y lo que tiene `data-cuenta` cuenta hasta su
- * número.
+ * También hace lo que comparten los bocetos al bajar: marca con `visto` lo que
+ * tiene `data-aparece` al verse (donde el navegador no ata animaciones al
+ * scroll, eso dispara su entrada: barra.css), y lo que tiene `data-cuenta`
+ * cuenta hasta su número.
  *
  * Y lo que los bocetos no pueden hacer solos, porque la política de contenido
  * no deja scripts en línea: los formularios de muestra (`form[data-muestra]`)

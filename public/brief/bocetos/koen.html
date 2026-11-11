@@ -26,6 +26,7 @@
   --ancho: 1240px;
   --margen: clamp(20px, 5vw, 64px);
   --suave: cubic-bezier(0.23, 1, 0.32, 1);
+  --exhala: cubic-bezier(0.3, 0.1, 0.2, 1);
 }
 * { box-sizing: border-box; }
 html { background: var(--papel); scroll-behavior: smooth; }
@@ -213,17 +214,37 @@ figcaption { margin-top: 12px; font-size: 13px; color: var(--gris); }
 }
 
 /* ---- Movimiento ----
-   El ensō se dibuja al ritmo de una respiración: 4 s se dibuja, 4 s se borra,
-   y la palabra de al lado acompaña. Lo demás solo entra al bajar. */
+   Kōen se mueve como una respiración: despacio, poco y sin apuro. La portada
+   llega de a una cosa, cada una en lo que dura una exhalación, y la línea del
+   texto vertical baja como un trazo de pincel. Al bajar, todo sube apenas y
+   tarda en llegar (un `--tramo` largo), y la foto de la portada se queda
+   atrás, más lenta que la página. El ensō se dibuja al ritmo de una
+   respiración: 4 s se dibuja, 4 s se borra, y la palabra de al lado acompaña. */
+[data-aparece] { --entrada: koen-sube; --curva: var(--exhala); --tramo: 55svh; --duracion: 1600ms; }
+.te-grid figure, .pase { --entrada: koen-foto; }
+@keyframes koen-sube { from { opacity: 0; transform: translateY(24px); } }
+@keyframes koen-foto { from { opacity: 0; transform: translateY(56px); } }
+@keyframes koen-llega { from { opacity: 0; translate: 0 18px; } }
+@keyframes koen-trazo { from { clip-path: inset(0 0 100% 0); } }
+@keyframes koen-queda { to { translate: 0 12%; } }
 @keyframes entra { from { opacity: 0; transform: translateY(10px); } }
 @keyframes respira { 0%, 100% { stroke-dashoffset: 470; } 50% { stroke-dashoffset: 0; } }
 @keyframes inhala { 0%, 46% { opacity: 1; } 54%, 96% { opacity: 0; } }
 @keyframes exhala { 0%, 46% { opacity: 0; } 54%, 96% { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
+  .portada-texto > *, .respiro, .portada-foto figcaption { animation: koen-llega 1600ms var(--exhala) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 220ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 440ms; }
+  .portada-texto > :nth-child(4) { animation-delay: 660ms; }
+  .respiro, .portada-foto figcaption { animation-delay: 900ms; }
+  .vertical { animation: koen-trazo 2600ms var(--exhala) 300ms both; }
   .enso circle { animation: respira 8s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
   .respira .exhala { visibility: visible; }
   .respira .inhala { animation: inhala 8s ease-in-out infinite; }
   .respira .exhala { animation: exhala 8s ease-in-out infinite; }
+  @supports (animation-timeline: scroll()) {
+    .portada-foto { animation: koen-queda linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .horario-dias [data-dia] { animation: none !important; }
@@ -343,11 +364,11 @@ figcaption { margin-top: 12px; font-size: 13px; color: var(--gris); }
         <img src="/image/bocetos/koen/matcha-500.webp" srcset="/image/bocetos/koen/matcha-500.webp 500w, /image/bocetos/koen/matcha-900.webp 900w" sizes="(min-width: 960px) 22vw, 50vw" width="900" height="1125" loading="lazy" alt="Unas manos baten matcha con un batidor de bambú en un cuenco de cerámica">
         <figcaption>Matcha batido a mano.</figcaption>
       </figure>
-      <figure class="te-tetera" data-aparece style="--retraso: 120ms">
+      <figure class="te-tetera" data-aparece style="--orden: 1">
         <img src="/image/bocetos/koen/tetera-500.webp" srcset="/image/bocetos/koen/tetera-500.webp 500w, /image/bocetos/koen/tetera-900.webp 900w" sizes="(min-width: 960px) 22vw, 50vw" width="900" height="900" loading="lazy" alt="Agua caliente que cae de una tetera oscura, con vapor, sobre tazas blancas">
         <figcaption>Agua a 80 °C para el sencha.</figcaption>
       </figure>
-      <figure class="te-dulces" data-aparece style="--retraso: 240ms">
+      <figure class="te-dulces" data-aparece style="--orden: 2">
         <img src="/image/bocetos/koen/dulces-500.webp" srcset="/image/bocetos/koen/dulces-500.webp 500w, /image/bocetos/koen/dulces-900.webp 900w" sizes="(min-width: 960px) 30vw, 80vw" width="900" height="675" loading="lazy" alt="Tetera blanca, dos tazas y dulces japoneses en una bandeja de madera">
         <figcaption>Wagashi de la temporada, para acompañar.</figcaption>
       </figure>
@@ -357,10 +378,10 @@ figcaption { margin-top: 12px; font-size: 13px; color: var(--gris); }
   <section class="seccion" id="pases">
     <div class="ancho">
       <header class="titulo" data-aparece><p class="rotulo">Pases</p><h2>Sin matrícula ni contratos</h2></header>
-      <div class="pases" data-aparece>
-        <div class="pase"><h3>Clase suelta</h3><p class="precio">$12.000</p><p>Para venir cuando se pueda. Incluye un té en la casa.</p></div>
-        <div class="pase destacado"><h3>Ocho clases</h3><p class="precio">$72.000</p><p>Vence en dos meses. Se puede compartir con una persona más.</p></div>
-        <div class="pase"><h3>Mes libre</h3><p class="precio">$95.000</p><p>Todas las clases del mes y un cupo en la ceremonia del té.</p></div>
+      <div class="pases">
+        <div class="pase" data-aparece><h3>Clase suelta</h3><p class="precio">$12.000</p><p>Para venir cuando se pueda. Incluye un té en la casa.</p></div>
+        <div class="pase destacado" data-aparece style="--orden: 1"><h3>Ocho clases</h3><p class="precio">$72.000</p><p>Vence en dos meses. Se puede compartir con una persona más.</p></div>
+        <div class="pase" data-aparece style="--orden: 2"><h3>Mes libre</h3><p class="precio">$95.000</p><p>Todas las clases del mes y un cupo en la ceremonia del té.</p></div>
       </div>
     </div>
   </section>

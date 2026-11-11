@@ -28,6 +28,7 @@
   --azul: #72b7ff;
   --ancho: 1200px;
   --margen: clamp(20px, 4vw, 48px);
+  --preciso: cubic-bezier(0.2, 0.8, 0.2, 1);
   --suave: cubic-bezier(0.22, 1, 0.36, 1);
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
@@ -193,7 +194,7 @@ p { margin: 0; }
 .preguntas details p { padding-bottom: 22px; max-width: 60ch; color: var(--gris); }
 
 /* ---- Demo ---- */
-.demo { position: relative; padding-block: clamp(80px, 11vw, 160px); border-top: 1px solid var(--borde); text-align: center; overflow: hidden; }
+.demo { position: relative; padding-block: clamp(80px, 11vw, 160px); border-top: 1px solid var(--borde); text-align: center; overflow: hidden; overflow: clip; }
 .demo::before { content: ''; position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(var(--borde) 1px, transparent 1px), linear-gradient(90deg, var(--borde) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 100%, #000 10%, transparent 70%); mask-image: radial-gradient(ellipse 50% 60% at 50% 100%, #000 10%, transparent 70%); opacity: 0.5; }
 .demo h2 { max-width: 18ch; margin-inline: auto; font-size: clamp(34px, 4.6vw, 60px); }
 .demo > div > p { margin: 18px auto 32px; max-width: 44ch; color: var(--gris); }
@@ -240,16 +241,38 @@ p { margin: 0; }
   .pie { grid-template-columns: 1fr; }
 }
 
-/* ---- Movimiento: las rutas se trazan ----
-   Al aparecer el panel, las tres rutas se dibujan desde la bodega, una tras
-   otra, y el camión de la ruta ámbar avanza por la suya. */
+/* ---- Movimiento: preciso ----
+   Nodo se mueve como un sistema: distancias cortas, curvas firmes y todo en
+   su orden. Al cargar, la portada se arma de arriba abajo y la grilla del
+   fondo se enciende. El panel llega inclinado, como visto desde la mesa, y se
+   endereza mientras se baja; al aparecer, sus tres rutas se dibujan desde la
+   bodega, una tras otra, y el camión de la ruta ámbar avanza por la suya.
+   Los diagramas se trazan con el scroll, las fotos se revelan de arriba abajo
+   como una pantalla que carga y los planes llegan uno tras otro. */
+[data-aparece] { --entrada: nodo-entra; --curva: var(--preciso); --tramo: 28svh; --duracion: 700ms; }
+.app { --entrada: nodo-endereza; --curva: cubic-bezier(0.25, 0.5, 0.2, 1); --tramo: 75svh; --duracion: 1200ms; }
+.fotos img { --entrada: nodo-escanea; --tramo: 45svh; }
+.figura [data-sigue] { --entrada: nodo-traza; --tramo: 55svh; --duracion: 1400ms; }
+.figura [stroke-dasharray] { --entrada: nodo-asoma; }
+@keyframes nodo-entra { from { opacity: 0; translate: 0 16px; } }
+@keyframes nodo-endereza { from { opacity: 0.4; transform: perspective(1600px) rotateX(24deg) scale(0.94); } }
+@keyframes nodo-escanea { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes nodo-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes nodo-asoma { from { opacity: 0; } }
+@keyframes nodo-enciende { from { opacity: 0; } }
 @keyframes trazar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes latir { 0%, 100% { transform: scale(1); opacity: 0.25; } 50% { transform: scale(1.8); opacity: 0; } }
 @media (prefers-reduced-motion: no-preference) {
+  .portada::before { animation: nodo-enciende 1400ms ease-out both; }
+  .portada .ancho > :not(.app) { animation: nodo-entra 700ms var(--preciso) both; }
+  .portada h1 { animation-delay: 80ms; }
+  .portada .bajada { animation-delay: 160ms; }
+  .portada .acciones { animation-delay: 240ms; }
+  .con-js .figura [data-sigue]:not([stroke-dasharray]) { stroke-dasharray: 1; }
   .con-js .app .ruta { stroke-dasharray: 1; stroke-dashoffset: 1; }
-  .con-js .app.visto .ruta { animation: trazar 1600ms var(--suave) forwards; }
-  .con-js .app.visto .r2 { animation-delay: 250ms; }
-  .con-js .app.visto .r3 { animation-delay: 500ms; }
+  .con-js .app.visto .ruta { animation: trazar 1600ms var(--suave) 300ms forwards; }
+  .con-js .app.visto .r2 { animation-delay: 550ms; }
+  .con-js .app.visto .r3 { animation-delay: 800ms; }
   .halo { transform-box: fill-box; transform-origin: center; animation: latir 2400ms ease-in-out infinite; }
 }
 @media (prefers-reduced-motion: reduce) { .movil { display: none; } }
@@ -343,19 +366,19 @@ p { margin: 0; }
     <div class="figuras">
       <article class="figura" data-aparece>
         <p class="mono">Fig 0.1</p>
-        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="30" cy="120" r="8"/><circle cx="110" cy="40" r="8"/><circle cx="170" cy="100" r="8"/><circle cx="230" cy="30" r="8"/><circle cx="90" cy="110" r="5"/><circle cx="200" cy="130" r="5"/><path d="M36 114 104 46M118 44l46 50M176 94l48-58" stroke="#2ee6a6" stroke-width="1.6"/><path d="M38 120h44M95 108l70-6M176 106l20 20" stroke-dasharray="3 4"/></svg>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle data-sigue pathLength="1" cx="30" cy="120" r="8"/><circle data-sigue pathLength="1" cx="110" cy="40" r="8"/><circle data-sigue pathLength="1" cx="170" cy="100" r="8"/><circle data-sigue pathLength="1" cx="230" cy="30" r="8"/><circle data-sigue pathLength="1" cx="90" cy="110" r="5"/><circle data-sigue pathLength="1" cx="200" cy="130" r="5"/><path data-sigue pathLength="1" d="M36 114 104 46M118 44l46 50M176 94l48-58" stroke="#2ee6a6" stroke-width="1.6"/><path data-sigue d="M38 120h44M95 108l70-6M176 106l20 20" stroke-dasharray="3 4"/></svg>
         <h3>Rutas que se arman solas</h3>
         <p>Cargas los pedidos y Nodo ordena las paradas según la distancia, la ventana horaria de cada cliente y lo que cabe en el vehículo.</p>
       </article>
-      <article class="figura" data-aparece style="--retraso: 100ms">
+      <article class="figura" data-aparece style="--orden: 1">
         <p class="mono">Fig 0.2</p>
-        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="90" y="10" width="80" height="136" rx="14"/><path d="M118 20h24"/><path d="M130 50c-14 0-22 10-22 21 0 16 22 37 22 37s22-21 22-37c0-11-8-21-22-21z" stroke="#2ee6a6" stroke-width="1.6"/><circle cx="130" cy="71" r="7" stroke="#2ee6a6"/><path d="M104 124h52M104 132h34"/><path d="M20 70h50M190 70h50" stroke-dasharray="3 4"/></svg>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect data-sigue pathLength="1" x="90" y="10" width="80" height="136" rx="14"/><path data-sigue pathLength="1" d="M118 20h24"/><path data-sigue pathLength="1" d="M130 50c-14 0-22 10-22 21 0 16 22 37 22 37s22-21 22-37c0-11-8-21-22-21z" stroke="#2ee6a6" stroke-width="1.6"/><circle data-sigue pathLength="1" cx="130" cy="71" r="7" stroke="#2ee6a6"/><path data-sigue pathLength="1" d="M104 124h52M104 132h34"/><path data-sigue d="M20 70h50M190 70h50" stroke-dasharray="3 4"/></svg>
         <h3>Seguimiento para tu cliente</h3>
         <p>Cada cliente recibe un enlace con la hora estimada de llegada, que se actualiza sola mientras el chofer avanza.</p>
       </article>
-      <article class="figura" data-aparece style="--retraso: 200ms">
+      <article class="figura" data-aparece style="--orden: 2">
         <p class="mono">Fig 0.3</p>
-        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M70 50l60-30 60 30-60 30z"/><path d="M70 50v60l60 30 60-30V50M130 80v60"/><path d="M100 35l60 30" stroke-dasharray="3 4"/><path d="M196 118c10-14 18-14 22-4s12 8 22-6" stroke="#2ee6a6" stroke-width="1.6"/><path d="M20 128h40" stroke-dasharray="3 4"/></svg>
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path data-sigue pathLength="1" d="M70 50l60-30 60 30-60 30z"/><path data-sigue pathLength="1" d="M70 50v60l60 30 60-30V50M130 80v60"/><path data-sigue d="M100 35l60 30" stroke-dasharray="3 4"/><path data-sigue pathLength="1" d="M196 118c10-14 18-14 22-4s12 8 22-6" stroke="#2ee6a6" stroke-width="1.6"/><path data-sigue d="M20 128h40" stroke-dasharray="3 4"/></svg>
         <h3>Prueba de entrega</h3>
         <p>La foto, la firma y la hora quedan guardadas en el pedido. Se acabaron las guías perdidas y las discusiones por una entrega.</p>
       </article>
@@ -364,8 +387,8 @@ p { margin: 0; }
 
   <section class="ancho cifras" aria-label="Resultados">
     <div class="cifra" data-aparece><b><span data-cuenta="38">38</span><small>%</small></b><p>menos kilómetros recorridos en el primer mes, en promedio.</p></div>
-    <div class="cifra" data-aparece style="--retraso: 100ms"><b><span data-cuenta="2400">2.400</span></b><p>despachos al día en el cliente más grande, con seis choferes.</p></div>
-    <div class="cifra" data-aparece style="--retraso: 200ms"><b><span data-cuenta="11">11</span><small>min</small></b><p>menos por parada, porque nadie busca la dirección ni llama para confirmar.</p></div>
+    <div class="cifra" data-aparece style="--orden: 1"><b><span data-cuenta="2400">2.400</span></b><p>despachos al día en el cliente más grande, con seis choferes.</p></div>
+    <div class="cifra" data-aparece style="--orden: 2"><b><span data-cuenta="11">11</span><small>min</small></b><p>menos por parada, porque nadie busca la dirección ni llama para confirmar.</p></div>
   </section>
 
   <section class="ancho calle-seccion" aria-labelledby="calle-titulo">
@@ -375,15 +398,15 @@ p { margin: 0; }
     </header>
     <div class="fotos">
       <figure class="ancha" data-aparece>
-        <img src="/image/bocetos/nodo/calle-1600.webp" srcset="/image/bocetos/nodo/calle-1000.webp 1000w, /image/bocetos/nodo/calle-1600.webp 1600w" sizes="(min-width: 1200px) 1104px, 100vw" width="1600" height="686" loading="lazy" alt="Una autopista curva de noche, vista desde lo alto, con la ciudad iluminada al fondo">
+        <img data-sigue src="/image/bocetos/nodo/calle-1600.webp" srcset="/image/bocetos/nodo/calle-1000.webp 1000w, /image/bocetos/nodo/calle-1600.webp 1600w" sizes="(min-width: 1200px) 1104px, 100vw" width="1600" height="686" loading="lazy" alt="Una autopista curva de noche, vista desde lo alto, con la ciudad iluminada al fondo">
         <figcaption><span>Fig 0.4 — Ruta nocturna</span><span>Promedio 14 paradas por chofer</span></figcaption>
       </figure>
       <figure data-aparece>
-        <img src="/image/bocetos/nodo/carga-600.webp" srcset="/image/bocetos/nodo/carga-600.webp 600w, /image/bocetos/nodo/carga-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Un repartidor carga cajas de cartón en una furgoneta azul frente a un edificio de ladrillo">
+        <img data-sigue src="/image/bocetos/nodo/carga-600.webp" srcset="/image/bocetos/nodo/carga-600.webp 600w, /image/bocetos/nodo/carga-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Un repartidor carga cajas de cartón en una furgoneta azul frente a un edificio de ladrillo">
         <figcaption><span>Fig 0.5 — Carga</span><span>07:30</span></figcaption>
       </figure>
-      <figure data-aparece style="--retraso: 100ms">
-        <img src="/image/bocetos/nodo/bodega-600.webp" srcset="/image/bocetos/nodo/bodega-600.webp 600w, /image/bocetos/nodo/bodega-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Una bodega con cintas transportadoras y cajas plásticas ordenadas por ruta">
+      <figure data-aparece style="--orden: 1">
+        <img data-sigue src="/image/bocetos/nodo/bodega-600.webp" srcset="/image/bocetos/nodo/bodega-600.webp 600w, /image/bocetos/nodo/bodega-1000.webp 1000w" sizes="(min-width: 700px) 50vw, 100vw" width="1000" height="750" loading="lazy" alt="Una bodega con cintas transportadoras y cajas plásticas ordenadas por ruta">
         <figcaption><span>Fig 0.6 — Bodega</span><span>Etiquetas por ruta</span></figcaption>
       </figure>
     </div>
@@ -399,22 +422,22 @@ p { margin: 0; }
           <label><input type="radio" name="periodo" value="anual">Anual <small>−20%</small></label>
         </fieldset>
       </div>
-      <div class="planes" data-aparece>
-        <article class="plan">
+      <div class="planes">
+        <article class="plan" data-aparece>
           <h3>Emprende</h3>
           <p class="precio"><span class="mensual">$29.990 <small>/ mes</small></span><span class="anual">$23.990 <small>/ mes</small></span></p>
           <p>Para quien reparte con su propio auto.</p>
           <ul><li>1 vehículo</li><li>Hasta 300 pedidos al mes</li><li>Seguimiento para clientes</li></ul>
           <a class="boton fantasma" href="#demo">Empezar</a>
         </article>
-        <article class="plan destacado">
+        <article class="plan destacado" data-aparece style="--orden: 1">
           <h3>Pyme <small>El más usado</small></h3>
           <p class="precio"><span class="mensual">$89.990 <small>/ mes</small></span><span class="anual">$71.990 <small>/ mes</small></span></p>
           <p>Para equipos con bodega y varios choferes.</p>
           <ul><li>Hasta 10 vehículos</li><li>Pedidos sin límite</li><li>Rutas con ventanas horarias</li><li>Prueba de entrega con foto y firma</li></ul>
           <a class="boton" href="#demo">Pedir demo</a>
         </article>
-        <article class="plan">
+        <article class="plan" data-aparece style="--orden: 2">
           <h3>Flota</h3>
           <p class="precio"><span class="mensual">A medida</span><span class="anual">A medida</span></p>
           <p>Para distribuidoras con más de diez vehículos.</p>

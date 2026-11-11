@@ -26,7 +26,7 @@
   --gris: #9d9688;
   --linea: #2b2720;
   --margen: clamp(20px, 4vw, 56px);
-  --lento: cubic-bezier(0.25, 1, 0.5, 1);
+  --lento: cubic-bezier(0.4, 0, 0.1, 1);
 }
 * { box-sizing: border-box; }
 html { background: var(--negro); scroll-behavior: smooth; }
@@ -166,15 +166,38 @@ em { font-style: italic; }
   .horas label { min-width: calc(50% - 5px); }
 }
 
-/* ---- Movimiento: la luz cruza el dorado ----
-   Un brillo recorre la palabra dorada de lado a lado y descansa, como cuando
-   una pieza gira bajo la lámpara de la vitrina. Las fotos de la colección
-   cambian a la pieza puesta al pasar el cursor. */
+/* ---- Movimiento: lento, como una vitrina ----
+   Ónix se mueve poco y despacio, con la calma de una joyería: nada salta,
+   todo se revela. La portada sale de la penumbra y, al bajar, su foto queda
+   atrás mientras el título se desvanece. El filete dorado baja como un hilo,
+   las frases aparecen sin apuro y las fotos de las piezas se alejan apenas
+   mientras pasan, como una cámara que retrocede. Un brillo recorre la palabra
+   dorada de lado a lado y descansa, como cuando una pieza gira bajo la lámpara
+   de la vitrina. Las fotos de la colección cambian a la pieza puesta al pasar
+   el cursor. */
+[data-aparece] { --entrada: onix-revela; --curva: var(--lento); --tramo: 55svh; --duracion: 1800ms; }
+.firma { --entrada: none; }
+.filete { --entrada: onix-hilo; --tramo: 30svh; }
+.pieza, .taller-foto, .orfebre, .cita figure { --entrada: onix-aclara; }
+.pieza .marco img, .taller-foto img, .orfebre img, .cita figure img { --entrada: onix-retrocede; --tramo: 100svh; --curva: cubic-bezier(0.3, 0, 0.3, 1); }
+@keyframes onix-revela { from { opacity: 0; translate: 0 20px; } }
+@keyframes onix-aclara { from { opacity: 0; } }
+@keyframes onix-hilo { from { clip-path: inset(0 0 100% 0); } }
+@keyframes onix-retrocede { from { scale: 1.14; } }
+@keyframes onix-se-va { to { opacity: 0; translate: 0 -48px; } }
+@keyframes onix-queda { to { translate: 0 16%; } }
 @keyframes brillo { 0% { background-position: 100% 0; } 45%, 100% { background-position: 0% 0; } }
 @keyframes acercar { from { transform: scale(1.08); } }
 @media (prefers-reduced-motion: no-preference) {
-  .dorado { animation: brillo 6s var(--lento) 900ms infinite; }
-  .portada img { animation: acercar 3200ms var(--lento) both; }
+  .dorado { animation: brillo 6s var(--lento) 1600ms infinite; }
+  .portada img { animation: acercar 3600ms var(--lento) both; }
+  .portada-texto > * { animation: onix-revela 1800ms var(--lento) both; }
+  .portada-texto > :nth-child(2) { animation-delay: 250ms; }
+  .portada-texto > :nth-child(3) { animation-delay: 500ms; }
+  @supports (animation-timeline: scroll()) {
+    .portada picture { animation: onix-queda linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+    .portada-texto { animation: onix-se-va linear both; animation-timeline: scroll(root); animation-range: 0 75svh; }
+  }
 }
 </style>
 </head>
@@ -199,8 +222,8 @@ em { font-style: italic; }
     </div>
   </section>
 
-  <section class="ancho firma" aria-label="El taller">
-    <div class="filete" aria-hidden="true"></div>
+  <section class="ancho firma" aria-label="El taller" data-aparece>
+    <div class="filete" aria-hidden="true" data-sigue></div>
     <p class="frase" data-aparece>Cada pieza se funde, se lima y se pule a mano en nuestro taller de Lastarria, en tiradas de no más de doce.</p>
     <p class="versalita" data-aparece>Oro de 18 quilates reciclado · plata 950</p>
   </section>
@@ -211,8 +234,8 @@ em { font-style: italic; }
       <figure class="pieza p-anillo" data-aparece>
         <a href="#cita">
           <div class="marco">
-            <img src="/image/bocetos/onix/anillo-1000.webp" srcset="/image/bocetos/onix/anillo-600.webp 600w, /image/bocetos/onix/anillo-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un anillo ancho de oro de forma ondulada, reflejado en un espejo">
-            <img class="uso" src="/image/bocetos/onix/anillo-uso-1000.webp" srcset="/image/bocetos/onix/anillo-uso-600.webp 600w, /image/bocetos/onix/anillo-uso-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
+            <img data-sigue src="/image/bocetos/onix/anillo-1000.webp" srcset="/image/bocetos/onix/anillo-600.webp 600w, /image/bocetos/onix/anillo-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un anillo ancho de oro de forma ondulada, reflejado en un espejo">
+            <img data-sigue class="uso" src="/image/bocetos/onix/anillo-uso-1000.webp" srcset="/image/bocetos/onix/anillo-uso-600.webp 600w, /image/bocetos/onix/anillo-uso-1000.webp 1000w" sizes="(min-width: 900px) 44vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
           </div>
           <figcaption><h3>Anillo Marea</h3><span class="precio">$480.000</span><span class="versalita">Oro de 18 quilates · hecho a tu medida</span></figcaption>
         </a>
@@ -220,17 +243,17 @@ em { font-style: italic; }
       <figure class="pieza p-colgante" data-aparece>
         <a href="#cita">
           <div class="marco">
-            <img src="/image/bocetos/onix/colgante-1000.webp" srcset="/image/bocetos/onix/colgante-600.webp 600w, /image/bocetos/onix/colgante-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante ovalado de oro sobre arena, con su cadena">
-            <img class="uso" src="/image/bocetos/onix/colgante-uso-1000.webp" srcset="/image/bocetos/onix/colgante-uso-600.webp 600w, /image/bocetos/onix/colgante-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
+            <img data-sigue src="/image/bocetos/onix/colgante-1000.webp" srcset="/image/bocetos/onix/colgante-600.webp 600w, /image/bocetos/onix/colgante-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante ovalado de oro sobre arena, con su cadena">
+            <img data-sigue class="uso" src="/image/bocetos/onix/colgante-uso-1000.webp" srcset="/image/bocetos/onix/colgante-uso-600.webp 600w, /image/bocetos/onix/colgante-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 90vw" width="1000" height="1250" loading="lazy" alt="">
           </div>
           <figcaption><h3>Colgante Órbita</h3><span class="precio">$620.000</span><span class="versalita">Oro de 18 quilates · cadena de 45 cm</span></figcaption>
         </a>
       </figure>
-      <figure class="pieza p-argollas" data-aparece style="--retraso: 120ms">
+      <figure class="pieza p-argollas" data-aparece style="--orden: 1">
         <a href="#cita">
           <div class="marco">
-            <img src="/image/bocetos/onix/argollas-1000.webp" srcset="/image/bocetos/onix/argollas-600.webp 600w, /image/bocetos/onix/argollas-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="Un par de argollas de oro trenzado apoyadas en piedras blancas, con sombras largas">
-            <img class="uso" src="/image/bocetos/onix/argollas-uso-1000.webp" srcset="/image/bocetos/onix/argollas-uso-600.webp 600w, /image/bocetos/onix/argollas-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="">
+            <img data-sigue src="/image/bocetos/onix/argollas-1000.webp" srcset="/image/bocetos/onix/argollas-600.webp 600w, /image/bocetos/onix/argollas-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="Un par de argollas de oro trenzado apoyadas en piedras blancas, con sombras largas">
+            <img data-sigue class="uso" src="/image/bocetos/onix/argollas-uso-1000.webp" srcset="/image/bocetos/onix/argollas-uso-600.webp 600w, /image/bocetos/onix/argollas-uso-1000.webp 1000w" sizes="(min-width: 900px) 36vw, 76vw" width="1000" height="1250" loading="lazy" alt="">
           </div>
           <figcaption><h3>Argollas Trenza</h3><span class="precio">$390.000</span><span class="versalita">Oro de 18 quilates · el par</span></figcaption>
         </a>
@@ -241,20 +264,20 @@ em { font-style: italic; }
   <section class="taller" id="taller">
     <div class="ancho taller-grid">
       <figure class="taller-foto" data-aparece>
-        <img src="/image/bocetos/onix/banco-1400.webp" srcset="/image/bocetos/onix/banco-800.webp 800w, /image/bocetos/onix/banco-1400.webp 1400w" sizes="(min-width: 900px) 56vw, 100vw" width="1400" height="933" loading="lazy" alt="Unas manos trabajan una pieza de metal sobre un banco de joyero, con herramientas alrededor">
+        <img data-sigue src="/image/bocetos/onix/banco-1400.webp" srcset="/image/bocetos/onix/banco-800.webp 800w, /image/bocetos/onix/banco-1400.webp 1400w" sizes="(min-width: 900px) 56vw, 100vw" width="1400" height="933" loading="lazy" alt="Unas manos trabajan una pieza de metal sobre un banco de joyero, con herramientas alrededor">
         <figcaption class="versalita">El banco de trabajo, Lastarria 70</figcaption>
       </figure>
       <div class="taller-texto" data-aparece>
         <p class="versalita">El taller</p>
         <h2>Tres semanas para cada pieza</h2>
         <ol class="pasos">
-          <li><span aria-hidden="true">I</span><b>Fundición</b><p>El oro reciclado se funde y se vierte en un molde de arena hecho para esa pieza.</p></li>
-          <li><span aria-hidden="true">II</span><b>Limado</b><p>Se trabaja a mano con limas finas, hasta que la forma queda como en el dibujo.</p></li>
-          <li><span aria-hidden="true">III</span><b>Pulido</b><p>Tres pasadas de pulido, de la más gruesa a la más fina, y el sello del taller.</p></li>
+          <li data-sigue><span aria-hidden="true">I</span><b>Fundición</b><p>El oro reciclado se funde y se vierte en un molde de arena hecho para esa pieza.</p></li>
+          <li data-sigue style="--orden: 1"><span aria-hidden="true">II</span><b>Limado</b><p>Se trabaja a mano con limas finas, hasta que la forma queda como en el dibujo.</p></li>
+          <li data-sigue style="--orden: 2"><span aria-hidden="true">III</span><b>Pulido</b><p>Tres pasadas de pulido, de la más gruesa a la más fina, y el sello del taller.</p></li>
         </ol>
       </div>
       <figure class="orfebre" data-aparece>
-        <img src="/image/bocetos/onix/orfebre-1000.webp" srcset="/image/bocetos/onix/orfebre-600.webp 600w, /image/bocetos/onix/orfebre-1000.webp 1000w" sizes="(min-width: 900px) 22vw, 50vw" width="1000" height="1250" loading="lazy" alt="Una orfebre joven sentada en su banco de trabajo, mirando a cámara">
+        <img data-sigue src="/image/bocetos/onix/orfebre-1000.webp" srcset="/image/bocetos/onix/orfebre-600.webp 600w, /image/bocetos/onix/orfebre-1000.webp 1000w" sizes="(min-width: 900px) 22vw, 50vw" width="1000" height="1250" loading="lazy" alt="Una orfebre joven sentada en su banco de trabajo, mirando a cámara">
         <figcaption class="versalita">Isidora Vial, orfebre</figcaption>
       </figure>
       <blockquote class="cita-orfebre" data-aparece>«Una joya buena se nota en la parte que no se ve: el interior de un anillo, el cierre de un collar.»<small>Isidora Vial, fundadora</small></blockquote>
@@ -263,7 +286,7 @@ em { font-style: italic; }
 
   <section class="ancho cita" id="cita">
     <figure data-aparece>
-      <img src="/image/bocetos/onix/estuche-1000.webp" srcset="/image/bocetos/onix/estuche-600.webp 600w, /image/bocetos/onix/estuche-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante dorado de barra, colgado de un estuche oscuro">
+      <img data-sigue src="/image/bocetos/onix/estuche-1000.webp" srcset="/image/bocetos/onix/estuche-600.webp 600w, /image/bocetos/onix/estuche-1000.webp 1000w" sizes="(min-width: 900px) 40vw, 90vw" width="1000" height="1250" loading="lazy" alt="Un colgante dorado de barra, colgado de un estuche oscuro">
     </figure>
     <div data-aparece>
       <p class="versalita">Cita privada</p>

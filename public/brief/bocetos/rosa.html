@@ -25,8 +25,8 @@
   --mostaza: #eaa93f;
   --oliva: #5f6a2c;
   --margen: clamp(20px, 4vw, 56px);
-  --suave: cubic-bezier(0.34, 1.2, 0.64, 1);
-  --calma: cubic-bezier(0.25, 1, 0.5, 1);
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --calma: cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 * { box-sizing: border-box; }
 html { background: var(--crema); scroll-behavior: smooth; }
@@ -162,6 +162,8 @@ p { margin: 0; }
 
 /* ---- WhatsApp flotante ---- */
 .whatsapp { position: fixed; z-index: 50; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; width: 60px; height: 60px; border: 2px solid var(--cafe); border-radius: 50%; background: #25d366; color: #fff; box-shadow: 0 4px 0 var(--cafe); transition: transform 300ms var(--suave); }
+/* En el visor del brief, sobre sus botones (barra.js marca `en-visor`). */
+.en-visor .whatsapp { bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 76px); }
 .whatsapp:hover { transform: translateY(-3px) rotate(-6deg); }
 .whatsapp svg { width: 30px; height: 30px; }
 
@@ -187,17 +189,41 @@ p { margin: 0; }
   .pie-grid { grid-template-columns: 1fr; }
 }
 
-/* ---- Movimiento: las fotos redondas flotan ----
-   Suben y bajan unos píxeles, cada una a su ritmo, como el vapor de una olla.
-   Lo demás entra al bajar y la carta aparece al elegir el día. */
+/* ---- Movimiento: como servir la mesa ----
+   Rosa se mueve con calidez y sin prisa: lo que llega se posa, como un plato
+   que se deja en la mesa, un poco más chico al bajar y del tamaño justo al
+   tocarla, siempre sin rebote. Al cargar, el título se sirve de a una línea y
+   el mosaico, de a un plato. Al bajar, las opiniones se acomodan torcidas,
+   cada una girando a su lugar como un papel que se clava en la pared, y las
+   fotos redondas de la portada suben un poco más rápido que la página. Las
+   fotos redondas flotan, cada una a su ritmo, como el vapor de una olla. */
+[data-aparece] { --entrada: rosa-sirve; --curva: var(--calma); --tramo: 38svh; --duracion: 1000ms; }
+.nota { --entrada: rosa-se-clava; --tramo: 50svh; }
+.nota:nth-child(2) { --giro: 7deg; }
+.nota:nth-child(3) { --giro: -4deg; }
+@keyframes rosa-sirve { from { opacity: 0; translate: 0 28px; scale: 0.96; } }
+@keyframes rosa-posa { from { translate: 0 24px; scale: 0.97; } }
+@keyframes rosa-se-clava { from { opacity: 0; translate: 0 64px; rotate: var(--giro, -6deg); } }
+@keyframes rosa-sube { to { translate: 0 -48px; } }
 @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 @keyframes servir { from { opacity: 0; transform: translateY(12px); } }
 @media (prefers-reduced-motion: no-preference) {
+  .portada h1 span { animation: rosa-sirve 1000ms var(--calma) both; }
+  .portada h1 .baja { animation-delay: 160ms; }
+  .portada-fila { animation: rosa-sirve 1000ms var(--calma) 320ms both; }
+  .m-mesa { animation: rosa-posa 1100ms var(--calma) 200ms both; }
+  .m-cazuela, .m-pan, .m-verano { animation: rosa-sirve 1000ms var(--calma) 380ms both; }
+  .m-pan { animation-delay: 500ms; }
+  .m-verano { animation-delay: 620ms; }
   .m-cazuela img { animation: flotar 5.6s ease-in-out infinite; }
   .m-pan img { animation: flotar 6.4s ease-in-out -2s infinite; }
   .sello { animation: flotar 7s ease-in-out -1s infinite; }
   .plato img { animation: flotar 6s ease-in-out infinite; }
   .rosa img { animation: flotar 8s ease-in-out infinite; }
+  @supports (animation-timeline: scroll()) {
+    .m-cazuela, .m-pan { animation: rosa-sirve 1000ms var(--calma) 380ms both, rosa-sube linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100svh; }
+    .m-pan { animation-delay: 500ms, 0s; }
+  }
 }
 @media (prefers-reduced-motion: reduce) { .carta-dias [data-dia] { animation: none !important; } }
 </style>
@@ -243,11 +269,11 @@ p { margin: 0; }
       <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 28h40v14a12 12 0 0 1-12 12H24a12 12 0 0 1-12-12z M7 28h50 M26 18c0-4 4-4 4-8 M36 20c0-4 4-4 4-8"/></svg>
       <div><h3>Cocinado esa mañana</h3><p>Nada se recalienta del día anterior. Lo que sobra va al comedor de la parroquia.</p></div>
     </div>
-    <div class="promesa" data-aparece style="--retraso: 100ms">
+    <div class="promesa" data-aparece style="--orden: 1">
       <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 22 32 12l22 10v22L32 54 10 44z M10 22l22 10 22-10 M32 32v22 M44 40l4-2"/></svg>
       <div><h3>En caja que vuelve</h3><p>Llega en ollas de loza que retiramos al día siguiente, cuando dejamos el próximo pedido.</p></div>
     </div>
-    <div class="promesa" data-aparece style="--retraso: 200ms">
+    <div class="promesa" data-aparece style="--orden: 2">
       <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 48C16 26 30 14 50 14c0 20-12 34-34 34z M16 48l18-18 M8 56l8-8"/></svg>
       <div><h3>De la feria del barrio</h3><p>Las verduras las compramos el día antes en la feria de Exequiel Fernández.</p></div>
     </div>
@@ -315,8 +341,8 @@ p { margin: 0; }
     <h2 data-aparece>Lo que dicen en el barrio</h2>
     <div class="notas">
       <figure class="nota" data-aparece><blockquote>«La cazuela del martes es la de mi mamá. No exagero: lloré un poco en la oficina.»</blockquote><footer><span aria-hidden="true">C</span><p>Carolina M.<small>Providencia</small></p></footer></figure>
-      <figure class="nota" data-aparece style="--retraso: 100ms"><blockquote>«Hicieron el almuerzo del bautizo para 60 personas y nadie se fue con hambre. Ni con espacio para el postre.»</blockquote><footer><span aria-hidden="true">J</span><p>Jorge y Paula<small>La Reina</small></p></footer></figure>
-      <figure class="nota" data-aparece style="--retraso: 200ms"><blockquote>«Pedimos los viernes para toda la oficina. La plateada ya es tradición.»</blockquote><footer><span aria-hidden="true">E</span><p>Estudio Lira<small>Ñuñoa</small></p></footer></figure>
+      <figure class="nota" data-aparece style="--orden: 1"><blockquote>«Hicieron el almuerzo del bautizo para 60 personas y nadie se fue con hambre. Ni con espacio para el postre.»</blockquote><footer><span aria-hidden="true">J</span><p>Jorge y Paula<small>La Reina</small></p></footer></figure>
+      <figure class="nota" data-aparece style="--orden: 2"><blockquote>«Pedimos los viernes para toda la oficina. La plateada ya es tradición.»</blockquote><footer><span aria-hidden="true">E</span><p>Estudio Lira<small>Ñuñoa</small></p></footer></figure>
     </div>
   </section>
 
