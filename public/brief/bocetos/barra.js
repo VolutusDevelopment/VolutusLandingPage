@@ -34,9 +34,9 @@
 
 const CLAVE = 'volutus:brief:bocetos'
 const REACCIONES = [
-  ['si', 'Me gusta', '♥'],
-  ['medio', 'Más o menos', '~'],
   ['no', 'No me gusta', '✕'],
+  ['medio', 'Más o menos', '~'],
+  ['si', 'Me gusta', '♥'],
 ]
 const LARGO_DE_LA_NOTA = 200
 const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches

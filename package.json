@@ -35,5 +35,8 @@
   "bugs": {
     "url": "https://github.com/VolutusDevGroup/VolutusLandingPage/issues"
   },
-  "homepage": "https://github.com/VolutusDevGroup/VolutusLandingPage#readme"
+  "homepage": "https://github.com/VolutusDevGroup/VolutusLandingPage#readme",
+  "dependencies": {
+    "pdf-lib": "1.17.1"
+  }
 }

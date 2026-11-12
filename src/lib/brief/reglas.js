@@ -74,11 +74,13 @@ export const campoEstrella = (id) => `${id}_imprescindible`
 export const campoBoceto = (slug) => `boceto_${slug}`
 export const campoNotaBoceto = (slug) => `boceto_${slug}_nota`
 
-// Las reacciones a un boceto, con lo que significan en palabras.
+// Las reacciones a un boceto, con lo que significan en palabras, en el orden
+// en que se muestran: de «no» a la izquierda a «sí» a la derecha, como en el
+// visor.
 export const REACCIONES = [
-  ['si', 'Me gusta', '♥'],
-  ['medio', 'Más o menos', '~'],
   ['no', 'No me gusta', '✕'],
+  ['medio', 'Más o menos', '~'],
+  ['si', 'Me gusta', '♥'],
 ]
 
 // Donde quedan las calificaciones de los bocetos en el navegador. Las escriben
@@ -146,11 +148,15 @@ export const campoCelda = (id, fila, columna) => `${id}_${fila}_${columna}`
 // Uno de los colores de una pregunta `colores`: empieza en 1.
 export const campoColor = (id, n) => `${id}_${n}`
 
-// Todas las preguntas de una lista, con las de las columnas y las del mockup
-// sacadas de su grupo y en su orden.
+// Todas las preguntas de una lista, con las de las columnas, la escena y el
+// mockup sacadas de su grupo y en su orden.
 export const aplanar = (preguntas) =>
   preguntas.flatMap((pregunta) =>
-    pregunta.tipo === 'columnas' ? pregunta.columnas.flatMap((columna) => aplanar(columna.preguntas)) : pregunta.tipo === 'mockup' ? pregunta.preguntas : [pregunta]
+    pregunta.tipo === 'columnas'
+      ? pregunta.columnas.flatMap((columna) => aplanar(columna.preguntas))
+      : ['escena', 'mockup'].includes(pregunta.tipo)
+        ? aplanar(pregunta.preguntas)
+        : [pregunta]
   )
 
 // Las preguntas que se responden (no los consejos ni las comparaciones).

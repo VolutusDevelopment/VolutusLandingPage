@@ -47,3 +47,10 @@ export const BOCETOS = [
 // Dónde vive cada boceto. Con `.html`: así abre igual en `vite` (que sirve
 // public/ tal cual) y en Cloudflare (que redirige a la ruta sin extensión).
 export const rutaDeBoceto = (slug) => `/brief/bocetos/${slug}.html`
+
+// Las marcas que se eligen viéndolas (un espacio, comida, joyas, un gimnasio,
+// perros, un lugar) llevan en su tarjeta una foto de su boceto, recortada a
+// 16:9 en dos anchos (320 y 640). Las demás se dibujan (MuestraBrief.jsx).
+const CON_FOTO = new Set(['alba', 'rosa', 'onix', 'golpe', 'pelusa', 'kiri', 'parina', 'marfil'])
+export const tieneFoto = (slug) => CON_FOTO.has(slug)
+export const fotoDeTarjeta = (slug, ancho) => `/image/bocetos/${slug}/tarjeta-${ancho}.webp`

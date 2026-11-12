@@ -102,10 +102,22 @@ function Fecha({ texto }) {
   )
 }
 
-// El arte de cada estilo y su marca de elegido. Todo es decorado: la tarjeta
-// se llama por la leyenda de su estilo.
+// El arte de cada estilo y su marca de elegido. Las marcas con foto
+// (`tieneFoto` de bocetos.js) llevan encima su logotipo en una placa de su
+// color (`Placa`), nunca texto directo sobre la foto; las demás se dibujan
+// enteras. Todo es decorado: la tarjeta se llama por la leyenda de su estilo.
+const Placa = ({ children }) => <span className="placa">{children}</span>
+
+// La olla de La Mesa de Rosa, la misma de public/brief/bocetos/rosa.html.
+const OLLA = 'M6 17h28v9a9 9 0 0 1-9 9H15a9 9 0 0 1-9-9z M3 17h34 M15 9c0-3 3-3 3-6 M21 11c0-3 3-3 3-6'
+
 const ESTILOS = {
-  minimalista: [<span className="rot">menos</span>, <Trazo d="M3 13l6 6L21 5" caja="0 0 24 24" />],
+  minimalista: [
+    <Placa>
+      <span className="rot">Alba Interiores</span>
+    </Placa>,
+    <Trazo d="M3 13l6 6L21 5" caja="0 0 24 24" />,
+  ],
   tecnologico: [
     <>
       <svg className="curvas" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice">
@@ -183,26 +195,31 @@ const ESTILOS = {
     <span>Nº 12</span>,
   ],
   calido: [
-    <>
-      <span className="bola b1" />
-      <span className="bola b2" />
-      <span className="bola b3" />
-      <span className="rot">Pasa, estás en tu casa</span>
-    </>,
+    <Placa>
+      <svg viewBox="0 0 40 40">
+        <path d={OLLA} />
+      </svg>
+      La Mesa de Rosa
+    </Placa>,
     <span>♥</span>,
   ],
-  premium: [<span className="rot">MAISON</span>, <span>✦</span>],
-  audaz: [<span className="rot">SÍ.</span>, <span>!</span>],
+  premium: [
+    <Placa>
+      <span className="rot">ÓNIX</span>
+    </Placa>,
+    <span>✦</span>,
+  ],
+  audaz: [
+    <Placa>
+      <span className="rot">GOLPE</span>
+    </Placa>,
+    <span>!</span>,
+  ],
   ludico: [
-    <>
-      <span className="f f1" />
-      <span className="f f2" />
-      <span className="f f3" />
-      <svg className="huella" viewBox="0 0 24 24">
-        {HUELLA}
-      </svg>
+    <Placa>
       <span className="rot">pelusa</span>
-    </>,
+      <svg viewBox="0 0 24 24">{HUELLA}</svg>
+    </Placa>,
     <svg viewBox="0 0 24 24">{HUELLA}</svg>,
   ],
   brutalista: [
@@ -304,15 +321,13 @@ const ESTILOS = {
     </svg>,
   ],
   zen: [
-    <>
+    <Placa>
       <Enso />
-      <span className="nombre">
-        <svg viewBox="0 0 1000 1000">
-          <path d={KIRI} />
-        </svg>
-        <b>Kiri</b>
-      </span>
-    </>,
+      <svg viewBox="0 0 1000 1000">
+        <path d={KIRI} />
+      </svg>
+      <b>Kiri</b>
+    </Placa>,
     <Enso />,
   ],
   industrial: [
@@ -328,14 +343,12 @@ const ESTILOS = {
     <span />,
   ],
   artdeco: [
-    <>
-      <svg className="abanico" viewBox="0 0 300 150" preserveAspectRatio="xMidYMax meet">
-        <path className="izq" d="M125.3 150L7.3 111.6M127.5 145L20.1 83M130.7 140.6L38.5 57.6M134.7 137L61.8 36.6M139.4 134.2L89 21M144.6 132.6L118.8 11.3" />
-        <path d="M150 132V8" />
-        <path className="der" d="M155.4 132.6L181.2 11.3M160.6 134.2L211 21M165.3 137L238.2 36.6M169.3 140.6L261.5 57.6M172.5 145L279.9 83M174.7 150L292.7 111.6" />
+    <Placa>
+      <svg viewBox="0 0 36 20">
+        <path d={ABANICO} />
       </svg>
       <span className="rot">MARFIL</span>
-    </>,
+    </Placa>,
     <svg viewBox="0 0 36 20">
       <path d={ABANICO} />
     </svg>,
@@ -381,28 +394,21 @@ const ESTILOS = {
     <Trazo d={CHISPA} caja="0 0 24 24" />,
   ],
   andino: [
-    <>
+    <Placa>
       <span className="franja">
-        {[1, 2, 3, 4, 5].map((fila) => (
+        {[1, 2, 3].map((fila) => (
           <i key={fila} />
         ))}
       </span>
-      <span className="rot">
-        <svg viewBox="0 0 40 56">
-          <path d="M1.5 27.5 15.5 19 32 24.5 18 35.5zM27.6 4 31 .8 34.4 4 31 7.2z" />
-          <path className="ala" d="M10 26.6 17.6 22.6 25.6 25.2 18.2 30.4z" />
-          <path className="cuello" d="M27 24.5C34 21 35.5 14 30 11.2 24.6 8.6 25.2 3.4 30 3" />
-          <path className="pico" d="M33.2 3.1 38.6 4.4 37.4 8.8 35 5.6z" />
-          <path className="pata" d="M17.5 34V54M17.5 40.5 23 44.5 17.5 46.5M15 54h5" />
-        </svg>
-        Parina
-      </span>
-      <span className="franja f2">
-        {[1, 2, 3, 4, 5].map((fila) => (
-          <i key={fila} />
-        ))}
-      </span>
-    </>,
+      <svg viewBox="0 0 40 56">
+        <path d="M1.5 27.5 15.5 19 32 24.5 18 35.5zM27.6 4 31 .8 34.4 4 31 7.2z" />
+        <path className="ala" d="M10 26.6 17.6 22.6 25.6 25.2 18.2 30.4z" />
+        <path className="cuello" d="M27 24.5C34 21 35.5 14 30 11.2 24.6 8.6 25.2 3.4 30 3" />
+        <path className="pico" d="M33.2 3.1 38.6 4.4 37.4 8.8 35 5.6z" />
+        <path className="pata" d="M17.5 34V54M17.5 40.5 23 44.5 17.5 46.5M15 54h5" />
+      </svg>
+      Parina
+    </Placa>,
     <span />,
   ],
   letterpress: [

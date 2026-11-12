@@ -206,7 +206,8 @@
   overflow-wrap: break-word;
 }
 
-.brief-muestra:has(input:checked) .brief-muestra-detalle {
+.brief-muestra:has(input:checked) .brief-muestra-detalle,
+.brief-estilo:has([value='si']:checked) .brief-muestra-detalle {
   color: inherit;
   opacity: 0.8;
 }
@@ -235,15 +236,37 @@
   opacity: 1;
 }
 
-/* ---- Cada estilo: su arte, lo que hace al pasar y lo que hace marcado ---- */
+/* ---- Cada estilo: su portada, lo que hace al pasar y lo que hace marcado ----
+ * Las marcas que se eligen viéndolas (un espacio, comida, joyas, un
+ * gimnasio, perros, un lugar) llevan la foto de su boceto y, encima, su
+ * logotipo en una placa de su color (`--placa`, `--tinta`), abajo a la
+ * izquierda: el texto nunca va directo sobre la foto. Las demás se dibujan
+ * enteras con su logo, su paleta y un gesto de su página. */
+.brief-estilo .placa {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 24px);
+  padding: 8px 12px;
+  background: var(--placa);
+  color: var(--tinta);
+  white-space: nowrap;
+}
 
-/* Minimalista: una línea y un punto que la recorre. */
-.estilo-minimalista { --marcado: #141414; }
-.estilo-minimalista .brief-muestra-arte { background: #fafaf8; }
-.estilo-minimalista .brief-muestra-arte::before { content: ''; position: absolute; left: 26px; right: 26px; top: 50%; border-top: 1px solid #141414; }
-.estilo-minimalista .brief-muestra-arte::after { content: ''; position: absolute; left: 26px; top: calc(50% - 4px); width: 9px; height: 9px; border-radius: 50%; background: #141414; transition: left 900ms var(--ease); }
-.estilo-minimalista:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { left: calc(100% - 35px); }
-.estilo-minimalista .rot { position: absolute; left: 26px; bottom: 22px; font: 300 11px/1 'Muestra Hanken', sans-serif; letter-spacing: 0.3em; text-transform: uppercase; color: #141414; }
+.brief-estilo .placa svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Minimalista · Alba Interiores: el nombre espaciado, en una placa de papel. */
+.estilo-minimalista { --marcado: #141414; --placa: #fafaf8; --tinta: #141414; }
+.estilo-minimalista .placa { padding: 11px 14px; }
+.estilo-minimalista .rot { margin-right: -0.34em; font: 300 11px/1 'Muestra Hanken', sans-serif; letter-spacing: 0.34em; text-transform: uppercase; }
 .estilo-minimalista:has([value='si']:checked) .brief-muestra-pie { background: #fafaf8; color: #141414; }
 .estilo-minimalista:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; font-size: 14px; }
 .estilo-minimalista .brief-sello svg { width: 22px; fill: none; stroke: #141414; stroke-width: 1.4; stroke-dasharray: 30; stroke-dashoffset: 30; }
@@ -272,7 +295,7 @@
 .estilo-corporativo .banda { display: flex; align-items: center; gap: 8px; padding: 0 14px; background: #0f2a44; color: #ffffff; font: 800 10.5px/1 'Muestra Manrope', sans-serif; letter-spacing: 0.08em; }
 .estilo-corporativo .banda svg { width: 17px; height: 13px; fill: #ffffff; }
 .estilo-corporativo .banda .hueco { fill: none; stroke: #ffffff; stroke-width: 1.8; }
-.estilo-corporativo .corte { display: block; width: 100%; height: 120px; overflow: visible; }
+.estilo-corporativo .corte { position: absolute; left: 0; bottom: 0; display: block; width: 100%; height: calc(100% - 30px); overflow: visible; }
 .estilo-corporativo .tierra { fill: #c3cdd8; }
 .estilo-corporativo .raya { fill: none; stroke: #0f2a44; stroke-width: 2; }
 .estilo-corporativo .edificio rect { fill: #ffffff; stroke: #0f2a44; stroke-width: 1.6; }
@@ -301,58 +324,44 @@
 .estilo-editorial:has([value='si']:checked) .brief-muestra-nombre { font-size: 20px; }
 .estilo-editorial .brief-sello span { padding: 3px 0; border-block: 1px solid #6b1f2a; font: 500 10px/1.1 'Muestra Newsreader', Georgia, serif; letter-spacing: 0.08em; color: #6b1f2a; transition: opacity 300ms; }
 
-/* Cálido y cercano: formas blandas que se mueven con masa. */
-.estilo-calido { --marcado: #d0643a; }
-.estilo-calido .brief-muestra-arte { background: #f6e4d0; }
-.estilo-calido .bola { position: absolute; border-radius: 50%; transition: transform 600ms var(--masa); }
-.estilo-calido .b1 { left: -20px; bottom: -40px; width: 120px; height: 120px; background: #e49b6a; }
-.estilo-calido .b2 { right: 30px; top: 26px; width: 70px; height: 70px; background: #d0643a; }
-.estilo-calido .b3 { right: 90px; bottom: 26px; width: 40px; height: 40px; background: #f7c873; }
-.estilo-calido:is(:hover, :focus-within, :has([value='si']:checked)) .b2 { transform: translateY(-8px) scale(1.05); }
-.estilo-calido:is(:hover, :focus-within, :has([value='si']:checked)) .b3 { transform: translate(-6px, 4px); }
-.estilo-calido .rot { position: absolute; left: 20px; top: 22px; max-width: 9ch; font: 700 21px/1.05 'Muestra Fraunces', Georgia, serif; color: #4f2614; }
+/* Cálido · La Mesa de Rosa: la olla humeando y el nombre en Fraunces, en una
+   placa redonda. Al pasar, el vapor sube. */
+.estilo-calido { --marcado: #c4542c; --placa: #fdf6ec; --tinta: #3b2418; }
+.estilo-calido .placa { padding: 7px 16px 7px 10px; border-radius: 999px; font: 700 17px/1 'Muestra Fraunces', Georgia, serif; }
+.estilo-calido .placa svg { width: 26px; height: 26px; fill: none; stroke: #c4542c; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: translate 700ms var(--calma); }
+.estilo-calido:is(:hover, :focus-within, :has([value='si']:checked)) .placa svg { translate: 0 -2px; }
 .estilo-calido:has([value='si']:checked) .brief-muestra-pie { background: #f6e4d0; color: #4f2614; }
-.estilo-calido .brief-sello span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #d0643a; color: #ffffff; font-size: 13px; transform: scale(0.4); }
+.estilo-calido .brief-sello span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #c4542c; color: #ffffff; font-size: 13px; transform: scale(0.4); }
 .estilo-calido:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Premium: dorado sobre negro, con un destello. */
-.estilo-premium { --marcado: #c9a24a; }
-.estilo-premium .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(120% 90% at 70% 20%, #23201b, #0b0a09); }
-.estilo-premium .brief-muestra-arte::before,
-.estilo-premium .brief-muestra-arte::after { content: ''; position: absolute; left: 30px; right: 30px; border-top: 1px solid rgb(201 162 74 / 0.6); }
-.estilo-premium .brief-muestra-arte::before { top: 32px; }
-.estilo-premium .brief-muestra-arte::after { bottom: 32px; }
-.estilo-premium .rot { font: 500 30px/1 'Muestra Bodoni', Didot, serif; letter-spacing: 0.18em; color: transparent; background: linear-gradient(100deg, #8a6a2c 20%, #f3dc9a 45%, #8a6a2c 70%) 100% 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; transition: background-position 1.4s var(--ease); }
+/* Premium · Ónix: el nombre en Bodoni, dorado entre dos filetes. Al pasar,
+   le cruza un destello. */
+.estilo-premium { --marcado: #c9a24a; --placa: #0b0a09; --tinta: #efe9de; }
+.estilo-premium .placa { padding: 11px 16px; box-shadow: inset 0 1px 0 rgb(201 162 74 / 0.6), inset 0 -1px 0 rgb(201 162 74 / 0.6); }
+.estilo-premium .rot { margin-right: -0.56em; font: 500 20px/1 'Muestra Bodoni', Didot, serif; letter-spacing: 0.56em; color: transparent; background: linear-gradient(100deg, #8a6a2c 20%, #f3dc9a 45%, #8a6a2c 70%) 100% 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; transition: background-position 1.4s var(--ease); }
 .estilo-premium:is(:hover, :focus-within, :has([value='si']:checked)) .rot { background-position: 0 0; }
 .estilo-premium:has([value='si']:checked) .brief-muestra-pie { background: #0b0a09; color: #efe3c2; }
 .estilo-premium:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.1em; text-transform: uppercase; }
 .estilo-premium .brief-sello span { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #c9a24a; border-radius: 50%; color: #c9a24a; transform: rotate(-90deg); }
 .estilo-premium:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Audaz: una palabra enorme. */
-.estilo-audaz { --marcado: #111111; }
-.estilo-audaz .brief-muestra-arte { display: grid; align-items: end; padding: 0 12px; background: #ffe14d; }
-.estilo-audaz .rot { font: 400 104px/0.8 'Muestra Anton', Impact, sans-serif; letter-spacing: -0.02em; color: #111111; transform: translateY(10px); transform-origin: left bottom; transition: transform 400ms var(--masa); }
-.estilo-audaz:is(:hover, :focus-within, :has([value='si']:checked)) .rot { transform: translateY(0) scale(1.05); }
+/* Audaz · Golpe: el nombre enorme, amarillo sobre negro. Al pasar, crece. */
+.estilo-audaz { --marcado: #111111; --placa: #0d0d0d; --tinta: #ffe14d; }
+.estilo-audaz .placa { padding: 7px 12px 5px; }
+.estilo-audaz .rot { font: 400 38px/1 'Muestra Anton', Impact, sans-serif; letter-spacing: 0.02em; transform-origin: left bottom; transition: transform 400ms var(--masa); }
+.estilo-audaz:is(:hover, :focus-within, :has([value='si']:checked)) .rot { transform: scale(1.06); }
 .estilo-audaz:has([value='si']:checked) .brief-muestra-pie { background: #111111; color: #ffe14d; }
 .estilo-audaz:has([value='si']:checked) .brief-muestra-nombre { font-size: 21px; letter-spacing: 0.02em; text-transform: uppercase; }
 .estilo-audaz .brief-sello span { font: 400 24px/1 'Muestra Anton', Impact, sans-serif; color: #ffe14d; transform: scale(2); }
 .estilo-audaz:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Lúdico · Pelusa: tres formas blandas, una huella y su nombre. Al pasar, las
-   formas se mecen y se acomodan frenando. */
-.estilo-ludico { --marcado: #ff7a59; }
-.estilo-ludico .brief-muestra-arte { background: #fff6e6; }
-.estilo-ludico .f { position: absolute; transition: transform 700ms var(--calma); }
-.estilo-ludico .f1 { left: 18px; top: 18px; width: 64px; height: 64px; border-radius: 50%; background: #6cc4ff; }
-.estilo-ludico .f2 { right: 40px; top: 20px; width: 46px; height: 46px; border-radius: 28%; background: #ff7a59; transform: rotate(14deg); }
-.estilo-ludico .f3 { right: -16px; bottom: -22px; width: 108px; height: 84px; border-radius: 52% 48% 46% 54% / 56% 50% 50% 44%; background: #ffd34d; }
-.estilo-ludico .huella { position: absolute; left: 92px; top: 30px; width: 30px; height: 30px; fill: #2a1f1a; transform: rotate(-14deg); transition: transform 700ms var(--calma); }
-.estilo-ludico .rot { position: absolute; left: 18px; bottom: 14px; font: 700 34px/1 'Muestra Fredoka', sans-serif; letter-spacing: -0.02em; color: #2a1f1a; }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f1 { transform: translate(6px, -6px); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f2 { transform: rotate(32deg); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .f3 { transform: rotate(-8deg) translateX(-6px); }
-.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .huella { transform: rotate(4deg) translateY(-4px); }
+/* Lúdico · Pelusa: el nombre redondo y su huella. Al pasar, la huella da un
+   paso. */
+.estilo-ludico { --marcado: #ff7a59; --placa: #fff6e6; --tinta: #2a1f1a; }
+.estilo-ludico .placa { gap: 6px; padding: 5px 14px 8px; border-radius: 18px; }
+.estilo-ludico .rot { font: 700 28px/1 'Muestra Fredoka', sans-serif; letter-spacing: -0.02em; }
+.estilo-ludico .placa svg { width: 22px; height: 22px; fill: #ff7a59; rotate: -14deg; transition: rotate 700ms var(--calma), translate 700ms var(--calma); }
+.estilo-ludico:is(:hover, :focus-within, :has([value='si']:checked)) .placa svg { rotate: 4deg; translate: 0 -3px; }
 .estilo-ludico:has([value='si']:checked) .brief-muestra-pie { background: #ffd34d; color: #2a1f1a; }
 .estilo-ludico .brief-sello svg { width: 26px; fill: #ff7a59; transform: rotate(-30deg) scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-ludico:has([value='si']:checked) .brief-sello svg { transform: rotate(-10deg); }
@@ -449,15 +458,14 @@
 .estilo-artesanal .brief-sello svg { width: 22px; fill: #e0a12a; transform-origin: 50% 0; transform: scale(1, 0.4); transition: opacity 300ms, transform 900ms var(--calma); }
 .estilo-artesanal:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Zen: Kiri. Papel washi, el ensō a pincel y 霧 con «Kiri» en vertical; al
-   pasar, una niebla sube despacio. */
-.estilo-zen { --marcado: #1c1b19; --calma: cubic-bezier(0.45, 0, 0.55, 1); }
-.estilo-zen .brief-muestra-arte { background: #efeae0; }
-.estilo-zen .brief-muestra-arte .enso { position: absolute; left: calc(42% - 52px); top: calc(50% - 52px); width: 104px; height: 104px; fill: #1c1b19; }
-.estilo-zen .nombre { position: absolute; right: 26px; top: 18px; display: grid; justify-items: center; gap: 10px; color: #1c1b19; }
-.estilo-zen .nombre svg { width: 26px; height: 26px; fill: #1c1b19; }
-.estilo-zen .nombre b { writing-mode: vertical-rl; text-orientation: upright; font: 400 14px/1 'Muestra Shippori', Georgia, serif; letter-spacing: 0.3em; }
-.estilo-zen .brief-muestra-arte::after { content: ''; position: absolute; left: -20%; right: -20%; top: 45%; height: 100%; background: radial-gradient(closest-side, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0)); opacity: 0; transform: translateY(30%); }
+/* Zen · Kiri: el ensō, 霧 y el nombre, en papel washi. Al pasar, el ensō
+   gira despacio. */
+.estilo-zen { --marcado: #1c1b19; --calma: cubic-bezier(0.45, 0, 0.55, 1); --placa: #efeae0; --tinta: #1c1b19; }
+.estilo-zen .placa { padding: 8px 14px 8px 10px; }
+.estilo-zen .placa .enso { width: 26px; height: 26px; transition: rotate 1600ms var(--calma); }
+.estilo-zen .placa svg { width: 17px; height: 17px; }
+.estilo-zen .placa b { margin-right: -0.3em; font: 400 16px/1 'Muestra Shippori', Georgia, serif; letter-spacing: 0.3em; }
+.estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .placa .enso { rotate: 40deg; }
 .estilo-zen:has([value='si']:checked) .brief-muestra-pie { background: #efeae0; color: #1c1b19; }
 .estilo-zen:has([value='si']:checked) .brief-muestra-nombre { font-size: 18px; letter-spacing: 0.12em; }
 .estilo-zen .brief-sello svg { width: 28px; height: 28px; fill: #1c1b19; transform: rotate(-50deg) scale(0.6); transition: opacity 600ms, transform 1200ms var(--calma); }
@@ -481,16 +489,13 @@
 .estilo-industrial .brief-sello span { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe08a, #f2c230 55%, #8a6a10); transform: scale(0.3); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-industrial:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Art déco · Bar Marfil: el abanico de rayos que nace del eje y la marca.
-   Al pasar, el abanico se abre un poco más hacia los lados. */
-.estilo-artdeco { --marcado: #c9a24a; }
-.estilo-artdeco .brief-muestra-arte { background: #0f1f1c; }
-.estilo-artdeco .abanico { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #c9a24a; stroke-width: 1.4; }
-.estilo-artdeco .abanico path { transform-box: view-box; transform-origin: 150px 158px; transition: rotate 900ms var(--calma); }
-.estilo-artdeco .izq { rotate: 9deg; }
-.estilo-artdeco .der { rotate: -9deg; }
-.estilo-artdeco:is(:hover, :focus-within, :has([value='si']:checked)) :is(.izq, .der) { rotate: 0deg; }
-.estilo-artdeco .rot { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; padding: 8px 8px 7px 0.34em; border-block: 1px solid #c9a24a; background: #0f1f1c; font: 400 25px/1 'Muestra Poiret', sans-serif; letter-spacing: 0.34em; color: #f1e9d6; }
+/* Art déco · Bar Marfil: el abanico sobre el nombre entre filetes dorados.
+   Al pasar, el abanico se abre. */
+.estilo-artdeco { --marcado: #c9a24a; --placa: #0f1f1c; --tinta: #f1e9d6; }
+.estilo-artdeco .placa { flex-direction: column; gap: 5px; padding: 8px 12px; }
+.estilo-artdeco .placa svg { width: 30px; height: 17px; fill: #c9a24a; transform-origin: 50% 100%; scale: 0.85; transition: scale 700ms var(--calma); }
+.estilo-artdeco:is(:hover, :focus-within, :has([value='si']:checked)) .placa svg { scale: 1.1; }
+.estilo-artdeco .rot { padding: 5px 0 4px 0.34em; border-block: 1px solid #c9a24a; font: 400 19px/1 'Muestra Poiret', sans-serif; letter-spacing: 0.34em; }
 .estilo-artdeco:has([value='si']:checked) .brief-muestra-pie { background: #0f1f1c; color: #f1e9d6; }
 .estilo-artdeco:has([value='si']:checked) .brief-muestra-nombre { letter-spacing: 0.14em; text-transform: uppercase; }
 .estilo-artdeco .brief-sello svg { width: 30px; fill: #c9a24a; transform: scale(0.3); transform-origin: 50% 100%; transition: opacity 300ms, transform 700ms var(--calma); }
@@ -550,24 +555,18 @@
 .estilo-y2k .brief-sello svg { width: 22px; fill: #ff9ad5; transform: scale(0.2) rotate(-90deg); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-y2k:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Andino · Parina: dos franjas tejidas y el flamenco hecho de rombos. A la
-   segunda le falta su fila de rombos: al pasar, se teje. */
-.estilo-andino { --marcado: #b5442b; }
-.estilo-andino .brief-muestra-arte { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: #f3e7d3; }
-.estilo-andino .franja { display: grid; }
-.estilo-andino .franja i { height: 6px; background: var(--borde, #2f5d8a); }
-.estilo-andino .franja i:nth-child(2) { height: 10px; background: conic-gradient(from -45deg at 50% 100%, #d99b3c 90deg, #1a1512 0) 0 0 / 10px 10px; }
-.estilo-andino .franja i:nth-child(4) { height: 10px; background: conic-gradient(from 135deg at 50% 0, #d99b3c 90deg, #1a1512 0) 0 0 / 10px 10px; }
-.estilo-andino .franja i:nth-child(3) { height: 18px; background: linear-gradient(45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 18px 18px, linear-gradient(-45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 18px 18px, var(--rombo, #b5442b); }
-.estilo-andino .f2 { --borde: #5b7a4a; --rombo: #2f5d8a; }
-.estilo-andino .f2 i:nth-child(3) { clip-path: inset(0 100% 0 0); transition: clip-path 1000ms var(--calma); }
-.estilo-andino:is(:hover, :focus-within, :has([value='si']:checked)) .f2 i:nth-child(3) { clip-path: inset(0); }
-.estilo-andino .rot { display: flex; align-items: center; gap: 10px; padding-left: 18px; font: 700 34px/1 'Muestra Alegreya', Georgia, serif; color: #1a1512; }
-.estilo-andino .rot svg { width: 24px; height: 34px; fill: #d9677a; }
-.estilo-andino .rot .ala { fill: #b9475d; }
-.estilo-andino .rot .pico { fill: #1a1512; }
-.estilo-andino .rot .cuello, .estilo-andino .rot .pata { fill: none; stroke: #d9677a; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
-.estilo-andino .rot .pata { stroke: #1a1512; stroke-width: 1.5; }
+/* Andino · Parina: su franja tejida arriba de la placa, el flamenco hecho de
+   rombos y el nombre. */
+.estilo-andino { --marcado: #b5442b; --placa: #f3e7d3; --tinta: #1a1512; }
+.estilo-andino .placa { padding: 18px 14px 8px 10px; font: 700 28px/1 'Muestra Alegreya', Georgia, serif; }
+.estilo-andino .franja { position: absolute; left: 0; right: 0; top: 0; display: grid; }
+.estilo-andino .franja i { height: 2px; background: #2f5d8a; }
+.estilo-andino .franja i:nth-child(2) { height: 8px; background: linear-gradient(45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 8px 8px, linear-gradient(-45deg, #e9d8bb 25%, transparent 25% 75%, #e9d8bb 75%) 0 0 / 8px 8px, #b5442b; }
+.estilo-andino .placa svg { width: 20px; height: 28px; fill: #d9677a; }
+.estilo-andino .placa .ala { fill: #b9475d; }
+.estilo-andino .placa .pico { fill: #1a1512; }
+.estilo-andino .placa :is(.cuello, .pata) { fill: none; stroke: #d9677a; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.estilo-andino .placa .pata { stroke: #1a1512; stroke-width: 1.5; }
 .estilo-andino:has([value='si']:checked) .brief-muestra-pie { background: #1a1512; color: #f3e7d3; }
 .estilo-andino .brief-sello span { width: 18px; height: 18px; background: #d99b3c; box-shadow: inset 0 0 0 4px #b5442b; transform: rotate(45deg) scale(0.2); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-andino:has([value='si']:checked) .brief-sello span { transform: rotate(45deg); }
@@ -627,14 +626,15 @@
 .estilo-clinico .brief-sello span { width: 24px; height: 24px; border: 4px solid #ffffff; border-radius: 50%; transform: scale(0.4); transition: opacity 300ms, transform 600ms var(--calma); }
 .estilo-clinico:has([value='si']:checked) .brief-sello span { transform: none; }
 
-/* Lo que se mueve en bucle o se dibuja al pasar: solo sin el movimiento
-   reducido. */
+/* Lo que se mueve en bucle o al pasar: solo sin el movimiento reducido. La
+   foto se acerca apenas. */
 @media (prefers-reduced-motion: no-preference) {
+  .brief-estilo-foto { transition: scale 1200ms var(--calma); }
+  .brief-estilo:is(:hover, :focus-within, :has([value='si']:checked)) .brief-estilo-foto { scale: 1.05; }
+   reducido. */
   .estilo-tecnologico .curvas { transition: transform 1200ms var(--precisa); }
   .estilo-tecnologico:is(:hover, :focus-within, :has([value='si']:checked)) .curvas { transform: translate(-6px, 4px); }
   .estilo-tecnologico .sensor::after { animation: muestra-late 6s var(--precisa) infinite alternate; }
-  .estilo-zen .brief-muestra-arte::after { transition: opacity 1600ms var(--calma), transform 2600ms var(--calma); }
-  .estilo-zen:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { opacity: 1; transform: translateY(-20%); }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .chispa { animation: muestra-titila 6s var(--calma) infinite alternate; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch2 { animation-delay: -2s; }
   .estilo-y2k:is(:hover, :focus-within, :has([value='si']:checked)) .ch3 { animation-delay: -4s; }
@@ -1269,23 +1269,38 @@
   border-color: color-mix(in srgb, var(--nogusta) 55%, var(--linea));
 }
 
-/* El arte es el enlace al boceto: su dibujo y, debajo, sin taparlo, «Ver el
-   boceto». */
+/* La parte de arriba de la tarjeta es el enlace al boceto: la portada, en
+   16:9, el nombre y, al final, justo sobre las reacciones, «Ver el boceto». */
 .brief-estilo-enlace {
   display: flex;
   flex-direction: column;
-  color: inherit;
   text-decoration: none;
+}
+
+.brief-estilo-enlace,
+.brief-estilo-enlace:hover {
+  color: inherit;
 }
 
 .brief-estilo-cuadro {
   position: relative;
   display: block;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  background: var(--placa);
+}
+
+.brief-estilo-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brief-estilo .brief-muestra-arte {
-  height: 150px;
+  position: absolute;
+  inset: 0;
 }
 
 .brief-estilo-enlace:focus-visible {
@@ -1476,27 +1491,28 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .brief-estilo {
-    grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr);
-    grid-template-rows: auto auto;
+  /* La portada, en su 16:9, al lado del nombre, y «Ver el boceto» debajo de
+     los dos. */
+  .brief-estilo-enlace {
+    display: grid;
+    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+    align-items: center;
   }
 
   .brief-estilo-cuadro {
-    flex: 1;
-    min-height: 6rem;
+    margin: var(--e-3) 0 var(--e-3) var(--e-3);
+    border-radius: 6px;
   }
 
   .brief-estilo-ver {
+    grid-column: 1 / -1;
     padding-inline: var(--e-3);
-    border-bottom: 0;
     font-size: 12px;
   }
 
   /* El arte se dibuja igual, a la mitad, y llena su cuadro. */
   .brief-estilo .brief-muestra-arte {
-    position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0 auto auto 0;
     width: 200%;
     height: 200%;
     transform: scale(0.5);
@@ -1506,11 +1522,6 @@
   .brief-estilo .brief-muestra-pie {
     align-content: center;
     padding: var(--e-3) 40px var(--e-3) var(--e-4);
-  }
-
-  .brief-boceto-reacciones,
-  .brief .brief-boceto-nota {
-    grid-column: 1 / -1;
   }
 }
 

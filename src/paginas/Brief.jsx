@@ -1,6 +1,7 @@
 import { TRAZOS_DE_REACCION } from '../components/MuestraBrief.jsx'
 import Pagina from '../components/Pagina.jsx'
 import PreguntaBrief from '../components/PreguntaBrief.jsx'
+import { FIGURAS } from '../lib/brief/figuras.js'
 import { LIMITES_BRIEF } from '../lib/brief/reglas.js'
 import { BRIEF as brief } from '../lib/brief/preguntas.js'
 import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
@@ -12,9 +13,10 @@ import { CORREO_DE_CONTACTO } from '../lib/contacto.js'
  *
  * El protagonista es el formulario: la página es blanca y empieza por él. El
  * nombre del brief es el `h1`, en una línea sobre el título del recorrido,
- * que es el que manda y dice para qué es. Las partes se reparten en dos áreas, Marca y Diseño, cada una con su color y su figura
- * de puntos (círculo y cuadrado, como los puntos de la ola). El índice las
- * agrupa en dos cuadros con el nombre del área en el lomo.
+ * que es el que manda y dice para qué es. Las partes se reparten en dos
+ * áreas, Marca y Diseño, cada una con su color y su figura: un libro y un
+ * lápiz. El índice las agrupa en dos cuadros con el nombre del área en el
+ * lomo.
  *
  * Es un solo `<form>` partido en pantallas: el recorrido (#inicio), una por
  * paso (#paso-1…) y la revisión (#revisar). Cada pantalla es un ancla, y la que
@@ -41,15 +43,22 @@ const AREAS = [
 ]
 const nombreDeArea = (id) => AREAS.find((area) => area.id === id).nombre
 
-// La figura de cada área, de puntos como la ola: círculo para Marca y
-// cuadrado para Diseño. El trazo es de guiones de largo cero con punta
-// redonda: cada guion es un punto.
-function Figura({ area, className }) {
+// La figura de cada área (lib/brief/figuras.js): el libro de Marca y el lápiz
+// de Diseño, con sus detalles en el tono suave.
+function Figura({ area }) {
   return (
-    <svg className={`brief-figura ${className ?? ''}`} viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-      {area === 'marca' ? <circle cx="20" cy="20" r="16" /> : <rect x="5" y="5" width="30" height="30" />}
+    <svg className="brief-figura" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+      {FIGURAS[area].trazos.map(([tono, d]) => (
+        <path key={d} className={tono === 'suave' ? 'suave' : undefined} d={d} />
+      ))}
     </svg>
   )
+}
+
+// Dónde cae el número de la parte en su figura, en fracción de su lado.
+const centroDe = (area) => {
+  const [x, y] = FIGURAS[area].centro
+  return { '--centro-x': x / 40, '--centro-y': y / 40 }
 }
 
 // El visor de los bocetos (brief-visor.js): un mazo de cartas. Cada boceto es
@@ -254,7 +263,7 @@ export default function Brief() {
                   aria-labelledby={`paso-${i + 1}-titulo`}
                 >
                   <header className="brief-pantalla-cabeza">
-                    <span className="brief-numero" aria-hidden="true">
+                    <span className="brief-numero" style={centroDe(paso.area)} aria-hidden="true">
                       <Figura area={paso.area} />
                       <span>{numero(i)}</span>
                     </span>

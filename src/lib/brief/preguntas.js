@@ -25,8 +25,10 @@
  *
  * `columnas(...)` pone preguntas en dos columnas que crecen cada una por su
  * lado; `conMockup(...)` junta escalas con la portada de muestra que las
- * sigue. `clave` marca lo que más nos sirve: lleva una pastilla y la revisión
- * lo pide si quedó en blanco. `muestras` dibuja las opciones de una pregunta
+ * sigue; `escena(...)` encierra en un cuadro las que se responden en un
+ * juego de rol, con su contexto. `clave` marca lo que más nos sirve: lleva
+ * una pastilla y la revisión lo pide si quedó en blanco. `muestras` dibuja
+ * las opciones de una pregunta
  * en su propia letra o en su tipo de logo (MuestraBrief.jsx), y `marca`
  * viste la pastilla de una empresa con sus colores al marcarla.
  */
@@ -70,6 +72,10 @@ const columnas = (izquierda, derecha, titulos = []) => ({
 
 // Las escalas de «Cómo se ve», con la portada de muestra que las sigue.
 const conMockup = (...preguntas) => ({ tipo: 'mockup', preguntas })
+
+// Preguntas que se responden metido en un papel, en un cuadro con el
+// contexto del juego arriba.
+const escena = (titulo, texto, ...preguntas) => ({ tipo: 'escena', titulo, texto, preguntas })
 
 export const BRIEF = {
   nombre: 'Brief de marca y sitio',
@@ -218,32 +224,40 @@ export const BRIEF = {
               ph: 'Edad, tipo de negocio, tamaño, dónde vive o trabaja',
               ejemplo: 'Dueños de restaurantes de 1 a 3 locales en Santiago, entre 35 y 55 años.',
             },
-            { id: 'decide', tipo: 'texto', etiqueta: '¿Quién decide la compra y quién paga?', ph: 'Rara vez es quien te contacta' },
           ],
-          [
-            {
-              id: 'persona',
-              tipo: 'parrafo',
-              etiqueta: 'Ponle nombre y cara: un día de su vida',
-              ph: 'Inventa a una persona que represente a tu cliente',
-              ejemplo: 'Roberto, 47, dueño de 2 locales de repuestos. Vende bien en mesón, pero no aparece en Google.',
-            },
-            {
-              id: 'dolor',
-              tipo: 'texto',
-              etiqueta: '¿Qué le duele? Con sus palabras, no con las tuyas',
-              clave: true,
-              ph: '«Pido cotización a tres y ninguno me contesta.»',
-            },
-          ]
+          [{ id: 'decide', tipo: 'texto', etiqueta: '¿Quién decide la compra y quién paga?', ph: 'Rara vez es quien te contacta' }]
         ),
-        {
-          id: 'objeciones',
-          tipo: 'tabla',
-          etiqueta: 'Las 3 dudas que te pone antes de comprarte',
-          filas: 3,
-          columnas: [{ id: 'duda', etiqueta: 'Duda u objeción', ph: '¿Y si después nadie me responde?' }],
-        },
+        escena(
+          'Ponte en los zapatos de tu cliente',
+          'Estas tres preguntas son un juego de rol. Inventa a una persona que represente a tu cliente ideal: dale nombre, edad y un día normal. Después responde como si fueras ella: qué le molesta y qué dudas tiene, con sus palabras, como te lo diría por WhatsApp o en el mesón. No tiene que ser exacto; nos sirve para escribir tu sitio en su idioma.',
+          columnas(
+            [
+              {
+                id: 'persona',
+                tipo: 'parrafo',
+                etiqueta: 'Ponle nombre y cara: un día de su vida',
+                ph: 'Inventa a una persona que represente a tu cliente',
+                ejemplo: 'Roberto, 47, dueño de 2 locales de repuestos. Vende bien en mesón, pero no aparece en Google.',
+              },
+            ],
+            [
+              {
+                id: 'dolor',
+                tipo: 'texto',
+                etiqueta: '¿Qué le duele? Con sus palabras, no con las tuyas',
+                clave: true,
+                ph: '«Pido cotización a tres y ninguno me contesta.»',
+              },
+            ]
+          ),
+          {
+            id: 'objeciones',
+            tipo: 'tabla',
+            etiqueta: 'Las 3 dudas que te pone antes de comprarte',
+            filas: 3,
+            columnas: [{ id: 'duda', etiqueta: 'Duda u objeción', ph: '¿Y si después nadie me responde?' }],
+          }
+        ),
         {
           id: 'canales',
           tipo: 'varias',
@@ -366,13 +380,13 @@ export const BRIEF = {
           etiqueta: 'Si tu marca fuera una persona, ¿cuál se parece más?',
           otro: true,
           opciones: [
-            o('sabio', 'El Sabio', 'Enseña y explica. Genera confianza por lo que sabe.'),
-            o('creador', 'El Creador', 'Construye cosas nuevas. Cuida el oficio y el detalle.'),
-            o('mago', 'El Mago', 'Hace simple lo complicado. Efecto «wow».'),
-            o('cuidador', 'El Cuidador', 'Protege y acompaña. Cercano y servicial.'),
-            o('heroe', 'El Héroe', 'Resuelve lo difícil. Directo, valiente, eficaz.'),
-            o('explorador', 'El Explorador', 'Abre caminos. Libre, curioso, distinto.'),
-            o('no-se', 'No sé', 'Lo conversamos en la reunión.'),
+            conImagen('arquetipo-sabio', 'sabio', 'El Sabio', 'Enseña y explica. Genera confianza por lo que sabe.'),
+            conImagen('arquetipo-creador', 'creador', 'El Creador', 'Construye cosas nuevas. Cuida el oficio y el detalle.'),
+            conImagen('arquetipo-mago', 'mago', 'El Mago', 'Hace simple lo complicado. Efecto «wow».'),
+            conImagen('arquetipo-cuidador', 'cuidador', 'El Cuidador', 'Protege y acompaña. Cercano y servicial.'),
+            conImagen('arquetipo-heroe', 'heroe', 'El Héroe', 'Resuelve lo difícil. Directo, valiente, eficaz.'),
+            conImagen('arquetipo-explorador', 'explorador', 'El Explorador', 'Abre caminos. Libre, curioso, distinto.'),
+            conImagen('arquetipo-no-se', 'no-se', 'No sé', 'Lo conversamos en la reunión.'),
           ],
         },
         {

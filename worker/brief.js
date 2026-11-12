@@ -51,9 +51,13 @@ import {
  * de que el correo a Volutus salió: todo abuso pasa primero por la bandeja de
  * Volutus.
  *
+ * Las respuestas viajan en un PDF adjunto (pdf-del-brief.js), el mismo en los
+ * dos correos, que se lee mejor que un texto largo. Si el PDF no se pudiera
+ * armar, el correo sale igual con las respuestas en el cuerpo.
+ *
  * El logo que se sube viaja adjunto solo en el correo a Volutus, y solo si sus
  * bytes son de un formato aceptado (`tipoDeArchivo`) y, si es SVG, no trae
- * código. La copia dice que llegó, pero no lo lleva: así el envío no sirve para
+ * código. Ni la copia ni el PDF lo llevan: así el envío no sirve para
  * mandarle archivos a una dirección cualquiera.
  *
  * Al correo de Volutus se suma lo que identifica el envío: el número al azar
@@ -107,7 +111,7 @@ function respuestaDe(pregunta, datos, archivos) {
       const partes = opciones
         .filter(({ v }) => elegidas.includes(v))
         .slice(0, tope)
-        .map(({ v, l }) => l + (estrellas.includes(v) ? ' ★' : ''))
+        .map(({ v, l }) => l + (estrellas.includes(v) ? ' (imprescindible)' : ''))
       const libre = otro && texto(campoOtro(id))
       if (libre) partes.push(`Otro: ${libre}`)
       return partes.join(', ')
@@ -140,19 +144,21 @@ function respuestaDe(pregunta, datos, archivos) {
         .join(', ')
     case 'bocetos': {
       // Los estilos que le gustan van primero, en una línea; después cada
-      // estilo calificado, de «Me gusta» a «No me gusta», con su nota.
+      // estilo calificado, de «Me gusta» a «No me gusta» (REACCIONES va de
+      // «no» a «sí»: se recorre al revés), con su nota, y al final los que
+      // solo tienen nota.
       const calificados = BOCETOS.map((boceto) => ({
         ...boceto,
-        orden: REACCIONES.findIndex(([valor]) => valor === datos.get(campoBoceto(boceto.slug))),
+        reaccion: REACCIONES.find(([valor]) => valor === datos.get(campoBoceto(boceto.slug))),
         nota: texto(campoNotaBoceto(boceto.slug), LIMITES_BRIEF.nota),
       }))
-        .filter(({ orden, nota }) => orden >= 0 || nota)
-        .sort((a, b) => (a.orden < 0 ? 9 : a.orden) - (b.orden < 0 ? 9 : b.orden))
-      const gustan = calificados.filter(({ orden }) => orden === 0).map(({ titulo }) => titulo)
+        .filter(({ reaccion, nota }) => reaccion || nota)
+        .sort((a, b) => REACCIONES.indexOf(b.reaccion) - REACCIONES.indexOf(a.reaccion))
+      const gustan = calificados.filter(({ reaccion }) => reaccion?.[0] === 'si').map(({ titulo }) => titulo)
       return [
         gustan.length && `Le gustan: ${gustan.join(', ')}`,
         ...calificados.map(
-          ({ titulo, nombre, orden, nota }) => `${titulo} (boceto ${nombre}): ${[REACCIONES[orden]?.[1], nota].filter(Boolean).join(' — ')}`
+          ({ titulo, nombre, reaccion, nota }) => `${titulo} (boceto ${nombre}): ${[reaccion?.[1], nota].filter(Boolean).join(' — ')}`
         ),
       ]
         .filter(Boolean)
@@ -165,19 +171,42 @@ function respuestaDe(pregunta, datos, archivos) {
   }
 }
 
-// Las respuestas, por paso: el título del paso en mayúscula y, debajo, cada
-// pregunta con lo respondido. Lo que quedó en blanco no va.
-function respuestasEnTexto(datos, archivos) {
+// Las respuestas, por paso: su número, su título, su área y cada pregunta con
+// lo respondido. Lo que quedó en blanco no va, ni los pasos sin nada.
+function respuestasPorPaso(datos, archivos) {
   return BRIEF.pasos
-    .map((paso, i) => {
-      const lineas = respondibles(paso)
+    .map((paso, i) => ({
+      numero: i + 1,
+      titulo: paso.titulo,
+      area: paso.area,
+      respuestas: respondibles(paso)
         .map((pregunta) => [pregunta.etiqueta, respuestaDe(pregunta, datos, archivos)])
-        .filter(([, respuesta]) => respuesta)
-        .map(([pregunta, respuesta]) => `${pregunta}\n${respuesta}`)
-      return lineas.length ? `${String(i + 1).padStart(2, '0')} · ${paso.titulo.toUpperCase()}\n\n${lineas.join('\n\n')}` : ''
-    })
-    .filter(Boolean)
+        .filter(([, respuesta]) => respuesta),
+    }))
+    .filter(({ respuestas }) => respuestas.length)
+}
+
+// Las mismas respuestas en texto: de ahí se cuentan los enlaces, y es lo que
+// va en el cuerpo del correo si el PDF no se pudo armar.
+const pasosEnTexto = (pasos) =>
+  pasos
+    .map(
+      ({ numero, titulo, respuestas }) =>
+        `${String(numero).padStart(2, '0')} · ${titulo.toUpperCase()}\n\n${respuestas.map((par) => par.join('\n')).join('\n\n')}`
+    )
     .join('\n\n\n')
+
+// El brief en PDF (pdf-del-brief.js), o nada si falla: el correo sale igual,
+// con las respuestas en texto. pdf-lib se carga recién aquí, así las otras
+// rutas del Worker no lo evalúan.
+async function adjuntoPdf(brief) {
+  try {
+    const { briefEnPdf } = await import('./pdf-del-brief.js')
+    return { nombre: `brief-${brief.referencia}.pdf`, bytes: await briefEnPdf(brief) }
+  } catch (error) {
+    console.error('brief: falló el PDF', error)
+    return null
+  }
 }
 
 const duracion = (ms) => {
@@ -274,7 +303,10 @@ export async function manejarBrief(request, env) {
   const quiereCopia = datos.get('copia') === 'si' && Boolean(correo)
   const referencia = `B-${new Date().toISOString().slice(2, 10).replaceAll('-', '')}-${crypto.randomUUID().slice(0, 4).toUpperCase()}`
   const logo = await leerLogo(datos.get('logo_archivo'), referencia)
-  const respuestas = respuestasEnTexto(datos, new Map(logo ? [['logo_archivo', logo]] : []))
+  const pasos = respuestasPorPaso(datos, new Map(logo ? [['logo_archivo', logo]] : []))
+  const respuestas = pasosEnTexto(pasos)
+  const fecha = new Intl.DateTimeFormat('es-CL', { dateStyle: 'long', timeZone: 'America/Santiago' }).format(Date.now())
+  const pdf = await adjuntoPdf({ titulo: BRIEF.nombre, nombre, empresa, correo, telefono, referencia, fecha, pasos })
 
   const llego = await enviarCorreo(
     env,
@@ -286,7 +318,7 @@ export async function manejarBrief(request, env) {
       texto: [
         `${BRIEF.nombre} de ${nombre}${empresa ? `, ${empresa}` : ''}`,
         [correo && `Correo: ${correo}`, telefono && `WhatsApp o teléfono: ${telefono}`].filter(Boolean).join('\n'),
-        respuestas,
+        pdf ? 'Las respuestas van en el PDF adjunto.' : respuestas,
         `— ENVÍO Y DISPOSITIVO —\n${envioYDispositivo(request, datos, {
           referencia,
           ip,
@@ -296,7 +328,7 @@ export async function manejarBrief(request, env) {
           enlaces: (respuestas.match(/https?:\/\/|www\./gi) ?? []).length,
         })}`,
       ].join('\n\n\n'),
-      adjuntos: logo?.adjunto ? [logo.adjunto] : [],
+      adjuntos: [pdf, logo?.adjunto].filter(Boolean),
     },
     'brief'
   )
@@ -315,9 +347,10 @@ export async function manejarBrief(request, env) {
           `Hola, ${nombre}:`,
           `Esta es una copia de tu ${BRIEF.nombre.toLowerCase()} para Volutus (referencia ${referencia}). Lo leemos con calma y te escribimos para conversarlo. Si quieres sumar algo, responde este correo.`,
           'Si no llenaste este formulario, ignora este correo.',
-          respuestas,
+          pdf ? 'Tus respuestas van en el PDF adjunto.' : respuestas,
           '—\nVolutus · volutus.cl',
         ].join('\n\n'),
+        adjuntos: pdf ? [pdf] : [],
       },
       'brief'
     ))

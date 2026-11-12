@@ -1,5 +1,5 @@
 import MuestraBrief, { IconoReaccion, LogoDeMarca, muestraDeEstilo } from './MuestraBrief.jsx'
-import { BOCETOS, rutaDeBoceto } from '../lib/brief/bocetos.js'
+import { BOCETOS, fotoDeTarjeta, rutaDeBoceto, tieneFoto } from '../lib/brief/bocetos.js'
 import {
   ARCHIVO_BRIEF,
   ERRORES_BRIEF,
@@ -375,7 +375,28 @@ function Bocetos() {
               <legend className="solo-lectores">{titulo}</legend>
               <a className="brief-estilo-enlace" href={rutaDeBoceto(slug)} target="_blank" rel="noopener" data-visor={slug}>
                 <span className="brief-estilo-cuadro" aria-hidden="true">
+                  {tieneFoto(slug) && (
+                    <img
+                      className="brief-estilo-foto"
+                      src={fotoDeTarjeta(slug, 640)}
+                      srcSet={`${fotoDeTarjeta(slug, 320)} 320w, ${fotoDeTarjeta(slug, 640)} 640w`}
+                      sizes="(max-width: 559px) 8.5rem, 22rem"
+                      width="640"
+                      height="360"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   <span className="brief-muestra-arte">{arte}</span>
+                </span>
+                <span className="brief-muestra-pie" aria-hidden="true">
+                  <span className="brief-muestra-nombre">{titulo}</span>
+                  <span className="brief-muestra-detalle">{detalle}</span>
+                  <span className="brief-estilo-boceto">
+                    {nombre} · {rubro}
+                  </span>
+                  <span className="brief-sello">{sello}</span>
                 </span>
                 <span className="brief-estilo-ver">
                   Ver el boceto
@@ -386,14 +407,6 @@ function Bocetos() {
                   </span>
                 </span>
               </a>
-              <span className="brief-muestra-pie" aria-hidden="true">
-                <span className="brief-muestra-nombre">{titulo}</span>
-                <span className="brief-muestra-detalle">{detalle}</span>
-                <span className="brief-estilo-boceto">
-                  {nombre} · {rubro}
-                </span>
-                <span className="brief-sello">{sello}</span>
-              </span>
               <div className="brief-boceto-reacciones">
                 {REACCIONES.map(([valor, texto]) => (
                   <label key={valor} className={`brief-reaccion brief-reaccion-${valor}`}>
@@ -539,6 +552,24 @@ function Columnas({ columnas }) {
   )
 }
 
+// Las preguntas de un juego de rol (`escena` en preguntas.js), en un cuadro
+// con el contexto arriba. Es un grupo con nombre: el lector de pantalla lo
+// anuncia al entrar, y el agente de IA lee el contexto en
+// `toolparamdescription`.
+function Escena({ titulo, texto, preguntas }) {
+  return (
+    <fieldset className="brief-escena" toolparamdescription={texto}>
+      <legend className="brief-escena-titulo">{titulo}</legend>
+      <div className="brief-escena-cuerpo">
+        <p className="brief-escena-texto">{texto}</p>
+        {preguntas.map((pregunta, i) => (
+          <PreguntaBrief key={pregunta.id ?? i} pregunta={pregunta} />
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
 // Las escalas, con la portada de muestra al lado (en XL) o encima. Cada
 // escala va en su parada: encajan de a una al bajar, como los socios de
 // /nosotros, y la portada queda siempre a la vista (public/brief/muestras.css).
@@ -564,6 +595,7 @@ export default function PreguntaBrief({ pregunta }) {
   const { id, tipo, etiqueta, ayuda, ejemplo, max, clave } = pregunta
 
   if (tipo === 'columnas') return <Columnas columnas={pregunta.columnas} />
+  if (tipo === 'escena') return <Escena {...pregunta} />
   if (tipo === 'mockup') return <ConMockup preguntas={pregunta.preguntas} />
 
   if (tipo === 'consejo')
