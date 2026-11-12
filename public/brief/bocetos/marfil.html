@@ -5,257 +5,240 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Bar Marfil · boceto de página de Volutus</title>
-<meta name="description" content="Boceto de página de una marca inventada, Bar Marfil, coctelería y salón de baile desde 1928 en Cerro Alegre, Valparaíso, para mostrar el estilo Art déco.">
+<meta name="description" content="Boceto de página de una marca inventada, Bar Marfil, coctelería y salón de baile de 1928 en el cerro Alegre de Valparaíso, para mostrar el estilo Art déco.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/fonts/bocetos/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/image/bocetos/marfil/barra-1280.webp" imagesrcset="/image/bocetos/marfil/barra-800.webp 800w, /image/bocetos/marfil/barra-1280.webp 1280w" imagesizes="100vw">
+<link rel="preload" href="/fonts/bocetos/poiret-one.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/marfil/salon-1200.webp" imagesrcset="/image/bocetos/marfil/salon-700.webp 700w, /image/bocetos/marfil/salon-1200.webp 1200w, /image/bocetos/marfil/salon-1800.webp 1800w" imagesizes="calc(100vw - 32px)" fetchpriority="high">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
-/* Bar Marfil · art déco. Inspiración: el American Bar del Savoy
-   (thesavoylondon.com) y, de Awwwards, Tengile MalaMala y Mùn Rooftop
-   (sitios del día y menciones de 2025 y 2026): la experiencia contada como
-   un recorrido, fotos y video a sangre, una serif fina y grande, mucho aire
-   y un pie de un solo color. Se toma: 1) la noche como relato, hora por
-   hora; 2) el oro solo en líneas finas, sobre un verde botella hondo, con
-   Cormorant y la marca en Poiret One; 3) la entrada como ceremonia: unas
-   puertas que se abren. La idea propia: ir a Marfil es una noche entera. Al
-   llegar se abren las puertas del ascensor de 1928 sobre la barra en video;
-   un reloj déco avanza con el scroll de las siete a la una y media; la carta
-   son copas dibujadas a línea que se llenan al pasar el cursor, y la
-   reserva es una tarjeta con su noche, su hora y su mesa. */
-@font-face { font-family: 'Cormorant Garamond'; src: url('/fonts/bocetos/cormorant-garamond.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+/* Bar Marfil · art déco. Coctelería y salón de baile desde 1928 en el cerro
+   Alegre de Valparaíso. Tercera vuelta, copiada de Awwwards: Caffè Gilli
+   (caffegilli.com, de The Branding Crew, mención de agosto de 2026), el café
+   de 1733 de Florencia, con pastelería y barra de cócteles. Se toma su
+   recorrido entero:
+   1) la cabecera blanca con el menú a la izquierda, el logo ovalado al
+      centro y los datos a la derecha; la portada como una foto del salón con
+      margen alrededor; la frase de la casa centrada en mayúsculas finas;
+   2) el ritmo de cada capítulo: título en mayúsculas finas a la izquierda,
+      una foto vertical al medio y una nota con su enlace subrayado abajo a
+      la derecha; fotos que crecen de su recuadro al ancho de la pantalla al
+      bajar; tres productos sobre una banda de color; capítulos con la foto
+      chica que se agranda junto al texto; la foto histórica en blanco y
+      negro, y el pie de un solo color con las distinciones;
+   3) el botón redondo para volver arriba y los botones de cápsula dorados.
+   Lo propio: el verde botella en lugar del azul de Florencia, el oro solo en
+   líneas finas y botones, y el abanico déco del logo. */
 @font-face { font-family: 'Poiret One'; src: url('/fonts/bocetos/poiret-one.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Josefin Sans'; src: url('/fonts/bocetos/josefin-sans.woff2') format('woff2'); font-weight: 100 700; font-display: swap; }
 
 :root {
-  --botella: #0f1f1c;
-  --hondo: #0a1513;
+  --marfil: #fbf8f1;
+  --marfil-2: #f3ede0;
+  --botella: #123029;
+  --botella-2: #1d4339;
   --oro: #c9a24a;
-  --oro-claro: #e3c77d;
-  --marfil: #f1e9d6;
-  --humo: #a9b5ae;
-  --negro: #0b0b0b;
-  --ancho: 1200px;
-  --margen: clamp(20px, 4vw, 56px);
-  --curva: cubic-bezier(0.55, 0, 0.25, 1);
+  --oro-claro: #e2c98d;
+  --texto: #2b3a35;
+  --suave: #5c6a65;
+  --ancho: 1320px;
+  --margen: clamp(16px, 3vw, 44px);
+  --curva: cubic-bezier(0.65, 0, 0.35, 1);
+  --deco: 'Poiret One', 'Josefin Sans', Futura, sans-serif;
 }
 * { box-sizing: border-box; }
-html { background: var(--hondo); scroll-behavior: smooth; }
-body { margin: 0; background: var(--botella); color: var(--marfil); font: 300 20px/1.6 'Cormorant Garamond', Georgia, serif; -webkit-font-smoothing: antialiased; }
-img { display: block; max-width: 100%; height: auto; }
-figure { margin: 0; }
+html { background: var(--marfil); scroll-behavior: smooth; }
+body { margin: 0; background: var(--marfil); color: var(--texto); font: 400 16px/1.6 'Josefin Sans', Futura, 'Century Gothic', sans-serif; -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; height: auto; }
+figure, dl, dd { margin: 0; }
 a { color: inherit; }
-main { overflow-x: clip; }
-:focus-visible { outline: 1px solid var(--oro-claro); outline-offset: 4px; }
-h1, h2, h3 { margin: 0; font-weight: 400; line-height: 1.02; letter-spacing: -0.01em; text-wrap: balance; }
+:focus-visible { outline: 2px solid var(--oro); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: var(--deco); font-weight: 400; letter-spacing: 0.04em; line-height: 1.04; text-transform: uppercase; color: var(--botella); }
 p { margin: 0; }
 .ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
-.seccion { padding-block: clamp(110px, 13vw, 190px); }
-.rotulo { font: 400 13px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.34em; text-transform: uppercase; color: var(--oro); }
-.ornamento { display: flex; align-items: center; justify-content: center; gap: 18px; color: var(--oro); }
-.ornamento::before, .ornamento::after { content: ''; width: clamp(48px, 10vw, 140px); height: 5px; border-block: 1px solid currentColor; }
-.cabeza { display: grid; justify-items: center; gap: 22px; max-width: 46rem; margin: 0 auto clamp(56px, 7vw, 96px); text-align: center; }
-.cabeza h2 { font-size: clamp(52px, 6.6vw, 96px); font-weight: 300; }
-.cabeza > p:last-child { max-width: 40ch; font-size: 22px; color: var(--humo); }
-.boton { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 4px 34px 0; border: 1px solid var(--oro); background: transparent; color: var(--marfil); font: 400 14px/1 'Josefin Sans', sans-serif; letter-spacing: 0.28em; text-decoration: none; text-transform: uppercase; cursor: pointer; clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px); transition: background-color 600ms var(--curva), color 600ms var(--curva); }
-.boton:hover { background: var(--oro); color: var(--hondo); }
-.boton.lleno { background: var(--oro); color: var(--hondo); }
-.boton.lleno:hover { background: var(--oro-claro); }
-.enlace { position: relative; font: 400 13px/1 'Josefin Sans', sans-serif; letter-spacing: 0.28em; text-decoration: none; text-transform: uppercase; padding-bottom: 8px; }
-.enlace::after, .pie a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--oro); scale: 0.2 1; transition: scale 700ms var(--curva); }
-.enlace:hover::after, .pie a:hover::after { scale: 1 1; }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.titulo { font-size: clamp(36px, 3.8vw, 56px); }
+.chico { font-size: 14px; line-height: 1.7; color: var(--suave); }
+/* El enlace subrayado con su flecha, «Descubrir →». */
+.enlace { display: inline-flex; align-items: center; gap: 10px; padding-bottom: 4px; border-bottom: 1px solid currentColor; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--botella); }
+.enlace svg { width: 16px; height: 10px; transition: translate 500ms var(--curva); }
+.enlace:hover svg { translate: 5px 0; }
+.capsula { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 24px; border: 0; border-radius: 999px; background: var(--oro); color: var(--botella); font: 600 13px/1 'Josefin Sans', sans-serif; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background-color 500ms var(--curva); }
+.capsula:hover { background: var(--oro-claro); }
 
-/* ---- Portada: las puertas del ascensor ---- */
-.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(100svh, 1000px)); overflow: hidden; background: var(--hondo); isolation: isolate; text-align: center; }
-.portada-fondo { position: absolute; inset: 0; z-index: -2; }
-.portada-fondo > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.portada::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 60% 55% at 50% 52%, rgb(10 21 19 / 0.55), rgb(10 21 19 / 0.82) 70%, rgb(10 21 19 / 0.95)); }
-.marco { position: absolute; inset: clamp(14px, 2vw, 26px); z-index: 1; border: 1px solid rgb(201 162 74 / 0.55); pointer-events: none; }
-.marco::before, .marco::after { content: ''; position: absolute; inset: 8px; border: 1px solid rgb(201 162 74 / 0.25); }
-.marco::after { inset: -1px; border: 0; background:
-  linear-gradient(var(--oro), var(--oro)) 0 0 / 34px 1px no-repeat, linear-gradient(var(--oro), var(--oro)) 0 0 / 1px 34px no-repeat,
-  linear-gradient(var(--oro), var(--oro)) 100% 0 / 34px 1px no-repeat, linear-gradient(var(--oro), var(--oro)) 100% 0 / 1px 34px no-repeat,
-  linear-gradient(var(--oro), var(--oro)) 0 100% / 34px 1px no-repeat, linear-gradient(var(--oro), var(--oro)) 0 100% / 1px 34px no-repeat,
-  linear-gradient(var(--oro), var(--oro)) 100% 100% / 34px 1px no-repeat, linear-gradient(var(--oro), var(--oro)) 100% 100% / 1px 34px no-repeat; translate: -6px -6px; width: calc(100% + 12px); height: calc(100% + 12px); }
-.cabecera { position: absolute; inset: clamp(14px, 2vw, 26px) 0 auto; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px; padding: 26px clamp(32px, 5vw, 72px); }
-.cabecera nav:first-child { justify-self: start; }
-.cabecera nav:last-of-type { justify-self: end; }
-.cabecera ul { display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; }
-.cabecera .sello { display: grid; justify-items: center; gap: 2px; font: 400 22px/1 'Poiret One', sans-serif; letter-spacing: 0.4em; text-decoration: none; text-indent: 0.4em; }
-.cabecera .sello svg { width: 34px; height: 18px; }
-.portada-texto { position: relative; z-index: 2; display: grid; justify-items: center; gap: 22px; padding: 150px var(--margen) 120px; }
-.abanico { width: min(70vw, 340px); height: auto; margin-bottom: -6px; overflow: visible; fill: none; stroke: var(--oro); stroke-width: 1.1; }
-.abanico path { stroke-dasharray: 1; }
-.portada h1 { font: 400 clamp(64px, 12vw, 176px)/0.9 'Poiret One', sans-serif; letter-spacing: 0.32em; text-indent: 0.32em; color: var(--marfil); }
-.portada h1 small { display: block; margin-bottom: 18px; font: 400 14px/1 'Josefin Sans', sans-serif; letter-spacing: 0.6em; color: var(--oro); }
-.portada .bajada { max-width: 30ch; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.4; color: #e6dcc4; }
-.portada .acciones { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px 36px; margin-top: 12px; }
-.puertas { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-columns: 1fr 1fr; pointer-events: none; }
-.puertas i { position: relative; background:
-  repeating-linear-gradient(90deg, transparent 0 46px, rgb(201 162 74 / 0.5) 46px 47px, transparent 47px 52px, rgb(201 162 74 / 0.25) 52px 53px),
-  linear-gradient(180deg, #13261f, #0c1916); }
-.puertas i:first-child { box-shadow: inset -2px 0 0 var(--oro); }
-.puertas i:last-child { box-shadow: inset 2px 0 0 var(--oro); }
-.puertas i::after { content: ''; position: absolute; top: 50%; width: 120px; height: 240px; margin-top: -120px; border: 1px solid var(--oro); }
-.puertas i:first-child::after { right: -1px; border-right: 0; border-radius: 120px 0 0 120px; }
-.puertas i:last-child::after { left: -1px; border-left: 0; border-radius: 0 120px 120px 0; }
+/* ---- Cabecera ---- */
+.cabecera { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; padding-block: 14px; }
+.menu { position: relative; justify-self: start; display: flex; align-items: center; gap: 14px; }
+.menu summary { display: grid; place-items: center; width: 44px; height: 44px; list-style: none; cursor: pointer; }
+.menu summary::-webkit-details-marker { display: none; }
+.menu summary i { display: block; width: 26px; height: 1px; background: var(--botella); box-shadow: 0 -6px 0 var(--botella), 0 6px 0 var(--botella); transition: box-shadow 500ms var(--curva), rotate 500ms var(--curva); }
+.menu[open] summary i { box-shadow: 0 0 0 var(--botella), 0 0 0 var(--botella); rotate: 45deg; }
+.menu ul { position: absolute; z-index: 30; top: 52px; left: 0; display: grid; gap: 4px; min-width: 15rem; margin: 0; padding: 18px 22px; border: 1px solid var(--marfil-2); background: var(--marfil); list-style: none; box-shadow: 0 20px 40px -24px rgb(18 48 41 / 0.4); }
+.menu ul a { display: block; padding: 6px 0; font-family: var(--deco); font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--botella); }
+.menu ul a:hover { color: var(--oro); }
+.pastilla { display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px; border: 1px solid var(--botella); border-radius: 999px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: background-color 500ms var(--curva), color 500ms var(--curva); }
+.pastilla:hover { background: var(--botella); color: var(--marfil); }
+.logo { display: grid; place-items: center; text-decoration: none; color: var(--botella); }
+.logo svg { width: 132px; height: 62px; }
+.logo text { font-family: var(--deco); }
+.datos-cabeza { justify-self: end; display: flex; align-items: center; gap: 18px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--suave); }
 
-/* ---- La noche, hora por hora ---- */
-.noche { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px clamp(32px, 6vw, 96px); align-items: start; }
-.reloj { position: sticky; top: calc(var(--alto-barra, 0px) + 18svh); display: grid; justify-items: center; gap: 22px; }
-.reloj svg { width: min(100%, 300px); height: auto; overflow: visible; }
-.reloj .esfera { fill: var(--hondo); stroke: var(--oro); stroke-width: 1; }
-.reloj .aro { fill: none; stroke: rgb(201 162 74 / 0.35); stroke-width: 1; }
-.reloj .marca { stroke: var(--oro); stroke-width: 1.4; }
-.reloj text { font: 400 16px 'Poiret One', sans-serif; fill: var(--oro-claro); }
-.horario-mano { stroke: var(--marfil); stroke-width: 3; stroke-linecap: round; transform-origin: 150px 150px; rotate: 210deg; }
-.minutero { stroke: var(--oro-claro); stroke-width: 1.5; stroke-linecap: round; transform-origin: 150px 150px; }
-.reloj p { font: 400 13px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.3em; text-transform: uppercase; color: var(--humo); }
-.momentos { display: grid; gap: clamp(96px, 12vw, 160px); margin: 0; padding: 0; list-style: none; }
-.momento { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(28px, 4vw, 56px); align-items: center; }
-.momento:nth-child(even) figure { order: 2; }
-.momento figure { overflow: hidden; }
-.momento img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: scale 1600ms var(--curva); }
-.momento:hover img { scale: 1.04; }
-.momento time { display: block; font: 400 clamp(48px, 5vw, 76px)/1 'Poiret One', sans-serif; letter-spacing: 0.06em; color: var(--oro); }
-.momento h3 { margin-top: 14px; font-size: clamp(34px, 3.4vw, 50px); font-weight: 400; }
-.momento p { margin-top: 16px; max-width: 34ch; font-size: 21px; color: #d9d2bf; }
+/* ---- Portada: el salón, con margen ---- */
+.portada { position: relative; height: min(calc(100svh - 120px), 56vw); min-height: 380px; margin-inline: var(--margen); overflow: hidden; }
+.portada img, .portada video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(10 24 20 / 0) 55%, rgb(10 24 20 / 0.55) 100%); }
+.portada h1 { position: absolute; z-index: 1; left: clamp(20px, 3vw, 44px); bottom: clamp(20px, 3vw, 40px); max-width: 15ch; font-size: clamp(22px, 2.4vw, 34px); color: var(--marfil); text-shadow: 0 1px 18px rgb(0 0 0 / 0.5); }
 
-/* ---- La carta: copas que se llenan ---- */
-.carta-seccion { background: var(--hondo); }
-.carta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(56px, 7vw, 96px) clamp(24px, 4vw, 64px); margin: 0; padding: 0; list-style: none; }
-.coctel { display: grid; justify-items: center; gap: 14px; text-align: center; }
-.copa { width: clamp(110px, 11vw, 150px); height: auto; overflow: visible; }
-.copa .linea { fill: none; stroke: var(--oro); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
-.copa .liquido { fill: var(--trago); transform-box: fill-box; transform-origin: 50% 100%; translate: 0 62%; transition: translate 1300ms var(--curva); }
-.copa .brillo { fill: none; stroke: rgb(255 255 255 / 0.35); stroke-width: 2; stroke-linecap: round; }
-.copa .adorno { opacity: 0; translate: 0 -10px; transition: opacity 800ms var(--curva) 400ms, translate 900ms var(--curva) 400ms; }
-.coctel:hover .liquido { translate: 0 0; }
-.coctel:hover .adorno { opacity: 1; translate: 0 0; }
-.coctel h3 { font-size: clamp(32px, 2.8vw, 40px); }
-.coctel .lleva { font: 400 13px/1.7 'Josefin Sans', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--humo); }
-.coctel .precio { font: 400 22px/1 'Poiret One', sans-serif; letter-spacing: 0.1em; color: var(--oro-claro); }
-.carta-nota { margin-top: clamp(56px, 7vw, 88px); text-align: center; font-size: 19px; color: var(--humo); }
+/* ---- La frase de la casa ---- */
+.frase { padding-block: clamp(80px, 11vw, 160px) clamp(56px, 7vw, 100px); text-align: center; }
+.frase p { max-width: 20ch; margin-inline: auto; font-family: var(--deco); font-size: clamp(34px, 4.4vw, 66px); line-height: 1.08; letter-spacing: 0.04em; text-transform: uppercase; color: var(--botella); }
 
-/* ---- Las noches: tres invitaciones ---- */
-.noches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); margin: 0; padding: 0; list-style: none; }
-.invitacion { position: relative; display: grid; justify-items: center; gap: 12px; padding: clamp(40px, 4vw, 56px) 28px; text-align: center; border: 1px solid rgb(201 162 74 / 0.55); transition: translate 800ms var(--curva), background-color 800ms var(--curva); }
-.invitacion::before { content: ''; position: absolute; inset: 10px; border: 1px solid rgb(201 162 74 / 0.25); transition: inset 800ms var(--curva), border-color 800ms var(--curva); }
-.invitacion:hover { translate: 0 -6px; background: rgb(201 162 74 / 0.05); }
-.invitacion:hover::before { inset: 16px; border-color: rgb(201 162 74 / 0.55); }
-.invitacion .dia { font: 400 13px/1 'Josefin Sans', sans-serif; letter-spacing: 0.4em; text-transform: uppercase; color: var(--oro); }
-.invitacion h3 { font-size: clamp(40px, 3.6vw, 56px); }
-.invitacion p { max-width: 24ch; font-size: 19px; color: #d9d2bf; }
-.invitacion .hora { font: 400 18px/1 'Poiret One', sans-serif; letter-spacing: 0.14em; color: var(--oro-claro); }
+/* ---- La foto que crece de su recuadro al ancho de la pantalla ---- */
+.crece { overflow: hidden; }
+.crece img { width: 100%; height: min(86svh, 54vw); min-height: 320px; object-fit: cover; }
 
-/* ---- El salón privado ---- */
-.salon { position: relative; display: grid; align-items: end; min-height: clamp(520px, 70svh, 760px); overflow: hidden; isolation: isolate; }
-.salon > img { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; }
-.salon::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgb(10 21 19 / 0.9), rgb(10 21 19 / 0.4) 60%, rgb(10 21 19 / 0.1)); }
-.salon-texto { display: grid; gap: 22px; max-width: 34rem; padding-block: clamp(64px, 8vw, 110px); }
-.salon h2 { font-size: clamp(48px, 5.4vw, 80px); font-weight: 300; }
-.salon p:not(.rotulo) { font-size: 21px; color: #ded6c2; }
+/* ---- Un capítulo: título, foto vertical y nota ---- */
+.capitulo { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 4fr); gap: 40px clamp(28px, 4vw, 64px); align-items: center; padding-block: clamp(90px, 11vw, 160px); }
+.capitulo .texto { display: grid; gap: 18px; max-width: 24rem; }
+.capitulo figure img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+.capitulo .nota { align-self: end; display: grid; gap: 18px; justify-items: start; max-width: 20rem; }
 
-/* ---- Reservar: la tarjeta ---- */
-.tarjeta { position: relative; max-width: 54rem; margin-inline: auto; padding: clamp(36px, 5vw, 64px); border: 1px solid var(--oro); background: var(--hondo); }
-.tarjeta::before { content: ''; position: absolute; inset: 10px; border: 1px solid rgb(201 162 74 / 0.3); pointer-events: none; }
-.tarjeta form { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 28px; }
-.tarjeta .todo { grid-column: 1 / -1; }
-.tarjeta fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
-.tarjeta legend, .tarjeta label:not(.noche-op, .hora-op) { font: 400 13px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.26em; text-transform: uppercase; color: var(--oro); }
-.tarjeta legend { margin-bottom: 14px; padding: 0; }
-.noches-op { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.noche-op { position: relative; display: grid; justify-items: center; gap: 4px; padding: 18px 10px; border: 1px solid rgb(201 162 74 / 0.4); text-align: center; cursor: pointer; transition: background-color 600ms var(--curva), border-color 600ms var(--curva), color 600ms var(--curva); }
+/* ---- La carta: tres cócteles sobre la banda botella ---- */
+.carta { padding-block: clamp(80px, 10vw, 140px); background: var(--botella); color: var(--marfil); }
+.carta h2 { color: var(--marfil); }
+.carta-cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px 40px; margin-bottom: clamp(40px, 5vw, 64px); }
+.carta-cabeza p { max-width: 36ch; color: rgb(251 248 241 / 0.78); }
+.copas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
+.copa figure { overflow: hidden; }
+.copa img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: scale 1000ms var(--curva); }
+.copa:hover img { scale: 1.05; }
+.copa h3 { margin-top: 18px; font-size: 24px; color: var(--marfil); }
+.copa p { margin-top: 6px; font-size: 15px; color: rgb(251 248 241 / 0.74); }
+.copa .precio { margin-top: 10px; color: var(--oro-claro); letter-spacing: 0.1em; font-variant-numeric: tabular-nums; }
+.carta .enlace { margin-top: clamp(32px, 4vw, 48px); color: var(--oro-claro); }
+
+/* ---- Capítulos partidos: la foto se agranda junto al texto ---- */
+.partido { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(80px, 10vw, 140px); }
+.partido.al-reves { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+.partido.al-reves figure { order: 2; }
+.partido figure { overflow: hidden; }
+.partido img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.partido .texto { display: grid; gap: 20px; justify-items: start; max-width: 32rem; }
+.partido .texto p { font-size: 17px; }
+.noches { display: grid; gap: 0; width: 100%; margin: 6px 0 0; padding: 0; list-style: none; border-top: 1px solid rgb(18 48 41 / 0.16); }
+.noches li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) auto; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid rgb(18 48 41 / 0.16); }
+.noches b { font-family: var(--deco); font-weight: 400; font-size: 22px; text-transform: uppercase; color: var(--botella); }
+.noches span { color: var(--suave); }
+.noches small { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--oro); white-space: nowrap; }
+
+/* ---- La historia, en blanco y negro ---- */
+.historia { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: 40px clamp(32px, 5vw, 80px); padding-block: 0 clamp(90px, 11vw, 160px); }
+.historia figure { margin-left: calc(var(--margen) * -1); }
+.historia img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; filter: grayscale(1) contrast(1.08); }
+.historia .texto { display: grid; gap: 20px; justify-items: start; max-width: 34rem; }
+.historia dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 100%; padding-top: 18px; border-top: 1px solid rgb(18 48 41 / 0.16); }
+.historia dt { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--suave); }
+.historia dd { font-family: var(--deco); font-size: 30px; color: var(--botella); font-variant-numeric: tabular-nums; }
+
+/* ---- Reservar ---- */
+.reservar { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 80px); padding-block: clamp(80px, 10vw, 130px); border-top: 1px solid rgb(18 48 41 / 0.14); }
+.reservar .texto { display: grid; align-content: start; gap: 18px; }
+.reservar form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 28px; }
+.reservar .todo { grid-column: 1 / -1; }
+.reservar fieldset { margin: 0; padding: 0; border: 0; }
+.reservar legend, .reservar label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--suave); }
+.reservar legend { margin-bottom: 10px; }
+.reservar label:not(.noche-op):not(.hora-op) { display: grid; gap: 4px; }
+.noches-op { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.noche-op { position: relative; display: grid; gap: 2px; padding: 14px 16px; border: 1px solid rgb(18 48 41 / 0.2); cursor: pointer; letter-spacing: 0 !important; text-transform: none !important; transition: border-color 500ms var(--curva), background-color 500ms var(--curva); }
 .noche-op input, .hora-op input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
-.noche-op b { font: 400 30px/1 'Poiret One', sans-serif; }
-.noche-op span { font-size: 18px; }
-.noche-op small { font: 400 12px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--humo); }
-.noche-op:hover, .hora-op:hover { border-color: var(--oro); }
-.noche-op:has(input:checked) { background: var(--oro); border-color: var(--oro); color: var(--hondo); }
-.noche-op:has(input:checked) small { color: rgb(10 21 19 / 0.75); }
-.horas-op { display: flex; flex-wrap: wrap; gap: 10px; }
-.hora-op { position: relative; display: grid; place-items: center; min-width: 96px; min-height: 48px; padding: 4px 16px 0; border: 1px solid rgb(201 162 74 / 0.4); font: 400 20px/1 'Poiret One', sans-serif; letter-spacing: 0.08em; cursor: pointer; transition: background-color 600ms var(--curva), border-color 600ms var(--curva), color 600ms var(--curva); }
-.hora-op:has(input:checked) { background: var(--marfil); border-color: var(--marfil); color: var(--hondo); }
-:is(.noche-op, .hora-op):has(input:focus-visible) { outline: 1px solid var(--oro-claro); outline-offset: 4px; }
-.tarjeta label:not(.noche-op, .hora-op) { display: grid; gap: 10px; }
-.tarjeta :is(input:not([type="radio"]), select) { width: 100%; min-width: 0; min-height: 52px; padding: 8px 2px; border: 0; border-bottom: 1px solid rgb(201 162 74 / 0.6); border-radius: 0; background: transparent; color: var(--marfil); font: 400 21px/1.3 'Cormorant Garamond', Georgia, serif; letter-spacing: 0; text-transform: none; -webkit-appearance: none; appearance: none; }
-.tarjeta select { background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23c9a24a' stroke-width='1.4'/%3E%3C/svg%3E") right 4px center / 14px 9px no-repeat; }
-.tarjeta select option { background: var(--hondo); }
-.tarjeta :is(input, select):focus-visible { outline: none; border-bottom-color: var(--oro-claro); box-shadow: 0 1px 0 var(--oro-claro); }
-.codigo { font-size: 19px; color: var(--humo); }
-.tarjeta .boton { justify-self: center; }
-.tarjeta .boceto-aviso { text-align: center; color: var(--oro-claro); }
+.noche-op b { font-family: var(--deco); font-weight: 400; font-size: 22px; text-transform: uppercase; color: var(--botella); }
+.noche-op span { font-size: 15px; color: var(--texto); }
+.noche-op small { font-size: 13px; color: var(--suave); }
+.noche-op:has(input:checked) { border-color: var(--oro); background: #fff; box-shadow: inset 0 0 0 1px var(--oro); }
+.horas-op { display: flex; flex-wrap: wrap; gap: 8px; }
+.hora-op { position: relative; display: inline-grid; place-items: center; min-width: 5.5rem; min-height: 44px; border: 1px solid rgb(18 48 41 / 0.24); border-radius: 999px; font-size: 16px !important; letter-spacing: 0.04em !important; color: var(--botella) !important; font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 500ms var(--curva), color 500ms var(--curva); }
+.hora-op:has(input:checked) { background: var(--botella); color: var(--marfil) !important; border-color: var(--botella); }
+.noche-op:has(input:focus-visible), .hora-op:has(input:focus-visible) { outline: 2px solid var(--oro); outline-offset: 3px; }
+.reservar input:not([type='radio']), .reservar select { width: 100%; min-height: 44px; padding: 6px 0; border: 0; border-bottom: 1px solid rgb(18 48 41 / 0.3); border-radius: 0; background: transparent; color: var(--texto); font: 400 16px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.02em; text-transform: none; }
+.reservar :is(input, select):focus { outline: none; border-bottom-color: var(--oro); }
+.reservar .capsula { justify-self: start; }
+.reservar .boceto-aviso { grid-column: 1 / -1; color: var(--botella); }
 
 /* ---- Pie ---- */
-.pie { padding-block: clamp(88px, 10vw, 130px) 36px; background: #0b1714; text-align: center; }
-.pie-sello { display: grid; justify-items: center; gap: 14px; }
-.pie-sello svg { width: 120px; height: auto; fill: none; stroke: var(--oro); stroke-width: 1.2; }
-.pie-sello p { font: 400 clamp(40px, 5vw, 64px)/1 'Poiret One', sans-serif; letter-spacing: 0.36em; text-indent: 0.36em; }
-.pie-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; max-width: 60rem; margin: clamp(48px, 6vw, 72px) auto 0; }
-.pie dt { font: 400 12px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.32em; text-transform: uppercase; color: var(--oro); }
-.pie dd { margin: 10px 0 0; font-size: 20px; color: #dcd4c0; }
-.pie a { position: relative; text-decoration: none; padding-bottom: 4px; }
-.pie-boceto { margin-top: clamp(56px, 7vw, 88px); padding-top: 22px; border-top: 1px solid rgb(201 162 74 / 0.18); font: 400 12px/1.4 'Josefin Sans', sans-serif; letter-spacing: 0.24em; text-transform: uppercase; color: #7f8c86; }
+.pie { background: var(--botella); color: rgb(251 248 241 / 0.82); font-size: 14px; }
+.pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px 48px; padding-block: 40px 32px; border-top: 1px solid rgb(251 248 241 / 0.24); }
+.pie-envoltura { padding-top: 56px; }
+.pie .logo { color: var(--marfil); justify-items: start; }
+.pie address { font-style: normal; line-height: 1.8; }
+.pie-fila ul { display: grid; justify-items: end; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.distinciones { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 18px clamp(28px, 5vw, 64px); padding-block: 28px; margin: 0; list-style: none; color: var(--oro-claro); }
+.distinciones li { font-family: var(--deco); font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; line-height: 1.1; }
+.distinciones small { display: block; font-family: 'Josefin Sans', sans-serif; font-size: 10px; letter-spacing: 0.2em; color: rgb(251 248 241 / 0.6); }
+.pie-final { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 18px calc(24px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid rgb(251 248 241 / 0.24); font-size: 12px; color: rgb(251 248 241 / 0.62); }
+
+/* ---- Volver arriba ---- */
+.arriba { position: fixed; z-index: 20; right: clamp(14px, 2vw, 28px); bottom: calc(clamp(14px, 2vw, 28px) + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgb(201 162 74 / 0.86); color: var(--botella); text-decoration: none; transition: background-color 500ms var(--curva); }
+.arriba:hover { background: var(--oro-claro); }
+.arriba svg { width: 14px; height: 14px; }
 
 /* ---- M ---- */
 @media (max-width: 899px) {
-  .cabecera { grid-template-columns: 1fr; justify-items: center; }
-  .cabecera nav { display: none; }
-  .noche { grid-template-columns: minmax(0, 1fr); }
-  .reloj { position: relative; top: 0; }
-  .reloj svg { width: min(60%, 220px); }
-  .carta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .noches { grid-template-columns: minmax(0, 1fr); max-width: 30rem; margin-inline: auto; }
-  .salon::before { background: linear-gradient(rgb(10 21 19 / 0.2), rgb(10 21 19 / 0.85) 45%, rgb(10 21 19 / 0.95)); }
+  .datos-cabeza span { display: none; }
+  .capitulo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .capitulo .texto { grid-column: 1 / -1; }
+  .copas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .copa:last-child { display: none; }
+  .partido, .partido.al-reves, .historia, .reservar { grid-template-columns: minmax(0, 1fr); }
+  .partido.al-reves figure { order: 0; }
+  .partido img { aspect-ratio: 4 / 3; }
+  .historia figure { margin-left: 0; }
+  .historia img { aspect-ratio: 4 / 3; }
 }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
-  .momento { grid-template-columns: minmax(0, 1fr); }
-  .momento:nth-child(even) figure { order: 0; }
-  .carta { grid-template-columns: minmax(0, 1fr); }
-  .tarjeta form { grid-template-columns: minmax(0, 1fr); }
+  .cabecera { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .menu .pastilla { display: none; }
+  .logo svg { width: 108px; height: 52px; }
+  .datos-cabeza { display: none; }
+  .portada { height: 72svh; }
+  .capitulo { grid-template-columns: minmax(0, 1fr); }
+  .capitulo figure { width: 78%; justify-self: center; }
+  .copas { grid-template-columns: minmax(0, 1fr); }
+  .copa:last-child { display: block; }
+  .noches li { grid-template-columns: 5rem minmax(0, 1fr); }
+  .noches small { grid-column: 2; }
+  .historia dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .noches-op { grid-template-columns: minmax(0, 1fr); }
-  .pie-cols { grid-template-columns: minmax(0, 1fr); }
-  .portada h1 { letter-spacing: 0.18em; text-indent: 0.18em; }
+  .reservar form { grid-template-columns: minmax(0, 1fr); }
+  .pie-fila ul { justify-items: start; }
 }
 
-/* ---- Movimiento: una ceremonia lenta ----
-   Al llegar, las puertas del ascensor se abren hacia los lados sobre la
-   barra en video, y el abanico de la portada se traza desde el centro hacia
-   afuera. Al bajar, el reloj avanza de las siete a la una y media con el
-   scroll; las fotos se abren desde el eje, como dos puertas, y los textos
-   suben despacio. Al pasar el cursor, las copas se llenan y reciben su
-   adorno, y las invitaciones se levantan y se les abre el filete. */
-[data-aparece] { --entrada: marfil-sube; --tramo: 40svh; --duracion: 1600ms; }
-.momento figure { --entrada: marfil-abre; --tramo: 50svh; }
-@keyframes marfil-sube { from { opacity: 0; translate: 0 18px; } }
-@keyframes marfil-abre { from { clip-path: inset(0 50% 0 50%); } }
-@keyframes marfil-izquierda { to { translate: -101% 0; } }
-@keyframes marfil-derecha { to { translate: 101% 0; } }
-@keyframes marfil-se-va { to { visibility: hidden; } }
-@keyframes marfil-traza { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes marfil-llega { from { opacity: 0; translate: 0 14px; } }
-@keyframes marfil-hora { from { rotate: 210deg; } to { rotate: 405deg; } }
-@keyframes marfil-minuto { from { rotate: 0deg; } to { rotate: 2340deg; } }
+/* ---- Movimiento ----
+   Como en Gilli: la foto del salón se asienta al cargar; los títulos y las
+   notas suben apenas al llegar; las fotos marcadas crecen de su recuadro al
+   ancho de la pantalla mientras se baja, y las fotos de los capítulos
+   partidos se agrandan dentro de su marco. Donde el navegador no ata
+   animaciones al scroll (Safari 18), las fotos quedan en su tamaño final. */
+[data-aparece] { --entrada: marfil-sube; --duracion: 1200ms; --tramo: 30svh; }
+@keyframes marfil-sube { from { opacity: 0; translate: 0 16px; } }
+@keyframes marfil-asienta { from { scale: 1.08; } }
+@keyframes marfil-crece { from { clip-path: inset(0 22% 0 22%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes marfil-acerca { from { scale: 1.18; } }
+@keyframes marfil-agranda { from { clip-path: inset(18% 22% 18% 22%); } to { clip-path: inset(0 0 0 0); } }
 @media (prefers-reduced-motion: no-preference) {
-  .puertas { animation: marfil-se-va 1ms linear 2100ms forwards; }
-  .puertas i:first-child { animation: marfil-izquierda 1700ms var(--curva) 300ms forwards; }
-  .puertas i:last-child { animation: marfil-derecha 1700ms var(--curva) 300ms forwards; }
-  .abanico path { animation: marfil-traza 1600ms var(--curva) calc(1000ms + var(--k) * 90ms) both; }
-  .abanico .arco { animation-delay: 1700ms; }
-  .portada-texto > :not(.abanico), .cabecera { animation: marfil-llega 1400ms var(--curva) 1100ms both; }
+  .portada img, .portada video { animation: marfil-asienta 2600ms var(--curva) both; }
+  .frase p { animation: marfil-sube 1400ms var(--curva) 300ms both; }
   @supports (animation-timeline: view()) {
-    .noche { view-timeline: --noche; }
-    .horario-mano { animation: marfil-hora cubic-bezier(0.45, 0, 0.55, 1) both; animation-timeline: --noche; animation-range: contain 0% contain 100%; }
-    .minutero { animation: marfil-minuto cubic-bezier(0.45, 0, 0.55, 1) both; animation-timeline: --noche; animation-range: contain 0% contain 100%; }
+    .crece { animation: marfil-crece var(--curva) both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+    .crece img { animation: marfil-acerca var(--curva) both; animation-timeline: view(); animation-range: entry 0% exit 0%; }
+    .partido figure { animation: marfil-agranda var(--curva) both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+    .partido figure img { animation: marfil-acerca var(--curva) both; animation-timeline: view(); animation-range: entry 0% cover 60%; }
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .puertas { display: none; }
-  .copa .liquido { translate: 0 0; }
-  .copa .adorno { opacity: 1; translate: 0 0; }
+  .enlace svg, .capsula, .copa img, .menu summary i { transition: none; }
 }
 </style>
 </head>
@@ -264,179 +247,160 @@ p { margin: 0; }
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="abanico-chico" viewBox="0 0 68 36"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M34 34L4 34M34 34L8 18M34 34L20 7M34 34V3M34 34L48 7M34 34L60 18M34 34H64"/><path d="M4 34A30 30 0 0 1 64 34"/></g></symbol>
+  <symbol id="flecha" viewBox="0 0 16 10"><path d="M0 5h14M10 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+  <symbol id="sello" viewBox="0 0 132 62"><g fill="none" stroke="currentColor"><ellipse cx="66" cy="31" rx="64" ry="29" stroke-width="1.6"/><ellipse cx="66" cy="31" rx="59" ry="24.5" stroke-width="0.8"/></g><use href="#abanico-chico" x="57" y="7" width="18" height="10"/><text x="66" y="40" text-anchor="middle" font-size="21" letter-spacing="2.4" fill="currentColor">MARFIL</text><text x="66" y="52" text-anchor="middle" font-size="7" letter-spacing="2.2" fill="currentColor">1928</text></symbol>
 </svg>
 
-<main>
-  <section class="portada" id="inicio" aria-labelledby="titulo">
-    <div class="portada-fondo">
-      <img src="/image/bocetos/marfil/barra-1280.webp" srcset="/image/bocetos/marfil/barra-800.webp 800w, /image/bocetos/marfil/barra-1280.webp 1280w" sizes="100vw" width="1280" height="720" alt="Un cantinero de chaleco prepara cócteles en una barra de noche, con botellas iluminadas en las repisas de atrás" fetchpriority="high">
-      <video data-bucle data-src="/grabados/bocetos/marfil/barra.mp4" width="1280" height="720" muted playsinline aria-hidden="true"></video>
-    </div>
-    <span class="marco" aria-hidden="true"></span>
-    <header class="cabecera">
-      <nav aria-label="La noche"><ul><li><a class="enlace" href="#noche">La noche</a></li><li><a class="enlace" href="#carta">La carta</a></li></ul></nav>
-      <a class="sello" href="#inicio" aria-label="Bar Marfil, al inicio" style="color: var(--oro-claro)"><svg aria-hidden="true"><use href="#abanico-chico"/></svg></a>
-      <nav aria-label="Visitar"><ul><li><a class="enlace" href="#noches">Las noches</a></li><li><a class="enlace" href="#reservar">Reservar</a></li></ul></nav>
-    </header>
-    <div class="portada-texto">
-      <svg class="abanico" viewBox="0 0 400 210" aria-hidden="true"><path pathLength="1" style="--k: 6" d="M200 200L20 200"/><path pathLength="1" style="--k: 5" d="M200 200L26.1 153.4"/><path pathLength="1" style="--k: 4" d="M200 200L44.1 110"/><path pathLength="1" style="--k: 3" d="M200 200L72.7 72.7"/><path pathLength="1" style="--k: 2" d="M200 200L110 44.1"/><path pathLength="1" style="--k: 1" d="M200 200L153.4 26.1"/><path pathLength="1" style="--k: 0" d="M200 200L200 20"/><path pathLength="1" style="--k: 1" d="M200 200L246.6 26.1"/><path pathLength="1" style="--k: 2" d="M200 200L290 44.1"/><path pathLength="1" style="--k: 3" d="M200 200L327.3 72.7"/><path pathLength="1" style="--k: 4" d="M200 200L355.9 110"/><path pathLength="1" style="--k: 5" d="M200 200L373.9 153.4"/><path pathLength="1" style="--k: 6" d="M200 200L380 200"/><path class="arco" pathLength="1" style="--k: 0" d="M20 200A180 180 0 0 1 380 200"/><path class="arco" pathLength="1" style="--k: 0" d="M110 200A90 90 0 0 1 290 200"/></svg>
-      <h1 id="titulo"><small>Bar · desde 1928</small>Marfil</h1>
-      <p class="bajada">Coctelería y salón de baile en el segundo piso del edificio Templeman, en Cerro Alegre, Valparaíso.</p>
-      <div class="acciones"><a class="boton lleno" href="#reservar">Reservar una noche</a><a class="enlace" href="#noche">Cómo es una noche aquí</a></div>
-    </div>
-    <div class="puertas" aria-hidden="true"><i></i><i></i></div>
+<header class="ancho cabecera">
+  <div class="menu">
+    <details>
+      <summary aria-label="Abrir el menú"><i aria-hidden="true"></i></summary>
+      <nav aria-label="Secciones"><ul>
+        <li><a href="#cocteleria">La coctelería</a></li>
+        <li><a href="#carta">La carta</a></li>
+        <li><a href="#salon">El salón</a></li>
+        <li><a href="#musica">La música</a></li>
+        <li><a href="#historia">La historia</a></li>
+        <li><a href="#reservar">Reservar</a></li>
+      </ul></nav>
+    </details>
+    <a class="pastilla" href="#reservar">Reservar</a>
+  </div>
+  <a class="logo" href="#inicio" aria-label="Bar Marfil, al inicio"><svg aria-hidden="true"><use href="#sello"/></svg></a>
+  <p class="datos-cabeza"><span>Cerro Alegre · Valparaíso</span>Mar a sáb · 19:00</p>
+</header>
+
+<main id="inicio">
+  <section class="portada" aria-labelledby="titulo">
+    <img src="/image/bocetos/marfil/salon-1200.webp" srcset="/image/bocetos/marfil/salon-700.webp 700w, /image/bocetos/marfil/salon-1200.webp 1200w, /image/bocetos/marfil/salon-1800.webp 1800w" sizes="calc(100vw - 32px)" width="1200" height="750" alt="El salón de Marfil: un espejo redondo con marco dorado, butacas de terciopelo y ventanales con la luz de la tarde" fetchpriority="high">
+    <h1 id="titulo">Bar Marfil, coctelería y salón de baile</h1>
   </section>
 
-  <section class="ancho seccion" id="noche" aria-labelledby="noche-titulo">
-    <div class="cabeza" data-aparece>
-      <p class="rotulo">Una noche en Marfil</p>
-      <h2 id="noche-titulo">No se viene a tomar algo. Se viene a pasar la noche.</h2>
-      <p class="ornamento" aria-hidden="true">◆</p>
+  <section class="ancho frase" aria-label="La casa">
+    <p>En el cerro Alegre, con el puerto a los pies, desde 1928.</p>
+  </section>
+
+  <figure class="crece">
+    <img src="/image/bocetos/marfil/escalera-1400.webp" srcset="/image/bocetos/marfil/escalera-800.webp 800w, /image/bocetos/marfil/escalera-1400.webp 1400w" sizes="100vw" width="1400" height="875" loading="lazy" alt="La escalera de caracol de mármol que baja al salón, con su baranda de fierro forjado y la luz ámbar de abajo">
+  </figure>
+
+  <section class="ancho capitulo" id="cocteleria" aria-labelledby="cocteleria-titulo">
+    <div class="texto" data-aparece>
+      <h2 class="titulo" id="cocteleria-titulo">Una oda al cóctel</h2>
+      <p class="chico">Se agita y se cuela como en 1928: hielo tallado a mano, copas heladas y licores de la casa macerados en el sótano, donde antes se guardaba el vino del puerto.</p>
     </div>
-    <div class="noche">
-      <div class="reloj" aria-hidden="true">
-        <svg viewBox="0 0 300 300">
-          <circle class="esfera" cx="150" cy="150" r="140"/><circle class="aro" cx="150" cy="150" r="126"/>
-          <g class="marca"><path d="M150 24v16M150 260v16M24 150h16M260 150h16M213 41l-8 14M87 41l8 14M259 87l-14 8M41 87l14 8M259 213l-14-8M41 213l14-8M213 259l-8-14M87 259l8-14"/></g>
-          <text x="150" y="66" text-anchor="middle">XII</text><text x="238" y="156" text-anchor="middle">III</text><text x="150" y="246" text-anchor="middle">VI</text><text x="62" y="156" text-anchor="middle">IX</text>
-          <line class="minutero" x1="150" y1="150" x2="150" y2="44"/>
-          <line class="horario-mano" x1="150" y1="150" x2="150" y2="82"/>
-          <circle cx="150" cy="150" r="6" fill="var(--oro)"/>
-        </svg>
-        <p>De 19:00 a 01:30</p>
-      </div>
-      <ol class="momentos">
-        <li class="momento" data-aparece>
-          <figure data-aparece><img src="/image/bocetos/marfil/ascensor-700.webp" srcset="/image/bocetos/marfil/ascensor-440.webp 440w, /image/bocetos/marfil/ascensor-700.webp 700w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 40vw, 90vw" width="700" height="933" loading="lazy" alt="Un vestíbulo con piso de mármol en damero rojo y blanco y las puertas de madera de un ascensor"></figure>
-          <div><time datetime="19:00">19:00</time><h3>Sube el ascensor de 1928</h3><p>Lo maneja don Lucho, con guantes, y para en el segundo piso. La reja de bronce se abre sobre el salón y alguien te recibe el abrigo.</p></div>
-        </li>
-        <li class="momento" data-aparece>
-          <figure data-aparece><img src="/image/bocetos/marfil/colador-760.webp" srcset="/image/bocetos/marfil/colador-480.webp 480w, /image/bocetos/marfil/colador-760.webp 760w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 40vw, 90vw" width="760" height="950" loading="lazy" alt="Un cantinero cuela un cóctel color durazno en una copa coupé, sobre la barra"></figure>
-          <div><time datetime="19:30">19:30</time><h3>El primer cóctel</h3><p>La barra recibe con un Marfil: pisco, vermut blanco y cáscara de limón de Pica, colado sobre hielo tallado a mano esa tarde.</p></div>
-        </li>
-        <li class="momento" data-aparece>
-          <figure data-aparece><img src="/image/bocetos/marfil/lampara-700.webp" srcset="/image/bocetos/marfil/lampara-440.webp 440w, /image/bocetos/marfil/lampara-700.webp 700w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 40vw, 90vw" width="700" height="933" loading="lazy" alt="Una lámpara colgante de vidrio prensado, en capas escalonadas, bajo un tragaluz con vidrios en rombo"></figure>
-          <div><time datetime="21:00">21:00</time><h3>La cena, bajo la lámpara</h3><p>Platos para compartir de la cocina del puerto: congrio frito, ostiones a la parmesana, pan amasado. Las mesas bajas rodean la pista.</p></div>
-        </li>
-        <li class="momento" data-aparece>
-          <figure data-aparece><img src="/image/bocetos/marfil/trompeta-760.webp" srcset="/image/bocetos/marfil/trompeta-480.webp 480w, /image/bocetos/marfil/trompeta-760.webp 760w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 40vw, 90vw" width="760" height="950" loading="lazy" alt="Las manos de un músico tocan una trompeta dorada, en la penumbra"></figure>
-          <div><time datetime="22:30">22:30</time><h3>Entra la orquesta</h3><p>Seis músicos en el escenario de madera: los jueves, jazz; los sábados, swing. Nadie pide que se despeje la pista: se despeja sola.</p></div>
-        </li>
-        <li class="momento" data-aparece>
-          <figure data-aparece><img src="/image/bocetos/marfil/baile-760.webp" srcset="/image/bocetos/marfil/baile-480.webp 480w, /image/bocetos/marfil/baile-760.webp 760w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 40vw, 90vw" width="760" height="950" loading="lazy" alt="Una pareja baila con alegría en un salón lleno, él la inclina hacia atrás mientras ella ríe"></figure>
-          <div><time datetime="01:30">01:30</time><h3>El último baile</h3><p>La orquesta toca hasta la una y media. El ascensor sigue bajando hasta las dos, y la barra te despide con un café de la casa.</p></div>
-        </li>
-      </ol>
+    <figure data-aparece style="--orden: 1"><img src="/image/bocetos/marfil/colador-760.webp" srcset="/image/bocetos/marfil/colador-480.webp 480w, /image/bocetos/marfil/colador-760.webp 760w" sizes="(min-width: 900px) 26vw, (min-width: 600px) 45vw, 78vw" width="760" height="950" loading="lazy" alt="Un barman cuela un cóctel anaranjado en una copa coupé sobre la barra"></figure>
+    <div class="nota" data-aparece style="--orden: 2">
+      <p class="chico">Cada cóctel se prepara a la vista, en la barra de mármol de la entrada, y se sirve con su vaso de agua.</p>
+      <a class="enlace" href="#carta">La carta <svg aria-hidden="true"><use href="#flecha"/></svg></a>
     </div>
   </section>
 
-  <section class="seccion carta-seccion" id="carta" aria-labelledby="carta-titulo">
+  <figure class="crece">
+    <img src="/image/bocetos/marfil/cupula-800.webp" srcset="/image/bocetos/marfil/cupula-480.webp 480w, /image/bocetos/marfil/cupula-800.webp 800w" sizes="100vw" width="800" height="800" loading="lazy" alt="El cielo pintado del salón: rayos dorados y rojos sobre azul alrededor de una lámpara octogonal">
+  </figure>
+
+  <section class="carta" id="carta" aria-labelledby="carta-titulo">
     <div class="ancho">
-      <div class="cabeza" data-aparece>
-        <p class="rotulo">La carta</p>
-        <h2 id="carta-titulo">Seis cócteles de la casa</h2>
-        <p class="ornamento" aria-hidden="true">◆</p>
+      <div class="carta-cabeza" data-aparece>
+        <h2 class="titulo" id="carta-titulo">Desde Valparaíso, con cariño</h2>
+        <p>Tres de la casa. La carta entera tiene veinticuatro y cambia con la temporada.</p>
       </div>
-      <ul class="carta">
-        <li class="coctel" data-aparece style="--trago: #e6d39a">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-coupe"><path d="M16 36Q16 74 60 76Q104 74 104 36Z"/></clipPath></defs><g clip-path="url(#v-coupe)"><rect class="liquido" x="10" y="40" width="100" height="40"/></g><path class="linea" d="M14 34Q14 76 60 78Q106 76 106 34M60 78V136M38 140Q60 132 82 140"/><path class="brillo" d="M28 44Q30 60 44 66"/><path class="adorno linea" d="M92 30q8-10 2-18q-6 8-2 18" stroke="var(--oro-claro)"/></svg>
-          <h3>Marfil</h3><p class="lleva">Pisco · vermut blanco · limón de Pica</p><p class="precio">$8.900</p>
-        </li>
-        <li class="coctel" data-aparece style="--trago: #b5651d; --orden: 1">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-rocks"><path d="M27 52L32 136H88L93 52Z"/></clipPath></defs><g clip-path="url(#v-rocks)"><rect class="liquido" x="20" y="64" width="80" height="80"/></g><path class="linea" d="M24 48L30 140H90L96 48M31 128H89"/><rect class="adorno linea" x="44" y="72" width="30" height="28" rx="3" transform="rotate(-8 59 86)" stroke="rgb(255 255 255 / 0.6)"/><path class="brillo" d="M36 66L39 118"/></svg>
-          <h3>Templeman</h3><p class="lleva">Whisky · amaro · naranja quemada</p><p class="precio">$9.500</p>
-        </li>
-        <li class="coctel" data-aparece style="--trago: #ecdc9e; --orden: 2">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-flauta"><path d="M47 14Q43 68 54 90Q60 96 66 90Q77 68 73 14Z"/></clipPath></defs><g clip-path="url(#v-flauta)"><rect class="liquido" x="40" y="22" width="40" height="76"/></g><path class="linea" d="M45 10Q41 70 54 92Q60 98 66 92Q79 70 75 10M60 96V138M42 142Q60 136 78 142"/><g class="adorno" fill="rgb(255 255 255 / 0.7)"><circle cx="58" cy="70" r="1.6"/><circle cx="62" cy="56" r="1.3"/><circle cx="57" cy="42" r="1.5"/><circle cx="63" cy="32" r="1.2"/></g><path class="brillo" d="M50 24Q48 52 54 74"/></svg>
-          <h3>Ascensor 1928</h3><p class="lleva">Gin · espumante · pomelo rosado</p><p class="precio">$9.900</p>
-        </li>
-        <li class="coctel" data-aparece style="--trago: #e3a03b">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-nora"><path d="M30 30Q30 80 60 82Q90 80 90 30Z"/></clipPath></defs><g clip-path="url(#v-nora)"><rect class="liquido" x="24" y="34" width="72" height="52"/></g><path class="linea" d="M28 26Q28 82 60 84Q92 82 92 26M60 84V138M42 142Q60 136 78 142"/><path class="adorno linea" d="M76 22l16-16M92 6l3 3" stroke="var(--oro-claro)"/><path class="brillo" d="M38 40Q38 62 50 72"/></svg>
-          <h3>Cerro Alegre</h3><p class="lleva">Ron añejo · maracuyá · espuma de limón</p><p class="precio">$8.500</p>
-        </li>
-        <li class="coctel" data-aparece style="--trago: #e9e3d2; --orden: 1">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-martini"><path d="M16 28L60 84L104 28Z"/></clipPath></defs><g clip-path="url(#v-martini)"><rect class="liquido" x="10" y="30" width="100" height="58"/></g><path class="linea" d="M12 24L60 86L108 24M60 86V138M40 142Q60 136 80 142"/><g class="adorno"><path class="linea" d="M60 18V58" stroke="var(--oro-claro)"/><circle cx="60" cy="52" r="5" fill="#7d8b48"/></g><path class="brillo" d="M30 36L50 62"/></svg>
-          <h3>Niebla del puerto</h3><p class="lleva">Pisco · clara · rica rica</p><p class="precio">$8.900</p>
-        </li>
-        <li class="coctel" data-aparece style="--trago: #8e2b2b; --orden: 2">
-          <svg class="copa" viewBox="0 0 120 150" aria-hidden="true"><defs><clipPath id="v-alto"><path d="M37 24L40 138H80L83 24Z"/></clipPath></defs><g clip-path="url(#v-alto)"><rect class="liquido" x="30" y="40" width="60" height="100"/></g><path class="linea" d="M34 18L38 142H82L86 18M39 130H81"/><path class="adorno linea" d="M70 10L58 94" stroke="var(--oro-claro)"/><path class="brillo" d="M46 34L48 122"/></svg>
-          <h3>Último baile</h3><p class="lleva">Vermut rojo · soda · aceituna</p><p class="precio">$7.500</p>
-        </li>
+      <ul class="copas">
+        <li class="copa" data-aparece><figure><img src="/image/bocetos/marfil/copa-verde-800.webp" srcset="/image/bocetos/marfil/copa-verde-480.webp 480w, /image/bocetos/marfil/copa-verde-800.webp 800w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 46vw, 92vw" width="800" height="1000" loading="lazy" alt="Una copa coupé con un sour de espuma blanca sobre una mesa de mármol, ante una cortina de terciopelo verde"></figure><h3>Marfil 1928</h3><p>Pisco, clara de huevo, limón de Pica y almíbar de rosas.</p><p class="precio">$8.900</p></li>
+        <li class="copa" data-aparece style="--orden: 1"><figure><img src="/image/bocetos/marfil/copa-marmol-800.webp" srcset="/image/bocetos/marfil/copa-marmol-480.webp 480w, /image/bocetos/marfil/copa-marmol-800.webp 800w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 46vw, 92vw" width="800" height="1000" loading="lazy" alt="Una copa coupé con espuma al borde de una mesa de mármol, con una butaca de terciopelo azul delante"></figure><h3>Cerro Alegre</h3><p>Gin de la casa, vermut blanco y un toque de boldo.</p><p class="precio">$9.400</p></li>
+        <li class="copa" data-aparece style="--orden: 2"><figure><img src="/image/bocetos/marfil/lampara-700.webp" srcset="/image/bocetos/marfil/lampara-440.webp 440w, /image/bocetos/marfil/lampara-700.webp 700w" sizes="(min-width: 900px) 30vw, 92vw" width="700" height="933" loading="lazy" alt="Una lámpara déco de cristal y bronce colgando bajo un vitral"></figure><h3>Último baile</h3><p>Ron añejo, café de grano y naranja quemada. Se sirve después de la una.</p><p class="precio">$9.900</p></li>
       </ul>
-      <p class="carta-nota" data-aparece>La carta cambia con la estación. El hielo se talla cada tarde y los jugos se exprimen al pedirlos.</p>
+      <a class="enlace" href="#reservar">Reservar una mesa en la barra <svg aria-hidden="true"><use href="#flecha"/></svg></a>
     </div>
   </section>
 
-  <section class="ancho seccion" id="noches" aria-labelledby="noches-titulo">
-    <div class="cabeza" data-aparece>
-      <p class="rotulo">Las noches</p>
-      <h2 id="noches-titulo">Tres noches a la semana</h2>
-      <p class="ornamento" aria-hidden="true">◆</p>
-    </div>
-    <ul class="noches">
-      <li class="invitacion" data-aparece><p class="dia">Jueves</p><h3>Jazz</h3><p>El cuarteto de la casa y un invitado distinto cada semana.</p><p class="hora">22:30 · sin cover</p></li>
-      <li class="invitacion" data-aparece style="--orden: 1"><p class="dia">Viernes</p><h3>Piano y barra</h3><p>Una noche más quieta, para conversar con el cantinero.</p><p class="hora">21:00 · sin cover</p></li>
-      <li class="invitacion" data-aparece style="--orden: 2"><p class="dia">Sábado</p><h3>Swing</h3><p>La orquesta completa y clase abierta antes de que llene la pista.</p><p class="hora">22:30 · $6.000</p></li>
-    </ul>
-  </section>
-
-  <section class="salon" id="salon" aria-labelledby="salon-titulo">
-    <img src="/image/bocetos/marfil/salon-1200.webp" srcset="/image/bocetos/marfil/salon-700.webp 700w, /image/bocetos/marfil/salon-1200.webp 1200w" sizes="100vw" width="1200" height="750" loading="lazy" alt="Un salón privado con sillones de terciopelo, una mesa baja dorada y un espejo redondo, junto a grandes ventanales">
-    <div class="ancho">
-      <div class="salon-texto" data-aparece>
-        <p class="rotulo">El salón Templeman</p>
-        <h2 id="salon-titulo">Para cuarenta, con su propia barra</h2>
-        <p>Un salón aparte, con ventanales a la bahía, para matrimonios chicos, aniversarios y cenas de empresa. Lo armamos contigo: el menú, la música y la hora del último baile.</p>
-        <a class="enlace" href="#reservar" style="justify-self: start">Preguntar por el salón</a>
-      </div>
+  <section class="ancho partido" id="salon" aria-labelledby="salon-titulo">
+    <figure><img src="/image/bocetos/marfil/baile-760.webp" srcset="/image/bocetos/marfil/baile-480.webp 480w, /image/bocetos/marfil/baile-760.webp 760w" sizes="(min-width: 900px) 42vw, 100vw" width="760" height="950" loading="lazy" alt="Una pareja baila en la pista del salón y él la inclina hacia atrás entre risas"></figure>
+    <div class="texto" data-aparece>
+      <h2 class="titulo" id="salon-titulo">El salón de baile</h2>
+      <p>Ciento veinte metros de parqué bajo el cielo pintado. Las mesas rodean la pista y la orquesta toca desde el balcón, como cuando el salón abrió para los marinos del puerto.</p>
+      <ul class="noches">
+        <li><b>Jueves</b><span>Jazz, cuarteto de la casa</span><small>Desde 21:00</small></li>
+        <li><b>Viernes</b><span>Piano y barra, más tranquila</span><small>Desde 20:00</small></li>
+        <li><b>Sábado</b><span>Swing con orquesta completa</span><small>Desde 22:30</small></li>
+      </ul>
+      <a class="enlace" href="#reservar">Ver las noches <svg aria-hidden="true"><use href="#flecha"/></svg></a>
     </div>
   </section>
 
-  <section class="ancho seccion" id="reservar" aria-labelledby="reservar-titulo">
-    <div class="cabeza" data-aparece>
-      <p class="rotulo">Reservar</p>
-      <h2 id="reservar-titulo">Tu mesa para esta semana</h2>
-      <p>Guardamos la mesa media hora. Si vienen más, avísanos y la agrandamos.</p>
+  <section class="ancho partido al-reves" id="musica" aria-labelledby="musica-titulo">
+    <figure><img src="/image/bocetos/marfil/trompeta-760.webp" srcset="/image/bocetos/marfil/trompeta-480.webp 480w, /image/bocetos/marfil/trompeta-760.webp 760w" sizes="(min-width: 900px) 42vw, 100vw" width="760" height="950" loading="lazy" alt="La mano de un trompetista sobre las válvulas de su trompeta, en la luz baja del escenario"></figure>
+    <div class="texto" data-aparece>
+      <h2 class="titulo" id="musica-titulo">Música en vivo</h2>
+      <p>Una orquesta de doce, un cuarteto de jazz y un pianista que se sabe todo lo que le pidan. La música empieza cuando se apaga la lámpara grande, y termina con el último baile, a la una y media.</p>
+      <a class="enlace" href="#reservar">Reservar para el sábado <svg aria-hidden="true"><use href="#flecha"/></svg></a>
     </div>
-    <div class="tarjeta" data-aparece>
-      <form data-muestra toolname="reservar_mesa" tooldescription="Reserva una mesa en Bar Marfil, una coctelería y salón de baile inventada por Volutus como boceto de página: la noche, la hora, cuántas personas y a nombre de quién. No envía nada a nadie: responde que es un boceto.">
-        <fieldset class="todo" toolparamdescription="La noche: jueves 12 (jazz), viernes 13 (piano y barra) o sábado 14 (swing)">
-          <legend>La noche</legend>
-          <div class="noches-op">
-            <label class="noche-op"><input type="radio" name="noche" value="jueves 12, jazz"><b>Jue 12</b><span>Jazz</span><small>Cuarteto de la casa</small></label>
-            <label class="noche-op"><input type="radio" name="noche" value="viernes 13, piano y barra"><b>Vie 13</b><span>Piano y barra</span><small>Más tranquila</small></label>
-            <label class="noche-op"><input type="radio" name="noche" value="sábado 14, swing" checked><b>Sáb 14</b><span>Swing</span><small>Orquesta completa</small></label>
-          </div>
-        </fieldset>
-        <fieldset class="todo" toolparamdescription="La hora de llegada: 19:30, 21:00 o 22:30">
-          <legend>La hora</legend>
-          <div class="horas-op">
-            <label class="hora-op"><input type="radio" name="hora" value="19:30">19:30</label>
-            <label class="hora-op"><input type="radio" name="hora" value="21:00" checked>21:00</label>
-            <label class="hora-op"><input type="radio" name="hora" value="22:30">22:30</label>
-          </div>
-        </fieldset>
-        <label>Personas<select name="personas" toolparamdescription="Cuántas personas, de 2 a 8"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label>
-        <label>Ocasión<select name="ocasion" toolparamdescription="Si celebran algo: nada en especial, cumpleaños, aniversario u otra"><option>Ninguna en especial</option><option>Cumpleaños</option><option>Aniversario</option><option>Otra</option></select></label>
-        <label>A nombre de<input name="nombre" autocomplete="name" maxlength="80" required></label>
-        <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
-        <p class="codigo todo">Código de la casa: se viene como uno quiera, con ganas de bailar.</p>
-        <button class="boton lleno todo" type="submit">Pedir la mesa</button>
-      </form>
+  </section>
+
+  <section class="ancho historia" id="historia" aria-labelledby="historia-titulo">
+    <figure data-aparece><img src="/image/bocetos/marfil/ascensor-700.webp" srcset="/image/bocetos/marfil/ascensor-440.webp 440w, /image/bocetos/marfil/ascensor-700.webp 700w" sizes="(min-width: 900px) 44vw, 100vw" width="700" height="933" loading="lazy" alt="El vestíbulo del edificio, con su piso de mármol en triángulos y las puertas de madera de los ascensores, en blanco y negro"></figure>
+    <div class="texto" data-aparece>
+      <h2 class="titulo" id="historia-titulo">Una institución porteña</h2>
+      <p>Marfil abrió en 1928 en el último piso de un edificio de oficinas navieras. Se llega en el mismo ascensor de entonces, con su ascensorista. Cerró dos veces, en el 41 y en el 73, y las dos volvió con la misma barra y la misma lámpara.</p>
+      <dl>
+        <div><dt>Abrió</dt><dd>1928</dd></div>
+        <div><dt>Bartenders</dt><dd>6</dd></div>
+        <div><dt>Noches al año</dt><dd>240</dd></div>
+      </dl>
+      <a class="enlace" href="#reservar">Venir a conocerlo <svg aria-hidden="true"><use href="#flecha"/></svg></a>
     </div>
+  </section>
+
+  <section class="ancho reservar" id="reservar" aria-labelledby="reservar-titulo">
+    <div class="texto" data-aparece>
+      <h2 class="titulo" id="reservar-titulo">Reservar</h2>
+      <p class="chico">Guardamos la mesa media hora. Si vienen más, avísanos y la agrandamos.</p>
+      <p class="chico">Subida Concepción 281, piso 6 · reservas@barmarfil.cl</p>
+    </div>
+    <form data-muestra data-aparece toolname="reservar_mesa" tooldescription="Reserva una mesa en Bar Marfil, una coctelería y salón de baile inventada por Volutus como boceto de página: la noche, la hora, cuántas personas y a nombre de quién. No envía nada a nadie: responde que es un boceto.">
+      <fieldset class="todo" toolparamdescription="La noche: jueves 12 (jazz), viernes 13 (piano y barra) o sábado 14 (swing)">
+        <legend>La noche</legend>
+        <div class="noches-op">
+          <label class="noche-op"><input type="radio" name="noche" value="jueves 12, jazz"><b>Jue 12</b><span>Jazz</span><small>Cuarteto de la casa</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="viernes 13, piano y barra"><b>Vie 13</b><span>Piano y barra</span><small>Más tranquila</small></label>
+          <label class="noche-op"><input type="radio" name="noche" value="sábado 14, swing" checked><b>Sáb 14</b><span>Swing</span><small>Orquesta completa</small></label>
+        </div>
+      </fieldset>
+      <fieldset class="todo" toolparamdescription="La hora de llegada: 19:30, 21:00 o 22:30">
+        <legend>La hora</legend>
+        <div class="horas-op">
+          <label class="hora-op"><input type="radio" name="hora" value="19:30">19:30</label>
+          <label class="hora-op"><input type="radio" name="hora" value="21:00" checked>21:00</label>
+          <label class="hora-op"><input type="radio" name="hora" value="22:30">22:30</label>
+        </div>
+      </fieldset>
+      <label>Personas<select name="personas" toolparamdescription="Cuántas personas, de 2 a 8"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label>
+      <label>Ocasión<select name="ocasion" toolparamdescription="Si celebran algo: nada en especial, cumpleaños, aniversario u otra"><option>Ninguna en especial</option><option>Cumpleaños</option><option>Aniversario</option><option>Otra</option></select></label>
+      <label>A nombre de<input name="nombre" autocomplete="name" maxlength="80" required></label>
+      <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
+      <button class="capsula todo" type="submit">Pedir la mesa <svg width="16" height="10" aria-hidden="true"><use href="#flecha"/></svg></button>
+    </form>
   </section>
 </main>
 
 <footer class="pie">
-  <div class="ancho">
-    <div class="pie-sello"><svg viewBox="0 0 68 36" aria-hidden="true"><use href="#abanico-chico"/></svg><p>Marfil</p></div>
-    <dl class="pie-cols">
-      <div><dt>Dónde</dt><dd>Edificio Templeman, segundo piso<br>Templeman 412, Cerro Alegre, Valparaíso</dd></div>
-      <div><dt>Cuándo</dt><dd>Martes a sábado, de 19:00 a 02:00<br>El ascensor sube hasta la 01:00</dd></div>
-      <div><dt>Escríbenos</dt><dd>mesa@barmarfil.cl<br>+56 32 274 1928</dd></div>
-    </dl>
-    <p class="pie-boceto">Boceto de Volutus · marca inventada</p>
+  <div class="ancho pie-envoltura">
+    <div class="pie-fila">
+      <div><a class="logo" href="#inicio" aria-label="Bar Marfil, al inicio"><svg aria-hidden="true"><use href="#sello"/></svg></a></div>
+      <address>Subida Concepción 281, piso 6<br>Cerro Alegre, Valparaíso<br>reservas@barmarfil.cl · +56 32 274 1928</address>
+      <ul><li>Martes a sábado, de 19:00 a 01:30</li><li>Código de la casa: con ganas de bailar</li><li>Boceto de Volutus · marca inventada</li></ul>
+    </div>
+    <ul class="distinciones" aria-label="Distinciones (inventadas)">
+      <li>Bares históricos<small>de Valparaíso</small></li>
+      <li>Cincuenta mejores<small>bares de Chile 2026</small></li>
+      <li>Patrimonio<small>del cerro Alegre</small></li>
+      <li>Guía de coctelería<small>del Pacífico</small></li>
+    </ul>
+    <div class="pie-final"><span>© 2026 Bar Marfil</span><span>Coctelería y salón de baile desde 1928</span></div>
   </div>
 </footer>
+
+<a class="arriba" href="#inicio" aria-label="Volver arriba"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 13V1M2 6l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></a>
 </body>
 </html>

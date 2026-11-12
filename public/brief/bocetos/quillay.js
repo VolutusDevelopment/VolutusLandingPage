@@ -2,8 +2,9 @@
  * La vitrina de Quillay (quillay.html): el jabón elegido, en 3D, con WebGL y
  * sin dependencias. Los tres son distintos: la barra de avena, larga y
  * redondeada, con su sello hundido; el cubo de maqui y arcilla, cortado a
- * mano con cantos vivos, en dos capas con una veta entre ellas, y la pastilla
- * cuadrada del champú, gruesa, color rosa mosqueta, con semillas.
+ * mano con cantos vivos, en dos capas con una veta entre ellas y el sello
+ * arriba, y la pastilla cuadrada del champú, gruesa, color rosa mosqueta,
+ * con semillas.
  *
  * Gira apoyado en una esquina, como un jabón que alguien sostiene por la
  * punta y hace girar: la diagonal casi vertical, la esquina quieta sobre el
@@ -23,7 +24,7 @@
 
 const JABONES = {
   avena: { medio: [1.0, 0.34, 0.62], radio: 0.2, color: [0.93, 0.87, 0.75], color2: [0.93, 0.87, 0.75], capas: 0, puntos: [0.52, 0.38, 0.22], densidad: 0.55, escala: 9, sello: 1, conSello: 1 },
-  maqui: { medio: [0.62, 0.62, 0.62], radio: 0.045, color: [0.5, 0.36, 0.5], color2: [0.62, 0.69, 0.55], capas: 1, puntos: [0.3, 0.22, 0.32], densidad: 0.3, escala: 24, sello: 0.9, conSello: 0 },
+  maqui: { medio: [0.62, 0.62, 0.62], radio: 0.045, color: [0.5, 0.36, 0.5], color2: [0.62, 0.69, 0.55], capas: 1, puntos: [0.3, 0.22, 0.32], densidad: 0.3, escala: 24, sello: 0.8, conSello: 1 },
   champu: { medio: [0.7, 0.3, 0.7], radio: 0.15, color: [0.83, 0.55, 0.4], color2: [0.83, 0.55, 0.4], capas: 0, puntos: [0.42, 0.2, 0.11], densidad: 0.5, escala: 15, sello: 0.6, conSello: 1 },
 }
 

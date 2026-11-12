@@ -8,6 +8,8 @@
 <meta name="description" content="Boceto de página de una marca inventada, Basal Ingeniería, de aislación sísmica y cálculo estructural, para mostrar el estilo Corporativo.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/image/bocetos/basal/base-ancha-1800.webp" media="(min-width: 700px)" imagesrcset="/image/bocetos/basal/base-ancha-1100.webp 1100w, /image/bocetos/basal/base-ancha-1800.webp 1800w" imagesizes="100vw">
+<link rel="preload" as="image" href="/image/bocetos/basal/base-alta-700.webp" media="(max-width: 699px)" imagesrcset="/image/bocetos/basal/base-alta-700.webp 700w, /image/bocetos/basal/base-alta-1000.webp 1000w" imagesizes="100vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <script src="/brief/bocetos/basal.js" type="module"></script>
@@ -22,10 +24,19 @@
    Segunda vuelta, desde Awwwards: la cabecera pegada con el logo que reacciona
    al scroll (como los «sticky header» de Petro.Design o Aqtos) y el indicador
    que sigue la sección activa; del dibujo técnico, la deformada punteada que
-   compara el edificio con y sin aislación. */
+   compara el edificio con y sin aislación.
+   Tercera vuelta, la cabecera, desde Awwwards: Structure Consulting Engineers
+   (structureengineering.com.au, mención de octubre de 2026), un estudio de
+   cálculo estructural de Sídney. Se toma: 1) la tapa como una foto a sangre
+   con el titular blanco abajo a la izquierda y, al pie, los sectores como
+   etiquetas y los últimos proyectos como fichas chicas; 2) el menú en
+   pestañas sueltas, cada una su propia cajita, que quedan fijas al bajar;
+   3) el párrafo que se entinta palabra por palabra con el scroll. La foto es
+   la base de un edificio: columnas de hormigón bajo la losa. */
 @font-face { font-family: 'Manrope'; src: url('/fonts/bocetos/manrope.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
 
 :root {
+  --orilla: clamp(12px, 2vw, 24px);
   --marino: #0f2a44;
   --azul: #1f5fbf;
   --niebla: #eef2f6;
@@ -36,7 +47,7 @@
   --ancho: 1280px;
   --margen: clamp(20px, 4vw, 56px);
   --curva: cubic-bezier(0.65, 0, 0.35, 1);
-  --alto-cabecera: 72px;
+  --alto-cabecera: 84px;
   --arriba: calc(var(--alto-barra, 0px) + var(--alto-cabecera));
 }
 * { box-sizing: border-box; }
@@ -60,33 +71,67 @@ main { counter-reset: seccion; }
 .boton-borde:hover { background: var(--marino); color: var(--blanco); }
 .enlace { font-weight: 700; font-size: 15px; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 
-/* ---- Cabecera: pegada arriba, bajo la barra del boceto ----
+/* ---- Cabecera: pestañas sueltas ----
+   Como en Structure, cada cosa del menú es su propia cajita blanca y quedan
+   fijas arriba, sobre la foto y después sobre la página. Son dos piezas
+   (el logo con el menú a la izquierda y «Conversemos» a la derecha), cada
+   una más angosta que el 90 % del ancho, para que Safari no tiña sus
+   bandas. La sección que se lee se marca con su pestaña en marino.
    El logo es un ensayo en miniatura: al bajar, su línea de suelo se corre con
    la velocidad del scroll y los dos aisladores se inclinan, mientras la losa
    de arriba no se mueve. Al soltar, el suelo vuelve a su sitio frenando
    (basal.js). Al pasar el cursor, se mece una vez y se calma. */
-.cabecera { position: sticky; top: var(--alto-barra, 0px); z-index: 50; background: var(--blanco); border-bottom: 1px solid var(--linea); transition: box-shadow 500ms var(--curva); }
-.cabecera.pegada { box-shadow: 0 10px 30px -22px rgb(15 42 68 / 0.45); }
-.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--alto-cabecera); }
-.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-size: 19px; letter-spacing: -0.01em; }
+.cabecera-izq, .pestana-contacto { position: fixed; z-index: 50; top: calc(var(--alto-barra, 0px) + 16px); }
+.cabecera-izq { left: var(--orilla); display: flex; align-items: flex-start; gap: 6px; }
+.pestana-contacto { right: var(--orilla); }
+.cabecera nav ul { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.pestana, .cabecera nav a, .logo { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 2px; background: rgb(255 255 255 / 0.94); color: var(--marino); text-decoration: none; transition: background-color 450ms var(--curva), color 450ms var(--curva), box-shadow 500ms var(--curva); }
+.cabecera nav a, .pestana { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.cabecera nav a:hover { background: var(--niebla); }
+.cabecera nav a[aria-current] { background: var(--marino); color: var(--blanco); }
+.pestana-contacto { background: var(--azul); color: var(--blanco); }
+.pestana-contacto:hover { background: var(--marino); }
+.cabecera.pegada :is(.logo, nav a, .pestana) { box-shadow: 0 8px 22px -14px rgb(15 42 68 / 0.55); }
+.logo { gap: 10px; min-height: 52px; padding: 0 16px 0 14px; font-size: 18px; letter-spacing: -0.01em; }
 .logo svg { width: 34px; height: 26px; flex: none; }
 .logo b { font-weight: 800; }
 .logo span span { font-weight: 400; color: var(--acero); }
-.cabecera nav ul { position: relative; display: flex; gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 15px; font-weight: 600; }
-.cabecera nav a { display: block; padding-block: 8px; text-decoration: none; color: var(--acero); transition: color 400ms var(--curva); }
-.cabecera nav a:hover, .cabecera nav a[aria-current] { color: var(--marino); }
-.cabecera nav ul::after { content: ''; position: absolute; left: 0; bottom: 0; width: var(--ancho-marca, 0px); height: 2px; background: var(--azul); translate: var(--x-marca, 0px) 0; opacity: var(--ve-marca, 0); transition: translate 600ms var(--curva), width 600ms var(--curva), opacity 400ms var(--curva); }
 .logo-vivo svg { overflow: visible; }
 .logo-suelo { translate: calc(var(--suelo, 0) * 1px) 0; }
 .logo-aislador { transform-box: fill-box; transform-origin: 50% 0; transform: skewX(calc(var(--inclina, 0) * 1deg)); }
 @keyframes basal-logo-suelo { 0%, 100% { translate: 0 0; } 15% { translate: 2.4px 0; } 35% { translate: -1.6px 0; } 55% { translate: 0.9px 0; } 75% { translate: -0.4px 0; } }
 @keyframes basal-logo-aislador { 0%, 100% { transform: skewX(0deg); } 15% { transform: skewX(16.7deg); } 35% { transform: skewX(-11.3deg); } 55% { transform: skewX(6.4deg); } 75% { transform: skewX(-2.9deg); } }
 
+/* ---- La tapa: la base de un edificio, a sangre ----
+   El titular va abajo a la izquierda, sobre un velo marino que sube desde
+   el pie. Debajo, separados por una raya, los sectores como etiquetas y los
+   tres últimos proyectos como fichas chicas que llevan a cada uno. */
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tapa { position: relative; isolation: isolate; display: grid; align-content: end; min-height: max(620px, 100svh); padding-block: calc(var(--alto-cabecera) + 48px) clamp(24px, 3.5vw, 44px); color: var(--blanco); overflow: clip; }
+.tapa-foto { position: absolute; inset: 0; z-index: -2; }
+.tapa-foto img { width: 100%; height: 100%; object-fit: cover; }
+.tapa::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(15 42 68 / 0.3) 0%, rgb(15 42 68 / 0.12) 20%, rgb(15 42 68 / 0.5) 40%, rgb(15 42 68 / 0.76) 70%, rgb(15 42 68 / 0.92) 100%); }
+.tapa .rotulo { color: #b9d2f5; }
+.tapa h1 { max-width: 15ch; margin-top: 16px; font-size: clamp(42px, 6vw, 92px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
+.tapa-pie { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 24px clamp(24px, 4vw, 64px); margin-top: clamp(40px, 6svh, 72px); padding-top: 18px; border-top: 1px solid rgb(255 255 255 / 0.4); }
+.tapa-rotulo { margin-bottom: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255 255 255 / 0.78); }
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.etiquetas a { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border: 1px solid rgb(255 255 255 / 0.7); border-radius: 2px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: background-color 450ms var(--curva), color 450ms var(--curva); }
+.etiquetas a:hover { background: var(--blanco); color: var(--marino); }
+.ultimos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ultimos a { display: grid; grid-template-columns: 38% minmax(0, 1fr); align-items: stretch; height: 100%; background: var(--blanco); color: var(--marino); text-decoration: none; border-radius: 2px; overflow: hidden; }
+.ultimos img { width: 100%; height: 100%; min-height: 84px; object-fit: cover; transition: scale 700ms var(--curva); }
+.ultimos span { display: grid; align-content: space-between; gap: 10px; padding: 10px 12px; font-size: 15px; font-weight: 700; line-height: 1.25; }
+.ultimos small { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--azul); }
+.ultimos a:hover img { scale: 1.06; }
+
+/* ---- El dicho: se entinta palabra por palabra al bajar ---- */
+.dicho { font-size: clamp(26px, 2.6vw, 38px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+.dicho span { color: var(--marino); }
+
 /* ---- Portada y ensayo: el corte queda quieto a la derecha ---- */
 .bloque { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(32px, 5vw, 80px); }
 .portada { display: grid; align-content: center; gap: 26px; min-height: calc(100svh - 160px); padding-block: 56px; }
-.portada h1 { font-size: clamp(38px, 4vw, 58px); }
-.portada p.suave { max-width: 40ch; font-size: 19px; }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
 .pasos-ensayo { display: grid; }
 .paso-ensayo { display: grid; align-content: center; gap: 18px; min-height: 80svh; max-width: 30rem; }
@@ -188,8 +233,11 @@ main { counter-reset: seccion; }
 .pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #2c4864; font-size: 14px; }
 
 /* ---- M ---- */
-@media (max-width: 899px) {
+@media (max-width: 1099px) {
   .cabecera nav { display: none; }
+  .tapa-pie { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 899px) {
   .bloque { grid-template-columns: minmax(0, 1fr); }
   .portada { min-height: 0; padding-block: 48px 32px; }
   .escena-col { grid-column: 1; grid-row: 2; }
@@ -205,9 +253,13 @@ main { counter-reset: seccion; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
-  :root { --alto-cabecera: 64px; }
-  .logo { font-size: 17px; }
-  .cabecera .boton { min-height: 44px; padding: 0 14px; font-size: 14px; }
+  :root { --alto-cabecera: 68px; }
+  .logo { min-height: 44px; font-size: 16px; }
+  .logo span span { display: none; }
+  .pestana { min-height: 44px; }
+  .ultimos { grid-template-columns: minmax(0, 1fr); }
+  .ultimos a { grid-template-columns: 96px minmax(0, 1fr); }
+  .ultimos img { min-height: 64px; }
   .corte .nota { display: none; }
   .ficha div { grid-template-columns: 7.5rem minmax(0, 1fr); }
   .formulario { grid-template-columns: minmax(0, 1fr); }
@@ -236,11 +288,25 @@ main { counter-reset: seccion; }
 @keyframes basal-crece { from { scale: 0 1; } }
 .aislador { transform-box: fill-box; transform-origin: 50% 0; }
 .traza path { stroke-dasharray: 1; }
+@keyframes basal-tapa { from { scale: 1.08; } }
+@keyframes basal-baja { to { translate: 0 10%; } }
+@keyframes basal-entinta { from { color: #b4c0cd; } }
 @media (prefers-reduced-motion: no-preference) {
-  .portada > * { animation: basal-sube 1100ms var(--curva) both; }
-  .portada > :nth-child(2) { animation-delay: 120ms; }
-  .portada > :nth-child(3) { animation-delay: 240ms; }
-  .portada > :nth-child(4) { animation-delay: 360ms; }
+  .tapa-foto img { animation: basal-tapa 2600ms var(--curva) both; }
+  .tapa-texto > * { animation: basal-sube 1200ms var(--curva) both; }
+  .tapa-texto > :nth-child(2) { animation-delay: 140ms; }
+  .tapa-texto > :nth-child(3) { animation-delay: 420ms; }
+  .cabecera :is(.logo, li, .pestana) { animation: basal-sube 1000ms var(--curva) both; }
+  .cabecera li:nth-child(1) { animation-delay: 80ms; }
+  .cabecera li:nth-child(2) { animation-delay: 140ms; }
+  .cabecera li:nth-child(3) { animation-delay: 200ms; }
+  .cabecera li:nth-child(4) { animation-delay: 260ms; }
+  .cabecera .pestana { animation-delay: 320ms; }
+  @supports (animation-timeline: view()) {
+    .tapa-foto { animation: basal-baja var(--curva) both; animation-timeline: view(); animation-range: exit; }
+    .dicho { view-timeline: --dicho block; }
+    .dicho span { animation: basal-entinta var(--curva) both; animation-timeline: --dicho; animation-range: cover calc(18% + var(--i) * 1.4%) cover calc(24% + var(--i) * 1.4%); }
+  }
   .con-js .lectura { display: flex; }
   .logo-vivo:hover .logo-suelo { animation: basal-logo-suelo 1600ms var(--curva); }
   .logo-vivo:hover .logo-aislador > * { transform-box: fill-box; transform-origin: 50% 0; animation: basal-logo-aislador 1600ms var(--curva); }
@@ -261,7 +327,7 @@ main { counter-reset: seccion; }
 </svg>
 
 <header class="cabecera">
-  <div class="ancho cabecera-fila">
+  <div class="cabecera-izq">
     <a class="logo logo-vivo" href="#inicio">
       <svg viewBox="0 0 34 26" aria-hidden="true">
         <rect x="1" y="3" width="32" height="4" rx="1" fill="currentColor"/>
@@ -272,18 +338,41 @@ main { counter-reset: seccion; }
       <span><b>Basal</b> <span>Ingeniería</span></span>
     </a>
     <nav aria-label="Secciones"><ul><li><a href="#ensayo">El ensayo</a></li><li><a href="#proyectos">Proyectos</a></li><li><a href="#metodo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></nav>
-    <a class="boton boton-borde" href="#contacto">Conversemos</a>
   </div>
+  <a class="pestana pestana-contacto" href="#contacto">Conversemos</a>
 </header>
 
 <main>
-  <div class="ancho bloque" id="inicio">
-    <section class="portada" aria-labelledby="titulo">
-      <p class="rotulo">Aislación sísmica y cálculo estructural</p>
+  <section class="tapa" id="inicio" aria-labelledby="titulo">
+    <picture class="tapa-foto">
+      <source media="(max-width: 699px)" srcset="/image/bocetos/basal/base-alta-700.webp 700w, /image/bocetos/basal/base-alta-1000.webp 1000w" sizes="100vw" width="1000" height="1250">
+      <img src="/image/bocetos/basal/base-ancha-1800.webp" srcset="/image/bocetos/basal/base-ancha-1100.webp 1100w, /image/bocetos/basal/base-ancha-1800.webp 1800w" sizes="100vw" width="1800" height="1013" alt="Columnas de hormigón con capiteles anchos bajo la losa de un edificio, en un subterráneo iluminado de lado" fetchpriority="high">
+    </picture>
+    <div class="ancho tapa-texto">
+      <p class="rotulo">Aislación sísmica y cálculo estructural · Las Condes, desde 1998</p>
       <h1 id="titulo">Edificios que siguen funcionando al día siguiente del terremoto</h1>
-      <p class="suave">Calculamos hospitales, edificios y puentes que se apoyan sobre aisladores. Cuando el suelo se mueve, ellos absorben el movimiento y la estructura queda casi quieta.</p>
+      <div class="tapa-pie">
+        <div>
+          <p class="tapa-rotulo">Sectores</p>
+          <ul class="etiquetas"><li><a href="#p-salud">Salud</a></li><li><a href="#p-vivienda">Vivienda</a></li><li><a href="#p-infraestructura">Infraestructura</a></li></ul>
+        </div>
+        <div>
+          <p class="tapa-rotulo">Últimos proyectos</p>
+          <ul class="ultimos">
+            <li><a href="#p-salud"><img src="/image/bocetos/basal/hospital-700.webp" width="700" height="467" alt="" fetchpriority="low"><span><small>Salud · 2024</small>Hospital del Pacífico</span></a></li>
+            <li><a href="#p-vivienda"><img src="/image/bocetos/basal/obra-700.webp" width="700" height="467" alt="" fetchpriority="low"><span><small>Vivienda · 2023</small>Edificio Parque Antumapu</span></a></li>
+            <li><a href="#p-infraestructura"><img src="/image/bocetos/basal/puente-700.webp" width="700" height="467" alt="" fetchpriority="low"><span><small>Infraestructura · 2025</small>Puente Seno Reloncaví</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ancho bloque">
+    <div class="portada">
+      <p class="dicho"><span class="oculto">Calculamos hospitales, edificios y puentes que se apoyan sobre aisladores. Cuando el suelo se mueve, ellos absorben el movimiento y la estructura queda casi quieta.</span><span aria-hidden="true"><span style="--i: 0">Calculamos</span> <span style="--i: 1">hospitales,</span> <span style="--i: 2">edificios</span> <span style="--i: 3">y</span> <span style="--i: 4">puentes</span> <span style="--i: 5">que</span> <span style="--i: 6">se</span> <span style="--i: 7">apoyan</span> <span style="--i: 8">sobre</span> <span style="--i: 9">aisladores.</span> <span style="--i: 10">Cuando</span> <span style="--i: 11">el</span> <span style="--i: 12">suelo</span> <span style="--i: 13">se</span> <span style="--i: 14">mueve,</span> <span style="--i: 15">ellos</span> <span style="--i: 16">absorben</span> <span style="--i: 17">el</span> <span style="--i: 18">movimiento</span> <span style="--i: 19">y</span> <span style="--i: 20">la</span> <span style="--i: 21">estructura</span> <span style="--i: 22">queda</span> <span style="--i: 23">casi</span> <span style="--i: 24">quieta.</span></span></p>
       <div class="acciones"><a class="boton boton-lleno" href="#contacto">Pedir una evaluación</a><a class="enlace" href="#ensayo">Ver el ensayo</a></div>
-    </section>
+    </div>
 
     <div class="escena-col">
       <div class="escena" data-aparece>
@@ -354,7 +443,7 @@ main { counter-reset: seccion; }
         <p class="suave">Desde 1998 hemos aislado 214 estructuras en Chile, Perú y Colombia. Estos son tres de los últimos, con sus datos.</p>
       </div>
 
-      <article class="proyecto">
+      <article class="proyecto" id="p-salud">
         <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/hospital-1200.webp" srcset="/image/bocetos/basal/hospital-700.webp 700w, /image/bocetos/basal/hospital-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio hospitalario moderno de vidrio, con una entrada curva bajo el cielo azul"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Salud</p>
@@ -369,7 +458,7 @@ main { counter-reset: seccion; }
         </div>
       </article>
 
-      <article class="proyecto">
+      <article class="proyecto" id="p-vivienda">
         <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/obra-1200.webp" srcset="/image/bocetos/basal/obra-700.webp 700w, /image/bocetos/basal/obra-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un edificio en obra gruesa junto a una grúa torre, contra un cielo con nubes"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Vivienda</p>
@@ -384,7 +473,7 @@ main { counter-reset: seccion; }
         </div>
       </article>
 
-      <article class="proyecto">
+      <article class="proyecto" id="p-infraestructura">
         <figure class="foto revela" data-aparece><img data-sigue src="/image/bocetos/basal/puente-1200.webp" srcset="/image/bocetos/basal/puente-700.webp 700w, /image/bocetos/basal/puente-1200.webp 1200w" sizes="(min-width: 1280px) 680px, (min-width: 900px) 55vw, 100vw" width="1200" height="800" loading="lazy" alt="Un puente atirantado de varias torres que cruza el mar, con cerros al fondo"></figure>
         <div class="proyecto-texto">
           <p class="rotulo" data-aparece>Infraestructura</p>

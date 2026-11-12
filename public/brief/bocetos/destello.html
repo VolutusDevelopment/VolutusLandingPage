@@ -65,7 +65,7 @@ p { margin: 0; }
 .seccion { padding-block: clamp(80px, 10vw, 140px); }
 .titulo { font-size: clamp(32px, 4.8vw, 66px); text-transform: uppercase; }
 .bajada { max-width: 40ch; margin-top: 18px; color: var(--gris); }
-.cromo { color: var(--tinta); background: var(--cromo) 0 0 / 100% 220%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px var(--tinta); }
+.cromo { color: var(--tinta); background: var(--cromo) 0 0 / 100% 220%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(1px 0 0 var(--tinta)) drop-shadow(-1px 0 0 var(--tinta)) drop-shadow(0 1px 0 var(--tinta)) drop-shadow(0 -1px 0 var(--tinta)); }
 .boton { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 28px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--tinta); color: var(--lila); font: 700 17px/1 'Figtree', sans-serif; text-decoration: none; cursor: pointer; transition: background-color 400ms var(--curva), color 400ms var(--curva); }
 .boton:hover { background: var(--rosa); color: var(--tinta); }
 .enlace { font-weight: 700; text-underline-offset: 6px; text-decoration-thickness: 2px; text-decoration-color: var(--fecha); }

@@ -10,6 +10,7 @@
 <link rel="preload" href="/fonts/bocetos/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
+<script src="/brief/bocetos/rumbo.js" type="module"></script>
 <style>
 /* Rumbo · suizo / gráfico. Inspiración: Mijksenaar (mijksenaar.com), del
    mismo rubro, y de Awwwards la composición tipográfica de GS Project y la
@@ -20,7 +21,10 @@
    el letrero se mece, el pictograma se invierte. La idea propia: la página
    es un edificio señalizado. Arriba cuelga un letrero de verdad; al medio,
    un plano donde uno elige adónde va y la ruta se dibuja con sus letreros;
-   el pie es el letrero de salida. */
+   el pie es el letrero de salida. Y la página se señaliza a sí misma: al
+   dejar la portada aparece el letrero que sigue, colgado en una esquina,
+   con cada sección y su flecha; las flechas giran según quede arriba o
+   abajo, y la sección en que uno está se marca en rojo, «Estás aquí». */
 @font-face { font-family: 'Archivo'; src: url('/fonts/bocetos/archivo.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
 
 :root {
@@ -73,6 +77,43 @@ p { margin: 0; }
 .directorio .flecha { width: 15px; height: 15px; rotate: 90deg; }
 .directorio a:hover { background: var(--rojo); }
 .directorio a:hover .flecha { rotate: 0deg; translate: 3px 0; }
+
+/* ---- El letrero que sigue (rumbo.js) ----
+   Cuelga de dos cables en la esquina de abajo. Cada fila es una sección:
+   su flecha apunta hacia arriba o hacia abajo según dónde quede, y la de
+   la sección que se lee se vuelve roja y dice «Estás aquí». En teléfonos
+   mide menos del 90 % del ancho, para que Safari no tiña su barra. Sin
+   JavaScript no está. */
+.sigue { display: none; }
+html.con-js .sigue { display: block; position: fixed; z-index: 20; right: clamp(16px, 2.5vw, 32px); bottom: clamp(16px, 2.5vw, 32px); width: 17.5rem; opacity: 0; visibility: hidden; translate: 0 24px; transition: opacity 600ms var(--curva), translate 600ms var(--curva), visibility 0s 600ms; }
+html.con-js .sigue.a-la-vista { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.sigue::before, .sigue::after { content: ''; position: absolute; bottom: 100%; width: 2px; height: 18px; background: var(--negro); }
+.sigue::before { left: 22%; }
+.sigue::after { right: 22%; }
+.sigue ol { margin: 0; padding: 0; list-style: none; background: var(--negro); color: var(--blanco); box-shadow: 0 18px 40px -18px rgb(17 17 17 / 0.55); }
+.sigue a { display: grid; grid-template-columns: 22px minmax(0, 1fr) 18px; align-items: center; gap: 12px; min-height: 48px; padding: 6px 16px; font-size: 16px; font-weight: 700; text-decoration: none; transition: background-color 450ms var(--curva); }
+.sigue li + li a { border-top: 1px solid rgb(255 255 255 / 0.14); }
+.sigue a > span { display: grid; place-items: center; width: 22px; height: 22px; background: var(--blanco); color: var(--negro); font-size: 12px; font-variant-numeric: tabular-nums; }
+.sigue small { display: block; height: 0; overflow: hidden; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transition: opacity 450ms var(--curva), height 450ms var(--curva); }
+.sigue .flecha { width: 18px; height: 18px; rotate: 90deg; }
+.sigue [data-hacia='arriba'] .flecha { rotate: -90deg; }
+.sigue [data-hacia='aqui'] { background: var(--rojo); }
+.sigue [data-hacia='aqui'] small { height: 1.3em; opacity: 1; }
+.sigue [data-hacia='aqui'] .flecha { rotate: 0deg; scale: 0.4; opacity: 0; }
+.sigue .flecha { transition: rotate 600ms var(--curva), translate 450ms var(--curva), scale 450ms var(--curva), opacity 450ms var(--curva); }
+.sigue a:not([data-hacia='aqui']):hover { background: #2b2b2b; }
+.sigue [data-hacia='abajo']:hover .flecha { translate: 0 3px; }
+.sigue [data-hacia='arriba']:hover .flecha { translate: 0 -3px; }
+/* Plegado muestra solo dónde estás y adónde sigue, para tapar poco. Con el
+   cursor encima (o al recorrerlo con el teclado) se despliega entero. */
+.sigue li { display: none; }
+.sigue li:has(> [data-hacia='aqui']), .sigue li:has(> [data-hacia='aqui']) + li, .sigue:focus-within li { display: block; }
+.sigue li:has(> [data-hacia='aqui']) + li a { border-top: 0; }
+.sigue:focus-within li + li a { border-top: 1px solid rgb(255 255 255 / 0.14); }
+@media (hover: hover) {
+  .sigue:hover li { display: block; }
+  .sigue:hover li + li a { border-top: 1px solid rgb(255 255 255 / 0.14); }
+}
 
 /* ---- Portada: el letrero colgado ---- */
 .portada { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px clamp(32px, 4vw, 64px); align-items: center; padding-block: clamp(56px, 8vw, 112px) clamp(48px, 6vw, 88px); }
@@ -264,6 +305,8 @@ p { margin: 0; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
+  html.con-js .sigue { right: auto; left: 50%; width: min(20rem, calc(100% - 64px)); translate: -50% 24px; }
+  html.con-js .sigue.a-la-vista { translate: -50% 0; }
   .directorio { width: 100%; }
   .directorio li { flex: 1 1 33%; }
   .directorio a { min-height: 50px; padding: 0 12px; font-size: 14px; }
@@ -308,7 +351,7 @@ p { margin: 0; }
   .salida:hover .brazo-b { rotate: 28deg; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .camino { transition: none; }
+  .camino, html.con-js .sigue, .sigue a, .sigue small, .sigue .flecha { transition: none; }
 }
 </style>
 </head>
@@ -341,6 +384,16 @@ p { margin: 0; }
     </ul></nav>
   </div>
 </header>
+
+<nav class="sigue" aria-label="Letrero de la página: dónde estás y adónde ir">
+  <ol>
+    <li><a href="#ruta" data-hacia="abajo"><span>1</span><b>Pruébalo<small>Estás aquí</small></b><svg class="flecha" aria-hidden="true"><use href="#flecha"/></svg></a></li>
+    <li><a href="#piezas" data-hacia="abajo"><span>2</span><b>Qué hacemos<small>Estás aquí</small></b><svg class="flecha" aria-hidden="true"><use href="#flecha"/></svg></a></li>
+    <li><a href="#proyectos" data-hacia="abajo"><span>3</span><b>Proyectos<small>Estás aquí</small></b><svg class="flecha" aria-hidden="true"><use href="#flecha"/></svg></a></li>
+    <li><a href="#metodo" data-hacia="abajo"><span>4</span><b>Método<small>Estás aquí</small></b><svg class="flecha" aria-hidden="true"><use href="#flecha"/></svg></a></li>
+    <li><a href="#contacto" data-hacia="abajo"><span>5</span><b>Cotizar<small>Estás aquí</small></b><svg class="flecha" aria-hidden="true"><use href="#flecha"/></svg></a></li>
+  </ol>
+</nav>
 
 <main>
   <section class="ancho portada grilla" id="inicio" aria-labelledby="titulo">

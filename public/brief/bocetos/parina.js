@@ -101,10 +101,10 @@ const RUTAS = {
   },
 }
 const NOMBRES = [
-  [-0.84, -0.06, 'Putre · el lodge', 'lodge'],
+  [-0.84, -0.06, 'Putre · el lodge', 'casa'],
   [0.6, -0.4, 'Parinacota · 6.348 m', 'cima'],
   [0.82, -0.68, 'Pomerape · 6.282 m', 'cima'],
-  [0.5, 0.06, 'Lago Chungará', 'agua'],
+  [0.6, 0.12, 'Lago Chungará', 'agua'],
   [0.04, 0.42, 'Choquelimpie', ''],
   [0.56, 0.8, 'Salar de Surire', 'agua'],
 ]
@@ -324,9 +324,11 @@ function montar() {
   const nombres = NOMBRES.map(([x, z, texto, clase]) => ({ en: punto3d([x, z], 0.02), span: etiqueta(texto, `mapa-nombre ${clase}`) }))
   let paradas = []
 
-  // La cámara: gira alrededor de su centro y viaja entre encuadres.
+  // La cámara: gira alrededor de su centro y viaja entre encuadres. Va baja,
+  // como quien está parado en el altiplano: mira al horizonte, con la ruta
+  // en la mitad de abajo y los volcanes recortados contra el cielo.
   const ENCUADRE = { centro: [0.06, 0.1, 0.08], distancia: 3.6 }
-  const camara = { giro: 0.5, inclinacion: 0.92, centro: [...ENCUADRE.centro], distancia: ENCUADRE.distancia }
+  const camara = { giro: 0.5, inclinacion: 0.36, centro: [...ENCUADRE.centro], distancia: ENCUADRE.distancia }
   let viaje = null
   let elegida = null
   let matriz = null
@@ -386,8 +388,12 @@ function montar() {
       centro[2] + distancia * Math.cos(inclinacion) * Math.cos(giro),
     ]
     const aspecto = ancho / altoLienzo
-    const fov = aspecto < 1 ? 0.78 : 0.56
-    matriz = multiplicar(perspectiva(fov, aspecto, 0.1, 20), mirar(ojo, centro))
+    // Mira un poco más allá de la ruta, para que quede abajo y el horizonte
+    // suba en el cuadro.
+    const adelante = distancia * 0.3
+    const objetivo = [centro[0] - Math.sin(giro) * adelante, centro[1], centro[2] - Math.cos(giro) * adelante]
+    const fov = aspecto < 1.2 ? 0.78 : 0.56
+    matriz = multiplicar(perspectiva(fov, aspecto, 0.05, 20), mirar(ojo, objetivo))
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     gl.uniformMatrix4fv(uMatriz, false, matriz)
     gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_INT, 0)

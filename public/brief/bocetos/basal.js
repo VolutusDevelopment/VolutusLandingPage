@@ -194,9 +194,8 @@ if (!quieto) {
 
 // ---- La sección que se está leyendo ----
 // Una franja fina a media pantalla: la sección que la cruza se marca en el
-// menú, y la raya azul de abajo se corre hasta ella.
-const lista = cabecera.querySelector('nav ul')
-const enlaces = [...lista.querySelectorAll('a')]
+// menú, con su pestaña en marino.
+const enlaces = [...cabecera.querySelectorAll('nav a')]
 const secciones = enlaces.map((enlace) => document.querySelector(enlace.hash))
 const cruzan = new Set()
 function marcar() {
@@ -205,10 +204,6 @@ function marcar() {
     if (enlace === actual) enlace.setAttribute('aria-current', 'location')
     else enlace.removeAttribute('aria-current')
   }
-  lista.style.setProperty('--ve-marca', actual ? 1 : 0)
-  if (!actual) return
-  lista.style.setProperty('--x-marca', `${actual.offsetLeft}px`)
-  lista.style.setProperty('--ancho-marca', `${actual.offsetWidth}px`)
 }
 const vigia = new IntersectionObserver(
   (entradas) => {

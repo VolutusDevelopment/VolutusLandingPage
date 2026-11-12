@@ -196,6 +196,31 @@ tbody tr:last-child > * { border-bottom: 0; }
   caption { padding: 14px 12px 0; }
 }
 
+/* ---- La vista borrosa ----
+   Mientras se lee la portada, el borde de abajo de la pantalla se ve
+   desenfocado, como las últimas filas de la tabla para quien necesita
+   lentes. Son tres capas de desenfoque, cada una más fuerte y más abajo, para
+   que pase de nítido a borroso sin un corte. Al llegar al equipo se aclara:
+   donde el navegador ata animaciones al scroll, con él (y vuelve al subir);
+   en Safari 18, cuando el equipo se ve (barra.js le pone `visto`). Mide 88 %
+   del ancho, para que Safari no tiña con ella su barra de abajo, y fuera de
+   la columna solo hay fondo liso, así que no se nota el borde. Con el
+   movimiento reducido o sin JavaScript no está. */
+.vista-borrosa { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  html.con-js .vista-borrosa { display: block; position: fixed; z-index: 3; bottom: 0; left: 6vw; right: 6vw; height: 42svh; pointer-events: none; }
+  .vista-borrosa i { position: absolute; inset: 0; transition: opacity 1000ms var(--curva), visibility 0s 1000ms; }
+  .vista-borrosa i:nth-child(1) { -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); -webkit-mask-image: linear-gradient(transparent, #000 40%); mask-image: linear-gradient(transparent, #000 40%); }
+  .vista-borrosa i:nth-child(2) { -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); -webkit-mask-image: linear-gradient(transparent 30%, #000 70%); mask-image: linear-gradient(transparent 30%, #000 70%); }
+  .vista-borrosa i:nth-child(3) { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); -webkit-mask-image: linear-gradient(transparent 60%, #000 95%); mask-image: linear-gradient(transparent 60%, #000 95%); }
+  body:has(#equipo .cabeza.visto) .vista-borrosa i { opacity: 0; visibility: hidden; }
+  @supports (animation-timeline: view()) {
+    .portada { view-timeline: --portada block; }
+    .vista-borrosa i { transition: none; animation: iris-despeja var(--curva) both; animation-timeline: --portada; animation-range: exit 0% exit 45%; }
+  }
+}
+@keyframes iris-despeja { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
+
 /* ---- Movimiento: el enfoque ----
    Al cargar, las filas de la tabla de la portada parten desenfocadas y se
    enfocan una tras otra, de la letra más grande a la más chica. Al bajar,
@@ -257,6 +282,7 @@ tbody tr:last-child > * { border-bottom: 0; }
       </ol>
       <p class="disponible"><i aria-hidden="true"></i>Próxima hora disponible: mañana a las 10:30</p>
     </div>
+    <div class="vista-borrosa" aria-hidden="true"><i></i><i></i><i></i></div>
   </section>
 
   <section class="ancho seccion" id="equipo" aria-labelledby="equipo-titulo">

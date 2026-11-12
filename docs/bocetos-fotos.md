@@ -97,8 +97,9 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
+| bosque (video de la apertura y su foto quieta) | https://mixkit.co/free-stock-video/raining-in-a-cloud-forest-full-of-tall-trees-22728/ |
+| lago (video y su foto quieta) | https://mixkit.co/free-stock-video/mysterious-forest-with-a-lake-and-mist-34841/ |
 | portada-ancho | https://images.unsplash.com/photo-1644413638617-02369c89c156 |
-| portada-alto | https://images.unsplash.com/photo-1644413638617-02369c89c156 |
 | lavarse | https://images.unsplash.com/photo-1706017597480-24b0a4d9a943 |
 | entrar | https://images.unsplash.com/photo-1783094724116-ff5f8362a581 |
 | reposar | https://images.unsplash.com/photo-1510453091749-fcd4158d4aa6 |
@@ -108,11 +109,17 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | pozon-volcan | https://images.unsplash.com/photo-1578602857088-a6bca7b09710 |
 | habitacion | https://images.unsplash.com/photo-1757852823730-8bf5b66af780 |
 | cena | https://images.unsplash.com/photo-1587560555570-4d3f84dcee05 |
+| tejuela-gris | https://images.unsplash.com/photo-1762625906621-cc5d0bb9ace9 |
+| tejuela-roja | https://images.unsplash.com/photo-1782246619654-b79e9618aa9e |
+| piedra | https://images.unsplash.com/photo-1770027503111-8bf65be44d76 |
+| musgo | https://images.unsplash.com/photo-1790342063140-0a0ebb20c333 |
+| basalto | https://images.unsplash.com/photo-1767099579544-64b6b4af4ac6 |
 
 ## basal
 
 | Archivo | Foto original |
 | --- | --- |
+| base-ancha, base-alta | https://images.unsplash.com/photo-1760775850386-0397a527d9bc |
 | obra | https://images.unsplash.com/photo-1644221150186-5d785a471f44 |
 | hospital | https://images.unsplash.com/photo-1764885517847-79d62138cc58 |
 | puente | https://images.unsplash.com/photo-1494867121604-060b20cba39c |
@@ -123,7 +130,7 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
-| portada-ancha, portada-alta | https://images.unsplash.com/photo-1764438631347-af1911339a25 |
+| portada-ancha, portada-alta | https://images.unsplash.com/photo-1633466858898-a51e5fa02c91 |
 | retrato | https://images.unsplash.com/photo-1771086061785-ac187f1969ad |
 | invierno-ancha, invierno-alta | https://images.unsplash.com/photo-1706364057629-c22c600863d4 |
 | primavera | https://images.unsplash.com/photo-1618100789816-86508e3f2275 |
@@ -258,13 +265,16 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
-| barra (video de la portada y su foto quieta) | https://mixkit.co/free-stock-video/bartender-decorating-drink-glasses-15171/ |
+| salon | https://images.unsplash.com/photo-1779219505918-970ca739ac78 |
+| escalera | https://images.unsplash.com/photo-1575424656092-61c627c96aff |
+| cupula | https://images.unsplash.com/photo-1775830532678-a49291c5c02e |
+| copa-verde | https://images.unsplash.com/photo-1615887023516-9b6bcd559e87 |
+| copa-marmol | https://images.unsplash.com/photo-1671713682274-7ca1f2b81e00 |
 | colador | https://images.unsplash.com/photo-1779635593390-8b478382885f |
 | ascensor | https://images.unsplash.com/photo-1563219125-1db796e20ff2 |
 | lampara | https://images.unsplash.com/photo-1561047699-d4d557d7489c |
 | trompeta | https://images.unsplash.com/photo-1511192336575-5a79af67a629 |
 | baile | https://images.unsplash.com/photo-1758810409996-583f3bad7d51 |
-| salon | https://images.unsplash.com/photo-1779219505918-970ca739ac78 |
 
 ## libar
 
@@ -278,15 +288,14 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
-| portada | https://images.unsplash.com/photo-1561811565-6ed172b54cbe |
-| bmw | https://images.unsplash.com/photo-1568708167243-438efa1d7697 |
-| antes | https://images.unsplash.com/photo-1612881076138-d29be91ef8a7 |
-| despues | https://images.unsplash.com/photo-1648300117829-d9e207740785 |
-| triumph | https://images.unsplash.com/photo-1720722594991-35138eebe81a |
-| honda | https://images.unsplash.com/photo-1527537232679-89f0d63ea3f7 |
-| herramientas | https://images.unsplash.com/photo-1549636367-13c144c47063 |
-| mecanico | https://images.unsplash.com/photo-1517524206127-48bbd363f3d7 |
-| aceite (video y su foto quieta) | https://mixkit.co/free-stock-video/mechanic-pouring-oil-into-an-engine-41937/ |
+| rack-ancho, rack-alto | https://images.unsplash.com/photo-1544858635-7b82a2079314 |
+| esmeril | https://images.unsplash.com/photo-1615990860014-99e51245218c |
+| correa | https://images.unsplash.com/photo-1651672397008-01d088f4a9f6 |
+| planta-noche | https://images.unsplash.com/photo-1524037755327-dc2def03712a |
+| soldadura | https://images.unsplash.com/photo-1738162837389-3b02d6dd507b |
+| estructura | https://images.unsplash.com/photo-1608126842270-59250519e99f |
+| castillo | https://images.unsplash.com/photo-1642658475391-b5bc1332888e |
+| planta (video de la cita y su foto quieta) | https://mixkit.co/free-stock-video/workers-welding-heavy-metal-in-a-factory-47755/ |
 
 ## parina
 

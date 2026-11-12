@@ -8,220 +8,311 @@
 <meta name="description" content="Boceto de página de una marca inventada, Kiri, baños termales y ryokan junto al volcán Osorno, para mostrar el estilo Zen / japonés.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/shippori-mincho.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="/image/bocetos/kiri/portada-ancho-1600.webp" imagesrcset="/image/bocetos/kiri/portada-ancho-1000.webp 1000w, /image/bocetos/kiri/portada-ancho-1600.webp 1600w" imagesizes="(min-width: 1240px) 950px, (min-width: 600px) 78vw, 100vw" media="(min-width: 600px)" fetchpriority="high">
-<link rel="preload" as="image" href="/image/bocetos/kiri/portada-alto-900.webp" imagesrcset="/image/bocetos/kiri/portada-alto-600.webp 600w, /image/bocetos/kiri/portada-alto-900.webp 900w" imagesizes="calc(100vw - 84px)" media="(max-width: 599px)" fetchpriority="high">
+<link rel="preload" as="image" href="/image/bocetos/kiri/bosque-1280.webp" fetchpriority="high">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
-/* Kiri · zen / japonés. La idea es ma, el espacio vacío: la página respira,
-   muestra una sola cosa por vista, escribe en vertical y usa la niebla como
-   material. Nada se apura.
-
-   Inspiración: Hoshinoya (hoshinoresorts.com/ja/brands/hoshinoya/).
-   - Composición: una sola línea de texto con mucho espacio alrededor, y
-     parejas de foto y texto desfasadas que se alternan de lado.
-   - Letra y color: mincho chica con mucho interletrado y títulos en vertical.
-     Su fondo oscuro no se toma: Kiri es papel washi y tinta sumi.
-   - Movimiento: todo entra con fundidos lentos, sin desplazarse casi nada.
-   También: Beniya Mukayu (mukayu.com) y las galerías SANKOU! y MUUUUU.ORG. */
+/* Kiri · zen / japonés. Termas y ryokan en el bosque de Ensenada.
+   Tercera vuelta, copiada de Awwwards: Nasu Bettei KAI (bettei-kai.jp, de
+   Re:design, mención de agosto de 2024), un ryokan de Nasu. Se toma su
+   recorrido entero:
+   1) abre con un video oscuro del bosque a pantalla completa, con «Bajar»
+      en vertical y el crédito del lugar abajo; el papel sube por encima;
+   2) el índice en papel: el menú en columnas verticales, el sello a la
+      derecha, la noticia de la temporada y el botón de reservar en verde
+      bosque, con el sello y el menú fijos en las esquinas;
+   3) poemas en dos columnas de mincho chica, con mucho aire; una foto que
+      se destapa en escalones; el video del lago con su título vertical; la
+      tira de materiales, que se ensancha al pasar; el collage de la cocina;
+      la banda oscura de las aguas; las noticias con la fecha en vertical, y
+      la reserva con el teléfono grande.
+   Lo propio: el agua y la niebla del sur (alerce, tejuela de Chiloé, piedra
+   del Osorno) y el kanji 霧, niebla, dibujado en SVG dentro del sello. */
 @font-face { font-family: 'Shippori Mincho'; src: url('/fonts/bocetos/shippori-mincho.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Zen Kaku Gothic New'; src: url('/fonts/bocetos/zen-kaku-gothic-new.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
 :root {
-  --washi: #efeae0;
+  --washi: #eeebe4;
+  --washi-2: #e5e1d8;
   --sumi: #1c1b19;
-  --ceniza: #6e6a62;
-  --ceniza-texto: #67635b;
-  --cedro: #8a5a3c;
-  --musgo: #5d6b4f;
+  --texto: #2e2c28;
+  --ceniza: #66625a;
+  --bosque: #15261c;
+  --noche: #0e1511;
   --ancho: 1240px;
   --margen: clamp(20px, 5vw, 72px);
   --calma: cubic-bezier(0.45, 0, 0.55, 1);
   --mincho: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
+  --gotica: 'Zen Kaku Gothic New', 'Hiragino Sans', system-ui, sans-serif;
+  --papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .3 0 0 0 0 .26 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box; }
-html { background: var(--washi); scroll-behavior: smooth; }
-body { margin: 0; background: var(--washi); color: var(--sumi); font: 400 16px/2 'Zen Kaku Gothic New', 'Hiragino Sans', system-ui, sans-serif; letter-spacing: 0.04em; -webkit-font-smoothing: antialiased; }
-img { display: block; max-width: 100%; height: auto; }
-figure { margin: 0; }
+html { background: var(--noche); scroll-behavior: smooth; }
+body { margin: 0; background: var(--washi) var(--papel); color: var(--texto); font: 400 16px/2.1 var(--mincho); letter-spacing: 0.05em; -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; height: auto; }
+figure, dl, dd { margin: 0; }
 a { color: inherit; }
-:focus-visible { outline: 1px solid var(--sumi); outline-offset: 5px; }
-h1, h2, h3 { margin: 0; font-family: var(--mincho); font-weight: 400; letter-spacing: 0.12em; line-height: 1.5; }
+:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+h1, h2, h3 { margin: 0; font-weight: 400; }
 p { margin: 0; }
 .ancho { max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
-.suave { color: var(--ceniza-texto); }
-.rotulo { font-size: 12px; letter-spacing: 0.34em; color: var(--ceniza-texto); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .vertical { writing-mode: vertical-rl; }
-.marco { overflow: hidden; background: #e4ddd0; }
+.suave { color: var(--ceniza); }
+.rotulo { font: 400 12px/1.6 var(--gotica); letter-spacing: 0.24em; text-transform: uppercase; }
+/* El enlace con su raya, como en KAI: «Habitaciones ——». */
+.raya { display: inline-flex; align-items: center; gap: 14px; font: 400 13px/1 var(--mincho); letter-spacing: 0.16em; text-decoration: none; }
+.raya::after { content: ''; width: 40px; height: 1px; background: currentColor; transition: width 600ms var(--calma); }
+.raya:hover::after { width: 72px; }
+.titulo-v { writing-mode: vertical-rl; font-size: clamp(26px, 2.4vw, 34px); line-height: 1.5; letter-spacing: 0.12em; }
 
-/* ---- Cabecera ---- */
-.cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 26px; }
-.marca { display: inline-flex; align-items: center; gap: 12px; font: 400 18px/1 var(--mincho); letter-spacing: 0.32em; text-decoration: none; }
-.marca svg { width: 30px; height: 30px; }
-.cabecera nav ul { display: flex; gap: 36px; margin: 0; padding: 0; list-style: none; font-size: 14px; letter-spacing: 0.2em; }
-.cabecera nav a, .enlace { text-decoration: none; transition: color 600ms var(--calma); }
-.cabecera nav a { color: var(--ceniza-texto); }
-.cabecera nav a:hover { color: var(--sumi); }
-.enlace { display: inline-block; padding-bottom: 4px; border-bottom: 1px solid currentColor; font-size: 14px; letter-spacing: 0.24em; }
+/* ---- El sello y el menú, fijos en las esquinas ----
+   Dos piezas chicas, cada una muy lejos del 90 % del ancho, así Safari no
+   tiñe sus bandas. El menú se ve sobre el video y sobre el papel porque se
+   pinta por diferencia. */
+.sello { position: fixed; z-index: 30; top: calc(var(--alto-barra, 0px) + 18px); left: clamp(14px, 2vw, 28px); display: grid; place-items: center; width: 52px; height: 52px; background: var(--bosque); color: var(--washi); box-shadow: 0 0 0 1px rgb(238 235 228 / 0.18); }
+.sello svg { width: 30px; height: 30px; fill: currentColor; }
+.menu { position: fixed; z-index: 30; top: calc(var(--alto-barra, 0px) + 18px); right: clamp(14px, 2vw, 28px); display: grid; justify-items: center; gap: 10px; padding: 6px 4px; color: #fff; mix-blend-mode: difference; text-decoration: none; }
+.menu i { display: block; width: 28px; height: 1px; background: currentColor; box-shadow: 0 6px 0 currentColor; margin-bottom: 6px; }
+.menu span { writing-mode: vertical-rl; font: 400 12px/1 var(--gotica); letter-spacing: 0.3em; text-transform: uppercase; }
 
-/* ---- Portada: la foto, el vapor y el nombre en vertical ---- */
-.portada { display: grid; grid-template-columns: minmax(0, 1fr) clamp(64px, 9vw, 150px); gap: clamp(12px, 3vw, 48px); padding-bottom: clamp(96px, 14vw, 200px); }
-.portada .marco { position: relative; height: min(82svh, 820px); min-height: 460px; }
-.portada .marco img { width: 100%; height: 100%; object-fit: cover; }
-.vapor { position: absolute; inset: 0; pointer-events: none; }
-.vapor i { position: absolute; left: -15%; right: -15%; height: 70%; background: radial-gradient(closest-side, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0)); }
-.vapor i:nth-child(1) { bottom: -20%; }
-.vapor i:nth-child(2) { bottom: 5%; left: 10%; right: -30%; height: 55%; background: radial-gradient(closest-side, rgb(250 248 243 / 0.42), rgb(250 248 243 / 0)); }
-.vapor i:nth-child(3) { bottom: 25%; left: -35%; right: 25%; height: 50%; background: radial-gradient(closest-side, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0)); }
-.nombre { display: grid; grid-template-columns: auto auto; justify-content: center; align-content: start; gap: clamp(20px, 3vw, 36px) clamp(6px, 1vw, 14px); padding-top: 6px; }
-.nombre .kanji { grid-column: 1 / -1; justify-self: center; }
-.nombre .rotulo { grid-column: 1; grid-row: 2; padding-top: 4.5em; }
-.kanji { width: clamp(48px, 7vw, 112px); height: auto; fill: var(--sumi); }
-.nombre h1 { grid-column: 2; grid-row: 2; font-size: clamp(15px, 1.3vw, 18px); letter-spacing: 0.3em; line-height: 1.9; }
-.nombre .rotulo { letter-spacing: 0.4em; }
+/* ---- La apertura: el bosque con lluvia, a pantalla completa ----
+   El video queda pegado mientras el papel del índice sube por encima; los
+   dos van dentro de .entrada, así el video deja de estar pegado (y de
+   correr) al terminar el índice. El video no lleva fondo de CSS: Safari no
+   tiñe sus bandas con lo que pinta un video o una imagen. */
+.entrada { position: relative; }
+.apertura { position: sticky; top: 0; height: 100svh; overflow: hidden; color: var(--washi); }
+.apertura img, .apertura video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.apertura h1 { position: absolute; top: 50%; right: clamp(56px, 12vw, 200px); translate: 0 -50%; writing-mode: vertical-rl; font-size: clamp(22px, 2.2vw, 30px); line-height: 2; letter-spacing: 0.16em; text-shadow: 0 0 24px rgb(14 21 17 / 0.6); }
+.apertura h1 small { display: block; font: 400 13px/2.4 var(--gotica); letter-spacing: 0.3em; opacity: 0.86; }
+.bajar { position: absolute; left: clamp(18px, 2vw, 30px); bottom: 28px; display: grid; justify-items: center; gap: 12px; font: 400 11px/1 var(--gotica); letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; }
+.bajar span { writing-mode: vertical-rl; }
+.bajar i { position: relative; width: 1px; height: 64px; overflow: hidden; background: rgb(238 235 228 / 0.3); }
+.bajar i::after { content: ''; position: absolute; inset: 0; background: var(--washi); translate: 0 -100%; }
+.credito { position: absolute; right: clamp(18px, 2vw, 30px); bottom: 26px; display: flex; align-items: center; gap: 12px; font: 400 12px/1.4 var(--mincho); letter-spacing: 0.12em; opacity: 0.86; }
+.credito::before { content: ''; width: 36px; height: 1px; background: currentColor; }
 
-/* ---- Una línea ---- */
-.linea { display: grid; justify-items: center; gap: 28px; padding-block: clamp(40px, 8vw, 120px) clamp(120px, 18vw, 260px); text-align: center; }
-.linea p:first-child { max-width: 24ch; font: 400 clamp(22px, 2.6vw, 34px)/1.9 var(--mincho); letter-spacing: 0.14em; }
-.linea p + p { max-width: 38ch; }
+/* ---- El índice: el papel que sube sobre el video ---- */
+.indice { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px clamp(32px, 6vw, 96px); min-height: 100svh; padding: clamp(96px, 12svh, 140px) var(--margen) clamp(56px, 8svh, 96px); background: var(--washi) var(--papel); box-shadow: 0 -30px 60px -30px rgb(0 0 0 / 0.4); }
+.columnas { display: flex; flex-direction: row-reverse; justify-content: center; align-self: center; gap: clamp(18px, 3vw, 44px); margin: 0; padding: 0; list-style: none; }
+.columnas a { display: grid; justify-items: center; gap: 18px; text-decoration: none; }
+.columnas b { writing-mode: vertical-rl; font-weight: 400; font-size: clamp(17px, 1.5vw, 21px); letter-spacing: 0.14em; transition: color 500ms var(--calma); }
+.columnas small { font: 400 11px/1 var(--gotica); letter-spacing: 0.18em; color: var(--ceniza); }
+.columnas a::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--bosque); opacity: 0; scale: 0.4; transition: opacity 500ms var(--calma), scale 500ms var(--calma); }
+.columnas a:hover::after { opacity: 1; scale: 1; }
+.columnas a:hover b { color: var(--bosque); }
+.indice-lado { display: grid; align-content: space-between; justify-items: end; gap: 40px; }
+.marca { display: grid; justify-items: end; gap: 14px; text-align: right; }
+.marca .sello-grande { display: grid; place-items: center; width: 76px; height: 76px; background: var(--bosque); color: var(--washi); }
+.marca .sello-grande svg { width: 44px; height: 44px; fill: currentColor; }
+.marca p { font-size: 15px; letter-spacing: 0.24em; }
+.enlaces { display: grid; justify-items: end; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.noticia { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: center; width: min(100%, 25rem); padding: 10px; background: rgb(255 255 255 / 0.55); text-decoration: none; transition: background-color 500ms var(--calma); }
+.noticia:hover { background: rgb(255 255 255 / 0.85); }
+.noticia img { width: 96px; height: 72px; object-fit: cover; }
+.noticia p { font-size: 14px; line-height: 1.7; }
+.noticia .rotulo { color: var(--ceniza); font-size: 11px; }
+.reservar-boton { display: inline-grid; justify-items: center; min-width: 13rem; padding: 12px 28px; border: 0; background: var(--bosque); color: var(--washi); font: 400 15px/1.5 var(--mincho); letter-spacing: 0.24em; text-decoration: none; cursor: pointer; transition: background-color 500ms var(--calma); }
+.reservar-boton small { font: 400 11px/1.6 var(--gotica); letter-spacing: 0.2em; opacity: 0.8; }
+.reservar-boton:hover { background: #24402f; }
 
-/* ---- El baño: cuatro tiempos, uno por vista ---- */
-.seccion-titulo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
-.seccion-titulo h2 { writing-mode: vertical-rl; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: 0.4em; }
-.seccion-titulo p { max-width: 34ch; padding-top: 8px; }
-.ritual .seccion-titulo { margin-bottom: clamp(80px, 12vw, 160px); }
-.tiempo { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; column-gap: clamp(16px, 3vw, 40px); min-height: 92svh; padding-block: 6svh; }
-.tiempo .marco { grid-column: 2 / 7; }
-.tiempo .marco img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
-.tiempo-texto { grid-column: 8 / 12; display: grid; gap: 22px; }
-.tiempo h3 { font-size: clamp(34px, 4vw, 56px); letter-spacing: 0.2em; }
-.tiempo-texto p:last-child { max-width: 30ch; }
-.tiempo:nth-of-type(even) .marco { grid-column: 7 / 12; grid-row: 1; }
-.tiempo:nth-of-type(even) .tiempo-texto { grid-column: 2 / 6; grid-row: 1; }
+/* ---- La foto a sangre ---- */
+.sangre { position: relative; height: min(92svh, 56vw); overflow: hidden; }
+.sangre img { width: 100%; height: 100%; object-fit: cover; }
 
-/* ---- Ma: entre un baño y otro, nada ---- */
-.ma { display: grid; justify-items: center; gap: clamp(40px, 6vw, 72px); padding-block: clamp(120px, 18vw, 260px); text-align: center; }
-.ma svg { width: min(64vw, 380px); height: auto; overflow: visible; }
-.ma use { fill: var(--sumi); }
-.enso-guia { fill: none; stroke: #fff; stroke-width: 30; stroke-linecap: round; stroke-dasharray: 1; }
-.ma p { font: 400 clamp(20px, 2.2vw, 28px)/1.9 var(--mincho); letter-spacing: 0.16em; }
+/* ---- Poema en dos columnas, como el texto de KAI ---- */
+.poema { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 4fr); gap: 40px clamp(32px, 5vw, 80px); padding-block: clamp(110px, 16vw, 220px); }
+.poema .titulo-v { justify-self: end; }
+.poema-versos { font-size: 16px; line-height: 2.6; }
+.poema-prosa { font-size: 14px; line-height: 2.3; color: var(--ceniza); }
+.poema-prosa p + p, .poema-versos p + p { margin-top: 1.4em; }
 
-/* ---- Las aguas ---- */
-.aguas { padding-block: clamp(40px, 6vw, 80px) clamp(120px, 16vw, 220px); }
-.aguas .seccion-titulo { margin-bottom: clamp(56px, 8vw, 110px); }
-.pozones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); margin: 0; padding: 0; list-style: none; }
-.pozon { display: grid; gap: 18px; align-content: start; }
-.pozon:nth-child(2) { margin-top: clamp(60px, 9vw, 140px); }
-.pozon:nth-child(3) { margin-top: clamp(120px, 18vw, 280px); }
-.pozon .marco img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
-.pozon-cabeza { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 6px; border-top: 1px solid rgb(28 27 25 / 0.2); }
-.pozon h3 { font-size: 20px; letter-spacing: 0.2em; }
-.grados { font: 400 30px/1 var(--mincho); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; color: var(--cedro); }
+/* ---- Los escalones: la foto se destapa por bloques ----
+   Donde el navegador ata animaciones al scroll, el recorte en escalones se
+   abre al bajar (los dos polígonos tienen los mismos puntos, así que se
+   funden uno en otro). Donde no, queda en su forma final. */
+.escalones { display: grid; justify-items: center; gap: 28px; padding-block: 0 clamp(110px, 14vw, 200px); }
+.escalones figure { position: relative; width: min(100%, 980px); aspect-ratio: 16 / 10; }
+.escalones img { width: 100%; height: 100%; object-fit: cover; clip-path: polygon(4% 7%, 62% 7%, 62% 0%, 100% 0%, 100% 84%, 95% 84%, 95% 100%, 24% 100%, 24% 93%, 4% 93%); }
+.escalones figcaption { position: absolute; top: 18%; left: 50%; translate: -50% 0; writing-mode: vertical-rl; color: var(--washi); font-size: clamp(22px, 2.4vw, 32px); letter-spacing: 0.16em; text-shadow: 0 0 20px rgb(14 21 17 / 0.6); }
+.tiempos { display: grid; justify-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; text-align: center; font-size: 15px; letter-spacing: 0.14em; }
+.tiempos span { color: var(--ceniza); font-size: 13px; }
 
-/* ---- Habitaciones y cena: foto grande, texto al lado ---- */
-.estancia { display: grid; grid-template-columns: auto minmax(0, 7fr) minmax(0, 4fr); gap: clamp(24px, 4vw, 64px); align-items: end; padding-block: clamp(80px, 12vw, 180px); }
-.estancia h2 { writing-mode: vertical-rl; align-self: start; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: 0.4em; }
-.estancia .marco img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
-.estancia-texto { display: grid; gap: 24px; }
-.estancia-texto > p:first-child { font: 400 clamp(19px, 1.7vw, 23px)/1.9 var(--mincho); letter-spacing: 0.1em; }
-.datos { display: grid; gap: 0; margin: 0; }
-.datos div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; padding-block: 10px; border-top: 1px solid rgb(28 27 25 / 0.16); }
-.datos dt { color: var(--ceniza-texto); font-size: 14px; letter-spacing: 0.2em; }
-.datos dd { margin: 0; }
-.cena { grid-template-columns: auto minmax(0, 4fr) minmax(0, 5fr); align-items: center; }
-.cena .marco img { aspect-ratio: 1; }
-.cena .estancia-texto { order: -1; }
-.cena h2 { order: -2; }
+/* ---- El verso centrado ---- */
+.verso { display: grid; justify-items: center; gap: 36px; padding-block: 0 clamp(110px, 14vw, 200px); text-align: center; }
+.verso .versos { font-size: 16px; line-height: 2.5; }
+.verso .eco { max-width: 34ch; font-size: 13px; line-height: 2.3; color: var(--ceniza); }
+
+/* ---- El lago, en video ---- */
+.lago { position: relative; height: min(88svh, 52vw); min-height: 420px; overflow: hidden; color: var(--washi); }
+.lago img, .lago video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lago h2 { position: absolute; top: 14%; left: 50%; translate: -50% 0; writing-mode: vertical-rl; font-size: clamp(24px, 2.6vw, 36px); letter-spacing: 0.14em; line-height: 1.8; text-shadow: 0 0 22px rgb(14 21 17 / 0.55); }
+.lago .credito { bottom: 22px; }
+
+/* ---- Los materiales: una tira de muestras que se ensanchan ---- */
+.materiales { padding-block: clamp(80px, 9vw, 130px) clamp(64px, 7vw, 100px); }
+.materiales ul { display: flex; gap: clamp(6px, 1.2vw, 18px); margin: 0; padding: 0; list-style: none; }
+.materiales li { flex: 1 1 0; min-width: 0; display: grid; gap: 18px; transition: flex-grow 700ms var(--calma); }
+.materiales li:hover { flex-grow: 1.9; }
+.materiales figure { position: relative; height: clamp(260px, 44svh, 480px); overflow: hidden; }
+.materiales img { width: 100%; height: 100%; object-fit: cover; }
+.materiales .n { position: absolute; top: 12px; right: 10px; writing-mode: vertical-rl; padding: 8px 4px; background: rgb(238 235 228 / 0.88); font: 400 12px/1 var(--mincho); letter-spacing: 0.3em; }
+.materiales p { writing-mode: vertical-rl; justify-self: center; font-size: 15px; letter-spacing: 0.1em; line-height: 1.9; }
+.materiales p span { color: var(--ceniza); font-size: 13px; }
+
+/* ---- Un capítulo: título vertical, dos columnas y su raya ---- */
+.capitulo { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); padding-block: clamp(80px, 10vw, 150px); }
+.capitulo .titulo-v { justify-self: center; }
+.capitulo .texto p + p { margin-top: 1.2em; }
+.capitulo .datos { display: grid; gap: 10px; font-size: 14px; line-height: 1.9; color: var(--ceniza); }
+.capitulo .datos dt { font: 400 11px/1.6 var(--gotica); letter-spacing: 0.24em; text-transform: uppercase; color: var(--texto); }
+.capitulo .raya { grid-column: 3; justify-self: end; margin-top: 20px; }
+.habitacion { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); padding-bottom: clamp(80px, 10vw, 150px); }
+.habitacion figure { grid-column: 2; }
+.habitacion img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+/* ---- La cocina: fotos encimadas ---- */
+.collage { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: auto; padding-top: clamp(40px, 6vw, 90px); }
+.collage .grande { grid-column: 1 / 9; grid-row: 1; margin-top: clamp(40px, 6vw, 90px); }
+.collage .alta { grid-column: 8 / 12; grid-row: 1; z-index: 1; }
+.collage .chica { grid-column: 2 / 5; grid-row: 1; align-self: end; z-index: 1; margin-bottom: clamp(-90px, -6vw, -40px); }
+.collage img { width: 100%; height: 100%; object-fit: cover; }
+.collage .grande img { aspect-ratio: 3 / 2; }
+.collage .alta img { aspect-ratio: 3 / 4; }
+.collage .chica img { aspect-ratio: 1; box-shadow: 0 0 0 10px var(--washi); }
+
+/* ---- Las aguas: la banda oscura ---- */
+.aguas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); background: var(--noche); color: var(--washi); }
+.aguas figure img { width: 100%; height: 100%; min-height: 520px; object-fit: cover; }
+.aguas-texto { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: center; gap: 40px clamp(32px, 5vw, 72px); padding: clamp(56px, 7vw, 110px) var(--margen); }
+.aguas-texto .titulo-v { grid-row: 1 / 3; }
+.aguas-texto > p { color: #c9c4b8; font-size: 15px; }
+.pozones { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
+.pozones li { display: grid; grid-template-columns: 5.5ch minmax(0, 1fr); gap: 4px 20px; padding-top: 18px; border-top: 1px solid rgb(238 235 228 / 0.2); }
+.pozones b { grid-row: 1 / 3; font-weight: 400; font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.pozones h3 { font-size: 17px; letter-spacing: 0.2em; }
+.pozones p { color: #c9c4b8; font-size: 14px; line-height: 1.9; }
+
+/* ---- Temporada: las noticias con la fecha en vertical ---- */
+.temporada { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); gap: 40px; padding-block: clamp(90px, 11vw, 160px); }
+.temporada .titulo-v { justify-self: center; }
+.avisos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 48px); margin: 0; padding: 0; list-style: none; }
+.aviso { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 12px; }
+.aviso img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.aviso time { writing-mode: vertical-rl; font: 400 12px/1 var(--gotica); letter-spacing: 0.2em; color: var(--ceniza); }
+.aviso p { grid-column: 1 / -1; font-size: 15px; line-height: 1.9; }
+
+/* ---- Preguntas y cómo llegar ---- */
+.dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px clamp(40px, 8vw, 140px); padding-block: 0 clamp(90px, 11vw, 160px); }
+.dos article { display: grid; gap: 14px; padding-top: 22px; border-top: 1px solid rgb(46 44 40 / 0.18); }
+.dos h2 { font-size: 18px; letter-spacing: 0.3em; }
+.dos p { font-size: 15px; }
+.dos .raya { justify-self: end; }
 
 /* ---- Reservar ---- */
-.reservar { display: grid; grid-template-columns: auto minmax(0, 4fr) minmax(0, 6fr); gap: clamp(24px, 5vw, 80px); padding-block: clamp(100px, 14vw, 200px); border-top: 1px solid rgb(28 27 25 / 0.16); }
-.reservar h2 { writing-mode: vertical-rl; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: 0.4em; }
-.reservar-texto { display: grid; gap: 24px; align-content: start; }
-.reservar-texto > p:first-child { font: 400 clamp(19px, 1.7vw, 23px)/1.9 var(--mincho); letter-spacing: 0.1em; }
-.formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 32px; align-content: start; }
-.formulario label { display: grid; gap: 6px; font-size: 13px; letter-spacing: 0.26em; color: var(--ceniza-texto); }
+.reservar { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 4fr) minmax(0, 6fr); gap: 40px clamp(32px, 5vw, 80px); padding-block: clamp(90px, 11vw, 160px); border-top: 1px solid rgb(46 44 40 / 0.18); }
+.reservar .titulo-v { justify-self: center; }
+.reservar-texto { display: grid; align-content: start; gap: 22px; }
+.telefono { white-space: nowrap; font-size: clamp(24px, 2.4vw, 34px); letter-spacing: 0.06em; line-height: 1.3; }
+.telefono small { font-size: 14px; letter-spacing: 0.2em; margin-right: 8px; }
+.formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 32px; }
+.formulario label { display: grid; gap: 4px; font: 400 12px/1.6 var(--gotica); letter-spacing: 0.22em; color: var(--ceniza); }
 .formulario .todo { grid-column: 1 / -1; }
-.formulario input, .formulario select, .formulario textarea { display: block; width: 100%; min-height: 48px; padding: 8px 0; border: 0; border-bottom: 1px solid var(--ceniza); border-radius: 0; background: transparent; color: var(--sumi); font: 400 17px/1.6 'Zen Kaku Gothic New', system-ui, sans-serif; letter-spacing: 0.04em; -webkit-appearance: none; appearance: none; transition: border-color 600ms var(--calma); }
-.formulario input[type="date"] { min-width: 0; }
-.formulario input::-webkit-date-and-time-value { text-align: left; }
-.formulario textarea { min-height: 100px; resize: vertical; }
-.formulario select { padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, var(--sumi) 50%), linear-gradient(-45deg, transparent 50%, var(--sumi) 50%); background-position: calc(100% - 10px) 55%, calc(100% - 5px) 55%; background-size: 5px 5px; background-repeat: no-repeat; }
-.formulario input:focus-visible, .formulario select:focus-visible, .formulario textarea:focus-visible { outline: none; border-bottom-color: var(--sumi); box-shadow: 0 1px 0 var(--sumi); }
-.formulario button { justify-self: start; min-height: 54px; padding: 0 40px; border: 1px solid var(--sumi); background: var(--sumi); color: var(--washi); font: 400 15px/1 var(--mincho); letter-spacing: 0.3em; cursor: pointer; transition: background 600ms var(--calma), color 600ms var(--calma); }
-.formulario button:hover { background: transparent; color: var(--sumi); }
-.formulario .boceto-aviso { grid-column: 1 / -1; margin: 0; color: var(--sumi); }
+.formulario input, .formulario select, .formulario textarea { width: 100%; min-height: 44px; padding: 6px 0; border: 0; border-bottom: 1px solid rgb(46 44 40 / 0.4); border-radius: 0; background: transparent; color: var(--texto); font: 400 16px/1.6 var(--mincho); letter-spacing: 0.04em; transition: border-color 500ms var(--calma); }
+.formulario textarea { resize: vertical; }
+.formulario :is(input, select, textarea):focus { outline: none; border-bottom-color: var(--bosque); box-shadow: 0 1px 0 var(--bosque); }
+.formulario .reservar-boton { justify-self: start; }
 
 /* ---- Pie ---- */
-.pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 40px; padding-block: 48px; border-top: 1px solid rgb(28 27 25 / 0.16); font-size: 14px; color: var(--ceniza-texto); }
-.pie .marca { color: var(--sumi); }
+.pie { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 24px 48px; padding-block: 72px calc(48px + env(safe-area-inset-bottom, 0px)); background: var(--noche); color: #c9c4b8; font-size: 14px; }
+.pie .marca { justify-items: start; text-align: left; color: var(--washi); }
+.pie .marca .sello-grande { width: 56px; height: 56px; background: var(--bosque); box-shadow: 0 0 0 1px rgb(238 235 228 / 0.2); }
+.pie .marca .sello-grande svg { width: 32px; height: 32px; }
+.pie-envoltura { background: var(--noche); }
 
 /* ---- L ---- */
-@media (max-width: 1279px) {
-  .tiempo .marco { grid-column: 1 / 7; }
-  .tiempo-texto { grid-column: 8 / 13; }
-  .tiempo:nth-of-type(even) .marco { grid-column: 7 / 13; }
-  .tiempo:nth-of-type(even) .tiempo-texto { grid-column: 1 / 6; }
+@media (max-width: 1099px) {
+  .poema { grid-template-columns: minmax(0, 2fr) minmax(0, 5fr) minmax(0, 5fr); }
+  .capitulo, .reservar { grid-template-columns: minmax(0, 1fr) minmax(0, 5fr) minmax(0, 5fr); }
 }
 
 /* ---- M ---- */
 @media (max-width: 899px) {
-  .cabecera nav { display: none; }
-  .pozones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pozon:nth-child(3) { grid-column: 1 / 2; margin-top: 0; }
-  .estancia, .cena, .reservar { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
-  .estancia .estancia-texto, .reservar .formulario { grid-column: 2; }
-  .cena .estancia-texto { order: 0; }
-  .cena h2 { order: 0; grid-row: span 2; }
-  .estancia h2, .reservar h2 { grid-row: span 2; }
-  .cena .marco { max-width: 460px; }
+  .indice { grid-template-columns: minmax(0, 1fr); }
+  .columnas { justify-content: center; }
+  .indice-lado { justify-items: center; }
+  .marca { justify-items: center; text-align: center; }
+  .enlaces { justify-items: center; }
+  .poema { grid-template-columns: auto minmax(0, 1fr); }
+  .poema-prosa { grid-column: 2; }
+  .capitulo { grid-template-columns: auto minmax(0, 1fr); }
+  .capitulo .datos, .capitulo .raya { grid-column: 2; }
+  .habitacion { grid-template-columns: minmax(0, 1fr); }
+  .habitacion figure { grid-column: 1; }
+  .aguas { grid-template-columns: minmax(0, 1fr); }
+  .aguas figure img { min-height: 0; aspect-ratio: 16 / 10; }
+  .temporada { grid-template-columns: minmax(0, 1fr); }
+  .temporada .titulo-v { writing-mode: horizontal-tb; justify-self: start; }
+  .dos { grid-template-columns: minmax(0, 1fr); }
+  .reservar { grid-template-columns: auto minmax(0, 1fr); }
+  .formulario { grid-column: 1 / -1; }
+  .pie { grid-template-columns: minmax(0, 1fr); align-items: start; }
 }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
-  .cabecera { padding-block: 18px; }
-  .portada { grid-template-columns: minmax(0, 1fr) 48px; gap: 10px; padding-inline: 16px 10px; }
-  .portada .marco { height: 80svh; min-height: 420px; }
-  .nombre { gap: 16px; padding-top: 0; }
-  .nombre h1 { font-size: 14px; letter-spacing: 0.24em; }
-  .nombre .rotulo { display: none; }
-  .nombre { grid-template-columns: auto; }
-  .nombre h1 { grid-column: 1; }
-  .tiempo { grid-template-columns: minmax(0, 1fr); row-gap: 32px; min-height: 0; padding-block: 40px 72px; }
-  .tiempo .marco, .tiempo-texto, .tiempo:nth-of-type(even) .marco, .tiempo:nth-of-type(even) .tiempo-texto { grid-column: 1; grid-row: auto; }
-  .tiempo .marco { width: 86%; }
-  .tiempo:nth-of-type(even) .marco { justify-self: end; }
-  .pozones { grid-template-columns: minmax(0, 1fr); }
-  .pozon:nth-child(n) { margin-top: 0; }
-  .pozon:nth-child(2) { width: 88%; justify-self: end; }
-  .estancia, .cena, .reservar, .seccion-titulo { grid-template-columns: minmax(0, 1fr); }
-  .estancia h2, .reservar h2, .seccion-titulo h2 { writing-mode: horizontal-tb; grid-row: auto; letter-spacing: 0.3em; }
-  .estancia .estancia-texto, .reservar .formulario { grid-column: 1; }
+  .sello { width: 44px; height: 44px; }
+  .sello svg { width: 26px; height: 26px; }
+  .apertura h1 { right: 22px; font-size: 21px; }
+  .credito { display: none; }
+  .columnas { gap: 14px; }
+  .columnas b { font-size: 16px; }
+  .poema, .capitulo, .reservar { grid-template-columns: minmax(0, 1fr); }
+  .poema .titulo-v, .capitulo .titulo-v, .reservar .titulo-v { justify-self: start; writing-mode: horizontal-tb; }
+  .poema-prosa, .capitulo .datos, .capitulo .raya { grid-column: 1; }
+  .escalones figure { aspect-ratio: 4 / 5; }
+  .materiales ul { gap: 5px; }
+  .materiales li:hover { flex-grow: 1; }
+  .materiales figure { height: 38svh; }
+  .materiales p { font-size: 14px; }
+  .collage .grande { grid-column: 1 / 11; }
+  .collage .alta { grid-column: 7 / 13; margin-top: -24px; }
+  .collage .chica { grid-column: 1 / 6; }
+  .aguas-texto { grid-template-columns: minmax(0, 1fr); }
+  .aguas-texto .titulo-v { grid-row: auto; writing-mode: horizontal-tb; }
+  .avisos { grid-template-columns: minmax(0, 1fr); }
   .formulario { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ---- Movimiento: la niebla ----
-   Nada salta ni se apura: todo usa la misma curva lenta, que arranca y frena
-   en cero. Sobre la portada, el vapor sube en tres capas, cada una en su
-   propio bucle de ida y vuelta y con su largo, así que nunca coinciden y el
-   ciclo no se nota. Las fotos salen de la niebla al entrar, de blancas y
-   borrosas a nítidas. El ensō se traza con el scroll. */
-[data-aparece] { --entrada: kiri-aparece; --curva: var(--calma); --tramo: 46svh; --duracion: 1600ms; }
-.niebla { --entrada: kiri-niebla; --tramo: 60svh; --duracion: 2200ms; }
-.ma figure { --entrada: none; --tramo: 80svh; --duracion: 2400ms; }
-.enso-guia { --entrada: kiri-trazo; }
-@keyframes kiri-aparece { from { opacity: 0; transform: translateY(6px); } }
-@keyframes kiri-niebla { from { opacity: 0.35; filter: blur(14px) brightness(1.35) saturate(0.4); } to { opacity: 1; filter: blur(0) brightness(1) saturate(1); } }
-@keyframes kiri-trazo { from { stroke-dashoffset: 1; } }
-@keyframes kiri-entra { from { opacity: 0; } }
-@keyframes kiri-sube { from { transform: translate3d(-2%, 6%, 0) scale(1); } to { transform: translate3d(3%, -9%, 0) scale(1.08); } }
+/* ---- Movimiento: sin prisa ----
+   El video aparece sobre su foto quieta (barra.js). La raya de «Bajar» baja
+   y sube, despacio. Las fotos salen de la niebla: de borrosas y pálidas a
+   nítidas. Los títulos verticales se escriben de arriba abajo. La foto de
+   los escalones se abre por bloques con el scroll y la foto a sangre se
+   asienta. Al pasar el cursor, las muestras de material se ensanchan. */
+[data-aparece] { --entrada: kiri-funde; --tramo: 36svh; --duracion: 1600ms; --curva: var(--calma); }
+.niebla { --entrada: kiri-niebla; --duracion: 1800ms; }
+.titulo-v[data-aparece] { --entrada: kiri-escribe; --duracion: 1800ms; }
+@keyframes kiri-funde { from { opacity: 0; translate: 0 10px; } }
+@keyframes kiri-niebla { from { opacity: 0.15; filter: blur(14px) brightness(1.25); } }
+@keyframes kiri-escribe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -2% 0); } }
+@keyframes kiri-raya { 0%, 12% { translate: 0 -100%; } 55% { translate: 0 0; } 88%, 100% { translate: 0 100%; } }
+@keyframes kiri-asienta { from { scale: 1.12; } }
+@keyframes kiri-escalones { from { clip-path: polygon(22% 26%, 58% 26%, 58% 16%, 80% 16%, 80% 66%, 74% 66%, 74% 80%, 36% 80%, 36% 72%, 22% 72%); } }
+@keyframes kiri-sube { from { translate: 0 60px; } to { translate: 0 -60px; } }
 @media (prefers-reduced-motion: no-preference) {
-  .portada .marco img { animation: kiri-niebla 2600ms var(--calma) both; }
-  .vapor i { animation: kiri-entra 3000ms var(--calma) 600ms both, kiri-sube 17s var(--calma) 600ms infinite alternate; }
-  .vapor i:nth-child(2) { animation-duration: 3000ms, 23s; animation-delay: 1200ms, -8s; }
-  .vapor i:nth-child(3) { animation-duration: 3000ms, 29s; animation-delay: 1800ms, -19s; }
-  .nombre > * { animation: kiri-entra 2000ms var(--calma) both; }
-  .nombre > :nth-child(2) { animation-delay: 500ms; }
-  .nombre > :nth-child(3) { animation-delay: 1000ms; }
+  .bajar i::after { animation: kiri-raya 6s var(--calma) infinite; }
+  .apertura h1 { animation: kiri-funde 2400ms var(--calma) 400ms both; }
+  @supports (animation-timeline: view()) {
+    .sangre img { animation: kiri-asienta var(--calma) both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+    .escalones img { animation: kiri-escalones var(--calma) both; animation-timeline: view(); animation-range: entry 10% cover 55%; }
+    .collage .alta, .collage .chica { animation: kiri-sube var(--calma) both; animation-timeline: view(); animation-range: cover; }
+    .collage .chica { animation-direction: reverse; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .raya::after, .materiales li, .columnas a::after, .columnas b { transition: none; }
 }
 </style>
 </head>
@@ -229,147 +320,206 @@ p { margin: 0; }
 <div class="boceto-barra"><span class="boceto-etiqueta">Boceto de página</span><p class="boceto-que"><b>Kiri</b> es una marca inventada por Volutus para mostrarte el estilo <b>Zen / japonés</b>.</p></div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="enso" viewBox="0 0 200 200"><path d="M58.9 22.7L63.6 19.9L68.4 17.4L73.5 15.3L78.7 13.6L84 12.3L89.4 11.3L94.9 10.8L100.4 10.6L105.9 10.8L111.4 11.4L116.8 12.3L122.2 13.6L127.5 15.2L132.6 17.1L137.6 19.3L142.5 21.8L147.2 24.7L151.7 27.8L156 31.1L160.1 34.8L163.9 38.7L167.5 42.8L170.8 47.2L173.7 51.8L176.3 56.5L178.5 61.5L180.4 66.5L181.9 71.7L183.1 76.9L183.9 82.2L184.3 87.5L184.3 92.7L184.1 97.9L183.5 103.1L182.7 108.2L181.6 113.2L180.2 118.1L178.7 123L176.8 127.7L174.8 132.3L172.6 136.8L170.1 141.1L167.5 145.4L164.6 149.5L161.5 153.4L158.1 157.2L154.6 160.7L150.8 164.1L146.8 167.2L142.6 170L138.2 172.5L133.7 174.7L129 176.6L124.2 178.2L119.3 179.4L114.3 180.3L109.3 180.8L104.3 181L99.3 180.9L94.4 180.5L89.4 179.8L84.6 178.8L79.8 177.5L75.1 176L70.5 174.2L66 172.2L61.7 169.9L57.5 167.3L53.5 164.5L49.6 161.4L46 158.2L42.6 154.6L39.5 150.9L36.6 147L34 142.8L31.8 138.6L29.8 134.1L28.2 129.6L26.8 125L25.8 120.3L25.2 115.6L24.8 110.9L24.6 106.2L24.8 101.6L25.2 97L25.8 92.4L26.7 87.9L27.7 83.4L29 79L30.7 74.8A0.9 0.9 0 0 1 32.3 75.4L32.3 75.4L31.3 79.7L30.5 84L29.9 88.4L29.6 92.8L29.5 97.1L29.8 101.5L30.3 105.8L31 110L32 114.2L33.2 118.3L34.6 122.4L36.1 126.3L37.9 130.2L39.9 134L42 137.6L44.4 141.2L46.9 144.7L49.6 148L52.5 151.2L55.6 154.2L58.9 157L62.4 159.6L66 162L69.9 164.1L73.8 165.9L77.9 167.4L82.1 168.6L86.4 169.6L90.7 170.1L95.1 170.4L99.4 170.4L103.8 170.1L108 169.5L112.3 168.6L116.4 167.5L120.5 166.2L124.5 164.6L128.3 162.9L132.1 160.9L135.8 158.8L139.3 156.5L142.8 154L146.1 151.3L149.2 148.4L152.2 145.4L155 142.1L157.6 138.7L160 135.2L162.1 131.5L164 127.6L165.6 123.6L166.9 119.5L167.9 115.3L168.7 111.1L169.1 106.9L169.3 102.6L169.2 98.3L168.9 94.1L168.3 89.8L167.5 85.7L166.5 81.5L165.2 77.5L163.7 73.5L162.1 69.6L160.2 65.7L158.1 62L155.8 58.4L153.3 54.9L150.5 51.5L147.6 48.4L144.4 45.4L141.1 42.7L137.5 40.2L133.8 37.9L129.8 36L125.8 34.4L121.7 33L117.5 32L113.2 31.4L108.9 31L104.6 30.9L100.3 31.1L96.1 31.6L91.9 32.4L87.9 33.4L83.9 34.6L79.9 36L76.1 37.6L72.4 39.4L68.8 41.4A10.6 10.6 0 0 1 58.9 22.7Z"/></symbol>
   <symbol id="kiri" viewBox="0 0 1000 1000"><path d="M58 327Q58 313 67 301Q76 289 90 283Q115 270 130 240Q145 211 141 177L156 176Q161 189 167 213H459V149H315Q244 150 165 163L139 111Q194 117 272 119H727L748 90Q752 85 758 76Q765 68 769 64Q773 60 777 60Q783 60 804 76Q826 91 844 108Q863 126 863 133Q859 149 837 149H536V213H837L878 169Q915 204 930 222Q946 239 946 246Q946 250 936 252L919 254Q901 275 875 298Q849 322 827 338L815 331Q828 298 841 242H536V309L537 350Q538 395 541 437Q536 446 518 454Q499 462 472 462Q463 462 458 456Q452 450 452 442Q457 395 459 316V242H171L172 258Q172 293 159 318Q146 343 126 354Q112 362 97 362Q82 362 70 352Q58 343 58 327ZM264 332Q239 333 210 346L185 295Q223 301 277 303H320L334 283Q337 280 344 271Q350 262 356 262Q366 262 391 284Q416 305 416 316Q413 332 392 332ZM724 283Q727 279 734 270Q741 262 747 262Q757 262 782 284Q808 305 808 316Q805 332 784 332H649Q621 333 593 346L567 295Q607 301 663 303H709ZM838 532Q802 593 743 634Q826 661 946 671V683Q927 687 914 703Q902 719 897 743Q768 716 688 668Q646 689 618 698Q712 707 712 719Q712 723 703 728L686 737Q680 765 676 778H785L801 760Q804 757 812 749Q819 741 825 741Q831 741 848 754Q866 766 880 780Q895 795 895 802Q887 811 859 816Q854 876 842 910Q830 944 807 959Q775 980 722 980Q722 947 706 935Q692 922 635 912V896Q728 902 738 902Q757 902 767 896Q774 890 781 866Q788 843 792 807H664Q636 867 574 911Q511 955 399 981L392 966Q473 939 520 899Q568 859 591 807H550Q516 808 478 821L452 770Q495 776 554 778H602Q612 743 615 700Q542 725 444 741L439 726Q565 694 648 640Q598 603 568 555Q517 601 470 625L459 614Q475 598 475 598Q509 562 537 511Q565 460 574 418L586 421L564 378Q610 384 676 386H728L743 365Q746 361 753 352Q760 344 766 344Q776 344 804 366Q831 388 831 399Q827 415 806 415H730Q667 416 604 427Q672 446 672 457Q672 460 664 462L647 466Q634 486 619 502H809L827 476Q830 472 836 464Q841 457 845 453Q849 449 853 449Q859 449 878 463Q896 477 912 493Q928 509 928 516Q924 532 903 532ZM168 378Q212 384 274 386H324L339 366Q341 363 346 358Q350 352 354 349Q357 346 361 346Q371 346 397 367Q423 388 423 399Q419 415 398 415H326Q264 416 194 429ZM365 787 352 779Q376 732 395 670H325V887Q325 917 318 935Q312 953 292 965Q272 977 232 981Q230 948 217 935Q200 918 154 911V897Q225 902 240 902Q250 902 254 898Q257 894 257 885V745Q186 840 60 912L50 896Q161 808 224 670H174Q132 671 84 684L58 634Q113 640 191 642H283Q265 618 234 594Q202 569 172 555L180 545Q256 545 298 570Q325 548 360 509H264Q193 510 114 523L87 472Q142 478 220 480H372L391 458Q395 454 404 444Q412 435 418 435Q427 435 454 466Q482 498 482 509Q472 518 444 519Q405 548 320 586Q337 603 337 623Q337 634 331 642H393L410 621Q414 617 422 608Q429 600 435 600Q444 600 473 630Q502 660 502 671Q497 676 489 678Q481 680 465 681Q448 706 419 736Q390 767 365 787ZM754 532H592L584 541Q620 583 685 613Q729 577 754 532Z"/></symbol>
 </svg>
 
-<header class="ancho cabecera">
-  <a class="marca" href="#inicio"><svg aria-hidden="true"><use href="#enso"/></svg>Kiri</a>
-  <nav aria-label="Secciones"><ul><li><a href="#bano">El baño</a></li><li><a href="#aguas">Las aguas</a></li><li><a href="#habitaciones">Habitaciones</a></li><li><a href="#cena">La cena</a></li></ul></nav>
-  <a class="enlace" href="#reservar">Reservar</a>
-</header>
+<a class="sello" href="#inicio" aria-label="Kiri, al inicio"><svg aria-hidden="true"><use href="#kiri"/></svg></a>
+<a class="menu" href="#indice"><i aria-hidden="true"></i><span>Menú</span></a>
 
 <main>
-  <section class="ancho portada" id="inicio">
-    <div class="marco">
-      <picture>
-        <source media="(max-width: 599px)" srcset="/image/bocetos/kiri/portada-alto-600.webp 600w, /image/bocetos/kiri/portada-alto-900.webp 900w" sizes="calc(100vw - 84px)" width="900" height="1200">
-        <img src="/image/bocetos/kiri/portada-ancho-1600.webp" srcset="/image/bocetos/kiri/portada-ancho-1000.webp 1000w, /image/bocetos/kiri/portada-ancho-1600.webp 1600w" sizes="(min-width: 1240px) 950px, (min-width: 600px) 78vw, 100vw" width="1600" height="1000" alt="Un pozón de agua termal que humea bajo un alero de madera, con pastos secos y el bosque en la niebla al fondo" fetchpriority="high">
-      </picture>
-      <div class="vapor" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="entrada" id="inicio">
+    <div class="apertura">
+      <img src="/image/bocetos/kiri/bosque-1280.webp" width="1280" height="720" alt="" fetchpriority="high">
+      <video data-bucle data-src="/grabados/bocetos/kiri/bosque.mp4" width="1280" height="720" muted playsinline aria-hidden="true"></video>
+      <h1>Termas en el bosque<small>Kiri · Ensenada, al pie del Osorno</small></h1>
+      <a class="bajar" href="#indice"><span>Bajar</span><i aria-hidden="true"></i></a>
+      <p class="credito" aria-hidden="true">Lluvia en el bosque de Ensenada, siete de la mañana</p>
     </div>
-    <div class="nombre">
-      <svg class="kanji" viewBox="0 0 1000 1000" role="img" aria-label="Kiri, niebla en japonés"><use href="#kiri"/></svg>
-      <h1 class="vertical">Termas y ryokan en el bosque</h1>
-      <p class="rotulo vertical">Frente al volcán Osorno · Ensenada</p>
+
+    <nav class="indice" id="indice" aria-label="Kiri">
+      <ul class="columnas">
+        <li><a href="#aguas"><b>Las aguas</b><small>01</small></a></li>
+        <li><a href="#habitaciones"><b>Habitaciones</b><small>02</small></a></li>
+        <li><a href="#cocina"><b>La cocina</b><small>03</small></a></li>
+        <li><a href="#materiales"><b>La casa</b><small>04</small></a></li>
+        <li><a href="#temporada"><b>Temporada</b><small>05</small></a></li>
+        <li><a href="#reservar"><b>Reservar</b><small>06</small></a></li>
+      </ul>
+      <div class="indice-lado">
+        <div class="marca">
+          <span class="sello-grande" aria-hidden="true"><svg><use href="#kiri"/></svg></span>
+          <p>Kiri</p>
+          <p class="rotulo suave">Termas y ryokan · Ensenada</p>
+        </div>
+        <ul class="enlaces">
+          <li><a class="raya" href="#llegar">Cómo llegar</a></li>
+          <li><a class="raya" href="#preguntas">Preguntas</a></li>
+          <li><a class="raya" href="#temporada">Temporada</a></li>
+        </ul>
+        <a class="noticia" href="#temporada">
+          <img src="/image/bocetos/kiri/pozon-volcan-560.webp" width="560" height="373" alt="" loading="lazy">
+          <span><span class="rotulo">Temporada de niebla</span><p>De mayo a agosto, el pozón del volcán abre de noche.</p></span>
+        </a>
+        <a class="reservar-boton" href="#reservar">Reservar<small>Ver noches libres</small></a>
+      </div>
+    </nav>
+  </div>
+
+  <figure class="sangre">
+    <img src="/image/bocetos/kiri/portada-ancho-1600.webp" srcset="/image/bocetos/kiri/portada-ancho-1000.webp 1000w, /image/bocetos/kiri/portada-ancho-1600.webp 1600w" sizes="100vw" width="1600" height="1000" loading="lazy" alt="Un pozón termal de piedra bajo un alero de madera, con vapor sobre el agua y el bosque detrás">
+  </figure>
+
+  <section class="ancho poema" aria-labelledby="poema-titulo">
+    <h2 class="titulo-v" id="poema-titulo" data-aparece>霧 · niebla</h2>
+    <div class="poema-versos" data-aparece>
+      <p>Aquí la niebla baja<br>casi todas las mañanas<br>y se va cuando quiere.</p>
+      <p>No la apuramos.<br>Tampoco al agua,<br>que sale de la tierra a 43 grados<br>desde antes que la casa.</p>
+      <p>Doce habitaciones,<br>tres pozones<br>y nada más que hacer.</p>
+    </div>
+    <div class="poema-prosa" data-aparece style="--orden: 1">
+      <p>Kiri es un ryokan en el bosque de Ensenada, a los pies del volcán Osorno. La casa es de alerce y tejuela, como las del sur, y se ordena como una posada japonesa: se llega, se deja el reloj y se baña uno.</p>
+      <p>La vertiente es nuestra y no le agregamos nada. Los pozones se usan por turnos de una hora, y de noche quedan para quien se aloja.</p>
     </div>
   </section>
 
-  <section class="ancho linea" aria-label="La casa">
-    <p data-aparece>Doce habitaciones, tres pozones y nada más que hacer.</p>
-    <p class="suave" data-aparece style="--orden: 1">Kiri es un ryokan en el bosque de Ensenada, a los pies del volcán Osorno. El agua sale de la tierra a 43 °C y la niebla baja casi todas las mañanas.</p>
-  </section>
-
-  <section class="ancho ritual" id="bano">
-    <div class="seccion-titulo" data-aparece>
-      <h2>El baño</h2>
-      <p class="suave">Bañarse aquí tiene cuatro tiempos. No hay que aprenderlos: basta con no apurarse.</p>
-    </div>
-    <article class="tiempo">
-      <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/lavarse-480.webp" srcset="/image/bocetos/kiri/lavarse-480.webp 480w, /image/bocetos/kiri/lavarse-800.webp 800w" sizes="(min-width: 1280px) 450px, (min-width: 600px) 38vw, calc(86vw - 34px)" width="800" height="1000" loading="lazy" alt="Un caño de bambú vierte agua en una pila de piedra, junto a un cazo de madera y una planta"></figure>
-      <div class="tiempo-texto" data-aparece><p class="rotulo">Primer tiempo</p><h3>Lavarse</h3><p class="suave">Sentado en el banquito de madera, con el agua tibia del cazo. Al pozón se entra limpio.</p></div>
-    </article>
-    <article class="tiempo">
-      <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/entrar-480.webp" srcset="/image/bocetos/kiri/entrar-480.webp 480w, /image/bocetos/kiri/entrar-800.webp 800w" sizes="(min-width: 1280px) 450px, (min-width: 600px) 38vw, calc(86vw - 34px)" width="800" height="1000" loading="lazy" alt="Una tina redonda de madera al aire libre, rodeada de bosque verde y de un muro de cañas"></figure>
-      <div class="tiempo-texto" data-aparece><p class="rotulo">Segundo tiempo</p><h3>Entrar</h3><p class="suave">Despacio, primero los pies. El agua está a 41 °C y la tina es de ciprés, que con el calor suelta su olor.</p></div>
-    </article>
-    <article class="tiempo">
-      <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/reposar-480.webp" srcset="/image/bocetos/kiri/reposar-480.webp 480w, /image/bocetos/kiri/reposar-800.webp 800w" sizes="(min-width: 1280px) 450px, (min-width: 600px) 38vw, calc(86vw - 34px)" width="800" height="1000" loading="lazy" alt="Piedras negras y redondas a la orilla del agua, con la niebla blanca detrás"></figure>
-      <div class="tiempo-texto" data-aparece><p class="rotulo">Tercer tiempo</p><h3>Reposar</h3><p class="suave">Diez minutos dentro y diez fuera, sobre las piedras. No hay reloj: una campana suena en el jardín cada media hora.</p></div>
-    </article>
-    <article class="tiempo">
-      <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/volver-480.webp" srcset="/image/bocetos/kiri/volver-480.webp 480w, /image/bocetos/kiri/volver-800.webp 800w" sizes="(min-width: 1280px) 450px, (min-width: 600px) 38vw, calc(86vw - 34px)" width="800" height="1000" loading="lazy" alt="La luz de la tarde entra por una puerta corrediza y cae sobre el tatami"></figure>
-      <div class="tiempo-texto" data-aparece><p class="rotulo">Cuarto tiempo</p><h3>Volver</h3><p class="suave">Una yukata de algodón, un té de hierbas del bosque y el tatami tibio. El resto del día no hay nada que hacer.</p></div>
-    </article>
-  </section>
-
-  <section class="ma" aria-label="Pausa">
+  <section class="escalones" aria-labelledby="ritual-titulo">
     <figure data-aparece>
-      <svg viewBox="0 0 200 200" aria-hidden="true">
-        <mask id="trazo" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200"><path class="enso-guia" data-sigue pathLength="1" d="M64.3 32.9A76 76 0 0 1 157.4 149.9A76 76 0 0 1 28.6 74"/></mask>
-        <use href="#enso" width="200" height="200" mask="url(#trazo)"/>
-      </svg>
+      <img src="/image/bocetos/kiri/volver-800.webp" srcset="/image/bocetos/kiri/volver-480.webp 480w, /image/bocetos/kiri/volver-800.webp 800w" sizes="(min-width: 1000px) 980px, 100vw" width="800" height="1000" loading="lazy" alt="Luz de la tarde sobre el tatami de una habitación, entre paneles de madera">
+      <figcaption id="ritual-titulo">Y todo vuelve</figcaption>
     </figure>
-    <p data-aparece>Entre un baño y otro, nada.</p>
+    <ol class="tiempos" data-aparece>
+      <li>Lavarse <span>(sentado, con el cazo)</span></li>
+      <li>Entrar <span>(despacio, primero los pies)</span></li>
+      <li>Reposar <span>(diez minutos dentro, diez fuera)</span></li>
+      <li>Volver <span>(una yukata y el tatami tibio)</span></li>
+    </ol>
   </section>
 
-  <section class="ancho aguas" id="aguas">
-    <div class="seccion-titulo" data-aparece>
-      <h2>Las aguas</h2>
-      <p class="suave">Tres pozones de la misma vertiente, cada uno a su temperatura y con su vista. Se usan por turnos de una hora, y de noche quedan para quien se aloja.</p>
+  <section class="ancho verso" aria-label="El baño">
+    <div class="versos" data-aparece>
+      <p>Bañarse aquí tiene cuatro tiempos.<br>No hay que aprenderlos:<br>basta con no apurarse.</p>
     </div>
-    <ul class="pozones">
-      <li class="pozon">
-        <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/pozon-piedra-560.webp" srcset="/image/bocetos/kiri/pozon-piedra-560.webp 560w, /image/bocetos/kiri/pozon-piedra-900.webp 900w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 46vw, 100vw" width="900" height="600" loading="lazy" alt="Un pozón de agua verde clara entre rocas, con un pabellón de madera y cerros con bosque detrás"></figure>
-        <div class="pozon-cabeza" data-aparece><h3>De piedra</h3><span class="grados">41°</span></div>
-        <p class="suave" data-aparece>Al aire libre, entre coigües. Desde el agua se oye el estero.</p>
-      </li>
-      <li class="pozon">
-        <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/pozon-cubierto-560.webp" srcset="/image/bocetos/kiri/pozon-cubierto-560.webp 560w, /image/bocetos/kiri/pozon-cubierto-900.webp 900w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 46vw, 100vw" width="900" height="600" loading="lazy" alt="Una tina de madera bajo techo, en penumbra, con el agua que cae de un caño y una ventana de luz"></figure>
-        <div class="pozon-cabeza" data-aparece><h3>Cubierto</h3><span class="grados">39°</span></div>
-        <p class="suave" data-aparece>Bajo techo de lenga, para los días de lluvia, que en Ensenada son muchos.</p>
-      </li>
-      <li class="pozon">
-        <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/pozon-volcan-560.webp" srcset="/image/bocetos/kiri/pozon-volcan-560.webp 560w, /image/bocetos/kiri/pozon-volcan-900.webp 900w" sizes="(min-width: 900px) 30vw, (min-width: 600px) 46vw, 100vw" width="900" height="600" loading="lazy" alt="El volcán nevado en la bruma rosada del amanecer, sobre un bosque oscuro"></figure>
-        <div class="pozon-cabeza" data-aparece><h3>Del volcán</h3><span class="grados">43°</span></div>
-        <p class="suave" data-aparece>El más alto del terreno. Al amanecer, el Osorno sale de la niebla justo enfrente.</p>
-      </li>
+    <p class="eco" data-aparece style="--orden: 1">No hay reloj en los pozones. Una campana suena en el jardín cada media hora, y la tina de ciprés suelta su olor con el calor.</p>
+    <p class="raya" data-aparece style="--orden: 2">El baño</p>
+  </section>
+
+  <section class="lago" aria-labelledby="lago-titulo">
+    <img src="/image/bocetos/kiri/lago-1280.webp" width="1280" height="720" alt="" loading="lazy">
+    <video data-bucle data-src="/grabados/bocetos/kiri/lago.mp4" width="1280" height="720" muted playsinline aria-hidden="true"></video>
+    <h2 id="lago-titulo">La niebla sube del lago</h2>
+    <p class="credito" aria-hidden="true">Lago Llanquihue, al amanecer</p>
+  </section>
+
+  <section class="ancho materiales" id="materiales" aria-labelledby="materiales-titulo">
+    <h2 class="oculto" id="materiales-titulo">La casa, en cinco materiales</h2>
+    <ul>
+      <li data-aparece><figure class="niebla"><img src="/image/bocetos/kiri/tejuela-gris-320.webp" width="320" height="800" loading="lazy" alt="Tejuelas de madera gastadas por la lluvia, grises y superpuestas"><span class="n" aria-hidden="true">uno</span></figure><p>Tejuela de alerce <span>muros</span></p></li>
+      <li data-aparece style="--orden: 1"><figure class="niebla"><img src="/image/bocetos/kiri/tejuela-roja-320.webp" width="320" height="800" loading="lazy" alt="Tejuelas de madera pintadas de rojo, en hileras"><span class="n" aria-hidden="true">dos</span></figure><p>Tejuela de Chiloé <span>portones</span></p></li>
+      <li data-aparece style="--orden: 2"><figure class="niebla"><img src="/image/bocetos/kiri/piedra-320.webp" width="320" height="800" loading="lazy" alt="Roca volcánica oscura y porosa, de cerca"><span class="n" aria-hidden="true">tres</span></figure><p>Piedra del Osorno <span>pozones</span></p></li>
+      <li data-aparece style="--orden: 3"><figure class="niebla"><img src="/image/bocetos/kiri/musgo-320.webp" width="320" height="800" loading="lazy" alt="Musgo verde sobre piedras de lava"><span class="n" aria-hidden="true">cuatro</span></figure><p>Musgo <span>jardín</span></p></li>
+      <li data-aparece style="--orden: 4"><figure class="niebla"><img src="/image/bocetos/kiri/basalto-320.webp" width="320" height="800" loading="lazy" alt="Columnas de basalto gris, juntas como un panal"><span class="n" aria-hidden="true">cinco</span></figure><p>Basalto <span>caminos</span></p></li>
     </ul>
   </section>
 
-  <section class="ancho estancia" id="habitaciones">
-    <h2 data-aparece>Habitaciones</h2>
-    <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/habitacion-800.webp" srcset="/image/bocetos/kiri/habitacion-800.webp 800w, /image/bocetos/kiri/habitacion-1400.webp 1400w" sizes="(min-width: 900px) 52vw, 100vw" width="1400" height="933" loading="lazy" alt="Una habitación de tatami con las puertas corredizas de papel abiertas a un jardín de árboles podados"></figure>
-    <div class="estancia-texto" data-aparece>
-      <p>Doce habitaciones de tatami y madera, cada una con su ventana al bosque. Desde las del ala norte se ve el volcán.</p>
-      <dl class="datos">
-        <div><dt>Tamaño</dt><dd>28 m², con terraza</dd></div>
-        <div><dt>Cama</dt><dd>Futón sobre tatami o cama baja</dd></div>
-        <div><dt>Baño</dt><dd>Propio, con tina de ciprés</dd></div>
-        <div><dt>Noche</dt><dd>Desde $268.000 para dos, con cena y desayuno</dd></div>
-      </dl>
+  <section class="ancho capitulo" id="habitaciones" aria-labelledby="habitaciones-titulo">
+    <h2 class="titulo-v" id="habitaciones-titulo" data-aparece>Habitaciones</h2>
+    <div class="texto" data-aparece>
+      <p>Doce habitaciones de tatami y madera, apartadas unas de otras por el bosque, cada una con su ventana a los coigües.</p>
+      <p>Desde las del ala norte se ve el volcán. Las del ala del bosque oyen el estero toda la noche.</p>
     </div>
+    <dl class="datos" data-aparece style="--orden: 1">
+      <div><dt>Tamaño</dt><dd>28 m², con terraza</dd></div>
+      <div><dt>Cama</dt><dd>Futón sobre tatami o cama baja</dd></div>
+      <div><dt>Baño</dt><dd>Propio, con tina de ciprés</dd></div>
+      <div><dt>Noche</dt><dd>Desde $268.000 para dos, con cena y desayuno</dd></div>
+    </dl>
+    <a class="raya" href="#reservar" data-aparece>Ver noches libres</a>
   </section>
+  <div class="ancho habitacion">
+    <figure class="niebla" data-aparece><img src="/image/bocetos/kiri/habitacion-1400.webp" srcset="/image/bocetos/kiri/habitacion-800.webp 800w, /image/bocetos/kiri/habitacion-1400.webp 1400w" sizes="(min-width: 1240px) 870px, (min-width: 900px) 72vw, 100vw" width="1400" height="933" loading="lazy" alt="Una habitación de tatami con paneles de papel abiertos hacia un jardín de árboles podados"></figure>
+  </div>
 
-  <section class="ancho estancia cena" id="cena">
-    <h2 data-aparece>La cena</h2>
-    <div class="estancia-texto" data-aparece>
-      <p>Cocina del sur con método japonés, en platos pequeños que llegan de a uno. Cambia con la estación y con lo que trae el huerto.</p>
-      <dl class="datos">
+  <section class="ancho" id="cocina" aria-labelledby="cocina-titulo">
+    <div class="collage">
+      <figure class="grande niebla" data-aparece><img src="/image/bocetos/kiri/cena-800.webp" srcset="/image/bocetos/kiri/cena-480.webp 480w, /image/bocetos/kiri/cena-800.webp 800w" sizes="(min-width: 1240px) 760px, 66vw" width="800" height="800" loading="lazy" alt="Cuencos de cerámica gris sobre mármol, vistos desde arriba"></figure>
+      <figure class="alta niebla" data-aparece><img src="/image/bocetos/kiri/lavarse-800.webp" srcset="/image/bocetos/kiri/lavarse-480.webp 480w, /image/bocetos/kiri/lavarse-800.webp 800w" sizes="(min-width: 1240px) 380px, 50vw" width="800" height="1000" loading="lazy" alt="Huevos en una canasta de bronce, cociéndose en el agua de la vertiente que corre por un canal de piedra"></figure>
+      <figure class="chica niebla" data-aparece><img src="/image/bocetos/kiri/entrar-480.webp" width="480" height="600" loading="lazy" alt="Una tina de madera llena de agua en una terraza, con el bosque detrás"></figure>
+    </div>
+    <div class="capitulo">
+      <h2 class="titulo-v" id="cocina-titulo" data-aparece>La cocina</h2>
+      <div class="texto" data-aparece>
+        <p>Cocina del sur con método japonés, en platos pequeños que llegan de a uno. Los huevos se cuecen en la vertiente, como en los pueblos de termas.</p>
+        <p>Cambia con la estación y con lo que trae el huerto.</p>
+      </div>
+      <dl class="datos" data-aparece style="--orden: 1">
         <div><dt>Primavera</dt><dd>Espárragos del valle y trucha curada en sal</dd></div>
         <div><dt>Verano</dt><dd>Frutillas blancas y caldo frío de tomate</dd></div>
         <div><dt>Otoño</dt><dd>Changles a la brasa y arroz con murta</dd></div>
         <div><dt>Invierno</dt><dd>Cochayuyo, papa chilota y miso de la casa</dd></div>
       </dl>
     </div>
-    <figure class="marco niebla" data-aparece><img src="/image/bocetos/kiri/cena-480.webp" srcset="/image/bocetos/kiri/cena-480.webp 480w, /image/bocetos/kiri/cena-800.webp 800w" sizes="(min-width: 900px) 34vw, 100vw" width="800" height="800" loading="lazy" alt="Tres cuencos de cerámica clara con borde café, vacíos, sobre una mesa de mármol blanco"></figure>
   </section>
 
-  <section class="ancho reservar" id="reservar">
-    <h2 data-aparece>Reservar</h2>
+  <section class="aguas" id="aguas" aria-labelledby="aguas-titulo">
+    <figure class="niebla" data-aparece><img src="/image/bocetos/kiri/pozon-piedra-900.webp" srcset="/image/bocetos/kiri/pozon-piedra-560.webp 560w, /image/bocetos/kiri/pozon-piedra-900.webp 900w" sizes="(min-width: 900px) 42vw, 100vw" width="900" height="600" loading="lazy" alt="Un pozón termal de piedra al aire libre, con un quincho de madera y cerros detrás"></figure>
+    <div class="aguas-texto">
+      <h2 class="titulo-v" id="aguas-titulo" data-aparece>Las aguas</h2>
+      <p data-aparece>Tres pozones de la misma vertiente, cada uno a su temperatura y con su vista.</p>
+      <ul class="pozones">
+        <li data-aparece><b>41°</b><h3>De piedra</h3><p>Al aire libre, entre coigües. Desde el agua se oye el estero.</p></li>
+        <li data-aparece style="--orden: 1"><b>39°</b><h3>Cubierto</h3><p>Bajo techo de lenga, para los días de lluvia, que en Ensenada son muchos.</p></li>
+        <li data-aparece style="--orden: 2"><b>43°</b><h3>Del volcán</h3><p>El más alto del terreno. Al amanecer, el Osorno sale de la niebla justo enfrente.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ancho temporada" id="temporada" aria-labelledby="temporada-titulo">
+    <h2 class="titulo-v" id="temporada-titulo" data-aparece>Temporada</h2>
+    <ul class="avisos">
+      <li class="aviso" data-aparece><img class="niebla" src="/image/bocetos/kiri/pozon-volcan-560.webp" width="560" height="373" loading="lazy" alt="El volcán Osorno nevado sobre un bosque, al atardecer"><time datetime="2026-05-01">2026 · 05 · 01</time><p>Temporada de niebla: el pozón del volcán abre de noche, hasta agosto.</p></li>
+      <li class="aviso" data-aparece style="--orden: 1"><img class="niebla" src="/image/bocetos/kiri/pozon-cubierto-560.webp" width="560" height="373" loading="lazy" alt="Un baño de madera oscura con agua clara, iluminado por una ventana alta"><time datetime="2026-04-12">2026 · 04 · 12</time><p>Terminamos el techo nuevo del pozón cubierto, de tejuela de alerce.</p></li>
+      <li class="aviso" data-aparece style="--orden: 2"><img class="niebla" src="/image/bocetos/kiri/reposar-480.webp" width="480" height="600" loading="lazy" alt="Piedras negras y redondas a la orilla del agua"><time datetime="2026-03-20">2026 · 03 · 20</time><p>Otoño en la cocina: changles a la brasa y arroz con murta.</p></li>
+    </ul>
+  </section>
+
+  <div class="ancho dos">
+    <article id="llegar">
+      <h2>Cómo llegar</h2>
+      <p class="suave">Por la ruta 225, en el kilómetro 41, a una hora del aeropuerto de Puerto Montt. Te vamos a buscar si nos avisas.</p>
+      <a class="raya" href="#reservar">Avisar la llegada</a>
+    </article>
+    <article id="preguntas">
+      <h2>Preguntas</h2>
+      <p class="suave">Los pozones se usan sin traje de baño y por turnos. Los niños, desde los doce años. Las mascotas se quedan en casa.</p>
+      <a class="raya" href="#reservar">Escribirnos</a>
+    </article>
+  </div>
+
+  <section class="ancho reservar" id="reservar" aria-labelledby="reservar-titulo">
+    <h2 class="titulo-v" id="reservar-titulo" data-aparece>Reservar</h2>
     <div class="reservar-texto" data-aparece>
       <p>Te respondemos en el día con la habitación que queda libre y el turno de los pozones.</p>
-      <dl class="datos">
-        <div><dt>Dirección</dt><dd>Ruta 225, km 41, Ensenada</dd></div>
-        <div><dt>Correo</dt><dd>reservas@kiri.cl</dd></div>
-        <div><dt>Llegada</dt><dd>Desde las 15:00</dd></div>
-      </dl>
+      <p class="telefono"><small>Tel.</small>+56 65 233 0912</p>
+      <p class="suave">reservas@kiri.cl · llegada desde las 15:00</p>
     </div>
     <form class="formulario" data-muestra data-aparece toolname="reservar_estadia" tooldescription="Pide una reserva en Kiri, un ryokan con termas inventado por Volutus como boceto de página. No envía nada a nadie: responde que es un boceto.">
       <label>Llegada<input type="date" name="llegada" required toolparamdescription="Fecha de llegada, en formato AAAA-MM-DD"></label>
       <label>Salida<input type="date" name="salida" required toolparamdescription="Fecha de salida, en formato AAAA-MM-DD, después de la llegada"></label>
       <label>Personas<select name="personas"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
       <label>Habitación<select name="habitacion" toolparamdescription="El ala de la habitación: la del bosque o la del volcán, que se ve desde la ventana"><option>Ala del bosque</option><option>Ala del volcán</option></select></label>
+      <label class="todo">Nombre<input type="text" name="nombre" autocomplete="name" required></label>
       <label class="todo">Una nota<textarea name="nota" rows="3" maxlength="600" toolparamdescription="Algo que debamos saber: una celebración, una alergia o la hora de llegada"></textarea></label>
-      <button class="todo" type="submit">Pedir la reserva</button>
+      <button class="reservar-boton todo" type="submit">Pedir la reserva<small>Respondemos en el día</small></button>
     </form>
   </section>
 </main>
 
-<footer class="ancho pie">
-  <span class="marca" aria-hidden="true"><svg><use href="#enso"/></svg>Kiri</span>
-  <span>Ruta 225, km 41, Ensenada · Región de Los Lagos</span>
-  <span>Boceto de Volutus · marca inventada</span>
-</footer>
+<div class="pie-envoltura">
+  <footer class="ancho pie">
+    <div class="marca"><span class="sello-grande" aria-hidden="true"><svg><use href="#kiri"/></svg></span><p>Kiri</p></div>
+    <p>Ruta 225, km 41, Ensenada · Región de Los Lagos</p>
+    <p>Boceto de Volutus · marca inventada</p>
+  </footer>
+</div>
 </body>
 </html>

@@ -153,8 +153,10 @@ p { margin: 0; }
 .perfil text { font: 700 13px/1 'Alegreya Sans', sans-serif; fill: var(--gris); letter-spacing: 0.06em; }
 .perfil .cima { fill: var(--tierra); }
 
-/* El mapa en relieve (parina.js). Sin WebGL queda oculto. */
-.mapa { position: relative; aspect-ratio: 16 / 9; margin: 0 0 clamp(40px, 5vw, 64px); overflow: hidden; cursor: grab; }
+/* El mapa en relieve (parina.js). Sin WebGL queda oculto. Va de borde a
+   borde, mirando al horizonte: arriba, el cielo del altiplano se aclara
+   hasta el color de la sección, donde la maqueta corta. */
+.mapa { position: relative; aspect-ratio: 21 / 9; max-height: 86svh; margin: 0 0 clamp(40px, 5vw, 64px); overflow: hidden; cursor: grab; background: linear-gradient(180deg, #a9c1d1 0%, #cbd3cf 30%, var(--lana-2) 58%); }
 .mapa.girando { cursor: grabbing; }
 .mapa canvas, .mapa svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mapa canvas { touch-action: pan-y; }
@@ -165,7 +167,7 @@ p { margin: 0; }
 .mapa-nombres span { position: absolute; left: 0; top: 0; white-space: nowrap; font: 700 13px/1.2 'Alegreya Sans', sans-serif; }
 .mapa-nombre { translate: -50% -100%; padding: 3px 8px 2px; background: rgb(243 231 211 / 0.88); letter-spacing: 0.08em; text-transform: uppercase; font-size: 12px !important; }
 .mapa-nombre.agua { color: var(--lago); }
-.mapa-nombre.lodge { background: var(--negro); color: var(--lana); }
+.mapa-nombre.casa { background: var(--negro); color: var(--lana); }
 .mapa-parada { display: flex; align-items: center; gap: 8px; translate: -8px -50%; }
 .mapa-parada::before { content: ''; flex: none; width: 12px; height: 12px; background: var(--ocre); outline: 2px solid var(--negro); outline-offset: 1px; rotate: 45deg; }
 .mapa-parada.inicio::before { background: var(--tierra); }
@@ -197,9 +199,12 @@ p { margin: 0; }
 .jornada .momento p { color: var(--gris); }
 
 /* ---- La aclimatación: andenes ---- */
-.andenes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(12px, 2vw, 24px); align-items: end; margin: 0; padding: 0; list-style: none; }
-.anden { display: grid; grid-template-rows: auto auto; gap: 16px; }
-.anden-bloque { display: grid; align-content: start; height: calc((var(--h) - 3000) * 0.2px + 56px); padding: 12px 14px; color: var(--lana); background: var(--c); transform-origin: bottom; }
+/* Cada andén ocupa tres filas de la grilla (bloque, nombre y texto), así los
+   bloques se paran en la misma línea aunque los textos de abajo midan
+   distinto. */
+.andenes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(12px, 2vw, 24px); margin: 0; padding: 0; list-style: none; }
+.anden { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 16px; }
+.anden-bloque { display: grid; align-self: end; align-content: start; height: calc((var(--h) - 3000) * 0.2px + 56px); padding: 12px 14px; color: var(--t, var(--lana)); background: var(--c); transform-origin: bottom; }
 .anden-bloque b { font: 800 clamp(24px, 2.6vw, 34px)/1 'Alegreya', serif; font-variant-numeric: tabular-nums; }
 .anden-bloque span { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .anden h3 { font-size: 24px; }
@@ -268,6 +273,7 @@ p { margin: 0; }
   .portada, .lodge, .ruta, .reservar { grid-template-columns: minmax(0, 1fr); }
   .ventana { width: min(100%, 32rem); justify-self: center; }
   .andenes { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+  .anden-bloque { height: calc((var(--h) - 3000) * 0.12px + 56px); }
   .tejedoras { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .tejedoras .nombres { grid-column: 1 / -1; }
   .telar { position: static; }
@@ -290,7 +296,7 @@ p { margin: 0; }
   .tejedoras .f2 { margin-top: 0; }
   .puna { grid-template-columns: minmax(0, 1fr); }
   .pampa { grid-template-columns: minmax(0, 1fr); }
-  .mapa { aspect-ratio: 4 / 5; margin-inline: calc(var(--margen) * -1); }
+  .mapa { aspect-ratio: 1; }
   .mapa-parada { font-size: 13px !important; }
   .jornada::before { left: 8px; }
   .jornada li, .jornada li:nth-child(even) { grid-template-columns: 18px minmax(0, 1fr); gap: 18px 22px; align-items: start; }
@@ -406,8 +412,8 @@ p { margin: 0; }
 
   <div class="franja f-bofedal zigzag" data-aparece aria-hidden="true"><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i><i class="fila" data-sigue></i></div>
 
-  <section class="seccion caminatas-seccion" id="caminatas" aria-labelledby="caminatas-titulo">
-    <div class="ancho caminatas">
+  <section class="seccion caminatas-seccion caminatas" id="caminatas" aria-labelledby="caminatas-titulo">
+    <div class="ancho">
       <header class="cabeza" data-aparece>
         <p class="altura">Hasta 4.800 m</p>
         <h2 id="caminatas-titulo">Cuatro caminatas</h2>
@@ -420,12 +426,14 @@ p { margin: 0; }
         <input type="radio" name="ruta" id="r-surire" value="surire"><label for="r-surire">Salar de Surire</label>
         <input type="radio" name="ruta" id="r-choquelimpie" value="choquelimpie"><label for="r-choquelimpie">Cerro Choquelimpie</label>
       </fieldset>
-      <div class="mapa" data-mapa hidden aria-hidden="true">
-        <canvas></canvas>
-        <svg></svg>
-        <div class="mapa-nombres"></div>
-        <p class="mapa-ayuda">Arrastra para girar el relieve</p>
-      </div>
+    </div>
+    <div class="mapa" data-mapa hidden aria-hidden="true">
+      <canvas></canvas>
+      <svg></svg>
+      <div class="mapa-nombres"></div>
+      <p class="mapa-ayuda">Arrastra para girar el relieve</p>
+    </div>
+    <div class="ancho">
       <article class="ruta chungara">
         <img src="/image/bocetos/parina/lago-1000.webp" srcset="/image/bocetos/parina/lago-600.webp 600w, /image/bocetos/parina/lago-1000.webp 1000w" sizes="(min-width: 900px) 38vw, 92vw" width="1000" height="667" loading="lazy" alt="Un lago azul de aguas quietas con volcanes de fondo, bajo un cielo despejado">
         <div>
@@ -512,7 +520,7 @@ p { margin: 0; }
       </header>
       <ol class="andenes">
         <li class="anden" data-aparece><div class="anden-bloque" data-sigue style="--h: 3500; --c: var(--tierra)"><b>3.500 m</b><span>Día 1</span></div><h3>Llegar y descansar</h3><p>Almuerzo liviano, siesta y una vuelta corta por la plaza. Nada más.</p></li>
-        <li class="anden" data-aparece style="--orden: 1"><div class="anden-bloque" data-sigue style="--h: 4500; --c: var(--ocre)"><b>4.500 m</b><span>Día 2</span></div><h3>Parinacota</h3><p>La primera caminata, plana y corta, para conocer cómo responde tu cuerpo.</p></li>
+        <li class="anden" data-aparece style="--orden: 1"><div class="anden-bloque" data-sigue style="--h: 4500; --c: var(--ocre); --t: var(--negro)"><b>4.500 m</b><span>Día 2</span></div><h3>Parinacota</h3><p>La primera caminata, plana y corta, para conocer cómo responde tu cuerpo.</p></li>
         <li class="anden" data-aparece style="--orden: 2"><div class="anden-bloque" data-sigue style="--h: 4630; --c: var(--bofedal)"><b>4.630 m</b><span>Día 3</span></div><h3>Chungará</h3><p>Cuatro horas a la orilla del lago. Ya se duerme bien.</p></li>
         <li class="anden" data-aparece style="--orden: 3"><div class="anden-bloque" data-sigue style="--h: 4800; --c: var(--lago)"><b>4.800 m</b><span>Día 5</span></div><h3>Choquelimpie</h3><p>La subida larga, solo si los días anteriores fueron bien.</p></li>
       </ol>
