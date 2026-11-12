@@ -207,6 +207,7 @@ p { margin: 0; }
   .reloj svg { width: min(60%, 220px); }
   .carta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .noches { grid-template-columns: minmax(0, 1fr); max-width: 30rem; margin-inline: auto; }
+  .salon::before { background: linear-gradient(rgb(10 21 19 / 0.2), rgb(10 21 19 / 0.85) 45%, rgb(10 21 19 / 0.95)); }
 }
 
 /* ---- S ---- */
@@ -298,7 +299,6 @@ p { margin: 0; }
           <circle class="esfera" cx="150" cy="150" r="140"/><circle class="aro" cx="150" cy="150" r="126"/>
           <g class="marca"><path d="M150 24v16M150 260v16M24 150h16M260 150h16M213 41l-8 14M87 41l8 14M259 87l-14 8M41 87l14 8M259 213l-14-8M41 213l14-8M213 259l-8-14M87 259l8-14"/></g>
           <text x="150" y="66" text-anchor="middle">XII</text><text x="238" y="156" text-anchor="middle">III</text><text x="150" y="246" text-anchor="middle">VI</text><text x="62" y="156" text-anchor="middle">IX</text>
-          <path d="M150 52L156 150L150 160L144 150Z" fill="var(--oro)" opacity="0.25"/>
           <line class="minutero" x1="150" y1="150" x2="150" y2="44"/>
           <line class="horario-mano" x1="150" y1="150" x2="150" y2="82"/>
           <circle cx="150" cy="150" r="6" fill="var(--oro)"/>

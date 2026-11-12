@@ -286,21 +286,21 @@ const ESTILOS = {
   ],
   artesanal: [
     <>
-      <span className="etiqueta">
-        <i>miel cruda</i>
-        <b>LIBAR</b>
-        <small>Lote 07 · Curacautín</small>
-      </span>
-      <svg className="timbre" viewBox="0 0 60 60">
-        <circle cx="30" cy="30" r="27" />
-        <circle className="fino" cx="30" cy="30" r="23" />
-        <circle cx="30" cy="30" r="13" />
-        <text x="30" y="35">07</text>
+      <svg className="gotas" viewBox="0 0 240 64" preserveAspectRatio="xMidYMin slice">
+        <path d="M0 0H240V12C200 16 160 10 120 14S40 16 0 13Z" />
+        <path className="gota" d="M30 12V30a6 6 0 0 0 12 0V12Z" />
+        <path className="gota" d="M74 12V44a7 7 0 0 0 14 0V12Z" />
+        <path className="gota" d="M126 12V26a5 5 0 0 0 10 0V12Z" />
+        <path className="gota" d="M170 12V40a7 7 0 0 0 14 0V12Z" />
+        <path className="gota" d="M214 12V28a6 6 0 0 0 12 0V12Z" />
       </svg>
+      <span className="libar">
+        libar
+        <small>Miel cruda · Curacautín</small>
+      </span>
     </>,
     <svg viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="12.5" />
-      <circle cx="15" cy="15" r="6" />
+      <path d="M15 2c5 7 9 11 9 17a9 9 0 0 1-18 0c0-6 4-10 9-17z" />
     </svg>,
   ],
   zen: [
@@ -342,14 +342,16 @@ const ESTILOS = {
   ],
   bauhaus: [
     <>
-      <i className="t" />
-      <i className="q" />
-      <i className="b" />
-      <i className="c" />
-      <i className="h" />
-      <span className="rot">bisagra</span>
+      <svg className="bisagra" viewBox="0 0 26 32">
+        <rect x="2" y="1" width="7" height="30" rx="3.5" />
+        <path className="hoja" d="M9.6 2.5h4.9a6.25 6.25 0 0 1 0 12.5H9.6z" />
+        <path className="hoja" d="M9.6 16.5h6.4a7 7 0 0 1 0 14H9.6z" />
+      </svg>
+      <span className="rot">Bisagra</span>
     </>,
-    <span />,
+    <svg viewBox="0 0 26 32">
+      <path d="M5.5 1a3.5 3.5 0 0 1 3.5 3.5v23a3.5 3.5 0 0 1-7 0v-23A3.5 3.5 0 0 1 5.5 1zM9.6 2.5h4.9a6.25 6.25 0 0 1 0 12.5H9.6zM9.6 16.5h6.4a7 7 0 0 1 0 14H9.6z" />
+    </svg>,
   ],
   memphis: [
     <>

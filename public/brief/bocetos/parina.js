@@ -9,7 +9,8 @@
  * Arranca después de la carga, dibuja solo mientras el mapa se ve y se
  * detiene con la pestaña oculta o la página en espera en el visor. Con el
  * movimiento reducido no gira y los cambios de ruta son directos. Sin WebGL,
- * el mapa queda oculto: la información de cada ruta está en su ficha.
+ * o si se dibuja por software (sin tarjeta de video), el mapa queda oculto:
+ * la información de cada ruta está en su ficha.
  */
 
 const mapa = document.querySelector('[data-mapa]')
@@ -139,20 +140,18 @@ function malla(n) {
     datos.push(x, y, z, nx, ny, nz, h, lago, sal, lado, humedad)
     return datos.length / 11 - 1
   }
-  // La luz se calcula con el relieve exagerado, para que se lea la forma.
-  const normal = (x, z) => {
-    const e = celda
-    const hx = 2.4 * (alto(terreno(x + e, z).h) - alto(terreno(x - e, z).h))
-    const hz = 2.4 * (alto(terreno(x, z + e).h) - alto(terreno(x, z - e).h))
-    const largo = Math.hypot(hx, 2 * e, hz)
-    return [-hx / largo, (2 * e) / largo, -hz / largo]
-  }
+  // Primero las alturas de la grilla; las normales salen de las vecinas, con
+  // el relieve exagerado para que la luz lea la forma.
+  const grilla = []
+  for (let j = 0; j <= n; j++) for (let i = 0; i <= n; i++) grilla.push(terreno(-1 + i * celda, -1 + j * celda))
+  const y = (i, j) => alto(grilla[Math.min(n, Math.max(0, j)) * (n + 1) + Math.min(n, Math.max(0, i))].h)
   for (let j = 0; j <= n; j++) {
     for (let i = 0; i <= n; i++) {
-      const x = -1 + i * celda
-      const z = -1 + j * celda
-      const t = terreno(x, z)
-      vertice(x, alto(t.h), z, ...normal(x, z), t.h, t.lago, t.sal, 0, t.humedad)
+      const t = grilla[j * (n + 1) + i]
+      const hx = 2.4 * (y(i + 1, j) - y(i - 1, j))
+      const hz = 2.4 * (y(i, j + 1) - y(i, j - 1))
+      const largo = Math.hypot(hx, 2 * celda, hz)
+      vertice(-1 + i * celda, alto(t.h), -1 + j * celda, -hx / largo, (2 * celda) / largo, -hz / largo, t.h, t.lago, t.sal, 0, t.humedad)
     }
   }
   for (let j = 0; j < n; j++) {
@@ -264,10 +263,18 @@ function multiplicar(a, b) {
 
 // ---- El mapa ----
 
+// Si el navegador dibuja sin tarjeta de video (por software), el relieve
+// cuesta demasiado: el mapa no se monta y quedan las fichas de las rutas.
+function dibujaSinTarjeta(gl) {
+  const info = gl.getExtension('WEBGL_debug_renderer_info')
+  const nombre = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || '')
+  return /swiftshader|llvmpipe|software|basic render/i.test(nombre)
+}
+
 function montar() {
   const lienzo = mapa.querySelector('canvas')
   const gl = lienzo.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true })
-  if (!gl || !gl.getExtension('OES_element_index_uint') || !gl.getExtension('OES_standard_derivatives')) return
+  if (!gl || dibujaSinTarjeta(gl) || !gl.getExtension('OES_element_index_uint') || !gl.getExtension('OES_standard_derivatives')) return
   const compilar = (tipo, fuente) => {
     const s = gl.createShader(tipo)
     gl.shaderSource(s, fuente)

@@ -9,7 +9,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/bocetos/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="/image/bocetos/ladera/portada-ancha-1600.webp" media="(min-width: 700px)" imagesrcset="/image/bocetos/ladera/portada-ancha-1100.webp 1100w, /image/bocetos/ladera/portada-ancha-1600.webp 1600w" imagesizes="100vw">
-<link rel="preload" as="image" href="/image/bocetos/ladera/portada-alta-800.webp" media="(max-width: 699px)" imagesrcset="/image/bocetos/ladera/portada-alta-600.webp 600w, /image/bocetos/ladera/portada-alta-800.webp 800w" imagesizes="100vw">
+<link rel="preload" as="image" href="/image/bocetos/ladera/portada-alta-760.webp" media="(max-width: 699px)" imagesrcset="/image/bocetos/ladera/portada-alta-760.webp 760w, /image/bocetos/ladera/portada-alta-1000.webp 1000w" imagesizes="100vw">
 <link rel="stylesheet" href="/brief/bocetos/barra.css">
 <script src="/brief/bocetos/barra.js" defer></script>
 <style>
@@ -210,7 +210,9 @@ em { font-style: italic; }
 
 /* ---- Movimiento: se lee despacio ----
    Al cargar, la foto de la tapa se asienta y las letras de la cabecera suben
-   de una en una, desenfocadas al principio; el resto llega con un fundido.
+   de una en una, desenfocadas al principio; el titular llega con un fundido.
+   La fila del número y el menú están desde el primer cuadro: son lo primero
+   que se pinta, sin esperar a la foto.
    Al bajar, la tapa se queda atrás más despacio que la página. Las fotos a
    sangre se abren al ancho de la pantalla y avanzan más lento que el texto;
    las de los vinos se llenan de abajo arriba, como una copa. Las rayas de
@@ -231,7 +233,6 @@ em { font-style: italic; }
 @media (prefers-reduced-motion: no-preference) {
   .tapa-foto img { animation: ladera-asienta 2800ms var(--suave) both; }
   .tapa-marca i { animation: ladera-letra 1500ms var(--suave) both; animation-delay: calc(160ms + var(--i) * 90ms); }
-  .tapa-fila, .tapa nav { animation: ladera-funde 1200ms var(--suave) 500ms both; }
   .tapa-pie > * { animation: ladera-funde 1300ms var(--suave) 800ms both; }
   .tapa-pie > :nth-child(2) { animation-delay: 900ms; }
   .tapa-pie > :nth-child(3) { animation-delay: 1000ms; }
@@ -252,7 +253,7 @@ em { font-style: italic; }
 
 <header class="tapa" id="inicio">
   <picture class="tapa-foto">
-    <source media="(max-width: 699px)" srcset="/image/bocetos/ladera/portada-alta-600.webp 600w, /image/bocetos/ladera/portada-alta-800.webp 800w" sizes="100vw" width="800" height="1067">
+    <source media="(max-width: 699px)" srcset="/image/bocetos/ladera/portada-alta-760.webp 760w, /image/bocetos/ladera/portada-alta-1000.webp 1000w" sizes="100vw" width="1000" height="1333">
     <img src="/image/bocetos/ladera/portada-ancha-1600.webp" srcset="/image/bocetos/ladera/portada-ancha-1100.webp 1100w, /image/bocetos/ladera/portada-ancha-1600.webp 1600w" sizes="100vw" width="1600" height="900" alt="Viñas en terrazas sobre un cerro, vistas desde arriba, con la niebla cubriendo el valle" fetchpriority="high">
   </picture>
   <div class="ancho tapa-cabeza">

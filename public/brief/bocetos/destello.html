@@ -21,7 +21,14 @@
    se muestra como un producto de vitrina, colgada en su blíster. La idea
    propia: el flash. Las fotos llevan la fecha naranja de siete segmentos
    estampada en la esquina, la portada es la pantallita de la cámara (con su
-   disparador), y las copias salen del sobre de revelado. */
+   disparador), y las copias salen del sobre de revelado.
+   La experiencia: una compacta de cromo en 3D (destello.js, WebGL propio)
+   vive detrás de la página y la recorre contigo. Llega girando y dispara al
+   entrar; con el scroll cambia de pose en cada sección (saca el zoom en la
+   vitrina, muestra su pantalla en la revisión y en la venta, dispara al
+   llegar a la galería) y sigue apenas al cursor. La cápsula de arriba se
+   queda pegada y su pantallita dice dónde vas. La vitrina y la galería son
+   paneles que se ensanchan al entrar y se angostan al salir. */
 @font-face { font-family: 'Syne'; src: url('/fonts/bocetos/syne.woff2') format('woff2'); font-weight: 400 800; font-display: swap; }
 /* La de respaldo ocupa lo mismo que Syne (Arial, 1,48 veces más ancha): el
    título corta igual antes y después de cargar la letra y no mueve la página. */
@@ -46,7 +53,7 @@
 }
 * { box-sizing: border-box; }
 html { background: var(--lila); scroll-behavior: smooth; }
-body { margin: 0; background: var(--lila); color: var(--tinta); font: 400 18px/1.6 'Figtree', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: transparent; color: var(--tinta); font: 400 18px/1.6 'Figtree', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 img { display: block; max-width: 100%; height: auto; }
 main { overflow-x: clip; }
 figure { margin: 0; }
@@ -66,49 +73,53 @@ p { margin: 0; }
 .fecha svg { display: block; width: 100%; height: auto; }
 .chispa { position: absolute; width: var(--t, 26px); fill: var(--blanco); }
 
-/* ---- Cabecera: el dial de modos ---- */
-.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-block: 22px; }
-.logo { display: inline-flex; align-items: center; gap: 8px; font: 800 30px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: -0.05em; text-decoration: none; }
-.logo svg { width: 28px; height: 28px; fill: var(--tinta); }
-.dial ul { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 0; padding: 4px; list-style: none; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(180deg, #f6f7fa, var(--plata) 55%, #aeb4c2); box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.8); }
-.dial li:first-child { padding: 0 12px; font: 800 12px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: 0.08em; }
-.dial a { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: background-color 400ms var(--curva); }
+/* ---- La cámara de fondo (destello.js) ----
+   Un lienzo fijo detrás de todo, sin fondo propio: se ve donde la página es
+   transparente y, apenas, a través de la vitrina y la galería. */
+.escena-3d { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 900ms var(--curva); }
+.escena-3d.lista { opacity: 1; }
+
+/* ---- Cabecera: la cápsula pegada, con el dial de modos ----
+   Lo que se pega es solo la cápsula, angosta: en iOS, una barra pegada de
+   todo el ancho tiñe las franjas de Safari. */
+.cabecera { position: sticky; top: calc(var(--alto-barra, 0px) + 12px); z-index: 30; width: fit-content; max-width: calc(100% - 32px); margin: 14px auto 0; }
+.capsula { display: flex; align-items: center; gap: 6px; padding: 5px 5px 5px 16px; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(180deg, #f6f7fa, var(--plata) 55%, #aeb4c2); box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.8), 0 18px 34px -20px rgb(21 19 28 / 0.7); }
+.logo { display: inline-flex; align-items: center; gap: 7px; margin-right: 6px; font: 800 26px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: -0.05em; text-decoration: none; }
+.logo svg { width: 24px; height: 24px; fill: var(--tinta); }
+.dial ul { display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.dial a { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 0 14px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: background-color 400ms var(--curva); }
 .dial a:hover { background: var(--hielo); }
 .dial svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.capitulo { display: inline-grid; place-items: center; min-width: 13ch; min-height: 42px; padding: 0 14px; border-radius: 999px; background: var(--lcd); color: var(--hielo); font: 800 12px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: 0.08em; white-space: nowrap; font-variant-numeric: tabular-nums; box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.5); }
 
-/* ---- Portada: la cámara ---- */
-.portada { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 48px clamp(32px, 5vw, 80px); align-items: center; padding-block: clamp(24px, 4vw, 56px) clamp(80px, 10vw, 140px); }
-.portada-texto { display: grid; gap: 26px; justify-items: start; }
-.portada h1 { font-size: clamp(44px, 6vw, 92px); text-transform: uppercase; line-height: 0.9; }
+/* ---- Portada: el texto, el lugar de la cámara y su pantallita ---- */
+.portada { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 32px clamp(32px, 5vw, 80px); align-items: end; min-height: min(calc(100svh - 120px), 920px); padding-block: clamp(32px, 5vw, 72px) clamp(64px, 8vw, 110px); }
+.portada::after { content: ''; position: absolute; inset: -30% -50vw; z-index: 5; background: radial-gradient(circle at 72% 45%, #ffffff 0 18%, rgb(255 255 255 / 0) 62%); opacity: 0; pointer-events: none; }
+.portada-texto { display: grid; gap: 26px; justify-items: start; align-self: center; }
+.portada h1 { display: grid; font-size: clamp(40px, 5.3vw, 84px); text-transform: uppercase; line-height: 0.9; }
+.portada h1 .linea { display: block; }
 .portada-texto > p { max-width: 34ch; font-size: 20px; color: var(--gris); }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
-.camara { position: relative; width: min(100%, 37rem); justify-self: center; }
-.cam-cuerpo { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 2fr); gap: 6%; padding: 7% 6% 8%; border: 2px solid var(--tinta); border-radius: 34px; background: linear-gradient(160deg, #fbfbfd 0%, #dfe2e9 32%, #b7bdca 60%, #e6e9ef 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 0.9), inset 0 -6px 14px rgb(60 66 84 / 0.25), 0 30px 50px -30px rgb(21 19 28 / 0.6); }
-.cam-tope { position: absolute; right: 14%; top: -18px; display: flex; gap: 12px; align-items: end; }
-.cam-tope i { display: block; width: 34px; height: 10px; border: 2px solid var(--tinta); border-bottom: 0; border-radius: 8px 8px 0 0; background: var(--plata); }
-.disparador { position: relative; display: none; width: 58px; height: 24px; margin-bottom: -2px; border: 2px solid var(--tinta); border-bottom: 0; border-radius: 30px 30px 0 0; background: linear-gradient(180deg, var(--rosa), #e27bb8); cursor: pointer; transition: translate 300ms var(--curva); }
-.con-js .disparador { display: block; }
-.disparador:active { translate: 0 4px; }
-.disparador span { position: absolute; right: calc(100% + 12px); bottom: 26px; padding: 6px 12px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--blanco); font: 700 14px/1 'Figtree', sans-serif; white-space: nowrap; }
-.lcd { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 3px solid var(--tinta); border-radius: 10px; background: #0c0e14; }
+.camara { position: relative; justify-self: end; width: min(100%, 23rem); rotate: -3deg; }
+.disparador { display: none; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px 0 14px; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(180deg, #ffd0ec, var(--rosa)); color: var(--tinta); font: 700 16px/1 'Figtree', sans-serif; cursor: pointer; box-shadow: inset 0 2px 0 rgb(255 255 255 / 0.7); transition: translate 300ms var(--curva); }
+.disparador svg { width: 20px; height: 20px; fill: var(--tinta); }
+.con-js .disparador { display: inline-flex; }
+.disparador:active { translate: 0 3px; }
+.lcd { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 3px solid var(--tinta); border-radius: 12px; background: #0c0e14; box-shadow: 0 0 0 8px var(--plata), 0 0 0 10px var(--tinta), 0 30px 50px -24px rgb(21 19 28 / 0.7); }
 .toma { position: absolute; inset: 0; display: none; }
 .toma.actual { display: block; }
 .toma img { width: 100%; height: 100%; object-fit: cover; }
 .lcd-hud { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; padding: 6px 9px; font: 700 11px/1 'Figtree', sans-serif; letter-spacing: 0.06em; color: var(--blanco); text-shadow: 0 1px 2px rgb(0 0 0 / 0.7); pointer-events: none; }
 .contador { min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
 .flash { position: absolute; inset: -40%; z-index: 3; background: radial-gradient(circle, #ffffff 0 30%, rgb(255 255 255 / 0) 70%); opacity: 0; pointer-events: none; }
-.cam-botones { display: grid; align-content: center; justify-items: center; gap: 18%; }
-.cruceta { position: relative; width: 100%; aspect-ratio: 1; border: 2px solid var(--tinta); border-radius: 50%; background: radial-gradient(circle, var(--plata) 0 26%, var(--tinta) 27% 30%, #eef0f4 31%); }
-.cam-botones i { display: block; width: 72%; height: 14px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--hielo); }
-.cam-botones i + i { background: var(--blanco); }
-.cam-leyenda { margin-top: 14px; font: 700 12px/1.3 'Figtree', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); text-align: center; }
+.cam-leyenda { margin-top: 22px; font: 700 12px/1.3 'Figtree', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); text-align: center; }
 .portada .chispa:nth-of-type(1) { left: -2%; top: 8%; --t: 34px; }
 .portada .chispa:nth-of-type(2) { right: 3%; top: 2%; --t: 22px; }
 .portada .chispa:nth-of-type(3) { right: 1%; bottom: 20%; --t: 40px; }
 .portada .chispa:nth-of-type(4) { left: 44%; bottom: 10%; --t: 18px; }
 
 /* ---- El catálogo: blísteres en el tablero ---- */
-.catalogo { background: radial-gradient(circle, #b3a3dc 2.2px, transparent 2.8px) 0 0 / 26px 26px, var(--lila-hondo); }
+.catalogo { background: radial-gradient(circle, #b3a3dc 2.2px, transparent 2.8px) 0 0 / 26px 26px, rgb(214 196 251 / 0.86); }
 .blisteres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(16px, 2.4vw, 32px); margin: 56px 0 0; padding: 0; list-style: none; }
 .blister { position: relative; display: grid; gap: 16px; padding: 52px 16px 20px; border: 2px solid var(--tinta); border-radius: 22px; background: var(--c); }
 .blister::before { content: ''; position: absolute; left: 50%; top: 16px; width: 48px; height: 14px; translate: -50% 0; border: 2px solid var(--tinta); border-radius: 999px; background: var(--lila-hondo); }
@@ -137,7 +148,7 @@ p { margin: 0; }
 @keyframes destello-carga { from { transform: scaleX(0); opacity: 0.4; } }
 
 /* ---- Galería: el sobre de revelado ---- */
-.galeria { background: var(--tinta); color: var(--lila); }
+.galeria { background: rgb(21 19 28 / 0.84); color: var(--lila); }
 .galeria .bajada { color: #c3bad8; }
 .galeria .titulo { color: var(--lila); }
 .revelado { position: relative; max-width: 980px; margin: 64px auto 0; }
@@ -205,6 +216,9 @@ p { margin: 0; }
 /* ---- M ---- */
 @media (max-width: 899px) {
   .portada, .garantia, .vender { grid-template-columns: minmax(0, 1fr); }
+  .portada { min-height: 0; padding-top: clamp(220px, 40vw, 340px); }
+  .capitulo { display: none; }
+  .camara { justify-self: center; }
   .blisteres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pruebas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .copias { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
@@ -216,11 +230,13 @@ p { margin: 0; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
-  .dial li:first-child { display: none; }
-  .dial a { padding: 0 10px; font-size: 14px; min-height: 38px; }
-  .dial svg { display: none; }
-  .cam-tope { right: 10%; }
-  .disparador span { font-size: 13px; }
+  .capsula { padding-left: 12px; }
+  .logo { font-size: 22px; margin-right: 2px; }
+  .logo svg { width: 20px; height: 20px; }
+  .dial a { padding: 0 10px; min-height: 40px; }
+  .dial a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .capitulo { display: none; }
+  .portada { padding-top: 250px; }
   .blisteres { gap: 28px 14px; }
   .blister { padding: 46px 10px 14px; gap: 12px; }
   .precio { width: 62px; height: 62px; font-size: 12.5px; right: 4px; top: 50px; }
@@ -245,7 +261,12 @@ p { margin: 0; }
    crecen y se apagan, cada uno a su ritmo, sin parpadear. Al disparar
    (destello.js), el flash crece y se apaga y la foto siguiente se revela
    en la pantallita, de negra a nítida. Las celdas de la batería se cargan
-   una tras otra al bajar, y las copias salen del sobre, revelándose. */
+   una tras otra al bajar, y las copias salen del sobre, revelándose.
+   La entrada: la cápsula baja, las líneas del título suben de a una, la
+   cámara de fondo llega girando y, al quedar en su sitio, dispara: la
+   portada se llena de luz y aparece la pantallita con la foto. La vitrina
+   y la galería se ensanchan al entrar hasta el borde y se angostan al
+   salir; la galería, además, hace disparar a la cámara. */
 [data-aparece] { --entrada: destello-llega; --tramo: 36svh; --duracion: 1300ms; }
 @keyframes destello-llega { from { opacity: 0; translate: 0 28px; } }
 @keyframes destello-cromo { to { background-position: 0 100%; } }
@@ -253,6 +274,11 @@ p { margin: 0; }
 @keyframes destello-revela { from { filter: brightness(0.05) contrast(1.6) saturate(0); } }
 @keyframes destello-flash { 0% { opacity: 0; } 28% { opacity: 0.85; } 100% { opacity: 0; } }
 @keyframes destello-gira { to { rotate: 1turn; } }
+@keyframes destello-baja { from { translate: 0 -160%; } }
+@keyframes destello-sube { from { translate: 0 0.6em; opacity: 0; clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -20% 0); } }
+@keyframes destello-aparece { from { opacity: 0; translate: 0 40px; rotate: 6deg; } }
+@keyframes destello-luz { 0% { opacity: 0; } 22% { opacity: 0.9; } 100% { opacity: 0; } }
+@keyframes destello-ensancha { 0% { clip-path: inset(0 8% round 56px); } 30%, 70% { clip-path: inset(0 0 round 0); } 100% { clip-path: inset(0 8% round 56px); } }
 @media (prefers-reduced-motion: no-preference) {
   .cromo { animation: destello-cromo 9s var(--curva) infinite alternate; }
   .chispa { animation: destello-titila var(--d, 6s) var(--curva) infinite alternate; }
@@ -260,10 +286,18 @@ p { margin: 0; }
   .chispa:nth-of-type(3n) { --d: 9s; animation-delay: -4s; }
   .toma.actual img { animation: destello-revela 1600ms var(--curva) both; }
   .dispara .flash { animation: destello-flash 900ms var(--curva); }
+  .dispara::after { animation: destello-luz 1100ms var(--curva); }
+  .cabecera { animation: destello-baja 1000ms var(--curva) 150ms both; }
+  .portada h1 .linea { animation: destello-sube 1100ms var(--curva) calc(300ms + var(--n) * 130ms) both, destello-cromo 9s var(--curva) infinite alternate; }
+  .portada-texto > :not(h1) { animation: destello-llega 1100ms var(--curva) 800ms both; }
+  .con-js .camara { animation: destello-aparece 1200ms var(--curva) 1550ms both; }
+  @supports (animation-timeline: view()) {
+    .panel { animation: destello-ensancha var(--curva) both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  }
   .sello-cert svg { animation: destello-gira 40s linear infinite; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .boton, .dial a, .burbuja::after, .estado-fila, .disparador { transition: none; }
+  .boton, .dial a, .burbuja::after, .estado-fila, .disparador, .escena-3d { transition: none; }
 }
 </style>
 </head>
@@ -284,29 +318,32 @@ p { margin: 0; }
   <symbol id="d9" viewBox="0 0 10 18"><rect x="2" y="0" width="6" height="2" rx="0.6"/><rect x="8" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="8" y="9.8" width="2" height="6.6" rx="0.6"/><rect x="2" y="16" width="6" height="2" rx="0.6"/><rect x="0" y="1.6" width="2" height="6.6" rx="0.6"/><rect x="2" y="8" width="6" height="2" rx="0.6"/></symbol>
 </svg>
 
-<header class="ancho cabecera">
-  <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#chispa"/></svg>destello</a>
-  <nav class="dial" aria-label="Secciones">
-    <ul>
-      <li aria-hidden="true">AUTO</li>
-      <li><a href="#catalogo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="13" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6.5l1.5-2.5h5L16 6.5"/></svg>Catálogo</a></li>
-      <li><a href="#revision"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/></svg>Revisión</a></li>
-      <li><a href="#galeria"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="15" height="12" rx="1.5"/><path d="M7 20h14V9"/></svg>Galería</a></li>
-      <li><a href="#vender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M16.5 7.5C16 6 14.4 5 12 5S7.5 6.2 7.5 8.2c0 4.6 9 2.6 9 7.4 0 2-2 3.4-4.5 3.4s-4.3-1-4.9-2.8"/></svg>Vender</a></li>
-    </ul>
-  </nav>
+<canvas class="escena-3d" aria-hidden="true"></canvas>
+
+<header class="cabecera">
+  <div class="capsula">
+    <a class="logo" href="#inicio"><svg aria-hidden="true"><use href="#chispa"/></svg>destello</a>
+    <span class="capitulo" data-capitulo aria-hidden="true">01 · PORTADA</span>
+    <nav class="dial" aria-label="Secciones">
+      <ul>
+        <li><a href="#catalogo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="13" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6.5l1.5-2.5h5L16 6.5"/></svg><span>Catálogo</span></a></li>
+        <li><a href="#revision"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/></svg><span>Revisión</span></a></li>
+        <li><a href="#galeria"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="15" height="12" rx="1.5"/><path d="M7 20h14V9"/></svg><span>Galería</span></a></li>
+        <li><a href="#vender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M16.5 7.5C16 6 14.4 5 12 5S7.5 6.2 7.5 8.2c0 4.6 9 2.6 9 7.4 0 2-2 3.4-4.5 3.4s-4.3-1-4.9-2.8"/></svg><span>Vender</span></a></li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <main>
-  <section class="ancho portada" id="inicio" aria-labelledby="titulo">
+  <section class="ancho portada" id="inicio" data-pose="inicio" data-nombre="01 · PORTADA" aria-labelledby="titulo">
     <div class="portada-texto">
-      <h1 id="titulo" class="cromo">Fotos con flash, como en 2006</h1>
+      <h1 id="titulo"><span class="linea cromo" style="--n: 0">Fotos con</span> <span class="linea cromo" style="--n: 1">flash, como</span> <span class="linea cromo" style="--n: 2">en 2006</span></h1>
       <p>Cámaras digitales compactas de los 2000, revisadas una por una, con batería nueva y seis meses de garantía.</p>
       <div class="acciones"><a class="boton" href="#catalogo">Ver el catálogo</a><a class="enlace" href="#vender">Vender la tuya</a></div>
+      <button class="disparador" type="button" aria-controls="pantallita"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#chispa"/></svg>Sacar una foto</button>
     </div>
     <div class="camara">
-      <div class="cam-tope"><i></i><button class="disparador" type="button" aria-controls="pantallita"><span>Sacar foto</span></button></div>
-      <div class="cam-cuerpo">
         <div class="lcd" id="pantallita" role="group" aria-label="La pantalla de la cámara">
           <figure class="toma actual">
             <img src="/image/bocetos/destello/leopardo-640.webp" srcset="/image/bocetos/destello/leopardo-400.webp 400w, /image/bocetos/destello/leopardo-640.webp 640w" sizes="(min-width: 900px) 27vw, 58vw" width="640" height="480" alt="Una persona con peluca rubia, gorro verde y abrigo de leopardo mira seria a la cámara con un plato en la mano, iluminada por el flash" fetchpriority="high">
@@ -323,8 +360,6 @@ p { margin: 0; }
           <p class="lcd-hud" aria-hidden="true"><span>⚡ AUTO · 7M</span><span class="contador">1/3</span></p>
           <span class="flash"></span>
         </div>
-        <div class="cam-botones" aria-hidden="true"><span class="cruceta"></span><i></i><i></i></div>
-      </div>
       <p class="cam-leyenda">Fotos tomadas con cámaras del catálogo</p>
     </div>
     <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
@@ -333,7 +368,7 @@ p { margin: 0; }
     <svg class="chispa" aria-hidden="true"><use href="#chispa"/></svg>
   </section>
 
-  <section class="seccion catalogo" id="catalogo" aria-labelledby="catalogo-titulo">
+  <section class="seccion catalogo panel" id="catalogo" data-pose="catalogo" data-nombre="02 · VITRINA" aria-labelledby="catalogo-titulo">
     <div class="ancho">
       <div data-aparece>
         <h2 class="titulo" id="catalogo-titulo">En la vitrina</h2>
@@ -368,7 +403,7 @@ p { margin: 0; }
     </div>
   </section>
 
-  <section class="ancho seccion" id="revision" aria-labelledby="revision-titulo">
+  <section class="ancho seccion" id="revision" data-pose="revision" data-nombre="03 · REVISIÓN" aria-labelledby="revision-titulo">
     <div data-aparece>
       <h2 class="titulo" id="revision-titulo">Cinco pruebas antes de la vitrina</h2>
       <p class="bajada">Si una cámara no pasa las cinco, se desarma para repuestos. Ninguna sale a la venta a medias.</p>
@@ -386,7 +421,7 @@ p { margin: 0; }
     </ol>
   </section>
 
-  <section class="seccion galeria" id="galeria" aria-labelledby="galeria-titulo">
+  <section class="seccion galeria panel" id="galeria" data-pose="galeria" data-nombre="04 · GALERÍA" aria-labelledby="galeria-titulo">
     <div class="ancho">
       <div data-aparece>
         <h2 class="titulo" id="galeria-titulo">Recién reveladas</h2>
@@ -416,7 +451,7 @@ p { margin: 0; }
     </div>
   </section>
 
-  <section class="ancho seccion garantia" aria-labelledby="garantia-titulo">
+  <section class="ancho seccion garantia" id="garantia" data-pose="garantia" data-nombre="05 · GARANTÍA" aria-labelledby="garantia-titulo">
     <div class="certificado" data-aparece>
       <p class="cert-cabeza">Certificado de garantía Nº 06-1111</p>
       <h2 id="garantia-titulo">Seis meses, por escrito</h2>
@@ -434,7 +469,7 @@ p { margin: 0; }
     </ul>
   </section>
 
-  <section class="ancho seccion vender" id="vender" aria-labelledby="vender-titulo" style="padding-top: 0">
+  <section class="ancho seccion vender" id="vender" data-pose="vender" data-nombre="06 · VENDER" aria-labelledby="vender-titulo" style="padding-top: 0">
     <div data-aparece>
       <h2 class="titulo" id="vender-titulo">¿Tienes una en un cajón?</h2>
       <p class="bajada">Te la compramos aunque no tenga cargador. Mándanos los datos y en 48 horas te respondemos con una oferta.</p>
@@ -457,7 +492,7 @@ p { margin: 0; }
   </section>
 </main>
 
-<footer class="ancho pie">
+<footer class="ancho pie" data-pose="pie" data-nombre="07 · FIN">
   <div class="sd">
     <p class="sd-marca" aria-hidden="true">destello<b>2GB</b></p>
     <div class="sd-datos">

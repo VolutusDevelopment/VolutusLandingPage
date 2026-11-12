@@ -154,12 +154,10 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | portada | https://images.unsplash.com/photo-1618840152526-92682643af2d |
 | hojas | https://images.unsplash.com/photo-1610651445032-613d45fa8c66 |
 | espuma | https://images.unsplash.com/photo-1508759073847-9ca702cec7d2 |
-| jabon | https://images.unsplash.com/photo-1620567838715-4fc924689483 |
 | manos | https://images.unsplash.com/photo-1605264964528-06403738d6dc |
 | maqui | https://images.unsplash.com/photo-1584305574647-0cc949a2bb9f |
 | aceite | https://images.unsplash.com/photo-1671493235081-5842463637cd |
 | champu | https://images.unsplash.com/photo-1618840313409-66c0d92d6f26 |
-| mosqueta | https://images.unsplash.com/photo-1773968088738-3a572416221d |
 
 ## pelusa
 
@@ -183,10 +181,10 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | Archivo | Foto original |
 | --- | --- |
 | portada | https://images.unsplash.com/photo-1784399620949-e7da143e02d1 |
-| noche | https://images.unsplash.com/photo-1593029352324-5d8a5230d224 |
+| patina (video y su foto quieta) | https://mixkit.co/free-stock-video/young-woman-in-a-retro-outfit-dancing-in-roller-blades-49094/ |
 | arriendo | https://images.unsplash.com/photo-1682292508562-d93da8eaf271 |
 | clases | https://images.unsplash.com/photo-1578057183197-423269e14014 |
-| bola | https://images.unsplash.com/photo-1759906219378-9c1accdc32c9 |
+| bola-video (video y su foto quieta) | https://mixkit.co/free-stock-video/shiny-disco-ball-spinning-with-dark-background-1355/ |
 | historia | https://images.unsplash.com/photo-1785088561527-3b48824b5eb5 |
 
 ## tablero
@@ -194,11 +192,8 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | Archivo | Foto original |
 | --- | --- |
 | portada | https://images.unsplash.com/photo-1660807304251-9e2012336d19 |
-| fichas | https://images.unsplash.com/photo-1629760946220-5693ee4c46ac |
 | postre | https://images.unsplash.com/photo-1763683943834-cc07ccbcc65c |
-| ajedrez | https://images.unsplash.com/photo-1758691031257-09efdf77f392 |
 | mantel | https://images.unsplash.com/photo-1607438802263-ada36dae55c5 |
-| explica | https://images.unsplash.com/photo-1758691031288-eda755f22a94 |
 
 ## destello
 
@@ -221,6 +216,7 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
+| cielo (video de la portada y su foto quieta) | https://mixkit.co/free-stock-video/starry-night-in-the-desert-46119/ |
 | guiada | https://images.unsplash.com/photo-1654441895019-62a3d20846dd |
 | astrofoto | https://images.unsplash.com/photo-1604728890708-631078e3eab7 |
 | domo | https://images.unsplash.com/photo-1505579962197-df174377e13f |
@@ -233,31 +229,27 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | Archivo | Foto original |
 | --- | --- |
 | portada | https://images.unsplash.com/photo-1708497351913-71254998ed1a |
-| haz | https://images.unsplash.com/photo-1774967550635-182fb37cf31f |
 | butaca | https://images.unsplash.com/photo-1513106580091-1d82408b8cd6 |
 | proyector | https://images.unsplash.com/photo-1713514116709-4aa2d13e7b0c |
 | rollos | https://images.unsplash.com/photo-1659497559069-c7df574dff75 |
-| marquesina | https://images.unsplash.com/photo-1784644318350-9596c3a47b4f |
 
 ## rumbo
 
 | Archivo | Foto original |
 | --- | --- |
 | hospital | https://images.unsplash.com/photo-1777269749032-d8d458ae594d |
-| linea | https://images.unsplash.com/photo-1791932925637-f3db7614d78c |
 | aeropuerto | https://images.unsplash.com/photo-1678036934657-cfe9f54e139b |
 | escalera | https://images.unsplash.com/photo-1788492641162-ed3cab093745 |
-| flecha | https://images.unsplash.com/photo-1618623266812-f5075ba99663 |
-| dos | https://images.unsplash.com/photo-1584143257262-bf516a6a3877 |
 
 ## bisagra
 
 | Archivo | Foto original |
 | --- | --- |
-| disco | https://images.unsplash.com/photo-1753932847231-7949af383b98 |
-| codo | https://images.unsplash.com/photo-1570974802254-4b0ad1a755f5 |
-| cono | https://images.unsplash.com/photo-1590003689662-0773d48b6417 |
-| esfera | https://images.unsplash.com/photo-1604610728890-6f4b631ed081 |
+| ventana, ventana-alta | https://images.unsplash.com/photo-1653053151869-ecdc43ae6ac8 |
+| codo-brazo | https://images.unsplash.com/photo-1782292932568-149f950c4d0d |
+| hongo | https://images.unsplash.com/photo-1753932847231-7949af383b98 |
+| tambor | https://images.unsplash.com/photo-1691036561875-e764784a0c9a |
+| campana | https://images.unsplash.com/photo-1559924508-1461423083c5 |
 | torneado | https://images.unsplash.com/photo-1551868561-f2cdee310ecf |
 | plegado | https://images.unsplash.com/photo-1738162837340-da3e7a323a09 |
 | encendida | https://images.unsplash.com/photo-1621177555452-bedbe4c28879 |
@@ -266,7 +258,7 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 
 | Archivo | Foto original |
 | --- | --- |
-| portada | https://images.unsplash.com/photo-1787274031613-559170d08741 |
+| barra (video de la portada y su foto quieta) | https://mixkit.co/free-stock-video/bartender-decorating-drink-glasses-15171/ |
 | colador | https://images.unsplash.com/photo-1779635593390-8b478382885f |
 | ascensor | https://images.unsplash.com/photo-1563219125-1db796e20ff2 |
 | lampara | https://images.unsplash.com/photo-1561047699-d4d557d7489c |
@@ -279,9 +271,8 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | Archivo | Foto original |
 | --- | --- |
 | apicultor | https://images.unsplash.com/photo-1473973266408-ed4e27abdd47 |
-| flor | https://images.unsplash.com/photo-1550170139-ed6b5e6b4c38 |
-| cuchara | https://images.unsplash.com/photo-1665473052284-164335672208 |
-| colmenas | https://images.unsplash.com/photo-1693225428299-996f236f239f |
+| cuchara-video (video de la portada y su foto quieta) | https://mixkit.co/free-stock-video/honey-dipper-with-honey-2802/ |
+| colmena-video (video y su foto quieta) | https://mixkit.co/free-stock-video/bees-entering-their-beehive-8597/ |
 
 ## remache
 
@@ -295,7 +286,7 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | honda | https://images.unsplash.com/photo-1527537232679-89f0d63ea3f7 |
 | herramientas | https://images.unsplash.com/photo-1549636367-13c144c47063 |
 | mecanico | https://images.unsplash.com/photo-1517524206127-48bbd363f3d7 |
-| soldadura | https://images.unsplash.com/photo-1609348632802-b952f368fc3a |
+| aceite (video y su foto quieta) | https://mixkit.co/free-stock-video/mechanic-pouring-oil-into-an-engine-41937/ |
 
 ## parina
 
@@ -309,6 +300,11 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | telar | https://images.unsplash.com/photo-1606681246653-74521ac452f4 |
 | hilos | https://images.unsplash.com/photo-1643766883805-829d9ad95c42 |
 | lodge | https://images.unsplash.com/photo-1764768049904-5392dffdda14 |
+| salida | https://images.unsplash.com/photo-1552164587-8f7fe310e785 |
+| descanso | https://images.unsplash.com/photo-1645740713078-7ffec46c2011 |
+| ladera | https://images.unsplash.com/photo-1607613960015-f42a9da36204 |
+| arrieros | https://images.unsplash.com/photo-1662468271632-8f5c418a7a5b |
+| regreso | https://images.unsplash.com/photo-1592520091157-00128f3b8454 |
 
 ## tilde
 
@@ -317,21 +313,24 @@ Los videos en bucle de `public/grabados/bocetos/<boceto>/` (los «gifs») vienen
 | prensa | https://images.unsplash.com/photo-1701743807670-d25bdde3816e |
 | espejo | https://images.unsplash.com/photo-1699662585308-fcb113a0a4ba |
 | caja | https://images.unsplash.com/photo-1778167093244-33d90e4f76c2 |
-| rodillo | https://images.unsplash.com/photo-1778690133450-ddb08af48d76 |
-| invitacion | https://images.unsplash.com/photo-1741893043659-ca8b82a8b637 |
-| suite | https://images.unsplash.com/photo-1732649124686-3bab54f79aa3 |
-| taller | https://images.unsplash.com/photo-1763668193232-c4d0962fe4e4 |
 
 ## rampa
 
 Todas en blanco y negro (`sat=-100`); la trama de semitono la pone el CSS.
+Los «gifs» (videos en bucle de `public/grabados/bocetos/rampa/`) vienen de
+Mixkit, en gris y con la curva apretada (oscuros a negro, claros a papel)
+para que la figura se lea con el punto chico; su foto quieta (`-cuadro`) es
+el primer cuadro del bucle. La secuencia del mes son seis cuadros del mismo
+video que el de la portada.
 
 | Archivo | Foto original |
 | --- | --- |
-| skater | https://images.unsplash.com/photo-1597769555495-c54a15cd8c3f |
+| vuelo-cuadro, vuelo.mp4, secuencia-1 a 6 | https://mixkit.co/free-stock-video/boy-doing-a-pirouette-with-a-skateboard-in-a-park-34382/ |
+| bowl-cuadro, bowl.mp4 | https://mixkit.co/free-stock-video/boy-skating-with-a-skateboard-in-a-park-with-ramps-34389/ |
+| entra-cuadro, entra.mp4 | https://mixkit.co/free-stock-video/skateboarder-talks-with-a-girl-and-goes-down-to-the-1376/ |
+| escuela-cuadro, escuela.mp4 | https://mixkit.co/free-stock-video/boy-and-girl-practicing-skateboarding-together-1372/ |
+| pies-cuadro, pies.mp4 | https://mixkit.co/free-stock-video/feet-of-skateboarders-on-the-street-tracking-shot-21420/ |
 | vuelo | https://images.unsplash.com/photo-1784290624606-6163ff1be504 |
-| bowl | https://images.unsplash.com/photo-1683806904728-e5a2b9341da7 |
-| pies | https://images.unsplash.com/photo-1579382280945-f57c6a629a05 |
 | agachado | https://images.unsplash.com/photo-1517871627464-75e4506348f3 |
 | ruedas | https://images.unsplash.com/photo-1536318431364-5cc762cfc8ec |
 | tabla | https://images.unsplash.com/photo-1601247309037-a3e434b07906 |

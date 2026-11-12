@@ -13,7 +13,8 @@
  * - La pantallita de la cápsula de arriba dice en qué parte de la página vas.
  *
  * Arranca después de la carga y dibuja solo mientras la pestaña se ve y la
- * página no está en espera en el visor. Con el movimiento reducido, la cámara
+ * página no está en espera en el visor; si el navegador dibuja por software,
+ * no se monta. Con el movimiento reducido, la cámara
  * queda quieta en su pose de portada y no hay flash. Sin WebGL no hay cámara
  * de fondo y la página se ve completa.
  */
@@ -199,24 +200,27 @@ void main() {
 
 // Las poses: x e y en la pantalla (de -1 a 1), el tamaño, los giros
 // (alrededor de y, de x y de z, en radianes) y cuánto zoom sale la lente.
+// En pantallas angostas no hay costados libres: después de la portada la
+// cámara sale de cuadro y vuelve solo para disparar en la galería.
 const POSES_ANCHAS = {
   inicio: { x: 0.5, y: 0.02, s: 1.0, giro: -0.6, cabeceo: 0.14, ladeo: -0.06, zoom: 0 },
   catalogo: { x: -0.66, y: 0.34, s: 0.66, giro: 0.95, cabeceo: 0.28, ladeo: 0.2, zoom: 1 },
   revision: { x: 0.62, y: -0.05, s: 0.82, giro: 2.65, cabeceo: -0.1, ladeo: 0.06, zoom: 0.4 },
   galeria: { x: 0.0, y: 0.42, s: 0.7, giro: 0.0, cabeceo: 0.05, ladeo: 0.0, zoom: 0.7 },
-  garantia: { x: 0.62, y: 0.3, s: 0.62, giro: -0.95, cabeceo: 0.24, ladeo: -0.12, zoom: 0 },
-  vender: { x: -0.66, y: 0.12, s: 0.86, giro: 3.05, cabeceo: 0.06, ladeo: 0.04, zoom: 0 },
+  garantia: { x: 0.64, y: 0.6, s: 0.5, giro: -0.95, cabeceo: 0.24, ladeo: -0.12, zoom: 0 },
+  vender: { x: 1.02, y: 0.78, s: 0.6, giro: 3.05, cabeceo: 0.06, ladeo: 0.3, zoom: 0 },
   pie: { x: 0.0, y: -1.7, s: 0.6, giro: 6.2, cabeceo: 0.3, ladeo: 0.0, zoom: 0 },
 }
 const POSES_ANGOSTAS = {
-  inicio: { x: 0.42, y: 0.48, s: 0.5, giro: -0.6, cabeceo: 0.14, ladeo: -0.08, zoom: 0 },
-  catalogo: { x: -0.5, y: 0.66, s: 0.42, giro: 0.95, cabeceo: 0.28, ladeo: 0.2, zoom: 1 },
-  revision: { x: 0.5, y: 0.6, s: 0.48, giro: 2.65, cabeceo: -0.1, ladeo: 0.06, zoom: 0.4 },
-  galeria: { x: 0.0, y: 0.62, s: 0.48, giro: 0.0, cabeceo: 0.05, ladeo: 0.0, zoom: 0.7 },
-  garantia: { x: 0.5, y: 0.62, s: 0.42, giro: -0.95, cabeceo: 0.24, ladeo: -0.12, zoom: 0 },
-  vender: { x: -0.5, y: 0.66, s: 0.48, giro: 3.05, cabeceo: 0.06, ladeo: 0.04, zoom: 0 },
+  inicio: { x: 0.04, y: 0.36, s: 0.55, giro: -0.6, cabeceo: 0.14, ladeo: -0.08, zoom: 0 },
+  catalogo: { x: 1.7, y: 0.5, s: 0.42, giro: 0.95, cabeceo: 0.28, ladeo: 0.2, zoom: 1 },
+  revision: { x: 1.7, y: 0.3, s: 0.42, giro: 2.65, cabeceo: -0.1, ladeo: 0.06, zoom: 0.4 },
+  galeria: { x: 0.0, y: 0.56, s: 0.46, giro: 0.0, cabeceo: 0.05, ladeo: 0.0, zoom: 0.7 },
+  garantia: { x: -1.7, y: 0.4, s: 0.42, giro: -0.95, cabeceo: 0.24, ladeo: -0.12, zoom: 0 },
+  vender: { x: -1.7, y: 0.4, s: 0.42, giro: 3.05, cabeceo: 0.06, ladeo: 0.04, zoom: 0 },
   pie: { x: 0.0, y: -1.7, s: 0.4, giro: 6.2, cabeceo: 0.3, ladeo: 0.0, zoom: 0 },
 }
+const POSES_MEDIAS = { ...POSES_ANGOSTAS, inicio: { ...POSES_ANGOSTAS.inicio, y: 0.46 } }
 const CLAVES = ['x', 'y', 's', 'giro', 'cabeceo', 'ladeo', 'zoom']
 const suave = (t) => t * t * t * (t * (t * 6 - 15) + 10)
 const mezclar = (a, b, t) => Object.fromEntries(CLAVES.map((k) => [k, a[k] + (b[k] - a[k]) * t]))
@@ -239,6 +243,10 @@ function montarCamara() {
   const lienzo = document.querySelector('.escena-3d')
   const gl = lienzo?.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false })
   if (!gl) return null
+  // Dibujada por software (sin tarjeta de video), la cámara costaría cada
+  // cuadro: no se monta y la página queda completa sin ella.
+  const info = gl.getExtension('WEBGL_debug_renderer_info')
+  if (/swiftshader|llvmpipe|software|basic render/i.test(String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || ''))) return null
   const compilar = (tipo, fuente) => {
     const s = gl.createShader(tipo)
     gl.shaderSource(s, fuente)
@@ -265,7 +273,7 @@ function montarCamara() {
   let alto = 1
   function medir() {
     const angosta = innerWidth < 900
-    poses = angosta ? POSES_ANGOSTAS : POSES_ANCHAS
+    poses = innerWidth < 600 ? POSES_ANGOSTAS : angosta ? POSES_MEDIAS : POSES_ANCHAS
     const escala = Math.min(devicePixelRatio || 1, angosta ? 1.25 : 1.5) * (angosta ? 0.8 : 0.85)
     ancho = innerWidth
     alto = innerHeight
@@ -401,5 +409,7 @@ function empezar() {
   if (!quieto) setTimeout(disparar, 1500)
 }
 
-if (document.readyState === 'complete') empezar()
-else addEventListener('load', empezar, { once: true })
+// Arranca cuando la página ya cargó y el navegador está libre.
+const enCalma = () => ('requestIdleCallback' in window ? requestIdleCallback(empezar, { timeout: 900 }) : setTimeout(empezar, 200))
+if (document.readyState === 'complete') enCalma()
+else addEventListener('load', enCalma, { once: true })

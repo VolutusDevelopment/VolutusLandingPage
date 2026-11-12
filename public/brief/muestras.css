@@ -40,7 +40,7 @@
 @font-face { font-family: 'Muestra Rubik'; src: url('/fonts/brief/rubik-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 @font-face { font-family: 'Muestra Syne'; src: url('/fonts/brief/syne-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
 @font-face { font-family: 'Muestra Alegreya'; src: url('/fonts/brief/alegreya-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'Muestra Alegreya Sans'; src: url('/fonts/brief/alegreya-sans-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Muestra Instrument Serif'; src: url('/fonts/brief/instrument-serif.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Muestra Abril'; src: url('/fonts/brief/abril-fatface.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Muestra Special Elite'; src: url('/fonts/brief/special-elite.woff2') format('woff2'); font-display: swap; }
 @font-face { font-family: 'Muestra Archivo Black'; src: url('/fonts/brief/archivo-black.woff2') format('woff2'); font-display: swap; }
@@ -63,11 +63,11 @@
 .estilo-suizo { --letra: 700 1em 'Muestra Archivo', Helvetica, Arial, sans-serif; }
 .estilo-natural { --letra: 400 1em 'Muestra Young Serif', Georgia, serif; }
 .estilo-futurista { --letra: 700 1em 'Muestra Unbounded', sans-serif; }
-.estilo-artesanal { --letra: 700 1em 'Muestra Alegreya Sans', sans-serif; }
+.estilo-artesanal { --letra: 400 1.1em 'Muestra Instrument Serif', Georgia, serif; }
 .estilo-zen { --letra: 400 1em 'Muestra Shippori', Georgia, serif; }
 .estilo-industrial { --letra: 800 1em 'Muestra Stencil', Impact, sans-serif; }
 .estilo-artdeco { --letra: 400 1em 'Muestra Poiret', sans-serif; }
-.estilo-bauhaus { --letra: 700 1em 'Muestra Jost', sans-serif; }
+.estilo-bauhaus { --letra: 400 1.1em 'Muestra Instrument Serif', Georgia, serif; }
 .estilo-memphis { --letra: 800 1em 'Muestra Rubik', sans-serif; }
 .estilo-y2k { --letra: 800 1em 'Muestra Syne', sans-serif; }
 .estilo-andino { --letra: 700 1em 'Muestra Alegreya', Georgia, serif; }
@@ -435,21 +435,19 @@
 .estilo-futurista .brief-sello svg { width: 24px; fill: #e9e8ff; transform: rotate(-45deg) scale(0.4); transition: opacity 300ms, transform 900ms var(--calma); }
 .estilo-futurista:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Artesanal · Libar: la etiqueta del frasco y su timbre, que espera arriba.
-   Al pasar, el timbre baja y deja la tinta. */
-.estilo-artesanal { --marcado: #b5442b; }
-.estilo-artesanal .brief-muestra-arte { display: grid; place-items: center; background: #e9dcc4 radial-gradient(rgb(122 75 42 / 0.09) 1px, transparent 1.4px) 0 0 / 6px 6px; }
-.estilo-artesanal .etiqueta { display: grid; justify-items: center; gap: 5px; padding: 14px 24px 12px; background: #f6efe1; color: #3b2a1a; outline: 1.5px dashed rgb(59 42 26 / 0.45); outline-offset: -6px; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); rotate: -2deg; }
-.estilo-artesanal .etiqueta i { font: 700 18px/1 'Muestra Caveat', cursive; color: #4f5b3a; }
-.estilo-artesanal .etiqueta b { padding-left: 0.16em; font: 700 30px/1 'Muestra Alegreya Sans', sans-serif; letter-spacing: 0.16em; }
-.estilo-artesanal .etiqueta small { font: 700 9px/1 'Muestra Alegreya Sans', sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #6b5236; }
-.estilo-artesanal .timbre { position: absolute; left: calc(50% + 40px); top: 16px; width: 60px; fill: none; stroke: #b5442b; stroke-width: 2.5; opacity: 0.3; scale: 1.25; translate: 8px -10px; rotate: -14deg; filter: drop-shadow(5px 8px 3px rgb(59 42 26 / 0.3)); transition: opacity 700ms var(--calma), scale 700ms var(--calma), translate 700ms var(--calma), filter 700ms var(--calma); }
-.estilo-artesanal .timbre .fino { stroke-width: 1; }
-.estilo-artesanal .timbre text { fill: #b5442b; stroke: none; font: 700 15px/1 'Muestra Alegreya Sans', sans-serif; text-anchor: middle; }
-.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .timbre { opacity: 0.9; scale: 1; translate: 0 0; filter: drop-shadow(0 0 0 transparent); }
-.estilo-artesanal:has([value='si']:checked) .brief-muestra-pie { background: #e9dcc4; color: #3b2a1a; }
-.estilo-artesanal .brief-sello svg { width: 26px; fill: none; stroke: #b5442b; stroke-width: 2.5; transform: scale(1.8) rotate(-30deg); transition: opacity 300ms, transform 600ms var(--calma); }
-.estilo-artesanal:has([value='si']:checked) .brief-sello svg { transform: rotate(-12deg); }
+/* Artesanal · Libar: miel oscura, un borde que gotea y la marca en una
+   serif fina. Al pasar, las gotas se estiran despacio, sin caer. */
+.estilo-artesanal { --marcado: #e0a12a; }
+.estilo-artesanal .brief-muestra-arte { display: grid; place-items: center; background: radial-gradient(ellipse 80% 70% at 70% 90%, #3a2510, #1c1308 70%); }
+.estilo-artesanal .gotas { position: absolute; inset: 0 0 auto; width: 100%; height: 64px; fill: #e0a12a; }
+.estilo-artesanal .gota { transform-box: fill-box; transform-origin: 50% 0; transition: scale 1400ms var(--calma); }
+.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .gota { scale: 1 1.3; }
+.estilo-artesanal:is(:hover, :focus-within, :has([value='si']:checked)) .gota:nth-child(odd) { scale: 1 1.15; }
+.estilo-artesanal .libar { display: grid; justify-items: center; gap: 8px; margin-top: 22px; color: #f7eedb; font: 400 58px/0.85 'Muestra Instrument Serif', Georgia, serif; letter-spacing: -0.02em; }
+.estilo-artesanal .libar small { font: 600 9px/1 system-ui, sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: #e0a12a; }
+.estilo-artesanal:has([value='si']:checked) .brief-muestra-pie { background: #1c1308; color: #f7eedb; }
+.estilo-artesanal .brief-sello svg { width: 22px; fill: #e0a12a; transform-origin: 50% 0; transform: scale(1, 0.4); transition: opacity 300ms, transform 900ms var(--calma); }
+.estilo-artesanal:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Zen: Kiri. Papel washi, el ensō a pincel y 霧 con «Kiri» en vertical; al
    pasar, una niebla sube despacio. */
@@ -498,26 +496,23 @@
 .estilo-artdeco .brief-sello svg { width: 30px; fill: #c9a24a; transform: scale(0.3); transform-origin: 50% 100%; transition: opacity 300ms, transform 700ms var(--calma); }
 .estilo-artdeco:has([value='si']:checked) .brief-sello svg { transform: none; }
 
-/* Bauhaus · Bisagra: el logo de tres formas, la línea y su bisagra. Al pasar,
-   se arma en lámpara: el círculo es la pantalla, la línea el brazo, el
-   cuadrado la base y el triángulo, la luz. */
-.estilo-bauhaus { --marcado: #d7261e; }
-.estilo-bauhaus .brief-muestra-arte { background: #f1ead8; }
-.estilo-bauhaus .brief-muestra-arte i { position: absolute; transition: transform 900ms var(--calma), clip-path 900ms var(--calma), opacity 900ms var(--calma); }
-.estilo-bauhaus .c { left: 22px; top: 30px; width: 52px; height: 52px; border-radius: 50%; background: #d7261e; clip-path: inset(0 0 0 0); }
-.estilo-bauhaus .q { left: 84px; top: 34px; width: 44px; height: 44px; background: #1f4aa8; }
-.estilo-bauhaus .t { left: 138px; top: 30px; width: 50px; height: 48px; background: #f2b705; clip-path: polygon(50% 0, 100% 100%, 0 100%); transform-origin: 50% 0; }
-.estilo-bauhaus .b { left: 22px; top: 92px; width: 168px; height: 6px; background: #141414; transform-origin: 0 50%; }
-.estilo-bauhaus .h { left: 186px; top: 88px; width: 14px; height: 14px; border-radius: 50%; background: #f1ead8; box-shadow: inset 0 0 0 4px #141414; }
-.estilo-bauhaus .rot { position: absolute; left: 22px; bottom: 12px; font: 500 22px/1 'Muestra Jost', sans-serif; letter-spacing: -0.02em; color: #141414; }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .c { transform: translate(156px, 10px) rotate(20deg); clip-path: inset(0 0 50% 0); }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .q { transform: translate(59px, 63px) scale(0.68); }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .t { transform: translate(41px, 36px) scale(1.12, 1.38); opacity: 0.7; }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .b { transform: translate(143px, 9px) rotate(-68.4deg) scaleX(0.307); }
-.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .h { transform: translate(-9px, -39px); }
-.estilo-bauhaus:has([value='si']:checked) .brief-muestra-pie { background: #141414; color: #f1ead8; }
-.estilo-bauhaus .brief-sello span { width: 22px; height: 22px; border-radius: 50%; background: #d7261e; transform: translateX(14px); transition: opacity 300ms, transform 600ms var(--calma); }
-.estilo-bauhaus:has([value='si']:checked) .brief-sello span { transform: none; }
+/* Bauhaus · Bisagra: la «B» hecha con una bisagra y el nombre en serif,
+   de día. Al pasar, se hace de noche: el fondo se apaga, las hojas de la
+   bisagra se encienden y la luz cálida se reparte. Sello: la bisagra. */
+.estilo-bauhaus { --marcado: #9c4a2c; }
+.estilo-bauhaus .brief-muestra-arte { background: #f2eee7; transition: background-color 900ms var(--calma); }
+.estilo-bauhaus .brief-muestra-arte::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 56px 58px, rgb(255 196 128 / 0.5), rgb(255 196 128 / 0) 150px); opacity: 0; transition: opacity 900ms var(--calma); pointer-events: none; }
+.estilo-bauhaus .bisagra { position: absolute; left: 26px; top: 24px; width: 56px; height: 70px; fill: #1d1a16; transition: fill 900ms var(--calma); }
+.estilo-bauhaus .bisagra .hoja { transform-origin: 9.6px 0; transition: fill 900ms var(--calma), transform 700ms var(--calma); }
+.estilo-bauhaus .rot { position: absolute; left: 24px; bottom: 12px; font: 400 44px/1 'Muestra Instrument Serif', Georgia, serif; letter-spacing: -0.01em; color: #1d1a16; transition: color 900ms var(--calma); }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte { background: #13110e; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .brief-muestra-arte::after { opacity: 1; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .bisagra { fill: #f1e8da; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .bisagra .hoja { fill: #ffc480; }
+.estilo-bauhaus:is(:hover, :focus-within, :has([value='si']:checked)) .rot { color: #f1e8da; }
+.estilo-bauhaus:has([value='si']:checked) .brief-muestra-pie { background: #13110e; color: #f1e8da; }
+.estilo-bauhaus .brief-sello svg { width: 18px; fill: #9c4a2c; transform: scale(0.3); transition: opacity 300ms, transform 600ms var(--calma); }
+.estilo-bauhaus:has([value='si']:checked) .brief-sello svg { transform: none; }
 
 /* Memphis · Tablero: el patrón de puntos, figuras sueltas, el dado y su
    nombre. Al pasar, el garabato y las figuras se desplazan. */
