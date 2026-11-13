@@ -271,7 +271,7 @@ export const PAGINAS = {
   },
   '/privacidad': {
     archivo: 'privacidad.html',
-    actualizada: '2026-11-10',
+    actualizada: '2026-11-13',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',

@@ -810,10 +810,15 @@ svg {
   margin-top: var(--e-6);
 }
 
+/* Centrados en todos los anchos. Sin la medida de lectura de los <p>: es una
+   fila de botones, y se centra en la tarjeta entera, no en el ancho de un
+   párrafo. */
 .cierre-acciones {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--e-3);
+  max-width: none;
   margin-top: var(--e-8);
 }
 
@@ -826,10 +831,6 @@ svg {
 
   .cierre-invitacion .entradilla {
     margin-inline: auto;
-  }
-
-  .cierre-acciones {
-    justify-content: center;
   }
 }
 

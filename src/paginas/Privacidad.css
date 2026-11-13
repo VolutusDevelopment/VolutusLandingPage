@@ -60,6 +60,79 @@
   }
 }
 
+/* ---- la banda de las IA (cierre) ----
+   A sangre en la tarjeta: el margen negativo deshace su relleno lateral (el de
+   `.cierre-tarjeta`, en index.css), y una línea arriba y otra abajo la marcan
+   como banda. Los bordes se funden para que los íconos no entren cortados en
+   seco. */
+.privacidad-ias {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  margin: var(--e-8) calc(-1 * var(--e-6)) 0;
+  padding-block: var(--e-4);
+  border-block: 1px solid var(--linea);
+  color: var(--texto-suave);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (min-width: 640px) {
+  .privacidad-ias {
+    margin-inline: calc(-1 * var(--e-12));
+  }
+}
+
+/* El que guarda los trazos no ocupa lugar. */
+.privacidad-ias > svg {
+  position: absolute;
+}
+
+.privacidad-ias-pista {
+  display: flex;
+  flex: none;
+}
+
+/* El aire va dentro de cada ícono y no como `gap` de la pista: así las dos
+   mitades miden exactamente lo mismo y el giro empalma sin salto. */
+.privacidad-ia {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  padding-inline: var(--e-6);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Cada ícono trae sus colores; los que no tienen (ChatGPT, Grok) van en el
+   color del texto, más claro que el de los nombres. */
+.privacidad-ia svg {
+  width: 1.25em;
+  height: 1.25em;
+  color: var(--texto);
+  fill: currentColor;
+}
+
+/* Con movimiento, la pista avanza una mitad y vuelve a empezar: como la otra
+   mitad es igual, no se nota. Lenta, para que acompañe y no llame. Quieta, va
+   centrada. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .privacidad-ias {
+    justify-content: flex-start;
+  }
+
+  .privacidad-ias-pista {
+    animation: desfilar 60s linear infinite;
+  }
+}
+
+@keyframes desfilar {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ---- el resumen ----
    Lo esencial en una tarjeta azul marino, la misma del cierre: después del
    cielo de la cabecera, un bloque cerrado y no otro titular a todo el ancho.

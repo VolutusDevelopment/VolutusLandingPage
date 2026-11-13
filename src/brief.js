@@ -747,7 +747,8 @@ export default function iniciarBrief(form) {
   })
 
   // El paso en que va también se guarda, pero solo si ya escribió algo: abrir
-  // el link y mirar no deja nada en el equipo. «Retomaste…» es del recorrido:
+  // el link y mirar no deja respuestas en el equipo, solo la marca de la
+  // pestaña (`CLAVE_VISITA`), que se va al cerrarla. «Retomaste…» es del recorrido:
   // al moverse, se va.
   addEventListener('hashchange', () => {
     aviso.hidden = true

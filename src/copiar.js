@@ -1,6 +1,7 @@
 // Los botones que copian un texto de la página: `data-copiar` es el id del
-// elemento que lo guarda. Hoy, la política de privacidad en Markdown, para
-// pegarla en un chat de IA (ver Privacidad.jsx).
+// elemento que lo guarda. Hoy, en /privacidad, la política en Markdown y las
+// instrucciones para que una IA revise el código, para pegarlas en un chat
+// (ver Privacidad.jsx).
 //
 // El texto ya viene en el HTML y se copia dentro del mismo clic: Safari solo
 // deja escribir en el portapapeles mientras dura el gesto, y esperar una
