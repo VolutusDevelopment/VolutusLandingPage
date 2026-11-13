@@ -131,7 +131,7 @@ const APARTADOS = [
       'En tu navegador se guarda esto, y nada más:',
       [
         'Si terminaste una partida de la [caza de patos](/patos), para desbloquear un modo del juego.',
-        'El final que elegiste en Operación Venganza, para que la página Nosotros lo muestre. Se borra al cerrar la pestaña.',
+        'El final que elegiste en [Operación Venganza](/operacion-venganza), para que la página Nosotros lo muestre. Se borra al cerrar la pestaña.',
         'Si llenas nuestro brief: tus respuestas mientras lo llenas, su número al azar (ver arriba) y una marca de que lo abriste, para ofrecerte volver si lo dejas a medias. La marca se borra al cerrar la pestaña.',
       ],
       'Nada de eso sale de tu equipo, salvo tus respuestas y el número al azar cuando envías el brief. Lo demás se queda ahí hasta que borres los datos de este sitio en tu navegador.',
