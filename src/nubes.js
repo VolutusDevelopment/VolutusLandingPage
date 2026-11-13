@@ -257,17 +257,20 @@ function montar(pintor, lienzo, id) {
         alto: lugar.height * escala,
       })
     }
+    const medir = () => {
+      enviar()
+      enmarcar()
+    }
     addEventListener('scroll', enviar, { passive: true, signal })
-    addEventListener(
-      'resize',
-      () => {
-        enviar()
-        enmarcar()
-      },
-      { signal },
-    )
-    enviar()
-    enmarcar()
+    addEventListener('resize', medir, { signal })
+    // La vitrina también cambia de medida sin que cambie la ventana: cuando
+    // aparece o se va una barra de scroll, el ancho cambia unos 15 px, y en
+    // 16:9 la vitrina crece o se achica unos 8. Con el recorte de antes,
+    // debajo de la nube quedaba una franja del fondo.
+    const observador = new ResizeObserver(medir)
+    observador.observe(hueco)
+    signal.addEventListener('abort', () => observador.disconnect())
+    medir()
   }
 
   // La lámina: el telón se recorta a una franja del alto del hueco que la

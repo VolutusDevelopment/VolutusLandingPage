@@ -368,9 +368,9 @@
      abajo se pasaba del final de la página: al rebotar, bajo el mar asomaba un
      cuadro de cielo. `main` no pinta más abajo de su final, como el telón de
      /nosotros (Nosotros.css); arriba deja una pantalla para el reflejo de la
-     nube bajo la hora. */
+     nube bajo la hora, y abajo, el blanco que sigue al relevo. */
   .viaje {
-    clip-path: inset(-100lvh 0 0);
+    clip-path: inset(-100lvh 0 calc(-1 * var(--relevo-extra)));
   }
 }
 
@@ -392,11 +392,24 @@
    tapa: cae en la vitrina de PonleNota (`recortarPortada` en nubes.js). El
    relevo alarga el viaje el alto del cielo, y Proyectos se monta sobre él:
    así el cielo se suelta cuando Proyectos toca arriba, ya recortado en la
-   vitrina, y desde ahí se va con ella. */
+   vitrina, y desde ahí se va con ella.
+
+   En una ventana baja la vitrina no cabe en esa pantalla (en Brave, con sus
+   barras, desde unos 800 px de alto), y el blanco de Proyectos tapaba el pie
+   de la nube. Proyectos sigue transparente hasta donde llega la vitrina a lo
+   más, 52rem bajo su borde con el 16:9 a su ancho mayor, y el blanco del
+   viaje sigue ese tramo detrás de la nube con una sombra, sin alargar el
+   viaje: el cielo se suelta donde siempre. */
+.viaje,
+.viaje + .seccion {
+  --relevo-extra: max(0px, 52rem - 100lvh);
+}
+
 .viaje {
   position: relative;
   isolation: isolate;
   background: var(--fondo);
+  box-shadow: 0 var(--relevo-extra) var(--fondo);
 }
 
 .viaje-relevo {
@@ -405,7 +418,7 @@
 
 
 .viaje + .seccion {
-  --fondo-hora: linear-gradient(transparent 100lvh, var(--fondo) 0);
+  --fondo-hora: linear-gradient(transparent calc(100lvh + var(--relevo-extra)), var(--fondo) 0);
   position: relative;
   z-index: 1;
   margin-top: -100lvh;

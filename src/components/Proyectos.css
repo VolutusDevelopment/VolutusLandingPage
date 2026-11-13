@@ -8,13 +8,13 @@
  * fila; tres juntas se quedan en columna.
  * ========================================================================= */
 
-/* Pegadas al titular: con aire entre los dos, el titular quedaba suelto de
-   lo suyo. */
+/* Cerca del titular, con un respiro: con mucho aire el titular quedaba suelto
+   de lo suyo, y pegado a la caja de PonleNota no respiraba. */
 .obras {
   display: flex;
   flex-wrap: wrap;
   gap: var(--e-6);
-  margin: 0;
+  margin: var(--e-5) 0 0;
   padding: 0;
   list-style: none;
 }

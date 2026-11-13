@@ -155,7 +155,6 @@ export default function Proyectos() {
     <section id="proyectos" className="seccion zona-cielo proyectos">
       <div className="contenedor">
         <h2 className="titular entra">Proyectos y logros</h2>
-
         <ul className="obras">
           {obras.map((proyecto) => (
             <Obra key={proyecto.id} proyecto={proyecto} />
