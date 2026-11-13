@@ -205,11 +205,15 @@ function montar(pintor, lienzo, id) {
   // Proyectos, la sección que sigue al viaje (Inicio.jsx), y el producto sube
   // sobre ella. Se recorta en el último 70 % de pantalla antes de que la
   // sección toque arriba, y se queda con la franja del medio del cielo, donde
-  // la cámara deja el rollo al abrirse (`abrir` en lib/volutus.js).
+  // la cámara deja el rollo al abrirse (`abrir` en lib/volutus.js). Si la
+  // vitrina queda más arriba que el medio (en el teléfono y la tablet), con
+  // la franja de su propia altura: así el telón nunca sube, y su borde de
+  // abajo no deja una raya del fondo bajo la vitrina mientras llega. La
+  // cámara se encuadra en esa franja, así que en la vitrina se ve lo mismo.
   function recortarPortada() {
     const hueco = tapa.querySelector('.obra-con-vitrina .vitrina')
     if (!hueco) return
-    const franja = (alto, lugar) => (alto - lugar.height) / 2
+    const franja = (alto, lugar) => Math.min((alto - lugar.height) / 2, lugar.top - tapa.getBoundingClientRect().top)
     const tramo = () => 0.7 * innerHeight
     const delScroll = () => Math.min(1, Math.max(0, 1 - tapa.getBoundingClientRect().top / tramo()))
     // El recorte sigue al scroll con un resorte, como un imán: cuando el
@@ -230,7 +234,7 @@ function montar(pintor, lienzo, id) {
       } else pendiente = requestAnimationFrame(asentar)
       // Lo que el imán cree que le falta a la sección para tocar arriba: el
       // tope de lo que la franja la alcanza (ver `recortar`).
-      recortar(tapa, hueco, iman.x, franja, (1 - iman.x) * tramo())
+      recortar(tapa, hueco, iman.x, franja, { tope: (1 - iman.x) * tramo(), ligado: true })
       // El producto sube con ella (ver «la llegada» en Proyectos.css).
       hueco.style.setProperty('--asiento', iman.x.toFixed(4))
     }
@@ -281,18 +285,32 @@ function montar(pintor, lienzo, id) {
   // antes, la caída es la misma. Nunca más que `tope`, lo que el resorte cree
   // que falta: al subir, el resorte va detrás del scroll, y sin tope la nube
   // perseguía a la caja hacia abajo y volvía de golpe.
+  //
+  // Con `ligado`, el borde de abajo de la franja va pegado al del hueco donde
+  // está, no donde va a quedar: lo que llega debajo del hueco (el texto de la
+  // obra, en la portada) empuja a la nube desde que asoma, y entre los dos no
+  // queda fondo a la vista. Hasta que `k` llega a 1 va más abajo que el
+  // hueco, tapado por lo que llega, nunca más arriba. Al subir, el hueco baja
+  // más rápido de lo que esto alcanza a medirlo, y en el fotograma que llega
+  // tarde asomaba el fondo: la franja baja de más lo que el hueco bajó desde
+  // la vez anterior (`ventaja`), que queda tapado.
   let recorte
   let corrido = 0
-  function recortar(hoja, hueco, k, franjaDe, tope = 0) {
+  let abajoAntes
+  function recortar(hoja, hueco, k, franjaDe, { tope = 0, ligado = false } = {}) {
     const telon = lienzo.parentElement
     const caja = telon.getBoundingClientRect()
     const lugar = hueco.getBoundingClientRect()
     const alto = telon.offsetHeight
     const arriba = hoja.getBoundingClientRect().top
-    const falta = Math.min(tope, Math.max(0, Math.round(arriba - (caja.top - corrido))))
-    const medida = `${k} ${caja.width} ${alto} ${lugar.left} ${lugar.width} ${lugar.height} ${falta}`
+    // Dónde estaría el telón sin correrlo.
+    const sinCorrer = caja.top - corrido
+    const falta = Math.min(tope, Math.max(0, Math.round(arriba - sinCorrer)))
+    const medida = `${k} ${caja.width} ${alto} ${lugar.left} ${lugar.width} ${lugar.height} ${falta} ${ligado && lugar.top}`
     if (medida === recorte) return
     recorte = medida
+    const ventaja = Math.min(Math.max(0, lugar.bottom - (abajoAntes ?? lugar.bottom)), alto / 4)
+    abajoAntes = lugar.bottom
     telon.classList.toggle('recortado', k > 0)
     if (!k) {
       corrido = 0
@@ -312,7 +330,10 @@ function montar(pintor, lienzo, id) {
     // Lo que el redondeo corrió el telón lo devuelve la franja: calza con el
     // hueco al medio px, sin una raya de fondo abajo.
     const resto = exacto - corrido
-    const lados = [franja + resto, caja.right - lugar.right, alto - franja - lugar.height - resto, lugar.left - caja.left]
+    const abajo = ligado
+      ? Math.max(0, sinCorrer + corrido + alto - lugar.bottom - ventaja)
+      : alto - franja - lugar.height - resto
+    const lados = [franja + resto, caja.right - lugar.right, abajo, lugar.left - caja.left]
     telon.style.transform = `translateY(${corrido}px)`
     telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radios.join(' ')})`
   }
