@@ -429,7 +429,8 @@
 /* La tarjeta de PonleNota se da vuelta y su vitrina queda abierta al cielo,
    arriba y a todo el ancho: vertical en el teléfono, 4:3 en la tablet y
    16:9 desde L, con la nube vista como en la portada (ver `abrir` en
-   lib/volutus.js). El producto va grande, dentro del cielo. El fondo oscuro
+   lib/volutus.js). El producto se ordena dentro de ella en Proyectos.css,
+   con medidas en porcentajes de estas mismas proporciones. El fondo oscuro
    queda solo detrás del texto, que va abajo, en dos columnas desde L. No
    entra con el scroll: la nube la busca mientras sube, y tiene que estar
    donde va a quedar. */
@@ -450,44 +451,9 @@
   border-radius: var(--radio-panel) var(--radio-panel) 0 0;
 }
 
-/* El sitio, entero y arriba, recortado donde termina su portada: debajo la
-   captura sigue en blanco, y se veía como un hueco. */
-.proyectos .obra-con-vitrina .vitrina-pantalla {
-  left: 20%;
-  top: 16%;
-  width: 76%;
-  aspect-ratio: 128 / 65;
-  object-fit: cover;
-  object-position: top;
-  border-radius: var(--radio-tarjeta);
-  box-shadow: 0 24px 48px -16px rgb(6 16 26 / 0.45);
-}
-
-/* El teléfono del cliente sube desde el borde de abajo, delante del sitio:
-   se ve su tarjeta, y lo que su pantalla deja vacío debajo de ella queda
-   bajo el borde. */
-.proyectos .obra-con-vitrina .vitrina-telefono {
-  left: 6%;
-  top: 52%;
-  width: 44%;
-  border-radius: 13% / 6%;
-}
-
 @container (min-width: 36rem) {
   .proyectos .obra-con-vitrina .vitrina {
     aspect-ratio: 4 / 3;
-  }
-
-  .proyectos .obra-con-vitrina .vitrina-pantalla {
-    left: 30%;
-    top: 18%;
-    width: 62%;
-  }
-
-  .proyectos .obra-con-vitrina .vitrina-telefono {
-    left: 15%;
-    top: 67%;
-    width: 18%;
   }
 }
 
@@ -501,24 +467,12 @@
     aspect-ratio: 16 / 9;
   }
 
-  .proyectos .obra-con-vitrina .vitrina-pantalla {
-    left: 30%;
-    top: 18%;
-    width: 58%;
-  }
-
-  .proyectos .obra-con-vitrina .vitrina-telefono {
-    left: 16%;
-    top: 59%;
-    width: 17%;
-  }
-
   .proyectos .obra-con-vitrina .obra-texto {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'nombre pruebas'
-      'resumen abrir';
+      'resumen .';
     column-gap: var(--e-12);
     align-items: start;
   }
@@ -535,9 +489,5 @@
     grid-area: pruebas;
     margin: 0;
     padding: 0;
-  }
-
-  .proyectos .obra-con-vitrina .obra-abrir {
-    grid-area: abrir;
   }
 }

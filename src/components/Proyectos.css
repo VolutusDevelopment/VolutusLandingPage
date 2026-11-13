@@ -1,25 +1,15 @@
 /* ============================================================================
  * Las láminas de proyectos.
  *
- * Una por proyecto. La que trae capturas va a todo el ancho, con el texto a
- * un lado y el producto al otro; las que no, son filas y se reparten de a dos
- * o tres. Cada lámina toma su forma según su propio ancho (container query) y
- * no el de la pantalla: una fila sola ocupa el ancho entero y se pone en
- * horizontal; tres juntas se quedan en columna.
+ * Una por proyecto. La que trae capturas va a todo el ancho, con el producto
+ * de portada y el texto debajo; las que no, son solo el texto y se reparten de
+ * a dos o tres. Cada lámina toma su forma según su propio ancho (container
+ * query) y no el de la pantalla: sola ocupa el ancho entero y pone su texto en
+ * fila; tres juntas se quedan en columna.
  * ========================================================================= */
 
-/* Con el aire de entre secciones (64 px) el titular quedaba suelto de lo
-   suyo; con 32, todavía. */
-.obras-bloque {
-  display: grid;
-  gap: var(--e-6);
-  margin-top: var(--e-6);
-}
-
-.obras-bajada {
-  color: var(--texto-suave);
-}
-
+/* Pegadas al titular: con aire entre los dos, el titular quedaba suelto de
+   lo suyo. */
 .obras {
   display: flex;
   flex-wrap: wrap;
@@ -99,7 +89,7 @@
   margin: 0;
 }
 
-/* Por encima del `::after` del botón de la ficha, que cubre la lámina. En
+/* Por encima del `::after` del enlace que abre la lámina, que la cubre. En
    línea y no en flex: si la dirección se parte, la flecha sigue a la última
    palabra. El relleno lleva el área de toque a 44 px. */
 .obra-direccion {
@@ -130,8 +120,13 @@
   stroke-linejoin: round;
 }
 
-/* Toda la lámina responde al toque, no solo la línea del botón. La capa la
-   pone encima de las capturas, que también van posicionadas. */
+/* Toda la lámina abre el sitio, no solo su línea: el enlace no se posiciona,
+   así que su capa se estira hasta la lámina, encima de las capturas, que
+   también van posicionadas. */
+.obra-abrir {
+  position: static;
+}
+
 .obra-abrir::after {
   content: '';
   position: absolute;
@@ -139,93 +134,163 @@
   inset: 0;
 }
 
-/* Al pulsar no se inclina: con `transform` el botón pasaría a contener su
-   capa, que a mitad del toque dejaría de cubrir la lámina. */
-.obra-abrir:active {
-  transform: none;
-}
-
-/* Con el teclado, además del anillo del botón, se marca la lámina entera. */
+/* Con el teclado, además del anillo del enlace, se marca la lámina entera. */
 .obra:has(.obra-abrir:focus-visible) {
   outline: 3px solid var(--foco);
   outline-offset: 3px;
 }
 
-.obra-flecha {
-  display: grid;
-}
-
-.obra-flecha svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Pasar por la lámina rellena su botón: es el que la abre. */
-@media (hover: hover) {
-  .obra:hover .obra-abrir {
-    background: var(--accion);
-    border-color: var(--accion);
-    color: var(--sobre-accion);
-  }
-}
-
-/* ---- la vitrina ----
+/* ---- la portada ----
  *
- * El sitio detrás y el teléfono delante, los dos más grandes que su hueco: se
- * salen por abajo y el sitio también por la derecha, y la lámina los recorta.
- * Las medidas van en porcentajes del hueco, que tiene proporción fija: la
- * composición es la misma a cualquier ancho y nada se mueve al llegar las
- * imágenes. Dos límites mandan sobre los números: el recorte de la derecha no
- * pasa del 8 % del sitio, que más allá se come su tarjeta de valoraciones, y
- * el teléfono no tapa más del primer 10 %, donde empieza su titular. */
+ * El producto entero, sobre el texto: el sitio en su ventana, que es lo que
+ * manda, y los dos teléfonos enteros, del mismo alto. Desde M van a los lados
+ * del sitio y centrados con él; en S, donde no caben en fila, van juntos
+ * debajo. Los teléfonos montan solo el borde del sitio, donde su captura no
+ * tiene texto. Va primero aunque en el HTML venga después del texto: quien no
+ * ve la pantalla oye antes el nombre del proyecto. Las medidas van en porcentajes
+ * de la portada, que tiene proporción fija: la composición es la misma a
+ * cualquier ancho y nada se mueve al llegar las imágenes. */
 .vitrina {
+  container-type: size;
+  order: -1;
   position: relative;
-  aspect-ratio: 2 / 1;
-  background: radial-gradient(90% 80% at 70% 100%, color-mix(in srgb, var(--marca) 30%, transparent), transparent 70%);
+  overflow: hidden;
+  aspect-ratio: 1 / 0.85;
+  border-bottom: 1px solid var(--linea);
+  background: radial-gradient(70% 90% at 50% 100%, color-mix(in srgb, var(--marca) 30%, transparent), transparent 70%);
+}
+
+.vitrina > * {
+  position: absolute;
 }
 
 /* `height: auto` porque el atributo `height` del HTML, que reserva el hueco
    antes de que llegue la imagen, también fija su alto. */
 .vitrina img {
-  position: absolute;
   height: auto;
 }
 
-.vitrina-pantalla {
-  left: 30%;
-  top: 8%;
-  width: 78%;
-  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) 0 0;
+/* El sitio, con su dirección arriba. La captura se queda en su portada: lo
+   de más abajo es blanco y enseñaba tarjetas cortadas. */
+.vitrina-ventana {
+  left: 6%;
+  top: 7%;
+  width: 88%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--superficie);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 28px 48px -20px rgb(0 0 0 / 0.7);
 }
 
-/* La captura trae su teléfono, pero con las esquinas del fondo blanco donde
-   se tomó: el radio las recorta a la curva del propio marco. */
+.vitrina-direccion {
+  display: grid;
+  place-items: center;
+  height: clamp(16px, 2.1cqi, 24px);
+  background: var(--linea);
+  font-family: var(--fuente-datos);
+  font-size: clamp(8px, 0.95cqi, 11px);
+  letter-spacing: 0.04em;
+  color: var(--texto-suave);
+}
+
+.vitrina-ventana img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  object-position: top;
+}
+
+.vitrina-telefono,
+.vitrina-app {
+  top: 42%;
+  width: 29%;
+}
+
+/* La captura del cliente trae su teléfono, pero con las esquinas del fondo
+   blanco donde se tomó: el radio las recorta a la curva del propio marco. */
 .vitrina-telefono {
-  left: var(--obra-margen);
-  top: 16%;
-  width: 30%;
-  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
+  left: 19%;
+  border-radius: 13% / 6%;
   box-shadow: 0 24px 40px -12px rgb(0 0 0 / 0.6);
 }
 
-/* Con ratón, el producto se asoma un poco más: el teléfono, que está delante,
-   sube más que el sitio. Va `translate` suelto para no pisar el `transform`
-   de la entrada al scroll (`.entra`). */
+/* La app no trae su teléfono: lo dibuja la propia imagen, con el marco en el
+   borde y la franja de arriba en el relleno, y la isla encima. Copia las
+   proporciones del teléfono del cliente, en `cqi` del propio ancho, y se corta
+   a su mismo alto. */
+.vitrina-app {
+  right: 19%;
+  container-type: inline-size;
+}
+
+.vitrina-app img {
+  width: 100%;
+  aspect-ratio: 320 / 700;
+  object-fit: cover;
+  object-position: top;
+  padding-top: 15cqi;
+  border: 2.6cqi solid #111316;
+  border-radius: 13cqi;
+  background: #f6f7f9 padding-box;
+  box-shadow: 0 24px 40px -12px rgb(0 0 0 / 0.6);
+}
+
+.vitrina-app::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 5.2cqi;
+  left: 50%;
+  width: 29cqi;
+  height: 7.6cqi;
+  translate: -50% 0;
+  border-radius: 99px;
+  background: #111316;
+}
+
+/* ---- la llegada y el cursor ----
+ *
+ * El producto sube desde debajo del borde mientras la nube cae en la caja, con
+ * el mismo resorte que la recorta: nubes.js deja su avance, de 0 a 1, en
+ * `--asiento`. El sitio sube primero y los teléfonos un poco después, por una
+ * curva que arranca y termina sin golpe. La caída se mide en `cqh`, el alto de
+ * la caja, que es contenedor de tamaño para eso.
+ *
+ * Con ratón, las piezas siguen al puntero a distintas profundidades y se alzan
+ * mientras está encima: el sitio, que va detrás, se mueve menos. Lo lleva
+ * vitrina.js con un resorte, en `--mx`, `--my` y `--encima`. Va en `translate`
+ * suelto para no pisar el `transform` de la llegada. */
+@media (prefers-reduced-motion: no-preference) {
+  .vitrina-ventana {
+    --llegada: clamp(0, var(--asiento, 1) / 0.8, 1);
+    --caida: 60cqh;
+  }
+
+  .vitrina-telefono,
+  .vitrina-app {
+    --llegada: clamp(0, (var(--asiento, 1) - 0.2) / 0.8, 1);
+    --caida: 85cqh;
+  }
+
+  .vitrina > * {
+    transform: translateY(calc((1 - var(--llegada) * var(--llegada) * (3 - 2 * var(--llegada))) * var(--caida)));
+  }
+}
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .vitrina img {
-    transition: translate 500ms var(--ease-out);
+  .vitrina-ventana {
+    --hondo: -5px;
+    --alza: 6px;
   }
 
-  .obra:hover .vitrina-pantalla {
-    translate: 0 -6px;
+  .vitrina-telefono,
+  .vitrina-app {
+    --hondo: -12px;
+    --alza: 14px;
   }
 
-  .obra:hover .vitrina-telefono {
-    translate: 0 -14px;
+  .vitrina > * {
+    translate: calc(var(--mx, 0) * var(--hondo)) calc(var(--my, 0) * var(--hondo) - var(--encima, 0) * var(--alza));
   }
 }
 
@@ -245,6 +310,30 @@
   .obra-direccion {
     font-size: var(--texto-lg);
   }
+
+  .vitrina {
+    aspect-ratio: 2 / 1;
+  }
+
+  .vitrina-ventana {
+    left: 13%;
+    top: 24%;
+    width: 74%;
+  }
+
+  .vitrina-telefono,
+  .vitrina-app {
+    top: 28%;
+    width: 15%;
+  }
+
+  .vitrina-telefono {
+    left: 2%;
+  }
+
+  .vitrina-app {
+    right: 2%;
+  }
 }
 
 @container (min-width: 52rem) {
@@ -256,39 +345,42 @@
     max-width: 44ch;
   }
 
-  /* El texto a la izquierda y el producto a la derecha, pegado al borde de
-     abajo aunque el texto sea más alto. */
-  .obra-con-vitrina .obra-lamina {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  /* 400 px de alto a todo el ancho del contenedor (1152). */
+  .vitrina {
+    aspect-ratio: 1152 / 400;
   }
 
-  .obra-con-vitrina .vitrina {
-    align-self: end;
-    aspect-ratio: 4 / 3;
+  .vitrina-ventana {
+    left: 18%;
+    top: 20%;
+    width: 64%;
   }
 
-  .obra-con-vitrina .vitrina-pantalla {
-    left: 16%;
-    top: 25%;
-    width: 92%;
+  .vitrina-telefono,
+  .vitrina-app {
+    top: 23%;
+    width: 14%;
   }
 
-  .obra-con-vitrina .vitrina-telefono {
-    left: 0;
-    top: 40%;
-    width: 22%;
+  .vitrina-telefono {
+    left: 6%;
   }
 
-  /* La fila: el nombre y el resumen a la izquierda, dónde abrirlo a la
-     derecha. */
-  .obra:not(.obra-con-vitrina) .obra-texto {
+  .vitrina-app {
+    right: 6%;
+  }
+
+  /* La fila: el nombre y el resumen a la izquierda; dónde abrirlo, a la
+     derecha y al pie. */
+  .obra-texto {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
+    justify-items: start;
     align-items: end;
     column-gap: var(--e-12);
   }
 
-  .obra:not(.obra-con-vitrina) .obra-pruebas {
+  .obra-pruebas {
     grid-column: 2;
     grid-row: 1 / span 2;
   }
@@ -319,308 +411,4 @@
   line-height: 1;
   letter-spacing: -0.03em;
   color: #ffffff;
-}
-
-/* ============================================================================
- * La ficha.
- *
- * Un `<dialog>` modal por proyecto. Desde M es un panel centrado sobre el
- * velo; en S ocupa la pantalla entera, que en un teléfono es lo único que se
- * lee bien. Se desplaza por dentro, y mientras está abierta la página de atrás
- * no se mueve.
- * ========================================================================= */
-
-.ficha {
-  width: min(100% - 2 * var(--margen-lateral), 60rem);
-  max-width: none;
-  max-height: calc(100vh - 2 * var(--e-12));
-  max-height: calc(100dvh - 2 * var(--e-12));
-  margin: auto;
-  padding: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  border: 0;
-  border-radius: var(--radio-panel);
-  background: var(--fondo);
-  color: var(--texto);
-  box-shadow: 0 48px 96px -32px rgb(0 0 0 / 0.7);
-}
-
-.ficha::backdrop {
-  background: rgb(6 16 26 / 0.66);
-}
-
-/* El documento toma el fondo de la ficha (el `--fondo` de `.zona-plano`):
-   Safari en iOS lo pinta bajo su barra mientras está abierta, y en el teléfono
-   la ficha es la pantalla entera. */
-html:has(.ficha[open]) {
-  overflow: hidden;
-  background: #0a1a2a;
-}
-
-/* La cabecera se queda arriba mientras se baja por la ficha: cerrar está
-   siempre a mano. */
-.ficha-cabecera {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--e-4);
-  padding: var(--e-6) var(--e-6) var(--e-4) var(--e-8);
-  background: var(--fondo);
-}
-
-.ficha-cabecera .mancha {
-  flex: none;
-  width: 4.5rem;
-}
-
-.ficha-titulos {
-  flex: 1;
-  min-width: 0;
-}
-
-.ficha-titulos h3 {
-  font-size: var(--texto-xl);
-}
-
-.ficha-titulos p {
-  margin-top: var(--e-1);
-  font-size: var(--texto-sm);
-  color: var(--texto-suave);
-}
-
-.ficha-cerrar svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-
-/* El margen va en una variable porque la tira de capturas lo usa dos veces:
-   para salirse hasta el borde de la ficha y para alinear la primera captura
-   con el texto. */
-.ficha-cuerpo {
-  --ficha-margen: var(--e-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--e-8);
-  padding: var(--e-4) var(--ficha-margen) var(--e-8);
-}
-
-.ficha-resumen {
-  color: var(--texto-suave);
-}
-
-/* ---- las capturas ----
- *
- * Una tira que se desliza de lado y se detiene en cada captura. Llega hasta el
- * borde de la ficha, así la siguiente asoma y se entiende que hay más. Cada
- * marco tiene alto fijo: nada se mueve cuando llegan las imágenes, que se
- * piden al abrir la ficha y no antes (un `<dialog>` cerrado no se pinta). */
-.ficha-capturas {
-  display: flex;
-  gap: var(--e-4);
-  margin: 0 calc(var(--ficha-margen) * -1);
-  padding: 0 var(--ficha-margen) var(--e-3);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--ficha-margen);
-  list-style: none;
-  scrollbar-width: thin;
-  scrollbar-color: var(--linea) transparent;
-}
-
-.captura {
-  flex: none;
-  width: 15rem;
-  scroll-snap-align: start;
-}
-
-.captura-pantalla {
-  width: min(28rem, 80vw);
-}
-
-.captura figure {
-  margin: 0;
-}
-
-.captura-marco {
-  display: grid;
-  place-items: end center;
-  height: 17.5rem;
-  overflow: hidden;
-  border-radius: var(--radio-tarjeta);
-  background:
-    radial-gradient(80% 90% at 0% 100%, color-mix(in srgb, var(--marca) 30%, transparent), transparent 70%),
-    var(--superficie);
-}
-
-.captura-pantalla img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: left top;
-}
-
-/* La captura del cliente trae su teléfono, pero con las esquinas del fondo
-   blanco donde se tomó: el radio las recorta a la curva del propio marco. */
-.captura-telefono img {
-  width: auto;
-  height: 92%;
-  border-radius: 13% 13% 0 0 / 6% 6% 0 0;
-}
-
-/* La app no trae el teléfono en la captura: el borde lo dibuja la propia
-   imagen, que enseña el comienzo de la pantalla de inicio. */
-.captura-app img {
-  width: 7.75rem;
-  height: 92%;
-  object-fit: cover;
-  object-position: top;
-  border: 6px solid #151515;
-  border-bottom: 0;
-  border-radius: 24px 24px 0 0;
-  background: #151515;
-}
-
-.captura figcaption {
-  margin-top: var(--e-3);
-  font-size: var(--texto-xs);
-  line-height: 1.5;
-  color: var(--texto-suave);
-}
-
-.captura figcaption strong {
-  display: block;
-  margin-bottom: var(--e-1);
-  font-size: var(--texto-sm);
-  font-weight: 800;
-  color: var(--texto);
-}
-
-/* Cómo funciona: tres pasos con su número en la mono y en el color de acción. */
-.ficha-pasos {
-  counter-reset: paso;
-  display: grid;
-  gap: var(--e-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--texto-sm);
-  line-height: 1.5;
-}
-
-.ficha-pasos li {
-  counter-increment: paso;
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: var(--e-2);
-}
-
-.ficha-pasos li::before {
-  content: counter(paso, decimal-leading-zero);
-  font-family: var(--fuente-datos);
-  color: var(--accion);
-}
-
-@media (min-width: 650px) {
-  .ficha-pasos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--e-6);
-  }
-
-  /* Sin `start`, el paso más corto reparte el alto sobrante de la fila entre
-     el número y el texto, y queda más abajo que sus vecinos. */
-  .ficha-pasos li {
-    grid-template-columns: 1fr;
-    align-content: start;
-  }
-}
-
-.ficha-enlaces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-3);
-}
-
-/* En el teléfono la ficha es la pantalla entera, sin esquinas, con la
-   cabecera fija arriba y respetando las zonas seguras. */
-@media (max-width: 649px) {
-  .ficha {
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    max-height: none;
-    margin: 0;
-    border-radius: 0;
-  }
-
-  .ficha-cabecera {
-    padding: max(var(--e-4), env(safe-area-inset-top)) var(--e-4) var(--e-3) var(--margen-lateral);
-    border-bottom: 1px solid var(--linea);
-  }
-
-  .ficha-cabecera .mancha {
-    width: 2.75rem;
-  }
-
-  .ficha-titulos h3 {
-    font-size: var(--texto-lg);
-  }
-
-  /* La línea del proyecto ya la dice el resumen, justo debajo. */
-  .ficha-titulos p {
-    display: none;
-  }
-
-  .ficha-cuerpo {
-    --ficha-margen: var(--margen-lateral);
-    gap: var(--e-6);
-    padding-top: var(--e-6);
-    padding-bottom: max(var(--e-8), env(safe-area-inset-bottom));
-  }
-
-  .captura {
-    width: 13.75rem;
-  }
-
-  .captura-marco {
-    height: 12.5rem;
-  }
-
-  .captura-app img {
-    width: 5.5rem;
-    border-width: 5px;
-  }
-
-  .ficha-enlaces .boton {
-    flex: 1 1 auto;
-  }
-}
-
-/* ---- de la lámina a la ficha ----
- *
- * La ficha sale de su lámina y vuelve a ella (src/fichas.js): arranca encima,
- * con su ancho y recortada a su alto, y crece hasta su sitio. Escala desde la
- * esquina de arriba a la izquierda, que es la que se hace coincidir. El velo
- * aparece a la vez. Lleva la curva escrita entera porque `::backdrop` no
- * hereda las variables en Safari antiguo. */
-.ficha {
-  transform-origin: 0 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .ficha[open]::backdrop {
-    animation: velo-entra 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-}
-
-@keyframes velo-entra {
-  from {
-    opacity: 0;
-  }
 }

@@ -210,7 +210,8 @@ function montar(pintor, lienzo, id) {
     const hueco = tapa.querySelector('.obra-con-vitrina .vitrina')
     if (!hueco) return
     const franja = (alto, lugar) => (alto - lugar.height) / 2
-    const delScroll = () => Math.min(1, Math.max(0, 1 - tapa.getBoundingClientRect().top / (0.7 * innerHeight)))
+    const tramo = () => 0.7 * innerHeight
+    const delScroll = () => Math.min(1, Math.max(0, 1 - tapa.getBoundingClientRect().top / tramo()))
     // El recorte sigue al scroll con un resorte, como un imán: cuando el
     // encaje se detiene, la nube todavía cae y se asienta en la vitrina un
     // poco después, sin frenazo.
@@ -227,7 +228,11 @@ function montar(pintor, lienzo, id) {
         cuando = undefined
         pendiente = null
       } else pendiente = requestAnimationFrame(asentar)
-      recortar(tapa, hueco, iman.x, franja)
+      // Lo que el imán cree que le falta a la sección para tocar arriba: el
+      // tope de lo que la franja la alcanza (ver `recortar`).
+      recortar(tapa, hueco, iman.x, franja, (1 - iman.x) * tramo())
+      // El producto sube con ella (ver «la llegada» en Proyectos.css).
+      hueco.style.setProperty('--asiento', iman.x.toFixed(4))
     }
     const enviar = () => {
       meta = delScroll()
@@ -267,29 +272,48 @@ function montar(pintor, lienzo, id) {
   // toca arriba y la franja está en el hueco, con su ancho y su radio: desde
   // ahí el telón se suelta y se va con ella. Sin escalar, para que los puntos
   // sigan nítidos.
+  //
+  // `falta` es lo que le queda a la sección para tocar arriba mientras el telón
+  // sigue pegado, y vale cero en cuanto se suelta. Si el scroll se detiene
+  // unos px antes del encaje, el hueco queda esos px más abajo de donde lo
+  // espera la franja, y bajo la nube asomaba una raya del fondo blanco. La
+  // franja lo alcanza en el último décimo de `k`, por una curva sin golpe:
+  // antes, la caída es la misma. Nunca más que `tope`, lo que el resorte cree
+  // que falta: al subir, el resorte va detrás del scroll, y sin tope la nube
+  // perseguía a la caja hacia abajo y volvía de golpe.
   let recorte
-  function recortar(hoja, hueco, k, franjaDe) {
+  let corrido = 0
+  function recortar(hoja, hueco, k, franjaDe, tope = 0) {
     const telon = lienzo.parentElement
     const caja = telon.getBoundingClientRect()
     const lugar = hueco.getBoundingClientRect()
     const alto = telon.offsetHeight
-    const medida = `${k} ${caja.width} ${alto} ${lugar.left} ${lugar.width} ${lugar.height}`
+    const arriba = hoja.getBoundingClientRect().top
+    const falta = Math.min(tope, Math.max(0, Math.round(arriba - (caja.top - corrido))))
+    const medida = `${k} ${caja.width} ${alto} ${lugar.left} ${lugar.width} ${lugar.height} ${falta}`
     if (medida === recorte) return
     recorte = medida
     telon.classList.toggle('recortado', k > 0)
     if (!k) {
+      corrido = 0
       telon.style.transform = telon.style.clipPath = ''
       return
     }
-    const destino = lugar.top - hoja.getBoundingClientRect().top
+    const destino = lugar.top - arriba
     const franja = Math.round(franjaDe(alto, lugar))
     // Las cuatro esquinas del hueco, que pueden no ser iguales.
     const estilo = getComputedStyle(hueco)
     const radios = ['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].map(
       (esquina) => `${parseFloat(estilo[`border${esquina}Radius`]) * k}px`,
     )
-    const lados = [franja, caja.right - lugar.right, alto - franja - lugar.height, lugar.left - caja.left]
-    telon.style.transform = `translateY(${Math.round((destino - franja) * k)}px)`
+    const final = Math.max(0, (k - 0.9) / 0.1)
+    const exacto = (destino - franja) * k + falta * final * final * (3 - 2 * final)
+    corrido = Math.round(exacto)
+    // Lo que el redondeo corrió el telón lo devuelve la franja: calza con el
+    // hueco al medio px, sin una raya de fondo abajo.
+    const resto = exacto - corrido
+    const lados = [franja + resto, caja.right - lugar.right, alto - franja - lugar.height - resto, lugar.left - caja.left]
+    telon.style.transform = `translateY(${corrido}px)`
     telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radios.join(' ')})`
   }
 

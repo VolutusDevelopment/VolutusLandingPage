@@ -10,7 +10,7 @@
 
 import initTitularRotativo from './titular-rotativo.js'
 import initPieza from './pieza.js'
-import initFichas from './fichas.js'
+import initVitrina from './vitrina.js'
 import initPodio from './podio.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
@@ -316,7 +316,7 @@ export default function init() {
     initPatos,
     initTitularRotativo,
     initPieza,
-    initFichas,
+    initVitrina,
     initPodio,
     initBarra,
     initNubes,

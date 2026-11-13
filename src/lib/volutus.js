@@ -249,6 +249,12 @@ export function bajar(t, ancho, alto, marco) {
 // segundo, y la cámara se abre despacio después de él.
 export const APERTURA = 0.8
 
+// Entre servicios la cámara va como un resorte: un cuarto de segundo detrás
+// del encaje, se pasa un poco del servicio y vuelve (ver `arrastrar`). Al
+// llegar a la portada no se pasa: más arriba el camino se acaba y frenaría
+// en seco.
+export const RESORTE = { arrastre: 0.25, amortiguacion: 0.65 }
+
 const grados = (g) => (g * Math.PI) / 180
 const punto = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 const unir = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k]

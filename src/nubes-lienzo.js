@@ -44,7 +44,7 @@ import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, RONDA, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
 import { arrastrar } from './lib/resorte.js'
-import { APERTURA, FISICA, JUEGO, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
+import { APERTURA, FISICA, JUEGO, RESORTE, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import * as ATARDECER from './lib/atardecer.js'
 import { CAMPOS, ENTRE_PLANOS } from './lib/campos.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
@@ -1413,7 +1413,8 @@ function paso(ahora) {
 }
 
 // La cámara de la portada da un paso tras el scroll (`arrastrar`, lib/resorte.js)
-// hasta `ahora`, y se vuelve a encuadrar. En la apertura, pasado el último
+// hasta `ahora`, y se vuelve a encuadrar. Entre servicios va como un resorte
+// (`RESORTE`), salvo al volver a la portada; en la apertura, pasado el último
 // servicio, va despacio (`APERTURA`). Devuelve si se movió: ya quieta en su
 // sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
 function seguir(escena, ahora) {
@@ -1421,8 +1422,11 @@ function seguir(escena, ahora) {
   const { grua } = escena
   if (!grua || (grua.x === grua.meta && grua.v === 0)) return false
   const dt = Math.min((ahora - (grua.cuando ?? ahora)) / 1000, 0.1)
-  const arrastre = Math.max(grua.x, grua.meta) > 1 ? APERTURA : undefined
-  Object.assign(grua, arrastrar(grua, grua.meta, dt, arrastre), { cuando: ahora })
+  const paso =
+    Math.max(grua.x, grua.meta) > 1
+      ? arrastrar(grua, grua.meta, dt, APERTURA)
+      : arrastrar(grua, grua.meta, dt, RESORTE.arrastre, grua.meta > 0 ? RESORTE.amortiguacion : 1)
+  Object.assign(grua, paso, { cuando: ahora })
   if (Math.abs(grua.x - grua.meta) < 1e-5 && Math.abs(grua.v) < 1e-4) {
     Object.assign(grua, { x: grua.meta, v: 0, cuando: undefined })
   }
