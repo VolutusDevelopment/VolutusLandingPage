@@ -24,9 +24,11 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * **Describe lo que el sitio hace de verdad, no lo que suele decir una
  * política.** Volutus no vende por la web, no tiene cuentas, no perfila y no
  * mide nada: el único dato personal que entra es el del formulario, y la IP con
- * que Cloudflare frena a los robots. Si quien escribe elige WhatsApp, el
- * formulario no envía nada: abre WhatsApp con el texto (client.js), que viaja
- * en el enlace. El brief para clientes (/brief-web), que se
+ * que Cloudflare frena a los robots, que también queda, con el lugar que se
+ * deduce de ella, en el registro de cada petición que atiende el Worker: los
+ * envíos y los videos (`observability` en wrangler.jsonc). Si quien escribe
+ * elige WhatsApp, el formulario no envía nada: abre WhatsApp con el texto
+ * (client.js), que viaja en el enlace. El brief para clientes (/brief-web), que se
  * manda por link, suma lo que identifica el envío y el logo que se sube, que
  * llega adjunto (worker/brief.js). En el
  * navegador se guardan el modo desbloqueado del juego de los patos
@@ -40,10 +42,9 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * en la redacción que le da la 21.719 desde el 1 de diciembre de 2026:
  * responsable, canal de contacto, qué datos y de quién, para qué y con qué
  * base legal, a quién llegan y si salen del país, cuánto se guardan, cómo se
- * protegen, los derechos y el reclamo ante la Agencia, con versión y fecha.
+ * protegen, los derechos y el reclamo ante la Agencia, con su fecha.
  */
 
-const VERSION = 6
 const ACTUALIZADO = fechaDe('/privacidad')
 
 const CORREO = `[${CORREO_DE_CONTACTO}](mailto:${CORREO_DE_CONTACTO})`
@@ -53,7 +54,7 @@ const REPOSITORIO = 'https://github.com/VolutusDevelopment/VolutusLandingPage'
 
 // Lo esencial, para quien no va a leer más.
 const RESUMEN = [
-  { valor: '3 datos', texto: 'Tu nombre, cómo responderte y tu mensaje, y solo si nos escribes.' },
+  { valor: '3 datos', texto: 'Tu nombre, cómo responderte y tu mensaje. Aparte, un registro técnico con tu IP que se borra en una semana.' },
   { valor: '0 cookies', texto: 'Ni analítica ni nada que te siga por internet.' },
   { valor: '12 meses', texto: 'Lo máximo que guardamos tus datos desde el último contacto.' },
   { valor: '48 horas', texto: 'Hábiles, para responderte cuando ejerces tus derechos.' },
@@ -80,7 +81,7 @@ const APARTADOS = [
         '**Tu correo**, para responderte.',
         '**Tu mensaje y los servicios que marcas**, para darte una respuesta útil y, si te interesa, cotizar tu proyecto.',
       ],
-      'Si nos escribes por WhatsApp o llenas nuestro brief, se suma lo que explicamos en los dos puntos que siguen. Y al enviar cualquier formulario, Cloudflare revisa tu dirección IP para frenar a los robots.',
+      'Si nos escribes por WhatsApp o llenas nuestro brief, se suma lo que explicamos en los dos puntos que siguen. Y al enviar cualquier formulario, Cloudflare revisa tu dirección IP para frenar a los robots, y queda el registro técnico que explicamos más abajo.',
       'La base legal es que tú nos pides esa respuesta: son gestiones previas a un posible contrato, hechas a tu solicitud (art. 13, letra c).',
     ],
   },
@@ -97,7 +98,7 @@ const APARTADOS = [
     id: 'brief',
     titulo: 'Si llenas nuestro brief',
     cuerpo: [
-      'Si te mandamos el link del **brief**, el cuestionario de marca y sitio web, lo que respondes nos llega por correo, en un PDF, y, si lo pides, te llega una copia a ti. Lo usamos para preparar tu propuesta y la conversación.',
+      'Si te mandamos el link del **brief**, el cuestionario de marca y sitio web, lo que respondes nos llega por correo, en un PDF: tu nombre y tu rol, el correo o el número de WhatsApp o teléfono que nos dejes, los datos de tu negocio y cada respuesta del cuestionario. Si lo pides, te llega una copia a ti. Lo usamos para preparar tu propuesta y la conversación.',
       'Para saber que lo envía una persona y no un robot, y reconocer un envío repetido, el correo que nos llega suma datos del envío:',
       [
         '**Tu dirección IP**, y el lugar y el proveedor de internet que Cloudflare deduce de ella.',
@@ -135,7 +136,15 @@ const APARTADOS = [
         'Si llenas nuestro brief: tus respuestas mientras lo llenas, su número al azar (ver arriba) y una marca de que lo abriste, para ofrecerte volver si lo dejas a medias. La marca se borra al cerrar la pestaña.',
       ],
       'Nada de eso sale de tu equipo, salvo tus respuestas y el número al azar cuando envías el brief. Lo demás se queda ahí hasta que borres los datos de este sitio en tu navegador.',
-      'Como cualquier servidor, Cloudflare registra datos técnicos de cada visita, como tu dirección IP, para frenar ataques. Además, de cada envío de un formulario queda un registro técnico, sin lo que escribiste, para avisarnos si algo falla. Se borra solo en una semana como máximo.',
+      'Como cualquier servidor, Cloudflare registra datos técnicos de cada visita, como tu dirección IP, para frenar ataques.',
+      'Además, guardamos un **registro técnico** cada vez que envías un formulario o se reproduce uno de los videos del sitio, como la nube y el mar de las cabeceras o los bocetos del brief. Nos sirve para saber si algo falla y para ver intentos de abuso. Cada registro lleva:',
+      [
+        '**Tu dirección IP**, y el país, la región, la ciudad, el código postal, la zona horaria y las coordenadas aproximadas que Cloudflare deduce de ella, además de tu proveedor de internet.',
+        '**Tu navegador y tu sistema**, su idioma y la página desde la que llegaste.',
+        '**Datos de tu conexión**, como el protocolo, el tipo de cifrado y cuánto demora en ir y volver.',
+        '**Lo que se pidió**: la dirección, la fecha y la hora, y si el sitio respondió bien.',
+      ],
+      'No lleva lo que escribiste en el formulario. Lo guarda Cloudflare por encargo nuestro, solo lo vemos nosotros y se borra solo en una semana como máximo. La base legal es nuestro interés legítimo en mantener el sitio funcionando y protegido.',
     ],
   },
   {
@@ -144,7 +153,7 @@ const APARTADOS = [
     cuerpo: [
       'Con tres proveedores que actúan por encargo nuestro y solo para eso:',
       [
-        '**Cloudflare**, que aloja este sitio, recibe el formulario y usa tu dirección IP para comprobar que lo envía una persona y no un robot.',
+        '**Cloudflare**, que aloja este sitio, recibe el formulario, usa tu dirección IP para comprobar que lo envía una persona y no un robot, y guarda el registro técnico que explicamos arriba.',
         '**Resend**, que convierte el envío en el correo que nos llega. Guarda una copia de cada correo por 30 días y después la borra.',
         '**Zoho**, donde está nuestro correo y donde queda guardado tu mensaje.',
       ],
@@ -207,7 +216,7 @@ const enBloques = (bloques) =>
 function enMarkdown() {
   return enBloques([
     `# ${tituloCorto(TITULO)}`,
-    `Política de privacidad de Volutus, copiada de ${canonicalDe('/privacidad')}. Versión ${VERSION}, actualizada el ${ACTUALIZADO}.`,
+    `Política de privacidad de Volutus, copiada de ${canonicalDe('/privacidad')}. Actualizada el ${ACTUALIZADO}.`,
     '## En resumen',
     RESUMEN.map(({ valor, texto }) => `**${valor}**: ${texto}`),
     ...APARTADOS.flatMap(({ titulo, cuerpo }, indice) => [`## ${indice + 1}. ${titulo}`, ...cuerpo]),
@@ -229,6 +238,7 @@ const INSPECCION = enBloques([
     '**El brief** suma solo los datos del envío que la política enumera, y el logo llega adjunto sin quedar guardado: `worker/brief.js`.',
     '**En el navegador** se guarda solo lo que dice la política. Busca `localStorage`, `sessionStorage`, `indexedDB` y `document.cookie`.',
     '**Los datos no salen hacia nadie más** que Cloudflare, que aloja el sitio, y Resend, que manda el correo a la bandeja de Volutus en Zoho, o WhatsApp si quien escribe lo elige. Revisa cada `fetch`, cada enlace y cada dominio externo en `src/` y en `worker/`.',
+    '**El registro técnico** es el de Workers Logs, que activa `observability` en `wrangler.jsonc`: anota cada petición que atiende el Worker, y lo que el Worker escribe en él (`console.error`) no lleva lo que escribe la persona. Mira `worker/index.js` y `worker/comun.js`.',
     '**Las claves no están en el código**: el Worker las lee de su entorno. Mira `wrangler.jsonc` y `.gitignore`.',
   ],
   'Si no puedes abrir el repositorio o algún archivo, dímelo en vez de suponer lo que contiene. Responde en español simple: primero un veredicto en una frase, después punto por punto, y al final cualquier cosa del código que contradiga la política o que la política no mencione.',
@@ -276,7 +286,7 @@ function enLinea(texto) {
 function BotonCopiar({ variante, texto, hecho }) {
   return (
     <button type="button" className={`boton ${variante} copiar`} data-copiar={texto}>
-      <span>Copiar para tu IA</span>
+      <span>Copiar prompt para tu IA</span>
       <span>{hecho}</span>
       <span>No se pudo copiar</span>
     </button>
@@ -292,26 +302,39 @@ const ICONOS_IA =
 // mitad cubra la tarjeta más ancha (XL), que es lo que hace el giro continuo.
 const VUELTAS = 2
 
+// Cada IA abre su chat en otra pestaña, para pegar ahí lo que se copió.
+const IA = Object.fromEntries(IAS.map((ia) => [ia.id, ia]))
+const EnlaceIa = ({ id, children = IA[id].nombre, ...resto }) => (
+  <a href={IA[id].url} target="_blank" rel="noopener" {...resto}>
+    {children}
+  </a>
+)
+
 /**
- * La banda de las IA, a lo ancho de la tarjeta. Es decoración: los nombres ya
- * están en la pista de la cabecera, así que el lector de pantalla no la lee.
- * Lleva dos mitades iguales y avanza una (Privacidad.css), así que el final
- * empalma con el principio. Los trazos van una vez, en `<symbol>`, y cada
- * ícono los usa con `<use>`.
+ * La banda de las IA, a lo ancho de la tarjeta: cada una abre su chat. Lleva
+ * dos mitades iguales y avanza una (Privacidad.css), así que el final empalma
+ * con el principio. Solo la primera vuelta se lee y se recorre con el teclado;
+ * las copias son para el giro y quedan para el mouse y el dedo. Los trazos van
+ * una vez, en `<symbol>`, y cada ícono los usa con `<use>`.
  */
 function BandaDeIas() {
   return (
-    <div className="privacidad-ias" aria-hidden="true">
-      <svg width="0" height="0" focusable="false" dangerouslySetInnerHTML={{ __html: ICONOS_IA }} />
+    <div className="privacidad-ias">
+      <svg width="0" height="0" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: ICONOS_IA }} />
       <div className="privacidad-ias-pista">
         {Array.from({ length: VUELTAS * 2 }, (_, vuelta) =>
           IAS.map(({ id, nombre }) => (
-            <span key={`${vuelta}-${id}`} className="privacidad-ia">
-              <svg focusable="false">
+            <EnlaceIa
+              key={`${vuelta}-${id}`}
+              id={id}
+              className="privacidad-ia"
+              {...(vuelta > 0 && { 'aria-hidden': true, tabIndex: -1 })}
+            >
+              <svg aria-hidden="true" focusable="false">
                 <use href={`#ia-${id}`} />
               </svg>
               {nombre}
-            </span>
+            </EnlaceIa>
           ))
         )}
       </div>
@@ -367,7 +390,8 @@ export default function Privacidad() {
           <div className="privacidad-copiar">
             <BotonCopiar variante="boton-primario" texto="privacidad-texto" hecho="¡Copiada!" />
             <p className="privacidad-pista">
-              En texto, para pegarla en ChatGPT, Claude o Gemini y preguntarle lo que quieras.
+              En texto, para pegarla en <EnlaceIa id="chatgpt" />, <EnlaceIa id="claude" /> o{' '}
+              <EnlaceIa id="gemini" /> y preguntarle lo que quieras.
             </p>
             {/* Lo que el botón confirma a la vista, dicho para el lector de
                 pantalla. Lo comparte con el del cierre. */}
@@ -402,7 +426,7 @@ export default function Privacidad() {
             Punto por punto
           </h2>
           <p className="privacidad-version dato entra">
-            Versión {VERSION}, del {ACTUALIZADO}
+          {ACTUALIZADO}
           </p>
 
           <ol className="numerada privacidad-apartados">

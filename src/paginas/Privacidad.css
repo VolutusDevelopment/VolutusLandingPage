@@ -63,19 +63,15 @@
 /* ---- la banda de las IA (cierre) ----
    A sangre en la tarjeta: el margen negativo deshace su relleno lateral (el de
    `.cierre-tarjeta`, en index.css), y una línea arriba y otra abajo la marcan
-   como banda. Los bordes se funden para que los íconos no entren cortados en
-   seco. */
+   como banda. Quieta, muestra cada IA una vez, en filas centradas. */
 .privacidad-ias {
   position: relative;
   display: flex;
-  justify-content: center;
   overflow: hidden;
   margin: var(--e-8) calc(-1 * var(--e-6)) 0;
-  padding-block: var(--e-4);
+  padding-block: var(--e-2);
   border-block: 1px solid var(--linea);
   color: var(--texto-suave);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }
 
 @media (min-width: 640px) {
@@ -91,18 +87,32 @@
 
 .privacidad-ias-pista {
   display: flex;
-  flex: none;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-/* El aire va dentro de cada ícono y no como `gap` de la pista: así las dos
-   mitades miden exactamente lo mismo y el giro empalma sin salto. */
+/* El aire va dentro de cada enlace y no como `gap` de la pista: así las dos
+   mitades miden exactamente lo mismo y el giro empalma sin salto. El relleno
+   vertical le da al dedo un blanco de más de 24 px de alto. */
 .privacidad-ia {
   display: flex;
   align-items: center;
   gap: var(--e-2);
-  padding-inline: var(--e-6);
+  padding: var(--e-2) var(--e-6);
+  color: inherit;
   font-weight: 600;
   white-space: nowrap;
+  text-decoration: none;
+}
+
+.privacidad-ia:hover {
+  color: var(--texto);
+}
+
+/* Las copias solo sirven para el giro. */
+.privacidad-ia[aria-hidden] {
+  display: none;
 }
 
 /* Cada ícono trae sus colores; los que no tienen (ChatGPT, Grok) van en el
@@ -114,16 +124,26 @@
   fill: currentColor;
 }
 
-/* Con movimiento, la pista avanza una mitad y vuelve a empezar: como la otra
-   mitad es igual, no se nota. Lenta, para que acompañe y no llame. Quieta, va
-   centrada. */
+/* Con movimiento, la pista va en una sola fila con sus copias, avanza una
+   mitad y vuelve a empezar: como la otra mitad es igual, no se nota. Lenta,
+   para que acompañe y no llame; bajo el mouse se frena en una curva
+   (banda-de-ias.js). Los bordes se funden para que los íconos no entren
+   cortados en seco. Con el foco del teclado adentro vuelve a quedarse quieta, para que el
+   enlace enfocado siempre esté a la vista. Sin `:has` tampoco gira. */
 @media screen and (prefers-reduced-motion: no-preference) {
-  .privacidad-ias {
-    justify-content: flex-start;
+  .privacidad-ias:not(:has(:focus-visible)) {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
   }
 
-  .privacidad-ias-pista {
+  .privacidad-ias:not(:has(:focus-visible)) .privacidad-ias-pista {
+    flex: none;
+    flex-wrap: nowrap;
     animation: desfilar 60s linear infinite;
+  }
+
+  .privacidad-ias:not(:has(:focus-visible)) .privacidad-ia[aria-hidden] {
+    display: flex;
   }
 }
 

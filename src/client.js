@@ -15,6 +15,7 @@ import initPodio from './podio.js'
 import initBarra from './barra.js'
 import initNubes from './nubes.js'
 import initCopiar from './copiar.js'
+import initBandaDeIas from './banda-de-ias.js'
 import initSocios from './socios.js'
 import initBienvenida from './bienvenida.js'
 import initOla from './ola.js'
@@ -321,6 +322,7 @@ export default function init() {
     initBarra,
     initNubes,
     initCopiar,
+    initBandaDeIas,
     initSocios,
     // Antes que la ola: si la bienvenida ya se fue, que no la monte.
     initBienvenida,
