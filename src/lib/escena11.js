@@ -18,7 +18,7 @@ export const TOMAS = [
   { id: 'choca', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Intenta pasar, pero choca con la pared de la puerta.' }] },
   // La primera vez que se ve el caza de duky: con la cabina cerrada.
   { id: 'hangar', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Lo lleva al hangar…' }] },
-  { id: 'sube', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…y sube con él a un caza experimental, mientras la plataforma se eleva…' }] },
+  { id: 'sube', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…y sube con él a un F22 Raptor con armas prototipo' }] },
   { id: 'deposita', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…hasta dejarlo en la cabina.' }] },
   { id: 'cinturon', ms: 150, lineas: [{ texto: 'El marinero intenta ponerle el cinturón, pero Duky es medio gordito y no le cierra.' }] },
   {
