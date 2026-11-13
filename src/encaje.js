@@ -9,7 +9,7 @@
 // quedó. Por eso, adentro de una zona libre la página no encaja (`.libre`). Se
 // apaga un cuarto de pantalla pasado el borde y no en él: al volver, el encaje
 // se prende donde la página todavía puede quedarse, y no la mueve.
-const ABAJO = ['.servicios + .seccion', '.atardecer + .seccion > .contenedor', '.tienda-incluye + .seccion', '.brief-escalas + *']
+const ABAJO = ['.viaje + .seccion > .contenedor', '.atardecer + .seccion > .contenedor', '.tienda-incluye + .seccion', '.brief-escalas + *']
 const ARRIBA = ['.tienda-incluye .titular']
 
 export default function initEncaje() {

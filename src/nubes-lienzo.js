@@ -43,7 +43,8 @@
 import {
   GLOBO, GLOBOS, MAR, NADO, OJOS, RASTRO, RONDA, TRAMO_RASTRO, VAIVEN, alLienzo, camara, casco, flotar,
 } from './lib/mar.js'
-import { FISICA, JUEGO, arrastrar, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
+import { arrastrar } from './lib/resorte.js'
+import { APERTURA, FISICA, JUEGO, bajar, encuadrar, lapso, rollo } from './lib/volutus.js'
 import * as ATARDECER from './lib/atardecer.js'
 import { CAMPOS, ENTRE_PLANOS } from './lib/campos.js'
 import { COLORES, FLOTACION, NADA } from './lib/pato.js'
@@ -1411,19 +1412,20 @@ function paso(ahora) {
   medido = ahora
 }
 
-// La cámara de la portada da un paso tras el scroll (`arrastrar`, lib/volutus.js)
-// hasta `ahora`, y se vuelve a encuadrar. Devuelve si se movió: ya quieta en
-// su sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
+// La cámara de la portada da un paso tras el scroll (`arrastrar`, lib/resorte.js)
+// hasta `ahora`, y se vuelve a encuadrar. En la apertura, pasado el último
+// servicio, va despacio (`APERTURA`). Devuelve si se movió: ya quieta en su
+// sitio, no. Un paso nunca cuenta más de 0.1 s, como el tiempo de la nube.
 function seguir(escena, ahora) {
   if (escena.ocaso) return ponerse(escena, ahora)
   const { grua } = escena
   if (!grua || (grua.x === grua.meta && grua.v === 0)) return false
   const dt = Math.min((ahora - (grua.cuando ?? ahora)) / 1000, 0.1)
-  Object.assign(grua, arrastrar(grua, grua.meta, dt), { cuando: ahora })
+  const arrastre = Math.max(grua.x, grua.meta) > 1 ? APERTURA : undefined
+  Object.assign(grua, arrastrar(grua, grua.meta, dt, arrastre), { cuando: ahora })
   if (Math.abs(grua.x - grua.meta) < 1e-5 && Math.abs(grua.v) < 1e-4) {
     Object.assign(grua, { x: grua.meta, v: 0, cuando: undefined })
   }
-  escena.vista = bajar(grua.x)
   if (escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
   return true
 }
@@ -1451,9 +1453,11 @@ function avisarArriba(escena) {
 }
 
 // La cámara de la nube: la de su página o, en la portada al bajar, la de la
-// grúa en ese punto (`vista`, ver `bajar` en lib/volutus.js).
+// grúa en ese punto (ver `bajar` en lib/volutus.js).
 function enfocar(escena, { ancho, alto, densidad }) {
-  const encuadre = encuadrar(escena.vista ?? escena.perspectiva, ancho, alto)
+  const { grua } = escena
+  const vista = grua ? bajar(grua.x, ancho, alto, escena.marco) : escena.perspectiva
+  const encuadre = encuadrar(vista, ancho, alto)
   Object.assign(escena, { encuadre, lapso: lapso(encuadre.focal, densidad) })
   fijar(escena, (gl, u) => {
     for (const eje of ['ojo', 'frente', 'derecha', 'arriba', 'sol']) gl.uniform3fv(u[eje], encuadre[eje])
@@ -1587,14 +1591,19 @@ onmessage = ({ data }) => {
     if (!ocaso.visto || fija(escena)) Object.assign(ocaso, { x: data.sol, v: 0 })
     ocaso.visto = true
   }
-  // Cuánto se bajó por la portada, de 0 a 1 (ver `recorrer` en nubes.js). La
+  // La vitrina donde cae la nube de la portada, en px del lienzo (ver
+  // `recortarPortada` en nubes.js): la apertura termina encuadrada en ella.
+  if (escena && data.tipo === 'marco') {
+    escena.marco = data
+    if (escena.grua && escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
+  }
+  // Cuánto se bajó por la portada, de 0 a 2 (ver `recorrer` en nubes.js). La
   // primera vez la cámara va ahí; después lo sigue (`seguir`).
   if (escena && data.tipo === 'bajada') {
     if (escena.grua) {
       escena.grua.meta = data.t
     } else {
       escena.grua = { x: data.t, v: 0, meta: data.t }
-      escena.vista = bajar(data.t)
       if (escena.programas && escena.ultimos.medir) enfocar(escena, escena.ultimos.medir)
     }
   }

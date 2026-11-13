@@ -31,8 +31,11 @@ export default function Inicio() {
     <>
       <Bienvenida />
       <Pagina enHome hora="dia" cierre={<Contacto />}>
-        <Portada />
-        <Servicios />
+        <div className="viaje zona-cielo">
+          <Portada />
+          <Servicios />
+          <div className="viaje-relevo" aria-hidden="true" />
+        </div>
         <Proyectos />
       </Pagina>
     </>

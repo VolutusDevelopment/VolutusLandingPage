@@ -61,6 +61,7 @@
 
 import { CAMPOS, campoPara } from './lib/campos.js'
 import { quieto } from './lib/movimiento.js'
+import { arrastrar } from './lib/resorte.js'
 
 // Tope de densidad de píxeles del mar: por encima de 1.5 sus puntos no se ven
 // mejor y el costo sigue creciendo.
@@ -191,23 +192,84 @@ function montar(pintor, lienzo, id) {
       if (bajado !== antes) [subiendo, antes] = [bajado < antes, bajado]
       const puesta = subiendo ? lamina : entre((bajado - sola) / (desde - sola))
       pintor.postMessage({ tipo: 'ocaso', id, sol: quieto() ? 1 : bajado < sola ? entre(bajado / sola) : 1 + puesta })
-      recortar(hoja, lamina)
+      // La lámina es 55 % cielo y 45 % mar, como la parvada
+      // (`--cielo-de-la-lamina` en Nosotros.css).
+      recortar(hoja, hoja.querySelector('.lamina'), lamina, (alto, lugar) => HORIZONTE * alto - 0.55 * lugar.height)
     }
     addEventListener('scroll', enviar, { passive: true, signal })
     addEventListener('resize', enviar, { signal })
     enviar()
   }
 
+  // La portada: la nube no se tapa, cae en la vitrina de la primera obra de
+  // Proyectos, la sección que sigue al viaje (Inicio.jsx), y el producto sube
+  // sobre ella. Se recorta en el último 70 % de pantalla antes de que la
+  // sección toque arriba, y se queda con la franja del medio del cielo, donde
+  // la cámara deja el rollo al abrirse (`abrir` en lib/volutus.js).
+  function recortarPortada() {
+    const hueco = tapa.querySelector('.obra-con-vitrina .vitrina')
+    if (!hueco) return
+    const franja = (alto, lugar) => (alto - lugar.height) / 2
+    const delScroll = () => Math.min(1, Math.max(0, 1 - tapa.getBoundingClientRect().top / (0.7 * innerHeight)))
+    // El recorte sigue al scroll con un resorte, como un imán: cuando el
+    // encaje se detiene, la nube todavía cae y se asienta en la vitrina un
+    // poco después, sin frenazo.
+    let iman = { x: delScroll(), v: 0 }
+    let meta = iman.x
+    let cuando
+    let pendiente = null
+    const asentar = (ahora) => {
+      const dt = Math.min((ahora - (cuando ?? ahora)) / 1000, 0.1)
+      cuando = ahora
+      iman = arrastrar(iman, meta, dt, 0.35)
+      if (Math.abs(iman.x - meta) < 1e-4 && Math.abs(iman.v) < 1e-3) {
+        iman = { x: meta, v: 0 }
+        cuando = undefined
+        pendiente = null
+      } else pendiente = requestAnimationFrame(asentar)
+      recortar(tapa, hueco, iman.x, franja)
+    }
+    const enviar = () => {
+      meta = delScroll()
+      pendiente ??= requestAnimationFrame(asentar)
+    }
+    // Dónde queda la vitrina en el lienzo, en px del pintor: no depende del
+    // scroll, solo de la medida de la pantalla.
+    const enmarcar = () => {
+      const lugar = hueco.getBoundingClientRect()
+      const izquierda = lugar.left - lienzo.getBoundingClientRect().left
+      const arriba = franja(lienzo.parentElement.offsetHeight, lugar)
+      pintor.postMessage({
+        tipo: 'marco',
+        id,
+        x: izquierda * escala,
+        y: arriba * escala,
+        ancho: lugar.width * escala,
+        alto: lugar.height * escala,
+      })
+    }
+    addEventListener('scroll', enviar, { passive: true, signal })
+    addEventListener(
+      'resize',
+      () => {
+        enviar()
+        enmarcar()
+      },
+      { signal },
+    )
+    enviar()
+    enmarcar()
+  }
+
   // La lámina: el telón se recorta a una franja del alto del hueco que la
-  // espera en la sección siguiente (`.lamina`), 55 % cielo y 45 % mar, como
-  // la parvada (`--cielo-de-la-lamina` en Nosotros.css), y sube hasta él. Con
-  // `k` en 1 la sección toca arriba y la franja está en el hueco, con su ancho
-  // y su radio: desde ahí el telón se suelta y se va con ella. Sin escalar,
-  // para que los puntos sigan nítidos.
+  // espera en la sección siguiente (`hueco`), que empieza en `franja(alto,
+  // lugar)` px de su borde de arriba, y sube hasta él. Con `k` en 1 la sección
+  // toca arriba y la franja está en el hueco, con su ancho y su radio: desde
+  // ahí el telón se suelta y se va con ella. Sin escalar, para que los puntos
+  // sigan nítidos.
   let recorte
-  function recortar(hoja, k) {
+  function recortar(hoja, hueco, k, franjaDe) {
     const telon = lienzo.parentElement
-    const hueco = hoja.querySelector('.lamina')
     const caja = telon.getBoundingClientRect()
     const lugar = hueco.getBoundingClientRect()
     const alto = telon.offsetHeight
@@ -219,12 +281,16 @@ function montar(pintor, lienzo, id) {
       telon.style.transform = telon.style.clipPath = ''
       return
     }
-    const franja = Math.round(HORIZONTE * alto - 0.55 * lugar.height)
     const destino = lugar.top - hoja.getBoundingClientRect().top
-    const radio = parseFloat(getComputedStyle(hueco).borderTopLeftRadius)
+    const franja = Math.round(franjaDe(alto, lugar))
+    // Las cuatro esquinas del hueco, que pueden no ser iguales.
+    const estilo = getComputedStyle(hueco)
+    const radios = ['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].map(
+      (esquina) => `${parseFloat(estilo[`border${esquina}Radius`]) * k}px`,
+    )
     const lados = [franja, caja.right - lugar.right, alto - franja - lugar.height, lugar.left - caja.left]
     telon.style.transform = `translateY(${Math.round((destino - franja) * k)}px)`
-    telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radio * k}px)`
+    telon.style.clipPath = `inset(${lados.map((lado) => `${lado * k}px`).join(' ')} round ${radios.join(' ')})`
   }
 
   // El video del campo grabado se reproduce solo mientras la escena se pinta.
@@ -287,16 +353,21 @@ function montar(pintor, lienzo, id) {
     zona.addEventListener('touchend', soltar, pasivo)
   }
 
-  // La portada: mientras se baja hasta la sección que la tapa, la cámara baja
-  // con el scroll. Aquí solo se mide cuánto se bajó (de 0 a 1); la cámara la
-  // pone el pintor, que la lleva tras el scroll como un cuerpo con masa, sin
-  // frenazos (`bajar` y `arrastrar`, lib/volutus.js).
+  // La portada: mientras se baja hasta Proyectos, la cámara baja con el
+  // scroll. Aquí solo se mide cuánto se bajó: de 0 a 1 hasta el último
+  // servicio, cuando a Proyectos le falta una pantalla para tocar arriba, y de
+  // 1 a 2 en esa pantalla, el salto en que la nube cae en su vitrina. La
+  // cámara la pone el pintor, que la lleva tras el scroll como un cuerpo con
+  // masa, sin frenazos (`bajar` en lib/volutus.js y `arrastrar` en lib/resorte.js).
   // El navegador da como mucho un `scroll` por fotograma. Con movimiento
   // reducido se queda en la portada.
   function recorrer() {
     if (quieto()) return
-    const enviar = () =>
-      pintor.postMessage({ tipo: 'bajada', id, t: Math.min(1, Math.max(0, scrollY / tapa.offsetTop)) })
+    const enviar = () => {
+      const salto = tapa.offsetTop - innerHeight
+      const t = scrollY < salto ? scrollY / salto : 1 + (scrollY - salto) / innerHeight
+      pintor.postMessage({ tipo: 'bajada', id, t: Math.min(2, Math.max(0, t)) })
+    }
     addEventListener('scroll', enviar, { passive: true, signal })
     enviar()
   }
@@ -349,6 +420,7 @@ function montar(pintor, lienzo, id) {
     if (tapa) {
       recorrer()
       prestarLinea()
+      recortarPortada()
     }
     if (atardecer) ponerSol()
     lienzo.addEventListener(

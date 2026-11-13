@@ -1,12 +1,9 @@
 /* Los servicios suben sobre la nube fija (Portada.css), sin fondo propio, de
    a uno: cada scroll cae en uno, al centro de la pantalla, con la nube detrás.
    La página encaja (`scroll-snap`): arriba, en la portada; luego, en cada
-   servicio, sin saltarse ninguno, y abajo, en Proyectos. Su margen de abajo
-   alarga su zona de encaje hasta el final de la página, así que de ahí en
-   adelante se baja libre: una zona más alta que la pantalla deja parar en
-   cualquier punto de ella (Safari 15), y adentro de ella no encaja, por la
-   rueda del ratón (src/encaje.js). Con movimiento reducido no encaja: el
-   encaje mueve la página solo. */
+   servicio, sin saltarse ninguno, y abajo, en Proyectos (Portada.css), de
+   donde se baja libre. Con movimiento reducido no encaja: el encaje mueve la
+   página solo. */
 @media (prefers-reduced-motion: no-preference) {
   :root:has(.servicios):not(.libre) {
     scroll-snap-type: y mandatory;
@@ -15,11 +12,6 @@
 
 .portada:has(+ .servicios) {
   scroll-snap-align: start;
-}
-
-.servicios + .seccion {
-  scroll-snap-align: start;
-  scroll-margin-bottom: 100000px;
 }
 
 .servicios {

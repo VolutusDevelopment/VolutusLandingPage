@@ -44,8 +44,11 @@
 
 .portada {
   /* La escena pasa por debajo de la barra: el cielo llega hasta el borde de
-     arriba de la pantalla y la barra flota encima con su vidrio. */
-  margin-top: calc(-1 * var(--barra-alto));
+     arriba de la pantalla y la barra flota encima con su vidrio. Sube sobre
+     el cielo pegado el alto que él ocupa: con el margen en el cielo, un
+     `sticky` seguía fijo una pantalla después del final del viaje (ver el
+     telón de /nosotros). */
+  margin-top: -100lvh;
   padding-block: 0 var(--e-8);
   position: relative;
   /* `clip` evita el scroll lateral sin crear un contenedor de scroll. */
@@ -333,7 +336,7 @@
   top: 0;
   z-index: -1;
   height: 100lvh;
-  margin: calc(-1 * var(--barra-alto)) 0 -100lvh;
+  margin-top: calc(-1 * var(--barra-alto));
 }
 
 .portada-degradado {
@@ -366,7 +369,7 @@
      cuadro de cielo. `main` no pinta más abajo de su final, como el telón de
      /nosotros (Nosotros.css); arriba deja una pantalla para el reflejo de la
      nube bajo la hora. */
-  main:has(> .portada-cielo) {
+  .viaje {
     clip-path: inset(-100lvh 0 0);
   }
 }
@@ -380,10 +383,161 @@
   z-index: 1;
 }
 
-/* Proyectos tapa la nube: sube sobre ella como una hoja clara, fundida en su
-   borde de arriba. */
-:root .portada + .seccion + .seccion {
+/* ---- el viaje ----
+   El cielo, la portada y los servicios (Inicio.jsx). El cielo va pegado
+   dentro de él y se suelta donde termina. Su fondo blanco es lo que queda
+   alrededor de la nube cuando se recorta.
+
+   Del último servicio a Proyectos hay un solo salto, y en él la nube no se
+   tapa: cae en la vitrina de PonleNota (`recortarPortada` en nubes.js). El
+   relevo alarga el viaje el alto del cielo, y Proyectos se monta sobre él:
+   así el cielo se suelta cuando Proyectos toca arriba, ya recortado en la
+   vitrina, y desde ahí se va con ella. */
+.viaje {
+  position: relative;
+  isolation: isolate;
+  background: var(--fondo);
+}
+
+.viaje-relevo {
+  height: 100lvh;
+}
+
+
+.viaje + .seccion {
+  --fondo-hora: linear-gradient(transparent 100lvh, var(--fondo) 0);
   position: relative;
   z-index: 1;
-  --fondo-hora: linear-gradient(rgb(246 249 252 / 0), var(--fondo) 12rem);
+  margin-top: -100lvh;
+  padding-top: var(--bajo-barra);
+}
+
+/* El inicio de Proyectos es la última parada del encaje. Su zona llega al
+   final de la página, y una zona más alta que la pantalla deja parar en
+   cualquier punto: de ahí se baja libre (src/encaje.js). */
+.viaje + .seccion > .contenedor {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-bottom: 100000px;
+}
+
+.portada-cielo.recortado,
+.portada-cielo.recortado .nubes {
+  -webkit-box-reflect: none;
+}
+
+/* La tarjeta de PonleNota se da vuelta y su vitrina queda abierta al cielo,
+   arriba y a todo el ancho: vertical en el teléfono, 4:3 en la tablet y
+   16:9 desde L, con la nube vista como en la portada (ver `abrir` en
+   lib/volutus.js). El producto va grande, dentro del cielo. El fondo oscuro
+   queda solo detrás del texto, que va abajo, en dos columnas desde L. No
+   entra con el scroll: la nube la busca mientras sube, y tiene que estar
+   donde va a quedar. */
+.proyectos .obra-con-vitrina {
+  background: none;
+  animation: none;
+}
+
+.proyectos .obra-con-vitrina .obra-texto {
+  background: var(--fondo);
+}
+
+.proyectos .obra-con-vitrina .vitrina {
+  order: -1;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: none;
+  border-radius: var(--radio-panel) var(--radio-panel) 0 0;
+}
+
+/* El sitio, entero y arriba, recortado donde termina su portada: debajo la
+   captura sigue en blanco, y se veía como un hueco. */
+.proyectos .obra-con-vitrina .vitrina-pantalla {
+  left: 20%;
+  top: 16%;
+  width: 76%;
+  aspect-ratio: 128 / 65;
+  object-fit: cover;
+  object-position: top;
+  border-radius: var(--radio-tarjeta);
+  box-shadow: 0 24px 48px -16px rgb(6 16 26 / 0.45);
+}
+
+/* El teléfono del cliente sube desde el borde de abajo, delante del sitio:
+   se ve su tarjeta, y lo que su pantalla deja vacío debajo de ella queda
+   bajo el borde. */
+.proyectos .obra-con-vitrina .vitrina-telefono {
+  left: 6%;
+  top: 52%;
+  width: 44%;
+  border-radius: 13% / 6%;
+}
+
+@container (min-width: 36rem) {
+  .proyectos .obra-con-vitrina .vitrina {
+    aspect-ratio: 4 / 3;
+  }
+
+  .proyectos .obra-con-vitrina .vitrina-pantalla {
+    left: 30%;
+    top: 18%;
+    width: 62%;
+  }
+
+  .proyectos .obra-con-vitrina .vitrina-telefono {
+    left: 15%;
+    top: 67%;
+    width: 18%;
+  }
+}
+
+@container (min-width: 52rem) {
+  .proyectos .obra-con-vitrina .obra-lamina {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proyectos .obra-con-vitrina .vitrina {
+    align-self: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .proyectos .obra-con-vitrina .vitrina-pantalla {
+    left: 30%;
+    top: 18%;
+    width: 58%;
+  }
+
+  .proyectos .obra-con-vitrina .vitrina-telefono {
+    left: 16%;
+    top: 59%;
+    width: 17%;
+  }
+
+  .proyectos .obra-con-vitrina .obra-texto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'nombre pruebas'
+      'resumen abrir';
+    column-gap: var(--e-12);
+    align-items: start;
+  }
+
+  .proyectos .obra-con-vitrina .obra-nombre {
+    grid-area: nombre;
+  }
+
+  .proyectos .obra-con-vitrina .obra-resumen {
+    grid-area: resumen;
+  }
+
+  .proyectos .obra-con-vitrina .obra-pruebas {
+    grid-area: pruebas;
+    margin: 0;
+    padding: 0;
+  }
+
+  .proyectos .obra-con-vitrina .obra-abrir {
+    grid-area: abrir;
+  }
 }

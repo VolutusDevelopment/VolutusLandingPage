@@ -112,44 +112,21 @@ export const suave = (t, desde, hasta) => {
 }
 const entre = (a, b, k) => a + (b - a) * k
 
-// Los tres movimientos de la grúa de la portada (ver `bajar`) a `u`, de 0 a 1:
-// cuánto bajó, cuánto entró y cuánto centró la vista.
-const grua = (u) => [suave(u, 0, 0.5), suave(u, 0, 0.95), suave(u, 0, 0.3)]
+// Lo que la grúa de la portada corre a lo largo del rollo, en m (ver `grua`).
+const TRAVELLING = 2400
 
-// El camino de la grúa en 100 tramos de `u`: cuánto lleva recorrido al final
-// de cada uno, de 0 a 1, midiendo lo que avanzan sus tres movimientos juntos.
-const CAMINO = (() => {
-  const puntos = Array.from({ length: 101 }, (_, i) => grua(i / 100))
-  const largos = [0]
-  for (let i = 1; i < puntos.length; i++) {
-    largos.push(largos[i - 1] + Math.hypot(...puntos[i].map((x, eje) => x - puntos[i - 1][eje])))
-  }
-  return largos.map((largo) => largo / largos.at(-1))
-})()
-
-// La `u` en que la grúa lleva recorrida la fracción `t` de su camino.
-function recorrido(t) {
-  const i = CAMINO.findIndex((largo) => largo >= Math.min(t, 1))
-  if (i <= 0) return 0
-  return (i - 1 + (t - CAMINO[i - 1]) / (CAMINO[i] - CAMINO[i - 1])) / 100
-}
-
-/**
- * La cámara de la portada a `t` (de 0 a 1) del scroll hasta Proyectos, que la
- * tapa (`recorrer` en nubes.js). Es una grúa: no gira, baja lenta de la altura de la cima al
- * suelo mientras su brazo la acerca al pie del rollo y levanta la vista, hasta
- * tenerlo encima. Nunca sube sobre la nube: se la mira siempre desde abajo. En
- * 0 es `aire`. El punto al que mira pasa a la mitad del lienzo (`medio`) y el
- * sol se queda donde estaba en la portada aunque la cámara gire (`fijo`). Va
- * pareja con el scroll: cada píxel la lleva igual de lejos por su camino, del
- * primero al último, cuando Proyectos la tapa (`recorrido`).
- */
-export function bajar(t) {
+// La grúa de la portada a `u`, de 0 a 1, por su propio camino: baja lenta de
+// la altura de la cima al suelo mientras su brazo la acerca al pie del rollo y
+// levanta la vista, hasta tenerlo encima, y a la vez corre a lo largo del
+// rollo (`TRAVELLING`), que pasa de lado. No gira. En 0 es `aire`. El punto al
+// que mira pasa a la mitad del lienzo (`medio`) y el sol se queda donde estaba
+// en la portada aunque la cámara gire (`fijo`).
+function grua(u) {
   const { aire } = VISTAS
-  const [baja, entra, centra] = grua(recorrido(t))
+  const [baja, entra, centra] = [suave(u, 0, 0.5), suave(u, 0, 0.95), suave(u, 0, 0.3)]
   return {
     ...aire,
-    ojo: [0, entre(aire.ojo[1], 2, baja), entre(aire.ojo[2], -1150, entra)],
+    ojo: [TRAVELLING * suave(u, 0, 1), entre(aire.ojo[1], 2, baja), entre(aire.ojo[2], -1150, entra)],
     apaisado: entre(aire.apaisado, 70, entra),
     cabeceo: entre(aire.cabeceo, 45, entra),
     campo: entre(aire.campo, 66, baja),
@@ -159,24 +136,118 @@ export function bajar(t) {
   }
 }
 
-// Lo que la cámara de la portada va detrás del scroll cuando este corre
-// parejo, en s (ver `arrastrar`).
-const ARRASTRE = 0.15
+// En cuántos tramos de `u` se mide el camino de la grúa, y con cuántos rayos
+// por lado del lienzo (ver `medirCamino`).
+const TRAMOS = 100
+const RAYOS = 24
 
 /**
- * Un paso de `dt` s de la cámara de la portada hacia donde está el scroll
- * (`meta`), de 0 a 1 como `t` en `bajar`. Es un cuerpo con masa tirado por un
- * resorte con amortiguación crítica: arranca y frena sin golpes, porque su
- * velocidad `v` (1/s) nunca cambia de golpe, y no se pasa de largo. Es la
- * solución exacta del resorte, estable con cualquier paso.
+ * El camino de la grúa en `TRAMOS` tramos de `u`, en un lienzo de esa
+ * proporción: cuánto lleva recorrido al final de cada uno, de 0 a 1, medido
+ * en lo que se ve. En cada tramo, una rejilla de rayos toca la nube y se mide
+ * cuánto se corre, en la pantalla, cada punto tocado hasta el cuadro
+ * siguiente. Medida en el camino mismo, la grúa casi no movía la imagen en
+ * los primeros servicios y la movía cinco veces más en los últimos, donde la
+ * nube está cerca.
  */
-export function arrastrar({ x, v }, meta, dt) {
-  const w = 2 / ARRASTRE
-  const lejos = x - meta
-  const empuje = v + w * lejos
-  const decae = Math.exp(-w * dt)
-  return { x: meta + (lejos + empuje * dt) * decae, v: (v - w * empuje * dt) * decae }
+function medirCamino(proporcion) {
+  const [ancho, alto] = [1000 * proporcion, 1000]
+  const largos = [0]
+  let antes = encuadrar(grua(0), ancho, alto)
+  for (let i = 1; i <= TRAMOS; i++) {
+    const ahora = encuadrar(grua(i / TRAMOS), ancho, alto)
+    let corrido = 0
+    let tocados = 0
+    for (let j = 0; j < RAYOS * RAYOS; j++) {
+      const px = (((j % RAYOS) + 0.5) / RAYOS) * ancho
+      const py = ((Math.floor(j / RAYOS) + 0.5) / RAYOS) * alto
+      const visto = tocar(antes, px, py)
+      const luego = visto && proyectar(ahora, visto)
+      if (!luego) continue
+      corrido += Math.hypot(luego[0] - px, luego[1] - py)
+      tocados++
+    }
+    largos.push(largos[i - 1] + (tocados ? corrido / tocados : 0))
+    antes = ahora
+  }
+  return largos.map((largo) => largo / largos.at(-1))
 }
+
+// El último camino medido: la portada tiene un solo lienzo, y se vuelve a
+// medir solo si cambia su proporción.
+let medido = {}
+
+// La `u` en que la grúa lleva recorrida la fracción `t` de su camino.
+function recorrido(t, largos) {
+  const i = largos.findIndex((largo) => largo >= Math.min(t, 1))
+  if (i <= 0) return 0
+  return (i - 1 + (t - largos[i - 1]) / (largos[i] - largos[i - 1])) / TRAMOS
+}
+
+// La `vista` encuadrada para un marco de `marco.ancho` × `marco.alto` px
+// puesto en `marco.x`, `marco.y` de un lienzo de `ancho` × `alto`: lo que cae
+// en el marco es lo que vería un lienzo de su medida. La misma focal que la
+// de ese lienzo, con el punto al que mira corrido al marco.
+function enMarco(vista, ancho, alto, marco) {
+  const medida = (a, b) => Math.max(b, a / (vista.cubre ?? Infinity))
+  const lienzo = medida(ancho, alto)
+  const chico = medida(marco.ancho, marco.alto)
+  const rumbo = marco.ancho > marco.alto ? (vista.apaisado ?? vista.rumbo) : vista.rumbo
+  const campo = (2 * Math.atan((lienzo / chico) * Math.tan(grados(vista.campo) / 2)) * 180) / Math.PI
+  return {
+    ...vista,
+    rumbo,
+    apaisado: rumbo,
+    campo,
+    centro: [(marco.x + vista.centro[0] * chico) / lienzo, (marco.y + vista.centro[1] * marco.alto) / alto],
+    medio: 0,
+  }
+}
+
+// La apertura, a `k` de 0 a 1: del final de la grúa, la cámara vuelve a
+// subir y a alejarse hasta mirar el rollo a lo largo como en la portada
+// (`aire`), allí donde la dejó el travelling: entra enorme por la izquierda y
+// se pierde en el horizonte. Queda a la altura de la cima, nunca sobre ella.
+// Con `marco`, la vitrina donde cae la nube, la portada queda encuadrada en
+// él (`enMarco`): la vitrina es la portada en chico.
+function abrir(k, ancho, alto, marco) {
+  const desde = grua(1)
+  const portada = { ...grua(0), ojo: [desde.ojo[0], ...VISTAS.aire.ojo.slice(1)] }
+  const hasta = marco ? enMarco(portada, ancho, alto, marco) : portada
+  const s = suave(k, 0, 1)
+  const mezclar = (clave) => entre(desde[clave], hasta[clave], s)
+  return {
+    ...desde,
+    ojo: desde.ojo.map((eje, i) => entre(eje, hasta.ojo[i], s)),
+    rumbo: mezclar('rumbo'),
+    apaisado: mezclar('apaisado'),
+    cabeceo: mezclar('cabeceo'),
+    campo: mezclar('campo'),
+    centro: desde.centro.map((eje, i) => entre(eje, hasta.centro[i], s)),
+    medio: mezclar('medio'),
+  }
+}
+
+/**
+ * La cámara de la portada a `t` del scroll (`recorrer` en nubes.js), en un
+ * lienzo de `ancho` × `alto`. De 0 a 1, la grúa (`grua`), de la portada al
+ * último servicio; de 1 a 2, la apertura (`abrir`), en el salto en que la
+ * nube cae en la vitrina de Proyectos (`marco`). Nunca sube sobre la nube: se la mira
+ * siempre desde abajo. La grúa va pareja con el scroll en lo que se ve: cada
+ * píxel corre la nube lo mismo en la pantalla, del primer servicio al último
+ * (`medirCamino`).
+ */
+export function bajar(t, ancho, alto, marco) {
+  if (t > 1) return abrir(Math.min(t - 1, 1), ancho, alto, marco)
+  const proporcion = (ancho / alto).toFixed(3)
+  if (medido.proporcion !== proporcion) medido = { proporcion, largos: medirCamino(ancho / alto) }
+  return grua(recorrido(t, medido.largos))
+}
+
+// Lo que la cámara de la portada va detrás del scroll en la apertura, en s
+// (ver `arrastrar` en lib/resorte.js): el salto a Proyectos dura medio
+// segundo, y la cámara se abre despacio después de él.
+export const APERTURA = 0.8
 
 const grados = (g) => (g * Math.PI) / 180
 const punto = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
@@ -235,6 +306,20 @@ export function proyectar({ ojo, frente, derecha, arriba, focal, centro }, p) {
   const hondura = punto(d, frente)
   if (hondura <= 0) return null
   return [centro[0] + (focal * punto(d, derecha)) / hondura, centro[1] - (focal * punto(d, arriba)) / hondura, hondura]
+}
+
+// El punto del rollo que se ve en el px `x`, `y` del lienzo: donde su rayo
+// toca primero la superficie, un cilindro de sección elíptica a lo largo de
+// `x`. `null` si el rayo pasa por el cielo.
+function tocar({ ojo, frente, derecha, arriba, focal, centro }, x, y) {
+  const rayo = unir(unir(frente, derecha, (x - centro[0]) / focal), arriba, (centro[1] - y) / focal)
+  const [oy, oz] = [(ojo[1] - ROLLO.eje) / ROLLO.alto, ojo[2] / ROLLO.ancho]
+  const [dy, dz] = [rayo[1] / ROLLO.alto, rayo[2] / ROLLO.ancho]
+  const a = dy * dy + dz * dz
+  const b = oy * dy + oz * dz
+  const c = oy * oy + oz * oz - 1
+  const s = (-b - Math.sqrt(b * b - a * c)) / a
+  return a > 0 && s > 0 ? unir(ojo, rayo, s) : null
 }
 
 /**
