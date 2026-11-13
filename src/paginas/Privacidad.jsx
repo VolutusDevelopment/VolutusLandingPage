@@ -34,7 +34,8 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * navegador se guardan el modo desbloqueado del juego de los patos
  * (lib/odio.js), el final elegido en Operación Venganza (lib/final.js) y, en
  * el brief, las respuestas a medio llenar, su número al azar y la marca de la
- * pestaña (lib/brief/reglas.js); también se dice, y cuánto dura cada uno.
+ * pestaña (lib/brief/reglas.js), y lo que se califica en los bocetos
+ * (public/brief/bocetos/barra.js); también se dice, y cuánto dura cada uno.
  * Turnstile, Resend y los registros del Worker dicen qué guardan y cuánto, con
  * lo que publica cada proveedor.
  *
@@ -54,7 +55,7 @@ const REPOSITORIO = 'https://github.com/VolutusDevelopment/VolutusLandingPage'
 
 // Lo esencial, para quien no va a leer más.
 const RESUMEN = [
-  { valor: '3 datos', texto: 'Tu nombre, cómo responderte y tu mensaje. Aparte, un registro técnico con tu IP que se borra en una semana.' },
+  { valor: '3 datos', texto: 'Para escribirnos: tu nombre, cómo responderte y tu mensaje. El brief pide más. Aparte, un registro técnico con tu IP que se borra en una semana.' },
   { valor: '0 cookies', texto: 'Ni analítica ni nada que te siga por internet.' },
   { valor: '12 meses', texto: 'Lo máximo que guardamos tus datos desde el último contacto.' },
   { valor: '48 horas', texto: 'Hábiles, para responderte cuando ejerces tus derechos.' },
@@ -91,7 +92,7 @@ const APARTADOS = [
     cuerpo: [
       'En el formulario puedes elegir **WhatsApp** en vez del correo. Entonces el sitio no nos envía nada: abre WhatsApp con tu mensaje ya escrito, con tu nombre, tu correo si lo diste, los servicios que marcas y lo que nos cuentas, y eres tú quien decide enviarlo. El botón de WhatsApp del pie de página hace lo mismo, con un saludo.',
       'Ese texto va en el enlace que abre WhatsApp, así que **WhatsApp puede recibirlo apenas lo abres**, aunque no lo envíes. Si lo envías, además nos llega lo que WhatsApp muestra de ti: tu número de teléfono y lo que tengas visible en tu perfil.',
-      'WhatsApp es un servicio de **Meta**, que opera fuera de Chile y trata lo que pasa por él según su propia política de privacidad. Lo que nos llega por ahí lo tratamos igual que un correo: para lo mismo, con la misma base legal y por el mismo plazo.',
+      'WhatsApp es un servicio de **Meta**, que opera fuera de Chile y trata lo que pasa por él según [su propia política de privacidad](https://www.whatsapp.com/legal/privacy-policy). Lo que nos llega por ahí lo tratamos igual que un correo: para lo mismo, con la misma base legal y por el mismo plazo.',
     ],
   },
   {
@@ -99,16 +100,19 @@ const APARTADOS = [
     titulo: 'Si llenas nuestro brief',
     cuerpo: [
       'Si te mandamos el link del **brief**, el cuestionario de marca y sitio web, lo que respondes nos llega por correo, en un PDF: tu nombre y tu rol, el correo o el número de WhatsApp o teléfono que nos dejes, los datos de tu negocio y cada respuesta del cuestionario. Si lo pides, te llega una copia a ti. Lo usamos para preparar tu propuesta y la conversación.',
-      'Para saber que lo envía una persona y no un robot, y reconocer un envío repetido, el correo que nos llega suma datos del envío:',
+      'Para saber que lo envía una persona y no un robot, y reconocer un envío repetido, el correo que nos llega suma estos datos del envío, y ninguno más:',
       [
-        '**Tu dirección IP**, y el lugar y el proveedor de internet que Cloudflare deduce de ella.',
-        '**Tu navegador y tu sistema**, la medida de tu pantalla y si es táctil, tu zona horaria y tu idioma.',
-        '**Un número al azar** que se guarda en tu navegador para saber si dos briefs vienen del mismo equipo. No dice quién eres ni te sigue fuera de esta página.',
+        '**Tu dirección IP**, y la ciudad, la región, el país y el proveedor de internet que Cloudflare deduce de ella.',
+        '**Tu navegador**, como se identifica ante cualquier sitio, y **tu sistema**: cuál es y si usas celular o computador, cuando tu navegador lo informa.',
+        '**Tu pantalla**: su medida y si es táctil.',
+        '**Tu zona horaria y tu idioma**, los que tiene configurados tu navegador.',
+        '**Un número al azar** que tu navegador crea la primera vez que envías un brief y guarda, para saber si dos briefs vienen del mismo equipo. No dice quién eres ni te sigue fuera de esta página.',
         '**Cuándo lo enviaste** y cuánto tardaste en llenarlo.',
-        '**Datos de control**: su número de referencia, si pediste copia, si pasó la comprobación anti-robots y cuántos enlaces traen tus respuestas.',
+        '**Su número de referencia**, el mismo que te mostramos al enviarlo.',
+        '**Cómo llegó**: si pediste copia, si pasó la comprobación anti-robots y cuántos enlaces traen tus respuestas.',
       ],
       'Si subes **tu logo**, nos llega adjunto en ese mismo correo, con un nombre que le ponemos nosotros. No queda guardado en el sitio, y la copia que te llega no lo lleva.',
-      'Mientras lo llenas, tus respuestas se guardan **solo en tu navegador**, para que no se pierdan si cierras la página, y se borran de ahí al enviarlo o al tocar «Empezar de nuevo». El logo no se guarda ahí. La copia que te llega no lleva los datos del envío. La base legal es la misma del formulario, más nuestro interés legítimo en protegerlo de abusos.',
+      'Mientras lo llenas, tus respuestas, lo que calificas en los bocetos, la parte en que ibas, cuándo empezaste y cuándo se guardó por última vez quedan **solo en tu navegador**, para que no se pierdan si cierras la página, y se borran de ahí al enviarlo o al tocar «Empezar de nuevo». El número al azar no se borra: queda para reconocer el próximo envío. El logo no se guarda ahí. La copia que te llega no lleva los datos del envío. La base legal es la misma del formulario, más nuestro interés legítimo en protegerlo de abusos.',
     ],
   },
   {
@@ -128,16 +132,17 @@ const APARTADOS = [
     titulo: 'Esta página no te rastrea',
     cuerpo: [
       'No hay analítica, ni píxeles de seguimiento, ni botones de redes sociales que informen de tu visita. **No usamos cookies**, así que no hay aviso que aceptar. Los enlaces a otros sitios son enlaces comunes: el sitio al que llegas solo sabe que vienes de volutus.cl.',
-      'El único código de afuera es **Turnstile**, la comprobación anti-robots de Cloudflare. Se carga solo cuando tocas un formulario, aunque después elijas WhatsApp, y revisa tu IP, tu navegador y tu conexión para saber si eres una persona. Cloudflare dice en [la política de Turnstile](https://www.cloudflare.com/turnstile-privacy-policy/) que no lo usa para identificarte ni para hacer perfiles.',
+      'El único código de afuera es **Turnstile**, la comprobación anti-robots de Cloudflare. Se carga solo cuando tocas el formulario de contacto o el brief, aunque después elijas WhatsApp, y revisa tu IP, tu navegador y tu conexión para saber si eres una persona. Cloudflare dice en [la política de Turnstile](https://www.cloudflare.com/turnstile-privacy-policy/) que no lo usa para identificarte ni para hacer perfiles.',
       'En tu navegador se guarda esto, y nada más:',
       [
         'Si terminaste una partida de la [caza de patos](/patos), para desbloquear un modo del juego.',
         'El final que elegiste en [Operación Venganza](/operacion-venganza), para que la página Nosotros lo muestre. Se borra al cerrar la pestaña.',
-        'Si llenas nuestro brief: tus respuestas mientras lo llenas, su número al azar (ver arriba) y una marca de que lo abriste, para ofrecerte volver si lo dejas a medias. La marca se borra al cerrar la pestaña.',
+        'Si llenas nuestro brief: tus respuestas mientras lo llenas, con la parte en que ibas y cuándo empezaste, su número al azar (ver arriba) y una marca de que lo abriste, para ofrecerte volver si lo dejas a medias. La marca se borra al cerrar la pestaña.',
+        'Lo que calificas en los bocetos del brief, aunque los mires sin abrirlo, para que el brief lo muestre y lo envíe.',
       ],
-      'Nada de eso sale de tu equipo, salvo tus respuestas y el número al azar cuando envías el brief. Lo demás se queda ahí hasta que borres los datos de este sitio en tu navegador.',
+      'Nada de eso sale de tu equipo, salvo lo del brief cuando lo envías: tus respuestas, tus calificaciones, cuánto tardaste y el número al azar. Las respuestas y las calificaciones se borran de ahí al enviarlo. El modo de los patos y el número al azar se quedan hasta que borres los datos de este sitio en tu navegador.',
       'Como cualquier servidor, Cloudflare registra datos técnicos de cada visita, como tu dirección IP, para frenar ataques.',
-      'Además, guardamos un **registro técnico** cada vez que envías un formulario o se reproduce uno de los videos del sitio, como la nube y el mar de las cabeceras o los bocetos del brief. Nos sirve para saber si algo falla y para ver intentos de abuso. Cada registro lleva:',
+      'Además, guardamos un **registro técnico** cada vez que envías un formulario o tu navegador pide uno de los videos del sitio, como la nube y el mar de las cabeceras o los bocetos del brief. También puede quedar de otros pedidos que llegan a nuestro servidor, como los de robots que buscan direcciones que no existen. Nos sirve para saber si algo falla y para ver intentos de abuso. Cada registro lleva:',
       [
         '**Tu dirección IP**, y el país, la región, la ciudad, el código postal, la zona horaria y las coordenadas aproximadas que Cloudflare deduce de ella, además de tu proveedor de internet.',
         '**Tu navegador y tu sistema**, su idioma y la página desde la que llegaste.',
@@ -157,7 +162,8 @@ const APARTADOS = [
         '**Resend**, que convierte el envío en el correo que nos llega. Guarda una copia de cada correo por 30 días y después la borra.',
         '**Zoho**, donde está nuestro correo y donde queda guardado tu mensaje.',
       ],
-      'Los tres operan fuera de Chile, así que enviar el formulario es una **transferencia internacional** de tus datos, amparada en las garantías contractuales que ofrecen. Si eliges WhatsApp, tu mensaje pasa por **WhatsApp** en vez de por ellos, como explicamos arriba. Nadie más los recibe, salvo que una autoridad lo exija por ley.',
+      'Y con **WhatsApp**, solo si lo eliges para escribirnos. No actúa por encargo nuestro: Meta recibe tu mensaje, tu número y lo que muestra tu perfil, y los trata según su propia política, como explicamos arriba. Ese mensaje no pasa por Resend ni por Zoho.',
+      'Todos operan fuera de Chile, así que enviarnos tus datos es una **transferencia internacional**: con los tres proveedores, amparada en las garantías contractuales que ofrecen, y con WhatsApp, porque tú eliges escribirnos por ahí. Nadie más los recibe, salvo que una autoridad lo exija por ley.',
     ],
   },
   {
@@ -226,22 +232,19 @@ function enMarkdown() {
 const POLITICA = enMarkdown()
 
 // El encargo que copia el botón del cierre, para que la IA de quien lee revise
-// el código y lo compare con la política. Le dice dónde mirar, para que no
-// adivine, y le pide decir lo que no pudo abrir en vez de suponerlo.
+// el código y lo compare con la política. No le dice dónde mirar, para que
+// investigue sin guion, y le pide decir lo que no pudo abrir en vez de suponerlo.
 const INSPECCION = enBloques([
   'Quiero saber si el sitio de Volutus hace lo que dice su política de privacidad. Su código es público:',
   [`Código: ${REPOSITORIO} (la rama main es la que está publicada)`, `Política: ${canonicalDe('/privacidad')}`],
-  'Lee la política y revisa en el código cada uno de estos puntos. Para cada uno, dime si se cumple y en qué archivo lo viste:',
+  'Lee la política y después investiga el código por tu cuenta, sin dar nada por cierto: decide tú qué revisar y hasta dónde llegar. Busca lo que confirme cada promesa, lo que la contradiga y lo que el sitio haga con los datos de quien lo visita sin que la política lo diga.',
+  'Si no puedes abrir el repositorio o algún archivo, dímelo en vez de suponer lo que contiene.',
+  'Al final, entrégame un resumen ejecutivo en español y en lenguaje simple, para alguien que no programa:',
   [
-    '**Sin rastreo**: ni analítica, ni píxeles, ni cookies, ni scripts de terceros salvo Turnstile de Cloudflare. La Content-Security-Policy de `src/lib/seguridad.js` dice qué puede cargar la página.',
-    '**El formulario de contacto** usa solo nombre, correo, mensaje y servicios: los convierte en un correo sin guardarlos en el sitio o, si se elige WhatsApp, abre WhatsApp con ese texto. Mira `src/lib/contacto.js`, `src/client.js` y `worker/index.js`.',
-    '**El brief** suma solo los datos del envío que la política enumera, y el logo llega adjunto sin quedar guardado: `worker/brief.js`.',
-    '**En el navegador** se guarda solo lo que dice la política. Busca `localStorage`, `sessionStorage`, `indexedDB` y `document.cookie`.',
-    '**Los datos no salen hacia nadie más** que Cloudflare, que aloja el sitio, y Resend, que manda el correo a la bandeja de Volutus en Zoho, o WhatsApp si quien escribe lo elige. Revisa cada `fetch`, cada enlace y cada dominio externo en `src/` y en `worker/`.',
-    '**El registro técnico** es el de Workers Logs, que activa `observability` en `wrangler.jsonc`: anota cada petición que atiende el Worker, y lo que el Worker escribe en él (`console.error`) no lleva lo que escribe la persona. Mira `worker/index.js` y `worker/comun.js`.',
-    '**Las claves no están en el código**: el Worker las lee de su entorno. Mira `wrangler.jsonc` y `.gitignore`.',
+    '**Veredicto**: en una o dos frases, si el sitio cumple su política.',
+    '**Qué se cumple**: una lista con cada promesa de la política, si se cumple, no se cumple o no pudiste comprobarlo, y en qué archivo lo viste.',
+    '**Lo que la política no dice**: lo que encontraste en el código y ella no menciona. Si no hay nada, dilo.',
   ],
-  'Si no puedes abrir el repositorio o algún archivo, dímelo en vez de suponer lo que contiene. Responde en español simple: primero un veredicto en una frase, después punto por punto, y al final cualquier cosa del código que contradiga la política o que la política no mencione.',
 ])
 
 // Van en un <script> sin escapar (ver abajo): un «<» podría cerrarlo antes de
@@ -354,7 +357,7 @@ function Cierre() {
       <div className="contenedor">
         <div className="cierre-tarjeta zona-plano cierre-invitacion entra">
           <h2 id="cierre-titulo" className="titular">
-            No tienes que creernos
+            No nos tienes que creer
           </h2>
           <p className="entradilla">
             El código de este sitio es público. En GitHub puedes comprobar que
@@ -388,11 +391,7 @@ export default function Privacidad() {
           {/* La entradilla es la meta description, como en /nosotros. */}
           <p className="entradilla privacidad-entradilla">{DESCRIPCION}</p>
           <div className="privacidad-copiar">
-            <BotonCopiar variante="boton-primario" texto="privacidad-texto" hecho="¡Copiada!" />
-            <p className="privacidad-pista">
-              En texto, para pegarla en <EnlaceIa id="chatgpt" />, <EnlaceIa id="claude" /> o{' '}
-              <EnlaceIa id="gemini" /> y preguntarle lo que quieras.
-            </p>
+            <BotonCopiar variante="boton-primario" texto="privacidad-texto" hecho="¡Copiado!" />
             {/* Lo que el botón confirma a la vista, dicho para el lector de
                 pantalla. Lo comparte con el del cierre. */}
             <p className="copiar-aviso solo-lectores" role="status" />
