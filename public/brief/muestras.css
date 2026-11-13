@@ -1534,9 +1534,16 @@
  * corre y gira, aparece su sello y el botón de ese lado crece
  * (`--avance`, de -1 a 1 en el umbral). El comentario sube en una hoja.
  * Mientras carga, la carta tiene el color del boceto. Todo respeta las zonas
- * seguras del teléfono. */
+ * seguras del teléfono. En teléfonos y tabletas verticales no hay marco: el
+ * boceto ocupa la pantalla entera y la franja baja a los botones (al final
+ * de esta sección).
+ *
+ * Mientras el visor está abierto, el fondo del documento es el color del
+ * boceto (brief-visor.js): es lo que Safari muestra sobre el comienzo de la
+ * página, bajo la hora, y el fondo del visor no lo oscurece. */
 html:has(.brief-visor[open]) {
   overflow: hidden;
+  background-color: var(--fondo-boceto);
 }
 
 .brief-visor {
@@ -1563,7 +1570,7 @@ html:has(.brief-visor[open]) {
 }
 
 .brief-visor::backdrop {
-  background: rgb(10 26 42 / 0.5);
+  background: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1960,6 +1967,111 @@ html:has(.brief-visor[open]) {
   border-color: var(--accion);
   outline: none;
   background: color-mix(in srgb, var(--texto) 10%, transparent);
+}
+
+/* En teléfonos y tabletas verticales el boceto va de bajo el reloj al borde
+   de abajo, sin marco ni esquinas. Salir se suma a los botones, y el estilo y
+   la cuenta van en una píldora encima de ellos. Lo que tapan estos controles
+   lo suma el pie del boceto (`--reserva-abajo`, bocetos/barra.css).
+
+   El boceto sigue detrás de la hora y de la barra de Safari, como el resto
+   del sitio. Por eso aquí el visor no es fijo: Safari deja lo fijo entre la
+   hora y su barra. Va absoluto donde está la página (`--visor-y`,
+   brief-visor.js), y las cartas se extienden 80 px bajo la hora y 110 bajo
+   la barra; el boceto sabe que eso queda tapado (bocetos/barra.css). Detrás,
+   una sombra del color del boceto cubre lo que las cartas dejan al
+   moverse. */
+@media (max-width: 1023px) {
+  .brief-visor {
+    position: absolute;
+    inset: auto 0;
+    top: var(--visor-y, 0px);
+    height: 100%;
+    overflow: visible;
+    background: var(--fondo-boceto, var(--fondo));
+    box-shadow: 0 0 0 200px var(--fondo-boceto, var(--fondo));
+  }
+
+  .brief-visor::backdrop {
+    display: none;
+  }
+
+  .brief-visor[open] {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .brief-visor-mazo {
+    margin: env(safe-area-inset-top, 0px) 0 0;
+  }
+
+  .brief-visor-carta {
+    inset: -80px 0 -110px;
+    border-radius: 0;
+  }
+
+  .brief-visor-sello {
+    top: calc(80px + clamp(24px, 7vh, 64px));
+  }
+
+  .brief-visor-cabeza {
+    position: absolute;
+    z-index: 2;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    display: flex;
+    align-items: baseline;
+    gap: var(--e-2);
+    max-width: calc(100% - 32px);
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--vidrio-visor);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    white-space: nowrap;
+    translate: -50% 0;
+    transition: opacity 240ms ease;
+  }
+
+  .brief-visor-salir,
+  .brief-visor-titulo span {
+    display: none;
+  }
+
+  .brief-visor-titulo {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brief-visor-cuenta {
+    min-width: 0;
+    padding: 0;
+  }
+
+  .brief-visor-botones {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .brief-visor-ayuda {
+    bottom: calc(122px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .con-hoja .brief-visor-cabeza {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .brief-visor-botones {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brief-visor-boton[data-cerrar] {
+    display: none;
+  }
 }
 
 /* ==================== Los tipos de logo ====================

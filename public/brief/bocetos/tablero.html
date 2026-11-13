@@ -221,6 +221,11 @@ p { margin: 0; }
   .dado { width: 52px; height: 52px; padding: 7px; }
   .dado i { width: 8px; height: 8px; }
   .juego { grid-template-columns: minmax(0, 1fr) auto; padding: 14px 18px; }
+  /* Los filtros en filas cortas: los primeros juegos se ven junto a ellos. */
+  .filtros { gap: 16px; padding: 18px; }
+  .filtros legend { margin-bottom: 8px; font-size: 16px; }
+  .opciones { gap: 6px; }
+  .opcion { min-height: 40px; padding: 0 12px; font-size: 15px; }
   .juego > span:last-child { grid-column: 2; }
   .juego > span { text-align: right; }
   .juego.cabeza-tabla > span:last-child { display: none; }
@@ -238,6 +243,11 @@ p { margin: 0; }
   .cupos b { font-size: 30px; }
   .formulario { grid-template-columns: minmax(0, 1fr); box-shadow: 6px 6px 0 var(--negro); }
   .pie-cuerpo { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .titulo { font-size: 42px; }
 }
 
 /* ---- Movimiento ----

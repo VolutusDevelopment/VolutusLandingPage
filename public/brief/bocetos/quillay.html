@@ -68,7 +68,7 @@ p { margin: 0; }
 
 /* ---- Portada: la vitrina ---- */
 .portada-marco { position: relative; overflow: hidden; background: radial-gradient(ellipse 55% 65% at 72% 55%, #faf5ea, var(--crema) 72%); }
-.portada { position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(24px, 4vw, 64px); align-items: center; min-height: calc(100svh - 150px); padding-block: clamp(16px, 3vw, 40px); }
+.portada { position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px clamp(24px, 4vw, 64px); align-items: center; min-height: calc(var(--pantalla, 100svh) - 150px); padding-block: clamp(16px, 3vw, 40px); }
 .portada-texto { display: grid; gap: 22px; justify-items: start; max-width: 34rem; }
 .portada h1 { font-size: clamp(48px, 5.4vw, 84px); line-height: 1; }
 .bajada { max-width: 36ch; font-size: 19px; color: var(--gris); }
@@ -258,7 +258,14 @@ p { margin: 0; }
 /* ---- S ---- */
 @media (max-width: 599px) {
   .respuesta { grid-template-columns: minmax(0, 1fr); }
-  .respuesta figure { width: min(100%, 16rem); }
+  .respuesta figure { width: min(70%, 13rem); }
+  .necesidad { padding-block: 10px; }
+  /* La lámina y la caja más chicas, para ver la planta o la caja junto a lo
+     que se elige. */
+  .lamina-grande { width: min(56%, 22rem); }
+  .planta { padding-block: 16px 18px; }
+  .planta h3 { font-size: 34px; }
+  .caja { width: min(72%, 24rem); padding: 16px; gap: 10px; }
   .partes { grid-template-columns: minmax(0, 1fr); }
   .corte span { padding: 8px 4px; font-size: 13px; }
   .campos { grid-template-columns: minmax(0, 1fr); }

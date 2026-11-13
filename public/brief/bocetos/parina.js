@@ -406,11 +406,22 @@ function montar() {
       }
       trazo.setAttribute('d', d)
     }
-    for (const { en, span } of [...nombres, ...paradas]) {
+    // Ningún nombre se sale por los costados del mapa: los de lugares van
+    // centrados en su punto y las paradas empiezan en él (muestras en
+    // parina.html). Se miden todos antes de mover ninguno.
+    const etiquetas = [...nombres, ...paradas]
+    const anchos = etiquetas.map(({ span }) => span.offsetWidth)
+    const limite = capa.clientWidth
+    etiquetas.forEach(({ en, span }, i) => {
       const s = proyectar(en)
       span.hidden = !s
-      if (s) span.style.transform = `translate(${s[0].toFixed(1)}px, ${s[1].toFixed(1)}px)`
-    }
+      if (!s) return
+      const centrado = span.classList.contains('mapa-nombre')
+      const desde = centrado ? anchos[i] / 2 : 8
+      const hasta = limite - (centrado ? anchos[i] / 2 : anchos[i] - 8)
+      const x = Math.max(desde, Math.min(hasta, s[0]))
+      span.style.transform = `translate(${x.toFixed(1)}px, ${s[1].toFixed(1)}px)`
+    })
   }
 
   // El bucle corre mientras el mapa se ve y algo se mueve.

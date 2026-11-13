@@ -28,8 +28,8 @@
  * Los videos en bucle (`video[data-bucle]`, los «gifs» de los bocetos) bajan
  * recién cuando están por verse, corren solo mientras se ven y, con el
  * movimiento reducido, no bajan: queda la foto quieta que llevan detrás. Y el
- * alto de la barra queda en `--alto-barra`, para que lo que se pega arriba
- * quede bajo ella.
+ * alto de la barra, cuando va arriba, queda en `--alto-barra`, para que lo
+ * que se pega arriba quede bajo ella.
  */
 
 const CLAVE = 'volutus:brief:bocetos'
@@ -91,7 +91,10 @@ function montarBarra() {
     const icono = document.createElement('span')
     icono.setAttribute('aria-hidden', 'true')
     icono.textContent = signo
-    etiqueta.append(opcion, icono, texto)
+    const nombre = document.createElement('span')
+    nombre.className = 'boceto-reaccion-texto'
+    nombre.textContent = texto
+    etiqueta.append(opcion, icono, nombre)
     grupo.append(etiqueta)
   }
 
@@ -235,12 +238,14 @@ function montarComparadores() {
 }
 
 // El alto de la barra, para las cabeceras que se pegan arriba (`top:
-// var(--alto-barra, 0px)`). En el visor no hay barra y queda en cero.
+// var(--alto-barra, 0px)`). Solo cuenta cuando va pegada arriba: en el visor
+// no hay barra, y en teléfonos es una píldora abajo (barra.css).
 function medirBarra() {
   const barra = document.querySelector('.boceto-barra')
   if (!barra || enElVisor || !('ResizeObserver' in window)) return
   new ResizeObserver(([{ target }]) => {
-    document.documentElement.style.setProperty('--alto-barra', `${target.offsetHeight}px`)
+    const arriba = getComputedStyle(target).position === 'sticky'
+    document.documentElement.style.setProperty('--alto-barra', `${arriba ? target.offsetHeight : 0}px`)
   }).observe(barra)
 }
 

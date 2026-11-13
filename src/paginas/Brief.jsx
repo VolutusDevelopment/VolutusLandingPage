@@ -64,11 +64,13 @@ const centroDe = (area) => {
 // El visor de los bocetos (brief-visor.js): un mazo de cartas. Cada boceto es
 // una carta casi a pantalla completa, con el siguiente esperando debajo; se
 // recorre con el scroll y se decide arrastrándola de lado o con los botones
-// que flotan encima. El comentario sube en una hoja. Va fuera del `<form>`:
+// que flotan encima (en teléfonos, también salir, con el estilo y la cuenta
+// encima: muestras.css). El comentario sube en una hoja. Va fuera del `<form>`:
 // sus controles reflejan los de la tarjeta, que son los que se envían, y no
 // son un formulario más para WebMCP. Sin JavaScript no se abre: el arte de
 // cada tarjeta abre el boceto en otra pestaña.
 const TRAZOS_DEL_VISOR = {
+  salir: 'M19 12H5m6 6-6-6 6-6',
   atras: 'M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11',
   comentar: 'M20 15a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z',
 }
@@ -113,6 +115,7 @@ function Visor() {
           <span className="brief-visor-ayuda-teclado">Con las flechas: ← no · sí → · ↑ comentar</span>
         </p>
         <div className="brief-visor-botones" role="group" aria-label="¿Te gusta este estilo?">
+          <BotonDelVisor trazo={TRAZOS_DEL_VISOR.salir} texto="Salir" data-cerrar />
           <BotonDelVisor trazo={TRAZOS_DEL_VISOR.atras} texto="Volver al anterior" data-atras />
           <BotonDelVisor trazo={TRAZOS_DE_REACCION.no} texto="No me gusta" aria-pressed="false" data-elegir="no" />
           <BotonDelVisor trazo={TRAZOS_DEL_VISOR.comentar} texto="Comentar" aria-expanded="false" aria-controls="visor-hoja" data-comentar />

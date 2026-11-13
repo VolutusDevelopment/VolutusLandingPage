@@ -98,7 +98,7 @@ p { margin: 0; }
 .reloj { display: inline-block; min-width: 5ch; font-variant-numeric: tabular-nums; }
 
 /* ---- El interruptor: día y noche ---- */
-.interruptor { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 20; display: grid; grid-template-columns: 1fr 1fr; margin: 0; padding: 4px; border: 1px solid var(--linea); border-radius: 999px; background: rgb(242 238 231 / 0.88); color: #1d1a16; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 30px rgb(0 0 0 / 0.12); transition: background-color 900ms var(--curva), color 900ms var(--curva); }
+.interruptor { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + var(--reserva-abajo, 0px)); z-index: 20; display: grid; grid-template-columns: 1fr 1fr; margin: 0; padding: 4px; border: 1px solid var(--linea); border-radius: 999px; background: rgb(242 238 231 / 0.88); color: #1d1a16; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 30px rgb(0 0 0 / 0.12); transition: background-color 900ms var(--curva), color 900ms var(--curva); }
 :root:has(#noche:checked) .interruptor { background: rgb(28 25 20 / 0.86); color: #f1e8da; }
 .interruptor::before { content: ''; grid-area: 1 / 1; border-radius: 999px; background: #1d1a16; transition: translate 600ms var(--curva), background-color 900ms var(--curva); }
 :root:has(#noche:checked) .interruptor::before { translate: 100% 0; background: rgb(var(--luz)); }
@@ -111,7 +111,6 @@ p { margin: 0; }
 #noche:checked + label { color: #13110e; }
 .interruptor input:focus-visible + label { outline: 2px solid var(--acento); outline-offset: 2px; }
 .interruptor legend { padding: 0; }
-.en-visor .interruptor { bottom: 112px; }
 
 /* ---- La luz sobre las fotos ----
    Cada foto lleva en --x y --y dónde está la ampolleta, en --r su tamaño y
@@ -282,6 +281,12 @@ p { margin: 0; }
   .paso, .con-js .paso:not(.activo) { min-height: 0; opacity: 1; padding-block: 0 56px; }
   .paso .foco { display: block; margin-bottom: 10px; }
   .pie-cuerpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  /* El configurador cabe en una pantalla: la mesa más baja que ancha, los
+     tres tonos en una fila y menos aire entre los mandos, para ver la
+     lámpara mientras se arma y el precio al final. */
+  .mesa { aspect-ratio: 4 / 3; }
+  .armar { gap: 18px; }
+  .armar legend, .armar .etiqueta { margin-bottom: 8px; }
 }
 
 /* ---- S ---- */
@@ -290,11 +295,18 @@ p { margin: 0; }
   .cabecera nav ul { gap: 0 20px; }
   .portada-foto { --x: 32.6%; --y: 63%; --r: 5%; --px: 40%; --py: 90%; aspect-ratio: 4 / 5; }
   .lista { grid-template-columns: minmax(0, 1fr); }
-  .tonos { grid-template-columns: minmax(0, 1fr); }
-  .tono { min-height: 52px; }
+  .tono { min-height: 0; padding: 8px 10px; }
+  .tono b { font-size: 14px; }
+  .tono span { font-size: 12px; line-height: 1.3; }
+  .tono::after { right: 8px; top: 9px; width: 8px; height: 8px; }
   .frase { font-size: 30px; }
   .pie-cuerpo { grid-template-columns: minmax(0, 1fr); }
   .interruptor label { min-width: 84px; padding: 0 12px; }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .modelo h3 { font-size: 38px; }
 }
 
 /* ---- Movimiento ----

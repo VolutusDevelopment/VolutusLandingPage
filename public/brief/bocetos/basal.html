@@ -107,7 +107,7 @@ main { counter-reset: seccion; }
    el pie. Debajo, separados por una raya, los sectores como etiquetas y los
    tres últimos proyectos como fichas chicas que llevan a cada uno. */
 .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.tapa { position: relative; isolation: isolate; display: grid; align-content: end; min-height: max(620px, 100svh); padding-block: calc(var(--alto-cabecera) + 48px) clamp(24px, 3.5vw, 44px); color: var(--blanco); overflow: clip; }
+.tapa { position: relative; isolation: isolate; display: grid; align-content: end; min-height: max(620px, var(--pantalla, 100svh)); padding-block: calc(var(--alto-cabecera) + 48px) calc(clamp(24px, 3.5vw, 44px) + var(--reserva-portada, 0px)); color: var(--blanco); overflow: clip; }
 .tapa-foto { position: absolute; inset: 0; z-index: -2; }
 .tapa-foto img { width: 100%; height: 100%; object-fit: cover; }
 .tapa::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(15 42 68 / 0.3) 0%, rgb(15 42 68 / 0.12) 20%, rgb(15 42 68 / 0.5) 40%, rgb(15 42 68 / 0.76) 70%, rgb(15 42 68 / 0.92) 100%); }
@@ -131,7 +131,7 @@ main { counter-reset: seccion; }
 
 /* ---- Portada y ensayo: el corte queda quieto a la derecha ---- */
 .bloque { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(32px, 5vw, 80px); }
-.portada { display: grid; align-content: center; gap: 26px; min-height: calc(100svh - 160px); padding-block: 56px; }
+.portada { display: grid; align-content: center; gap: 26px; min-height: calc(var(--pantalla, 100svh) - 160px); padding-block: 56px; }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
 .pasos-ensayo { display: grid; }
 .paso-ensayo { display: grid; align-content: center; gap: 18px; min-height: 80svh; max-width: 30rem; }
@@ -139,7 +139,7 @@ main { counter-reset: seccion; }
 .cifra { font-size: clamp(56px, 6vw, 88px); font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
 .cifra small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; color: var(--acero); }
 .escena-col { grid-column: 2; grid-row: 1 / span 2; }
-.escena { position: sticky; top: var(--arriba); display: grid; align-content: start; gap: 20px; height: calc(100svh - var(--arriba)); padding-block: clamp(24px, 7svh, 72px) 24px; }
+.escena { position: sticky; top: var(--arriba); display: grid; align-content: start; gap: 20px; height: calc(var(--pantalla, 100svh) - var(--arriba)); padding-block: clamp(24px, 7svh, 72px) 24px; }
 .corte { width: 100%; height: auto; max-height: 52svh; overflow: visible; }
 .corte .nota text { paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
 .corte text { font: 600 13px 'Manrope', sans-serif; fill: var(--acero); }
@@ -253,6 +253,8 @@ main { counter-reset: seccion; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
+  .datos p { overflow-wrap: anywhere; }
+  .pie-grilla > :nth-child(3) { grid-column: 1 / -1; }
   :root { --alto-cabecera: 68px; }
   .logo { min-height: 44px; font-size: 16px; }
   .logo span span { display: none; }

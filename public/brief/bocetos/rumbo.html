@@ -85,7 +85,7 @@ p { margin: 0; }
    mide menos del 90 % del ancho, para que Safari no tiña su barra. Sin
    JavaScript no está. */
 .sigue { display: none; }
-html.con-js .sigue { display: block; position: fixed; z-index: 20; right: clamp(16px, 2.5vw, 32px); bottom: clamp(16px, 2.5vw, 32px); width: 17.5rem; opacity: 0; visibility: hidden; translate: 0 24px; transition: opacity 600ms var(--curva), translate 600ms var(--curva), visibility 0s 600ms; }
+html.con-js .sigue { display: block; position: fixed; z-index: 20; right: clamp(16px, 2.5vw, 32px); bottom: calc(clamp(16px, 2.5vw, 32px) + var(--reserva-abajo, 0px)); width: 17.5rem; opacity: 0; visibility: hidden; translate: 0 24px; transition: opacity 600ms var(--curva), translate 600ms var(--curva), visibility 0s 600ms; }
 html.con-js .sigue.a-la-vista { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
 .sigue::before, .sigue::after { content: ''; position: absolute; bottom: 100%; width: 2px; height: 18px; background: var(--negro); }
 .sigue::before { left: 22%; }

@@ -1,7 +1,8 @@
 /* La barra de los bocetos del brief (/brief/bocetos/*): dice que la página es
  * un boceto de una marca inventada y, con JavaScript, deja calificarlo
- * (barra.js). Va pegada arriba (sticky, no fija): no tapa nada ni pide medir
- * su alto. Usa la letra del sistema para no parecerse a ningún boceto. */
+ * (barra.js). En escritorio va pegada arriba (sticky, no fija); en teléfonos
+ * y tabletas verticales es una píldora al pie de la pantalla (más abajo). Usa
+ * la letra del sistema para no parecerse a ningún boceto. */
 
 .boceto-barra {
   position: sticky;
@@ -153,21 +154,77 @@
   font-size: 12px;
 }
 
-@media (max-width: 640px) {
-  .boceto-que {
-    flex-basis: calc(100% - 9rem);
+/* En teléfonos y tabletas verticales la barra baja a una píldora de vidrio al
+ * pie de la pantalla: la portada ocupa la pantalla entera y, como no llega al
+ * 90 % del ancho, Safari no pinta sus bandas con ella. Quedan la etiqueta y
+ * las tres reacciones; la frase y el nombre de cada reacción siguen ahí para
+ * los lectores de pantalla. Al elegir, la nota abre debajo y la píldora crece
+ * hacia arriba, sin mover la página. `--reserva-abajo` es lo que tapa: el pie
+ * del boceto lo suma (más abajo) y lo que el boceto fija abajo sube eso. Las
+ * portadas que ocupan una pantalla dejan `--reserva-portada` bajo lo suyo. */
+@media (max-width: 1023px) {
+  :root {
+    --reserva-abajo: calc(64px + env(safe-area-inset-bottom, 0px));
+    --reserva-portada: var(--reserva-abajo);
+  }
+
+  .boceto-barra {
+    position: fixed;
+    top: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 8px 10px;
+    width: max-content;
+    max-width: min(352px, 100% - 48px);
+    padding: 6px 6px 6px 12px;
+    border: 1px solid rgb(255 255 255 / 0.16);
+    border-radius: 22px;
+    background: rgb(10 26 42 / 0.66);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
+    translate: -50% 0;
+  }
+
+  .boceto-que,
+  .boceto-reaccion-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .boceto-calificar {
-    width: 100%;
+    display: contents;
+  }
+
+  .boceto-reacciones label {
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+  }
+
+  .boceto-nota,
+  .boceto-guardado {
+    grid-column: 1 / -1;
   }
 
   .boceto-nota {
-    flex: 1 1 10rem;
+    width: 100%;
   }
 
   .boceto-guardado {
     min-width: 0;
+    padding-inline: 4px;
+  }
+
+  .boceto-guardado:empty {
+    display: none;
   }
 }
 
@@ -233,18 +290,41 @@
 
 /* En el visor del brief, la página es una carta que se arrastra de lado
  * (src/brief-visor.js): el navegador solo la desplaza en vertical y no
- * convierte el gesto lateral en «atrás». Al final queda aire para que los
- * botones del visor no tapen el pie. La carta de abajo espera con todo en
- * pausa: su portada entra cuando empieza a verse. */
+ * convierte el gesto lateral en «atrás». Sus botones flotan abajo (en
+ * teléfonos, con el estilo y la cuenta encima), y tapan `--reserva-abajo`.
+ * La carta de abajo espera con todo en pausa: su portada entra cuando
+ * empieza a verse. */
 .en-visor {
+  --reserva-abajo: 96px;
+  --reserva-portada: 96px;
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-x: none;
 }
 
-.en-visor body::after {
-  content: '';
-  display: block;
-  height: 96px;
+/* En teléfonos, la carta sigue bajo la hora (80 px) y bajo la barra de
+ * Safari (110 px), como el resto del sitio (muestras.css): el boceto se ve
+ * detrás de ellas. Arriba, la página empieza bajo la hora, y lo que se pega
+ * arriba también (`--alto-barra`). Abajo tapan la barra y los botones del
+ * visor (150 px). Las portadas miden `--pantalla` y no 100svh, que aquí es
+ * la carta entera: llegan hasta bajo la barra, y lo suyo queda sobre los
+ * botones (`--reserva-portada`). */
+@media (max-width: 1023px) {
+  .en-visor {
+    --alto-barra: 80px;
+    --pantalla: calc(100svh - 110px);
+    --reserva-abajo: 260px;
+    --reserva-portada: 230px;
+    padding-top: var(--alto-barra);
+  }
+}
+
+/* El pie es el final de la página: lo que tapa la píldora o los botones del
+ * visor se le suma al pie como un borde transparente, por el que se ve su
+ * propio fondo, y no queda un espacio vacío después. Donde nada tapa (en
+ * escritorio, fuera del visor) la variable no existe y no hay borde. (Kiri
+ * envuelve su pie en `.pie-envoltura`.) */
+:is(body > footer, .pie-envoltura) {
+  border-bottom: var(--reserva-abajo) solid transparent;
 }
 
 .en-espera *,

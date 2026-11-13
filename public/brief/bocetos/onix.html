@@ -53,11 +53,11 @@ em { font-style: italic; }
 
 /* ---- Portada: la foto completa, oscura ---- */
 .portada { position: relative; isolation: isolate; display: grid; align-items: end; min-height: 640px; overflow: hidden; text-align: center; }
-@supports (height: 100svh) { .portada { min-height: max(640px, min(100svh, 940px)); } }
+@supports (height: var(--pantalla, 100svh)) { .portada { min-height: max(640px, min(var(--pantalla, 100svh), 940px)); } }
 .portada picture { position: absolute; inset: 0; z-index: -2; }
 .portada img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
 .portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(11 10 9 / 0.5), transparent 25%, transparent 48%, rgb(11 10 9 / 0.9) 88%, var(--negro)); }
-.portada-texto { display: grid; justify-items: center; gap: 22px; padding-block: 120px clamp(56px, 8vw, 104px); }
+.portada-texto { display: grid; justify-items: center; gap: 22px; padding-block: 120px calc(clamp(56px, 8vw, 104px) + var(--reserva-portada, 0px)); }
 .portada h1 { font-size: clamp(48px, 7.6vw, 124px); }
 .dorado { color: var(--oro); }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
@@ -153,6 +153,7 @@ em { font-style: italic; }
   .cita-orfebre { grid-column: 6 / 13; }
   .cita { grid-template-columns: minmax(0, 1fr); }
   .cita figure { max-width: 440px; }
+  .taller-foto, .cita figure { overflow-x: clip; }
 }
 
 /* ---- S ---- */
@@ -179,7 +180,7 @@ em { font-style: italic; }
 .firma { --entrada: none; }
 .filete { --entrada: onix-hilo; --tramo: 30svh; }
 .pieza, .taller-foto, .orfebre, .cita figure { --entrada: onix-aclara; }
-.pieza .marco img, .taller-foto img, .orfebre img, .cita figure img { --entrada: onix-retrocede; --tramo: 100svh; --curva: cubic-bezier(0.3, 0, 0.3, 1); }
+.pieza .marco img, .taller-foto img, .orfebre img, .cita figure img { --entrada: onix-retrocede; --tramo: var(--pantalla, 100svh); --curva: cubic-bezier(0.3, 0, 0.3, 1); }
 @keyframes onix-revela { from { opacity: 0; translate: 0 20px; } }
 @keyframes onix-aclara { from { opacity: 0; } }
 @keyframes onix-hilo { from { clip-path: inset(0 0 100% 0); } }
@@ -195,7 +196,7 @@ em { font-style: italic; }
   .portada-texto > :nth-child(2) { animation-delay: 250ms; }
   .portada-texto > :nth-child(3) { animation-delay: 500ms; }
   @supports (animation-timeline: scroll()) {
-    .portada picture { animation: onix-queda linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+    .portada picture { animation: onix-queda linear both; animation-timeline: scroll(root); animation-range: 0 var(--pantalla, 100svh); }
     .portada-texto { animation: onix-se-va linear both; animation-timeline: scroll(root); animation-range: 0 75svh; }
   }
 }

@@ -47,6 +47,11 @@
 * { box-sizing: border-box; }
 html { background: var(--crema); scroll-behavior: smooth; }
 body { margin: 0; background: var(--crema); color: var(--cafe); font: 400 17px/1.6 'Nunito Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. El html, el
+   mismo color, es lo que queda sobre la página en el visor. */
+@media (max-width: 1023px) { body { background: linear-gradient(var(--crema), var(--crema)) #eaa93f; } html { background: #eaa93f; } }
 img { display: block; max-width: 100%; height: auto; }
 figure, blockquote { margin: 0; }
 a { color: inherit; }
@@ -67,7 +72,7 @@ p { margin: 0; }
    La foto va bajo un velo café que la entibia y deja el texto crema sobre
    ella en más de 9:1. Abajo, la tarjeta de mañana: el plato que se puede
    pedir hoy para mañana (rosa.js lo elige según el día). */
-.portada { position: relative; isolation: isolate; display: grid; grid-template-rows: auto 1fr auto; min-height: max(600px, calc(100svh - 40px)); color: var(--papel); overflow: clip; }
+.portada { position: relative; isolation: isolate; display: grid; grid-template-rows: auto 1fr auto; min-height: max(600px, calc(var(--pantalla, 100svh) - 40px)); color: var(--papel); overflow: clip; }
 .portada-foto { position: absolute; inset: 0; z-index: -2; }
 .portada-foto img { width: 100%; height: 100%; object-fit: cover; }
 .portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 70% 60% at 50% 48%, rgb(36 21 14 / 0.72), rgb(36 21 14 / 0.5) 70%), linear-gradient(rgb(36 21 14 / 0.55), transparent 22%, transparent 70%, rgb(36 21 14 / 0.7)); }
@@ -86,7 +91,7 @@ p { margin: 0; }
 .lados { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; max-width: 72rem; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #f3e6d6; }
 .lados span { white-space: nowrap; }
 .lados span:nth-child(2) { flex: 1; height: 1px; background: rgb(253 246 236 / 0.4); }
-.portada-pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; padding-bottom: clamp(24px, 3vw, 40px); }
+.portada-pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; padding-bottom: calc(clamp(24px, 3vw, 40px) + var(--reserva-portada, 0px)); }
 .portada-pie > p { max-width: 30ch; font: 400 26px/1.15 var(--mano); color: #f3e6d6; }
 .manana { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 16px; width: min(100%, 23rem); padding: 14px 16px; border-radius: 18px; background: var(--papel); color: var(--cafe); text-decoration: none; box-shadow: 0 24px 40px -24px rgb(0 0 0 / 0.6); transition: translate 600ms var(--calma); }
 .manana:hover { translate: 0 -4px; }
@@ -237,13 +242,18 @@ p { margin: 0; }
   .lados span:nth-child(2) { display: none; }
   .portada-pie > p { font-size: 22px; }
   .mesa, .rosa, .pie-grid { grid-template-columns: minmax(0, 1fr); }
-  .platos { width: min(86%, 22rem); }
+  .platos { width: min(54%, 14rem); }
   .pizarra { border-width: 10px; padding: 18px 14px; }
   .pizarra label { grid-template-columns: 4.8rem minmax(0, 1fr) auto; gap: 6px; padding: 8px 8px; font-size: 21px; }
   .presupuesto { grid-template-columns: minmax(0, 1fr); }
   .incluye-evento { columns: 1; }
   .dicho:nth-child(n) { justify-self: start; text-align: left; }
   .rosa-foto { width: 82%; justify-self: center; }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .lados { letter-spacing: 0.06em; }
 }
 
 /* ---- Movimiento: se asienta ----

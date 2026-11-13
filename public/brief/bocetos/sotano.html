@@ -43,6 +43,11 @@
 * { box-sizing: border-box; }
 html { background: var(--blanco); scroll-behavior: smooth; }
 body { margin: 0; background: var(--blanco); color: var(--negro); font: 400 20px/1.4 var(--times); }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. El html, el
+   mismo color, es lo que queda sobre la página en el visor. */
+@media (max-width: 1023px) { body { background: linear-gradient(var(--blanco), var(--blanco)) #000; } html { background: #000; } }
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
 a { color: var(--azul); text-underline-offset: 3px; }
@@ -210,6 +215,11 @@ main { overflow-x: clip; }
   .butaca.pasillo { margin-left: 1ch; }
   .fila-letra { font-size: 12px; }
   .plano { padding-inline: 6px; }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .titulo-seccion h2 { font-size: 46px; }
 }
 
 /* ---- Movimiento: la sala a oscuras ----

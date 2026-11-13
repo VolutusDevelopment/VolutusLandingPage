@@ -280,6 +280,17 @@ p { margin: 0; }
   .pampa { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .pampa .logo { grid-column: 1 / -1; }
   .mapa { aspect-ratio: 4 / 3; }
+  /* Las caminatas en una pantalla: primero el mapa, debajo las cuatro rutas
+     de a dos y luego el nombre y los datos de la elegida, antes de su foto. */
+  .caminatas { display: flex; flex-direction: column; }
+  .caminatas > .ancho:first-child { display: contents; }
+  .caminatas .cabeza, .caminatas .elige { margin-inline: var(--margen); }
+  .caminatas .cabeza { margin-bottom: 24px; }
+  .caminatas .mapa { margin-bottom: 16px; }
+  .elige { order: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 24px; }
+  .elige label { justify-content: start; min-height: 44px; padding: 0 12px; font-size: 15px; line-height: 1.15; }
+  .caminatas > .ancho:last-child { order: 2; }
+  .ruta img { order: 1; }
 }
 
 /* ---- S ---- */
@@ -296,8 +307,8 @@ p { margin: 0; }
   .tejedoras .f2 { margin-top: 0; }
   .puna { grid-template-columns: minmax(0, 1fr); }
   .pampa { grid-template-columns: minmax(0, 1fr); }
-  .mapa { aspect-ratio: 1; }
-  .mapa-parada { font-size: 13px !important; }
+  .mapa-parada { gap: 6px; font-size: 12px !important; }
+  .mapa-nombre { padding: 2px 5px 1px; letter-spacing: 0.04em; font-size: 10px !important; }
   .jornada::before { left: 8px; }
   .jornada li, .jornada li:nth-child(even) { grid-template-columns: 18px minmax(0, 1fr); gap: 18px 22px; align-items: start; }
   .jornada li::before { grid-column: 1; margin-top: 4px; }

@@ -6,8 +6,9 @@
  * gustan son su elección.
  *
  * `estilo` es la clase de su arte (MuestraBrief.jsx y muestras.css), y
- * `titulo` y `detalle` lo nombran. `fondo` es el color del boceto, el que
- * pinta el visor mientras carga.
+ * `titulo` y `detalle` lo nombran. `fondo` es el color de arriba del boceto:
+ * el que pinta el visor mientras carga y bajo la hora y la barra de Safari
+ * hasta leer el de sus bordes.
  *
  * Lo usan la página (la tarjeta de cada estilo y el visor), su script (la
  * revisión) y el Worker (el correo). La calificación que se hace en el boceto
@@ -22,11 +23,11 @@ export const BOCETOS = [
   b('cauce', 'Cauce', 'Telemetría de riego para viñas y huertos', 'tecnologico', 'Tecnológico', 'Grilla, datos, precisión', '#0d1210'),
   b('basal', 'Basal Ingeniería', 'Aislación sísmica y cálculo estructural', 'corporativo', 'Corporativo', 'Estructura, respaldo, orden', '#ffffff'),
   b('ladera', 'Viña Ladera', 'Vinos de secano del Itata', 'editorial', 'Editorial', 'Como una revista, pausado', '#f2ede3'),
-  b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#3b2418'),
+  b('rosa', 'La Mesa de Rosa', 'Cocina casera y banquetería', 'calido', 'Cálido y cercano', 'Tonos tierra, formas suaves', '#eaa93f'),
   b('onix', 'Ónix', 'Joyería contemporánea de autor', 'premium', 'Premium', 'Oscuro, dorado, exclusivo', '#0b0a09'),
   b('golpe', 'Golpe', 'Club de boxeo', 'audaz', 'Audaz', 'Contraste, letras enormes', '#0d0d0d'),
-  b('pelusa', 'Pelusa', 'Guardería y peluquería de perros', 'ludico', 'Lúdico', 'Color, formas, humor', '#ffd9b8'),
-  b('sotano', 'Sótano', 'Cine club y sala independiente', 'brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir', '#ffffff'),
+  b('pelusa', 'Pelusa', 'Guardería y peluquería de perros', 'ludico', 'Lúdico', 'Color, formas, humor', '#fff6e6'),
+  b('sotano', 'Sótano', 'Cine club y sala independiente', 'brutalista', 'Brutalista', 'Crudo, bordes duros, sin pulir', '#000000'),
   b('lucero', 'Pista Lucero', 'Pista de patinaje y disco', 'retro', 'Retro', 'Nostalgia de los 70', '#24140c'),
   b('rumbo', 'Rumbo', 'Señalética y orientación', 'suizo', 'Suizo / gráfico', 'Grilla, rojo, tipografía', '#ffffff'),
   b('quillay', 'Quillay', 'Jabones de plantas nativas', 'natural', 'Natural', 'Formas orgánicas, tonos de tierra', '#f0eadb'),
@@ -35,7 +36,7 @@ export const BOCETOS = [
   b('kiri', 'Kiri', 'Termas y ryokan junto al volcán Osorno', 'zen', 'Zen / japonés', 'Silencio, aire, calma', '#0e1511'),
   b('remache', 'Remache', 'Maestranza industrial para minería', 'industrial', 'Industrial', 'Fuerte, oscuro, de taller', '#0b0c0c'),
   b('marfil', 'Bar Marfil', 'Coctelería y salón de baile en Valparaíso', 'artdeco', 'Art déco', 'Dorado, simetría, años 20', '#fbf8f1'),
-  b('bisagra', 'Bisagra', 'Lámparas de diseño hechas a mano', 'bauhaus', 'Bauhaus', 'Formas puras, colores primarios', '#f2eee7'),
+  b('bisagra', 'Bisagra', 'Lámparas de diseño hechas a mano', 'bauhaus', 'Bauhaus', 'Formas puras, colores primarios', '#13110e'),
   b('tablero', 'Tablero', 'Café de juegos de mesa', 'memphis', 'Memphis', 'Patrones, color, desorden alegre', '#ffffff'),
   b('destello', 'Destello', 'Cámaras digitales de los 2000, revisadas', 'y2k', 'Y2K', 'Cromo, brillos, años 2000', '#e9dcff'),
   b('parina', 'Parina', 'Lodge y caminatas en el altiplano', 'andino', 'Andino / folclórico', 'Grecas, tejidos, colores de la tierra', '#f3e7d3'),

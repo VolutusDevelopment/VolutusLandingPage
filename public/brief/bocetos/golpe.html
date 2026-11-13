@@ -54,11 +54,11 @@ p { margin: 0; }
 
 /* ---- Portada: foto completa en blanco y negro ---- */
 .portada { position: relative; display: grid; align-items: end; min-height: 640px; overflow: hidden; isolation: isolate; }
-@supports (height: 100svh) { .portada { min-height: max(640px, min(100svh, 980px)); } }
+@supports (height: var(--pantalla, 100svh)) { .portada { min-height: max(640px, min(var(--pantalla, 100svh), 980px)); } }
 .portada picture, .portada > img { position: absolute; inset: 0; z-index: -2; }
 .portada img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%; }
 .portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(13 13 13 / 0.6) 0%, transparent 22%, transparent 40%, rgb(13 13 13 / 0.94) 100%), linear-gradient(90deg, rgb(13 13 13 / 0.88) 0%, rgb(13 13 13 / 0.6) 50%, transparent 85%); }
-.portada-texto { display: grid; gap: 28px; padding-block: 140px clamp(48px, 7vw, 96px); }
+.portada-texto { display: grid; gap: 28px; padding-block: 140px calc(clamp(48px, 7vw, 96px) + var(--reserva-portada, 0px)); }
 .portada h1 { font-size: clamp(66px, 13.4vw, 216px); letter-spacing: -0.005em; }
 .portada h1 span { display: block; }
 .portada h1 .amarillo { color: var(--amarillo); }
@@ -206,7 +206,7 @@ p { margin: 0; }
   .portada h1 span:nth-child(3) { animation-delay: 340ms; }
   .portada-pie { animation: golpe-sube 800ms var(--golpe) 520ms both; }
   @supports (animation-timeline: scroll()) {
-    .portada img { animation: golpe-avanza linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+    .portada img { animation: golpe-avanza linear both; animation-timeline: scroll(root); animation-range: 0 var(--pantalla, 100svh); }
     .cierre { view-timeline: --cierre; }
     .cierre img, .cierre video { animation: golpe-pasa linear both; animation-timeline: --cierre; animation-range: cover 0% cover 100%; }
   }

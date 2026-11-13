@@ -47,6 +47,11 @@
 * { box-sizing: border-box; }
 html { background: var(--papel); scroll-behavior: smooth; }
 body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 17px/1.55 'Instrument Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. El html, el
+   mismo color, es lo que queda sobre la página en el visor. */
+@media (max-width: 1023px) { body { background: linear-gradient(var(--papel), var(--papel)) #0d1210; } html { background: #0d1210; } }
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
 a { color: inherit; }
@@ -123,7 +128,7 @@ main { background: repeating-linear-gradient(90deg, rgb(16 20 18 / 0.06) 0 1px, 
 .riego-paso { display: grid; align-content: center; gap: 12px; min-height: 72svh; max-width: 30rem; }
 .riego-paso h3 { font-size: clamp(28px, 2.8vw, 40px); font-stretch: 85%; font-weight: 600; letter-spacing: -0.03em; }
 .riego-paso p:not(.mono) { color: var(--grafito); }
-.riego-escena { grid-column: 2; grid-row: 1; position: sticky; top: var(--alto-barra, 0px); display: grid; align-content: center; gap: 12px; height: calc(100svh - var(--alto-barra, 0px)); }
+.riego-escena { grid-column: 2; grid-row: 1; position: sticky; top: var(--alto-barra, 0px); display: grid; align-content: center; gap: 12px; height: calc(var(--pantalla, 100svh) - var(--alto-barra, 0px)); }
 .corte { position: relative; border: 1px solid var(--linea); background: var(--blanco); }
 .corte-suelo { display: block; width: 100%; height: auto; }
 .corte-suelo .rayita { stroke: var(--linea); stroke-dasharray: 3 5; }

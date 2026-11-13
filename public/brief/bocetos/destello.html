@@ -93,7 +93,7 @@ p { margin: 0; }
 .capitulo { display: inline-grid; place-items: center; min-width: 13ch; min-height: 42px; padding: 0 14px; border-radius: 999px; background: var(--lcd); color: var(--hielo); font: 800 12px/1 'Syne', 'Syne respaldo', sans-serif; letter-spacing: 0.08em; white-space: nowrap; font-variant-numeric: tabular-nums; box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.5); }
 
 /* ---- Portada: el texto, el lugar de la cámara y su pantallita ---- */
-.portada { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 32px clamp(32px, 5vw, 80px); align-items: end; min-height: min(calc(100svh - 120px), 920px); padding-block: clamp(32px, 5vw, 72px) clamp(64px, 8vw, 110px); }
+.portada { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 32px clamp(32px, 5vw, 80px); align-items: end; min-height: min(calc(var(--pantalla, 100svh) - 120px), 920px); padding-block: clamp(32px, 5vw, 72px) clamp(64px, 8vw, 110px); }
 .portada::after { content: ''; position: absolute; inset: -30% -50vw; z-index: 5; background: radial-gradient(circle at 72% 45%, #ffffff 0 18%, rgb(255 255 255 / 0) 62%); opacity: 0; pointer-events: none; }
 .portada-texto { display: grid; gap: 26px; justify-items: start; align-self: center; }
 .portada h1 { display: grid; font-size: clamp(40px, 5.3vw, 84px); text-transform: uppercase; line-height: 0.9; }
@@ -254,6 +254,13 @@ p { margin: 0; }
   .fila { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .menu-lcd { box-shadow: 0 0 0 6px var(--plata), 0 0 0 8px var(--tinta); }
   .sd .sd-marca { font-size: min(40px, 10vw); }
+}
+
+@media (max-width: 359px) {
+  .capsula { gap: 2px; padding-left: 10px; }
+  .dial a { padding: 0 6px; }
+  .titulo { font-size: 27px; }
+  .sd .sd-marca { font-size: 29px; }
 }
 
 /* ---- Movimiento ----

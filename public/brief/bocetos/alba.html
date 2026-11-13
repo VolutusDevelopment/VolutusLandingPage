@@ -195,7 +195,7 @@ p { margin: 0; }
   .portada-detalle img { animation: alba-asienta 2400ms var(--calma) 700ms both; }
   .portada-detalle figcaption { animation: alba-aclara 1200ms var(--calma) 1300ms both; }
   @supports (animation-timeline: scroll()) {
-    .portada-foto { animation: alba-queda linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
+    .portada-foto { animation: alba-queda linear both; animation-timeline: scroll(root); animation-range: 0 var(--pantalla, 100svh); }
   }
 }
 </style>

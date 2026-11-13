@@ -54,6 +54,11 @@
 * { box-sizing: border-box; }
 html { background: var(--fondo); scroll-behavior: smooth; }
 body { margin: 0; background: var(--fondo); color: var(--tinta); font: 400 17px/1.5 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. El html, el
+   mismo color, es lo que queda sobre la página en el visor. */
+@media (max-width: 1023px) { body { background: linear-gradient(var(--fondo), var(--fondo)) #0b0c0c; } html { background: #0b0c0c; } }
 img, video { display: block; max-width: 100%; height: auto; }
 figure, dl, dd { margin: 0; }
 a { color: inherit; }
@@ -86,10 +91,10 @@ p { margin: 0; }
 .capsula .boton { min-height: 36px; padding: 0 12px; font-size: 11px; }
 
 /* ---- La portada: la silueta al atardecer ---- */
-.portada { position: relative; height: calc(100svh - var(--alto-barra, 0px)); min-height: 560px; overflow: hidden; background: var(--negro); }
+.portada { position: relative; height: calc(var(--pantalla, 100svh) - var(--alto-barra, 0px)); min-height: 560px; overflow: hidden; background: var(--negro); }
 .portada img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
 .portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(11 12 12 / 0) 55%, rgb(11 12 12 / 0.92) 92%); }
-.portada-pie { position: absolute; z-index: 1; left: 0; right: 0; bottom: clamp(28px, 5svh, 56px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 18px 40px; color: var(--blanco); }
+.portada-pie { position: absolute; z-index: 1; left: 0; right: 0; bottom: calc(clamp(28px, 5svh, 56px) + var(--reserva-portada, 0px)); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 18px 40px; color: var(--blanco); }
 .portada h1 { max-width: 13ch; font-size: clamp(40px, 5.4vw, 84px); }
 .portada-pie p { max-width: 34ch; color: rgb(255 255 255 / 0.78); }
 
@@ -272,7 +277,8 @@ p { margin: 0; }
   .portada img { object-position: 50% 30%; }
   .grilla-clientes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grilla-clientes li { min-height: 84px; overflow-wrap: break-word; }
-  .c1 { font-size: 16px; }
+  .grilla-clientes li { padding-inline: 8px; }
+  .c1 { font-size: clamp(13px, 4.1vw, 16px); letter-spacing: 0.02em; }
   .c3, .c5 { font-size: 17px; }
   .c4 { font-size: 14px; letter-spacing: 0.14em; }
   .c2 { font-size: 11px; letter-spacing: 0.14em; }
@@ -282,7 +288,7 @@ p { margin: 0; }
   .servicio dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .formulario { grid-template-columns: minmax(0, 1fr); }
   .pie-grilla { grid-template-columns: minmax(0, 1fr); }
-  .escaneo { min-height: 100svh; }
+  .escaneo { min-height: var(--pantalla, 100svh); }
 }
 
 /* ---- Movimiento ----
@@ -297,9 +303,13 @@ p { margin: 0; }
 @keyframes remache-barre { from { translate: -18% 0; } to { translate: 92% 0; } }
 @keyframes remache-enciende { from { color: rgb(255 255 255 / 0.22); } }
 @keyframes remache-traza { from { opacity: 0; } }
+/* La cápsula va centrada con `translate`: en teléfonos sube sin perder su
+   centro, para no asomar por el costado al entrar. */
+@keyframes remache-sube-centrada { from { opacity: 0; translate: -50% 18px; } }
 @media (prefers-reduced-motion: no-preference) {
   .portada img { animation: remache-asienta 2400ms var(--curva) both; }
   .capsula { animation: remache-sube 1000ms var(--curva) 300ms both; }
+  @media (max-width: 1023px) { .capsula { animation-name: remache-sube-centrada; } }
   .rack .barrido { animation: remache-barre 7s var(--curva) infinite alternate; }
   @supports (animation-timeline: view()) {
     .escaneo { view-timeline: --escaneo block; }

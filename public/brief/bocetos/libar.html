@@ -46,6 +46,10 @@
 * { box-sizing: border-box; }
 html { background: var(--noche); scroll-behavior: smooth; }
 body { margin: 0; background: var(--crema); color: var(--cafe); font: 400 18px/1.6 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. */
+@media (max-width: 1023px) { body { background: linear-gradient(var(--crema), var(--crema)) var(--noche); } }
 img { display: block; max-width: 100%; height: auto; }
 figure { margin: 0; }
 a { color: inherit; }
@@ -83,7 +87,7 @@ p { margin: 0; }
 .cabecera .boton { min-height: 44px; padding: 0 22px; font-size: 15px; }
 
 /* ---- Portada: la cuchara ---- */
-.portada { position: relative; display: grid; align-items: end; min-height: max(620px, min(100svh, 980px)); padding-block: 140px clamp(150px, 16vw, 210px); overflow: hidden; background: var(--noche); color: var(--crema); isolation: isolate; }
+.portada { position: relative; display: grid; align-items: end; min-height: max(620px, min(var(--pantalla, 100svh), 980px)); padding-block: 140px clamp(150px, 16vw, 210px); overflow: hidden; background: var(--noche); color: var(--crema); isolation: isolate; }
 .portada-fondo { position: absolute; inset: 0; z-index: -1; }
 .portada-fondo > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
 .portada::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgb(28 19 8 / 0.85), rgb(28 19 8 / 0.35) 55%, rgb(28 19 8 / 0.05)), linear-gradient(rgb(28 19 8 / 0.5), transparent 30%); }

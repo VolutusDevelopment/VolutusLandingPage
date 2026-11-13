@@ -49,6 +49,10 @@
 * { box-sizing: border-box; }
 html { background: var(--noche); scroll-behavior: smooth; }
 body { margin: 0; background: var(--washi) var(--papel); color: var(--texto); font: 400 16px/2.1 var(--mincho); letter-spacing: 0.05em; -webkit-font-smoothing: antialiased; }
+/* En teléfonos, Safari muestra bajo la hora, antes de bajar, el color de
+   fondo del body: es el de arriba de la página, y el body se sigue viendo
+   igual porque su color de siempre va encima, como imagen. */
+@media (max-width: 1023px) { body { background: var(--papel), linear-gradient(var(--washi), var(--washi)) var(--noche); } }
 img, video { display: block; max-width: 100%; height: auto; }
 figure, dl, dd { margin: 0; }
 a { color: inherit; }
@@ -82,11 +86,11 @@ p { margin: 0; }
    correr) al terminar el índice. El video no lleva fondo de CSS: Safari no
    tiñe sus bandas con lo que pinta un video o una imagen. */
 .entrada { position: relative; }
-.apertura { position: sticky; top: 0; height: 100svh; overflow: hidden; color: var(--washi); }
+.apertura { position: sticky; top: 0; height: var(--pantalla, 100svh); overflow: hidden; color: var(--washi); }
 .apertura img, .apertura video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .apertura h1 { position: absolute; top: 50%; right: clamp(56px, 12vw, 200px); translate: 0 -50%; writing-mode: vertical-rl; font-size: clamp(22px, 2.2vw, 30px); line-height: 2; letter-spacing: 0.16em; text-shadow: 0 0 24px rgb(14 21 17 / 0.6); }
 .apertura h1 small { display: block; font: 400 13px/2.4 var(--gotica); letter-spacing: 0.3em; opacity: 0.86; }
-.bajar { position: absolute; left: clamp(18px, 2vw, 30px); bottom: 28px; display: grid; justify-items: center; gap: 12px; font: 400 11px/1 var(--gotica); letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; }
+.bajar { position: absolute; left: clamp(18px, 2vw, 30px); bottom: calc(28px + var(--reserva-portada, 0px)); display: grid; justify-items: center; gap: 12px; font: 400 11px/1 var(--gotica); letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; }
 .bajar span { writing-mode: vertical-rl; }
 .bajar i { position: relative; width: 1px; height: 64px; overflow: hidden; background: rgb(238 235 228 / 0.3); }
 .bajar i::after { content: ''; position: absolute; inset: 0; background: var(--washi); translate: 0 -100%; }
@@ -94,7 +98,7 @@ p { margin: 0; }
 .credito::before { content: ''; width: 36px; height: 1px; background: currentColor; }
 
 /* ---- El índice: el papel que sube sobre el video ---- */
-.indice { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px clamp(32px, 6vw, 96px); min-height: 100svh; padding: clamp(96px, 12svh, 140px) var(--margen) clamp(56px, 8svh, 96px); background: var(--washi) var(--papel); box-shadow: 0 -30px 60px -30px rgb(0 0 0 / 0.4); }
+.indice { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px clamp(32px, 6vw, 96px); min-height: var(--pantalla, 100svh); padding: clamp(96px, 12svh, 140px) var(--margen) clamp(56px, 8svh, 96px); background: var(--washi) var(--papel); box-shadow: 0 -30px 60px -30px rgb(0 0 0 / 0.4); }
 .columnas { display: flex; flex-direction: row-reverse; justify-content: center; align-self: center; gap: clamp(18px, 3vw, 44px); margin: 0; padding: 0; list-style: none; }
 .columnas a { display: grid; justify-items: center; gap: 18px; text-decoration: none; }
 .columnas b { writing-mode: vertical-rl; font-weight: 400; font-size: clamp(17px, 1.5vw, 21px); letter-spacing: 0.14em; transition: color 500ms var(--calma); }

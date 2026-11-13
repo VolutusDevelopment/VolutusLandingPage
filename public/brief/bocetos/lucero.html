@@ -89,7 +89,7 @@ p { margin: 0; }
 
 /* ---- Portada: el afiche de la noche ---- */
 .portada-marco { position: relative; overflow: hidden; }
-.portada { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: center; min-height: calc(100svh - 170px); padding-block: 24px clamp(150px, 16vw, 230px); }
+.portada { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 40px clamp(32px, 5vw, 80px); align-items: center; min-height: calc(var(--pantalla, 100svh) - 170px); padding-block: 24px clamp(150px, 16vw, 230px); }
 .portada-texto { display: grid; gap: 22px; justify-items: start; }
 .portada h1 { margin-left: -0.04em; font-size: clamp(88px, 10.4vw, 156px); line-height: 0.86; color: var(--crema); text-shadow: 6px 6px 0 var(--naranja), 12px 12px 0 var(--rosa); rotate: -4deg; }
 .portada-texto > .bajada { max-width: 30ch; font-size: 22px; color: var(--suave); }
@@ -234,10 +234,13 @@ p { margin: 0; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
+  .cabecera { gap: 12px; }
   .cabecera .boton { min-height: 46px; padding: 3px 18px 0; font-size: 15px; }
+  .logo { margin-right: 28px; }
   .portada h1 { font-size: 21vw; }
   .esta-noche { justify-self: stretch; border-radius: 28px; }
-  .noche { grid-template-columns: 4.4rem minmax(0, 1fr); }
+  .noche { grid-template-columns: 5.8rem minmax(0, 1fr); gap: 4px 16px; }
+  .noche abbr { font-size: 34px; }
   .noche .precio { grid-column: 2; }
   .paso { --circulo: 64px; grid-template-columns: 64px minmax(0, 1fr); }
   .paso > span { font-size: 28px; }
@@ -246,6 +249,11 @@ p { margin: 0; }
   .talon { width: 56px; font-size: 12px; }
   .talon b { font-size: 18px; }
   .discos { gap: 36px 16px; }
+}
+
+@media (max-width: 359px) {
+  .logo-marca b { font-size: 26px; }
+  .cabecera .boton { padding-inline: 12px; font-size: 14px; letter-spacing: 0.08em; }
 }
 
 /* ---- Movimiento: una noche en la pista ----

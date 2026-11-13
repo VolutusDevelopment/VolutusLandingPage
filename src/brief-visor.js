@@ -37,6 +37,7 @@ const escribiendo = (elemento) => elemento?.closest?.('input, textarea, select, 
 export default function montarVisor(form) {
   const visor = document.querySelector('.brief-visor')
   if (!visor?.showModal) return
+  const raiz = document.documentElement
 
   const estilo = visor.querySelector('[data-visor-estilo]')
   const marca = visor.querySelector('[data-visor-marca]')
@@ -118,7 +119,8 @@ export default function montarVisor(form) {
 
   function presentar() {
     const i = cola[0]
-    const { nombre, rubro, titulo } = BOCETOS[i]
+    const { nombre, rubro, titulo, fondo } = BOCETOS[i]
+    raiz.style.setProperty('--fondo-boceto', fondo)
     estilo.textContent = titulo
     marca.textContent = `${nombre} · ${rubro}`
     cuenta.textContent = `${i + 1} de ${total}`
@@ -437,8 +439,15 @@ export default function montarVisor(form) {
     ordenar()
     cargar(arriba, i)
     presentar()
+    ubicar()
     visor.showModal()
   }
+
+  // En teléfonos el visor no es fijo sino absoluto, donde está la página
+  // (muestras.css): así el boceto se ve bajo la hora y la barra de Safari.
+  // Si la pantalla gira, se vuelve a ubicar.
+  const ubicar = () => visor.style.setProperty('--visor-y', `${scrollY}px`)
+  addEventListener('resize', () => visor.open && ubicar())
 
   async function cerrar() {
     ocupado = true
@@ -452,10 +461,11 @@ export default function montarVisor(form) {
     if (conHoja()) cerrarHoja()
     else if (!ocupado) cerrar()
   })
-  visor.querySelector('[data-cerrar]').addEventListener('click', cerrar)
+  visor.querySelectorAll('[data-cerrar]').forEach((boton) => boton.addEventListener('click', cerrar))
 
   // Al cerrar, los iframes sueltan los bocetos y el foco vuelve adonde estaba.
   visor.addEventListener('close', () => {
+    raiz.style.removeProperty('--fondo-boceto')
     visor.classList.remove('con-hoja')
     comentar.setAttribute('aria-expanded', 'false')
     visor.getAnimations().forEach((animacion) => animacion.cancel())

@@ -218,7 +218,11 @@ p { margin: 0; }
   .taller, .materiales, .presupuesto { grid-template-columns: minmax(0, 1fr); }
   .abanico { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .pasos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 36px; }
-  .prueba-col { position: static; width: min(100%, 26rem); }
+  /* La prueba va antes de la orden y más chica, y lo que cambia su aspecto
+     (pieza, papel y tinta) abre la orden: se ve la invitación mientras se
+     elige. */
+  .prueba-col { position: static; order: -1; justify-self: center; width: min(62%, 17rem); }
+  .prueba-col > * { min-width: 0; }
 }
 
 /* ---- S ---- */
@@ -230,6 +234,25 @@ p { margin: 0; }
   .pasos { grid-template-columns: minmax(0, 1fr); }
   .extendida { grid-template-columns: 7rem minmax(0, 1fr); }
   .orden { grid-template-columns: minmax(0, 1fr); }
+  .orden-cabeza b { font-size: 24px; }
+  .presupuesto { row-gap: 24px; }
+  .prueba-col { width: 100%; grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); align-items: end; gap: 14px; }
+  .prueba-col .nota { font-size: 14px; }
+  .prueba { gap: 8px; padding: 18px; }
+  .prueba .pieza { font-size: 11px; }
+  .prueba .nombres { font-size: 27px; }
+  .prueba .fecha { font-size: 14px; }
+  .prueba .lugar { font-size: 13px; }
+  .prueba svg { width: 90px; }
+  .casillas { gap: 0 18px; padding: 12px 0 6px; }
+  .casillas legend { margin-bottom: 2px; }
+  .casilla { min-height: 40px; gap: 8px; font-size: 16px; }
+  .casilla i { width: 20px; height: 20px; }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .titulo { font-size: 46px; }
 }
 
 /* ---- Movimiento: la prensa ----
@@ -398,24 +421,24 @@ p { margin: 0; }
           <label class="casilla"><input type="radio" name="pieza" value="bautizo"><i></i>Bautizo</label>
           <label class="casilla"><input type="radio" name="pieza" value="aniversario"><i></i>Aniversario</label>
         </fieldset>
-        <label class="campo todo">02 · Nombres<input name="nombres" maxlength="40" placeholder="Camila & Tomás" toolparamdescription="Los nombres que van impresos, de hasta 40 letras, por ejemplo Camila & Tomás"></label>
-        <label class="campo">03 · Fecha del evento<input type="date" name="fecha" min="2026-11-12" toolparamdescription="La fecha del evento, que va impresa en la invitación"></label>
-        <label class="campo">04 · Lugar<input name="lugar" maxlength="40" placeholder="Viña Santa Rita, Buin" toolparamdescription="Dónde es el evento, de hasta 40 letras"></label>
-        <label class="campo">05 · Cantidad<input type="number" name="cantidad" min="50" max="500" step="10" value="100" inputmode="numeric" toolparamdescription="Cuántas invitaciones, de 50 a 500"></label>
-        <label class="campo">06 · Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
         <fieldset class="casillas" toolparamdescription="El papel: blanco (algodón blanco), crema (algodón crema) o kraft">
-          <legend>07 · Papel</legend>
+          <legend>02 · Papel</legend>
           <label class="casilla"><input type="radio" name="papel" value="blanco" checked><i style="--c: #fbf8f2"></i>Algodón blanco</label>
           <label class="casilla"><input type="radio" name="papel" value="crema"><i style="--c: #f1e6cf"></i>Algodón crema</label>
           <label class="casilla"><input type="radio" name="papel" value="kraft"><i style="--c: #d9c4a0"></i>Kraft</label>
         </fieldset>
         <fieldset class="casillas" toolparamdescription="La tinta: azul, bermellon, verde o negro">
-          <legend>08 · Tinta</legend>
+          <legend>03 · Tinta</legend>
           <label class="casilla"><input type="radio" name="tinta" value="azul" checked><i style="--c: #1f2a44"></i>Azul tinta</label>
           <label class="casilla"><input type="radio" name="tinta" value="bermellon"><i style="--c: #b23427"></i>Bermellón</label>
           <label class="casilla"><input type="radio" name="tinta" value="verde"><i style="--c: #3f5a3a"></i>Verde musgo</label>
           <label class="casilla"><input type="radio" name="tinta" value="negro"><i style="--c: #1b1b1b"></i>Negro</label>
         </fieldset>
+        <label class="campo todo">04 · Nombres<input name="nombres" maxlength="40" placeholder="Camila & Tomás" toolparamdescription="Los nombres que van impresos, de hasta 40 letras, por ejemplo Camila & Tomás"></label>
+        <label class="campo">05 · Fecha del evento<input type="date" name="fecha" min="2026-11-12" toolparamdescription="La fecha del evento, que va impresa en la invitación"></label>
+        <label class="campo">06 · Lugar<input name="lugar" maxlength="40" placeholder="Viña Santa Rita, Buin" toolparamdescription="Dónde es el evento, de hasta 40 letras"></label>
+        <label class="campo">07 · Cantidad<input type="number" name="cantidad" min="50" max="500" step="10" value="100" inputmode="numeric" toolparamdescription="Cuántas invitaciones, de 50 a 500"></label>
+        <label class="campo">08 · Correo<input type="email" name="correo" autocomplete="email" maxlength="120" required></label>
         <button class="boton" type="submit">Enviar la orden</button>
         <p class="boceto-aviso"></p>
       </form>

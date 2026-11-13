@@ -110,7 +110,7 @@ p { margin: 0; }
 .dia[data-hora="noche"] { --arriba: #262046; --abajo: #4a3a78; --loma: #2f2b52; --astro: #fff3c4; --sol-x: 80vw; --sol-y: 12svh; --luz: 1; --estrellas: 1; }
 
 /* ---- El día: la primera pantalla ---- */
-.dia-cabecera { min-height: calc(100svh - var(--alto-barra, 0px)); margin-top: -100lvh; display: grid; grid-template-rows: auto 1fr; }
+.dia-cabecera { min-height: calc(var(--pantalla, 100svh) - var(--alto-barra, 0px)); margin-top: -100lvh; display: grid; grid-template-rows: auto 1fr; }
 .portada { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 32px clamp(32px, 5vw, 80px); align-items: center; padding-block: 8px 48px; }
 .portada-texto { display: grid; gap: 22px; justify-items: start; }
 .portada h1 { font-size: clamp(44px, 6vw, 92px); }
@@ -129,7 +129,7 @@ p { margin: 0; }
 
 /* ---- El día: un momento por pantalla ---- */
 .momentos { margin: 0; padding: 0; list-style: none; }
-.momento { display: grid; place-items: center; min-height: calc(100svh - var(--alto-barra, 0px)); padding: 24px var(--margen) 96px; }
+.momento { display: grid; place-items: center; min-height: calc(var(--pantalla, 100svh) - var(--alto-barra, 0px)); padding: 24px var(--margen) 96px; }
 .tarjeta { --acento: var(--coral); --acento-claro: #ffe1d6; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; width: min(100%, 1000px); padding: 14px; border-radius: 40px; background: var(--blanco); box-shadow: 0 40px 70px -46px rgb(42 31 26 / 0.55); }
 .momento:nth-child(even) .tarjeta { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
 .momento:nth-child(even) .tarjeta-video { order: 2; }
@@ -153,7 +153,7 @@ p { margin: 0; }
    La pausa es la escena sola, de noche, con la casa encendida. Su texto va
    en tinta hasta que cae la noche y entonces pasa a crema: así también se
    lee sin JavaScript, cuando el cielo se queda en la mañana. */
-.dia-pausa { display: grid; justify-items: center; align-content: start; gap: 18px; min-height: 100svh; padding: 20svh var(--margen) 0; color: var(--tinta); text-align: center; transition: color 1400ms var(--calma); }
+.dia-pausa { display: grid; justify-items: center; align-content: start; gap: 18px; min-height: var(--pantalla, 100svh); padding: 20svh var(--margen) 0; color: var(--tinta); text-align: center; transition: color 1400ms var(--calma); }
 .dia-pausa h2 { font-size: clamp(44px, 6vw, 88px); }
 .dia-pausa p { max-width: 36ch; font-size: 20px; }
 .dia[data-hora="noche"] .dia-pausa { color: #fff6e6; }
@@ -163,7 +163,7 @@ p { margin: 0; }
    viendo y deja saltar a otro. Va pegado dentro de la historia, así que
    aparece y se va con ella, sin JavaScript; en la primera pantalla espera
    escondido, para no tapar la portada. */
-.reloj { position: sticky; bottom: max(14px, env(safe-area-inset-bottom, 0px)); z-index: 5; display: flex; justify-content: center; margin-top: -64px; height: 64px; pointer-events: none; }
+.reloj { position: sticky; bottom: calc(max(14px, env(safe-area-inset-bottom, 0px)) + var(--reserva-abajo, 0px)); z-index: 5; display: flex; justify-content: center; margin-top: -64px; height: 64px; pointer-events: none; }
 .reloj ol { display: flex; gap: 4px; margin: 0; padding: 6px; list-style: none; border-radius: 999px; background: rgb(255 255 255 / 0.92); box-shadow: 0 10px 30px -14px rgb(42 31 26 / 0.5); pointer-events: auto; }
 .reloj a { display: grid; place-items: center; min-width: 44px; height: 44px; padding: 0 10px; border-radius: 999px; font: 600 15px/1 'Fredoka', sans-serif; text-decoration: none; font-variant-numeric: tabular-nums; transition: background-color 500ms var(--calma), color 500ms var(--calma); }
 .reloj a[aria-current] { background: var(--tinta); color: var(--crema); }
@@ -310,6 +310,13 @@ tbody tr:last-child > * { border-bottom: 0; }
   .momento { scroll-snap-align: center; scroll-snap-stop: always; }
   .dia-pausa { scroll-snap-align: start; scroll-snap-stop: always; }
   .despues { scroll-snap-align: start; }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  td { font-size: 14px; }
+  thead th { font-size: 13px; }
+  thead th svg { width: 26px; height: 20px; }
 }
 
 /* ---- Movimiento: más vivo, sin rebote ----

@@ -84,7 +84,7 @@ p { margin: 0; }
 .datos-cabeza { justify-self: end; display: flex; align-items: center; gap: 18px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--suave); }
 
 /* ---- Portada: el salón, con margen ---- */
-.portada { position: relative; height: min(calc(100svh - 120px), 56vw); min-height: 380px; margin-inline: var(--margen); overflow: hidden; }
+.portada { position: relative; height: min(calc(var(--pantalla, 100svh) - 120px), 56vw); min-height: 380px; margin-inline: var(--margen); overflow: hidden; }
 .portada img, .portada video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(10 24 20 / 0) 55%, rgb(10 24 20 / 0.55) 100%); }
 .portada h1 { position: absolute; z-index: 1; left: clamp(20px, 3vw, 44px); bottom: clamp(20px, 3vw, 40px); max-width: 15ch; font-size: clamp(22px, 2.4vw, 34px); color: var(--marfil); text-shadow: 0 1px 18px rgb(0 0 0 / 0.5); }
@@ -178,7 +178,7 @@ p { margin: 0; }
 .pie-final { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 18px calc(24px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid rgb(251 248 241 / 0.24); font-size: 12px; color: rgb(251 248 241 / 0.62); }
 
 /* ---- Volver arriba ---- */
-.arriba { position: fixed; z-index: 20; right: clamp(14px, 2vw, 28px); bottom: calc(clamp(14px, 2vw, 28px) + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgb(201 162 74 / 0.86); color: var(--botella); text-decoration: none; transition: background-color 500ms var(--curva); }
+.arriba { position: fixed; z-index: 20; right: clamp(14px, 2vw, 28px); bottom: calc(clamp(14px, 2vw, 28px) + env(safe-area-inset-bottom, 0px) + var(--reserva-abajo, 0px)); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgb(201 162 74 / 0.86); color: var(--botella); text-decoration: none; transition: background-color 500ms var(--curva); }
 .arriba:hover { background: var(--oro-claro); }
 .arriba svg { width: 14px; height: 14px; }
 
@@ -207,7 +207,7 @@ p { margin: 0; }
   .capitulo figure { width: 78%; justify-self: center; }
   .copas { grid-template-columns: minmax(0, 1fr); }
   .copa:last-child { display: block; }
-  .noches li { grid-template-columns: 5rem minmax(0, 1fr); }
+  .noches li { grid-template-columns: 5.6rem minmax(0, 1fr); gap: 12px; }
   .noches small { grid-column: 2; }
   .historia dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .noches-op { grid-template-columns: minmax(0, 1fr); }

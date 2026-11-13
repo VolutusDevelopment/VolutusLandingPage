@@ -76,7 +76,7 @@ p { margin: 0; }
 .cabecera .reservar-enlace { justify-self: end; font-size: 15px; font-weight: 400; text-underline-offset: 6px; text-decoration-color: var(--polvo); }
 
 /* ---- Portada: el cielo en exposición larga ---- */
-.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(100svh, 1000px)); overflow: hidden; background: var(--noche); isolation: isolate; }
+.portada { position: relative; display: grid; place-items: center; min-height: max(640px, min(var(--pantalla, 100svh), 1000px)); overflow: hidden; background: var(--noche); isolation: isolate; }
 /* El cielo: un video corto en bucle (barra.js) sobre su cuadro quieto, que es
    la imagen de la portada. Se oscurece arriba y abajo para que el título se
    lea y la portada se funda con la página. Se corre apenas con el cursor. */
@@ -268,7 +268,26 @@ p { margin: 0; }
   .experiencias { grid-template-columns: minmax(0, 1fr); max-width: 34rem; margin-inline: auto; }
   .telescopio { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .telescopio figure { grid-column: 1 / -1; max-width: 26rem; }
-  .ocular { grid-template-columns: minmax(0, 1fr); }
+  /* En una columna, el ocular y lo que lo mueve caben en una pantalla: el
+     campo más chico, el foco justo debajo, los cuatro objetos de a dos y la
+     descripción al final. La hora elegida en el planisferio se lee arriba de
+     los datos de la semana, junto a las horas. */
+  .ocular { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .campo-marco { width: min(62%, 18rem); min-height: 0; padding: 12px; }
+  .campo { height: auto; aspect-ratio: 1; }
+  .mandos { display: contents; }
+  .foco { order: 1; }
+  .foco output { width: auto; min-width: 14ch; }
+  .mandos fieldset { order: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .mandos legend { margin-bottom: 4px; }
+  .objeto { grid-template-columns: minmax(0, 1fr); padding: 10px 14px; border-radius: 14px; }
+  .objeto b { font-size: 14px; }
+  .objeto small { font-size: 12px; }
+  .descripciones { order: 3; min-height: 5.4em; }
+  .planisferio { width: min(84%, 26rem); }
+  .panel h3 { order: -2; }
+  .que-se-ve { order: -1; padding-bottom: 22px; border-bottom: 1px solid var(--borde-vidrio); }
+  .panel dl { padding-bottom: 0; border-bottom: 0; }
   .pie-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .llevar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .perfil { position: static; background: var(--cerro); }
@@ -278,6 +297,7 @@ p { margin: 0; }
 
 /* ---- S ---- */
 @media (max-width: 599px) {
+  .panel dl { grid-template-columns: minmax(min-content, 1fr) minmax(0, auto); column-gap: 14px; }
   .cabecera { grid-template-columns: 1fr auto; }
   .coordenadas { display: none; }
   .logo { font-size: 18px; letter-spacing: 0.18em; }
@@ -288,6 +308,12 @@ p { margin: 0; }
   .llevar { grid-template-columns: minmax(0, 1fr); }
   .formulario { grid-template-columns: minmax(0, 1fr); }
   .lunas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ---- Hasta 359 px: los títulos y tablas caben en los teléfonos más angostos ---- */
+@media (max-width: 359px) {
+  .panel dl { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+  .panel dd { margin-bottom: 10px; text-align: left; }
 }
 
 /* ---- Movimiento ----
