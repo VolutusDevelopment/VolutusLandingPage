@@ -408,8 +408,16 @@
 .viaje {
   position: relative;
   isolation: isolate;
-  background: var(--fondo);
   box-shadow: 0 var(--relevo-extra) var(--fondo);
+}
+
+/* El fondo blanco va solo con la nube recortada (`recortar` en nubes.js).
+   Con la nube entera, el cielo pegado tapa la pantalla y del viaje se ve solo
+   lo que pasa bajo la hora y bajo la barra de Safari en iOS, donde lo pegado
+   no llega: ahí tiene que asomar el azul del documento (`html`, index.css).
+   Con el blanco, la franja de la hora se veía blanca sobre la nube. */
+.viaje:has(.recortado) {
+  background: var(--fondo);
 }
 
 .viaje-relevo {
