@@ -14,7 +14,7 @@ import { CABINAS, avion } from '../pilotos/interiores.mjs'
 import { MAR, cielo, colocar, poner, portaaviones } from '../escena1/lugares.mjs'
 import { suave } from '../escena1/personajes.mjs'
 import { rejilla } from '../tiras.mjs'
-import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
+import { ALTO, ANCHO } from '../../../src/lib/operacion-venganza/escena1.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const esc = (a, k) => a.map((v) => v * k)

@@ -11,7 +11,7 @@ import { pagina, mono } from '../pilotos/tablero.mjs'
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, SILLON } from './personajes.mjs'
 import { salaCon, TOMAS_3D } from './tomas.mjs'
 import { cielo } from './lugares.mjs'
-import { TOMAS as GUION, textoDe } from '../../../src/lib/escena1.js'
+import { TOMAS as GUION, textoDe } from '../../../src/lib/operacion-venganza/escena1.js'
 import { writeFileSync } from 'node:fs'
 
 const [RAIZ, HOJA] = process.argv.slice(2)
@@ -168,7 +168,7 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
 
 // ── Las tomas ────────────────────────────────────────────────────────────
 
-// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/escena1.js).
+// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/operacion-venganza/escena1.js).
 const NOMBRES = {
   llegada: 'llegan los barcos',
   orbita: 'el Sitting Ducks',

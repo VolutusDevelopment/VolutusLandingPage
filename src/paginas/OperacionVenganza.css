@@ -43,7 +43,7 @@
 }
 
 /* ---- La carga ----
-   Un personaje de tres cuartos: su tira de ocho pasos (lib/cargas.js), que
+   Un personaje de tres cuartos: su tira de ocho pasos (lib/operacion-venganza/cargas.js), que
    llega en `--tira`, corre de a un cuadro, sin suavizar; la de Duky es un
    solo cuadro. En las escenas están todos, escondidos en una caja de su
    tamaño, y el JS muestra uno. La barra se llena de a bloques de 20 px: 12 en
@@ -872,7 +872,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* El retrato de un piloto: un cuadro de la hoja de lib/cazas.js (la ponen
+/* El retrato de un piloto: un cuadro de la hoja de lib/operacion-venganza/cazas.js (la ponen
    en `--retratos` el nivel y su fila, `--fila`, quien lo usa), con las líneas
    de un video por radio. Hablando, pasa por sus cuadros: mueve el pico. */
 .nivel-retrato {

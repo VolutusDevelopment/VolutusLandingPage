@@ -98,7 +98,7 @@
 
 /* ---- la parvada ----
    Quince patos en V cruzan una vez, lejos, justo sobre el horizonte
-   (Nosotros.jsx), apenas se deja el último socio (src/parvada.js les da la
+   (Nosotros.jsx), apenas se deja el último socio (src/comportamiento/parvada.js les da la
    salida con `.vuela`). Van en el telón, en el
    cielo que queda en la lámina (`--cielo-de-la-lamina`, ver la lámina), que
    se recorta en el horizonte: el que cae, cae al mar. Así, si la escena se
@@ -221,7 +221,7 @@
 }
 
 /* ---- la flota ----
-   Cuando cae el último pato (src/parvada.js pone `.llega`), la escena queda
+   Cuando cae el último pato (src/comportamiento/parvada.js pone `.llega`), la escena queda
    con su escolta navegando lejos, sobre el horizonte, y el portaaviones
    «Sitting Ducks» sale de la lejanía y se acerca despacio (Nosotros.jsx). Va
    en el telón, como la parvada: si la escena se recorta en la lámina, se va
@@ -312,7 +312,7 @@
   animation-play-state: running;
 }
 
-/* Vivo en la escena 16 (src/flota.js pone `.zarpa`): la flota ya está,
+/* Vivo en la escena 16 (src/comportamiento/flota.js pone `.zarpa`): la flota ya está,
    quieta, con el portaaviones donde termina de llegar. Con `.llega` zarpa
    entera: cada barco sigue su rumbo hacia la derecha, todos a la par, y en
    pocos segundos van a la velocidad con que llegó el portaaviones, hasta salir
@@ -332,7 +332,7 @@
   animation-name: irse;
 }
 
-/* Hundido en la escena 16 (src/flota.js pone `.hundido`): el portaaviones ya
+/* Hundido en la escena 16 (src/comportamiento/flota.js pone `.hundido`): el portaaviones ya
    está en su lugar, partido en dos como el Titanic. Cada mitad gira sobre su
    quiebre, que se hunde, y lo que queda bajo la línea de flotación no se ve.
    Sin reflejo, que sería el del barco entero. */
@@ -471,7 +471,7 @@
    atardecer, arriba). En S la tarjeta es más alta que la pantalla: encaja a su inicio y otra vez al
    final de su texto, y entre los dos se lee libre, así que nadie queda leído
    a medias. Desde M encaja al centro (abajo). Desde la sección siguiente se
-   baja libre, y ahí no encaja, por la rueda del ratón (src/encaje.js). Con
+   baja libre, y ahí no encaja, por la rueda del ratón (src/comportamiento/encaje.js). Con
    movimiento reducido no encaja: el encaje mueve la página solo. */
 @media (prefers-reduced-motion: no-preference) {
   :root:has(.socios):not(.libre) {

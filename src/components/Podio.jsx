@@ -9,7 +9,7 @@
  * (ver `lienzo`): no hay imágenes que descargar y escalan nítidos a
  * cualquier tamaño. Cada columna del podio
  * es una pestaña; el cartel de abajo cuenta el logro elegido, y la tabla elige
- * lo mismo al tocar una fila (src/podio.js). Sin JavaScript se ven todos los
+ * lo mismo al tocar una fila (src/comportamiento/podio.js). Sin JavaScript se ven todos los
  * carteles (ver SIN_SCRIPT) y el contenido sigue en el HTML para los
  * buscadores.
  */

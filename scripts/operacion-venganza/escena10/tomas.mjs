@@ -1,6 +1,6 @@
 // Las tomas de la escena 10, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 2 (escena2/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena10.js.
+// sus líneas, está en src/lib/operacion-venganza/escena10.js.
 //
 // Pasa en la sala de mando de la reunión (escena2/reunion.mjs), sin el
 // almirante: duck-one de pie frente a la pantalla de las bajas, con la

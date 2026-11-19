@@ -1,4 +1,4 @@
-// Las tiras de la escena 13 (src/lib/escena13.js), una por toma (tiras.mjs).
+// Las tiras de la escena 13 (src/lib/operacion-venganza/escena13.js), una por toma (tiras.mjs).
 // La pantalla de carga es la de la escena 1.
 //
 //   node scripts/operacion-venganza/escena13/sprites.mjs
@@ -8,6 +8,6 @@
 
 import { TOMAS_3D } from './tomas.mjs'
 import { escribirTiras } from '../tiras.mjs'
-import { TOMAS, rutaDeToma } from '../../../src/lib/escena13.js'
+import { TOMAS, rutaDeToma } from '../../../src/lib/operacion-venganza/escena13.js'
 
 await escribirTiras(TOMAS, TOMAS_3D, rutaDeToma)

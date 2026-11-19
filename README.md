@@ -77,7 +77,7 @@ El JS del cliente engancha sobre el HTML prerenderizado: valida y envía el
 formulario, rota el titular, gira la rueda de servicios, abre las fichas de
 proyectos, actualiza la barra al desplazarse y mueve los lienzos de nube y mar.
 En las páginas de error, «Jugar» descarga el juego de los patos
-([src/patos.js](src/patos.js)) al pulsarlo y deshace la volutus en cúmulos
+([src/comportamiento/patos.js](src/comportamiento/patos.js)) al pulsarlo y deshace la volutus en cúmulos
 mientras se juega; en `/patos` la partida empieza automáticamente. El formulario
 envía a
 `POST /api/contacto`, que el Worker reenvía por correo con Resend. El endpoint
@@ -87,7 +87,7 @@ acepta cinco envíos por minuto por IP (binding `LIMITE_CONTACTO` en
 El brief ([src/paginas/Brief.jsx](src/paginas/Brief.jsx), preguntas en
 [src/lib/brief/](src/lib/brief/)) es un solo formulario partido en pantallas
 por ancla (`#paso-1`…): el CSS muestra la del ancla con `:target`, así que el
-«atrás» del navegador retrocede un paso. [src/brief.js](src/brief.js), que solo
+«atrás» del navegador retrocede un paso. [src/comportamiento/brief/brief.js](src/comportamiento/brief/brief.js), que solo
 baja en esa página, guarda las respuestas en el navegador mientras se llenan,
 pide nombre y un contacto, arma la revisión y envía a `POST /api/brief`
 ([worker/brief.js](worker/brief.js)). El Worker valida cada respuesta según su
@@ -132,14 +132,21 @@ scripts/
   prerender.mjs         # un HTML por página, sitemap.xml y _headers
   verificar.mjs         # verificación con Playwright
 src/
+  main.js, client.js    # entrada en el navegador y arranque de cada comportamiento
+  dev.jsx               # React en el navegador, solo en desarrollo
+  entry-server.jsx      # el render del prerender
+  comportamiento/       # el JavaScript del navegador, uno por pieza (barra, nubes, ola…)
+    brief/              # el brief, su visor de bocetos, su logo y el aviso para volver
+    operacion-venganza/ # el juego y su combate
   paginas/              # Inicio, Nosotros, Privacidad, Ley21719, Servicio, Articulos y las de error (404 y 5xx)
     articulos/          # el cuerpo de cada artículo
     servicios/          # el cuerpo de cada página de servicio, con su CSS
   components/           # secciones con su CSS
   data/                 # proyectos y contenido de las páginas de servicio
-  lib/                  # metadatos, servicios, seguridad y geometría de la marca
+  lib/                  # lo que comparten el prerender, el Worker y los scripts: metadatos, servicios, seguridad, marca
+    brief/              # preguntas, reglas y bocetos del brief
+    operacion-venganza/ # escenas, niveles, cazas y pantallas de carga del juego
   styles/               # tokens y base (index.css) + orden de la cascada (main.css)
-  main.js, client.js    # entrada y comportamiento en el navegador
 worker/
   index.js              # POST /api/contacto y el enrutado
   brief.js              # POST /api/brief

@@ -5,7 +5,7 @@
 import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso, ambos, CAZA_DUKE, plegarAlas } from '../pilotos/modelos.mjs'
 import { TREN_HORNET } from '../escena9/cazas.mjs'
-import { BORDE, FLECHA, HUELLA } from '../../../src/lib/flecha.js'
+import { BORDE, FLECHA, HUELLA } from '../../../src/lib/operacion-venganza/flecha.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -110,7 +110,7 @@ export const cielo = ([x, y, z]) => {
 
 // ── El mar ───────────────────────────────────────────────────────────────
 
-// El mar del juego (src/combate.js): el agua toma el color de su franja según
+// El mar del juego (src/comportamiento/operacion-venganza/combate.js): el agua toma el color de su franja según
 // lo hondo que se la mira, la tangente del ángulo bajo el horizonte, y sus
 // olas, uno más claro; bajo el sol, doradas. Así se ve mar hasta el
 // horizonte desde cualquier altura, sin un círculo alrededor de nadie.

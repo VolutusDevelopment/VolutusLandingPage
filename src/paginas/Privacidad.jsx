@@ -32,7 +32,7 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * manda por link, suma lo que identifica el envío y el logo que se sube, que
  * llega adjunto (worker/brief.js). En el
  * navegador se guardan el modo desbloqueado del juego de los patos
- * (lib/odio.js), el final elegido en Operación Venganza (lib/final.js) y, en
+ * (lib/odio.js), el final elegido en Operación Venganza (lib/operacion-venganza/final.js) y, en
  * el brief, las respuestas a medio llenar, su número al azar y la marca de la
  * pestaña (lib/brief/reglas.js), y lo que se califica en los bocetos
  * (public/brief/bocetos/barra.js); también se dice, y cuánto dura cada uno.

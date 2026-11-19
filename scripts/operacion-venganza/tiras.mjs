@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { pixel3d } from './pilotos/tres.mjs'
 import { candidatosGpu, cerrarGpu } from './pilotos/gpu.mjs'
 import { cielo } from './escena1/lugares.mjs'
-import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/escena1.js'
+import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/operacion-venganza/escena1.js'
 
 const PUBLICO = fileURLToPath(new URL('../../public', import.meta.url))
 

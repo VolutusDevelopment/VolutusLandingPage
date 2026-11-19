@@ -3,12 +3,12 @@
  * vista y sin JavaScript, el aviso de que es un boceto de una marca inventada
  * (`.boceto-barra`). Este script le suma el formulario para calificarlo: lo
  * que se marca se guarda en este equipo, bajo la misma clave que lee el brief
- * (src/brief.js), que lo muestra en la tarjeta del boceto y lo envía.
+ * (src/comportamiento/brief/brief.js), que lo muestra en la tarjeta del boceto y lo envía.
  *
  * Es un `<form>` anotado para WebMCP: un agente puede calificar el boceto, y
  * como no le envía nada a nadie, lleva `toolautosubmit`.
  *
- * Dentro del visor del brief (un iframe del mismo sitio, src/brief-visor.js)
+ * Dentro del visor del brief (un iframe del mismo sitio, src/comportamiento/brief/brief-visor.js)
  * la barra no va: el visor ya dice qué es y deja calificarlo. El visor muestra
  * el boceto recién al cargar, cuando esto ya corrió, así que no asoma. Ahí,
  * en cambio, los enlaces internos saltan sin mover el brief (`montarSaltos`).

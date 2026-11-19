@@ -427,7 +427,7 @@
 
 /* El inicio de Proyectos es la última parada del encaje. Su zona llega al
    final de la página, y una zona más alta que la pantalla deja parar en
-   cualquier punto: de ahí se baja libre (src/encaje.js). */
+   cualquier punto: de ahí se baja libre (src/comportamiento/encaje.js). */
 .viaje + .seccion > .contenedor {
   scroll-snap-align: start;
   scroll-snap-stop: always;

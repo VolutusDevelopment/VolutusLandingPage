@@ -140,7 +140,7 @@ const RASGOS = [
 
 // La parvada: quince patos en V, el primero adelante y los demás en dos
 // brazos abiertos hacia atrás, como la que se va al cielo siguiente en el
-// juego de la 404 (src/patos.js). `fila` es su fila en la V, y `lado`, su
+// juego de la 404 (src/comportamiento/patos.js). `fila` es su fila en la V, y `lado`, su
 // brazo.
 const PARVADA = Array.from({ length: 15 }, (_, i) => ({ fila: Math.ceil(i / 2), lado: i % 2 ? -1 : 1 }))
 
@@ -159,7 +159,7 @@ const CUADROS = [
  * escena se recorta mientras cruza, sigue adentro y se va con ella. La tira de
  * cuadros se define una vez y cada pato la usa entera y muestra el suyo; el
  * vuelo y la caída los lleva el CSS (Nosotros.css), y cuándo sale y quién cae,
- * src/parvada.js.
+ * src/comportamiento/parvada.js.
  */
 function Parvada() {
   return (
@@ -205,9 +205,9 @@ const BUQUES = [
 
 /**
  * El portaaviones «Sitting Ducks» y su escolta. Llegan cuando cae el último
- * pato (src/parvada.js): la escolta ya navega lejos y el portaaviones sale de
+ * pato (src/comportamiento/parvada.js): la escolta ya navega lejos y el portaaviones sale de
  * la lejanía y se acerca despacio (`.llega`, ver Nosotros.css). Es el enlace al
- * juego, y la página lo pulsa por él cuando algo se lo tapa (src/flota.js).
+ * juego, y la página lo pulsa por él cuando algo se lo tapa (src/comportamiento/flota.js).
  * Si en la escena 16 se hundió, ya está ahí, partido en dos: sus `restos` son
  * sus dos mitades, que repiten su dibujo (`#barco`). Si se los dejó vivir,
  * ya está ahí y zarpa con su escolta (`.zarpa`).

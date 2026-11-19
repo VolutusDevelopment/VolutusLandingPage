@@ -1,7 +1,7 @@
 // Las tomas de la escena 16, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 15 (escena15/tomas.mjs), en la misma
 // proa y al mismo atardecer. El guion, con sus líneas y sus dos finales, está
-// en src/lib/escena16.js.
+// en src/lib/operacion-venganza/escena16.js.
 //
 // El almirante va solo a la proa y le habla a quien juega. La cámara lo mira
 // de frente, de espaldas y desde detrás de un caza estacionado, y él la

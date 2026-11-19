@@ -48,7 +48,7 @@ import { PAGINAS_DE_SERVICIO } from '../src/data/paginas-de-servicio.js'
 import { PROYECTOS } from '../src/data/proyectos.js'
 import { SOCIOS, socioDe } from '../src/data/socios.js'
 import { ESTIMADOS, desde } from '../src/lib/precios.js'
-import { NIVELES, PAGINAS as PARTES_DEL_JUEGO } from '../src/lib/juego.js'
+import { NIVELES, PAGINAS as PARTES_DEL_JUEGO } from '../src/lib/operacion-venganza/juego.js'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = `${root}dist/`
@@ -154,7 +154,7 @@ function ofertaDe(id) {
 }
 
 /**
- * Operación Venganza (lib/juego.js) se declara en su primera página como un
+ * Operación Venganza (lib/operacion-venganza/juego.js) se declara en su primera página como un
  * `VideoGame`, con los pilotos de sus niveles, y cada escena y nivel dice que
  * es parte de él. Solo `VideoGame`: Google no le da resultado enriquecido, y
  * con otro tipo de app pediría valoraciones, que el juego no tiene.

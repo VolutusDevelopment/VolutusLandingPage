@@ -1,6 +1,6 @@
 // Las tomas de la escena 13, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 10 (escena10/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena13.js; quien juega, pintado encima de
+// sus líneas, está en src/lib/operacion-venganza/escena13.js; quien juega, pintado encima de
 // la cabina, en visor.mjs.
 //
 // Duky vuela a 300 m (escena11/tomas.mjs) y lo que graba su cabina se ve en
@@ -20,7 +20,7 @@ import { K, fase, girar, giroHacia, reunion } from '../escena2/reunion.mjs'
 import { ALTURA, conDuky, nubes } from '../escena11/tomas.mjs'
 import { enCabina } from '../escena11/hangar.mjs'
 import { EN_CABINA, aSuDistancia, alargar, cuadroGpu, proyectar } from '../tiras.mjs'
-import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
+import { ALTO, ANCHO } from '../../../src/lib/operacion-venganza/escena1.js'
 import { enemigo } from './visor.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])

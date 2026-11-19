@@ -1,4 +1,4 @@
-// La hoja de las pasadas de /patos (src/lib/cazas.js): cada caza de perfil,
+// La hoja de las pasadas de /patos (src/lib/operacion-venganza/cazas.js): cada caza de perfil,
 // un poco desde abajo, con la postcombustión encendida; el A-10 de Moby no
 // tiene, y pasa con su llama de siempre. Una fila por caza y una columna por
 // cada largo de la llama, para que parpadee.
@@ -11,7 +11,7 @@ import { marco } from '../pilotos/tres.mjs'
 import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { ALAS_TOMCAT, CAZA_DUCK_ONE, CAZA_DUKE, CAZA_DUKY, CAZA_MOBY, POSTCOMBUSTION_HORNET, POSTCOMBUSTION_TOMCAT, barrerAlas } from '../pilotos/modelos.mjs'
 import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
-import { LLAMAS, PASADA, PASADAS, rutaDePasadas } from '../../../src/lib/cazas.js'
+import { LLAMAS, PASADA, PASADAS, rutaDePasadas } from '../../../src/lib/operacion-venganza/cazas.js'
 
 const sinLlama = (caza) => caza.filter((f) => !f.luz)
 

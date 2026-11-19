@@ -1,7 +1,7 @@
 // Las tomas de la escena 14, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 13 (escena13/tomas.mjs), de donde salen
 // la cabina de duky y la pantalla de la sala. El guion, con sus líneas, está
-// en src/lib/escena14.js; el indicador de munición y la marca de quien juega,
+// en src/lib/operacion-venganza/escena14.js; el indicador de munición y la marca de quien juega,
 // en visor.mjs.
 //
 // Duky tira todo lo que tiene y no le da a quien juega: cada ráfaga va a donde

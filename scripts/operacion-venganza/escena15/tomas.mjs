@@ -1,6 +1,6 @@
 // Las tomas de la escena 15, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 9 (escena9/tomas.mjs), de donde sale el
-// aterrizaje. El guion, con sus líneas, está en src/lib/escena15.js.
+// aterrizaje. El guion, con sus líneas, está en src/lib/operacion-venganza/escena15.js.
 //
 // El caza de duky frena en la cubierta del Sitting Ducks y un marinero lo
 // saca como lo metió en la escena 11, pero al revés. Lo deja en la proa, de

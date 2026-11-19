@@ -1,6 +1,6 @@
 // Las tomas de la escena 6, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 9 (escena9/tomas.mjs), con sus mismos
-// cazas. El guion, con sus líneas, está en src/lib/escena6.js; el visor de la
+// cazas. El guion, con sus líneas, está en src/lib/operacion-venganza/escena6.js; el visor de la
 // cámara de duke y la marca en el cielo, en visor.mjs.
 //
 // Moby y duke vuelan a 300 m sobre el mar, alejándose del sol: lo tienen a la

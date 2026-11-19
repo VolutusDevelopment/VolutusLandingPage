@@ -1,7 +1,7 @@
-// Los retratos del cuadro de comunicaciones de los niveles (src/combate.js):
+// Los retratos del cuadro de comunicaciones de los niveles (src/comportamiento/operacion-venganza/combate.js):
 // cada piloto en su cabina, desde la cámara del tablero, hablando; y la torre
 // de control, el oficial de la sala azul de la escena 11 con su radio. Una
-// fila por quien habla, en el orden de `RETRATOS` (src/lib/cazas.js), con
+// fila por quien habla, en el orden de `RETRATOS` (src/lib/operacion-venganza/cazas.js), con
 // `CUADROS_DE_RETRATO` cuadros de `LADO_DE_RETRATO` px: el primero, callado.
 //
 //   node scripts/operacion-venganza/combate/retratos.mjs
@@ -16,7 +16,7 @@ import { ACELERADOR, CABINAS, PALANCA, aCaza, avion, cabinaCon } from '../piloto
 import { MAR, cielo } from '../escena1/lugares.mjs'
 import { TOMAS_3D } from '../escena11/tomas.mjs'
 import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
-import { CUADROS_DE_RETRATO, LADO_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../../../src/lib/cazas.js'
+import { CUADROS_DE_RETRATO, LADO_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../../../src/lib/operacion-venganza/cazas.js'
 
 const N = LADO_DE_RETRATO
 const ALTURA = [0, 300, 0]

@@ -128,7 +128,7 @@ async function manejarContacto(request, env) {
 // Safari reproduce un video solo si el servidor lo entrega por partes: pide un
 // rango (`Range`) y espera un 206. Los assets de Cloudflare ignoran `Range` y
 // responden el archivo entero, así que las grabaciones de las escenas
-// (src/nubes.js) pasan por aquí, que corta la parte pedida. Un solo rango por
+// (src/comportamiento/nubes.js) pasan por aquí, que corta la parte pedida. Un solo rango por
 // pedido, que es lo que piden los navegadores al reproducir; cualquier otra
 // cosa recibe lo que dé el binding de assets.
 async function porPartes(request, env) {

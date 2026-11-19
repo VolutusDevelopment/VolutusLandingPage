@@ -1,4 +1,4 @@
-// Las tiras de la escena 2 (src/lib/escena2.js), una por toma (tiras.mjs);
+// Las tiras de la escena 2 (src/lib/operacion-venganza/escena2.js), una por toma (tiras.mjs);
 // las que ven la pantalla de la sala, una por modo. La pantalla de carga es
 // la de la escena 1.
 //
@@ -9,6 +9,6 @@
 
 import { TOMAS_3D } from './tomas.mjs'
 import { escribirTiras } from '../tiras.mjs'
-import { TOMAS, rutaDeToma } from '../../../src/lib/escena2.js'
+import { TOMAS, rutaDeToma } from '../../../src/lib/operacion-venganza/escena2.js'
 
 await escribirTiras(TOMAS, TOMAS_3D, rutaDeToma)

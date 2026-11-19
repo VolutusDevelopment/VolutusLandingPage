@@ -45,7 +45,7 @@
   height: var(--alto-mar);
 }
 
-/* El mar grabado, para los equipos sin GPU (src/nubes.js), es solo el agua:
+/* El mar grabado, para los equipos sin GPU (src/comportamiento/nubes.js), es solo el agua:
    lo que queda bajo el horizonte, 324 de los 380 px del lienzo. Su cielo
    taparía la línea legal. */
 .pie-mar .grabado {
@@ -53,7 +53,7 @@
   object-position: center bottom;
 }
 
-/* El pato que sale a nadar al minuto (src/nubes.js): el pintor lo dibuja en el
+/* El pato que sale a nadar al minuto (src/comportamiento/nubes.js): el pintor lo dibuja en el
    agua y esto es su enlace, del tamaño de sus 16 × 13 puntos, que lo sigue
    desde el borde de arriba del mar. El anillo de foco va en espuma, que se ve
    sobre el agua. */

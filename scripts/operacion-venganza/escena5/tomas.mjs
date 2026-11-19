@@ -1,6 +1,6 @@
 // Las tomas de la escena 5, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 3 (escena3/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena5.js.
+// sus líneas, está en src/lib/operacion-venganza/escena5.js.
 //
 // duck-one vuelve al Sitting Ducks: su F-14 llega por la popa, abre las alas,
 // aterriza como puede y frena en la cubierta, de babor, donde moby y duke lo

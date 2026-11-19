@@ -3,7 +3,7 @@
 // derecha, y quien juega chiquito, a lo lejos, por un ventanal de la sala.
 
 import { poner } from '../escena6/visor.mjs'
-import { ALTO, ANCHO } from '../../../src/lib/escena1.js'
+import { ALTO, ANCHO } from '../../../src/lib/operacion-venganza/escena1.js'
 
 const SOMBRA = '#16191e'
 const AMBAR = '#ffad5c'

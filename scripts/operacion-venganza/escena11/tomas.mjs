@@ -1,6 +1,6 @@
 // Las tomas de la escena 11, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 2 (escena2/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena11.js.
+// sus líneas, está en src/lib/operacion-venganza/escena11.js.
 //
 // Un marinero saca a duky de la sala de mando (escena2/reunion.mjs), choca
 // con él contra la pared de la puerta y lo lleva al hangar del Sitting Ducks
@@ -21,7 +21,7 @@ import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
 import { cic } from './cic.mjs'
 import { girosHacia, losTres } from '../escena10/tomas.mjs'
 import { EN_CABINA } from '../tiras.mjs'
-import { TOMAS } from '../../../src/lib/escena11.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena11.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
@@ -198,7 +198,7 @@ const subiendo = (u) => {
 // Una sola toma, en segundos, desde el comienzo de la catapulta de babor:
 // quieto un instante, la catapulta lo lanza hasta la proa y, ya en el aire,
 // sube con el morro arriba. Dos segundos después se pone feliz, cuando sale
-// la segunda línea de la toma (src/lib/escena11.js). La cámara va en el
+// la segunda línea de la toma (src/lib/operacion-venganza/escena11.js). La cámara va en el
 // tablero, mirando a duky todo el tiempo.
 const DESPEGUE = TOMAS.find(({ id }) => id === 'despegue')
 const segundos = (cuadros) => (cuadros * DESPEGUE.ms) / 1000

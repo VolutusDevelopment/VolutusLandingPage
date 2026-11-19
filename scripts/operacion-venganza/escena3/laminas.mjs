@@ -10,7 +10,7 @@ import { pixel3d } from '../pilotos/tres.mjs'
 import { celdaDeToma, fila, pagina } from '../pilotos/tablero.mjs'
 import { TOMAS_3D } from './tomas.mjs'
 import { cielo } from '../escena1/lugares.mjs'
-import { TOMAS } from '../../../src/lib/escena3.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena3.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
 const [RAIZ, HOJA] = process.argv.slice(2)
@@ -28,7 +28,7 @@ const ANIMACIONES = `.t12{animation:cuadro12 ${DURACION}s step-end infinite}
 const cuadro = (figura, [ojo, mira, campo]) =>
   pixel3d(figura, { ojo, mira, campo, cielo }, N, TAM, { c: [0, 0, 0], radio: 1 }).replace(`height="${N * TAM}" viewBox="0 0 ${N} ${N}"`, `height="${ALTO * TAM}" viewBox="0 ${(N - ALTO) / 2} ${N} ${ALTO}"`)
 
-// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/escena3.js).
+// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/operacion-venganza/escena3.js).
 const NOMBRES = {
   cubierta: 'a su caza',
   cabina: 'entra en la cabina',

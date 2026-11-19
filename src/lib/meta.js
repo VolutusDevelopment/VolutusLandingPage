@@ -1,4 +1,4 @@
-import { CARGAS } from './cargas.js'
+import { CARGAS } from './operacion-venganza/cargas.js'
 
 /**
  * Metadatos de las páginas, en un solo sitio.

@@ -10,7 +10,7 @@ import { pixel3d } from '../pilotos/tres.mjs'
 import { celdaDeToma, fila, pagina } from '../pilotos/tablero.mjs'
 import { TOMAS_3D } from './tomas.mjs'
 import { cielo } from '../escena1/lugares.mjs'
-import { TOMAS } from '../../../src/lib/escena11.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena11.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
 const RAIZ = process.argv[2]

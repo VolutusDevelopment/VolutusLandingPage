@@ -1,6 +1,6 @@
 // Las tomas de la escena 9, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 5 (escena5/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena9.js.
+// sus líneas, está en src/lib/operacion-venganza/escena9.js.
 //
 // Moby y duke vuelan juntos a 300 m sobre el mar, como duky en la escena 11,
 // y el oficial de inteligencia les habla por radio desde el control de vuelo,

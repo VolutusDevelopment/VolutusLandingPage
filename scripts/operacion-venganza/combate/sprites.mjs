@@ -1,4 +1,4 @@
-// Las hojas de los cazas del combate (src/lib/cazas.js): cada caza desde todos
+// Las hojas de los cazas del combate (src/lib/operacion-venganza/cazas.js): cada caza desde todos
 // sus giros y alturas, con las llamas de los motores atrás. El F-14 de
 // duck-one vuela con las alas barridas, como sale de la escena 3.
 //
@@ -11,7 +11,7 @@ import { marco } from '../pilotos/tres.mjs'
 import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { ALAS_TOMCAT, CAZA_DUCK_ONE, CAZA_DUKE, CAZA_DUKY, CAZA_MOBY, barrerAlas } from '../pilotos/modelos.mjs'
 import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
-import { ALTURAS, GIROS, LADO, LLENADO, RADIO, rutaDeCaza } from '../../../src/lib/cazas.js'
+import { ALTURAS, GIROS, LADO, LLENADO, RADIO, rutaDeCaza } from '../../../src/lib/operacion-venganza/cazas.js'
 
 const CAZAS = { 'duck-one': barrerAlas(CAZA_DUCK_ONE, ALAS_TOMCAT.barridas), moby: CAZA_MOBY, duke: CAZA_DUKE, duky: CAZA_DUKY }
 

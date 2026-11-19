@@ -1,4 +1,4 @@
-// Las tiras de la escena 1 (src/lib/escena1.js), una por toma (tiras.mjs), y
+// Las tiras de la escena 1 (src/lib/operacion-venganza/escena1.js), una por toma (tiras.mjs), y
 // la de duck-one caminando para la pantalla de carga (su lámina está en
 // cargas.mjs). Se pintan con el mismo motor que las láminas.
 //
@@ -11,7 +11,7 @@ import { marco } from '../pilotos/tres.mjs'
 import { PERSONAJES } from '../pilotos/cuerpos.mjs'
 import { TOMAS_3D } from './tomas.mjs'
 import { escribir, escribirTiras, pixel3dGpu, png, primeraParte, rejilla } from '../tiras.mjs'
-import { CARGA, TOMAS, rutaDeToma } from '../../../src/lib/escena1.js'
+import { CARGA, TOMAS, rutaDeToma } from '../../../src/lib/operacion-venganza/escena1.js'
 
 // duck-one de tres cuartos, como en la lámina de la pantalla de carga.
 const duckOne = PERSONAJES.find((p) => p.archivo === 'duck-one')
