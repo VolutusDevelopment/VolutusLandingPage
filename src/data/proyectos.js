@@ -42,19 +42,22 @@ export const PROYECTOS = [
     resumen:
       'ponlenota.cl convierte cada visita a un negocio local en una valoración privada y, si el cliente quiere, en una reseña en Google.',
     sitio: 'https://ponlenota.cl',
-    // Tres caras del producto, cada una con su captura real, en la vitrina de
+    // Dos caras del producto, cada una con su captura real, en la vitrina de
     // la lámina. `forma` dice dónde va: `pantalla` es el sitio, que va en una
-    // ventana, y `telefono` y `app` van a sus lados en el iPhone de la portada
-    // de ponlenota.cl, fotografiado en perspectiva hacia el sitio y con su
-    // sombra: son imágenes planas, la vitrina no dibuja ningún 3D.
+    // ventana, y `app` va a su lado en el iPhone de la portada de
+    // ponlenota.cl, fotografiado girado hacia quien mira y echado un poco
+    // atrás, con su sombra: es una imagen plana, la vitrina no dibuja ningún
+    // 3D.
     //
-    // La web es la portada de ponlenota.cl (19-11-2026). El cliente es la
-    // pantalla de Google y el cupón de esa portada, con su café de ejemplo.
-    // La app es la pantalla real del dueño, pintada con un negocio de ejemplo
-    // (Café Luna) y datos inventados: ningún dato de un cliente real.
+    // La web es la portada de ponlenota.cl (19-11-2026), bajando de sección
+    // en sección hasta el footer: `video` corre sobre la imagen, que es su
+    // primer cuadro y queda sola con movimiento reducido. La app es la
+    // pantalla real del dueño, pintada con un negocio de ejemplo (Café Luna)
+    // y datos inventados: ningún dato de un cliente real.
     vistas: [
       {
         forma: 'pantalla',
+        video: '/image/proyectos/ponlenota-recorrido.mp4',
         imagen: {
           src: '/image/proyectos/ponlenota-1280.webp',
           srcSet: '/image/proyectos/ponlenota-760.webp 760w, /image/proyectos/ponlenota-1280.webp 1280w',
@@ -64,22 +67,12 @@ export const PROYECTOS = [
         },
       },
       {
-        forma: 'telefono',
-        imagen: {
-          src: '/image/proyectos/ponlenota-cliente-320.webp',
-          srcSet: '/image/proyectos/ponlenota-cliente-320.webp 320w, /image/proyectos/ponlenota-cliente-640.webp 640w',
-          ancho: 320,
-          alto: 649,
-          alt: 'Un iPhone con la valoración de Café Volutus: cinco estrellas, el agradecimiento y los botones para dejar la opinión en Google o pedir el beneficio.',
-        },
-      },
-      {
         forma: 'app',
         imagen: {
           src: '/image/proyectos/ponlenota-app-320.webp',
           srcSet: '/image/proyectos/ponlenota-app-320.webp 320w, /image/proyectos/ponlenota-app-640.webp 640w',
           ancho: 320,
-          alto: 649,
+          alto: 547,
           alt: 'Un iPhone con el inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, los accesos rápidos y la campaña activa de un café americano gratis.',
         },
       },

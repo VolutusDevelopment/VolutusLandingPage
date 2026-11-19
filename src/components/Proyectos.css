@@ -143,10 +143,10 @@
 /* ---- la portada ----
  *
  * El producto entero, sobre el texto: el sitio en su ventana, que es lo que
- * manda, y los dos teléfonos enteros, del mismo alto. Desde M van a los lados
- * del sitio y centrados con él; en S, donde no caben en fila, van juntos
- * debajo. Los teléfonos montan solo el borde del sitio, donde su captura no
- * tiene texto. Va primero aunque en el HTML venga después del texto: quien no
+ * manda, y el teléfono con la app, entero, a su izquierda. Desde M va al
+ * lado del sitio y centrado con él; en S, donde no cabe al lado, va encima de
+ * su borde de abajo. El teléfono monta solo el borde del sitio, donde su captura
+ * no tiene texto. Va primero aunque en el HTML venga después del texto: quien no
  * ve la pantalla oye antes el nombre del proyecto. Las medidas van en porcentajes
  * de la portada, que tiene proporción fija: la composición es la misma a
  * cualquier ancho y nada se mueve al llegar las imágenes. */
@@ -194,28 +194,35 @@
 }
 
 .vitrina-ventana img {
+  display: block;
   width: 100%;
 }
 
-.vitrina-telefono,
-.vitrina-app {
-  top: 40%;
-  width: 33%;
+/* El recorrido del sitio, justo encima de su imagen, que es su primer cuadro:
+   se ve recién cuando corre, así que el cambio no se nota. */
+.vitrina-video {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 2 / 1;
 }
 
-.vitrina-telefono {
-  left: 16%;
+.vitrina-video:not(.vivo) {
+  opacity: 0;
 }
 
 .vitrina-app {
-  right: 16%;
+  top: 41%;
+  left: 5%;
+  width: 40.5%;
 }
 
 /* ---- la llegada y el cursor ----
  *
  * El producto sube desde debajo del borde mientras la nube cae en la caja, con
  * el mismo resorte que la recorta: nubes.js deja su avance, de 0 a 1, en
- * `--asiento`. El sitio sube primero y los teléfonos un poco después, por una
+ * `--asiento`. El sitio sube primero y el teléfono un poco después, por una
  * curva que arranca y termina sin golpe. La caída se mide en `cqh`, el alto de
  * la caja, que es contenedor de tamaño para eso.
  *
@@ -229,7 +236,6 @@
     --caida: 60cqh;
   }
 
-  .vitrina-telefono,
   .vitrina-app {
     --llegada: clamp(0, (var(--asiento, 1) - 0.2) / 0.8, 1);
     --caida: 85cqh;
@@ -246,7 +252,6 @@
     --alza: 6px;
   }
 
-  .vitrina-telefono,
   .vitrina-app {
     --hondo: -12px;
     --alza: 14px;
@@ -279,23 +284,15 @@
   }
 
   .vitrina-ventana {
-    left: 13%;
+    left: 20%;
     top: 24%;
     width: 74%;
   }
 
-  .vitrina-telefono,
   .vitrina-app {
-    top: 28%;
-    width: 15%;
-  }
-
-  .vitrina-telefono {
-    left: 0;
-  }
-
-  .vitrina-app {
-    right: 0;
+    top: 26%;
+    left: 2%;
+    width: 22.5%;
   }
 }
 
@@ -314,23 +311,15 @@
   }
 
   .vitrina-ventana {
-    left: 18%;
+    left: 24%;
     top: 20%;
     width: 64%;
   }
 
-  .vitrina-telefono,
   .vitrina-app {
-    top: 22%;
-    width: 16%;
-  }
-
-  .vitrina-telefono {
-    left: 3%;
-  }
-
-  .vitrina-app {
-    right: 3%;
+    top: 16%;
+    left: 4%;
+    width: 23.5%;
   }
 
   /* La fila: el nombre y el resumen a la izquierda; dónde abrirlo, a la

@@ -248,10 +248,18 @@ function initLectura(barra, fondos) {
   // La luz de una imagen: pintada una vez en un lienzo diminuto, que promedia
   // como el desenfoque del vidrio. Lo que se ve de ella es lo que deja su
   // lámina, el primer ancestro que recorta.
+  // Un video cambia de luz mientras corre: se mide en cada lectura, que pide
+  // también cada avance suyo. Hasta tener un cuadro no cuenta, y se lee lo que
+  // tiene debajo.
   const luzDe = (imagen) => {
-    if (luces.has(imagen)) return luces.get(imagen)
-    if (!imagen.complete || !imagen.naturalWidth) {
-      imagen.addEventListener('load', pedir, { once: true })
+    const video = imagen instanceof HTMLVideoElement
+    if (!video && luces.has(imagen)) return luces.get(imagen)
+    if (video && !luces.has(imagen)) {
+      luces.set(imagen, null)
+      imagen.addEventListener('timeupdate', pedir)
+    }
+    if (video ? imagen.readyState < 2 : !imagen.complete || !imagen.naturalWidth) {
+      if (!video) imagen.addEventListener('load', pedir, { once: true })
       return null
     }
     const [ancho, alto] = REJILLA

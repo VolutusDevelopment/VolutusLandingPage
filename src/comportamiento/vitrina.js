@@ -1,7 +1,8 @@
 /**
- * La vitrina de Proyectos sigue al ratón: sus piezas se corren hacia el
- * puntero a distintas profundidades y se alzan mientras está encima (ver «la
- * llegada y el cursor» en Proyectos.css).
+ * La vitrina de Proyectos reproduce el recorrido del sitio mientras se ve y
+ * sigue al ratón: sus piezas se corren hacia el puntero a distintas
+ * profundidades y se alzan mientras está encima (ver «la llegada y el cursor»
+ * en Proyectos.css).
  *
  * Cada eje es un resorte con amortiguación crítica (lib/resorte.js): arranca y
  * frena sin golpes y no se pasa de largo. Solo corre mientras se mueve.
@@ -11,9 +12,25 @@ import { arrastrar } from '../lib/resorte.js'
 
 const EJES = ['mx', 'my', 'encima']
 
+// El video corre solo a la vista, y se muestra cuando ya corre: hasta entonces,
+// con movimiento reducido o si el navegador no lo deja (el ahorro de batería de
+// iOS), se ve su primer cuadro, la imagen de abajo. `preload="none"`: nada se
+// descarga antes de que la vitrina asome.
+function reproducirMientrasSeVe(video) {
+  if (!video || quieto()) return
+  video.muted = true
+  video.addEventListener('playing', () => video.classList.add('vivo'), { once: true })
+  new IntersectionObserver(([{ isIntersecting }]) => {
+    if (isIntersecting) video.play().catch(() => {})
+    else video.pause()
+  }).observe(video)
+}
+
 export default function initVitrina() {
   const vitrina = document.querySelector('.obra-con-vitrina .vitrina')
-  if (!vitrina || !matchMedia('(hover: hover)').matches || quieto()) return
+  if (!vitrina) return
+  reproducirMientrasSeVe(vitrina.querySelector('.vitrina-video'))
+  if (!matchMedia('(hover: hover)').matches || quieto()) return
   const obra = vitrina.closest('.obra')
 
   const estado = Object.fromEntries(EJES.map((eje) => [eje, { x: 0, v: 0 }]))

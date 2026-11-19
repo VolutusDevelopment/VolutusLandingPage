@@ -36,22 +36,21 @@ function Captura({ imagen, sizes, className }) {
   )
 }
 
-const TAMANO_TELEFONO = '(min-width: 1024px) 10rem, (min-width: 650px) 15vw, 26vw'
+const TAMANO_TELEFONO = '(min-width: 1024px) 17rem, (min-width: 650px) 23vw, 41vw'
 
 /**
  * El producto en la portada de la lámina: el sitio en su ventana, que es lo
- * que manda, y lo que ve el cliente y la app del negocio en dos teléfonos
- * enteros, en perspectiva hacia el sitio: cada imagen ya trae su teléfono y
- * su sombra.
+ * que manda, y la app del negocio en un teléfono entero, girado hacia quien
+ * mira: la imagen ya trae su teléfono y su sombra. El sitio puede llevar un video encima de su imagen, que
+ * vitrina.js reproduce mientras se ve.
  *
  * Pasan bajo la barra con su luz propia, clara y oscura a trozos: la barra la
  * lee en cada punto (`data-fondo`, ver `initLectura` en barra.js).
  */
 function Vitrina({ vistas, sitio }) {
-  const imagenDe = (forma) => vistas.find((vista) => vista.forma === forma)?.imagen
-  const pantalla = imagenDe('pantalla')
-  const telefono = imagenDe('telefono')
-  const app = imagenDe('app')
+  const vistaDe = (forma) => vistas.find((vista) => vista.forma === forma)
+  const pantalla = vistaDe('pantalla')
+  const app = vistaDe('app')?.imagen
   return (
     <div className="vitrina">
       {pantalla && (
@@ -61,10 +60,12 @@ function Vitrina({ vistas, sitio }) {
               {new URL(sitio).host}
             </span>
           )}
-          <Captura imagen={pantalla} sizes="(min-width: 1024px) 46rem, (min-width: 650px) 70vw, 80vw" />
+          <Captura imagen={pantalla.imagen} sizes="(min-width: 1024px) 46rem, (min-width: 650px) 70vw, 80vw" />
+          {pantalla.video && (
+            <video className="vitrina-video" src={pantalla.video} data-fondo="" muted loop playsInline preload="none" aria-hidden="true" />
+          )}
         </div>
       )}
-      {telefono && <Captura imagen={telefono} sizes={TAMANO_TELEFONO} className="vitrina-telefono" />}
       {app && <Captura imagen={app} sizes={TAMANO_TELEFONO} className="vitrina-app" />}
     </div>
   )
