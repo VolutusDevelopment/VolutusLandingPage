@@ -1,7 +1,7 @@
-// La hoja de las pasadas de /patos (src/lib/operacion-venganza/cazas.js): cada caza de perfil,
-// un poco desde abajo, con la postcombustión encendida; el A-10 de Moby no
-// tiene, y pasa con su llama de siempre. Una fila por caza y una columna por
-// cada largo de la llama, para que parpadee.
+// La hoja de las pasadas de /patos (src/lib/operacion-venganza/cazas.js): cada
+// caza de perfil, un poco desde abajo, con la postcombustión encendida; el A-10
+// de Moby no tiene, y pasa con su llama de siempre. Una fila por caza y una
+// columna por cada largo de la llama, para que parpadee.
 //
 //   node scripts/operacion-venganza/combate/pasadas.mjs
 //

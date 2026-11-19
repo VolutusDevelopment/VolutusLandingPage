@@ -1,25 +1,25 @@
 // La parvada de /nosotros (Nosotros.jsx): quince patos que cruzan una vez,
 // lejos, sobre el mar del atardecer, apenas se deja el último socio: salen
-// cuando la pausa que lo sigue (`.atardecer-pausa`) asoma un poco desde
-// abajo, a un 15 % de la pantalla, o ya quedó atrás (un salto, una recarga con
-// la página a medio camino): basta con que su borde de arriba esté sobre esa línea. Vuelan en el telón, así que si la escena se recorta en la lámina
+// cuando la pausa que lo sigue (`.atardecer-pausa`) asoma un poco desde abajo,
+// a un 15 % de la pantalla, o ya quedó atrás (un salto, una recarga con la
+// página a medio camino): basta con que su borde de arriba esté sobre esa
+// línea. Vuelan en el telón, así que si la escena se recorta en la lámina
 // mientras cruzan, siguen adentro. Al que el cursor le pasa encima queda
 // cazado, como en el Duck Hunt: se pasma y cae al mar. Con el dedo se caza
 // tocando, no arrastrando: arrastrar es desplazarse, y el navegador lo cancela
 // (`pointercancel`) antes de soltar. El pato mide 12 px en el teléfono, así que
 // el toque vale hasta `DEDO` px fuera de él, y cae el más cercano. Ni el cursor
 // ni el toque esperan: si el cursor barre la V entera, caen todos los que toca.
-// Pueden caer todos: entonces llega el
-// portaaviones (`.flota`, ver flota.js). El vuelo y
-// la caída los lleva el CSS (Nosotros.css); aquí se les da la salida y se mira
-// si el puntero da en un pato que se vea: fuera de la lámina, recortado, o
-// detrás de las tarjetas de los socios, no se caza. La sección siguiente se
-// monta sobre la lámina, así que el puntero se escucha en toda la página
-// mientras vuelan. El cruce corre solo mientras la parvada está a la vista
-// (`.lejos` lo detiene): así nadie se lo pierde por irse de la lámina antes.
-// Una vez cruzada, se quita: no vuelve hasta recargar. Con
-// movimiento reducido no está, ni si ya se eligió un final en la escena 12 de
-// Operación Venganza: los quince patos ya cayeron (src/comportamiento/flota.js).
+// Pueden caer todos: entonces llega el portaaviones (`.flota`, ver flota.js).
+// El vuelo y la caída los lleva el CSS (Nosotros.css); aquí se les da la salida
+// y se mira si el puntero da en un pato que se vea: fuera de la lámina,
+// recortado, o detrás de las tarjetas de los socios, no se caza. La sección
+// siguiente se monta sobre la lámina, así que el puntero se escucha en toda la
+// página mientras vuelan. El cruce corre solo mientras la parvada está a la
+// vista (`.lejos` lo detiene): así nadie se lo pierde por irse de la lámina
+// antes. Una vez cruzada, se quita: no vuelve hasta recargar. Con movimiento
+// reducido no está, ni si ya se eligió un final en la escena 12 de Operación
+// Venganza: los quince patos ya cayeron (src/comportamiento/flota.js).
 
 import { elegido } from '../lib/operacion-venganza/final.js'
 import { quieto } from '../lib/movimiento.js'

@@ -1,7 +1,8 @@
-// Los retratos del cuadro de comunicaciones de los niveles (src/comportamiento/operacion-venganza/combate.js):
-// cada piloto en su cabina, desde la cámara del tablero, hablando; y la torre
-// de control, el oficial de la sala azul de la escena 8 con su radio. Una
-// fila por quien habla, en el orden de `RETRATOS` (src/lib/operacion-venganza/cazas.js), con
+// Los retratos del cuadro de comunicaciones de los niveles
+// (src/comportamiento/operacion-venganza/combate.js): cada piloto en su cabina,
+// desde la cámara del tablero, hablando; y la torre de control, el oficial de
+// la sala azul de la escena 8 con su radio. Una fila por quien habla, en el
+// orden de `RETRATOS` (src/lib/operacion-venganza/cazas.js), con
 // `CUADROS_DE_RETRATO` cuadros de `LADO_DE_RETRATO` px: el primero, callado.
 //
 //   node scripts/operacion-venganza/combate/retratos.mjs

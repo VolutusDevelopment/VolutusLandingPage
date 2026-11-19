@@ -154,10 +154,11 @@ function ofertaDe(id) {
 }
 
 /**
- * Operación Venganza (lib/operacion-venganza/juego.js) se declara en su primera página como un
- * `VideoGame`, con los pilotos de sus niveles, y cada escena y nivel dice que
- * es parte de él. Solo `VideoGame`: Google no le da resultado enriquecido, y
- * con otro tipo de app pediría valoraciones, que el juego no tiene.
+ * Operación Venganza (lib/operacion-venganza/juego.js) se declara en su primera
+ * página como un `VideoGame`, con los pilotos de sus niveles, y cada escena y
+ * nivel dice que es parte de él. Solo `VideoGame`: Google no le da resultado
+ * enriquecido, y con otro tipo de app pediría valoraciones, que el juego no
+ * tiene.
  */
 const JUEGO = '/operacion-venganza'
 const VIDEOJUEGO = { '@type': 'VideoGame', '@id': `${canonicalDe(JUEGO)}#juego`, name: 'Operación Venganza', url: canonicalDe(JUEGO) }

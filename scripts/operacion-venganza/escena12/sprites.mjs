@@ -1,5 +1,6 @@
-// Las tiras de la escena 12 (src/lib/operacion-venganza/escena12.js), una por toma (tiras.mjs),
-// las de los dos finales también. La pantalla de carga es la de la escena 1.
+// Las tiras de la escena 12 (src/lib/operacion-venganza/escena12.js), una por
+// toma (tiras.mjs), las de los dos finales también. La pantalla de carga es la
+// de la escena 1.
 //
 //   node scripts/operacion-venganza/escena12/sprites.mjs
 //

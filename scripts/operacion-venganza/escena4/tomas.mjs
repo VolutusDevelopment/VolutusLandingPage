@@ -99,10 +99,10 @@ const plano = (de, a, { cerca = 2.0, lado = 0.5, campo = 46 } = {}) => {
 
 // ── El aterrizaje ────────────────────────────────────────────────────────
 
-// Llega por la popa en el eje de la catapulta de babor, bajando por la senda
-// de planeo de 3,5°, toca la cubierta en `TOCA` y frena hasta `PARADA`. El
-// caza gira en torno a sus ruedas principales: `alabeo` a estribor, `rumbo` a
-// babor y `cabeceo` con el morro arriba, en grados; `sube` lo levanta de la senda.
+// Llega por la popa en el eje de la catapulta de babor, bajando por la senda de
+// planeo de 3,5°, toca la cubierta en `TOCA` y frena hasta `PARADA`. El caza
+// gira en torno a sus ruedas principales: `alabeo` a estribor, `rumbo` a babor
+// y `cabeceo` con el morro arriba, en grados; `sube` lo levanta de la senda.
 const TOCA = -70
 const SENDA = Math.tan((3.5 * Math.PI) / 180)
 const enVuelo = ({ x, z = PARADA[2], alabeo = 0, rumbo = 0, cabeceo = 0, sube = 0 }) =>
@@ -137,7 +137,8 @@ const bandazos = (u) => {
   const golpe = Math.exp(-k * 9)
   return { x: TOCA * (1 - k) ** 2, alabeo: 6.6 * golpe * Math.cos(k * 30), sube: 0.9 * Math.max(0, Math.sin(k * Math.PI * 5)) * golpe, cabeceo: 3 * golpe - 2.5 * Math.sin(Math.PI * tramo(u, POV.para - 0.04, POV.para + 0.05)) }
 }
-// La medalla cuelga hacia donde está el suelo, con algo de retraso, y salta con los golpes.
+// La medalla cuelga hacia donde está el suelo, con algo de retraso, y salta con
+// los golpes.
 const medalla = (u) => {
   const salta = (desde) => (u > desde ? 35 * Math.exp(-(u - desde) * 14) * Math.sin((u - desde) * 45) : 0)
   return 0.9 * bandazos(Math.max(0, u - 0.04)).alabeo + salta(POV.toca) + salta(POV.para)
@@ -153,7 +154,8 @@ const camaraEnLaCabina = (u) => {
   return [punto(enCabina(sum(OJOS, [-0.9, 0.35 + tiembla, 0]))), punto(enCabina([4, 1.0, 0])), 70, res(punto([0, 1, 0]), punto([0, 0, 0]))]
 }
 
-// El humo de las ruedas: tres nubes donde tocan la cubierta, que crecen y se deshacen.
+// El humo de las ruedas: tres nubes donde tocan la cubierta, que crecen y se
+// deshacen.
 const humo = (u) => {
   const k = (u - POV.toca) / 0.4
   if (k < 0 || k > 1) return []

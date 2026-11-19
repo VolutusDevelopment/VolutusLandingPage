@@ -1,19 +1,22 @@
 /**
- * El combate de Operación Venganza (paginas/OperacionVenganza.jsx, `Nivel`):
- * el guion del nivel que diga `data-nivel` (lib/operacion-venganza/nivel1.js, nivel2.js o
- * nivel3.js) contra quien juega, que es el cursor o, con el dedo, una huella.
- * Lo corre el juego (src/comportamiento/operacion-venganza/operacion-venganza.js) en la misma página que las
- * escenas, uno tras otro: cada nivel empieza de cero, y al terminar suelta lo
- * que escuchaba, para su lienzo y le avisa al juego, que sigue con las escenas.
+ * El combate de Operación Venganza (paginas/OperacionVenganza.jsx, `Nivel`): el
+ * guion del nivel que diga `data-nivel` (lib/operacion-venganza/nivel1.js,
+ * nivel2.js o nivel3.js) contra quien juega, que es el cursor o, con el dedo,
+ * una huella. Lo corre el juego
+ * (src/comportamiento/operacion-venganza/operacion-venganza.js) en la misma
+ * página que las escenas, uno tras otro: cada nivel empieza de cero, y al
+ * terminar suelta lo que escuchaba, para su lienzo y le avisa al juego, que
+ * sigue con las escenas.
  *
  * El cielo es un mundo en 3D pintado pixel a pixel en un lienzo chico que el
- * CSS agranda sin suavizar: las franjas del atardecer, el sol medio hundido,
- * el mar con sus olas y las nubes, y la cámara vuela hacia +x a `V` m/s. Los
- * cazas son los de las escenas, desde sus hojas (lib/operacion-venganza/cazas.js): se elige el
- * cuadro según desde dónde se lo ve y se gira según hacia dónde se ladea. Las balas
- * y quien juega viven en el plano de la pantalla, como en un combate por
- * turnos: cada vista del guion mueve la cámara y cambia los patrones, y entre
- * una y otra se habla. El texto avanza solo, al ritmo de lo que tarda leerlo.
+ * CSS agranda sin suavizar: las franjas del atardecer, el sol medio hundido, el
+ * mar con sus olas y las nubes, y la cámara vuela hacia +x a `V` m/s. Los cazas
+ * son los de las escenas, desde sus hojas (lib/operacion-venganza/cazas.js): se
+ * elige el cuadro según desde dónde se lo ve y se gira según hacia dónde se
+ * ladea. Las balas y quien juega viven en el plano de la pantalla, como en un
+ * combate por turnos: cada vista del guion mueve la cámara y cambia los
+ * patrones, y entre una y otra se habla. El texto avanza solo, al ritmo de lo
+ * que tarda leerlo.
  *
  * Quien juega va justo donde está el ratón, o se arrastra 1:1 con el dedo
  * desde cualquier parte, o con las flechas; solo las ráfagas lo corren.

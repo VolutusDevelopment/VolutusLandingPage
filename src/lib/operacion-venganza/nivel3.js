@@ -1,13 +1,13 @@
 /**
  * Operación Venganza, nivel 3: «El fantasma amarillo», después de la escena 8.
- * Duky en su F-22 experimental, con la forma de lib/operacion-venganza/nivel1.js. Es el nivel
- * difícil: seis vistas, cada una desde una cámara que no sale en los otros
- * niveles y más dura que la anterior. Duky dispara adonde va a estar quien
- * juega (`j.futuro`), como dicen en la escena 9, con armas prototipo de luz
- * violeta, la de su estela: un rayo que se apunta antes de quemar y quita
- * 15 PV, anillos de balas y misiles de seguimiento. Todo sale del caza: nada
- * cae desde fuera en un punto marcado. Duky no habla: la torre le habla por
- * radio y nadie contesta.
+ * Duky en su F-22 experimental, con la forma de
+ * lib/operacion-venganza/nivel1.js. Es el nivel difícil: seis vistas, cada una
+ * desde una cámara que no sale en los otros niveles y más dura que la anterior.
+ * Duky dispara adonde va a estar quien juega (`j.futuro`), como dicen en la
+ * escena 9, con armas prototipo de luz violeta, la de su estela: un rayo que se
+ * apunta antes de quemar y quita 15 PV, anillos de balas y misiles de
+ * seguimiento. Todo sale del caza: nada cae desde fuera en un punto marcado.
+ * Duky no habla: la torre le habla por radio y nadie contesta.
  */
 
 import { embestida } from './maniobras.js'

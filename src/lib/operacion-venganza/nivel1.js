@@ -1,19 +1,20 @@
 /**
- * Operación Venganza, nivel 1: Duck-One, solo, después de la escena 3. El
- * guion del combate que juega src/comportamiento/operacion-venganza/combate.js en /operacion-venganza/nivel-1:
- * su caza (lib/operacion-venganza/cazas.js), las vistas por las que pasa la cámara y lo que se
- * dice al final. duck-one escribe como habla: sus faltas son suyas.
+ * Operación Venganza, nivel 1: Duck-One, solo, después de la escena 3. El guion
+ * del combate que juega src/comportamiento/operacion-venganza/combate.js en
+ * /operacion-venganza/nivel-1: su caza (lib/operacion-venganza/cazas.js), las
+ * vistas por las que pasa la cámara y lo que se dice al final. duck-one escribe
+ * como habla: sus faltas son suyas.
  *
- * Cada vista dice dónde mira la cámara (`camara`, en grados) y, si no va a
- * 300 m ni a 150 m/s, a qué altura sobre el mar (`altura`, m) y a qué
- * velocidad (`velocidad`, m/s), cuánto dura el
- * ataque (`dur`, s), qué se dice antes (`lineas`), dónde espera el caza
- * mientras tanto (`presenta`), cómo se mueve (`mover`) y qué dispara
- * (`disparar`). Las tres últimas reciben `j`, lo que el combate les presta
- * (ver `prestar` en src/comportamiento/operacion-venganza/combate.js), con los cazas de `CAZAS` en `j.cazas`, y
- * las dos últimas el tiempo `t` desde que empezó el ataque y `s`, un objeto
- * propio de la vista para recordar cosas. Una vista con `cazas` lleva solo
- * esos; si no, todos.
+ * Cada vista dice dónde mira la cámara (`camara`, en grados) y, si no va a 300
+ * m ni a 150 m/s, a qué altura sobre el mar (`altura`, m) y a qué velocidad
+ * (`velocidad`, m/s), cuánto dura el ataque (`dur`, s), qué se dice antes
+ * (`lineas`), dónde espera el caza mientras tanto (`presenta`), cómo se mueve
+ * (`mover`) y qué dispara (`disparar`). Las tres últimas reciben `j`, lo que el
+ * combate les presta (ver `prestar` en
+ * src/comportamiento/operacion-venganza/combate.js), con los cazas de `CAZAS`
+ * en `j.cazas`, y las dos últimas el tiempo `t` desde que empezó el ataque y
+ * `s`, un objeto propio de la vista para recordar cosas. Una vista con `cazas`
+ * lleva solo esos; si no, todos.
  *
  * El caza mira hacia donde se mueve en la pantalla; `avance` es la parte de
  * la velocidad de la cámara que conserva (0,35 si no lo dice) y `fondo`
@@ -32,7 +33,8 @@ const DUCK_ONE = 'Duck-One'
 export const CAZAS = { duckOne: { hoja: 'duck-one', torpeza: 1 } }
 
 // La ventana antes de jugar: quién es cada piloto (su retrato sale de
-// lib/operacion-venganza/cazas.js), su lema, cómo pelea y lo que dice quien te derriba.
+// lib/operacion-venganza/cazas.js), su lema, cómo pelea y lo que dice quien te
+// derriba.
 export const FICHAS = [
   {
     quien: DUCK_ONE,

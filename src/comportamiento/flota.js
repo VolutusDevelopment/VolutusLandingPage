@@ -1,11 +1,11 @@
 // El portaaviones de /nosotros (Nosotros.jsx, `Flota`): cuando llega
-// (src/comportamiento/parvada.js le pone `.llega`), pulsarlo o tocarlo empieza el juego. El
-// enlace va en el telón, debajo de las secciones de la página, que se llevan
-// el clic; por eso aquí se escucha en toda la página y, si el clic da en el
-// barco (con `DEDO` px de holgura, que de chico el barco no es un blanco de
-// 44 px) y se ve, no lo tapa una tarjeta ni la sección siguiente, se pulsa el
-// enlace. Con teclado y lectores, el enlace se usa solo. Con el cursor encima
-// del barco, el cursor es una mano.
+// (src/comportamiento/parvada.js le pone `.llega`), pulsarlo o tocarlo empieza
+// el juego. El enlace va en el telón, debajo de las secciones de la página, que
+// se llevan el clic; por eso aquí se escucha en toda la página y, si el clic da
+// en el barco (con `DEDO` px de holgura, que de chico el barco no es un blanco
+// de 44 px) y se ve, no lo tapa una tarjeta ni la sección siguiente, se pulsa
+// el enlace. Con teclado y lectores, el enlace se usa solo. Con el cursor
+// encima del barco, el cursor es una mano.
 //
 // Lo que se eligió al final de la escena 12 dura lo que la sesión: si se
 // hundió, el barco ya está, partido en dos (`.hundido`, también con movimiento
@@ -50,9 +50,9 @@ export default function initFlota() {
   )
 }
 
-// La flota se queda quieta hasta que la pausa que sigue al último socio
-// asoma, como la parvada (src/comportamiento/parvada.js); entonces `.llega` la echa a andar
-// y se va entera.
+// La flota se queda quieta hasta que la pausa que sigue al último socio asoma,
+// como la parvada (src/comportamiento/parvada.js); entonces `.llega` la echa a
+// andar y se va entera.
 function zarpar(flota) {
   flota.classList.add('zarpa')
   const salida = new IntersectionObserver(

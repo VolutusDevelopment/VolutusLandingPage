@@ -1,5 +1,6 @@
-// Maniobras que comparten los guiones de los niveles (lib/operacion-venganza/nivel1.js y
-// siguientes), con los métodos de cada caza de src/comportamiento/operacion-venganza/combate.js.
+// Maniobras que comparten los guiones de los niveles
+// (lib/operacion-venganza/nivel1.js y siguientes), con los métodos de cada caza
+// de src/comportamiento/operacion-venganza/combate.js.
 
 /**
  * Embestidas de `periodo` s: el caza `c` aparece en el horizonte, se acerca

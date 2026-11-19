@@ -261,10 +261,10 @@ function initFormulario() {
 }
 
 /**
- * El juego de las páginas de error y de /patos (src/comportamiento/patos.js). Casi nadie lo
- * abre, así que no pesa en la carga: se descarga al pulsar «Jugar», y cada
- * pulsación lo empieza o lo termina. Sin JavaScript el botón no sirve, por eso
- * llega oculto.
+ * El juego de las páginas de error y de /patos (src/comportamiento/patos.js).
+ * Casi nadie lo abre, así que no pesa en la carga: se descarga al pulsar
+ * «Jugar», y cada pulsación lo empieza o lo termina. Sin JavaScript el botón no
+ * sirve, por eso llega oculto.
  */
 function initPatos() {
   const boton = document.querySelector('.jugar')

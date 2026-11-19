@@ -1,6 +1,7 @@
 // Lo que la escena 5 pinta sobre los cuadros (el `encima` de tiras.mjs), en
-// pixeles del cuadro de ANCHO × ALTO (src/lib/operacion-venganza/escena1.js): el visor de la
-// cámara de la cabina de duke y la marca de quien juega en el cielo.
+// pixeles del cuadro de ANCHO × ALTO (src/lib/operacion-venganza/escena1.js):
+// el visor de la cámara de la cabina de duke y la marca de quien juega en el
+// cielo.
 
 import { ALTO, ANCHO } from '../../../src/lib/operacion-venganza/escena1.js'
 import { BORDE, FLECHA, HUELLA } from '../../../src/lib/operacion-venganza/flecha.js'

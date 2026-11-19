@@ -1,6 +1,7 @@
-// Las tomas de la escena 11, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 6 (escena6/tomas.mjs), de donde sale el
-// aterrizaje. El guion, con sus líneas, está en src/lib/operacion-venganza/escena11.js.
+// Las tomas de la escena 11, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde, como las de la escena 6 (escena6/tomas.mjs), de donde sale el
+// aterrizaje. El guion, con sus líneas, está en
+// src/lib/operacion-venganza/escena11.js.
 //
 // El caza de duky frena en la cubierta del Sitting Ducks y un marinero lo
 // saca como lo metió en la escena 8, pero al revés. Lo deja en la proa, de
@@ -90,7 +91,8 @@ const AMARILLO = OFICIOS.amarillo.color
 const marinero = (color, cfg = {}) => figura(pMarinero(color), { tronco: marineroTronco(color), manos: reposo(pMarinero(color)), ...cfg })
 const andando = (color, f) => marinero(color, { manos: manosAndando(pMarinero(color), f), fase: f })
 
-// Las manos van antes de inclinar y agachar la figura: se ponen girando al revés.
+// Las manos van antes de inclinar y agachar la figura: se ponen girando al
+// revés.
 const antesDe = ({ inclina = 0, agacha = 0 }, p) => transformar([0, 0, -inclina], [0, -1.35, 0]).punto(sum(p, [0, agacha, 0]))
 
 // Duky va de sobre la cabeza de quien está en `donde` hasta `destino`, con
@@ -132,9 +134,9 @@ const loDeja = (u) => {
 
 // ── El escuadrón ─────────────────────────────────────────────────────────
 
-// Cada uno en su lugar de la fila (`lado`, en metros a la derecha de duky),
-// de pie, con su cuerpo de siempre y las manos donde se le diga.
-// En «Es una escena muy bonita», a moby se le caen las lágrimas (`llanto`, modelos.mjs).
+// Cada uno en su lugar de la fila (`lado`, en metros a la derecha de duky), de
+// pie, con su cuerpo de siempre y las manos donde se le diga. En «Es una escena
+// muy bonita», a moby se le caen las lágrimas (`llanto`, modelos.mjs).
 const mobyTronco = (u, llanto) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, llanto })]
 const ESCUADRON = {
   moby: { lado: -2.2, p: pMoby, suelo: pMoby.suelo, tronco: mobyTronco },
@@ -228,13 +230,15 @@ const pintaCaja = ({ cinta, sticker }) => ([x, y, z]) => {
   }
   if (cinta > 0 && Math.abs(z - CAJA.z) < 0.11 && (x - X0) / CAJA.lado < cinta * 2) return rayas([x, y, z])
   if (cinta > 0.5 && Math.abs(cx) < 0.11 && (z - Z0) / CAJA.lado < cinta * 2 - 1) return rayas([x, y, z])
-  // Un listón en cada arista, donde dos de las tres medidas tocan su borde, y las tablas cada 20 cm.
+  // Un listón en cada arista, donde dos de las tres medidas tocan su borde, y
+  // las tablas cada 20 cm.
   const cerca = (v, a, b) => Math.min(Math.abs(v - a), Math.abs(v - b)) < 0.08
   if (cerca(x, X0, X1) + cerca(y, Y0, Y1) + cerca(z, Z0, Z1) >= 2) return '#b07a40'
   return ((y - Y0) / 0.2) % 1 < 0.1 ? '#8a5a2c' : null
 }
 
-// La caja con su `tapa` a `tapa` metros de cerrada (0, cerrada; sin tapa, null).
+// La caja con su `tapa` a `tapa` metros de cerrada (0, cerrada; sin tapa,
+// null).
 const caja = ({ tapa = 0, cinta = 0, sticker = false, salto = 0 } = {}) => {
   const o = { pinta: pintaCaja({ cinta, sticker }) }
   const paredes = [
@@ -360,7 +364,8 @@ const salpica = (en, k) =>
         const r = 0.8 + 2 * k
         return el([en[0] + r * Math.cos(a), AGUA + 2.4 * Math.sin(Math.PI * k) * (0.6 + 0.4 * (i % 2)), en[2] + r * Math.sin(a)], esc([0.6, 1.0, 0.6], 1 - k * 0.6), C.nube, { flat: '#eef4ff' })
       })
-// Dónde va en el instante u: corriendo por la cubierta y, desde la borda, cayendo.
+// Dónde va en el instante u: corriendo por la cubierta y, desde la borda,
+// cayendo.
 const FIN = sum(A_LA_BORDA.donde(A_LA_BORDA.largo).en, [0, CUBIERTA, 0])
 const EN_EL_AGUA = [FIN[0], AGUA - 0.25, FIN[2] + 1.2]
 const corriendoEn = (u) => {
@@ -373,7 +378,8 @@ const corriendoEn = (u) => {
 }
 const corriendo = (u) => {
   const donde = corriendoEn(u)
-  // Sin sombra: la cubierta la tapa, pero al llegar a la borda quedaría en el aire.
+  // Sin sombra: la cubierta la tapa, pero al llegar a la borda quedaría en el
+  // aire.
   if (u < CAIDA.sale) return pato(enElAire(corre(OFICIOS.amarillo, (u * 10) % 1)), donde)
   if (u < CAIDA.cae) return transformar([200 * tramo(u, CAIDA.sale, CAIDA.cae), 0, 0], sum(donde.en, [0, 0.5, 0])).formas(pato(enElAire(corre(OFICIOS.amarillo, (u * 14) % 1, { inclina: 0 })), donde))
   return salpica(EN_EL_AGUA, tramo(u, CAIDA.cae, 1))
@@ -430,7 +436,8 @@ export const TOMAS_3D = {
   // Desde fuera de la borda, a la altura de la cubierta: lo ve venir y lo
   // sigue en la caída hasta la espuma.
   corre: { escena: huye, camara: (u) => [[CAJA.x + 3.5, CUBIERTA + 0.8, BORDA + 2.5], sum(corriendoEn(Math.min(u, CAIDA.cae)).en, [0, 0.4, 0]), 54] },
-  // Sobre el agua, detrás de su cabeza: él abajo y el barco, cada vez más chico.
+  // Sobre el agua, detrás de su cabeza: él abajo y el barco, cada vez más
+  // chico.
   flota: {
     escena: flota,
     camara: (u) => {

@@ -1,6 +1,7 @@
-// Las tomas de la escena 1, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde. Las usan las láminas del lienzo (laminas.mjs) y las tiras del
-// juego (sprites.mjs); el guion, con sus líneas, está en src/lib/operacion-venganza/escena1.js.
+// Las tomas de la escena 1, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde. Las usan las láminas del lienzo (laminas.mjs) y las tiras del juego
+// (sprites.mjs); el guion, con sus líneas, está en
+// src/lib/operacion-venganza/escena1.js.
 //
 // `escena(u, modo)` arma la figura; `camara(u)` da [ojo, mira, campo] en
 // metros y grados. `modo` es lo que muestra la pantalla de la sala desde el

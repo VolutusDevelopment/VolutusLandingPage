@@ -42,8 +42,8 @@ export const sobreLaCabeza = ({ en, giro }, k) => ({ en: sum(en, [0, 3.4 * k, 0]
 
 // ── En la sala: el marinero se lleva a duky ──────────────────────────────
 
-// Entra hasta el costado del sillón, lo levanta, se da vuelta y camina con
-// él hacia la puerta, primero de lado a la cámara: duky va delante y no lo tapa.
+// Entra hasta el costado del sillón, lo levanta, se da vuelta y camina con él
+// hacia la puerta, primero de lado a la cámara: duky va delante y no lo tapa.
 const DE_LA_PUERTA = recorrido([[-4.6, 2.8], [-2.4, 1.0]])
 const A_LA_PUERTA = recorrido([[-2.4, 1.0], [-3.0, 1.05], [-3.0, 2.0]])
 const JUNTO_AL_SILLON = { en: [-2.4, 0, 1.0], giro: 0 }
@@ -62,7 +62,8 @@ const seLoLleva = (u) => {
     const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(REPOSO[s], AGARRA[s], tramo(u, 0.35, 0.42)), ARRIBA[s], levanta)]))
     const donde = { ...JUNTO_AL_SILLON, giro: VUELTA * tramo(u, 0.55, 0.65) }
     const brazos = sobreLaCabeza(donde, K_SALA)
-    // Primero lo sube en el lugar y después lo pasa sobre su cabeza: no le pasa por la cara.
+    // Primero lo sube en el lugar y después lo pasa sobre su cabeza: no le pasa
+    // por la cara.
     const sube = [SENTADO_EN_EL_SILLON.en[0], brazos.en[1], SENTADO_EN_EL_SILLON.en[2]]
     const en = lerp(lerp(SENTADO_EN_EL_SILLON.en, sube, tramo(u, 0.42, 0.5)), brazos.en, tramo(u, 0.5, 0.55))
     const dukyDonde = u < 0.55 ? { en, giro: girar(SENTADO_EN_EL_SILLON.giro, brazos.giro, levanta), suelo: -2.2 } : brazos
@@ -163,7 +164,8 @@ const tirando = (tira, { suelta = 0, encoge = 0, mira = 0 } = {}) => {
 
 // El caza espera sobre la plataforma del ascensor de popa con el morro a popa,
 // así la escalerilla queda hacia el mar. `k` es dónde va la plataforma, de 0
-// (en el hangar) a 1 (en la cubierta); `delCaza` lleva un punto del caza al barco.
+// (en el hangar) a 1 (en la cubierta); `delCaza` lleva un punto del caza al
+// barco.
 const SOBRE_EL_ASCENSOR = [(ASCENSOR.x0 + ASCENSOR.x1) / 2, (ASCENSOR.z0 + ASCENSOR.z1) / 2]
 const enAscensor = (k) => [SOBRE_EL_ASCENSOR[0], HANGAR.piso + (20.8 - HANGAR.piso) * k - SUELO, SOBRE_EL_ASCENSOR[1]]
 const delCaza = (k, [x, y, z]) => sum(enAscensor(k), [-x, y, -z])
@@ -197,9 +199,9 @@ const subiendo = (u) => {
 
 // Una sola toma, en segundos, desde el comienzo de la catapulta de babor:
 // quieto un instante, la catapulta lo lanza hasta la proa y, ya en el aire,
-// sube con el morro arriba. Dos segundos después se pone feliz, cuando sale
-// la segunda línea de la toma (src/lib/operacion-venganza/escena8.js). La cámara va en el
-// tablero, mirando a duky todo el tiempo.
+// sube con el morro arriba. Dos segundos después se pone feliz, cuando sale la
+// segunda línea de la toma (src/lib/operacion-venganza/escena8.js). La cámara
+// va en el tablero, mirando a duky todo el tiempo.
 const DESPEGUE = TOMAS.find(({ id }) => id === 'despegue')
 const segundos = (cuadros) => (cuadros * DESPEGUE.ms) / 1000
 const PISTA = { en: [40, 20.8 - SUELO, -6], lanza: 0.36, sale: 1.86, largo: 127, dura: segundos(DESPEGUE.cuadros), feliz: segundos(DESPEGUE.lineas[1].cuadro) }
@@ -250,7 +252,8 @@ const dukyDespega = (s) => {
   return pegar(aplastar(dukyFigura({ cara: g > 0.05 ? caraPegada(g) : caraQueJadea(k) }), k), g)
 }
 
-// La cámara en el tablero, sobre la pantalla, mirando a duky: en unidades de la cabina.
+// La cámara en el tablero, sobre la pantalla, mirando a duky: en unidades de la
+// cabina.
 const TABLERO = { ojo: [3.6, 0.55, 0], mira: [-0.4, -0.5, 0], campo: 72 }
 
 // ── En vuelo ─────────────────────────────────────────────────────────────
@@ -347,7 +350,8 @@ export const TOMAS_3D = {
     },
   },
 
-  // Desde su consola, junto a la pantalla, de frente al oficial; el almirante, detrás.
+  // Desde su consola, junto a la pantalla, de frente al oficial; el almirante,
+  // detrás.
   radio: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.5, 1.15, 0.2], [1.0, 1.02, -0.05], 50) },
   // Mientras el oficial llama, duky de perfil frente al tablero del F-22, de un
   // lado y del otro: las pantallas encendidas y él, que no contesta.

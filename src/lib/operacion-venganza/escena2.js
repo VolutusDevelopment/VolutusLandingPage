@@ -1,10 +1,10 @@
 /**
  * Operación Venganza, escena 2: «Patoon-4». El guion, con la forma del de la
- * escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
- * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
- * tira corre una sola vez, `segunModo` si se ve la pantalla de la sala, que
- * muestra el cursor o la huella de quien juega (una tira por modo), y sus
- * líneas.
+ * escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las
+ * medidas de las tiras: `ms` por cuadro, `cuadros` si no son los de siempre,
+ * `unaVez` si la tira corre una sola vez, `segunModo` si se ve la pantalla de
+ * la sala, que muestra el cursor o la huella de quien juega (una tira por
+ * modo), y sus líneas.
  *
  * Pasa en la misma sala de mando de la escena 1. duck-one escribe como habla:
  * sus faltas de ortografía son suyas y van tal cual. Las frases largas van en

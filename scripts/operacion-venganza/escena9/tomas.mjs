@@ -1,6 +1,6 @@
-// Las tomas de la escena 9, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 7 (escena7/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/operacion-venganza/escena9.js; quien juega, pintado encima de
+// Las tomas de la escena 9, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde, como las de la escena 7 (escena7/tomas.mjs). El guion, con sus líneas,
+// está en src/lib/operacion-venganza/escena9.js; quien juega, pintado encima de
 // la cabina, en visor.mjs.
 //
 // Duky vuela a 300 m (escena8/tomas.mjs) y lo que graba su cabina se ve en
@@ -235,9 +235,11 @@ const seAcercaYSeRefleja = async (u, modo) => {
 
 // ── Las cámaras de la sala ───────────────────────────────────────────────
 
-// Desde la pantalla, de frente a quien está en `z`: muy cerca, con el campo abierto.
+// Desde la pantalla, de frente a quien está en `z`: muy cerca, con el campo
+// abierto.
 export const DE_FRENTE = (z) => fija([3.88, 1.3, z], [FILA, 1.35, z], 86)
-// Moby, más alto, desde más abajo: a la altura de los otros, el pico le tapa la cara.
+// Moby, más alto, desde más abajo: a la altura de los otros, el pico le tapa la
+// cara.
 export const A_MOBY = fija([3.88, 1.0, DONDE.moby.en[2]], [FILA, 1.2, DONDE.moby.en[2]], 86)
 
 export const TOMAS_3D = {

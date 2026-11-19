@@ -168,7 +168,8 @@ const PANTALLA_DE_FRENTE = [[0.9, 1.875, 0], [4, 1.875, 0], 84]
 
 // ── Las tomas ────────────────────────────────────────────────────────────
 
-// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/operacion-venganza/escena1.js).
+// Cada celda dice su toma y sus líneas, del guion del juego
+// (src/lib/operacion-venganza/escena1.js).
 const NOMBRES = {
   llegada: 'llegan los barcos',
   orbita: 'el Sitting Ducks',

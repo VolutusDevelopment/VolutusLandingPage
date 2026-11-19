@@ -22,7 +22,8 @@ const PANTALLA = 'bajas'
 
 // ── Quién está y dónde ───────────────────────────────────────────────────
 
-// duck-one, frente a la pantalla y de cara a la mesa, donde terminó la escena 2.
+// duck-one, frente a la pantalla y de cara a la mesa, donde terminó la escena
+// 2.
 const DUCK_ONE = { en: [2.75, 0, -1.0], giro: 180 }
 const DUKY = xz(ASIENTOS.duky)
 // Gira `k` hacia duky, que está en su sillón o en `punto` ([x, z]).
@@ -60,13 +61,15 @@ const sigueTosiendo = (u) => sentar(pMoby, calada(5.2 + 8 * u), 0.2)
 
 // ── duke ─────────────────────────────────────────────────────────────────
 
-// Agita la cabellera: echa la cabeza atrás y adelante, con un destello en el copete.
+// Agita la cabellera: echa la cabeza atrás y adelante, con un destello en el
+// copete.
 const cabellera = (u) => {
   const sacude = Math.sin(u * Math.PI * 6)
   const tronco = hablar(M.dukeBase({ ojos: M.ojosCerrados, menton: 16 + 18 * sacude }, []), silaba(u) * 0.8)
   return sentar(pDuke, figura(pDuke, { tronco, manos: { 1: pDuke.reposo(1), [-1]: pDuke.reposo(-1) }, extra: sacude > 0.7 ? M.destello([-0.4, 1.5, -0.5]) : [], inclina: 3 * sacude }))
 }
-// Mira fijo a la cámara con los ojos abiertos, y le brillan destellos alrededor, de a uno.
+// Mira fijo a la cámara con los ojos abiertos, y le brillan destellos
+// alrededor, de a uno.
 const BRILLOS = [[0.7, 1.45, -0.85], [0.7, 0.15, -1.05], [0.7, 1.5, 0.8], [0.7, 0.2, 1.0], [0.7, 0.85, -1.15], [0.7, 0.8, 1.15]]
 const mirada = (u) => {
   const tronco = M.dukeBase({ ojos: M.ojosAbiertos, menton: 2 }, [])

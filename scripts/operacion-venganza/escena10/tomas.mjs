@@ -1,15 +1,15 @@
-// Las tomas de la escena 10, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 9 (escena9/tomas.mjs), de donde salen
-// la cabina de duky y la pantalla de la sala. El guion, con sus líneas, está
-// en src/lib/operacion-venganza/escena10.js; el indicador de munición y la marca de quien juega,
-// en visor.mjs.
+// Las tomas de la escena 10, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde, como las de la escena 9 (escena9/tomas.mjs), de donde salen la cabina
+// de duky y la pantalla de la sala. El guion, con sus líneas, está en
+// src/lib/operacion-venganza/escena10.js; el indicador de munición y la marca
+// de quien juega, en visor.mjs.
 //
 // Duky tira todo lo que tiene y no le da a quien juega: cada ráfaga va a donde
-// estaba, y quien juega ya no está. En la lluvia gasta además los doce
-// misiles y el arma prototipo, los racimos violeta del juego. Las cámaras van dentro de la cabina, como
-// en las láminas v15 (pilotos/cabinas.mjs), y el caza alabea y cabecea de
-// verdad. Sin balas, duky chilla como el pato de hule que es, vuelve al
-// portaaviones en una S partida y se calma: primero exhala y después inhala.
+// estaba, y quien juega ya no está. En la lluvia gasta además los doce misiles
+// y el arma prototipo, los racimos violeta del juego. Las cámaras van dentro de
+// la cabina, como en las láminas v15 (pilotos/cabinas.mjs), y el caza alabea y
+// cabecea de verdad. Sin balas, duky chilla como el pato de hule que es, vuelve
+// al portaaviones en una S partida y se calma: primero exhala y después inhala.
 // En la sala, la cámara de duky se corta, moby llora y la cámara sigue a cada
 // uno a lo suyo hasta una esquina.
 
@@ -61,7 +61,8 @@ const aplastar = (formas, escala, pivote) => {
     return g
   })
 }
-// Desinflado en `k` (0, como siempre; 1, la mitad de alto y más ancho), sentado.
+// Desinflado en `k` (0, como siempre; 1, la mitad de alto y más ancho),
+// sentado.
 const desinflado = (formas, k) => aplastar(formas, [1 + 0.3 * k, 1 - 0.5 * k, 1 + 0.3 * k], ASIENTO)
 
 // Sin `armas` después del ataque: las gastó todas contra quien juega. Antes,
@@ -120,9 +121,9 @@ const trazadora = (canon, destino, s, [ojo, , campo]) => {
 }
 const fogonazo = (canon) => el(canon, [0.5, 0.35, 0.35], C.blanco, { flat: LILA, brilla: true })
 
-// Una ráfaga: `tiros` por vuelta, que se turnan los `canones`, y `desvio(k, t)`,
-// lo que el tiro k, disparado en el instante t, se aparta de quien juega, en
-// metros (y, z). Solo los que salen antes de `hasta` en cada vuelta, y los
+// Una ráfaga: `tiros` por vuelta, que se turnan los `canones`, y `desvio(k,
+// t)`, lo que el tiro k, disparado en el instante t, se aparta de quien juega,
+// en metros (y, z). Solo los que salen antes de `hasta` en cada vuelta, y los
 // disparados desde `desde`.
 const rafaga = ({ tiros, objetivo, desvio, hasta = 1, desde = -Infinity, canones = CANONES }) => (u, T, camara) =>
   Array.from({ length: tiros }, (_, k) => {
@@ -432,7 +433,8 @@ const SILLON_GIRADO = () => ({ moby: SILLON.giro })
 export const TOMAS_3D = {
   ...ATAQUE,
   chillido: { abre: EN_CABINA, escena: chilla, camara: aBordo(TEMBLOR, CAMARAS.tablero), encima: (celdas, u) => municion(celdas, u, 0) },
-  // Desde atrás y por babor: lo sigue hasta que se pierde hacia el portaaviones.
+  // Desde atrás y por babor: lo sigue hasta que se pierde hacia el
+  // portaaviones.
   retirada: {
     escena: (u) => [MAR, ...nubes(0.4 + 0.2 * u), ...PORTAAVIONES, ...enManiobra(S_PARTIDA(u)).formas(DE_HULE)],
     camara: (u) => [sum(ALTURA, [40, 4, -40]), lerp(sum(ALTURA, S_PARTIDA(u).en), sum(ALTURA, [-400, -40, 60]), tramo(u, 0.65, 1)), 50],
@@ -441,7 +443,8 @@ export const TOMAS_3D = {
   // Donde estaba duky, solo quien juega y las nubes, quietas.
   vacio: { abre: EN_CABINA, escena: () => [MAR, ...nubes(0.4)], camara: aBordo(NIVELADO, CAMARAS.detras), encima: marcar(aBordo(NIVELADO, CAMARAS.detras), QUIETO, EN_CABINA) },
 
-  // Desde atrás, por sobre la mesa de control, los tres ante la pantalla sin señal.
+  // Desde atrás, por sobre la mesa de control, los tres ante la pantalla sin
+  // señal.
   torre: enLaSala(sala(), fija([-0.6, 2.85, 0], [3.9, 1.3, 0], 62)),
   llora: enLaSala(sala(), DE_FRENTE(0)),
   sabe: enLaSala(sala(habla('duke', DUKE.hablando)), DE_FRENTE(DONDE.duke.en[2])),

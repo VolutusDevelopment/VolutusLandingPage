@@ -1,7 +1,7 @@
-// Las tomas de la escena 5, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 6 (escena6/tomas.mjs), con sus mismos
-// cazas. El guion, con sus líneas, está en src/lib/operacion-venganza/escena5.js; el visor de la
-// cámara de duke y la marca en el cielo, en visor.mjs.
+// Las tomas de la escena 5, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde, como las de la escena 6 (escena6/tomas.mjs), con sus mismos cazas. El
+// guion, con sus líneas, está en src/lib/operacion-venganza/escena5.js; el
+// visor de la cámara de duke y la marca en el cielo, en visor.mjs.
 //
 // Moby y duke vuelan a 300 m sobre el mar, alejándose del sol: lo tienen a la
 // espalda. Todo se arma en la formación, con los morros hacia +x, y `VUELO`

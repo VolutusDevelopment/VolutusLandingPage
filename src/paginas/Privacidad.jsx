@@ -28,13 +28,13 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * deduce de ella, en el registro de cada petición que atiende el Worker: los
  * envíos y los videos (`observability` en wrangler.jsonc). Si quien escribe
  * elige WhatsApp, el formulario no envía nada: abre WhatsApp con el texto
- * (client.js), que viaja en el enlace. El brief para clientes (/brief-web), que se
- * manda por link, suma lo que identifica el envío y el logo que se sube, que
- * llega adjunto (worker/brief.js). En el
- * navegador se guardan el modo desbloqueado del juego de los patos
- * (lib/odio.js), el final elegido en Operación Venganza (lib/operacion-venganza/final.js) y, en
- * el brief, las respuestas a medio llenar, su número al azar y la marca de la
- * pestaña (lib/brief/reglas.js), y lo que se califica en los bocetos
+ * (client.js), que viaja en el enlace. El brief para clientes (/brief-web), que
+ * se manda por link, suma lo que identifica el envío y el logo que se sube, que
+ * llega adjunto (worker/brief.js). En el navegador se guardan el modo
+ * desbloqueado del juego de los patos (lib/odio.js), el final elegido en
+ * Operación Venganza (lib/operacion-venganza/final.js) y, en el brief, las
+ * respuestas a medio llenar, su número al azar y la marca de la pestaña
+ * (lib/brief/reglas.js), y lo que se califica en los bocetos
  * (public/brief/bocetos/barra.js); también se dice, y cuánto dura cada uno.
  * Turnstile, Resend y los registros del Worker dicen qué guardan y cuánto, con
  * lo que publica cada proveedor. De Turnstile se dicen sus dos usos: el que

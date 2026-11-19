@@ -1,6 +1,6 @@
-// Las tiras de las pantallas de carga (src/lib/operacion-venganza/cargas.js), menos la de
-// duck-one, que pinta escena1/sprites.mjs. Cada personaje de tres cuartos,
-// como en sus láminas (cargas.mjs), y cada marinero en su toma.
+// Las tiras de las pantallas de carga (src/lib/operacion-venganza/cargas.js),
+// menos la de duck-one, que pinta escena1/sprites.mjs. Cada personaje de tres
+// cuartos, como en sus láminas (cargas.mjs), y cada marinero en su toma.
 //
 //   node scripts/operacion-venganza/cargas/sprites.mjs
 //

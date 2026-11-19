@@ -1,6 +1,7 @@
-// Las hojas de los cazas del combate (src/lib/operacion-venganza/cazas.js): cada caza desde todos
-// sus giros y alturas, con las llamas de los motores atrás. El F-14 de
-// duck-one vuela con las alas barridas, como sale de la escena 3.
+// Las hojas de los cazas del combate (src/lib/operacion-venganza/cazas.js):
+// cada caza desde todos sus giros y alturas, con las llamas de los motores
+// atrás. El F-14 de duck-one vuela con las alas barridas, como sale de la
+// escena 3.
 //
 //   node scripts/operacion-venganza/combate/sprites.mjs
 //

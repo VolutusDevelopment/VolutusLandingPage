@@ -28,7 +28,8 @@ const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 
 const [, MOBY_P, DUKE_P] = PERSONAJES
 const CUBIERTA = 20.8
-// En la cubierta todos van a la escala de la cabina de duke, como en la escena 4.
+// En la cubierta todos van a la escala de la cabina de duke, como en la escena
+// 4.
 const K = DUKE.k
 const MANDOS = { 1: PALANCA, [-1]: ACELERADOR }
 
@@ -207,7 +208,8 @@ export const TOMAS_3D = {
   // Desde la consola, entre sus dos pantallas, de frente al oficial.
   regresen: { escena: RADIO, camara: fija([-27.45, PISO + 1.12, 24.2], [-27.6, PISO + 1.0, 25.75], 50) },
   tengo: { abre: EN_CABINA, escena: hablando('moby'), camara: DEL_TABLERO('moby') },
-  // Por su lado de popa, junto a los ventanales: detrás, la proa y el atardecer.
+  // Por su lado de popa, junto a los ventanales: detrás, la proa y el
+  // atardecer.
   presupuesto: { escena: RADIO, camara: fija([-30.6, PISO + 1.35, 24.3], [-27.9, PISO + 1.0, 26.7], 58) },
   significa: { abre: EN_CABINA, escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
   recortado: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },

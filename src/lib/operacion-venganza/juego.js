@@ -1,9 +1,10 @@
 /**
  * Operación Venganza, el orden del juego: cada escena tiene su página y entre
  * ellas, en su lugar, van los niveles jugables, con sus guiones. Se juega
- * entero en una sola página (src/comportamiento/operacion-venganza/operacion-venganza.js): la de cada escena o
- * nivel empieza ahí y sigue hasta el final, y las escenas seguidas corren
- * como una sola.
+ * entero en una sola página
+ * (src/comportamiento/operacion-venganza/operacion-venganza.js): la de cada
+ * escena o nivel empieza ahí y sigue hasta el final, y las escenas seguidas
+ * corren como una sola.
  */
 
 import * as nivel1 from './nivel1.js'

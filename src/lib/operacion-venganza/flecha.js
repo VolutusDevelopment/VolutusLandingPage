@@ -1,7 +1,9 @@
 // La flecha de quien juega con ratón, pixel a pixel: X borde, de `BORDE`, y W
-// relleno, blanco. Es el personaje del combate (src/comportamiento/operacion-venganza/combate.js), el cursor de
-// las escenas (src/comportamiento/operacion-venganza/operacion-venganza.js) y la que se ve en las pantallas de
-// las tomas (scripts/operacion-venganza): la misma en todas partes.
+// relleno, blanco. Es el personaje del combate
+// (src/comportamiento/operacion-venganza/combate.js), el cursor de las escenas
+// (src/comportamiento/operacion-venganza/operacion-venganza.js) y la que se ve
+// en las pantallas de las tomas (scripts/operacion-venganza): la misma en todas
+// partes.
 export const FLECHA = [
   'X',
   'XX',

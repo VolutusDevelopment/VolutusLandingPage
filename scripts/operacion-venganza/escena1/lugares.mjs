@@ -32,9 +32,9 @@ export const poner = (formas, giro, en) => transformar([0, giro, 0], [0, 0, 0], 
 
 // ── Letras de cuadritos ──────────────────────────────────────────────────
 
-// Lo que va pintado en el barco, el 15 y su nombre, la operación en la
-// pantalla de la sala (escena 2) y el sticker de la caja de duky (escena 11). Cuatro de ancho y cinco de alto; las que
-// llevan tilde traen una fila más, encima.
+// Lo que va pintado en el barco, el 15 y su nombre, la operación en la pantalla
+// de la sala (escena 2) y el sticker de la caja de duky (escena 11). Cuatro de
+// ancho y cinco de alto; las que llevan tilde traen una fila más, encima.
 const LETRAS = {
   1: ['.#..', '##..', '.#..', '.#..', '###.'],
   5: ['####', '#...', '###.', '...#', '###.'],
@@ -110,10 +110,11 @@ export const cielo = ([x, y, z]) => {
 
 // ── El mar ───────────────────────────────────────────────────────────────
 
-// El mar del juego (src/comportamiento/operacion-venganza/combate.js): el agua toma el color de su franja según
-// lo hondo que se la mira, la tangente del ángulo bajo el horizonte, y sus
-// olas, uno más claro; bajo el sol, doradas. Así se ve mar hasta el
-// horizonte desde cualquier altura, sin un círculo alrededor de nadie.
+// El mar del juego (src/comportamiento/operacion-venganza/combate.js): el agua
+// toma el color de su franja según lo hondo que se la mira, la tangente del
+// ángulo bajo el horizonte, y sus olas, uno más claro; bajo el sol, doradas.
+// Así se ve mar hasta el horizonte desde cualquier altura, sin un círculo
+// alrededor de nadie.
 const FRANJAS_DEL_MAR = [
   [0.018, '#c495a8', '#ecc0c0'],
   [0.045, '#9a86b6', '#c2acd6'],

@@ -1,5 +1,5 @@
-// Las tiras de la escena 3 (src/lib/operacion-venganza/escena3.js), una por toma (tiras.mjs).
-// La pantalla de carga es la de la escena 1.
+// Las tiras de la escena 3 (src/lib/operacion-venganza/escena3.js), una por
+// toma (tiras.mjs). La pantalla de carga es la de la escena 1.
 //
 //   node scripts/operacion-venganza/escena3/sprites.mjs
 //

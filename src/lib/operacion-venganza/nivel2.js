@@ -1,11 +1,11 @@
 /**
  * Operación Venganza, nivel 2: «La rabia y la belleza», después de la escena 5.
  * Moby-Duck sale solo, furioso, y tras tres vistas llega Duke SkyDucker. Tiene
- * la forma de lib/operacion-venganza/nivel1.js. Moby grita en mayúsculas y dispara como un A-10
- * de verdad: el cañón de siete tubos como una manguera, a veces sin soltar
- * el gatillo, y cohetes sin guía, que salen derechos. Duke posa y dispara
- * flores de estrellas que giran. Como hablan los dos, cada uno lo hace desde
- * su esquina (`LADOS`).
+ * la forma de lib/operacion-venganza/nivel1.js. Moby grita en mayúsculas y
+ * dispara como un A-10 de verdad: el cañón de siete tubos como una manguera, a
+ * veces sin soltar el gatillo, y cohetes sin guía, que salen derechos. Duke
+ * posa y dispara flores de estrellas que giran. Como hablan los dos, cada uno
+ * lo hace desde su esquina (`LADOS`).
  */
 
 import { embestida, enCirculo } from './maniobras.js'

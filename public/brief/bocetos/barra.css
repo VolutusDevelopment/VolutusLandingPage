@@ -289,11 +289,11 @@
 }
 
 /* En el visor del brief, la página es una carta que se arrastra de lado
- * (src/comportamiento/brief/brief-visor.js): el navegador solo la desplaza en vertical y no
- * convierte el gesto lateral en «atrás». Sus botones flotan abajo (en
- * teléfonos, con el estilo y la cuenta encima), y tapan `--reserva-abajo`.
- * La carta de abajo espera con todo en pausa: su portada entra cuando
- * empieza a verse. */
+ * (src/comportamiento/brief/brief-visor.js): el navegador solo la desplaza en
+ * vertical y no convierte el gesto lateral en «atrás». Sus botones flotan abajo
+ * (en teléfonos, con el estilo y la cuenta encima), y tapan `--reserva-abajo`.
+ * La carta de abajo espera con todo en pausa: su portada entra cuando empieza a
+ * verse. */
 .en-visor {
   --reserva-abajo: 96px;
   --reserva-portada: 96px;

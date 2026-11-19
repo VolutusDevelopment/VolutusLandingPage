@@ -29,7 +29,8 @@ const ANIMACIONES = `.t12{animation:cuadro12 ${DURACION}s step-end infinite}
 const cuadro = (figura, [ojo, mira, campo]) =>
   pixel3d(figura, { ojo, mira, campo, cielo }, N, TAM, { c: [0, 0, 0], radio: 1 }).replace(`height="${N * TAM}" viewBox="0 0 ${N} ${N}"`, `height="${ALTO * TAM}" viewBox="0 ${(N - ALTO) / 2} ${N} ${ALTO}"`)
 
-// Cada celda dice su toma y sus líneas, del guion del juego (src/lib/operacion-venganza/escena2.js).
+// Cada celda dice su toma y sus líneas, del guion del juego
+// (src/lib/operacion-venganza/escena2.js).
 const NOMBRES = {
   puerta: 'la puerta',
   medallas: 'las medallas',

@@ -1,9 +1,10 @@
 /**
  * Operación Venganza, escena 7: «La última opción». El guion que reproduce
- * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/la-ultima-opcion, con la forma del
- * de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
- * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
- * tira corre una sola vez, y sus líneas. Las tiras las escribe
+ * src/comportamiento/operacion-venganza/operacion-venganza.js en
+ * /operacion-venganza/la-ultima-opcion, con la forma del de la escena 1
+ * (lib/operacion-venganza/escena1.js), de donde salen también las medidas de
+ * las tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si
+ * la tira corre una sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena7/sprites.mjs, desde las tomas en 3D.
  *
  * Pasa en la sala de mando de la escena 2. duck-one escribe como habla: sus

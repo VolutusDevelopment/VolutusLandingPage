@@ -1,9 +1,10 @@
 /**
  * Operación Venganza, escena 10: «Último ataque». El guion que reproduce
- * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/ultimo-ataque, con la forma del
- * de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
- * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
- * tira corre una sola vez, y sus líneas. Las tiras las escribe
+ * src/comportamiento/operacion-venganza/operacion-venganza.js en
+ * /operacion-venganza/ultimo-ataque, con la forma del de la escena 1
+ * (lib/operacion-venganza/escena1.js), de donde salen también las medidas de
+ * las tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si
+ * la tira corre una sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena10/sprites.mjs, desde las tomas en 3D.
  *
  * Desde la cabina de duky, con el indicador de munición, que baja de toma en

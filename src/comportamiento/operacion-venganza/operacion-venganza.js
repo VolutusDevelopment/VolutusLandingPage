@@ -1,11 +1,12 @@
 /**
  * Operación Venganza (paginas/OperacionVenganza.jsx): el juego entero, en una
- * sola página, desde la escena o el nivel de su `data-desde` (lib/operacion-venganza/juego.js)
- * hasta el final. Las escenas, con sus guiones (lib/operacion-venganza/escena1.js, escena2.js,
- * escena3.js, escena4.js, escena5.js, escena6.js, escena7.js, escena8.js,
- * escena9.js, escena10.js, escena11.js y escena12.js; las medidas de las
- * tiras son las de la 1), corren seguidas como una sola, y entre ellas, en su
- * sección, los niveles (src/comportamiento/operacion-venganza/combate.js).
+ * sola página, desde la escena o el nivel de su `data-desde`
+ * (lib/operacion-venganza/juego.js) hasta el final. Las escenas, con sus
+ * guiones (lib/operacion-venganza/escena1.js, escena2.js, escena3.js,
+ * escena4.js, escena5.js, escena6.js, escena7.js, escena8.js, escena9.js,
+ * escena10.js, escena11.js y escena12.js; las medidas de las tiras son las de
+ * la 1), corren seguidas como una sola, y entre ellas, en su sección, los
+ * niveles (src/comportamiento/operacion-venganza/combate.js).
  *
  * Hay una sola pantalla de carga, al principio: camina uno de los personajes,
  * al azar (lo anima el CSS), y bajan las tiras de todas las escenas, las
@@ -29,15 +30,15 @@
  * Con ratón, el cursor de las escenas es la flecha del juego (`flecha`); en
  * los niveles, quien juega.
  *
- * En la página de una pantalla de carga (lib/operacion-venganza/cargas.js, `data-carga`) no hay
- * juego: la barra se llena con las tiras de sus escenas y queda llena hasta
- * que se pide el índice, y «Ver otra vez» vuelve a la carga.
+ * En la página de una pantalla de carga (lib/operacion-venganza/cargas.js,
+ * `data-carga`) no hay juego: la barra se llena con las tiras de sus escenas y
+ * queda llena hasta que se pide el índice, y «Ver otra vez» vuelve a la carga.
  *
- * Al acabar la 12 (o al saltarla), quien juega elige uno de sus `FINALES` en
- * el menú que aparece sobre el cuadro (con el ratón, el dedo o las flechas), y
+ * Al acabar la 12 (o al saltarla), quien juega elige uno de sus `FINALES` en el
+ * menú que aparece sobre el cuadro (con el ratón, el dedo o las flechas), y
  * corren sus tomas. Su nombre queda en la sesión, en la clave `FINAL` del
- * guion, para /nosotros (src/comportamiento/flota.js), adonde se va sola la página al
- * terminarlas.
+ * guion, para /nosotros (src/comportamiento/flota.js), adonde se va sola la
+ * página al terminarlas.
  */
 
 import * as escena1 from '../../lib/operacion-venganza/escena1.js'
