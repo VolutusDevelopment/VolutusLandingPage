@@ -1,6 +1,6 @@
 // Los retratos del cuadro de comunicaciones de los niveles (src/comportamiento/operacion-venganza/combate.js):
 // cada piloto en su cabina, desde la cámara del tablero, hablando; y la torre
-// de control, el oficial de la sala azul de la escena 11 con su radio. Una
+// de control, el oficial de la sala azul de la escena 8 con su radio. Una
 // fila por quien habla, en el orden de `RETRATOS` (src/lib/operacion-venganza/cazas.js), con
 // `CUADROS_DE_RETRATO` cuadros de `LADO_DE_RETRATO` px: el primero, callado.
 //
@@ -14,7 +14,7 @@ import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { PERSONAJES, cabina } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, CABINAS, PALANCA, aCaza, avion, cabinaCon } from '../pilotos/interiores.mjs'
 import { MAR, cielo } from '../escena1/lugares.mjs'
-import { TOMAS_3D } from '../escena11/tomas.mjs'
+import { TOMAS_3D } from '../escena8/tomas.mjs'
 import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
 import { CUADROS_DE_RETRATO, LADO_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../../../src/lib/operacion-venganza/cazas.js'
 

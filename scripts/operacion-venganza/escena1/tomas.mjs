@@ -9,7 +9,7 @@
 import { ALMIRANTE, OFICIAL, MARINEROS, OFICIOS, silaba, suave } from './personajes.mjs'
 import { MAR, PANTALLA, enMarcha, portaaviones, destructor, navegando, poner, colocar } from './lugares.mjs'
 import { ASIENTOS, recorrido, reunion } from '../escena2/reunion.mjs'
-import { DUKE, MOBY } from '../escena9/cazas.mjs'
+import { DUKE, MOBY } from '../escena6/cazas.mjs'
 import { SUELO as SUELO_DUCK_ONE, caza as cazaDuckOne } from '../escena3/caza.mjs'
 import { ALAS_TOMCAT } from '../pilotos/modelos.mjs'
 import { alargar } from '../tiras.mjs'

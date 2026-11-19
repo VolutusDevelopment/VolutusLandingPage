@@ -1,51 +1,63 @@
 /**
- * Operación Venganza, escena 11: «Preparativos», la primera del nivel 3,
- * «El fantasma amarillo». El guion que reproduce src/comportamiento/operacion-venganza/operacion-venganza.js en
- * /operacion-venganza/escena-11, con la forma del de la escena 1
- * (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las tiras: `ms` por
- * cuadro, `cuadros` si no son los de siempre, `unaVez` si la tira corre una
- * sola vez, y sus líneas. Las tiras las escribe
+ * Operación Venganza, escena 11: «El regreso del fantasma». El guion que
+ * reproduce src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/el-regreso-del-fantasma, con la
+ * forma del de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las
+ * medidas de las tiras: `ms` por cuadro, `cuadros` si no son los de siempre,
+ * `unaVez` si la tira corre una sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena11/sprites.mjs, desde las tomas en 3D.
  *
- * Duky no habla. El oficial de inteligencia le habla por radio desde la sala
- * azul, con el almirante detrás, y nadie contesta.
+ * Duky vuelve al Sitting Ducks y el escuadrón mira con él el atardecer, donde
+ * sigue quien juega: esas tomas van `segunModo`, y la línea que lo nombra dice
+ * cursor o dedo. Después, la caja, el almirante y los dos marineros.
  */
 
-const OFICIAL = 'Oficial de inteligencia'
+const ALMIRANTE = 'Almirante'
+const MARINERO_1 = 'Marinero 1'
+const MARINERO_2 = 'Marinero 2'
+
+// Una línea que nombra a quien juega: `el` cursor o dedo, en `frase`.
+const segunQuien = (frase) => ({ cursor: frase('cursor'), huella: frase('dedo') })
 
 export const TOMAS = [
-  { id: 'recoge', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Un marinero entra en la sala y recoge a Duky.' }] },
-  { id: 'choca', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Intenta pasar, pero choca con la pared de la puerta.' }] },
-  // La primera vez que se ve el caza de duky: con la cabina cerrada.
-  { id: 'hangar', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Lo lleva al hangar…' }] },
-  { id: 'sube', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…y sube con él a un F22 Raptor con armas prototipo' }] },
-  { id: 'deposita', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: '…hasta dejarlo en la cabina.' }] },
-  { id: 'cinturon', ms: 150, lineas: [{ texto: 'El marinero intenta ponerle el cinturón, pero Duky es medio gordito y no le cierra.' }] },
-  {
-    id: 'encoge',
-    ms: 150,
-    cuadros: 33,
-    unaVez: true,
-    lineas: [{ texto: 'Lo intenta una vez más, se rinde y cierra la cabina. Duky se queda sin cinturón.' }],
-  },
-  // Una sola toma, con la cámara siempre en duky: desde el comienzo de la
-  // pista, pegado al asiento, hasta que deja el portaaviones; ya en el aire,
-  // 2 s de calma y la segunda línea, cuando se pone feliz.
-  {
-    id: 'despegue',
-    ms: 100,
-    cuadros: 74,
-    unaVez: true,
-    lineas: [{ texto: 'El avión despega.' }, { texto: 'Duky se pone feliz: exhala e inhala rápidamente, de la emoción.', cuadro: 39 }],
-  },
+  // En la cubierta, al atardecer.
+  { id: 'aterriza', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'El caza de Duky aterriza en el Sitting Ducks.' }] },
+  { id: 'saca', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Un marinero sube y saca a Duky de la cabina.' }] },
+  { id: 'cubierta', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Lo lleva en brazos por la cubierta…' }] },
+  { id: 'borde', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: '…y lo deja en el borde, mirando al atardecer.' }] },
+  { id: 'lejos', segunModo: true, ms: 200, lineas: [{ texto: segunQuien((el) => `A lo lejos, sobre el mar, sigue el ${el}.`) }] },
+  { id: 'acercan', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Duck-One, Moby y Duke se acercan.' }] },
+  { id: 'atardecer', segunModo: true, ms: 200, lineas: [{ texto: 'El escuadrón Patoon-4, junto, mira el atardecer.' }] },
+  { id: 'manos', segunModo: true, ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Los cuatro, en línea, se toman de las manos.' }] },
+  { id: 'bonito', ms: 200, lineas: [{ texto: 'Es una escena muy bonita.' }] },
 
-  // La radio: el oficial, desde la sala azul, y duky en su cabina.
-  { id: 'radio', ms: 150, lineas: [{ quien: OFICIAL, texto: 'Torre de control, aquí torre de control, ¿me recibe?' }] },
-  { id: 'silencio', ms: 150, lineas: [{ texto: 'Silencio.' }] },
-  { id: 'pitido', ms: 150, lineas: [{ texto: 'El radar emite un pitido.' }] },
-  { id: 'termina', ms: 150, lineas: [{ quien: OFICIAL, texto: 'Bien, Fantasma Amarillo, termina con ese maldito.' }] },
-  { id: 'calla', ms: 150, lineas: [{ texto: 'Silencio.' }] },
-  { id: 'otroPitido', ms: 150, lineas: [{ texto: 'El radar emite un pitido.' }] },
+  // La caja.
+  { id: 'recoge', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Llega un marinero y recoge a Duky.' }] },
+  { id: 'caja', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Lo deja en una caja de madera…' }] },
+  {
+    id: 'cinta',
+    ms: 150,
+    cuadros: 41,
+    unaVez: true,
+    lineas: [{ texto: '…la sella con cinta de peligro, amarilla y negra…' }, { texto: '…y le pega un gran sticker rojo: «CLASIFICADO».' }],
+  },
+  { id: 'almirante', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'El Almirante se acerca a la caja.' }] },
+  { id: 'destino', ms: 150, lineas: [{ quien: MARINERO_1, texto: '¿Cuál es el destino?' }] },
+  { id: 'myanmar', ms: 150, lineas: [{ quien: ALMIRANTE, texto: 'Myanmar.' }] },
+  { id: 'porque', ms: 150, lineas: [{ quien: MARINERO_2, texto: '¿Por qué Myanmar?' }] },
+  { id: 'clasificada', ms: 150, lineas: [{ quien: ALMIRANTE, texto: 'Eso es información clasificada, Cabo.' }] },
+  { id: 'proteccion', ms: 150, lineas: [{ quien: MARINERO_1, texto: '¿Y por qué tanta protección para el Amarillento?' }] },
+
+  // El miedo.
+  { id: 'patea', ms: 150, cuadros: 28, unaVez: true, lineas: [{ texto: 'El primer marinero patea la caja, para asegurarse de que esté bien protegida.' }] },
+  { id: 'tiembla', ms: 100, cuadros: 24, lineas: [{ texto: 'El segundo marinero mira la caja y niega con la cabeza, tembloroso.' }] },
+  { id: 'corre', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Sale corriendo y, del miedo, se cae por la borda.' }] },
+  {
+    id: 'flota',
+    ms: 200,
+    cuadros: 40,
+    unaVez: true,
+    lineas: [{ texto: 'Flota de espaldas en el mar, tranquilo…' }, { texto: '…cada vez más lejos del fantasma amarillo.' }],
+  },
 ]
 
-export const rutaDeToma = ({ id }) => `/operacion-venganza/escena11/${id}.png`
+export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena11/${id}${segunModo ? `-${modo}` : ''}.png`

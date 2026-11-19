@@ -1,8 +1,8 @@
-// Lo que la escena 13 pinta sobre los cuadros de la cabina de duky (el
+// Lo que la escena 9 pinta sobre los cuadros de la cabina de duky (el
 // `encima` de tiras.mjs), en pixeles del cuadro de ANCHO × ALTO: quien juega,
-// marcado como en la escena 6, y el anillo de su clic.
+// marcado como en la escena 5, y el anillo de su clic.
 
-import { objetivo, poner } from '../escena6/visor.mjs'
+import { objetivo, poner } from '../escena5/visor.mjs'
 
 // Un anillo blanco de radio `r` alrededor de [x, y], de borde sombreado.
 const anillo = (celdas, [x, y], r) => {

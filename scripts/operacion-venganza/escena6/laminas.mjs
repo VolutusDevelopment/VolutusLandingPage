@@ -1,9 +1,9 @@
-// Escena 9, «Retirada»: las tomas de la cubierta en una lámina animada del
+// Escena 6, «Retirada»: las tomas de la cubierta en una lámina animada del
 // lienzo de Design, como las de la escena 3 (escena3/laminas.mjs), con el
 // Hornet de duke plegando las alas detrás de él, y en otra las de la radio,
 // desde el control de vuelo.
 //
-//   node scripts/operacion-venganza/escena9/laminas.mjs <carpeta>
+//   node scripts/operacion-venganza/escena6/laminas.mjs <carpeta>
 //
 // Escribe <carpeta>/project/E9-tomas-cubierta.dc.html y E9-tomas-radio.dc.html.
 
@@ -11,7 +11,7 @@ import { pixel3d } from '../pilotos/tres.mjs'
 import { celdaDeToma, fila, pagina } from '../pilotos/tablero.mjs'
 import { TOMAS_3D } from './tomas.mjs'
 import { cielo } from '../escena1/lugares.mjs'
-import { TOMAS } from '../../../src/lib/operacion-venganza/escena9.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena6.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
 const RAIZ = process.argv[2]
@@ -43,8 +43,8 @@ mkdirSync(`${RAIZ}/project`, { recursive: true })
 writeFileSync(
   `${RAIZ}/project/E9-tomas-cubierta.dc.html`,
   pagina({
-    titulo: 'Escena 9 · en la cubierta',
-    papel: 'Escena 9 · tomas 9 a 14',
+    titulo: 'Escena 6 · en la cubierta',
+    papel: 'Escena 6 · tomas 9 a 14',
     nombre: 'En la cubierta',
     bajada: 'Del regreso a la torre, con el Hornet de duke',
     detalle: 'Los dos bajan hacia la popa; duke aterriza primero y moby detrás. Duke sale de un saltito, visto de frente y desde abajo, y mientras baja, detrás de él su Hornet pliega las alas como en la vida real: las puntas suben hasta pasar un poco la vertical, y así queda el caza en la cubierta. Se mira en la toma de aire de babor, blanca y brillante como un espejo, mientras moby le abolla la góndola a su A-10, y los dos caminan hacia la torre.',
@@ -56,8 +56,8 @@ writeFileSync(
 writeFileSync(
   `${RAIZ}/project/E9-tomas-radio.dc.html`,
   pagina({
-    titulo: 'Escena 9 · la radio',
-    papel: 'Escena 9 · tomas 2 y 4',
+    titulo: 'Escena 6 · la radio',
+    papel: 'Escena 6 · tomas 2 y 4',
     nombre: 'El control de vuelo',
     bajada: 'El oficial de inteligencia llama de vuelta al Patoon-4',
     detalle: 'En lo alto de la isla, con ventanales a babor, a proa y a popa sobre la cubierta y pantallas colgadas del techo. El oficial habla por radio sentado a la consola, con la mano en el audífono, entre el radar de aproximación y el combustible de los dos cazas, que parpadea en rojo. Detrás de él, de pie y con las manos atrás, el almirante mira las pantallas con el ceño fruncido.',

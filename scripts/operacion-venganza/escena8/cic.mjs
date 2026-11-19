@@ -9,7 +9,7 @@
 import { placa } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
 import { CONSOLA, caja, colocar } from '../escena1/lugares.mjs'
-import { pantalla, radar, renglones, teclea } from '../escena9/control.mjs'
+import { pantalla, radar, renglones, teclea } from '../escena6/control.mjs'
 import { OFICIOS } from '../escena1/personajes.mjs'
 
 const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16))

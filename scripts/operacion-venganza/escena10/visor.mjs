@@ -1,8 +1,8 @@
-// Lo que la escena 14 pinta sobre los cuadros, en pixeles del cuadro de
+// Lo que la escena 10 pinta sobre los cuadros, en pixeles del cuadro de
 // ANCHO × ALTO: el indicador de munición de la cabina de duky, abajo a la
 // derecha, y quien juega chiquito, a lo lejos, por un ventanal de la sala.
 
-import { poner } from '../escena6/visor.mjs'
+import { poner } from '../escena5/visor.mjs'
 import { ALTO, ANCHO } from '../../../src/lib/operacion-venganza/escena1.js'
 
 const SOMBRA = '#16191e'

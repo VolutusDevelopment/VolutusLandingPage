@@ -541,6 +541,22 @@ traslados.push(
 // El brief para clientes se llamaba /brief: el link que ya se mandó sigue
 // llegando al formulario.
 traslados.push('/brief /brief-web 301')
+// Las escenas de Operación Venganza iban por número, con huecos donde van los
+// niveles (/escena-2 … /escena-16). Ahora van del 1 al 12 y su página lleva
+// el nombre de la escena.
+traslados.push(
+  '/operacion-venganza/escena-2 /operacion-venganza/patoon-4 301',
+  '/operacion-venganza/escena-3 /operacion-venganza/despegue 301',
+  '/operacion-venganza/escena-5 /operacion-venganza/regreso 301',
+  '/operacion-venganza/escena-6 /operacion-venganza/entrada 301',
+  '/operacion-venganza/escena-9 /operacion-venganza/retirada 301',
+  '/operacion-venganza/escena-10 /operacion-venganza/la-ultima-opcion 301',
+  '/operacion-venganza/escena-11 /operacion-venganza/preparativos 301',
+  '/operacion-venganza/escena-13 /operacion-venganza/la-sala-de-mando 301',
+  '/operacion-venganza/escena-14 /operacion-venganza/ultimo-ataque 301',
+  '/operacion-venganza/escena-15 /operacion-venganza/el-regreso-del-fantasma 301',
+  '/operacion-venganza/escena-16 /operacion-venganza/desolacion 301'
+)
 // La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
 // a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
 // `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare

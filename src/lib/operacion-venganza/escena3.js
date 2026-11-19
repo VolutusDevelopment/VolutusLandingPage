@@ -1,6 +1,6 @@
 /**
  * Operación Venganza, escena 3: «Despegue». El guion que reproduce
- * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/escena-3, con la forma del
+ * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/despegue, con la forma del
  * de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
  * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
  * tira corre una sola vez, `segunModo` si lleva el cursor o la huella de quien

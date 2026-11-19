@@ -2,8 +2,8 @@
  * Operación Venganza (paginas/OperacionVenganza.jsx): el juego entero, en una
  * sola página, desde la escena o el nivel de su `data-desde` (lib/operacion-venganza/juego.js)
  * hasta el final. Las escenas, con sus guiones (lib/operacion-venganza/escena1.js, escena2.js,
- * escena3.js, escena5.js, escena6.js, escena9.js, escena10.js, escena11.js,
- * escena13.js, escena14.js, escena15.js y escena16.js; las medidas de las
+ * escena3.js, escena4.js, escena5.js, escena6.js, escena7.js, escena8.js,
+ * escena9.js, escena10.js, escena11.js y escena12.js; las medidas de las
  * tiras son las de la 1), corren seguidas como una sola, y entre ellas, en su
  * sección, los niveles (src/comportamiento/operacion-venganza/combate.js).
  *
@@ -33,7 +33,7 @@
  * juego: la barra se llena con las tiras de sus escenas y queda llena hasta
  * que se pide el índice, y «Ver otra vez» vuelve a la carga.
  *
- * Al acabar la 16 (o al saltarla), quien juega elige uno de sus `FINALES` en
+ * Al acabar la 12 (o al saltarla), quien juega elige uno de sus `FINALES` en
  * el menú que aparece sobre el cuadro (con el ratón, el dedo o las flechas), y
  * corren sus tomas. Su nombre queda en la sesión, en la clave `FINAL` del
  * guion, para /nosotros (src/comportamiento/flota.js), adonde se va sola la página al
@@ -43,15 +43,15 @@
 import * as escena1 from '../../lib/operacion-venganza/escena1.js'
 import * as escena2 from '../../lib/operacion-venganza/escena2.js'
 import * as escena3 from '../../lib/operacion-venganza/escena3.js'
+import * as escena4 from '../../lib/operacion-venganza/escena4.js'
 import * as escena5 from '../../lib/operacion-venganza/escena5.js'
 import * as escena6 from '../../lib/operacion-venganza/escena6.js'
+import * as escena7 from '../../lib/operacion-venganza/escena7.js'
+import * as escena8 from '../../lib/operacion-venganza/escena8.js'
 import * as escena9 from '../../lib/operacion-venganza/escena9.js'
 import * as escena10 from '../../lib/operacion-venganza/escena10.js'
 import * as escena11 from '../../lib/operacion-venganza/escena11.js'
-import * as escena13 from '../../lib/operacion-venganza/escena13.js'
-import * as escena14 from '../../lib/operacion-venganza/escena14.js'
-import * as escena15 from '../../lib/operacion-venganza/escena15.js'
-import * as escena16 from '../../lib/operacion-venganza/escena16.js'
+import * as escena12 from '../../lib/operacion-venganza/escena12.js'
 import { quieto } from '../../lib/movimiento.js'
 import { CARGAS } from '../../lib/operacion-venganza/cargas.js'
 import { rutaDeCaza, rutaDeRetratos } from '../../lib/operacion-venganza/cazas.js'
@@ -59,7 +59,7 @@ import { BORDE, FLECHA, escalaDe } from '../../lib/operacion-venganza/flecha.js'
 import { NIVELES, PAGINAS, tramosDesde } from '../../lib/operacion-venganza/juego.js'
 
 const { ALTO, ANCHO, cuadrosDe, textoDe } = escena1
-const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 5: escena5, 6: escena6, 9: escena9, 10: escena10, 11: escena11, 13: escena13, 14: escena14, 15: escena15, 16: escena16 }
+const GUIONES = { 1: escena1, 2: escena2, 3: escena3, 4: escena4, 5: escena5, 6: escena6, 7: escena7, 8: escena8, 9: escena9, 10: escena10, 11: escena11, 12: escena12 }
 const PASO = 120
 const MINIMO = 3000
 // Lo que tarda leer una línea: 250 palabras por minuto, más un segundo para
@@ -240,7 +240,7 @@ function cargar(raiz, cargas, listo) {
 
 // Las escenas: devuelve con qué correr las de unos enlaces, una tras otra,
 // como una sola, y al acabarlas (o al saltar la última) seguir con `despues`;
-// tras la 16, quien juega elige el final. Los botones y el lienzo se preparan
+// tras la 12, quien juega elige el final. Los botones y el lienzo se preparan
 // una vez: entre un tramo y otro, la sección espera escondida.
 function reproductor(raiz, tiras, modo) {
   const seccion = raiz.querySelector('.escena')

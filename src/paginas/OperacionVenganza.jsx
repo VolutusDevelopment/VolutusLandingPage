@@ -1,5 +1,5 @@
 import { ALTO, ANCHO } from '../lib/operacion-venganza/escena1.js'
-import { FINALES } from '../lib/operacion-venganza/escena16.js'
+import { FINALES } from '../lib/operacion-venganza/escena12.js'
 import { CARGAS } from '../lib/operacion-venganza/cargas.js'
 import { NIVELES, PAGINAS, siguienteDe } from '../lib/operacion-venganza/juego.js'
 import { BORDE, FLECHA, HUELLA } from '../lib/operacion-venganza/flecha.js'
@@ -17,7 +17,7 @@ const CAMINANTES = Object.values(CARGAS).filter(({ tira }) => tira)
  * juego entero, que empieza en ella: la pantalla de carga, con uno de los
  * personajes caminando mientras se llena la barra con todo lo del juego, las
  * escenas y los niveles. Ya cargado, corre de una página a otra sin volver a
- * cargar, hasta la 16, que lleva a Nosotros. Todo lo mueve
+ * cargar, hasta la 12, que lleva a Nosotros. Todo lo mueve
  * src/comportamiento/operacion-venganza/operacion-venganza.js, que empieza en `data-desde`; aquí está el HTML
  * que espera.
  *
@@ -107,7 +107,7 @@ function Juego({ ruta }) {
   )
 }
 
-// Las escenas, en un lienzo. Los finales de la 16, un menú sobre el cuadro.
+// Las escenas, en un lienzo. Los finales de la 12, un menú sobre el cuadro.
 function Escenas() {
   return (
     <section className="escena" aria-label="Escenas" hidden>

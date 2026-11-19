@@ -19,7 +19,7 @@ export const CARGAS = {
   '/operacion-venganza/carga-duke': {
     nombre: 'Duke camina',
     tira: '/operacion-venganza/cargas/duke.png',
-    escenas: [5, 6],
+    escenas: [4, 5],
     destellos: [
       [30, 12],
       [76, 8],
@@ -29,8 +29,8 @@ export const CARGAS = {
     ],
   },
   '/operacion-venganza/carga-moby-duck': { nombre: 'Moby camina', tira: '/operacion-venganza/cargas/moby-duck.png' },
-  '/operacion-venganza/carga-duky': { nombre: 'Duky, quieto', tira: '/operacion-venganza/cargas/duky.png', quieto: true, escenas: [9, 10, 11, 13] },
-  '/operacion-venganza/carga-almirante': { nombre: 'El almirante camina', tira: '/operacion-venganza/cargas/almirante.png', paso: 1.8, escenas: [14, 15, 16] },
+  '/operacion-venganza/carga-duky': { nombre: 'Duky, quieto', tira: '/operacion-venganza/cargas/duky.png', quieto: true, escenas: [6, 7, 8, 9] },
+  '/operacion-venganza/carga-almirante': { nombre: 'El almirante camina', tira: '/operacion-venganza/cargas/almirante.png', paso: 1.8, escenas: [10, 11, 12] },
   '/operacion-venganza/carga-marineros': {
     nombre: 'Los marineros corren',
     corredores: [

@@ -4,7 +4,7 @@
 
 import { el, forro, placa, tubo, transformar } from '../pilotos/tres.mjs'
 import { RAMPAS as C, hueso, ambos, CAZA_DUKE, plegarAlas } from '../pilotos/modelos.mjs'
-import { TREN_HORNET } from '../escena9/cazas.mjs'
+import { TREN_HORNET } from '../escena6/cazas.mjs'
 import { BORDE, FLECHA, HUELLA } from '../../../src/lib/operacion-venganza/flecha.js'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -33,7 +33,7 @@ export const poner = (formas, giro, en) => transformar([0, giro, 0], [0, 0, 0], 
 // ── Letras de cuadritos ──────────────────────────────────────────────────
 
 // Lo que va pintado en el barco, el 15 y su nombre, la operación en la
-// pantalla de la sala (escena 2) y el sticker de la caja de duky (escena 15). Cuatro de ancho y cinco de alto; las que
+// pantalla de la sala (escena 2) y el sticker de la caja de duky (escena 11). Cuatro de ancho y cinco de alto; las que
 // llevan tilde traen una fila más, encima.
 const LETRAS = {
   1: ['.#..', '##..', '.#..', '.#..', '###.'],
@@ -296,7 +296,7 @@ const mastil = ([mx, mz], giro) => {
 // torre, el radar de búsqueda aérea gira `giro` grados, y la antena del
 // mástil, el doble. Va sobre un saliente de la cubierta que un faldón une al
 // casco, como en un Nimitz. Con `control`, el control de vuelo, cerrado,
-// cambia por esas formas (escena9/control.mjs).
+// cambia por esas formas (escena6/control.mjs).
 const QUINCE = { alto: 8, x: -25 - ancho('15', 8) / 2, y: 25 }
 const isla = (alarma, giro, control) => [
   faldon([-56, 33], [-4, 33], 1),

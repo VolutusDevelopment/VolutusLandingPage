@@ -14,20 +14,20 @@ export const NIVELES = { 1: nivel1, 2: nivel2, 3: nivel3 }
 
 export const PAGINAS = {
   '/operacion-venganza': { numero: 1, nombre: 'El portaaviones' },
-  '/operacion-venganza/escena-2': { numero: 2, nombre: 'Patoon-4' },
-  '/operacion-venganza/escena-3': { numero: 3, nombre: 'Despegue' },
+  '/operacion-venganza/patoon-4': { numero: 2, nombre: 'Patoon-4' },
+  '/operacion-venganza/despegue': { numero: 3, nombre: 'Despegue' },
   '/operacion-venganza/nivel-1': { nivel: 1, nombre: 'Duck-One' },
-  '/operacion-venganza/escena-5': { numero: 5, nombre: 'Regreso' },
-  '/operacion-venganza/escena-6': { numero: 6, nombre: 'Entrada' },
+  '/operacion-venganza/regreso': { numero: 4, nombre: 'Regreso' },
+  '/operacion-venganza/entrada': { numero: 5, nombre: 'Entrada' },
   '/operacion-venganza/nivel-2': { nivel: 2, nombre: 'Moby-Duck y Duke SkyDucker' },
-  '/operacion-venganza/escena-9': { numero: 9, nombre: 'Retirada' },
-  '/operacion-venganza/escena-10': { numero: 10, nombre: 'La última opción' },
-  '/operacion-venganza/escena-11': { numero: 11, nombre: 'Preparativos' },
+  '/operacion-venganza/retirada': { numero: 6, nombre: 'Retirada' },
+  '/operacion-venganza/la-ultima-opcion': { numero: 7, nombre: 'La última opción' },
+  '/operacion-venganza/preparativos': { numero: 8, nombre: 'Preparativos' },
   '/operacion-venganza/nivel-3': { nivel: 3, nombre: 'Duky' },
-  '/operacion-venganza/escena-13': { numero: 13, nombre: 'La sala de mando' },
-  '/operacion-venganza/escena-14': { numero: 14, nombre: 'Último ataque' },
-  '/operacion-venganza/escena-15': { numero: 15, nombre: 'El regreso del fantasma' },
-  '/operacion-venganza/escena-16': { numero: 16, nombre: 'Desolación' },
+  '/operacion-venganza/la-sala-de-mando': { numero: 9, nombre: 'La sala de mando' },
+  '/operacion-venganza/ultimo-ataque': { numero: 10, nombre: 'Último ataque' },
+  '/operacion-venganza/el-regreso-del-fantasma': { numero: 11, nombre: 'El regreso del fantasma' },
+  '/operacion-venganza/desolacion': { numero: 12, nombre: 'Desolación' },
 }
 
 export const ENLACES = Object.keys(PAGINAS)

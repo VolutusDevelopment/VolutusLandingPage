@@ -151,7 +151,7 @@ export const escribir = (ruta, datos) => {
 }
 
 // Una tira por toma del guion, con la escena 3D de `TOMAS_3D` (que puede ser
-// async, si pinta otro cuadro adentro, como los monitores de la escena 13);
+// async, si pinta otro cuadro adentro, como los monitores de la escena 9);
 // las que van `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta
 // sobre los cuadros lo que va en la pantalla y no en la escena (un visor, una
 // marca), y recibe las distancias de cada pixel para que lo de atrás quede

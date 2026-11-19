@@ -254,7 +254,7 @@
    Como en el cine: el cuadro en 21:9 al medio, entre dos bandas negras de al
    menos `--banda` de alto. Abajo van los subtítulos, con su alto fijo: el texto
    cambia y nada se mueve. Arriba, en los extremos de la pantalla, «Saltar
-   escena» y «Siguiente». Los dos finales de la escena 16 son un menú de
+   escena» y «Siguiente». Los dos finales de la escena 12 son un menú de
    juego sobre el cuadro. */
 .venganza {
   --banda: calc(7.5rem + 2 * var(--e-4));
@@ -424,7 +424,7 @@
 
 /* ---- El estilo del juego ----
    Las ventanas y los menús del juego, los de los niveles y la elección final
-   de la escena 16, no los de Volutus: la letra de pixeles, un marco
+   de la escena 12, no los de Volutus: la letra de pixeles, un marco
    blanco de esquinas mordidas, como en una consola, y la opción elegida en
    amarillo, con un triángulo de pixeles: la que está bajo el ratón o, si no,
    la que tiene el foco o, si no, la primera.

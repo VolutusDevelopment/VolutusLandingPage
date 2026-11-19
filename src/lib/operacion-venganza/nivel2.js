@@ -1,5 +1,5 @@
 /**
- * Operación Venganza, nivel 2: «La rabia y la belleza», después de la escena 6.
+ * Operación Venganza, nivel 2: «La rabia y la belleza», después de la escena 5.
  * Moby-Duck sale solo, furioso, y tras tres vistas llega Duke SkyDucker. Tiene
  * la forma de lib/operacion-venganza/nivel1.js. Moby grita en mayúsculas y dispara como un A-10
  * de verdad: el cañón de siete tubos como una manguera, a veces sin soltar
@@ -213,7 +213,7 @@ export const VISTAS = [
   },
 ]
 
-// Al terminar sigue la escena 9, con la alarma de combustible.
+// Al terminar sigue la escena 6, con la alarma de combustible.
 export const FINAL = [
   { quien: MOBY, texto: '¡YA CASI TE TENGO! ¡NO TE MUEVAS!' },
   { quien: DUKE, texto: 'Sigue así, Moby. Te ves muy natural.' },

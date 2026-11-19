@@ -18,7 +18,7 @@
 // mientras vuelan. El cruce corre solo mientras la parvada está a la vista
 // (`.lejos` lo detiene): así nadie se lo pierde por irse de la lámina antes.
 // Una vez cruzada, se quita: no vuelve hasta recargar. Con
-// movimiento reducido no está, ni si ya se eligió un final en la escena 16 de
+// movimiento reducido no está, ni si ya se eligió un final en la escena 12 de
 // Operación Venganza: los quince patos ya cayeron (src/comportamiento/flota.js).
 
 import { elegido } from '../lib/operacion-venganza/final.js'

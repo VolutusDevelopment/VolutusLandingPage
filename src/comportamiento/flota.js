@@ -7,7 +7,7 @@
 // enlace. Con teclado y lectores, el enlace se usa solo. Con el cursor encima
 // del barco, el cursor es una mano.
 //
-// Lo que se eligió al final de la escena 16 dura lo que la sesión: si se
+// Lo que se eligió al final de la escena 12 dura lo que la sesión: si se
 // hundió, el barco ya está, partido en dos (`.hundido`, también con movimiento
 // reducido); si se los dejó vivir, la flota ya está y zarpa entera cuando
 // saldría la parvada (`.zarpa`, ver `zarpar`). Con movimiento reducido,

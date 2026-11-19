@@ -312,7 +312,7 @@
   animation-play-state: running;
 }
 
-/* Vivo en la escena 16 (src/comportamiento/flota.js pone `.zarpa`): la flota ya está,
+/* Vivo en la escena 12 (src/comportamiento/flota.js pone `.zarpa`): la flota ya está,
    quieta, con el portaaviones donde termina de llegar. Con `.llega` zarpa
    entera: cada barco sigue su rumbo hacia la derecha, todos a la par, y en
    pocos segundos van a la velocidad con que llegó el portaaviones, hasta salir
@@ -332,7 +332,7 @@
   animation-name: irse;
 }
 
-/* Hundido en la escena 16 (src/comportamiento/flota.js pone `.hundido`): el portaaviones ya
+/* Hundido en la escena 12 (src/comportamiento/flota.js pone `.hundido`): el portaaviones ya
    está en su lugar, partido en dos como el Titanic. Cada mitad gira sobre su
    quiebre, que se hunde, y lo que queda bajo la línea de flotación no se ve.
    Sin reflejo, que sería el del barco entero. */

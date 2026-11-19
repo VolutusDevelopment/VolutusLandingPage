@@ -1,74 +1,71 @@
 /**
- * Operación Venganza, escena 10: «La última opción». El guion que reproduce
- * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/escena-10, con la forma del
+ * Operación Venganza, escena 10: «Último ataque». El guion que reproduce
+ * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/ultimo-ataque, con la forma del
  * de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
  * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
  * tira corre una sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena10/sprites.mjs, desde las tomas en 3D.
  *
- * Pasa en la sala de mando de la escena 2. duck-one escribe como habla: sus
- * faltas de ortografía son suyas y van tal cual. Cada toma tiene a lo más
- * quien hable, y solo a él se le mueve el pico.
+ * Desde la cabina de duky, con el indicador de munición, que baja de toma en
+ * toma hasta cero; después, la sala de mando. Las líneas que nombran a quien
+ * juega dicen cursor o dedo, según el modo, y las tomas que lo muestran van
+ * `segunModo`. duck-one escribe como habla: sus faltas de ortografía son
+ * suyas y van tal cual.
  */
 
 const DUCK_ONE = 'Duck-One'
-const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
+// Una línea que nombra a quien juega: `el` cursor o dedo, en `frase`.
+const segunQuien = (frase) => ({ cursor: frase('cursor'), huella: frase('dedo') })
+
 export const TOMAS = [
-  { id: 'espera', ms: 150, lineas: [{ texto: 'En la sala de mando, Duck-One espera con una carpeta.' }] },
-  { id: 'furioso', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Moby-Duck entra furioso.' }] },
-  { id: 'reflejo', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke SkyDucker entra mirando su reflejo.' }] },
+  // La cabina de duky, cortada con tomas de afuera. Cada tira dura lo que se
+  // tarda en leer su línea: el ataque no se detiene.
+  { id: 'patrones', segunModo: true, ms: 100, cuadros: 37, unaVez: true, lineas: [{ texto: segunQuien((el) => `El ${el} esquiva una sucesión de patrones cada vez más complejos.`) }] },
+  { id: 'frente', ms: 90, cuadros: 14, unaVez: true, lineas: [] },
+  { id: 'lluvia', segunModo: true, ms: 100, cuadros: 34, unaVez: true, lineas: [{ texto: 'La pantalla se llena de proyectiles y de munición derrochada.' }] },
+  { id: 'costado', segunModo: true, ms: 90, cuadros: 14, unaVez: true, lineas: [] },
+  { id: 'secuencia', segunModo: true, ms: 100, cuadros: 25, unaVez: true, lineas: [{ texto: 'Duky ejecuta una última secuencia, precisa…' }] },
+  { id: 'cola', segunModo: true, ms: 100, cuadros: 30, unaVez: true, lineas: [{ texto: segunQuien((el) => `…que obliga al ${el} a moverse sin descanso.`) }] },
+  { id: 'cero', segunModo: true, ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Finalmente, el indicador de munición llega a cero.' }] },
+  { id: 'silencio', segunModo: true, ms: 150, lineas: [{ texto: 'Silencio.' }] },
+
+  // Desde el tablero, y desde afuera. Sin balas, vuelve a ser un pato de hule.
   {
-    id: 'evaluasion',
-    ms: 150,
-    lineas: [
-      { quien: DUCK_ONE, texto: 'Caballeros, tras una exaustiba evaluasión de los resultados,' },
-      { quien: DUCK_ONE, texto: 'e determinado que la situación requiere la aplicación de una medida extraordinal.' },
-    ],
+    id: 'chillido',
+    ms: 100,
+    cuadros: 24,
+    lineas: [{ texto: 'Duky se descontrola: es su primera misión fallida y no lo puede soportar.' }, { texto: 'Se retira con un chillido de guerra y de rabia.' }],
   },
-  { id: 'maldita', ms: 150, lineas: [{ quien: MOBY, texto: '¡MALDITA SEA!' }] },
+  { id: 'retirada', ms: 150, cuadros: 32, unaVez: true, lineas: [{ texto: 'Su caza se da la vuelta rápidamente y se dirige al portaaviones.' }] },
   {
-    id: 'tos',
-    ms: 150,
-    cuadros: 48,
-    unaVez: true,
-    lineas: [{ texto: 'Moby intenta fumar un puro, pero vuelve a toser descontroladamente.' }, { texto: 'Se le llenan los ojos de lágrimas.' }],
-  },
-  { id: 'indicador', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Eso es un indicador de rendimiento, no una conclusión definitiva.' }] },
-  // Agitando la cabellera.
-  { id: 'pintura', ms: 150, lineas: [{ quien: DUKE, texto: 'Mi avión necesita pintura nueva.' }] },
-  { id: 'perfecto', ms: 150, lineas: [{ quien: MOBY, texto: '¡TU AVIÓN ESTÁ PERFECTO!' }] },
-  { id: 'sigue', ms: 150, lineas: [{ texto: 'Moby sigue tosiendo.' }] },
-  // Una sola toma: lo dice y, sin corte, la cámara se le acerca y él la mira fijo.
-  {
-    id: 'reparar',
+    id: 'respira',
     ms: 150,
     cuadros: 40,
     unaVez: true,
-    lineas: [
-      { quien: DUKE, texto: 'Entonces no debería ser difícil repararlo.' },
-      { texto: 'Duke mira fijamente a la cámara, con sus ojos muy azules.', cuadro: 17 },
-    ],
+    lineas: [{ texto: 'Como es un pato de hule, primero exhala…' }, { texto: '…y después inhala. Se calma.' }],
   },
-  { id: 'recurso', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Ha llegado el momento de recurrir a nuestro último recurso.' }] },
-  { id: 'nuclear', ms: 150, lineas: [{ quien: MOBY, texto: '¿Bomba nuclear?' }] },
-  { id: 'especializado', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Algo mucho más especializado.' }] },
-  { id: 'guapo', ms: 150, lineas: [{ quien: DUKE, texto: '¿Un piloto extranjero y guapo?' }] },
-  { id: 'chiyar', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Un piloto que no necesita chiyar para cumplir sus objetivos.' }] },
-  // Giran todos en sus sillones, a la vez.
-  { id: 'miran', ms: 150, cuadros: 15, unaVez: true, lineas: [{ texto: 'Los tres miran a Duky.' }] },
-  { id: 'enserio', ms: 150, lineas: [{ quien: MOBY, texto: 'No puede ser en serio.' }] },
+  { id: 'vacio', segunModo: true, ms: 150, lineas: [{ texto: 'Silencio.' }] },
+
+  // En la sala de mando, la cámara de duky ya no transmite.
+  { id: 'torre', ms: 150, lineas: [{ texto: 'En la torre de mando, todos han seguido las maniobras de Duky.' }] },
   {
-    id: 'eficacia',
+    id: 'llora',
     ms: 150,
-    lineas: [
-      { quien: DUCK_ONE, texto: 'La eficacia militar a veces, exige decisiones que, en ocasiones,' },
-      { quien: DUCK_ONE, texto: 'exseden los límites de la comprensión internacional.' },
-    ],
+    lineas: [{ texto: 'Moby se pone a llorar: la misión no se ha completado,' }, { texto: segunQuien((el) => `y el ${el} podría destruir el portaaviones con todos dentro.`) }],
   },
-  // Los mira como en la escena 2, pero esta vez le toca a él.
-  { id: 'noot', ms: 150, cuadros: 36, unaVez: true, lineas: [{ texto: 'Duky mira al equipo.' }, { texto: 'Emocionadísimo, resopla cuatro veces.' }] },
+  { id: 'sabe', ms: 150, lineas: [{ quien: DUKE, texto: segunQuien((el) => `¿Crees que el ${el} sabe que estamos aquí?`) }] },
+  { id: 'naturalmente', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Naturalmente.' }] },
+  { id: 'pausa', ms: 150, lineas: [{ texto: 'Pausa.' }] },
+  { id: 'moral', ms: 150, lineas: [{ quien: DUCK_ONE, texto: segunQuien((el) => `Creo que si le atacamos con la moral y la hética, el ${el} nos dejará.`) }] },
+
+  // La cámara sigue a cada uno a lo suyo y termina en una esquina de la sala.
+  // En `gorro` y `sala` se ve quien juega, a lo lejos por el ventanal.
+  { id: 'gorro', segunModo: true, ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duck-One camina hacia el ventanal. Por el camino se le cae el gorro y deja ver su pelo.' }] },
+  { id: 'circulos', ms: 150, cuadros: 24, lineas: [{ texto: 'Duke empieza a caminar en círculos, mirando su reflejo.' }] },
+  { id: 'lagrimas', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Moby se sienta y se rompe en lágrimas.' }] },
+  { id: 'sala', segunModo: true, ms: 150, cuadros: 32, lineas: [] },
 ]
 
-export const rutaDeToma = ({ id }) => `/operacion-venganza/escena10/${id}.png`
+export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena10/${id}${segunModo ? `-${modo}` : ''}.png`

@@ -1,4 +1,4 @@
-// Los cazas de la escena 9: el F/A-18 Hornet blanco y rosa de duke y el A-10
+// Los cazas de la escena 6: el F/A-18 Hornet blanco y rosa de duke y el A-10
 // negro de moby (pilotos/interiores.mjs), con su tren de aterrizaje, la cúpula
 // que se abre, las alas que se pliegan y la alarma de combustible, que tiñe
 // de rojo la cabina.

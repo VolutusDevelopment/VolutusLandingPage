@@ -1,210 +1,257 @@
 // Las tomas de la escena 6, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 9 (escena9/tomas.mjs), con sus mismos
-// cazas. El guion, con sus líneas, está en src/lib/operacion-venganza/escena6.js; el visor de la
-// cámara de duke y la marca en el cielo, en visor.mjs.
+// desde dónde, como las de la escena 4 (escena4/tomas.mjs). El guion, con
+// sus líneas, está en src/lib/operacion-venganza/escena6.js.
 //
-// Moby y duke vuelan a 300 m sobre el mar, alejándose del sol: lo tienen a la
-// espalda. Todo se arma en la formación, con los morros hacia +x, y `VUELO`
-// la gira hacia donde vuelan. Duke va a babor de moby y más atrás.
+// Moby y duke vuelan juntos a 300 m sobre el mar, como duky en la escena 8,
+// y el oficial de inteligencia les habla por radio desde el control de vuelo,
+// en lo alto de la isla (control.mjs), con el almirante detrás. Vuelven al
+// Sitting Ducks y frenan en la cubierta, uno detrás del otro, en el eje de
+// la catapulta de babor. Duke sale de un saltito mientras su Hornet pliega
+// las alas, como en la vida real. Todo en metros del barco.
 
 import { el, placa, transformar } from '../pilotos/tres.mjs'
 import * as M from '../pilotos/modelos.mjs'
-import { RAMPAS as C, alaDelA10, ambos, disco, dukeBase, ojosAbiertos, pielDelA10 } from '../pilotos/modelos.mjs'
+import { RAMPAS as C } from '../pilotos/modelos.mjs'
 import { ACELERADOR, PALANCA, enCabina as conMandos } from '../pilotos/interiores.mjs'
-import { PERSONAJES, dukeCerrado, figura, pDuke } from '../pilotos/cuerpos.mjs'
-import { MAR, SOL, poner } from '../escena1/lugares.mjs'
-import { hablar, silaba, suave } from '../escena1/personajes.mjs'
-import { ALTURA, nubes } from '../escena11/tomas.mjs'
-import { DUKE, MOBY } from '../escena9/cazas.mjs'
-import { EN_CABINA } from '../tiras.mjs'
-import { grabando, objetivo } from './visor.mjs'
+import { PERSONAJES, dukeCerrado, figura, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
+import { MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
+import { ALMIRANTE, OFICIAL, suave } from '../escena1/personajes.mjs'
+import { ALTURA, nubes } from '../escena8/tomas.mjs'
+import { CONTROL, control } from './control.mjs'
+import { DUKE, MOBY } from './cazas.mjs'
+import { EN_CABINA, alargar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
 const tramo = (u, a, b) => suave((u - a) / (b - a))
-const grados = (r) => (r * 180) / Math.PI
+const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
 
 const [, MOBY_P, DUKE_P] = PERSONAJES
+const CUBIERTA = 20.8
+// En la cubierta todos van a la escala de la cabina de duke, como en la escena 4.
+const K = DUKE.k
 const MANDOS = { 1: PALANCA, [-1]: ACELERADOR }
-const CAZAS = { duke: DUKE, moby: MOBY }
 
-// La formación vuela hacia -SOL: el +x de la formación, girado.
-const VUELO = transformar([0, 180 - grados(Math.atan2(SOL[2], SOL[0])), 0])
-const EN = { moby: ALTURA, duke: sum(ALTURA, [-22, 1.5, -12]) }
-const enVuelo = (quien, p, en = EN[quien]) => VUELO.punto(sum(CAZAS[quien].enCabina(p), en))
-const fija = (ojo, mira, campo) => () => [VUELO.punto(ojo), VUELO.punto(mira), campo]
+// ── En vuelo ─────────────────────────────────────────────────────────────
 
-// ── Los cazas ────────────────────────────────────────────────────────────
+// duke adelante y moby a su estribor, un poco atrás: las nubes pasan más
+// lejos, a estribor de los dos, y la cámara va por babor.
+const EN = { duke: ALTURA, moby: sum(ALTURA, [-10, 7, 18]) }
+const enVuelo = (quien, p) => sum((quien === 'duke' ? DUKE : MOBY).enCabina(p), EN[quien])
 
-// Moby: parches de metal sobre el fuselaje ([x, y]) y las alas ([x, z]),
-// agujeros de bala y, bajo la cabina, una raya blanca por cada derribo, todo
-// pegado a la piel del A-10 (pilotos/modelos.mjs).
-const PARCHES = [[2.5, 0.2], [0, 0.6], [-2.6, 0.2]]
-const PARCHES_ALA = [[0.7, 4.5], [-0.4, 6.8]]
-const AGUJEROS = [[3.0, -0.2], [2.7, 0.5], [0.5, 0.1], [-1.6, 0.4]]
-const AGUJERO_ALA = [0.2, 5.6]
-const sobreLaPiel = (x, y, s, alto = 0.015) => {
-  const { p, n } = pielDelA10(x, y, s)
-  return { p: sum(p, n.map((v) => v * alto)), n }
-}
-const sobreElAla = (x, z, s, alto = 0.015) => [x, alaDelA10(z) + alto, s * z]
-const ARRIBA = [0, 1, 0]
-const agujero = ({ p, n }) => disco(p, n, 0.09, 0.008, C.negro, { flat: '#101216' })
-const MARCAS = ambos((s) => [
-  ...PARCHES.map(([x, y]) => placa([[0.45, 0.25], [-0.45, 0.25], [-0.45, -0.25], [0.45, -0.25]].map(([dx, dy]) => sobreLaPiel(x + dx, y + dy, s).p), 0.02, C.grisOscuro)),
-  ...PARCHES_ALA.map(([x, z]) => placa([[0.45, 0.3], [-0.45, 0.3], [-0.45, -0.3], [0.45, -0.3]].map(([dx, dz]) => sobreElAla(x + dx, z + dz, s)), 0.02, C.grisOscuro)),
-  ...AGUJEROS.map(([x, y]) => agujero(sobreLaPiel(x, y, s, 0))),
-  agujero({ p: sobreElAla(...AGUJERO_ALA, s, 0), n: ARRIBA }),
-  ...[0, 1, 2, 3, 4].map((i) => el(sobreLaPiel(3.3 + i * 0.22, 0.2, s, 0.02).p, [0.05, 0.16, 0.03], null, { flat: '#f4f4f4' })),
-]).flat()
-
-// Duke: el sol le saca destellos que van y vienen por el fuselaje y las alas.
-const BRILLOS = [[7.6, 0.65, 0], [4.0, 1.5, 0.3], [-1.6, 0.55, 4.4], [-4.6, 2.6, 1.6], [-1.6, 0.55, -4.4]]
-const destellos = (puntos, u, tam, giro) =>
-  puntos.flatMap((c, i) => ((Math.floor(u * 12) + i) % 3 === 0 ? M.destello(c, giro).map((f) => ({ ...f, r: f.r.map((r) => r * tam) })) : []))
-
-// Cada piloto sentado con las manos en los mandos o en la pose de `pilotos`.
+// Cada piloto sentado en su cabina, con las manos en los mandos o donde las
+// lleve su pose; `pilotos` cambia a quien se mueva.
 const QUIETOS = { duke: (u) => DUKE_P.sentado(u, MANDOS), moby: (u) => MOBY_P.sentado(u, MANDOS) }
-const caza = (quien, pose, u) => [
-  ...CAZAS[quien].caza({ motor: true, piloto: conMandos(() => pose(u)), t: u }),
-  ...(quien === 'moby' ? MARCAS : destellos(BRILLOS, u, 3)),
-]
-
-// El mar y la formación; `en` mueve a quien no esté en su lugar.
-const volando = ({ pilotos = {}, en = {} } = {}) => (u) => {
+const volando = ({ pilotos = {}, alarma = () => false } = {}) => (u) => {
   const pose = { ...QUIETOS, ...pilotos }
-  const lugar = { ...EN, ...Object.fromEntries(Object.entries(en).map(([q, f]) => [q, f(u)])) }
-  const cazas = Object.keys(CAZAS).flatMap((q) => poner(caza(q, pose[q], u), 0, lugar[q]))
-  return [MAR, ...VUELO.formas([...nubes(u), ...cazas])]
+  return [
+    MAR,
+    ...nubes(u),
+    ...poner(DUKE.caza({ motor: true, piloto: conMandos(() => pose.duke(u)), alarma: alarma(u), t: u }), 0, EN.duke),
+    ...poner(MOBY.caza({ motor: true, piloto: conMandos(() => pose.moby(u)), alarma: alarma(u), t: u }), 0, EN.moby),
+  ]
 }
-// Moby grita sin humo cuando duke está en el cuadro: el puro no lo tapa.
-const hablando = (quien, estado) => volando({ pilotos: { [quien]: (u) => (quien === 'duke' ? DUKE_P : MOBY_P).hablando(u, estado) } })
+const hablando = (quien) => volando({ pilotos: { [quien]: (u) => (quien === 'duke' ? DUKE_P : MOBY_P).hablando(u) } })
 
-// ── Las cámaras de la cabina ─────────────────────────────────────────────
-
-// Desde el tablero, de tres cuartos por el lado sin humo y temblando al ritmo
-// de los gritos, como en la escena 9.
+// Las tomas de la cabina, como en las láminas (pilotos/cabinas.mjs): desde
+// el tablero, de tres cuartos por el lado sin humo y desde abajo.
 // En el Hornet de duke, más cerrada: más abierta, asoma en las esquinas el
 // borde de su cúpula rosada.
-const DEL_TABLERO = (quien) => () => [enVuelo(quien, [3.4, 1.0, 0]), enVuelo(quien, [0, 0.1, 0]), quien === 'duke' ? 72 : 85]
-const TRES_CUARTOS = (quien, lado) => () => [enVuelo(quien, [2.8, 0.8, lado * 1.2]), enVuelo(quien, [0, 0.1, -lado * 0.1]), 80]
+const DEL_TABLERO = (quien) => fija(enVuelo(quien, [3.4, 1.0, 0]), enVuelo(quien, [0, 0.1, 0]), quien === 'duke' ? 72 : 85)
+const TRES_CUARTOS = (quien, lado) => fija(enVuelo(quien, [2.8, 0.8, lado * 1.2]), enVuelo(quien, [0, 0.1, -lado * 0.1]), 80)
+// Desde el tablero, más abajo y temblando, al ritmo de los gritos.
 const TEMBLANDO = (quien) => (u) => {
   const tiembla = 0.06 * Math.sin(Math.floor(u * 24) * 2.3)
   return [enVuelo(quien, [3.6, 0.2 + tiembla, 0.8 + tiembla]), enVuelo(quien, [0, 0.4, 0]), 80]
 }
-// La cámara de duke, adelante y a su izquierda, a la altura de los ojos.
-const [OJO, MIRA] = [[2.7, 0.9, -0.9], [0.2, 0.6, 0]]
-const SU_CAMARA = () => [enVuelo('duke', OJO), enVuelo('duke', MIRA), 80]
 
-// ── duke ante su cámara ──────────────────────────────────────────────────
+// ── En el control de vuelo ───────────────────────────────────────────────
 
-// Gira el cuerpo `giro` grados hacia su izquierda (o, en negativo, hacia su
-// derecha): las manos siguen en los mandos.
-const dukeAbierto = dukeBase({ ojos: ojosAbiertos, menton: 4 }, [])
-const girado = (tronco, giro) => transformar([0, giro, 0], [0.1, 0, 0]).formas(tronco)
-const sentadoCon = (tronco, giro, extra = []) => figura(pDuke, { tronco: girado(tronco, giro), manos: { 1: pDuke.reposo(1), [-1]: pDuke.reposo(-1) }, extra })
-const DE_PERFIL = 32
+// El oficial habla por radio y el almirante, detrás, mira las pantallas.
+const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
+const RADIO = control({ oficial: gesto(OFICIAL, 'habla por radio'), almirante: gesto(ALMIRANTE, 'mira las pantallas') })
+const { piso: PISO } = CONTROL
 
-// Destellos en un anillo alrededor de la cabeza, de cara a su cámara: el
-// brazo horizontal de cada cruz, de través a ella.
-const ANILLO = Array.from({ length: 7 }, (_, i) => {
-  const a = (i / 7) * Math.PI * 2
-  return [0.5, 0.75 + 0.85 * Math.sin(a), -0.2 + 0.9 * Math.cos(a)]
-})
-const A_SU_CAMARA = grados(Math.atan2(MIRA[0] - OJO[0], MIRA[2] - OJO[2]))
+// ── En la cubierta ───────────────────────────────────────────────────────
 
-// ── Moby se lanza ────────────────────────────────────────────────────────
+const barco = (u) => [MAR, ...portaaviones(enMarcha(u))]
+// Frenan en el eje de la catapulta de babor: duke donde frenó duck-one en la
+// escena 4 y moby detrás, más a popa.
+const PARADA = { duke: [0, CUBIERTA - DUKE.suelo, -6], moby: [-30, CUBIERTA - MOBY.suelo, -6] }
+const CUPULA_ABIERTA = 40
+// Las puntas de las alas del Hornet suben hasta pasar un poco la vertical.
+const PLEGADAS = 100
+const enCubierta = (quien, p) => sum((quien === 'duke' ? DUKE : MOBY).enCabina(p), PARADA[quien])
 
-// Pasa por estribor de duke desde atrás, cada vez más rápido, y duke lo
-// sigue con la cabeza hasta donde le da el cuello.
-const PASA = (u) => sum(EN.duke, [-50 + 120 * u * u, 6, 16])
-const loSigue = (u) => {
-  const [dx, , dz] = sum(PASA(u), EN.duke.map((v) => -v))
-  return -Math.min(75, grados(Math.atan2(dz, dx)))
+// Llegan por la popa, tocan la cubierta y frenan hasta su parada, con el
+// morro arriba mientras están en el aire (escena4/tomas.mjs). Antes de k = 0
+// vienen de más lejos, por la misma senda, en línea recta.
+const LLEGA = { largo: 170, toca: 0.3, hasta: 0.75 }
+export const enPista = (k, parada) => {
+  if (k < 0) {
+    const { aire, en } = enPista(0, parada)
+    const vuelo = [(2 * LLEGA.largo) / LLEGA.hasta, -(16 * 1.5) / (LLEGA.toca * LLEGA.hasta), 0]
+    return { aire, en: sum(en, vuelo.map((v) => v * k)) }
+  }
+  const corrido = Math.min(1, k / LLEGA.hasta)
+  const aire = Math.max(0, 1 - corrido / LLEGA.toca)
+  return { aire, en: sum(parada, [-LLEGA.largo * (1 - corrido) ** 2, 16 * aire ** 1.5, 0]) }
 }
-
-// Y se va contra quien juega, que está en el medio del cuadro: la cámara mira
-// a la marca y moby sube hacia ella, achicándose.
-const MARCA = sum(ALTURA, [600, 60, 0])
-const SUBIDA = grados(Math.atan2(MARCA[1] - ALTURA[1], MARCA[0]))
-const seLanza = (u) => {
-  const en = lerp(ALTURA, MARCA, 0.35 * u * u)
-  const moby = transformar([0, 0, SUBIDA], [0, 0, 0], en).formas(caza('moby', QUIETOS.moby, u))
-  return [MAR, ...VUELO.formas([...nubes(u), ...moby])]
-}
-
-// ── La llegada ───────────────────────────────────────────────────────────
-
-// Desde muy lejos, a cada lado del sol, hasta su lugar en la formación,
-// virando hacia donde van. La cámara está adelante y mira al sol.
-const DESDE = { moby: sum(ALTURA, [-1200, 12, 240]), duke: sum(ALTURA, [-1200, 24, -260]) }
-const llegan = (u) => {
-  const k = 1 - (1 - u) ** 2
-  const cazas = Object.keys(CAZAS).flatMap((q) => {
-    const [dx, , dz] = sum(EN[q], DESDE[q].map((v) => -v))
-    return transformar([0, -grados(Math.atan2(dz, dx)) * (1 - k), 0], [0, 0, 0], lerp(DESDE[q], EN[q], k)).formas(caza(q, QUIETOS[q], u))
+// Al tocar la cubierta, las ruedas principales (`ruedas`, [x, z] en metros
+// del caza) patinan y echan humo: tres nubes por rueda en los primeros metros,
+// que quedan atrás, crecen, suben y se deshacen.
+const TOCA = LLEGA.toca * LLEGA.hasta
+export const humoDeRuedas = (k, parada, [x, z]) =>
+  [0, 0.015, 0.03].flatMap((tarde) => {
+    const t = (k - TOCA - tarde) / 0.35
+    if (t < 0 || t > 1) return []
+    const [px, , pz] = enPista(TOCA + tarde, parada).en
+    const tam = (0.6 + 2.2 * t) * (1 - t ** 3)
+    return [1, -1].map((s) => el([px + x, CUBIERTA + 0.4 + 1.5 * t, pz + s * z], [1.3 * tam, 0.8 * tam, tam], C.humo))
   })
-  return [MAR, ...VUELO.formas([...nubes(u), ...cazas])]
+const PRINCIPALES = { duke: [-1.0, 1.55], moby: [1.2, 2.9] }
+const aterriza = (quien, k) => {
+  const c = quien === 'duke' ? DUKE : MOBY
+  const { aire, en } = enPista(k, PARADA[quien])
+  return [...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, c.suelo, 0], en).formas(c.caza({ motor: aire > 0 || k < 0.5, tren: true })), ...humoDeRuedas(k, PARADA[quien], PRINCIPALES[quien])]
 }
+
+// Los dos cazas detenidos, duke ya sin su piloto; `duke`, sus opciones.
+const estacionados = (u, duke = {}) => [...barco(u), ...poner(DUKE.caza({ cupula: CUPULA_ABIERTA, alas: PLEGADAS, ...duke }), 0, PARADA.duke), ...poner(MOBY.caza(), 0, PARADA.moby)]
+
+// ── duke sale de un saltito ──────────────────────────────────────────────
+
+// Se para en el asiento, salta por babor y cae en la cubierta junto al morro,
+// con los brazos arriba, de cara a la cámara. Mientras baja, detrás de él
+// las puntas de las alas suben hasta quedar casi de pie.
+const ASIENTO = enCubierta('duke', [0, -2.3, 0])
+const AL_LADO = [3.6, CUBIERTA, -9.0]
+const saltito = (u) => {
+  const k = tramo(u, 0.15, 0.7)
+  const en = sum(lerp(ASIENTO, AL_LADO, k), [0, 1.4 * Math.sin(Math.PI * k), 0])
+  const arriba = Math.sin(Math.PI * Math.min(1, k * 1.2))
+  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(pDuke.reposo(s), [0.3, 0.9, s * 1.1], arriba)]))
+  const brilla = u > 0.75 && Math.floor(u * 12) % 2 ? M.destello([0.1, 1.55, -0.55]) : []
+  return colocar(figura(pDuke, { tronco: dukeCerrado, manos, extra: brilla, inclina: -8 * arriba }), { k: K, en })
+}
+
+// ── duke en el fuselaje ──────────────────────────────────────────────────
+
+// Junto a la toma de aire de babor, que es plana, blanca y brilla como un
+// espejo, delante de la rueda. Su reflejo va dentro, tras un vidrio perla en
+// un hueco del fuselaje, y más arriba: duke no le llega a la toma, y así se ve.
+const ESPEJO = { x0: -0.3, x1: 1.2, y0: -0.42, y1: 0.32, z: -1.43 }
+const enElEspejo = ([x, y, z]) => x > ESPEJO.x0 && x < ESPEJO.x1 && y > ESPEJO.y0 && y < ESPEJO.y1 && z < -0.4
+const VIDRIO = placa(
+  [[ESPEJO.x0, ESPEJO.y0, ESPEJO.z], [ESPEJO.x1, ESPEJO.y0, ESPEJO.z], [ESPEJO.x1, ESPEJO.y1, ESPEJO.z], [ESPEJO.x0, ESPEJO.y1, ESPEJO.z]],
+  0.02,
+  C.perla,
+  { vidrio: true },
+)
+const PLANO = PARADA.duke[2] + ESPEJO.z
+const SUBE = 1.15
+const SOMBRA = '#4a80e6'
+const voltea = ([x, y, z]) => [x, y, 2 * PLANO - z]
+const espejar = (formas) =>
+  formas
+    .filter((f) => f.flat !== SOMBRA)
+    .map((f) => {
+      const ida = (p) => sum(voltea(p), [0, SUBE, 0])
+      const vuelta = (p) => voltea(sum(p, [0, -SUBE, 0]))
+      const normal = ([x, y, z]) => [x, y, -z]
+      const g = f.k === 'e' ? { ...f, c: ida(f.c), M: f.M.map((fila, i) => (i === 2 ? fila.map((v) => -v) : fila)) } : { ...f, centro: ida(f.centro), tris: f.tris.map((t) => ({ a: ida(t.a), b: ida(t.b), c: ida(t.c), ...(t.na ? { na: normal(t.na), nb: normal(t.nb), nc: normal(t.nc) } : {}) })) }
+      if (f.pinta) g.pinta = (p, n) => f.pinta(vuelta(p), normal(n))
+      return g
+    })
+const SE_PEINA = DUKE_P.gestos.find((g) => g.nombre === 'se peina').pose
+const FRENTE = (ESPEJO.x0 + ESPEJO.x1) / 2
+const ANTE_EL_ESPEJO = { k: K, en: [FRENTE, CUBIERTA, PLANO - 0.75], giro: -90 }
+const fuselaje = (u) => {
+  const duke = colocar(SE_PEINA(u), ANTE_EL_ESPEJO)
+  const brillo = Math.floor(u * 12) % 4 === 0 ? M.destello([0.5, 0.2, 0]).map((f) => ({ ...f, c: [ESPEJO.x0 + 0.25 + 1.0 * ((u * 3) % 1), PARADA.duke[1] + ESPEJO.y1 - 0.12, PLANO - 0.03], r: f.r.map((r) => r * K) })) : []
+  // Bajo la toma no hay espejo: ahí el reflejo no se ve.
+  const reflejo = espejar(duke).filter((f) => (f.c ?? f.centro)[1] > PARADA.duke[1] + ESPEJO.y0)
+  return [...estacionados(u, { hueco: enElEspejo }), ...poner([VIDRIO], 0, PARADA.duke), ...duke, ...reflejo, ...brillo]
+}
+
+// ── moby y su abolladura ─────────────────────────────────────────────────
+
+// Bajo el ala de babor, al costado de la góndola del tren, le pega con un
+// puño y otro, saltando, hasta que la góndola se hunde. Después retrocede
+// resoplando, se agacha a mirar la abolladura y, pasado u = 1, sacude la mano
+// adolorida. Los puños se turnan en cada cuadro.
+const GONDOLA = sum(PARADA.moby, [1.2, -0.85, -2.9])
+const GOLPE = sum(GONDOLA, [1.1, -0.08, -0.22])
+const JUNTO_A_LA_GONDOLA = { k: K, en: [GOLPE[0], CUBIERTA, GOLPE[2] - 0.6], giro: -90, suelo: pMoby.suelo }
+const RETROCEDE = 0.5
+const MOBY_ENOJADO = (u) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false })]
+const pegando = (u) => {
+  const golpea = u < 0.7
+  const golpe = Math.floor(u * 24) % 2 ? 1 : -1
+  const sacude = tramo(u, 1.0, 1.08)
+  const duele = sum(lerp(pMoby.reposo(1), [1.0, -0.25, 0.85], sacude), [0, 0.1 * golpe * sacude, 0])
+  const manos = golpea
+    ? { [golpe]: [1.6, 0.9, golpe * 0.35], [-golpe]: [0.6, -0.2, -golpe * 1.1] }
+    : { 1: duele, [-1]: pMoby.reposo(-1) }
+  const mira = tramo(u, 0.82, 0.9) * (1 - tramo(u, 1.0, 1.08))
+  const retrocede = u >= 0.7 && u < 0.82
+  return figura(pMoby, { tronco: MOBY_ENOJADO(u), manos, fase: retrocede ? (1 - (u - 0.7) / 0.06) % 1 : null, salto: golpea ? 0.5 + 0.4 * (golpe > 0 ? 1 : 0) : 0.06 * Math.abs(Math.sin(u * Math.PI * 8)), inclina: golpea ? 10 : -4 - 8 * mira })
+}
+const dondePega = (u) => ({ ...JUNTO_A_LA_GONDOLA, en: sum(JUNTO_A_LA_GONDOLA.en, [0, 0, -RETROCEDE * tramo(u, 0.7, 0.82)]) })
+// La abolladura crece con los golpes: un hundido oscuro con su borde gris.
+const abolladura = (k) => (k > 0 ? [M.disco(GOLPE, [0, 0, -1], 0.2 * k, 0.02, C.gris), M.disco(sum(GOLPE, [0, 0, -0.03]), [0, 0, -1], 0.12 * k, 0.02, C.oscuro, { flat: '#101216' })] : [])
 
 export const TOMAS_3D = {
-  horizonte: { escena: llegan, camara: fija(sum(ALTURA, [55, 2, -6]), sum(ALTURA, [-200, 0, -6]), 40) },
-  // De costado y desde abajo, la cámara se adelanta junto a moby hasta verlo
-  // de tres cuartos, con sus marcas. Las nubes van a su paso: la toma dura
-  // 1,25 de antes.
-  moby: {
-    escena: (u) => volando()(1.25 * u),
-    camara: (u) => [VUELO.punto(sum(EN.moby, lerp([-18, -3, 22], [17, -1.75, 22], suave(u)))), VUELO.punto(EN.moby), 48],
-  },
-  // De costado, un poco desde abajo, duke brillando contra el cielo, hasta
-  // quedar de perfil.
-  duke: {
-    escena: (u) => volando()(1.25 * u),
-    camara: (u) => [VUELO.punto(sum(EN.duke, lerp([22, -2, -22], [4.5, -1.4, -27], suave(u)))), VUELO.punto(EN.duke), 42],
-  },
-  // Los dos de frente, con el sol detrás.
-  juntos: {
-    escena: volando(),
-    camara: (u) => [VUELO.punto(sum(ALTURA, lerp([34, -2, -20], [27, -1, -14], suave(u)))), VUELO.punto(sum(ALTURA, [-11, 1, -6])), 46],
-  },
+  // Los dos de frente, por babor; la alarma prende y apaga la cúpula.
+  alarma: { escena: volando({ alarma: (u) => Math.floor(u * 6) % 2 === 0 }), camara: fija(sum(ALTURA, [24, -1, -26]), sum(ALTURA, [-5, 3, 9]), 42) },
+  // Desde la consola, entre sus dos pantallas, de frente al oficial.
+  regresen: { escena: RADIO, camara: fija([-27.45, PISO + 1.12, 24.2], [-27.6, PISO + 1.0, 25.75], 50) },
+  tengo: { abre: EN_CABINA, escena: hablando('moby'), camara: DEL_TABLERO('moby') },
+  // Por su lado de popa, junto a los ventanales: detrás, la proa y el atardecer.
+  presupuesto: { escena: RADIO, camara: fija([-30.6, PISO + 1.35, 24.3], [-27.9, PISO + 1.0, 26.7], 58) },
+  significa: { abre: EN_CABINA, escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
+  recortado: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
+  contabilidad: { abre: EN_CABINA, escena: hablando('moby'), camara: TEMBLANDO('moby') },
+  adicional: { abre: EN_CABINA, escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
 
-  monstruo: { abre: EN_CABINA, escena: hablando('moby', { humea: false }), camara: DEL_TABLERO('moby') },
-  sensores: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
-  mejor: { abre: EN_CABINA, escena: hablando('moby', { humea: false }), camara: TEMBLANDO('moby') },
-  camaras: { abre: EN_CABINA, escena: hablando('duke'), camara: TRES_CUARTOS('duke', -1) },
-  graben: { abre: EN_CABINA, escena: hablando('moby'), camara: TRES_CUARTOS('moby', 1) },
-  humo: { abre: EN_CABINA, escena: hablando('duke'), camara: DEL_TABLERO('duke') },
-
-  gira: {
-    escena: volando({ pilotos: { duke: (u) => sentadoCon(u < 0.5 ? dukeCerrado : dukeAbierto, DE_PERFIL * tramo(u, 0.1, 0.7)) } }),
-    abre: EN_CABINA,
-    camara: SU_CAMARA,
-    encima: grabando,
+  // Desde atrás y arriba, los dos bajan hacia la popa del barco.
+  regresan: {
+    escena: (u) => {
+      const en = lerp([-560, 110, -6], [-330, 60, -6], u)
+      return [...barco(u), ...poner(DUKE.caza({ motor: true }), 0, en), ...poner(MOBY.caza({ motor: true }), 0, sum(en, [-18, 6, -12]))]
+    },
+    camara: (u) => {
+      const en = lerp([-560, 110, -6], [-330, 60, -6], u)
+      return [sum(en, [-80, 18, 0]), [-150, CUBIERTA, 0], 36]
+    },
   },
-  presenta: {
-    escena: volando({ pilotos: { duke: (u) => sentadoCon(hablar(dukeAbierto, silaba(u) * 0.8), DE_PERFIL) } }),
-    abre: EN_CABINA,
-    camara: SU_CAMARA,
-    encima: grabando,
+  // Desde la cubierta, a babor y hacia proa de donde tocan, mirando a popa:
+  // los dos vienen llegando por el aire, primero duke y detrás moby, que se
+  // acerca desde lejos por la misma senda; tocan la cubierta con el humo de
+  // las ruedas y pasan rodando junto a la cámara.
+  aterrizan: {
+    escena: (u) => [...barco(u), ...aterriza('duke', Math.min(1, u / 0.5)), ...aterriza('moby', (u - 0.4) / 0.55)],
+    camara: fija([-50, 25, -24], [-160, 28, -6], 38),
   },
-  destellos: {
-    escena: volando({ pilotos: { duke: (u) => sentadoCon(dukeCerrado, DE_PERFIL, destellos(ANILLO, u, 2.2, A_SU_CAMARA)) } }),
-    abre: EN_CABINA,
-    camara: SU_CAMARA,
-    encima: grabando,
+  // De frente y desde abajo, a la altura de la rueda de proa.
+  saltito: { escena: (u) => [...estacionados(u, { alas: PLEGADAS * tramo(u, 0.35, 0.9) }), ...saltito(u)], camara: fija([13, 21.3, -8], [0, 23.2, -6], 50) },
+  fuselaje: { escena: fuselaje, camara: fija([FRENTE + 2.3, 21.6, PLANO - 3.8], [FRENTE, 22.0, PLANO - 0.3], 52) },
+  abolladura: alargar(
+    {
+      escena: (u) => [...estacionados(u), ...colocar(pegando(u), dondePega(u)), ...abolladura(tramo(u, 0.25, 0.65))],
+      camara: fija([GOLPE[0] + 2.4, 21.4, GOLPE[2] - 3.0], [GOLPE[0] - 0.2, 21.6, GOLPE[2] - 0.3], 50),
+    },
+    0,
+    31 / 24,
+  ),
+  // A ras de cubierta, detrás de los dos: caminan hacia la isla y la cámara
+  // sube despacio hasta el último piso.
+  torre: {
+    escena: (u) => {
+      const z = -10.5 + 6 * u
+      const fase = (u * 10) % 1
+      return [...estacionados(u), ...colocar(DUKE_P.andando(fase), { k: K, en: [-16.8, CUBIERTA, z], giro: -90 }), ...colocar(MOBY_P.andando((fase + 0.5) % 1), { k: K, en: [-18.5, CUBIERTA, z], giro: -90, suelo: pMoby.suelo })]
+    },
+    camara: (u) => [[-17.6, CUBIERTA + 0.35, -16], lerp([-17.6, CUBIERTA + 0.5, 0], [-26, 48, 27], suave(tramo(u, 0.2, 0.95))), 52],
   },
-  pato: { abre: EN_CABINA, escena: hablando('moby'), camara: TEMBLANDO('moby') },
-  indescriptible: {
-    escena: volando({ pilotos: { duke: (u) => sentadoCon(hablar(dukeCerrado, silaba(u) * 0.8), DE_PERFIL, destellos(ANILLO.slice(0, 3), u, 2, A_SU_CAMARA)) } }),
-    abre: EN_CABINA,
-    camara: SU_CAMARA,
-    encima: grabando,
-  },
-
-  acelera: {
-    escena: volando({ pilotos: { duke: (u) => sentadoCon(dukeAbierto, loSigue(u)) }, en: { moby: PASA } }),
-    abre: EN_CABINA,
-    camara: DEL_TABLERO('duke'),
-  },
-  objetivo: { escena: seLanza, camara: fija(sum(ALTURA, [-22, 3, 0]), MARCA, 50), encima: (celdas, u, modo) => objetivo(celdas, u, modo) },
 }

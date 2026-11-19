@@ -1,5 +1,5 @@
 // El F-22 de duky (pilotos/interiores.mjs), el caza experimental de la
-// escena 11, con su tren de aterrizaje, sus armas y la cúpula que se abre.
+// escena 8, con su tren de aterrizaje, sus armas y la cúpula que se abre.
 // El hangar donde espera es el del Sitting Ducks (escena1/lugares.mjs).
 //
 // El caza va en sus metros (morro hacia +x, ruedas en `SUELO`) y duky, en
@@ -50,7 +50,7 @@ const ALA = (z) => {
   return ataque - (ataque - fuga) * 0.4
 }
 const soporte = (x, z, alto) => hueso([x, bajoElAla(z), z], [x, bajoElAla(z) - alto, z], 0.05, C.grisOscuro)
-// Un misil con la punta hacia +x, en [x, y, z]; escena14/tomas.mjs lo dispara.
+// Un misil con la punta hacia +x, en [x, y, z]; escena10/tomas.mjs lo dispara.
 export const misil = ([x, y, z, largo]) => [
   hueso([x - largo, y, z], [x + largo, y, z], 0.08, C.blanco),
   el([x + largo, y, z], [0.18, 0.08, 0.08], C.boca),

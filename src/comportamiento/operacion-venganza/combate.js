@@ -25,7 +25,7 @@ import { quieto } from '../../lib/movimiento.js'
 import { BORDE, FLECHA, HUELLA, escalaDe } from '../../lib/operacion-venganza/flecha.js'
 
 const V = 150 // m/s, la velocidad de la cámara, si la vista no dice otra (`velocidad`)
-const ALT = 300 // m sobre el mar, como duky en la escena 11: la de las nubes y la de la cámara si la vista no dice otra (`altura`)
+const ALT = 300 // m sobre el mar, como duky en la escena 8: la de las nubes y la de la cámara si la vista no dice otra (`altura`)
 const TAN = 0.62 // medio campo de visión, en el lado corto de la pantalla
 const PIXELES_POR_METRO = (LADO * LLENADO) / (2 * RADIO) // en la hoja del caza
 const PV_MAX = 100

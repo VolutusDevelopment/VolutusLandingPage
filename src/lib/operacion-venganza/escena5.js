@@ -1,61 +1,72 @@
 /**
- * Operación Venganza, escena 5: «Regreso». El guion que reproduce
- * src/comportamiento/operacion-venganza/operacion-venganza.js en /operacion-venganza/escena-5, con la forma del
- * de la escena 1 (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las
- * tiras: `ms` por cuadro, `cuadros` si no son los de siempre, `unaVez` si la
- * tira corre una sola vez, y sus líneas. Las tiras las escribe
+ * Operación Venganza, escena 5: «Entrada», la primera del nivel 2, «La rabia
+ * y la belleza». El guion que reproduce src/comportamiento/operacion-venganza/operacion-venganza.js en
+ * /operacion-venganza/entrada, con la forma del de la escena 1
+ * (lib/operacion-venganza/escena1.js), de donde salen también las medidas de las tiras: `ms` por
+ * cuadro, `cuadros` si no son los de siempre, `unaVez` si la tira corre una
+ * sola vez, y sus líneas. Las tiras las escribe
  * scripts/operacion-venganza/escena5/sprites.mjs, desde las tomas en 3D.
  *
- * Pasa en la cubierta del Sitting Ducks, al atardecer. duck-one escribe como
- * habla: sus faltas de ortografía son suyas y van tal cual. Cada toma tiene a
- * lo más quien hable, y solo a él se le mueve el pico.
+ * Moby y Duke llegan volando con el sol a la espalda. Duke lleva una cámara en
+ * la cabina, y lo que graba se ve con su visor. Al final, Moby se lanza contra
+ * quien juega, marcado en el cielo: la última toma va `segunModo`.
  */
 
-const DUCK_ONE = 'Duck-One'
 const MOBY = 'Moby-Duck'
 const DUKE = 'Duke SkyDucker'
 
 export const TOMAS = [
-  // El caza llega por la popa, visto desde atrás: abre las alas y baja el tren y el gancho…
-  { id: 'aproximacion', ms: 100, cuadros: 30, unaVez: true, lineas: [] },
-  // …y aterriza visto desde la cabeza de duck-one: se ladea de lado a lado, golpea
-  // la cubierta y frena entre los marinos, que se apartan corriendo.
+  // Desde el aire, mirando al sol: los dos cazas salen de sus costados.
   {
-    id: 'aterrizaje',
-    ms: 100,
-    cuadros: 44,
+    id: 'horizonte',
+    ms: 200,
+    cuadros: 32,
     unaVez: true,
-    lineas: [{ texto: 'Duck-One aterriza, casi atropellando a los marinos de cubierta, que deben correr del caza.' }],
+    lineas: [{ texto: 'Los compañeros aparecen en el horizonte, con el sol a la espalda.' }],
   },
-  { id: 'pose', ms: 150, cuadros: 18, unaVez: true, lineas: [{ texto: 'Sale del avión con una pose heroica.' }] },
-  { id: 'ybien', ms: 150, lineas: [{ quien: MOBY, texto: '¿Y bien?' }] },
+  { id: 'moby', ms: 150, cuadros: 30, unaVez: true, lineas: [{ texto: 'El avión de Moby es oscuro, pesado y está cubierto de marcas de combate.' }] },
+  { id: 'duke', ms: 150, cuadros: 30, unaVez: true, lineas: [{ texto: 'El de Duke brilla bajo el sol y parece recién salido de una exhibición.' }] },
+  { id: 'juntos', ms: 150, cuadros: 24, unaVez: true, lineas: [] },
+
+  // Desde el tablero de Moby, con el caza de Duke a la derecha.
   {
-    id: 'estimasiones',
-    ms: 150,
-    lineas: [{ quien: DUCK_ONE, texto: 'El enemigo ha demostrado una capacidad de supervivencia superior a las estimasiones iniciales.' }],
-  },
-  { id: 'lediste', ms: 150, lineas: [{ quien: MOBY, texto: '¿Le diste?' }] },
-  { id: 'concluyente', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'No de forma concluyente.' }] },
-  { id: 'inservibles', ms: 150, lineas: [{ quien: MOBY, texto: 'Tus estimaciones son inservibles.' }] },
-  {
-    id: 'datos',
+    id: 'monstruo',
     ms: 150,
     lineas: [
-      { quien: DUCK_ONE, texto: 'La diferencia entre tú y yo, Moby,' },
-      { quien: DUCK_ONE, texto: 'es que yo comprendo la importancia de la recopilación de datos.' },
+      { quien: MOBY, texto: '¡MUY BIEN, HIJO DE PATA! ¡AHORA VAS A SABER LO QUE ES ENFRENTARTE A UN VERDADERO MONSTRUO!' },
+      { quien: MOBY, texto: '¡JAJAJAJAJAJA!' },
     ],
   },
-  { id: 'recopilaste', ms: 150, lineas: [{ quien: DUKE, texto: '¿Qué datos recopilaste?' }] },
-  { id: 'bastante', ms: 150, lineas: [{ quien: DUCK_ONE, texto: 'Que se mueve bastante.' }] },
+  { id: 'sensores', ms: 150, lineas: [{ quien: DUKE, texto: 'Moby, afectas mis sensores internos.' }] },
+  { id: 'mejor', ms: 150, lineas: [{ quien: MOBY, texto: '¡MEJOR!' }] },
+  { id: 'camaras', ms: 150, lineas: [{ quien: DUKE, texto: 'Solo quería informarte de que tengo cámaras grabando.' }] },
+  { id: 'graben', ms: 150, lineas: [{ quien: MOBY, texto: '¡QUE GRABEN CÓMO LO DESTRUYO!' }] },
+  { id: 'humo', ms: 150, lineas: [{ quien: DUKE, texto: 'Perfecto. Intenta no taparme con humo.' }] },
+
+  // Lo que graba la cámara de la cabina de Duke, de frente y por su izquierda.
+  { id: 'gira', ms: 150, cuadros: 40, unaVez: true, lineas: [{ texto: 'Duke se gira hacia la cámara de su cabina y le muestra su mejor perfil y sus increíbles ojos azules.' }] },
   {
-    id: 'marcha',
+    id: 'presenta',
+    ms: 150,
+    lineas: [
+      { quien: DUKE, texto: 'Para los espectadores que no me conozcan, soy Duke SkyDucker.' },
+      { quien: DUKE, texto: 'Piloto, icono y referente estético de la aviación contemporánea.' },
+    ],
+  },
+  { id: 'destellos', ms: 150, lineas: [{ texto: 'Unos destellos rodean a Duke.' }] },
+  { id: 'pato', ms: 150, lineas: [{ quien: MOBY, texto: '¡ERES UN PATO CON UN AVIÓN!' }] },
+  { id: 'indescriptible', ms: 150, lineas: [{ quien: DUKE, texto: 'Nah ah, soy indescriptibleee.' }] },
+
+  // Duke lo sigue con la cabeza, y Moby se va contra quien juega.
+  { id: 'acelera', ms: 150, cuadros: 24, unaVez: true, lineas: [{ texto: 'Duke sigue con la cabeza a Moby, que acelera…' }] },
+  {
+    id: 'objetivo',
     ms: 150,
     cuadros: 24,
     unaVez: true,
-    lineas: [{ texto: 'Duck-One se marcha con la cabeza alta.' }],
+    segunModo: true,
+    lineas: [{ texto: { cursor: '…y se lanza contra el cursor, marcado en el cielo.', huella: '…y se lanza contra el dedo, marcado en el cielo.' } }],
   },
-  { id: 'salta', ms: 150, cuadros: 25, unaVez: true, lineas: [{ texto: 'Mirando al horizonte, salta levantando la mano con el dedo índice.' }] },
-  { id: 'fase', ms: 150, lineas: [{ quien: DUCK_ONE, texto: '¡Preparad la siguiente fase de la operasión benganza!' }] },
 ]
 
-export const rutaDeToma = ({ id }) => `/operacion-venganza/escena5/${id}.png`
+export const rutaDeToma = ({ id, segunModo }, modo) => `/operacion-venganza/escena5/${id}${segunModo ? `-${modo}` : ''}.png`

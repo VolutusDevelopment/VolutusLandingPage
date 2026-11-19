@@ -1,7 +1,7 @@
-// Las tomas de la escena 16, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 15 (escena15/tomas.mjs), en la misma
+// Las tomas de la escena 12, en 3D: qué se ve en el instante u ∈ [0, 1) y
+// desde dónde, como las de la escena 11 (escena11/tomas.mjs), en la misma
 // proa y al mismo atardecer. El guion, con sus líneas y sus dos finales, está
-// en src/lib/operacion-venganza/escena16.js.
+// en src/lib/operacion-venganza/escena12.js.
 //
 // El almirante va solo a la proa y le habla a quien juega. La cámara lo mira
 // de frente, de espaldas y desde detrás de un caza estacionado, y él la
@@ -16,8 +16,8 @@ import { figura, manosAndando } from '../pilotos/cuerpos.mjs'
 import { MAR, SOL, colocar, destructor, enMarcha, navegando, poner, portaaviones } from '../escena1/lugares.mjs'
 import { MANOS_ATRAS, OFICIOS, almiranteCabeza, almiranteTronco, corre, hablar, pAlmirante, silaba, suave } from '../escena1/personajes.mjs'
 import { giroHacia, girar } from '../escena2/reunion.mjs'
-import { K, SUELO, caza } from '../escena11/hangar.mjs'
-import { objetivo } from '../escena6/visor.mjs'
+import { K, SUELO, caza } from '../escena8/hangar.mjs'
+import { objetivo } from '../escena5/visor.mjs'
 import { alargar, proyectar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
@@ -40,7 +40,7 @@ const barco = (u) => [...portaaviones({ avion: false, ...enMarcha(u) }), ...CAZA
 
 // ── El almirante ─────────────────────────────────────────────────────────
 
-// La proa, de cara al sol, como en la escena 15; a su derecha, `A_LA_DERECHA`.
+// La proa, de cara al sol, como en la escena 11; a su derecha, `A_LA_DERECHA`.
 const AL_SOL = SOL
 const A_LA_DERECHA = [-SOL[2], 0, SOL[0]]
 const MIRA_AL_SOL = giroHacia([0, 0], [SOL[0], SOL[2]])

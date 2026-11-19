@@ -1,7 +1,7 @@
 // moby-duck y el puro: da una calada sacando pecho para hacerse el duro, el
 // puro le gana: tose sin control, el ceño se le da vuelta y llora a chorros.
 // Se seca con el antebrazo, vuelve a sacar pecho y otra calada. La usan la
-// lámina v17 (puro.mjs) y las escenas 2 y 10. De la tos le caen lágrimas por
+// lámina v17 (puro.mjs) y las escenas 2 y 7. De la tos le caen lágrimas por
 // la cara (la primera fase del llanto, modelos.mjs) hasta que se seca.
 
 import { el } from './tres.mjs'

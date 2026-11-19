@@ -1,8 +1,8 @@
-// Escena 11, «Preparativos»: las tomas de la radio en una lámina animada del
-// lienzo de Design, como las de la escena 9 (escena9/laminas.mjs), desde la
+// Escena 8, «Preparativos»: las tomas de la radio en una lámina animada del
+// lienzo de Design, como las de la escena 6 (escena6/laminas.mjs), desde la
 // sala azul.
 //
-//   node scripts/operacion-venganza/escena11/laminas.mjs <carpeta>
+//   node scripts/operacion-venganza/escena8/laminas.mjs <carpeta>
 //
 // Escribe <carpeta>/project/E11-tomas-radio.dc.html.
 
@@ -10,7 +10,7 @@ import { pixel3d } from '../pilotos/tres.mjs'
 import { celdaDeToma, fila, pagina } from '../pilotos/tablero.mjs'
 import { TOMAS_3D } from './tomas.mjs'
 import { cielo } from '../escena1/lugares.mjs'
-import { TOMAS } from '../../../src/lib/operacion-venganza/escena11.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena8.js'
 import { mkdirSync, writeFileSync } from 'node:fs'
 
 const RAIZ = process.argv[2]
@@ -41,8 +41,8 @@ mkdirSync(`${RAIZ}/project`, { recursive: true })
 writeFileSync(
   `${RAIZ}/project/E11-tomas-radio.dc.html`,
   pagina({
-    titulo: 'Escena 11 · la radio',
-    papel: 'Escena 11 · tomas 10, 12, 13 y 15',
+    titulo: 'Escena 8 · la radio',
+    papel: 'Escena 8 · tomas 10, 12, 13 y 15',
     nombre: 'La sala azul',
     bajada: 'El oficial de inteligencia llama al Fantasma Amarillo',
     detalle: 'El caza de duky es un prototipo: se sigue desde el centro de información de combate, en la oscuridad del casco. Pantallas grandes al frente con el radar, relojes rojos, consolas de teclas naranjas y luces azules en el techo; todo lo que no da luz se tiñe de azul. El oficial llama por radio desde la consola del medio, y el almirante, de pie detrás, mira las pantallas. Nadie contesta; el radar emite un pitido.',

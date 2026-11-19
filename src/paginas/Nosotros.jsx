@@ -208,7 +208,7 @@ const BUQUES = [
  * pato (src/comportamiento/parvada.js): la escolta ya navega lejos y el portaaviones sale de
  * la lejanía y se acerca despacio (`.llega`, ver Nosotros.css). Es el enlace al
  * juego, y la página lo pulsa por él cuando algo se lo tapa (src/comportamiento/flota.js).
- * Si en la escena 16 se hundió, ya está ahí, partido en dos: sus `restos` son
+ * Si en la escena 12 se hundió, ya está ahí, partido en dos: sus `restos` son
  * sus dos mitades, que repiten su dibujo (`#barco`). Si se los dejó vivir,
  * ya está ahí y zarpa con su escolta (`.zarpa`).
  */
