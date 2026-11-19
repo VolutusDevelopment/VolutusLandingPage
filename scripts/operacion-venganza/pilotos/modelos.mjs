@@ -600,7 +600,7 @@ const FUSELAJE_A10 = [
   [-8.1, 0.25, 0.25, 0.4],
 ]
 // Un punto de su piel en la cuaderna `x`, a la altura `y`, del lado `s`, y su
-// normal: ahí van pegados los parches y las marcas de moby (escena6/tomas.mjs).
+// normal: ahí van pegados los parches y las marcas de moby (escena5/tomas.mjs).
 export const pielDelA10 = (x, y, s) => {
   const i = FUSELAJE_A10.findIndex(([xi]) => xi < x)
   const [a, b] = [FUSELAJE_A10[i - 1], FUSELAJE_A10[i]]

@@ -1,6 +1,6 @@
 // Las tomas de la escena 2, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 1 (escena1/tomas.mjs). El guion, con sus
-// líneas, está en src/lib/escena2.js.
+// líneas, está en src/lib/operacion-venganza/escena2.js.
 //
 // `escena(u, modo)` arma la figura en metros de la sala; `camara(u)` da
 // [ojo, mira, campo] en metros y grados. `modo` es lo que muestra la pantalla:

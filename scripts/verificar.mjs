@@ -272,11 +272,11 @@ async function formulariosSinAnotar(pagina, ruta) {
 
 /**
  * Comprueba que la página no encaja al final, donde las que encajan se bajan
- * libres (src/encaje.js): con la rueda del ratón Chrome encajaba ahí cada tick
- * y la página bajaba el doble y en dos tirones. La rueda de Playwright no lo
- * reproduce, así que se mira el encaje. Se recorre de a poco, como quien baja:
- * de un salto, encaja en el borde de la zona libre, donde todavía encaja, y
- * ahí se queda.
+ * libres (src/comportamiento/encaje.js): con la rueda del ratón Chrome encajaba
+ * ahí cada tick y la página bajaba el doble y en dos tirones. La rueda de
+ * Playwright no lo reproduce, así que se mira el encaje. Se recorre de a poco,
+ * como quien baja: de un salto, encaja en el borde de la zona libre, donde
+ * todavía encaja, y ahí se queda.
  */
 async function encajaAlFinal(pagina, ruta) {
   await recorrer(pagina)
@@ -298,7 +298,8 @@ async function revisarMarcado(ruta) {
 
 // La bienvenida del home tapa la página y se va a los 4 s, con o sin
 // JavaScript. Con él sale del documento, también si el script llega cuando ya
-// se fue (src/bienvenida.js): si no, su ola sigue pasando sin que nadie la vea.
+// se fue (src/comportamiento/bienvenida.js): si no, su ola sigue pasando sin
+// que nadie la vea.
 async function revisarBienvenida() {
   const problemas = []
   for (const [como, opciones, tarde] of [
@@ -323,9 +324,9 @@ async function revisarBienvenida() {
 
 // ---- Las nubes, en cualquier equipo ----
 //
-// La nube y el mar los dibuja un worker con WebGL (src/nubes-lienzo.js), y
-// cada GPU compila sus shaders a su manera. Sus fallos ocurrieron en equipos
-// que no eran el del desarrollo:
+// La nube y el mar los dibuja un worker con WebGL
+// (src/comportamiento/nubes-lienzo.js), y cada GPU compila sus shaders a su
+// manera. Sus fallos ocurrieron en equipos que no eran el del desarrollo:
 //
 //   - Con gráficos Intel la nube salía como un recorte a la derecha, o no
 //     salía: leía su ruido con derivadas indefinidas. Se compara con la misma

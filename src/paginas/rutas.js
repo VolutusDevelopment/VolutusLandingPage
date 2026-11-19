@@ -2,7 +2,7 @@ import Inicio from './Inicio.jsx'
 import Ley21719 from './Ley21719.jsx'
 import Nosotros from './Nosotros.jsx'
 import OperacionVenganza from './OperacionVenganza.jsx'
-import { CARGAS } from '../lib/cargas.js'
+import { CARGAS } from '../lib/operacion-venganza/cargas.js'
 import Privacidad from './Privacidad.jsx'
 import Servicio from './Servicio.jsx'
 import IndiceDeServicios from './IndiceDeServicios.jsx'
@@ -59,20 +59,20 @@ export const COMPONENTES = {
   '/articulos/como-trabajamos': ComoTrabajamos,
   '/nosotros': Nosotros,
   '/operacion-venganza': OperacionVenganza,
-  '/operacion-venganza/escena-2': OperacionVenganza,
-  '/operacion-venganza/escena-3': OperacionVenganza,
+  '/operacion-venganza/patoon-4': OperacionVenganza,
+  '/operacion-venganza/despegue': OperacionVenganza,
   '/operacion-venganza/nivel-1': OperacionVenganza,
-  '/operacion-venganza/escena-5': OperacionVenganza,
-  '/operacion-venganza/escena-6': OperacionVenganza,
+  '/operacion-venganza/regreso': OperacionVenganza,
+  '/operacion-venganza/entrada': OperacionVenganza,
   '/operacion-venganza/nivel-2': OperacionVenganza,
-  '/operacion-venganza/escena-9': OperacionVenganza,
-  '/operacion-venganza/escena-10': OperacionVenganza,
-  '/operacion-venganza/escena-11': OperacionVenganza,
+  '/operacion-venganza/retirada': OperacionVenganza,
+  '/operacion-venganza/la-ultima-opcion': OperacionVenganza,
+  '/operacion-venganza/preparativos': OperacionVenganza,
   '/operacion-venganza/nivel-3': OperacionVenganza,
-  '/operacion-venganza/escena-13': OperacionVenganza,
-  '/operacion-venganza/escena-14': OperacionVenganza,
-  '/operacion-venganza/escena-15': OperacionVenganza,
-  '/operacion-venganza/escena-16': OperacionVenganza,
+  '/operacion-venganza/la-sala-de-mando': OperacionVenganza,
+  '/operacion-venganza/ultimo-ataque': OperacionVenganza,
+  '/operacion-venganza/el-regreso-del-fantasma': OperacionVenganza,
+  '/operacion-venganza/desolacion': OperacionVenganza,
   '/operacion-venganza/indice': OperacionVenganza,
   ...Object.fromEntries(Object.keys(CARGAS).map((ruta) => [ruta, OperacionVenganza])),
   '/privacidad': Privacidad,

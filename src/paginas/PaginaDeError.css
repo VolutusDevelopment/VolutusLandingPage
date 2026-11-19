@@ -48,7 +48,7 @@
   }
 }
 
-/* El juego (src/patos.js). Los patos van detrás de la nube, para salir de
+/* El juego (src/comportamiento/patos.js). Los patos van detrás de la nube, para salir de
    dentro de ella y caer a través, en un lienzo que calza con el suyo: la misma
    rejilla de puntos. Un pato que huye se va por debajo de la barra en vez de
    cortarse a media altura. Solo recibe el puntero mientras se juega, y sin el

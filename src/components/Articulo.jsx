@@ -29,7 +29,7 @@ import { SERVICIOS, servicioDeArticulo } from '../lib/servicios.js'
  * entradilla, el servicio queda a un toque.
  *
  * `portada`, de PAGINAS, cambia el cielo de la cabecera por una foto de
- * public/image (su nombre, a 800 y 1600 px), que se desvanece en el blanco de
+ * public/image/articulos (su nombre, a 800 y 1600 px), que se desvanece en el blanco de
  * la página.
  */
 export default function Articulo({ ruta, children }) {
@@ -52,8 +52,8 @@ export default function Articulo({ ruta, children }) {
           {portada && (
             <img
               className="articulo-portada"
-              src={`/image/${portada}-800.webp`}
-              srcSet={`/image/${portada}-800.webp 800w, /image/${portada}-1600.webp 1600w`}
+              src={`/image/articulos/${portada}-800.webp`}
+              srcSet={`/image/articulos/${portada}-800.webp 800w, /image/articulos/${portada}-1600.webp 1600w`}
               sizes="100vw"
               alt=""
               fetchPriority="high"

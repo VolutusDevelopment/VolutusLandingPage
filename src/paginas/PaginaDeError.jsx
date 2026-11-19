@@ -19,7 +19,7 @@ import { ARRIBA, CASCO } from '../lib/pato.js'
  *
  * Y un juego: «Jugar» deshace la volutus en cúmulos repartidos por el cielo y
  * suelta patos desde dentro de ellos, como los del Duck Hunt desde el pasto; el
- * que se caza cae a través de la nube (src/patos.js).
+ * que se caza cae a través de la nube (src/comportamiento/patos.js).
  * Su lienzo va antes que el de la nube para quedar detrás: dentro de la nube,
  * los puntos de ella tapan casi todo el pato. El botón llega oculto, porque sin
  * JavaScript no sirve, y va junto a «Inicio», que es igual de alto, así que

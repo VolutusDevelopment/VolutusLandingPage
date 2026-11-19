@@ -43,7 +43,7 @@
 }
 
 /* ---- La carga ----
-   Un personaje de tres cuartos: su tira de ocho pasos (lib/cargas.js), que
+   Un personaje de tres cuartos: su tira de ocho pasos (lib/operacion-venganza/cargas.js), que
    llega en `--tira`, corre de a un cuadro, sin suavizar; la de Duky es un
    solo cuadro. En las escenas están todos, escondidos en una caja de su
    tamaño, y el JS muestra uno. La barra se llena de a bloques de 20 px: 12 en
@@ -254,7 +254,7 @@
    Como en el cine: el cuadro en 21:9 al medio, entre dos bandas negras de al
    menos `--banda` de alto. Abajo van los subtítulos, con su alto fijo: el texto
    cambia y nada se mueve. Arriba, en los extremos de la pantalla, «Saltar
-   escena» y «Siguiente». Los dos finales de la escena 16 son un menú de
+   escena» y «Siguiente». Los dos finales de la escena 12 son un menú de
    juego sobre el cuadro. */
 .venganza {
   --banda: calc(7.5rem + 2 * var(--e-4));
@@ -424,7 +424,7 @@
 
 /* ---- El estilo del juego ----
    Las ventanas y los menús del juego, los de los niveles y la elección final
-   de la escena 16, no los de Volutus: la letra de pixeles, un marco
+   de la escena 12, no los de Volutus: la letra de pixeles, un marco
    blanco de esquinas mordidas, como en una consola, y la opción elegida en
    amarillo, con un triángulo de pixeles: la que está bajo el ratón o, si no,
    la que tiene el foco o, si no, la primera.
@@ -872,7 +872,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* El retrato de un piloto: un cuadro de la hoja de lib/cazas.js (la ponen
+/* El retrato de un piloto: un cuadro de la hoja de lib/operacion-venganza/cazas.js (la ponen
    en `--retratos` el nivel y su fila, `--fila`, quien lo usa), con las líneas
    de un video por radio. Hablando, pasa por sus cuadros: mueve el pico. */
 .nivel-retrato {

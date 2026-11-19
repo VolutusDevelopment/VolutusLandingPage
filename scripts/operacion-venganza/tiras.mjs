@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { pixel3d } from './pilotos/tres.mjs'
 import { candidatosGpu, cerrarGpu } from './pilotos/gpu.mjs'
 import { cielo } from './escena1/lugares.mjs'
-import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/escena1.js'
+import { ALTO, ANCHO, MODOS, cuadrosDe } from '../../src/lib/operacion-venganza/escena1.js'
 
 const PUBLICO = fileURLToPath(new URL('../../public', import.meta.url))
 
@@ -151,7 +151,7 @@ export const escribir = (ruta, datos) => {
 }
 
 // Una tira por toma del guion, con la escena 3D de `TOMAS_3D` (que puede ser
-// async, si pinta otro cuadro adentro, como los monitores de la escena 13);
+// async, si pinta otro cuadro adentro, como los monitores de la escena 9);
 // las que van `segunModo`, una por modo. `encima`, si la toma lo tiene, pinta
 // sobre los cuadros lo que va en la pantalla y no en la escena (un visor, una
 // marca), y recibe las distancias de cada pixel para que lo de atrás quede

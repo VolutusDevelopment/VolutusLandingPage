@@ -55,8 +55,8 @@ export const PROYECTOS = [
       {
         forma: 'pantalla',
         imagen: {
-          src: '/image/ponlenota-1280.webp',
-          srcSet: '/image/ponlenota-760.webp 760w, /image/ponlenota-1280.webp 1280w',
+          src: '/image/proyectos/ponlenota-1280.webp',
+          srcSet: '/image/proyectos/ponlenota-760.webp 760w, /image/proyectos/ponlenota-1280.webp 1280w',
           ancho: 1280,
           alto: 800,
           alt: 'La portada de ponlenota.cl: el titular «Opiniones privadas. Reseñas en Google» junto a una tarjeta con la valoración media de un café de ejemplo.',
@@ -65,8 +65,8 @@ export const PROYECTOS = [
       {
         forma: 'telefono',
         imagen: {
-          src: '/image/ponlenota-cliente-320.webp',
-          srcSet: '/image/ponlenota-cliente-320.webp 320w, /image/ponlenota-cliente-628.webp 628w',
+          src: '/image/proyectos/ponlenota-cliente-320.webp',
+          srcSet: '/image/proyectos/ponlenota-cliente-320.webp 320w, /image/proyectos/ponlenota-cliente-628.webp 628w',
           ancho: 320,
           alto: 700,
           alt: 'Un teléfono con la valoración de Café Luna: cinco estrellas, el agradecimiento y los botones para dejar la opinión en Google o pedir el beneficio.',
@@ -75,8 +75,8 @@ export const PROYECTOS = [
       {
         forma: 'app',
         imagen: {
-          src: '/image/ponlenota-app-640.webp',
-          srcSet: '/image/ponlenota-app-640.webp 640w, /image/ponlenota-app-960.webp 960w',
+          src: '/image/proyectos/ponlenota-app-640.webp',
+          srcSet: '/image/proyectos/ponlenota-app-640.webp 640w, /image/proyectos/ponlenota-app-960.webp 960w',
           ancho: 640,
           alto: 2636,
           alt: 'El inicio de la app de PonleNota para Café Luna: 1240 toques, 486 valoraciones, 212 cupones entregados y 97 canjeados este mes, los accesos rápidos y la campaña activa de un café americano gratis.',

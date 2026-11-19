@@ -8,30 +8,30 @@
 // Lo principal es el formulario: valida mientras se escribe, monta Turnstile
 // (sin su token el Worker rechaza el envío) y evita la recarga.
 
-import initTitularRotativo from './titular-rotativo.js'
-import initPieza from './pieza.js'
-import initVitrina from './vitrina.js'
-import initPodio from './podio.js'
-import initBarra from './barra.js'
-import initNubes from './nubes.js'
-import initCopiar from './copiar.js'
-import initBandaDeIas from './banda-de-ias.js'
-import initSocios from './socios.js'
-import initBienvenida from './bienvenida.js'
-import initOla from './ola.js'
-import initFlota from './flota.js'
-import initParvada from './parvada.js'
-import initChat from './chat.js'
-import initEstimado from './estimado.js'
-import initMapa from './mapa.js'
-import initMenuServicios from './menu-servicios.js'
-import initServicios from './servicios.js'
-import initEncaje from './encaje.js'
-import initPreguntas from './preguntas.js'
-import initTienda from './tienda.js'
-import initTitularDelContacto from './titular-del-contacto.js'
-import initFondoDelMar from './fondo-del-mar.js'
-import initVolverAlBrief from './volver-al-brief.js'
+import initTitularRotativo from './comportamiento/titular-rotativo.js'
+import initPieza from './comportamiento/pieza.js'
+import initVitrina from './comportamiento/vitrina.js'
+import initPodio from './comportamiento/podio.js'
+import initBarra from './comportamiento/barra.js'
+import initNubes from './comportamiento/nubes.js'
+import initCopiar from './comportamiento/copiar.js'
+import initBandaDeIas from './comportamiento/banda-de-ias.js'
+import initSocios from './comportamiento/socios.js'
+import initBienvenida from './comportamiento/bienvenida.js'
+import initOla from './comportamiento/ola.js'
+import initFlota from './comportamiento/flota.js'
+import initParvada from './comportamiento/parvada.js'
+import initChat from './comportamiento/chat.js'
+import initEstimado from './comportamiento/estimado.js'
+import initMapa from './comportamiento/mapa.js'
+import initMenuServicios from './comportamiento/menu-servicios.js'
+import initServicios from './comportamiento/servicios.js'
+import initEncaje from './comportamiento/encaje.js'
+import initPreguntas from './comportamiento/preguntas.js'
+import initTienda from './comportamiento/tienda.js'
+import initTitularDelContacto from './comportamiento/titular-del-contacto.js'
+import initFondoDelMar from './comportamiento/fondo-del-mar.js'
+import initVolverAlBrief from './comportamiento/brief/volver-al-brief.js'
 import { quieto } from './lib/movimiento.js'
 import { desbloqueado } from './lib/odio.js'
 import {
@@ -261,22 +261,22 @@ function initFormulario() {
 }
 
 /**
- * El juego de las páginas de error y de /patos (src/patos.js). Casi nadie lo
- * abre, así que no pesa en la carga: se descarga al pulsar «Jugar», y cada
- * pulsación lo empieza o lo termina. Sin JavaScript el botón no sirve, por eso
- * llega oculto.
+ * El juego de las páginas de error y de /patos (src/comportamiento/patos.js).
+ * Casi nadie lo abre, así que no pesa en la carga: se descarga al pulsar
+ * «Jugar», y cada pulsación lo empieza o lo termina. Sin JavaScript el botón no
+ * sirve, por eso llega oculto.
  */
 function initPatos() {
   const boton = document.querySelector('.jugar')
   if (!boton) return
   boton.hidden = false
-  const alternar = () => import('./patos.js').then((juego) => juego.alternar(boton))
+  const alternar = () => import('./comportamiento/patos.js').then((juego) => juego.alternar(boton))
   boton.addEventListener('click', alternar)
   const odio = document.querySelector('.odio')
   odio.hidden = !desbloqueado()
   odio.addEventListener('click', () => {
     odio.classList.add('desarmado')
-    import('./patos.js').then((juego) => setTimeout(() => juego.odio(boton), 600))
+    import('./comportamiento/patos.js').then((juego) => setTimeout(() => juego.odio(boton), 600))
   })
   if (boton.dataset.empieza && !quieto()) empezarSolo(boton, alternar)
 }
@@ -298,7 +298,7 @@ function empezarSolo(boton, alternar) {
 // página: el resto del sitio no paga por un formulario de 80 preguntas.
 function initBrief() {
   const form = document.querySelector('.brief')
-  if (form) import('./brief.js').then((modulo) => modulo.default(form))
+  if (form) import('./comportamiento/brief/brief.js').then((modulo) => modulo.default(form))
 }
 
 // Operación Venganza baja su código solo en sus páginas; el combate lo baja
@@ -306,7 +306,7 @@ function initBrief() {
 function initOperacionVenganza() {
   const raiz = document.querySelector('.venganza')
   if (!raiz || 'indice' in raiz.dataset) return
-  import('./operacion-venganza.js').then((modulo) => modulo.default(raiz))
+  import('./comportamiento/operacion-venganza/operacion-venganza.js').then((modulo) => modulo.default(raiz))
 }
 
 // Cada parte arranca por su cuenta: si una falla en algún navegador, las demás

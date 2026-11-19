@@ -1,16 +1,19 @@
 /**
  * La barra de los bocetos del brief (/brief/bocetos/*). Cada boceto trae, a la
  * vista y sin JavaScript, el aviso de que es un boceto de una marca inventada
- * (`.boceto-barra`). Este script le suma el formulario para calificarlo: lo
- * que se marca se guarda en este equipo, bajo la misma clave que lee el brief
- * (src/brief.js), que lo muestra en la tarjeta del boceto y lo envía.
+ * (`.boceto-barra`). Este script le suma el formulario para calificarlo: lo que
+ * se marca se guarda en este equipo, bajo la misma clave que lee el brief
+ * (src/comportamiento/brief/brief.js), que lo muestra en la tarjeta del boceto
+ * y lo envía.
  *
  * Es un `<form>` anotado para WebMCP: un agente puede calificar el boceto, y
  * como no le envía nada a nadie, lleva `toolautosubmit`.
  *
- * Dentro del visor del brief (un iframe del mismo sitio, src/brief-visor.js)
- * la barra no va: el visor ya dice qué es y deja calificarlo. El visor muestra
- * el boceto recién al cargar, cuando esto ya corrió, así que no asoma.
+ * Dentro del visor del brief (un iframe del mismo sitio,
+ * src/comportamiento/brief/brief-visor.js) la barra no va: el visor ya dice qué
+ * es y deja calificarlo. El visor muestra el boceto recién al cargar, cuando
+ * esto ya corrió, así que no asoma. Ahí, en cambio, los enlaces internos saltan
+ * sin mover el brief (`montarSaltos`).
  *
  * También hace lo que comparten los bocetos al bajar: marca con `visto` lo que
  * tiene `data-aparece` al verse (donde el navegador no ata animaciones al
@@ -293,7 +296,26 @@ function montarVideos() {
   new MutationObserver(seguir).observe(raiz, { attributes: true, attributeFilter: ['class'] })
 }
 
-if (!enElVisor) montarBarra()
+// En el visor, un enlace a otra parte del boceto (`#…`) desplaza solo el
+// boceto. El salto del navegador movería también el brief que está debajo,
+// porque el iframe es del mismo sitio, y el visor quedaría corrido; y sumaría
+// un paso al historial, así que «atrás» volvería dentro del boceto en vez de
+// cerrar el visor. `scrollTo` respeta el `scroll-behavior` del boceto; el
+// margen de arriba se descuenta a mano.
+function montarSaltos() {
+  const margen = (elemento, propiedad) => parseFloat(getComputedStyle(elemento)[propiedad]) || 0
+  document.addEventListener('click', (evento) => {
+    const enlace = evento.target.closest?.('a[href^="#"]')
+    if (!enlace || evento.defaultPrevented) return
+    evento.preventDefault()
+    const destino = document.getElementById(decodeURIComponent(enlace.getAttribute('href').slice(1)))
+    const arriba = destino ? destino.getBoundingClientRect().top + scrollY - margen(destino, 'scrollMarginTop') : 0
+    scrollTo({ top: arriba - margen(document.documentElement, 'scrollPaddingTop') })
+  })
+}
+
+if (enElVisor) montarSaltos()
+else montarBarra()
 medirBarra()
 montarVideos()
 montarEntradas()

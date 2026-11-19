@@ -1,7 +1,8 @@
 /**
  * La letra de los patos y sus globos, en filas de puntos como los cuadros de
- * lib/pato.js. La usan el juego (src/patos.js), en el contador, la burla y el
- * reclamo, y el pato del mar (lib/mar.js), en lo que dice al salir.
+ * lib/pato.js. La usan el juego (src/comportamiento/patos.js), en el contador,
+ * la burla y el reclamo, y el pato del mar (lib/mar.js), en lo que dice al
+ * salir.
  */
 
 // Mayúsculas en 3×5. Los dibujos en filas hacen fácil revisar y ampliar la
