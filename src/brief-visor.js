@@ -9,7 +9,8 @@
 //
 // El recorrido es una cola: el boceto abierto y luego los que faltan por
 // calificar, o todos si ya están todos. Al terminarla, el visor se cierra y
-// vuelve al brief: no da la vuelta.
+// vuelve al brief: no da la vuelta. El «atrás» del navegador también lo
+// cierra, sin cambiar de parte.
 //
 // Lo que se envía es lo de la tarjeta (PreguntaBrief.jsx): el visor lo copia
 // ahí al decidir y al comentar, y avisa con el evento de siempre, así que
@@ -306,7 +307,7 @@ export default function montarVisor(form) {
     const desdeAdentro = document.activeElement === arriba.querySelector('iframe')
     await lanzar(lado, x, v)
     vistos.push({ i: cola.shift(), lado })
-    if (!cola.length) return cerrar()
+    if (!cola.length) return salir()
     ;[arriba, abajo] = [abajo, arriba]
     ordenar()
     presentar()
@@ -441,13 +442,18 @@ export default function montarVisor(form) {
     presentar()
     ubicar()
     visor.showModal()
+    history.scrollRestoration = 'manual'
+    history.pushState({ visor: true }, '')
   }
 
   // En teléfonos el visor no es fijo sino absoluto, donde está la página
   // (muestras.css): así el boceto se ve bajo la hora y la barra de Safari.
-  // Si la pantalla gira, se vuelve a ubicar.
+  // Si la pantalla gira, o algo mueve la página debajo (en iOS, enfocar un
+  // campo del boceto la desplaza), se vuelve a ubicar.
   const ubicar = () => visor.style.setProperty('--visor-y', `${scrollY}px`)
-  addEventListener('resize', () => visor.open && ubicar())
+  const reubicar = () => visor.open && ubicar()
+  addEventListener('resize', reubicar)
+  addEventListener('scroll', reubicar, { passive: true })
 
   async function cerrar() {
     ocupado = true
@@ -455,16 +461,26 @@ export default function montarVisor(form) {
     visor.close()
   }
 
+  // El «atrás» del navegador cierra el visor, como en una app, y no cambia la
+  // parte del brief: abrirlo suma un paso al historial con la misma dirección
+  // (brief.js no ve un `hashchange`). Salir de otro modo consume ese paso, y
+  // el `popstate` lo cierra. Mientras está abierto, el navegador no repone el
+  // scroll al volver (`manual`): repondría uno viejo, el de cuando se llegó a
+  // esa parte, y la página saltaría al cerrar.
+  const salir = () => (history.state?.visor ? history.back() : cerrar())
+  addEventListener('popstate', () => visor.open && cerrar())
+
   // Escape cierra primero la hoja, y el visor con el mismo fundido que salir.
   visor.addEventListener('cancel', (evento) => {
     evento.preventDefault()
     if (conHoja()) cerrarHoja()
-    else if (!ocupado) cerrar()
+    else if (!ocupado) salir()
   })
-  visor.querySelectorAll('[data-cerrar]').forEach((boton) => boton.addEventListener('click', cerrar))
+  visor.querySelectorAll('[data-cerrar]').forEach((boton) => boton.addEventListener('click', salir))
 
   // Al cerrar, los iframes sueltan los bocetos y el foco vuelve adonde estaba.
   visor.addEventListener('close', () => {
+    history.scrollRestoration = 'auto'
     raiz.style.removeProperty('--fondo-boceto')
     visor.classList.remove('con-hoja')
     comentar.setAttribute('aria-expanded', 'false')
