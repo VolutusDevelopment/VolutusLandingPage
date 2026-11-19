@@ -41,7 +41,8 @@ const TAMANO_TELEFONO = '(min-width: 1024px) 10rem, (min-width: 650px) 15vw, 26v
 /**
  * El producto en la portada de la lámina: el sitio en su ventana, que es lo
  * que manda, y lo que ve el cliente y la app del negocio en dos teléfonos
- * enteros.
+ * enteros, en perspectiva hacia el sitio: cada imagen ya trae su teléfono y
+ * su sombra.
  *
  * Pasan bajo la barra con su luz propia, clara y oscura a trozos: la barra la
  * lee en cada punto (`data-fondo`, ver `initLectura` en barra.js).
@@ -64,11 +65,7 @@ function Vitrina({ vistas, sitio }) {
         </div>
       )}
       {telefono && <Captura imagen={telefono} sizes={TAMANO_TELEFONO} className="vitrina-telefono" />}
-      {app && (
-        <div className="vitrina-app">
-          <Captura imagen={app} sizes={TAMANO_TELEFONO} />
-        </div>
-      )}
+      {app && <Captura imagen={app} sizes={TAMANO_TELEFONO} className="vitrina-app" />}
     </div>
   )
 }
