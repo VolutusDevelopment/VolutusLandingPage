@@ -1,7 +1,7 @@
 /**
  * El modo «Odio a los patos» se desbloquea al terminar una partida entera (ver
- * src/patos.js) y queda desbloqueado en las visitas siguientes. Sin
- * almacenamiento, como en una ventana privada, dura lo que la página.
+ * src/comportamiento/patos.js) y queda desbloqueado en las visitas siguientes.
+ * Sin almacenamiento, como en una ventana privada, dura lo que la página.
  */
 
 const CLAVE = 'patos-odio'

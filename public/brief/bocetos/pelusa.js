@@ -7,7 +7,7 @@
  *   lo marca.
  * - El encaje: mientras dura el día, cada scroll cae en un momento. Pasado un
  *   cuarto de pantalla dentro de la sección que sigue, la página se lee libre
- *   (`libre` en <html>), como en /nosotros (src/encaje.js): si no, la rueda
+ *   (`libre` en <html>), como en /nosotros (src/comportamiento/encaje.js): si no, la rueda
  *   del mouse la devolvería al último momento.
  *
  * Sin JavaScript, todo se ve: el cielo queda en la mañana y las tarjetas,

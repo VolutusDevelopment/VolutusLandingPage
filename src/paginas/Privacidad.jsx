@@ -28,16 +28,19 @@ import { ORIGEN, PAGINAS, canonicalDe, fechaDe, tituloCorto } from '../lib/meta.
  * deduce de ella, en el registro de cada petición que atiende el Worker: los
  * envíos y los videos (`observability` en wrangler.jsonc). Si quien escribe
  * elige WhatsApp, el formulario no envía nada: abre WhatsApp con el texto
- * (client.js), que viaja en el enlace. El brief para clientes (/brief-web), que se
- * manda por link, suma lo que identifica el envío y el logo que se sube, que
- * llega adjunto (worker/brief.js). En el
- * navegador se guardan el modo desbloqueado del juego de los patos
- * (lib/odio.js), el final elegido en Operación Venganza (lib/final.js) y, en
- * el brief, las respuestas a medio llenar, su número al azar y la marca de la
- * pestaña (lib/brief/reglas.js), y lo que se califica en los bocetos
+ * (client.js), que viaja en el enlace. El brief para clientes (/brief-web), que
+ * se manda por link, suma lo que identifica el envío y el logo que se sube, que
+ * llega adjunto (worker/brief.js). En el navegador se guardan el modo
+ * desbloqueado del juego de los patos (lib/odio.js), el final elegido en
+ * Operación Venganza (lib/operacion-venganza/final.js) y, en el brief, las
+ * respuestas a medio llenar, su número al azar y la marca de la pestaña
+ * (lib/brief/reglas.js), y lo que se califica en los bocetos
  * (public/brief/bocetos/barra.js); también se dice, y cuánto dura cada uno.
  * Turnstile, Resend y los registros del Worker dicen qué guardan y cuánto, con
- * lo que publica cada proveedor.
+ * lo que publica cada proveedor. De Turnstile se dicen sus dos usos: el que
+ * Cloudflare hace por encargo nuestro y el que hace por su cuenta, como
+ * responsable independiente, para mejorar su detección de robots (§4 de su
+ * política).
  *
  * **Cubre lo que la ley pide publicar.** Es el art. 14 ter de la Ley 19.628,
  * en la redacción que le da la 21.719 desde el 1 de diciembre de 2026:
@@ -132,7 +135,12 @@ const APARTADOS = [
     titulo: 'Esta página no te rastrea',
     cuerpo: [
       'No hay analítica, ni píxeles de seguimiento, ni botones de redes sociales que informen de tu visita. **No usamos cookies**, así que no hay aviso que aceptar. Los enlaces a otros sitios son enlaces comunes: el sitio al que llegas solo sabe que vienes de volutus.cl.',
-      'El único código de afuera es **Turnstile**, la comprobación anti-robots de Cloudflare. Se carga solo cuando tocas el formulario de contacto o el brief, aunque después elijas WhatsApp, y revisa tu IP, tu navegador y tu conexión para saber si eres una persona. Cloudflare dice en [la política de Turnstile](https://www.cloudflare.com/turnstile-privacy-policy/) que no lo usa para identificarte ni para hacer perfiles.',
+      'El único código de afuera es **Turnstile**, la comprobación anti-robots de Cloudflare. Se carga solo cuando tocas el formulario de contacto o el brief, aunque después elijas WhatsApp, y le manda a Cloudflare unas señales técnicas: **tu dirección IP**, **la huella de cifrado de tu conexión** (TLS), **cómo se identifica tu navegador** y **desde qué sitio se carga**. Según [la política de Turnstile](https://www.cloudflare.com/turnstile-privacy-policy/), Cloudflare las usa para dos cosas:',
+      [
+        '**Por encargo nuestro**, para saber si eres una persona y frenar a los robots en este sitio.',
+        '**Por su cuenta**, para mejorar su detección de robots en general. Para ese uso Cloudflare es **responsable independiente** de esas señales, con la base legal de su interés legítimo, y las trata según su propia política: lo que quieras pedir sobre ese uso se lo pides a Cloudflare.',
+      ],
+      'Cloudflare dice en esa misma política que no usa las señales para identificarte ni para hacer perfiles.',
       'En tu navegador se guarda esto, y nada más:',
       [
         'Si terminaste una partida de la [caza de patos](/patos), para desbloquear un modo del juego.',
@@ -156,12 +164,13 @@ const APARTADOS = [
     id: 'proveedores',
     titulo: 'Con quién se comparten',
     cuerpo: [
-      'Con tres proveedores que actúan por encargo nuestro y solo para eso:',
+      'Con tres proveedores que actúan por encargo nuestro:',
       [
         '**Cloudflare**, que aloja este sitio, recibe el formulario, usa tu dirección IP para comprobar que lo envía una persona y no un robot, y guarda el registro técnico que explicamos arriba.',
         '**Resend**, que convierte el envío en el correo que nos llega. Guarda una copia de cada correo por 30 días y después la borra.',
         '**Zoho**, donde está nuestro correo y donde queda guardado tu mensaje.',
       ],
+      'Lo único que uno de ellos hace por su cuenta es lo de Turnstile: con sus señales, Cloudflare también mejora su detección de robots, como explicamos en «Esta página no te rastrea». Para eso no actúa por encargo nuestro.',
       'Y con **WhatsApp**, solo si lo eliges para escribirnos. No actúa por encargo nuestro: Meta recibe tu mensaje, tu número y lo que muestra tu perfil, y los trata según su propia política, como explicamos arriba. Ese mensaje no pasa por Resend ni por Zoho.',
       'Todos operan fuera de Chile, así que enviarnos tus datos es una **transferencia internacional**: con los tres proveedores, amparada en las garantías contractuales que ofrecen, y con WhatsApp, porque tú eliges escribirnos por ahí. Nadie más los recibe, salvo que una autoridad lo exija por ley.',
     ],

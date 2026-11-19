@@ -161,14 +161,14 @@ function Nota({ fuente }) {
 }
 
 // Una foto, a lo ancho de la columna: debajo, quién la tomó y la nota que
-// lleva a su archivo y su licencia. Cada una está en public/image a 800 px y a
+// lleva a su archivo y su licencia. Cada una está en public/image/articulos a 800 px y a
 // su ancho completo (`ancho`).
 function Foto({ nombre, ancho, alto, alt, fuente, children }) {
   return (
     <figure>
       <img
-        src={`/image/${nombre}-800.webp`}
-        srcSet={`/image/${nombre}-800.webp 800w, /image/${nombre}-${ancho}.webp ${ancho}w`}
+        src={`/image/articulos/${nombre}-800.webp`}
+        srcSet={`/image/articulos/${nombre}-800.webp 800w, /image/articulos/${nombre}-${ancho}.webp ${ancho}w`}
         sizes="(min-width: 824px) 776px, calc(100vw - 48px)"
         width={ancho}
         height={alto}

@@ -252,7 +252,7 @@
   --vidrio: rgb(255 255 255 / 0.72);
   --vidrio-halo: rgb(255 255 255 / 0.22);
 
-  /* La nube y el mar (src/nubes.js) donde la hora del día no aplica. En hex:
+  /* La nube y el mar (src/comportamiento/nubes.js) donde la hora del día no aplica. En hex:
      el lienzo los lee tal cual. La nube: cara al sol celeste y vientre azul
      pizarra. */
   --nube-luz: #b9dcf2;
@@ -1104,7 +1104,7 @@ svg {
   outline-offset: 2px;
 }
 
-/* El lienzo de las nubes (src/nubes.js). Ocupa su contenedor sin mover el
+/* El lienzo de las nubes (src/comportamiento/nubes.js). Ocupa su contenedor sin mover el
    layout y aparece con un fundido cuando pinta su primer fotograma; hasta
    entonces, o sin WebGL, es transparente. El color lo decide quien lo
    contiene, con `--nubes-luz`, `--nubes-sombra` y `--nubes-alfa`; el mar y
@@ -1124,13 +1124,13 @@ svg {
 }
 
 /* La escena grabada que va sobre el lienzo en los equipos sin GPU
-   (src/nubes.js). */
+   (src/comportamiento/nubes.js). */
 .grabado {
   object-fit: cover;
 }
 
 /* El video del campo grabado, que el pintor lee cuadro a cuadro
-   (src/nubes.js): en pantalla, para que iOS lo reproduzca, pero de 1 px y
+   (src/comportamiento/nubes.js): en pantalla, para que iOS lo reproduzca, pero de 1 px y
    transparente. */
 .campo-grabado {
   position: absolute;
@@ -1144,7 +1144,7 @@ svg {
 
 /* El punto de la nube, en px CSS: el mismo en todas las páginas, salvo la
    portada en el teléfono (Portada.css), y el lienzo lo pinta a la densidad
-   real de la pantalla (`rejilla` en src/nubes.js). El mar del pie lleva el
+   real de la pantalla (`rejilla` en src/comportamiento/nubes.js). El mar del pie lleva el
    suyo (Pie.css). */
 .nubes[data-vista='cielo'] {
   --nubes-celda: 2;

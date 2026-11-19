@@ -1,7 +1,7 @@
-// Los sonidos de las escenas (src/lib/escena<n>.js), hechos con el modelo de
-// efectos de sonido de ElevenLabs: solo efectos, sin voces. Los escriben los
-// sonidos.mjs de cada escena, con su lista de sonidos por toma, en
-// public/operacion-venganza.
+// Los sonidos de las escenas (src/lib/operacion-venganza/escena<n>.js), hechos
+// con el modelo de efectos de sonido de ElevenLabs: solo efectos, sin voces.
+// Los escriben los sonidos.mjs de cada escena, con su lista de sonidos por
+// toma, en public/operacion-venganza.
 //
 // Un sonido de una escena va en su carpeta y empieza en su `cuadro`, o en
 // cada uno de sus `cuadros` (los pasos, de pisadas.json). Dura lo que su tira
@@ -45,7 +45,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
-import { cuadrosDe } from '../../src/lib/escena1.js'
+import { cuadrosDe } from '../../src/lib/operacion-venganza/escena1.js'
 
 const PUBLICO = fileURLToPath(new URL('../../public', import.meta.url))
 

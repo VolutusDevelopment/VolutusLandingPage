@@ -116,6 +116,6 @@ duck-one son a propósito: así escribe él.
 - [Nivel 2: Moby-Duck y Duke SkyDucker](https://volutus.cl/operacion-venganza/nivel-2): la fuerza bruta, en un A-10 Thunderbolt II, y el rostro del escuadrón, en un F/A-18C Hornet
 - [Nivel 3: Duky](https://volutus.cl/operacion-venganza/nivel-3): el fantasma amarillo, un pato de hule gigante en un F-22A Raptor; el nivel difícil
 
-Cada escena tiene también su página, de /operacion-venganza/escena-2 a
-/operacion-venganza/escena-16, y el juego empieza en la que se abra.
+Cada escena tiene también su página, de /operacion-venganza/patoon-4 a
+/operacion-venganza/desolacion, y el juego empieza en la que se abra.
 

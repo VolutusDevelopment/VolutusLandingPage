@@ -1,10 +1,10 @@
-// Los sonidos de la escena 1 (src/lib/escena1.js), toma por toma
-// (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
+// Los sonidos de la escena 1 (src/lib/operacion-venganza/escena1.js), toma por
+// toma (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/escena1/sonidos.mjs [nombre…]
 
 import { pasosDe, escribirSonidos } from '../sonidos.mjs'
-import { TOMAS } from '../../../src/lib/escena1.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena1.js'
 
 const paso = pasosDe(1)
 

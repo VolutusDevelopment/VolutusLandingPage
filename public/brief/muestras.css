@@ -771,8 +771,9 @@
  *
  * El encaje vale mientras se ve esta parte: arriba encajan el comienzo de la
  * página y el de la parte; abajo, la pregunta que sigue, y desde ella se baja
- * libre (su zona de encaje llega al final de la página, y src/encaje.js lo
- * apaga ahí por la rueda del ratón). Con movimiento reducido no encaja. */
+ * libre (su zona de encaje llega al final de la página, y
+ * src/comportamiento/encaje.js lo apaga ahí por la rueda del ratón). Con
+ * movimiento reducido no encaja. */
 @media (prefers-reduced-motion: no-preference) {
   :root:has(.brief-pantalla-escalas:target):not(.libre) {
     scroll-snap-type: y mandatory;
@@ -1526,17 +1527,17 @@
 }
 
 /* ==================== El visor de los bocetos ====================
- * Un mazo de cartas (src/brief-visor.js). Cada boceto es una carta casi a
- * pantalla completa, sobre la tinta del sitio, con el siguiente esperando
- * debajo, un poco más chico. Arriba va una franja fina con salir, el estilo y
- * cuánto va; sobre la carta flotan cuatro botones redondos que no tapan más
- * que su círculo: atrás, no, comentar y me gusta. Al arrastrar, la carta se
- * corre y gira, aparece su sello y el botón de ese lado crece
- * (`--avance`, de -1 a 1 en el umbral). El comentario sube en una hoja.
+ * Un mazo de cartas (src/comportamiento/brief/brief-visor.js). Cada boceto es
+ * una carta casi a pantalla completa, sobre la tinta del sitio, con el
+ * siguiente esperando debajo, un poco más chico. Arriba va una franja fina con
+ * salir, el estilo y cuánto va; sobre la carta flotan cuatro botones redondos
+ * que no tapan más que su círculo: atrás, no, comentar y me gusta. Al
+ * arrastrar, la carta se corre y gira, aparece su sello y el botón de ese lado
+ * crece (`--avance`, de -1 a 1 en el umbral). El comentario sube en una hoja.
  * Mientras carga, la carta tiene el color del boceto. Todo respeta las zonas
  * seguras del teléfono. En teléfonos y tabletas verticales no hay marco: el
- * boceto ocupa la pantalla entera y la franja baja a los botones (al final
- * de esta sección).
+ * boceto ocupa la pantalla entera y la franja baja a los botones (al final de
+ * esta sección).
  *
  * Mientras el visor está abierto, el fondo del documento es el color del
  * boceto (brief-visor.js): es lo que Safari muestra sobre el comienzo de la
@@ -2076,10 +2077,10 @@ html:has(.brief-visor[open]) {
 
 /* ==================== Los tipos de logo ====================
  * Cada tipo dibujado con el nombre del negocio (MuestraBrief.jsx y
- * src/brief-logo.js), en tinta y un acento, sin la voz de Volutus: son
- * muestras de su marca, no de la nuestra. El nombre se achica con su largo
- * (`--largo`) para entrar en su cuadro. Al pasar o marcarse, cada uno hace lo
- * suyo: el aro se dibuja, el sol sale, el personaje guiña. */
+ * src/comportamiento/brief/brief-logo.js), en tinta y un acento, sin la voz de
+ * Volutus: son muestras de su marca, no de la nuestra. El nombre se achica con
+ * su largo (`--largo`) para entrar en su cuadro. Al pasar o marcarse, cada uno
+ * hace lo suyo: el aro se dibuja, el sol sale, el personaje guiña. */
 .brief-muestras-logo {
   --largo: 8;
   --tinta-logo: #1d2430;
@@ -2448,8 +2449,9 @@ html:has(.brief-visor[open]) {
 
 /* ==================== El logo que se sube ====================
  * La casilla nativa cubre la zona, transparente: tocarla abre el selector y
- * soltar un archivo encima lo elige, sin JavaScript. Con él (src/brief-logo.js)
- * se ve la vista previa y el estado dice qué pasó. */
+ * soltar un archivo encima lo elige, sin JavaScript. Con él
+ * (src/comportamiento/brief/brief-logo.js) se ve la vista previa y el estado
+ * dice qué pasó. */
 .brief-archivo {
   display: grid;
   gap: var(--e-2);

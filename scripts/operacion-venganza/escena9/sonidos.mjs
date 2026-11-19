@@ -1,110 +1,52 @@
-// Los sonidos de la escena 9 (src/lib/escena9.js), toma por toma
-// (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
+// Los sonidos de la escena 9 (src/lib/operacion-venganza/escena9.js), toma por
+// toma (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/escena9/sonidos.mjs [nombre…]
 
-import { pasosDe, escribirSonidos } from '../sonidos.mjs'
-import { TOMAS } from '../../../src/lib/escena9.js'
+import { CAZAS, pasosDe, escribirSonidos } from '../sonidos.mjs'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena9.js'
 
-const DE_MOBY = ['tengo', 'significa', 'contabilidad']
-const DE_DUKE = ['recortado', 'adicional']
-const EN_CUBIERTA = ['aterrizan', 'saltito', 'fuselaje', 'abolladura', 'torre']
+const EN_LA_SALA = ['monitores', 'pasando', 'metodologia', 'futuro', 'antes', 'mira', 'reflejo', 'nomegusta']
 
 const paso = pasosDe(9)
 
-// Los cuadros salen de tomas.mjs. En `aterrizan` duke llega a 120 m de la
-// cámara, toca la cubierta en el 3,6, pasa a 18 m en el 5,5 y se detiene a
-// 53 m; moby viene de 490 m, toca en el 16,8 y pasa a 18 m en el 21,5. Los
-// dos suenan con su motor (enPista): su distancia, cuadro a cuadro, y un
-// Doppler de verdad, que baja al pasar. Duke salta en el 3,6 de `saltito` y
-// su Hornet pliega las alas del 8,4 al 21,6 con el motor en marcha, que se
-// apaga bajando de tono cuando la cámara va a moby, cuyo A-10 ya se apaga en
-// `saltito`. Moby pega un puñetazo por cuadro hasta el 17.
 export const SONIDOS = [
-  // Vuelan juntos: suenan sus dos motores, como en la escena 6, y al
-  // regresar la cámara va más atrás.
-  ...['motor-a10', 'motor-hornet'].flatMap((nombre) => [
-    { toma: 'alarma', nombre, lejos: 0.2 },
-    { toma: 'regresan', nombre, lejos: 0.45, entra: 1 },
-  ]),
+  { tomas: EN_LA_SALA, nombre: 'sala-de-mando' },
   {
-    tomas: ['alarma', ...DE_MOBY, ...DE_DUKE],
-    nombre: 'alarma-combustible',
-    nivel: 'alto',
+    tomas: ['monitores', 'mira'],
+    nombre: 'combate-en-pantalla',
+    nivel: 'suave',
     bucle: true,
-    texto: 'A fighter jet cockpit low fuel warning: urgent repeating electronic beeps',
+    fondo: true,
+    texto: 'A distant aerial dogfight heard through a small monitor speaker: muffled jet roar and laser zaps',
   },
-  { tomas: DE_MOBY, nombre: 'cabina-moby' },
-  { tomas: DE_DUKE, nombre: 'cabina-duke' },
-  { tomas: ['regresen', 'presupuesto'], nombre: 'sala' },
-  { toma: 'regresan', nombre: 'cielo' },
-  { tomas: EN_CUBIERTA, nombre: 'cubierta' },
-  // Cada uno aterriza con su motor, y sus ruedas chirrían a su manera: las
-  // del Hornet, livianas; las del A-10, pesadas. El chirrido empieza a fondo
-  // antes de su golpe (0,1 s el de duke y 0,5 s el de moby): va corrido para
-  // que empiece al tocar.
-  {
-    toma: 'aterrizan',
-    nombre: 'motor-hornet',
-    entra: 0.3,
-    lejos: [[0, 0.66], [2, 0.5], [3.6, 0.33], [4.5, 0.2], [5.5, 0.12], [6.5, 0.19], [8, 0.31], [10, 0.4], [12, 0.42]],
-    tono: [[0, 1.1], [4.5, 1.08], [5.5, 1], [6.5, 0.92], [8, 0.9], [12, 0.85], [32, 0.8]],
-  },
-  {
-    toma: 'aterrizan',
-    nombre: 'motor-a10',
-    entra: 0.3,
-    lejos: [[0, 1], [10, 0.84], [14, 0.66], [16.8, 0.48], [18, 0.38], [20, 0.19], [21.5, 0.12], [23, 0.17], [25, 0.22], [28, 0.23]],
-    tono: [[0, 1.1], [20, 1.08], [21.5, 1], [23, 0.92], [25, 0.88], [32, 0.82]],
-  },
-  {
-    toma: 'aterrizan',
-    nombre: 'chirrido-duke',
-    nivel: 'fuerte',
-    cuadros: [4.4],
-    segundos: 2.5,
-    texto: 'Starting right away with the impact: the main wheels of a light fighter jet hit an aircraft carrier deck, a sharp double chirp of rubber tires screeching and smoking, then the tires rumbling as they roll and fading out, no clack',
-  },
-  {
-    toma: 'aterrizan',
-    nombre: 'chirrido-moby',
-    nivel: 'fuerte',
-    cuadros: [20.1],
-    segundos: 3,
-    texto: 'Starting right away with the impact: the heavy landing gear of a big attack jet slams onto an aircraft carrier deck, a deep heavy thump and a long loud squeal of burning rubber tires skidding, then a rolling rumble fading out, no clack',
-  },
-  { toma: 'saltito', nivel: 'suave', texto: 'A light cartoon hop and a soft tap landing on the rough surface of an aircraft carrier deck' },
-  { toma: 'saltito', nombre: 'motor-hornet', lejos: 0.1, tono: 0.8, entra: 0.3 },
-  { toma: 'saltito', nombre: 'motor-a10', lejos: [[0, 0.4], [24, 0.85]], tono: [[0, 0.82], [24, 0.45]], entra: 0.3 },
-  { toma: 'fuselaje', nombre: 'motor-hornet', lejos: 0.05, tono: 0.8, entra: 0.3 },
-  {
-    toma: 'saltito',
-    nombre: 'alas',
-    nivel: 'medio',
-    cuadro: 8.4,
-    segundos: 2.6,
-    texto: 'Starting right away: hydraulic actuators whirring steadily for two seconds as a parked fighter jet folds its wingtips up, then a soft solid clunk as they lock, and silence',
-  },
-  { toma: 'abolladura', nombre: 'motor-hornet', lejos: [[0, 0.3], [31, 1]], tono: [[0, 0.8], [31, 0.35]], entra: 0.3 },
-  {
-    toma: 'abolladura',
-    nombre: 'punetazo',
-    nivel: 'alto',
-    cada: 0.15,
-    hasta: 17,
+  { tomas: ['vuela', 'ataca', 'esquiva'], nombre: 'cabina-duky' },
+  { toma: 'ataca', nombre: 'disparos' },
+  // Feliz, duky rebota en el asiento y se mece de lado a lado: cuatro veces
+  // por tira (dukyFeliz en tomas.mjs), y chilla un poco en cada una.
+  ...[
+    ['vuela', [0, 3, 6, 9]],
+    ['ataca', [0, 3, 6, 9]],
+    ['esquiva', [0, 6, 12, 18]],
+  ].map(([toma, cuadros]) => ({
+    toma,
+    nombre: 'rebote',
+    nivel: 'susurro',
+    cuadros,
     segundos: 0.5,
-    texto: 'Starting right away: a hard punch of a bare fist on a thin sheet metal panel, one loud metallic bang with a short tinny ring, then silence',
-  },
+    texto: 'Starting right away: a rubber duck toy bounces once on a padded seat, one small soft squeak of rubber',
+  })),
+  // Quien juega se le viene encima y duky da un tonel completo del 7 al 19.
   {
-    toma: 'abolladura',
+    toma: 'esquiva',
     nivel: 'alto',
-    cuadros: [9],
-    segundos: 1,
-    texto: 'Starting right away: a thin aluminum aircraft panel crunches and dents inward under a hard fist blow, a short metallic crumple, then silence',
+    cuadro: 5,
+    segundos: 3.5,
+    entra: 0.2,
+    texto: `Inside the cockpit of ${CAZAS.f22} in flight: the pilot snaps the jet into a fast full aileron roll, the engines surging, the wind roar over the canopy rising and swirling around, the airframe creaking under the load, then leveling out smoothly`,
   },
-  paso('abolladura', 'moby', 'paso-moby-cubierta'),
-  paso('torre', 'moby', 'paso-moby-cubierta'),
-  paso('torre', 'duke', 'paso-duke-cubierta'),
+  paso('reflejo', 'moby', 'paso-moby'),
+  { toma: 'reflejo', nombre: 'apagado', nivel: 'suave', texto: 'A CRT monitor switching off with a soft electric pop and a fading whine' },
 ]
 
 if (import.meta.main) await escribirSonidos(9, TOMAS, SONIDOS)

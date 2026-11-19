@@ -1,363 +1,448 @@
-// Las tomas de la escena 11, en 3D: qué se ve en el instante u ∈ [0, 1) y
-// desde dónde, como las de la escena 2 (escena2/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena11.js.
+// Las tomas de la escena 11, en 3D: qué se ve en el instante u ∈ [0, 1) y desde
+// dónde, como las de la escena 6 (escena6/tomas.mjs), de donde sale el
+// aterrizaje. El guion, con sus líneas, está en
+// src/lib/operacion-venganza/escena11.js.
 //
-// Un marinero saca a duky de la sala de mando (escena2/reunion.mjs), choca
-// con él contra la pared de la puerta y lo lleva al hangar del Sitting Ducks
-// (escena1/lugares.mjs), donde su F-22 (hangar.mjs) espera sobre el ascensor
-// de popa. Lo sube a la cabina mientras la plataforma sube a la cubierta, y
-// el caza despega desde el comienzo de la pista, con la cámara siempre en
-// duky. En vuelo, el oficial de inteligencia le habla por radio desde la sala
-// azul (cic.mjs), con el almirante detrás, y duky no contesta.
+// El caza de duky frena en la cubierta del Sitting Ducks y un marinero lo
+// saca como lo metió en la escena 8, pero al revés. Lo deja en la proa, de
+// cara al sol, y el escuadrón se pone a su lado, tomados de las manos, con
+// quien juega a lo lejos en el cielo. Después el mismo marinero lo mete en
+// una caja, el almirante llega a ella y el segundo marinero, del miedo, se
+// cae por la borda. Todo en metros del barco, y los patos a la escala de la
+// cabina de duky.
 
-import { ASIENTOS, K as K_SALA, PUERTA, enUnidades, fase, girar, recorrido, reunion } from '../escena2/reunion.mjs'
-import { EN_BRAZOS, duky, marinero } from '../escena2/patoon.mjs'
-import { el, transformar } from '../pilotos/tres.mjs'
-import { DUKY as DUKY_HULE, RAMPAS as C, hueso } from '../pilotos/modelos.mjs'
-import { PERSONAJES, dukyFigura, figura, manosAndando } from '../pilotos/cuerpos.mjs'
-import { ASCENSOR, HANGAR, MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
-import { ALMIRANTE, OFICIAL, OFICIOS, marineroTronco, pMarinero, suave } from '../escena1/personajes.mjs'
-import { K, SUELO, caza, enCabina, puntaDelCinturon } from './hangar.mjs'
-import { cic } from './cic.mjs'
-import { girosHacia, losTres } from '../escena10/tomas.mjs'
-import { EN_CABINA } from '../tiras.mjs'
-import { TOMAS } from '../../../src/lib/escena11.js'
+import { el, placa, transformar } from '../pilotos/tres.mjs'
+import * as M from '../pilotos/modelos.mjs'
+import { RAMPAS as C } from '../pilotos/modelos.mjs'
+import { dukeAbierto, dukyFigura, figura, manosAndando, pDuckOne, pDuke, pMoby } from '../pilotos/cuerpos.mjs'
+import { MAR, SOL, ancho, colocar, enMarcha, enTexto, poner, portaaviones } from '../escena1/lugares.mjs'
+import { OFICIOS, corre, hablar, marineroTronco, pMarinero, silaba, suave } from '../escena1/personajes.mjs'
+import { almirante } from '../escena2/patoon.mjs'
+import { enUnidades, giroHacia, girar, recorrido } from '../escena2/reunion.mjs'
+import { K, SUELO, caza, enCabina } from '../escena8/hangar.mjs'
+import { ARRIBA, CUPULA_ABIERTA, conDuky, deposita, escalerilla, sobreLaCabeza } from '../escena8/tomas.mjs'
+import { enPista, humoDeRuedas } from '../escena6/tomas.mjs'
+import { aLoLejos } from '../escena10/visor.mjs'
+import { aSuDistancia, alargar, proyectar } from '../tiras.mjs'
 
 const sum = (a, b) => a.map((v, i) => v + b[i])
 const res = (a, b) => a.map((v, i) => v - b[i])
+const esc = (a, k) => a.map((v) => v * k)
 const lerp = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k)
+const entre = (a, b, k) => a + (b - a) * k
 const tramo = (u, a, b) => suave((u - a) / (b - a))
 const fija = (ojo, mira, campo) => () => [ojo, mira, campo]
+const vuelta = (u) => u * Math.PI * 2
+// Un ciclo de pasos cada 33 cm, como en el hangar.
+const pasos = (s) => (s / 0.33) % 1
 
-const DUKY = PERSONAJES.at(-1)
-const VERDE = OFICIOS.verde.color
-const pMar = pMarinero(VERDE)
-const REPOSO = { 1: pMar.reposo(1), [-1]: pMar.reposo(-1) }
-const PANTALLA = 'bajas'
-
-// Lleva a duky sobre la cabeza, con los brazos arriba: así, al darse vuelta
-// o al caminar, ninguno de los dos tapa al otro.
-export const ARRIBA = { 1: [0.15, 1.45, 0.7], [-1]: [0.15, 1.45, -0.7] }
-export const sobreLaCabeza = ({ en, giro }, k) => ({ en: sum(en, [0, 3.4 * k, 0]), giro, suelo: -2.2 })
-
-// ── En la sala: el marinero se lleva a duky ──────────────────────────────
-
-// Entra hasta el costado del sillón, lo levanta, se da vuelta y camina con
-// él hacia la puerta, primero de lado a la cámara: duky va delante y no lo tapa.
-const DE_LA_PUERTA = recorrido([[-4.6, 2.8], [-2.4, 1.0]])
-const A_LA_PUERTA = recorrido([[-2.4, 1.0], [-3.0, 1.05], [-3.0, 2.0]])
-const JUNTO_AL_SILLON = { en: [-2.4, 0, 1.0], giro: 0 }
-const SENTADO_EN_EL_SILLON = { ...ASIENTOS.duky, en: sum(ASIENTOS.duky.en, [0, 0.15 * K_SALA, 0]) }
-// Se da vuelta de cara a la cámara, para que duky no le pase por detrás.
-const VUELTA = (A_LA_PUERTA.donde(0.3).giro + 360) % 360
-const AGARRA = Object.fromEntries([1, -1].map((s) => [s, sum(EN_BRAZOS.manos[s], [1.0, -0.45, 0])]))
-
-const seLoLleva = (u) => {
-  if (u < 0.35) {
-    const s = DE_LA_PUERTA.largo * tramo(u, 0, 0.35)
-    return [[marinero(fase(s), manosAndando(pMar, fase(s))), DE_LA_PUERTA.donde(s)], [duky.sentado(), ASIENTOS.duky]]
-  }
-  if (u < 0.65) {
-    const levanta = tramo(u, 0.42, 0.55)
-    const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(REPOSO[s], AGARRA[s], tramo(u, 0.35, 0.42)), ARRIBA[s], levanta)]))
-    const donde = { ...JUNTO_AL_SILLON, giro: VUELTA * tramo(u, 0.55, 0.65) }
-    const brazos = sobreLaCabeza(donde, K_SALA)
-    // Primero lo sube en el lugar y después lo pasa sobre su cabeza: no le pasa por la cara.
-    const sube = [SENTADO_EN_EL_SILLON.en[0], brazos.en[1], SENTADO_EN_EL_SILLON.en[2]]
-    const en = lerp(lerp(SENTADO_EN_EL_SILLON.en, sube, tramo(u, 0.42, 0.5)), brazos.en, tramo(u, 0.5, 0.55))
-    const dukyDonde = u < 0.55 ? { en, giro: girar(SENTADO_EN_EL_SILLON.giro, brazos.giro, levanta), suelo: -2.2 } : brazos
-    return [[marinero(null, manos), donde], [duky.enBrazos(), dukyDonde]]
-  }
-  const s = A_LA_PUERTA.largo * tramo(u, 0.65, 1)
-  const donde = A_LA_PUERTA.donde(s)
-  return [[marinero(fase(s), ARRIBA), donde], [duky.enBrazos(), sobreLaCabeza(donde, K_SALA)]]
-}
-
-// ── La puerta ────────────────────────────────────────────────────────────
-
-// Va derecho a la puerta, pero duky, sobre su cabeza, no cabe: la cabeza le
-// da contra la pared de arriba. Los dos rebotan, duky se bambolea con
-// estrellitas alrededor y el marinero se queda tambaleando.
-const MEDIO_DE_LA_PUERTA = (PUERTA.z0 + PUERTA.z1) / 2
-const CONTRA_LA_PUERTA = recorrido([[-2.6, MEDIO_DE_LA_PUERTA], [-3.5, MEDIO_DE_LA_PUERTA]])
-const CHOCA = 0.45
-const estrellitas = (centro, u) =>
-  [0, 1, 2].map((i) => {
-    const a = u * 14 + (i * Math.PI * 2) / 3
-    return el(sum(centro, [Math.sin(a) * 0.4, 0.06 * Math.sin(a * 2), Math.cos(a) * 0.4]), [0.07, 0.07, 0.07], C.oro, { flat: '#fff2a4', brilla: true })
-  })
-const choca = (u) => {
-  const rebote = 0.35 * tramo(u, CHOCA, CHOCA + 0.15)
-  const s = CONTRA_LA_PUERTA.largo * Math.min(1, u / CHOCA) - rebote
-  const { en, giro } = CONTRA_LA_PUERTA.donde(s)
-  const golpe = Math.max(0, u - CHOCA)
-  const bambolea = u > CHOCA ? 22 * Math.exp(-golpe * 9) * Math.cos(golpe * 40) : 0
-  const tambalea = u > CHOCA ? 6 * Math.sin(golpe * 18) * (1 - tramo(u, 0.8, 1)) : 0
-  const donde = { en, giro }
-  const marineroF = figura(pMar, { tronco: marineroTronco(VERDE), manos: ARRIBA, fase: u < CHOCA ? fase(s) : null, inclina: tambalea })
-  const dukyDonde = sobreLaCabeza(donde, K_SALA)
-  const cabeza = sum(dukyDonde.en, [0, 3.6 * K_SALA, 0])
-  return {
-    figuras: [[marineroF, donde], [dukyFigura({ inclina: -bambolea }), dukyDonde]],
-    extra: u > CHOCA && u < 0.85 ? estrellitas(cabeza, u) : [],
-  }
-}
-
-// ── El caza y la escalerilla ─────────────────────────────────────────────
-
-export const CUPULA_ABIERTA = 40
-
-// El marinero se para en el lomo, junto a la cabina y mirando a ella: sube
-// por una escalerilla desde el piso, con sus dos largueros y siete peldaños.
-const LOMO = { en: enCabina([0.3, -2.15, -2.6]), giro: -90 }
-const PIE = [LOMO.en[0], SUELO, LOMO.en[2] - 1.4]
-const CIMA = [LOMO.en[0], LOMO.en[1], LOMO.en[2] - 0.2]
-export const escalerilla = [
-  ...[-0.25, 0.25].map((dx) => hueso(sum(PIE, [dx, 0, 0]), sum(CIMA, [dx, 0, 0]), 0.04, C.rayas)),
-  ...Array.from({ length: 7 }, (_, i) => lerp(PIE, CIMA, (i + 1) / 8)).map((p) => hueso(sum(p, [-0.25, 0, 0]), sum(p, [0.25, 0, 0]), 0.03, C.rayas)),
-]
-const enSusManos = (p) => enUnidades(p, { ...LOMO, k: K })
-// Sobre el lomo del caza, sin la sombra que figura() le pone en el piso.
-const elMarinero = (cfg) => colocar(figura(pMar, { tronco: marineroTronco(VERDE), sinSombra: true, ...cfg }), { k: K, ...LOMO })
-
-// duky, un modelo aparte del caza: siempre con sus patas, sin su sombra.
+const CUBIERTA = 20.8
+const barco = (u) => [MAR, ...portaaviones(enMarcha(u))]
+const reposo = (p) => ({ 1: p.reposo(1), [-1]: p.reposo(-1) })
+const pato = (formas, donde) => colocar(formas, { k: K, ...donde })
+// En el aire, sin la sombra que figura() le pone bajo los pies.
 const SOMBRA = '#4a80e6'
-const sinSombra = (f) => f.flat !== SOMBRA
-const SENTADO = { en: enCabina([0, -2.2, 0]), giro: 0, suelo: -2.2 }
-const dukyEn = (donde, formas = DUKY.sentado(0)) => colocar(formas.filter(sinSombra), { k: K, ...donde })
-// El marinero con duky sobre la cabeza; con `paso`, caminando.
-const conLaCarga = (donde, paso = null) => [...colocar(marinero(paso, ARRIBA), { k: K, ...donde }), ...dukyEn(sobreLaCabeza(donde, K), duky.enBrazos())]
+const enElAire = (formas) => formas.filter((f) => f.flat !== SOMBRA)
 
-// Lo pasa de sobre su cabeza a sobre la cabina, lo gira hacia el morro, lo
-// baja y lo suelta para el último tramo, que duky cae solo.
-const EN_EL_LOMO = sobreLaCabeza(LOMO, K)
-const bajando = (u) => {
-  const arriba = sum(SENTADO.en, [0, 0.55, 0])
-  const pasa = lerp(EN_EL_LOMO.en, arriba, tramo(u, 0.1, 0.45))
-  const baja = lerp(pasa, sum(SENTADO.en, [0, 0.3, 0]), tramo(u, 0.45, 0.7))
-  return lerp(baja, SENTADO.en, tramo(u, 0.7, 0.8))
-}
-export const deposita = (u) => {
-  const llevado = sum(enSusManos(bajando(Math.min(u, 0.7))), enSusManos(EN_EL_LOMO.en).map((v) => -v))
-  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(sum(ARRIBA[s], llevado), REPOSO[s], tramo(u, 0.75, 0.95))]))
-  return [...elMarinero({ manos }), ...dukyEn({ en: bajando(u), giro: girar(-90, 0, tramo(u, 0.1, 0.45)), suelo: -2.2 }, duky.enBrazos())]
+// ── El aterrizaje y la cabina ────────────────────────────────────────────
+
+// Frena donde frenó duke en la escena 6, en el eje de la catapulta de babor.
+const PARADA = [0, CUBIERTA - SUELO, -6]
+const aterriza = (u) => {
+  const { aire, en } = enPista(u, PARADA)
+  return [...barco(u), ...transformar([0, 0, 7 * Math.min(1, aire * 3)], [-1.4, SUELO, 0], en).formas(conDuky({ motor: aire > 0 || u < 0.5, armas: false }, dukyFigura({}))), ...humoDeRuedas(u, PARADA, [-1.75, 1.7])]
 }
 
-export const conDuky = (opciones, piloto) => [...caza(opciones), ...dukyEn(SENTADO, piloto)]
+// El marinero lo saca como lo metió en el hangar (escena8/tomas.mjs): la
+// misma toma, al revés.
+const saca = (u) => [...barco(u), ...poner([...caza({ cupula: CUPULA_ABIERTA, armas: false }), ...escalerilla, ...deposita(1 - u)], 0, PARADA)]
+const SOBRE_LA_CABINA = (() => {
+  const de = (p) => sum(enCabina(p), PARADA)
+  return fija(de([9.5, 4.2, -1.6]), de([0, 0.4, -1.2]), 54)
+})()
 
-// El marinero tironea de las dos puntas del cinturón (`tira`, de 0 a 1), o
-// las suelta (`suelta`) y se encoge de hombros (`encoge`); con `mira`, se
-// inclina a mirar la correa. duky es medio gordito: mientras más tironea, más
-// se le aprieta la barriga, y la correa igual no le cierra. Da el cinturón
-// como quedó y a los dos.
-const tirando = (tira, { suelta = 0, encoge = 0, mira = 0 } = {}) => {
-  const cinturon = tira * (1 - suelta)
-  const hombros = { 1: [0.35, -0.35, 1.45], [-1]: [0.35, -0.35, -1.45] }
-  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(lerp(enSusManos(puntaDelCinturon(s, cinturon)), REPOSO[s], suelta), hombros[s], encoge)]))
-  const aprieta = Math.max(0, (cinturon - 0.55) / 0.45)
-  const apretado = deformar(DUKY.sentado(0), [0, -1.9, 0], [1, 1 + 0.06 * aprieta, 1 - 0.14 * aprieta])
-  return { cinturon, figuras: [...elMarinero({ manos, salto: 0.08 * encoge, inclina: -10 * mira }), ...dukyEn(SENTADO, apretado)] }
+// ── La proa, de cara al sol ──────────────────────────────────────────────
+
+// La fila mira al sol, que se pone por la amura de estribor; a su derecha,
+// `A_LA_DERECHA`. duky queda al medio de la proa, a metro y medio del borde.
+const AL_SOL = SOL
+const A_LA_DERECHA = [-SOL[2], 0, SOL[0]]
+const MIRA_AL_SOL = giroHacia([0, 0], [SOL[0], SOL[2]])
+const BORDE = [164.3, CUBIERTA, 0]
+const enLaFila = (lado, atras = 0) => sum(sum(BORDE, esc(A_LA_DERECHA, lado)), esc(AL_SOL, -atras))
+const deFrente = (lado, atras = 0) => ({ en: enLaFila(lado, atras), giro: MIRA_AL_SOL })
+
+// Quien juega, a lo lejos: sobre el mar, a la izquierda del sol.
+const QUIEN_JUEGA = sum(enLaFila(-10 * 15, -900), [0, 70, 0])
+const conQuienJuega = (escena, camara) => ({
+  escena,
+  camara,
+  encima: (celdas, u, modo, distancias) => {
+    const c = camara(u)
+    const en = proyectar(c, QUIEN_JUEGA)
+    if (en) aSuDistancia(celdas, distancias, Math.hypot(...res(QUIEN_JUEGA, c[0])), (cs) => aLoLejos(cs, modo, en))
+  },
+})
+
+// ── El marinero que lo lleva ─────────────────────────────────────────────
+
+const VERDE = OFICIOS.verde.color
+const AMARILLO = OFICIOS.amarillo.color
+const marinero = (color, cfg = {}) => figura(pMarinero(color), { tronco: marineroTronco(color), manos: reposo(pMarinero(color)), ...cfg })
+const andando = (color, f) => marinero(color, { manos: manosAndando(pMarinero(color), f), fase: f })
+
+// Las manos van antes de inclinar y agachar la figura: se ponen girando al
+// revés.
+const antesDe = ({ inclina = 0, agacha = 0 }, p) => transformar([0, 0, -inclina], [0, -1.35, 0]).punto(sum(p, [0, agacha, 0]))
+
+// Duky va de sobre la cabeza de quien está en `donde` hasta `destino`, con
+// `k` de 0 a 1: adelante a `alto` metros, y después abajo. El marinero se
+// agacha para dejarlo; las manos, siempre con él.
+const deja = (donde, destino, k, alto = 0) => {
+  const arriba = sobreLaCabeza(donde, K)
+  const encima = [destino[0], Math.max(arriba.en[1], destino[1] + alto), destino[2]]
+  const en = lerp(lerp(arriba.en, encima, tramo(k, 0, 0.4)), destino, tramo(k, 0.4, 1))
+  const desde = enUnidades(arriba.en, { ...donde, k: K })
+  const corrido = res(enUnidades(en, { ...donde, k: K }), desde)
+  const doblado = { inclina: -24 * tramo(k, 0.5, 1), agacha: 0.3 * tramo(k, 0.5, 1) }
+  const manos = Object.fromEntries([1, -1].map((s) => [s, antesDe(doblado, sum(ARRIBA[s], corrido))]))
+  return [...pato(marinero(VERDE, { manos, ...doblado }), donde), ...pato(enElAire(dukyFigura({})), { en, giro: donde.giro, suelo: -2.2 })]
 }
 
-// ── En el ascensor ───────────────────────────────────────────────────────
-
-// El caza espera sobre la plataforma del ascensor de popa con el morro a popa,
-// así la escalerilla queda hacia el mar. `k` es dónde va la plataforma, de 0
-// (en el hangar) a 1 (en la cubierta); `delCaza` lleva un punto del caza al barco.
-const SOBRE_EL_ASCENSOR = [(ASCENSOR.x0 + ASCENSOR.x1) / 2, (ASCENSOR.z0 + ASCENSOR.z1) / 2]
-const enAscensor = (k) => [SOBRE_EL_ASCENSOR[0], HANGAR.piso + (20.8 - HANGAR.piso) * k - SUELO, SOBRE_EL_ASCENSOR[1]]
-const delCaza = (k, [x, y, z]) => sum(enAscensor(k), [-x, y, -z])
-const enElAscensor = (u, k, formas) => [MAR, ...portaaviones({ ...enMarcha(u), ascensor: k }), ...poner(formas, 180, enAscensor(k))]
-// Arriba, a ras de la cubierta, con la escalerilla puesta.
-const enLaCabina = (u, cupula, { cinturon, figuras }) => enElAscensor(u, 1, [...caza({ cupula, cinturon, t: u }), ...escalerilla, ...figuras])
-// Junto a la cabina, del lado de afuera del marinero, bajo la cúpula abierta.
-const JUNTO_A_LA_CABINA = { ojo: [3.0, 1.2, 7.5], mira: [-0.2, 0.0, -0.6], campo: 54 }
-const CERCA_DE_LA_CABINA = { ojo: [2.2, 1.6, 5.0], mira: [-0.1, -0.6, -0.4], campo: 52 }
-const alLado = (k, { ojo, mira, campo }) => [delCaza(k, enCabina(ojo)), delCaza(k, enCabina(mira)), campo]
-
-// Cruza el hangar con duky en brazos, hacia el portalón y el caza.
-const AL_PORTALON = recorrido([[SOBRE_EL_ASCENSOR[0] + 1.5, 3], [SOBRE_EL_ASCENSOR[0] + 1.5, 16.5]])
-const enElHangar = (u) => {
-  const { en, giro } = AL_PORTALON.donde(AL_PORTALON.largo * u)
-  return { en: [en[0], HANGAR.piso, en[2]], giro }
+// Con duky sobre la cabeza, por un `camino` (recorrido) de `s` metros.
+const loLleva = (camino, s) => {
+  const donde = { ...camino.donde(s), en: sum(camino.donde(s).en, [0, CUBIERTA, 0]) }
+  return [...pato(marinero(VERDE, { manos: ARRIBA, fase: pasos(s) }), donde), ...pato(enElAire(dukyFigura({})), sobreLaCabeza(donde, K))]
 }
-const alPortalon = (u) => conLaCarga(enElHangar(u), fase(AL_PORTALON.largo * u))
+const camino = (puntos) => recorrido(puntos.map(([x, , z]) => [x, z]))
 
-// Sube por la escalerilla mientras se abre la cúpula y la plataforma
-// arranca; después lo deposita y la plataforma termina de subir. En los
-// peldaños no lleva sombra.
-const SUBE = 0.4
-const subiendo = (u) => {
-  const s = tramo(u, 0.2, 0.85)
-  const carga = conLaCarga({ en: lerp([PIE[0], SUELO, PIE[2] - 0.35], LOMO.en, s), giro: LOMO.giro }, s > 0 && s < 1 ? (s * 5) % 1 : null)
-  return s > 0 ? carga.filter(sinSombra) : carga
+// Por la cubierta, hacia la proa, y hasta detrás de donde lo deja.
+const DETRAS_DE_DUKY = deFrente(0, 0.8)
+const A_LA_PROA = camino([enLaFila(-1.5, 7), enLaFila(0, 3.2), DETRAS_DE_DUKY.en])
+
+// Lo deja, se endereza, se da vuelta y se va por donde vino.
+const DE_VUELTA = camino([DETRAS_DE_DUKY.en, enLaFila(0, 5)])
+const DUKY_EN_EL_BORDE = { en: BORDE, giro: MIRA_AL_SOL, suelo: -2.2 }
+const loDeja = (u) => {
+  if (u < 0.6) return deja(DETRAS_DE_DUKY, BORDE, tramo(u, 0.05, 0.55))
+  const duky = pato(dukyFigura({}), DUKY_EN_EL_BORDE)
+  if (u < 0.75) return [...pato(marinero(VERDE), { ...DETRAS_DE_DUKY, giro: girar(MIRA_AL_SOL, MIRA_AL_SOL + 180, tramo(u, 0.6, 0.75)) }), ...duky]
+  const s = DE_VUELTA.largo * tramo(u, 0.75, 1.15)
+  const { en, giro } = DE_VUELTA.donde(s)
+  return [...pato(andando(VERDE, pasos(s)), { en: sum(en, [0, CUBIERTA, 0]), giro }), ...duky]
 }
 
-// ── El despegue ──────────────────────────────────────────────────────────
+// ── El escuadrón ─────────────────────────────────────────────────────────
 
-// Una sola toma, en segundos, desde el comienzo de la catapulta de babor:
-// quieto un instante, la catapulta lo lanza hasta la proa y, ya en el aire,
-// sube con el morro arriba. Dos segundos después se pone feliz, cuando sale
-// la segunda línea de la toma (src/lib/escena11.js). La cámara va en el
-// tablero, mirando a duky todo el tiempo.
-const DESPEGUE = TOMAS.find(({ id }) => id === 'despegue')
-const segundos = (cuadros) => (cuadros * DESPEGUE.ms) / 1000
-const PISTA = { en: [40, 20.8 - SUELO, -6], lanza: 0.36, sale: 1.86, largo: 127, dura: segundos(DESPEGUE.cuadros), feliz: segundos(DESPEGUE.lineas[1].cuadro) }
-// Los primeros 35 m los sube en curva, en `CURVA` s, y después sigue derecho.
-const CURVA = 1.14
-const despegando = (s) => {
-  const corre = Math.min(1, Math.max(0, (s - PISTA.lanza) / (PISTA.sale - PISTA.lanza)))
-  const aire = Math.max(0, s - PISTA.sale)
-  const rapidez = (2 * PISTA.largo) / (PISTA.sale - PISTA.lanza)
-  const sube = aire < CURVA ? 35 * (aire / CURVA) ** 1.6 : 35 + ((35 * 1.6) / CURVA) * (aire - CURVA)
-  return transformar([0, 0, 10 * tramo(s, PISTA.sale, PISTA.sale + 0.6)], [0, 0, 0], sum(PISTA.en, [PISTA.largo * corre ** 2 + rapidez * aire, sube, 0]))
+// Cada uno en su lugar de la fila (`lado`, en metros a la derecha de duky), de
+// pie, con su cuerpo de siempre y las manos donde se le diga. En «Es una escena
+// muy bonita», a moby se le caen las lágrimas (`llanto`, modelos.mjs).
+const mobyTronco = (u, llanto) => [...M.MOBY_TORSO, ...M.mobyCabeza({ t: u * 8, humea: false, llanto })]
+const ESCUADRON = {
+  moby: { lado: -2.2, p: pMoby, suelo: pMoby.suelo, tronco: mobyTronco },
+  duckOne: { lado: -1.05, p: pDuckOne, suelo: pDuckOne.suelo, tronco: () => M.DUCK_ONE },
+  duke: { lado: 1.0, p: pDuke, suelo: pDuke.suelo, tronco: () => dukeAbierto },
+}
+const dondeDe = (quien, atras = 0) => ({ ...deFrente(ESCUADRON[quien].lado, atras), suelo: ESCUADRON[quien].suelo })
+
+// Las manos que se toman, en metros: la de cada uno, a medio camino de la
+// del vecino; con duky, la punta de su ala.
+const aMetros = (p, { en, giro, suelo }) => transformar([0, giro, 0], [0, 0, 0], en).punto(esc(res(p, [0, suelo, 0]), K))
+const manoEnMetros = (quien, s) => aMetros(ESCUADRON[quien].p.reposo(s), dondeDe(quien))
+const ALA = (s) => aMetros([-0.25, -0.85, s * 1.0], DUKY_EN_EL_BORDE)
+const TOMADAS = {
+  moby: { 1: lerp(manoEnMetros('moby', 1), manoEnMetros('duckOne', -1), 0.5) },
+  duckOne: { [-1]: lerp(manoEnMetros('moby', 1), manoEnMetros('duckOne', -1), 0.5), 1: ALA(-1) },
+  duke: { [-1]: ALA(1) },
+}
+// De pie en la fila; `toma`, de 0 a 1, lleva sus manos a las del vecino.
+const enLaFilaDe = (quien, u, toma = 0, llanto = 0) => {
+  const { p, tronco } = ESCUADRON[quien]
+  const donde = dondeDe(quien)
+  const manos = Object.fromEntries([1, -1].map((s) => [s, TOMADAS[quien][s] ? lerp(p.reposo(s), enUnidades(TOMADAS[quien][s], { ...donde, k: K }), toma) : p.reposo(s)]))
+  return pato(figura(p, { tronco: tronco(u, llanto), manos, salto: 0.015 * Math.sin(vuelta(u)) }), donde)
+}
+const juntos = (u, toma = 0, llanto = 0) => Object.keys(ESCUADRON).flatMap((quien) => enLaFilaDe(quien, u, toma, llanto))
+const dukyQuieto = (u) => pato(dukyFigura({ salto: 0.02 * Math.sin(vuelta(u)) }), DUKY_EN_EL_BORDE)
+const fila = (toma = () => 0, llanto = 0) => (u) => [...barco(u), ...juntos(u, toma(u), llanto), ...dukyQuieto(u)]
+
+// Llegan por detrás, cada uno por su carril y desde más o menos lejos.
+const DESDE = { moby: 6.5, duckOne: 5, duke: 5.8 }
+const seAcercan = (u) => {
+  const llegan = Object.keys(ESCUADRON).flatMap((quien) => {
+    const s = DESDE[quien] * (1 - tramo(u, 0, 0.8))
+    if (s <= 0) return enLaFilaDe(quien, u)
+    const { p, tronco } = ESCUADRON[quien]
+    const f = pasos(DESDE[quien] - s)
+    return pato(figura(p, { tronco: tronco(u), manos: manosAndando(p, f), fase: f }), dondeDe(quien, s))
+  })
+  return [...barco(u), ...llegan, ...dukyQuieto(u)]
 }
 
-// ── La emoción ───────────────────────────────────────────────────────────
+// Detrás de la fila, un poco por encima: el sol entre duck-one y duky.
+const MEDIO = enLaFila(-0.55)
+const DETRAS = fija(sum(MEDIO, sum(esc(AL_SOL, -5.5), [0, 1.9, 0])), sum(MEDIO, sum(esc(AL_SOL, 40), [0, 0.2, 0])), 52)
+const MAS_CERCA = fija(sum(MEDIO, sum(esc(AL_SOL, -4.2), [0, 1.2, 0])), sum(MEDIO, sum(esc(AL_SOL, 30), [0, -0.3, 0])), 58)
+// De frente, desde el mar, con la cubierta detrás.
+const DE_CARA = (lejos, alto, campo) => fija(sum(MEDIO, sum(esc(AL_SOL, lejos), [0, alto, 0])), sum(MEDIO, [0, 0.45, 0]), campo)
+// Detrás de duky, a ras de cubierta y a su izquierda: el sol a su lado.
+const TRAS_DUKY = fija(sum(enLaFila(-0.6, 3.4), [0, 0.8, 0]), sum(enLaFila(-9, -60), [0, 2.6, 0]), 46)
+// De costado, desde estribor, a la altura del marinero.
+const DE_COSTADO = fija(sum(enLaFila(4.6, 1.2), [0, 1.4, 0]), sum(enLaFila(0, 1.0), [0, 0.35, 0]), 50)
 
-// duky jadea de la emoción como lo que es, un pato de hule que alguien
-// aprieta: con `k` de 0 a 1 se aplasta entero desde el asiento, ancho y bajo,
-// y bota el aire por el pico abierto; al soltarlo vuelve a su forma y lo
-// recupera. El pico de su cara de siempre (la forma 7 de pilotos/modelos.mjs)
-// se parte en dos. En la catapulta, en cambio, la aceleración lo pega al
-// respaldo (`pegar`, con `g` de 0 a 1): se achata contra él.
-const CARA = DUKY_HULE.slice(6)
-const PICO = DUKY_HULE[7]
-const caraQueJadea = (k) => [
-  ...CARA.filter((forma) => forma !== PICO),
-  el(sum(PICO.c, [0, 0.03 + 0.05 * k, 0]), [0.36, 0.08, 0.32], C.picoHule, { rot: [0, 0, 6 + 10 * k] }),
-  el(sum(PICO.c, [-0.04, -0.03 - 0.06 * k, 0]), [0.3, 0.07, 0.28], C.picoHule, { rot: [0, 0, -14 * k] }),
-  el(sum(PICO.c, [-0.08, 0, 0]), [0.22, 0.02 + 0.08 * k, 0.22], C.oscuro, { flat: '#3a0e0a' }),
+// Llega por detrás de duky, los vecinos le sueltan las alas, lo sube sobre
+// la cabeza y se lo lleva por donde vino.
+const DE_ATRAS = camino([enLaFila(0, 4), DETRAS_DE_DUKY.en])
+const loRecoge = (u) => {
+  const sueltan = 1 - tramo(u, 0.05, 0.25)
+  const quedan = [...barco(u), ...juntos(u, sueltan)]
+  if (u < 0.35) {
+    const s = DE_ATRAS.largo * tramo(u, 0, 0.35)
+    const { en, giro } = DE_ATRAS.donde(s)
+    return [...quedan, ...pato(andando(VERDE, pasos(s)), { en: sum(en, [0, CUBIERTA, 0]), giro }), ...dukyQuieto(u)]
+  }
+  if (u < 0.75) return [...quedan, ...deja(DETRAS_DE_DUKY, BORDE, 1 - tramo(u, 0.35, 0.75))]
+  const donde = { ...DETRAS_DE_DUKY, giro: girar(MIRA_AL_SOL, MIRA_AL_SOL + 180, tramo(u, 0.75, 0.9)) }
+  return [...quedan, ...pato(marinero(VERDE, { manos: ARRIBA }), donde), ...pato(enElAire(dukyFigura({})), sobreLaCabeza(donde, K))]
+}
+// De frente y muy desde arriba, sobre el mar: así el marinero, detrás de
+// duky, queda por encima de él en el cuadro.
+const DESDE_ARRIBA = fija(sum(enLaFila(-0.55, -3.2), [0, 5.4, 0]), sum(enLaFila(-0.55, 0.5), [0, 0.2, 0]), 56)
+
+// ── La caja ──────────────────────────────────────────────────────────────
+
+// De madera, de 1,2 m de lado y 1 de alto, a estribor, frente a los cazas
+// estacionados. La cinta de peligro la cruza por arriba en dos bandas, que se
+// van poniendo con `cinta` de 0 a 1, y el sticker va en la cara de estribor.
+const CAJA = { x: 50, z: 10, lado: 1.2, alto: 1.0 }
+const MADERA = ['#f2cf96', '#cf9c5c', '#9a6a36', '#5c3c1c']
+const [X0, X1, Z0, Z1] = [CAJA.x - CAJA.lado / 2, CAJA.x + CAJA.lado / 2, CAJA.z - CAJA.lado / 2, CAJA.z + CAJA.lado / 2]
+const [Y0, Y1] = [CUBIERTA, CUBIERTA + CAJA.alto]
+const LETRA = 0.085
+const STICKER = { texto: 'CLASIFICADO', ancho: ancho('CLASIFICADO', LETRA) + 0.1, y0: Y0 + 0.36, y1: Y0 + 0.64 }
+
+const rayas = ([x, y, z]) => (Math.floor((x + y + z) / 0.07) % 2 ? '#1c1d22' : '#f8d020')
+const pintaCaja = ({ cinta, sticker }) => ([x, y, z]) => {
+  const cx = x - CAJA.x
+  if (sticker && z > Z1 - 0.02 && Math.abs(cx) < STICKER.ancho / 2 && y > STICKER.y0 && y < STICKER.y1) {
+    const u = cx + STICKER.ancho / 2 - 0.05
+    return enTexto(STICKER.texto, u, y - STICKER.y0 - (STICKER.y1 - STICKER.y0 - LETRA) / 2, LETRA) ? '#ffffff' : '#d8282c'
+  }
+  if (cinta > 0 && Math.abs(z - CAJA.z) < 0.11 && (x - X0) / CAJA.lado < cinta * 2) return rayas([x, y, z])
+  if (cinta > 0.5 && Math.abs(cx) < 0.11 && (z - Z0) / CAJA.lado < cinta * 2 - 1) return rayas([x, y, z])
+  // Un listón en cada arista, donde dos de las tres medidas tocan su borde, y
+  // las tablas cada 20 cm.
+  const cerca = (v, a, b) => Math.min(Math.abs(v - a), Math.abs(v - b)) < 0.08
+  if (cerca(x, X0, X1) + cerca(y, Y0, Y1) + cerca(z, Z0, Z1) >= 2) return '#b07a40'
+  return ((y - Y0) / 0.2) % 1 < 0.1 ? '#8a5a2c' : null
+}
+
+// La caja con su `tapa` a `tapa` metros de cerrada (0, cerrada; sin tapa,
+// null).
+const caja = ({ tapa = 0, cinta = 0, sticker = false, salto = 0 } = {}) => {
+  const o = { pinta: pintaCaja({ cinta, sticker }) }
+  const paredes = [
+    placa([[X0, Y0, Z0], [X1, Y0, Z0], [X1, Y1, Z0], [X0, Y1, Z0]], 0.05, MADERA, o),
+    placa([[X0, Y0, Z1], [X0, Y1, Z1], [X1, Y1, Z1], [X1, Y0, Z1]], 0.05, MADERA, o),
+    placa([[X0, Y0, Z0], [X0, Y1, Z0], [X0, Y1, Z1], [X0, Y0, Z1]], 0.05, MADERA, o),
+    placa([[X1, Y0, Z0], [X1, Y0, Z1], [X1, Y1, Z1], [X1, Y1, Z0]], 0.05, MADERA, o),
+  ]
+  const arriba = tapa === null ? [] : [placa([[X0, Y1 + tapa, Z0], [X0, Y1 + tapa, Z1], [X1, Y1 + tapa, Z1], [X1, Y1 + tapa, Z0]], 0.05, MADERA, o)]
+  return transformar([salto * 4, 0, salto * 3], [CAJA.x, Y0, CAJA.z], [0, 0.04 * salto, 0]).formas([...paredes, ...arriba])
+}
+const CERRADA = { cinta: 1, sticker: true }
+
+// Los tres alrededor de la caja: el primer marinero a popa, el segundo a proa
+// y el almirante, al llegar, en la esquina de estribor, sin tapar el sticker.
+// Cada uno mira la caja.
+const hacia = ([x, z], destino = [CAJA.x, CAJA.z]) => ({ en: [x, CUBIERTA, z], giro: giroHacia([x, z], destino) })
+const M1 = hacia([CAJA.x - 1.0, CAJA.z])
+const M2 = hacia([CAJA.x + 1.0, CAJA.z - 0.5])
+const ALM = hacia([CAJA.x + 0.8, CAJA.z + 1.2])
+
+// Quien está en `donde`, de tres cuartos: la cámara, a `angulo` grados de
+// hacia donde mira (la caja), del lado donde no hay nadie. Los marineros, más
+// bajos que la caja, van de perfil, pasados los 90°, para que no los tape.
+const primerPlano = (donde, angulo, lejos = 2.2, campo = 44) => {
+  const a = ((donde.giro + angulo) * Math.PI) / 180
+  return fija(sum(donde.en, [lejos * Math.cos(a), 0.95, -lejos * Math.sin(a)]), sum(donde.en, [0, 0.6, 0]), campo)
+}
+
+// La lleva hasta la caja, lo deja dentro y la tapa.
+const DENTRO = [CAJA.x, CUBIERTA + 0.06, CAJA.z]
+const AL_LADO_DE_LA_CAJA = (() => {
+  const p = M1.en
+  return camino([[p[0] - 3, 0, p[2] - 1.5], [p[0], 0, p[2]]])
+})()
+const tapando = (u) => {
+  const tapa = 0.5 * (1 - tramo(u, 0.6, 0.9))
+  const manos = Object.fromEntries([1, -1].map((s) => [s, enUnidades([X0 + 0.1, Y1 + tapa, CAJA.z + s * 0.35], { ...M1, k: K })]))
+  return [...pato(marinero(VERDE, { manos }), M1), ...caja({ tapa })]
+}
+const enLaCaja = (u) => {
+  if (u < 0.2) return [...loLleva(AL_LADO_DE_LA_CAJA, AL_LADO_DE_LA_CAJA.largo * (0.6 + 0.4 * tramo(u, 0, 0.2))), ...caja({ tapa: null })]
+  if (u < 0.55) return [...deja(M1, DENTRO, tramo(u, 0.2, 0.55), 1.25), ...caja({ tapa: null })]
+  return tapando(u)
+}
+
+// Mientras la cinta se pone sola (hasta u = 0,47), el primer marinero la va
+// pasando. Después se inclina, estira el brazo por la esquina y pega el
+// sticker de un manotazo (aparece con el golpe, en u = 0,6), lo aplasta otra
+// vez y baja las manos. El segundo mira.
+const EN_EL_STICKER = [X0 + 0.2, (STICKER.y0 + STICKER.y1) / 2, Z1 + 0.04]
+const pegando = (u) => {
+  const ida = Math.sin(vuelta(u) * 3.84) * (1 - tramo(u, 0.44, 0.48))
+  const [estira, aplasta, baja] = [tramo(u, 0.52, 0.6), Math.sin(Math.PI * tramo(u, 0.63, 0.69)), tramo(u, 0.71, 0.79)]
+  const enCaja = (p) => enUnidades(p, { ...M1, k: K })
+  const pega = lerp(lerp(enCaja([X0 + 0.05, Y1 - 0.15 + 0.1 * ida, CAJA.z + 0.2]), enCaja(sum(EN_EL_STICKER, [0, 0, 0.12 * aplasta])), estira), M1_REPOSO[1], baja)
+  const otra = lerp(enCaja([X0 + 0.05, Y1 - 0.15 - 0.1 * ida, CAJA.z - 0.2]), M1_REPOSO[-1], estira)
+  return pato(marinero(VERDE, { manos: { 1: pega, [-1]: otra }, inclina: -12 * estira * (1 - baja) }), M1)
+}
+const M1_REPOSO = reposo(pMarinero(VERDE))
+const segundo = (u, cfg = {}) => pato(marinero(AMARILLO, { salto: 0.01 * Math.sin(vuelta(u)), ...cfg }), M2)
+const primero = (u, cfg = {}) => pato(marinero(VERDE, { salto: 0.01 * Math.sin(vuelta(u) + 1), ...cfg }), M1)
+
+// El almirante llega desde la isla, con las manos atrás.
+const DE_LA_ISLA = camino([[CAJA.x - 1.6, 0, CAJA.z + 2.6], [ALM.en[0], 0, ALM.en[2]]])
+const llegaElAlmirante = (u) => {
+  const s = DE_LA_ISLA.largo * tramo(u, 0, 0.85)
+  const { en, giro } = DE_LA_ISLA.donde(s)
+  const donde = s < DE_LA_ISLA.largo ? { en: sum(en, [0, CUBIERTA, 0]), giro } : { ...ALM, giro: girar(giro, ALM.giro, tramo(u, 0.85, 1)) }
+  return pato(s < DE_LA_ISLA.largo ? almirante.andando(pasos(s)) : almirante.quieto(u), donde)
+}
+
+// Junto a la caja: quien hable, con su cuerpo; los demás, quietos.
+const hablando = (color) => (u) => marinero(color, { tronco: hablar(marineroTronco(color), silaba(u)) })
+const conversacion = (cambios = {}) => (u) => [
+  ...barco(u),
+  ...caja(CERRADA),
+  ...pato(cambios.m1?.(u) ?? marinero(VERDE, { salto: 0.01 * Math.sin(vuelta(u) + 1) }), M1),
+  ...pato(cambios.m2?.(u) ?? marinero(AMARILLO, { salto: 0.01 * Math.sin(vuelta(u)) }), M2),
+  ...pato(cambios.alm?.(u) ?? almirante.quieto(u), ALM),
 ]
-const deformar = (formas, base, S) => {
-  const p = (v) => v.map((x, i) => base[i] + (x - base[i]) * S[i])
-  return formas.map((f) =>
-    f.k === 'e' ? { ...f, c: p(f.c), r: f.r.map((x, i) => x * S[i]) } : { ...f, centro: p(f.centro), tris: f.tris.map((t) => ({ ...t, a: p(t.a), b: p(t.b), c: p(t.c) })) },
-  )
+
+// ── La patada y el miedo ─────────────────────────────────────────────────
+
+// Abre los brazos y patea dos veces con la derecha, sola: el pie sube y se
+// adelanta como un paso largo, la izquierda queda plantada y la caja salta
+// con cada golpe. Conforme, baja los brazos y asiente. Antes de u = 0 y
+// después de 1, más cuadros al mismo ritmo.
+const PATADA = { ...pMarinero(VERDE), pierna: { ...pMarinero(VERDE).pierna, A: 1.4, alto: 0.9 } }
+const GOLPES = [0.3, 0.65]
+const golpe = (u) => Math.max(...GOLPES.map((g) => Math.max(0, 1 - Math.abs(u - g) / 0.1)))
+const patea = (u) => {
+  const k = golpe(u)
+  const ψ = Math.PI / 2 - (Math.PI / 2 + 0.45) * suave(k)
+  const abre = tramo(u, -0.08, 0) * (1 - tramo(u, 0.95, 1.03))
+  const manos = Object.fromEntries([1, -1].map((s) => [s, lerp(PATADA.reposo(s), [0.1, -0.7, s * 1.4], abre)]))
+  const asiente = Math.max(0, Math.sin(2 * Math.PI * tramo(u, 1.0, 1.08)))
+  const cuerpo = figura(PATADA, { tronco: marineroTronco(VERDE), manos, patada: ψ, inclina: 10 * k - 6 * asiente })
+  const sacude = Math.max(...GOLPES.map((g) => (u > g ? Math.max(0, 1 - (u - g) / 0.12) : 0))) * Math.sin(vuelta(u) * 6)
+  return [...barco(u), ...caja({ ...CERRADA, salto: sacude }), ...pato(cuerpo, M1), ...segundo(u), ...pato(almirante.quieto(u), ALM)]
 }
-const aplastar = (formas, k) => deformar(formas, [0, -1.9, 0], [1 + 0.14 * k, 1 - 0.24 * k, 1 + 0.14 * k])
-// Pegado, se achata contra el respaldo, se ensancha y aprieta los ojos.
-const [, , ...OJOS] = CARA
-const caraPegada = (g) => CARA.filter((f, i) => g < 0.5 || i < 4).map((f) => (OJOS.includes(f) ? { ...f, r: [f.r[0], f.r[1] * (1 - 0.75 * g), f.r[2] * (1 + 0.3 * g)] } : f))
-const pegar = (formas, g) => deformar(formas, [-1.2, -1.9, 0], [1 - 0.35 * g, 1 - 0.14 * g, 1 + 0.24 * g])
-// Jadea `veces` por segundo, con fuerza `fuerza` (de 0 a 1).
-const jadea = (s, veces, fuerza = 1) => fuerza * (0.5 - 0.5 * Math.cos(s * Math.PI * 2 * veces))
-// En la pista va pegado al asiento; en el aire se suelta, se queda quieto y,
-// a su hora, jadea de la emoción: una vez cada 0,4 s.
-const dukyDespega = (s) => {
-  const g = tramo(s, PISTA.lanza, PISTA.lanza + 0.15) * (1 - tramo(s, PISTA.sale + 0.06, PISTA.sale + 0.42))
-  const k = jadea(Math.max(0, s - PISTA.feliz), 2.5, tramo(s, PISTA.feliz, PISTA.feliz + 0.4))
-  return pegar(aplastar(dukyFigura({ cara: g > 0.05 ? caraPegada(g) : caraQueJadea(k) }), k), g)
+
+// El segundo marinero niega con la cabeza, rápido, y tirita entero, con las
+// manos al pecho. La cabeza son sus formas desde la tercera.
+const tirita = (u, k) => Math.sin(Math.floor(u * 96) * 2.39 + k)
+const niega = (u) => {
+  const tronco = marineroTronco(AMARILLO)
+  const cabeza = transformar([0, 28 * Math.sin(vuelta(u) * 4), 0], [0.1, 0.1, 0]).formas(tronco.slice(2))
+  return marinero(AMARILLO, { tronco: [...tronco.slice(0, 2), ...cabeza], manos: { 1: [0.7, -0.45, 0.45], [-1]: [0.7, -0.45, -0.45] }, salto: 0.03 * tirita(u, 0), inclina: 3 + 2 * tirita(u, 1) })
 }
 
-// La cámara en el tablero, sobre la pantalla, mirando a duky: en unidades de la cabina.
-const TABLERO = { ojo: [3.6, 0.55, 0], mira: [-0.4, -0.5, 0], campo: 72 }
-
-// ── En vuelo ─────────────────────────────────────────────────────────────
-
-// A 300 m sobre el mar. El caza se queda donde está y las nubes pasan hacia
-// atrás, una vuelta de 600 m por bucle, más abajo y al otro lado del caza que
-// la cámara: nunca lo tapan.
-export const ALTURA = [0, 300, 0]
-const NUBES = [[-80, -30, 120, 40], [60, -50, 200, 55], [200, -20, 90, 35], [330, -45, 160, 60], [470, -25, 110, 45]]
-export const nubes = (u) => NUBES.map(([x, y, z, r]) => el([((((x - 600 * u + 900) % 600) + 600) % 600) - 300, 300 + y, z], [r, r * 0.3, r * 0.6], C.nube))
-const volando = (u, piloto = DUKY.sentado(0)) => [MAR, ...nubes(u), ...poner(conDuky({ motor: true, tren: false, t: u }, piloto), 0, ALTURA)]
-const enVueloDe = (p) => sum(enCabina(p), ALTURA)
-
-// ── La radio ─────────────────────────────────────────────────────────────
-
-// En la sala azul, el oficial habla por radio o calla, y el almirante, detrás,
-// mira las pantallas; con `eco`, quien juega aparece en los radares.
-const gesto = (p, nombre) => p.gestos.find((g) => g.nombre === nombre).pose
-const POR_RADIO = gesto(OFICIAL, 'habla por radio')
-const enLaSalaAzul = ({ habla = false, eco = false }) => cic({ oficial: habla ? POR_RADIO : (u) => POR_RADIO(u, { abre: 0 }), almirante: gesto(ALMIRANTE, 'mira las pantallas'), eco })
-
-// La sala con el marinero y duky, `figuras`, en ese orden, y los demás donde
-// terminó la escena 10, siguiendo a duky con la vista.
-const losVenIrse = (u, figuras) => {
-  const { en } = figuras[1][1]
-  const duky = [en[0], en[2]]
-  return reunion({ u, pantalla: PANTALLA, abre: 1, giros: girosHacia(duky), figuras: [...losTres(u, duky), ...figuras] })
+// Se da vuelta, corre hacia estribor con los brazos arriba, sigue de largo
+// por el borde de la cubierta y cae al agua dando una vuelta, de cabeza.
+const BORDA = 22.4
+const A_LA_BORDA = camino([[M2.en[0], 0, M2.en[2]], [M2.en[0] + 0.4, 0, BORDA]])
+const CAIDA = { sale: 0.5, cae: 0.82 }
+const AGUA = 0.1
+const salpica = (en, k) =>
+  k <= 0 || k >= 1
+    ? []
+    : [0, 1, 2, 3, 4, 5].map((i) => {
+        const a = (i / 6) * Math.PI * 2
+        const r = 0.8 + 2 * k
+        return el([en[0] + r * Math.cos(a), AGUA + 2.4 * Math.sin(Math.PI * k) * (0.6 + 0.4 * (i % 2)), en[2] + r * Math.sin(a)], esc([0.6, 1.0, 0.6], 1 - k * 0.6), C.nube, { flat: '#eef4ff' })
+      })
+// Dónde va en el instante u: corriendo por la cubierta y, desde la borda,
+// cayendo.
+const FIN = sum(A_LA_BORDA.donde(A_LA_BORDA.largo).en, [0, CUBIERTA, 0])
+const EN_EL_AGUA = [FIN[0], AGUA - 0.25, FIN[2] + 1.2]
+const corriendoEn = (u) => {
+  if (u < CAIDA.sale) {
+    const { en, giro } = A_LA_BORDA.donde(A_LA_BORDA.largo * tramo(u, 0.05, CAIDA.sale) ** 1.3)
+    return { en: sum(en, [0, CUBIERTA, 0]), giro: girar(M2.giro, giro, tramo(u, 0, 0.1)) }
+  }
+  const k = tramo(u, CAIDA.sale, CAIDA.cae)
+  return { en: [FIN[0], entre(FIN[1], EN_EL_AGUA[1], k ** 2), entre(FIN[2], EN_EL_AGUA[2], k)], giro: A_LA_BORDA.donde(A_LA_BORDA.largo).giro }
 }
+const corriendo = (u) => {
+  const donde = corriendoEn(u)
+  // Sin sombra: la cubierta la tapa, pero al llegar a la borda quedaría en el
+  // aire.
+  if (u < CAIDA.sale) return pato(enElAire(corre(OFICIOS.amarillo, (u * 10) % 1)), donde)
+  if (u < CAIDA.cae) return transformar([200 * tramo(u, CAIDA.sale, CAIDA.cae), 0, 0], sum(donde.en, [0, 0.5, 0])).formas(pato(enElAire(corre(OFICIOS.amarillo, (u * 14) % 1, { inclina: 0 })), donde))
+  return salpica(EN_EL_AGUA, tramo(u, CAIDA.cae, 1))
+}
+const huye = (u) => [...barco(u), ...caja(CERRADA), ...primero(u), ...pato(almirante.quieto(u), ALM), ...corriendo(u)]
+
+// Flota de espaldas con los brazos abiertos y los ojos cerrados, subiendo y
+// bajando con las olas, mientras el barco se aleja: la corriente lo lleva
+// mar adentro por estribor.
+const FLOTA = [CAJA.x + 1.4, AGUA, BORDA + 8]
+const DE_ESPALDAS = transformar([0, 0, 90], [0, -1.35, 0]).formas(
+  enElAire(marinero(AMARILLO, { tronco: marineroTronco(AMARILLO, 0), manos: { 1: [0, -0.8, 1.9], [-1]: [0, -0.8, -1.9] } })),
+)
+const alejandose = (u) => sum(FLOTA, [-4 * u, 0.06 * Math.sin(vuelta(u) * 3), 40 * u])
+const flota = (u) => [...barco(u), ...pato(DE_ESPALDAS, { en: alejandose(u), giro: 90, suelo: -1.6 })]
 
 export const TOMAS_3D = {
-  // Desde lo alto, por sobre la mesa.
-  recoge: {
-    escena: (u) => losVenIrse(u, seLoLleva(u)),
-    camara: fija([3.2, 2.6, -2.6], [-2.4, 1.0, 1.2], 58),
-  },
-  // De costado, desde la sala: se ve la puerta y la pared contra la que choca.
-  choca: {
-    escena: (u) => {
-      const { figuras, extra } = choca(u)
-      return [...losVenIrse(u, figuras), ...extra]
-    },
-    camara: fija([-2.4, 1.9, -0.3], [-3.5, 2.0, MEDIO_DE_LA_PUERTA], 56),
-  },
-  // La primera vez que se ve el caza: con la cúpula cerrada, recortado en el
-  // portalón contra el atardecer. La cámara va detrás del marinero.
-  hangar: {
-    escena: (u) => [...enElAscensor(u, 0, [...caza(), ...escalerilla]), ...alPortalon(u)],
+  // Desde babor, siguiéndolo hasta que frena.
+  aterriza: { escena: aterriza, camara: (u) => [[12, 26, -30], sum(enPista(Math.max(u, 0.3), PARADA).en, [0, 0.5, 0]), 52] },
+  saca: { escena: saca, camara: SOBRE_LA_CABINA },
+  // Lo acompaña de costado, desde babor, a su altura.
+  cubierta: {
+    escena: (u) => [...barco(u), ...loLleva(A_LA_PROA, A_LA_PROA.largo * 0.75 * u)],
     camara: (u) => {
-      const { en } = enElHangar(u)
-      return [[en[0] + 1.6, HANGAR.piso + 1.2, en[2] - 3.4], [en[0] - 0.4, HANGAR.piso + 2.4, en[2] + 10], 58]
+      const { en } = A_LA_PROA.donde(A_LA_PROA.largo * 0.75 * u)
+      const p = sum(en, [0, CUBIERTA, 0])
+      return [sum(p, sum(esc(A_LA_DERECHA, -3.6), [0.4, 1.5, 0])), sum(p, [0.6, 0.6, 0]), 54]
     },
   },
-  // Desde la plataforma, abajo y de contrapicado: sube con ella, y detrás el
-  // costado del barco baja hasta que asoma el cielo.
-  sube: {
-    escena: (u) => enElAscensor(u, SUBE * suave(u), [...caza({ cupula: CUPULA_ABIERTA * tramo(u, 0, 0.2) }), ...escalerilla, ...subiendo(u)]),
-    camara: (u) => {
-      const y = HANGAR.piso + (20.8 - HANGAR.piso) * SUBE * suave(u)
-      return [[-74, y + 0.9, 36.4], [-80, y + 2.4 + 0.6 * suave(u), 31.2], 60]
-    },
-  },
-  // De costado y adelante, bajo la cúpula, que se abre desde la bisagra de
-  // atrás: lo deja en el asiento con el atardecer detrás, mientras la
-  // plataforma llega a la cubierta.
-  deposita: {
-    abre: EN_CABINA,
-    escena: (u) => enElAscensor(u, SUBE + (1 - SUBE) * suave(u), [...caza({ cupula: CUPULA_ABIERTA }), ...escalerilla, ...deposita(u)]),
-    camara: (u) => alLado(SUBE + (1 - SUBE) * suave(u), JUNTO_A_LA_CABINA),
-  },
-  cinturon: { abre: EN_CABINA, escena: (u) => enLaCabina(u, CUPULA_ABIERTA, tirando(0.55 + 0.45 * Math.abs(Math.sin(u * Math.PI * 2)))), camara: () => alLado(1, CERCA_DE_LA_CABINA) },
-  // Un último tirón, con fuerza: lo sostiene, se inclina a mirar la correa que
-  // no cierra y la suelta. Se encoge de hombros, cierra la cabina, y duky
-  // queda adentro un momento, sin cinturón.
-  encoge: {
-    abre: EN_CABINA,
-    escena: (u) => {
-      const tira = 0.55 + 0.45 * tramo(u, 0, 0.09) * (1 - tramo(u, 0.24, 0.33))
-      const mira = tramo(u, 0.15, 0.21) * (1 - tramo(u, 0.24, 0.3))
-      return enLaCabina(u, CUPULA_ABIERTA * (1 - tramo(u, 0.64, 0.82)), tirando(tira, { suelta: tramo(u, 0.33, 0.42), encoge: tramo(u, 0.42, 0.5) * (1 - tramo(u, 0.585, 0.64)), mira }))
-    },
-    camara: () => alLado(1, JUNTO_A_LA_CABINA),
-  },
-  despegue: {
-    abre: EN_CABINA,
-    escena: (u) => {
-      const s = u * PISTA.dura
-      return [MAR, ...portaaviones({ radar: s * 40 }), ...despegando(s).formas(conDuky({ motor: s > PISTA.lanza - 0.12, tren: s < PISTA.sale + 0.6, t: u }, dukyDespega(s)))]
-    },
-    camara: (u) => {
-      const s = u * PISTA.dura
-      const { punto } = despegando(s)
-      const tiembla = s > PISTA.lanza && s < PISTA.sale + 0.15 ? 0.08 * Math.sin(Math.floor(s * 10) * 2.3) : 0
-      return [punto(enCabina(sum(TABLERO.ojo, [0, tiembla, tiembla]))), punto(enCabina(TABLERO.mira)), TABLERO.campo, res(punto([0, 1, 0]), punto([0, 0, 0]))]
-    },
-  },
+  borde: { escena: (u) => [...barco(u), ...loDeja(u)], camara: DE_COSTADO },
+  lejos: conQuienJuega((u) => [...barco(u), ...dukyQuieto(u)], TRAS_DUKY),
+  acercan: { escena: seAcercan, camara: DE_CARA(8, 2.6, 46) },
+  atardecer: conQuienJuega(fila(), DETRAS),
+  manos: conQuienJuega(fila((u) => tramo(u, 0.15, 0.8)), MAS_CERCA),
+  bonito: { escena: fila(() => 1, 1), camara: DE_CARA(4.6, 0.9, 50) },
 
-  // Desde su consola, junto a la pantalla, de frente al oficial; el almirante, detrás.
-  radio: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.5, 1.15, 0.2], [1.0, 1.02, -0.05], 50) },
-  // Mientras el oficial llama, duky de perfil frente al tablero del F-22, de un
-  // lado y del otro: las pantallas encendidas y él, que no contesta.
-  silencio: { abre: EN_CABINA, escena: (u) => volando(u), camara: fija(enVueloDe([1.2, 0.6, -1.45]), enVueloDe([1.9, -1.0, 0.7]), 96) },
-  // El radar de su consola, de cerca: aparece el eco.
-  pitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([1.5, 1.2, -0.95], [2.12, 1.1, -0.5], 40) },
-  // Por el lado izquierdo del oficial, el que no tapa su brazo.
-  termina: { escena: enLaSalaAzul({ habla: true }), camara: fija([2.0, 1.25, -1.2], [1.0, 1.0, 0.0], 54) },
-  calla: { abre: EN_CABINA, escena: (u) => volando(u), camara: fija(enVueloDe([0.9, 0.75, 1.5]), enVueloDe([1.9, -0.9, -0.55]), 92) },
-  // Desde el fondo del pasillo, en alto, la sala entera: el almirante de
-  // espaldas, el oficial en su consola y el eco otra vez en el radar grande.
-  otroPitido: { escena: enLaSalaAzul({ eco: true }), camara: fija([-8.4, 2.9, 0.5], [1.0, 1.2, -0.42], 54) },
+  recoge: { escena: loRecoge, camara: DESDE_ARRIBA },
+  // Desde atrás y arriba, a estribor: se ve el fondo de la caja.
+  caja: { escena: (u) => [...barco(u), ...enLaCaja(u)], camara: fija([CAJA.x - 1.6, CUBIERTA + 2.9, CAJA.z + 3.0], [CAJA.x - 0.3, CUBIERTA + 0.5, CAJA.z], 54) },
+  // De cerca, de frente a la cara del sticker.
+  cinta: {
+    escena: (u) => [...barco(u), ...caja({ cinta: tramo(u, 0.039, 0.468), sticker: u > 0.6 }), ...pegando(u), ...segundo(u)],
+    camara: (u) => [[CAJA.x + 0.1, CUBIERTA + 1.3, CAJA.z + 2.3 - 0.5 * tramo(u, 0.55, 0.71)], [CAJA.x, CUBIERTA + 0.55, CAJA.z], 54],
+  },
+  almirante: { escena: (u) => [...barco(u), ...caja(CERRADA), ...primero(u), ...segundo(u), ...llegaElAlmirante(u)], camara: fija([CAJA.x + 0.2, CUBIERTA + 3.8, CAJA.z + 3.8], [CAJA.x - 0.3, CUBIERTA + 0.3, CAJA.z + 0.8], 54) },
+  destino: { escena: conversacion({ m1: hablando(VERDE) }), camara: primerPlano(M1, -100) },
+  myanmar: { escena: conversacion({ alm: almirante.habla }), camara: primerPlano(ALM, 70, 2.2) },
+  porque: { escena: conversacion({ m2: hablando(AMARILLO) }), camara: primerPlano(M2, -100) },
+  clasificada: { escena: conversacion({ alm: almirante.ordena }), camara: primerPlano(ALM, -70, 2.2, 46) },
+  proteccion: { escena: conversacion({ m1: hablando(VERDE) }), camara: primerPlano(M1, 100) },
+
+  patea: alargar({ escena: patea, camara: fija([CAJA.x - 0.6, CUBIERTA + 0.9, CAJA.z + 3.4], [CAJA.x - 0.6, CUBIERTA + 0.45, CAJA.z], 52) }, -2 / 24, 26 / 24),
+  tiembla: { escena: conversacion({ m2: niega }), camara: primerPlano(M2, -100, 2.0, 44) },
+  // Desde fuera de la borda, a la altura de la cubierta: lo ve venir y lo
+  // sigue en la caída hasta la espuma.
+  corre: { escena: huye, camara: (u) => [[CAJA.x + 3.5, CUBIERTA + 0.8, BORDA + 2.5], sum(corriendoEn(Math.min(u, CAIDA.cae)).en, [0, 0.4, 0]), 54] },
+  // Sobre el agua, detrás de su cabeza: él abajo y el barco, cada vez más
+  // chico.
+  flota: {
+    escena: flota,
+    camara: (u) => {
+      const en = alejandose(u)
+      return [sum(en, [0.5, 2.2, 2.6]), sum(en, [-0.3, -0.6, -2.5]), 64]
+    },
+  },
 }

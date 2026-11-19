@@ -1,63 +1,49 @@
-// Los sonidos de la escena 5 (src/lib/escena5.js), toma por toma
-// (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
+// Los sonidos de la escena 5 (src/lib/operacion-venganza/escena5.js), toma por
+// toma (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/escena5/sonidos.mjs [nombre…]
 
-import { caminataDe, pasosDe, escribirSonidos } from '../sonidos.mjs'
-import { TOMAS } from '../../../src/lib/escena5.js'
+import { escribirSonidos } from '../sonidos.mjs'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena5.js'
 
-const paso = pasosDe(5)
-const caminata = caminataDe(5)
+// Cada caza suena con su motor, y juntos suenan los dos: llegan del
+// horizonte, acercándose toda la toma, y cada uno queda cerca cuando la
+// cámara se le acerca, con el otro más atrás. Cada uno habla desde su cabina,
+// que suena como su caza. Duke no lleva destellos.
+const DE_MOBY = ['monstruo', 'mejor', 'graben', 'pato']
+const DE_DUKE = ['sensores', 'camaras', 'humo', 'gira', 'presenta', 'destellos', 'indescriptible', 'acelera']
+const MOTORES = { moby: 'motor-a10', duke: 'motor-hornet' }
+const motores = (toma, lejos = {}, entra, tono) => Object.entries(MOTORES).map(([quien, nombre]) => ({ toma, nombre, lejos: lejos[quien], entra, tono }))
+const DEL_HORIZONTE = [[0, 1], [16, 0.75], [32, 0.4]]
 
-// Toca la cubierta en u = 0,58 de su tira (POV.toca en tomas.mjs), el cuadro
-// 25; el chirrido del aterrizaje empieza 0,2 s después del suyo.
 export const SONIDOS = [
-  { toma: 'aproximacion', nivel: 'alto', texto: 'A jet fighter approaches an aircraft carrier to land, the engine roar growing louder over the sea' },
-  { toma: 'aproximacion', nombre: 'mar' },
-  { toma: 'aterrizaje', nombre: 'cabina' },
+  { tomas: ['horizonte', 'moby', 'duke', 'juntos', 'objetivo'], nombre: 'cielo' },
+  ...motores('horizonte', { moby: DEL_HORIZONTE, duke: DEL_HORIZONTE }, 1.5, [[0, 1.05], [32, 1]]),
+  ...motores('moby', { duke: 0.5 }, 2),
+  ...motores('duke', { moby: 0.5 }, 2),
+  ...motores('juntos', {}, 0.5),
+  { tomas: DE_MOBY, nombre: 'cabina-moby' },
+  { tomas: DE_DUKE, nombre: 'cabina-duke' },
+  // Su cámara empieza a grabar cuando se gira hacia ella: el «REC».
   {
-    toma: 'aterrizaje',
-    nivel: 'fuerte',
-    cuadro: 23.5,
-    segundos: 3,
-    texto: "Starting right away with the impact: a fighter jet's tires screech loudly as they hit an aircraft carrier deck, the arresting wire snaps taut and the jet lurches to a stop, panicked sailors' footsteps scatter",
-  },
-  // Cuando duck-one se baja, el motor se apaga despacio y suena mientras
-  // hablan en la cubierta, hasta enfriarse del todo.
-  {
-    toma: 'pose',
-    nombre: 'revoluciones',
-    nivel: 'alto',
-    segundos: 14,
-    texto: 'Jet engine shutdown spool down, heard on an aircraft carrier deck right next to a parked F-14 Tomcat: the turbine whine winding down slowly, lower and lower over fourteen seconds, the rumble fading, a long decrescendo into silence with a few faint ticks of hot metal cooling',
-  },
-  { tomas: TOMAS.slice(2).map((t) => t.id), nombre: 'cubierta' },
-  // La cúpula ya está abierta: duck-one baja del ala, toca la cubierta en el
-  // 9,6 y se pone en jarras, sacando pecho, del 9,6 al 12 (pose en tomas.mjs).
-  { toma: 'pose', nivel: 'medio', segundos: 1.5, texto: 'A fighter jet cockpit canopy finishes opening with a short pneumatic hiss and a soft clunk' },
-  { toma: 'pose', nombre: 'cae-de-pie', cuadros: [9.6] },
-  { toma: 'pose', nombre: 'duck-one-pecho', cuadros: [10.8] },
-  paso('marcha', 'duckOne', 'paso-duck-one-cubierta'),
-  { ...caminata('marcha', 'duckOne'), nombre: 'medallas' },
-  // Salta en el 3,2 y cae en el 17,6 (saltaYSeñala en tomas.mjs), y las
-  // medallas se le mueven mientras levanta la mano y está en el aire.
-  {
-    toma: 'salta',
-    nombre: 'impulso',
+    toma: 'gira',
+    nombre: 'graba',
     nivel: 'medio',
-    cuadros: [3.2],
-    segundos: 0.8,
-    texto: 'Starting right away: a man in military boots springs up into a jump from the rough non-skid surface of an aircraft carrier deck, a quick gritty scuff of both soles pushing off and a whoosh of his uniform',
+    segundos: 0.7,
+    texto: 'Starting right away: two short, clear, high-pitched electronic beeps, like a camcorder starting to record',
   },
+  { toma: 'destellos', nivel: 'medio', bucle: true, texto: 'Continuous magical glitter shimmer with twinkling chimes' },
+  // Moby lo adelanta desde atrás, por estribor y cada vez más rápido (PASA en
+  // tomas.mjs): a 53 m, pasa a 17 m de la cabina de duke en el 15,5 y se va
+  // a 72 m, con su Doppler. Después sube contra quien juega y se aleja de la
+  // cámara, de 22 a 233 m.
   {
-    toma: 'salta',
-    nombre: 'cae-de-pie',
-    nivel: 'medio',
-    cuadros: [17.6],
-    segundos: 0.8,
-    texto: 'Starting right away: a man in military boots lands on both feet on the rough non-skid surface of an aircraft carrier deck after a jump, one firm gritty thud, no metal',
+    toma: 'acelera',
+    nombre: 'motor-a10',
+    lejos: [[0, 0.65], [9.6, 0.45], [13.2, 0.2], [15.5, 0.05], [18, 0.25], [21, 0.55], [24, 0.7]],
+    tono: [[0, 1], [9.6, 1.07], [13.2, 1.07], [15.5, 1], [18, 0.91], [21, 0.86], [24, 0.84]],
   },
-  { toma: 'salta', nombre: 'medallas', cuadro: 1.6, hasta: 19 },
+  { toma: 'objetivo', nombre: 'motor-a10', lejos: [[0, 0.2], [12, 0.5], [24, 0.9]], tono: [[0, 0.9], [12, 0.85], [24, 0.78]] },
 ]
 
 if (import.meta.main) await escribirSonidos(5, TOMAS, SONIDOS)

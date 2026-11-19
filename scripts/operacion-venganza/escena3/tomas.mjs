@@ -1,6 +1,6 @@
 // Las tomas de la escena 3, en 3D: qué se ve en el instante u ∈ [0, 1) y
 // desde dónde, como las de la escena 1 (escena1/tomas.mjs). El guion, con
-// sus líneas, está en src/lib/escena3.js.
+// sus líneas, está en src/lib/operacion-venganza/escena3.js.
 //
 // `escena(u)` arma la figura en metros del barco; `camara(u)` da [ojo, mira,
 // campo] en metros y grados.
@@ -10,7 +10,7 @@ import { ALAS_TOMCAT, RAMPAS as C, CABEZA, DUCK_ONE, DUCK_ONE_TORSO, GAFAS_DUCK_
 import { PERSONAJES, figura, manosAndando, pDuckOne } from '../pilotos/cuerpos.mjs'
 import { ACELERADOR, NORMAL, PALANCA, enCabina } from '../pilotos/interiores.mjs'
 import { MAR, colocar, enMarcha, poner, portaaviones } from '../escena1/lugares.mjs'
-import { FLECHA, HUELLA } from '../../../src/lib/flecha.js'
+import { FLECHA, HUELLA } from '../../../src/lib/operacion-venganza/flecha.js'
 import { curva, hablar, silaba, suave } from '../escena1/personajes.mjs'
 import { BOTON, EN_CATAPULTA, ESCALA, SUELO, caza, enCaza, enPiloto } from './caza.mjs'
 import { EN_CABINA, alargar } from '../tiras.mjs'

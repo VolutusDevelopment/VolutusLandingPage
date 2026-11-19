@@ -1,6 +1,6 @@
-// Las tiras de las pantallas de carga (src/lib/cargas.js), menos la de
-// duck-one, que pinta escena1/sprites.mjs. Cada personaje de tres cuartos,
-// como en sus láminas (cargas.mjs), y cada marinero en su toma.
+// Las tiras de las pantallas de carga (src/lib/operacion-venganza/cargas.js),
+// menos la de duck-one, que pinta escena1/sprites.mjs. Cada personaje de tres
+// cuartos, como en sus láminas (cargas.mjs), y cada marinero en su toma.
 //
 //   node scripts/operacion-venganza/cargas/sprites.mjs
 //
@@ -11,7 +11,7 @@ import { cerrarGpu } from '../pilotos/gpu.mjs'
 import { PERSONAJES, dukyFigura } from '../pilotos/cuerpos.mjs'
 import { ALMIRANTE, OFICIOS, corre } from '../escena1/personajes.mjs'
 import { escribir, pixel3dGpu, png, rejilla } from '../tiras.mjs'
-import { CARGAS, CUADROS, LADO } from '../../../src/lib/cargas.js'
+import { CARGAS, CUADROS, LADO } from '../../../src/lib/operacion-venganza/cargas.js'
 
 const TRES_CUARTOS = { giro: -40, altura: 8 }
 const fases = (pose) => Array.from({ length: CUADROS }, (_, k) => pose(k / CUADROS))

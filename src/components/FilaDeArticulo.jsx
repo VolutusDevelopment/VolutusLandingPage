@@ -30,8 +30,8 @@ export default function FilaDeArticulo({ articulo, destacado = false, diario = f
       {diario ? (
         <img
           className="articulos-foto"
-          src={`/image/${portada}-800.webp`}
-          srcSet={`/image/${portada}-800.webp 800w, /image/${portada}-1600.webp 1600w`}
+          src={`/image/articulos/${portada}-800.webp`}
+          srcSet={`/image/articulos/${portada}-800.webp 800w, /image/articulos/${portada}-1600.webp 1600w`}
           sizes="(min-width: 640px) 260px, 100vw"
           alt=""
           width={800}

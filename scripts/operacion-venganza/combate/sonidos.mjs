@@ -1,8 +1,9 @@
-// Los sonidos de los niveles (src/combate.js): todo lo que pasa en la pelea,
-// por quién lo hace, con `cuando` suena y su `nivel` (../sonidos.mjs). El
-// cielo y los motores son el fondo y se repiten; lo demás son efectos. Los
-// que traen `ruta` son de las escenas: un caza que pasa o se va suena igual
-// en las dos partes del juego.
+// Los sonidos de los niveles
+// (src/comportamiento/operacion-venganza/combate.js): todo lo que pasa en la
+// pelea, por quién lo hace, con `cuando` suena y su `nivel` (../sonidos.mjs).
+// El cielo y los motores son el fondo y se repiten; lo demás son efectos. Los
+// que traen `ruta` son de las escenas: un caza que pasa o se va suena igual en
+// las dos partes del juego.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/combate/sonidos.mjs [nombre…]
 
@@ -41,7 +42,7 @@ export const SONIDOS = {
     segundos: 1.2,
     texto: 'A fighter jet doing a fast barrel roll: a swirling whoosh of air and engine roar panning across',
   },
-  embestida: { grupo: 'Todos los cazas', nivel: 'fuerte', cuando: 'El caza se lanza contra quien juega.', ruta: rutaDeSonido(6, 'acelera') },
+  embestida: { grupo: 'Todos los cazas', nivel: 'fuerte', cuando: 'El caza se lanza contra quien juega.', ruta: rutaDeSonido(5, 'acelera') },
   impacto: {
     grupo: 'Todos los cazas',
     nivel: 'alto',
@@ -49,7 +50,7 @@ export const SONIDOS = {
     segundos: 0.8,
     texto: 'A small mid-air explosion pop with a crackle of debris',
   },
-  'se-va': { grupo: 'Todos los cazas', nivel: 'alto', cuando: 'Al ganar, los cazas se van.', ruta: rutaDeSonido(14, 'retirada') },
+  'se-va': { grupo: 'Todos los cazas', nivel: 'alto', cuando: 'Al ganar, los cazas se van.', ruta: rutaDeSonido(10, 'retirada') },
 
   'motor-duck-one': {
     grupo: 'Duck-One',

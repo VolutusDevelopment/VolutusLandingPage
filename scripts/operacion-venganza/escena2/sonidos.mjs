@@ -1,10 +1,10 @@
-// Los sonidos de la escena 2 (src/lib/escena2.js), toma por toma
-// (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
+// Los sonidos de la escena 2 (src/lib/operacion-venganza/escena2.js), toma por
+// toma (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/escena2/sonidos.mjs [nombre…]
 
 import { caminataDe, pasosDe, escribirSonidos } from '../sonidos.mjs'
-import { TOMAS } from '../../../src/lib/escena2.js'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena2.js'
 
 // Los cuadros salen de tomas.mjs: la puerta se abre del 6 al 20 (su golpe
 // final suena 1,8 s después de empezar), el marinero se inclina sobre el

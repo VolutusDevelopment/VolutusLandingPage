@@ -53,7 +53,7 @@ export default function Pie({ dia = false }) {
                 rel="noopener"
                 aria-label="Escribir por WhatsApp"
               >
-                <img src="/image/whatsapp.webp" width="22" height="22" alt="" loading="lazy" />
+                <img src="/image/iconos/whatsapp.webp" width="22" height="22" alt="" loading="lazy" />
                 WhatsApp
               </a>
             )}

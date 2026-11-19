@@ -1,4 +1,4 @@
-import { CARGAS } from './cargas.js'
+import { CARGAS } from './operacion-venganza/cargas.js'
 
 /**
  * Metadatos de las páginas, en un solo sitio.
@@ -118,7 +118,7 @@ export const PAGINAS = {
   // una sin `servicios` se sugiere en todas. Las opiniones llevan `autor`, el
   // `id` del socio que la firma (data/socios.js), no se sugieren en los
   // servicios y tienen su propio índice, aparte del de las guías. `portada` es
-  // el nombre de una foto de public/image (a 800 y 1600 px): abre la cabecera
+  // el nombre de una foto de public/image/articulos (a 800 y 1600 px): abre la cabecera
   // del artículo y es la carátula de su fila en el índice de opiniones.
   '/articulos': {
     archivo: 'articulos.html',
@@ -271,7 +271,7 @@ export const PAGINAS = {
   },
   '/privacidad': {
     archivo: 'privacidad.html',
-    actualizada: '2026-11-13',
+    actualizada: '2026-11-18',
     titulo: 'Privacidad y protección de datos — Volutus',
     descripcion:
       'Qué datos trata Volutus cuando escribes por el formulario, con quién se comparten, cuánto se conservan y cómo ejercer tus derechos bajo la ley chilena.',
@@ -328,8 +328,8 @@ export const PAGINAS = {
     fondo: '#5c94fc',
   },
   // Cada escena que sigue va en su propia página.
-  '/operacion-venganza/escena-2': {
-    archivo: 'operacion-venganza/escena-2.html',
+  '/operacion-venganza/patoon-4': {
+    archivo: 'operacion-venganza/patoon-4.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 2: Patoon-4 — Volutus',
@@ -337,8 +337,8 @@ export const PAGINAS = {
       'El escuadrón Patoon-4 llega a la sala de mando del Sitting Ducks: medallas, un puro apagado y un pato de hule con 112 victorias. Escena 2, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-3': {
-    archivo: 'operacion-venganza/escena-3.html',
+  '/operacion-venganza/despegue': {
+    archivo: 'operacion-venganza/despegue.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
     titulo: 'Operación Venganza, escena 3: Despegue — Volutus',
@@ -356,22 +356,22 @@ export const PAGINAS = {
       'duck-one ataca a quien juega: esquiva las balas de su F-14 mientras el cielo del atardecer cambia de vista, con ráfagas de viento. Nivel 1, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-5': {
-    archivo: 'operacion-venganza/escena-5.html',
+  '/operacion-venganza/regreso': {
+    archivo: 'operacion-venganza/regreso.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 5: Regreso — Volutus',
+    titulo: 'Operación Venganza, escena 4: Regreso — Volutus',
     descripcion:
-      'duck-one aterriza su F-14 en el Sitting Ducks como puede, casi atropella a los marinos y le rinde cuentas a moby y a duke. Escena 5, en el navegador.',
+      'duck-one aterriza su F-14 en el Sitting Ducks como puede, casi atropella a los marinos y le rinde cuentas a moby y a duke. Escena 4, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-6': {
-    archivo: 'operacion-venganza/escena-6.html',
+  '/operacion-venganza/entrada': {
+    archivo: 'operacion-venganza/entrada.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 6: Entrada — Volutus',
+    titulo: 'Operación Venganza, escena 5: Entrada — Volutus',
     descripcion:
-      'Moby y Duke llegan con el sol a la espalda. Moby amenaza, Duke se presenta ante su cámara y Moby se lanza contra quien juega. Escena 6, en el navegador.',
+      'Moby y Duke llegan con el sol a la espalda. Moby amenaza, Duke se presenta ante su cámara y Moby se lanza contra quien juega. Escena 5, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/nivel-2': {
@@ -383,31 +383,31 @@ export const PAGINAS = {
     tarjetaAlt: 'Un afiche en píxeles: Moby-Duck saca músculo y Duke SkyDucker saluda junto al texto «La rabia y la belleza».',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-9': {
-    archivo: 'operacion-venganza/escena-9.html',
+  '/operacion-venganza/retirada': {
+    archivo: 'operacion-venganza/retirada.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 9: Retirada — Volutus',
+    titulo: 'Operación Venganza, escena 6: Retirada — Volutus',
     descripcion:
-      'La torre llama de vuelta a Moby y a Duke: ya no queda presupuesto. Duke se mira en el fuselaje y Moby abolla su avión. Escena 9, en el navegador.',
+      'La torre llama de vuelta a Moby y a Duke: ya no queda presupuesto. Duke se mira en el fuselaje y Moby abolla su avión. Escena 6, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-10': {
-    archivo: 'operacion-venganza/escena-10.html',
+  '/operacion-venganza/la-ultima-opcion': {
+    archivo: 'operacion-venganza/la-ultima-opcion.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 10: La última opción — Volutus',
+    titulo: 'Operación Venganza, escena 7: La última opción — Volutus',
     descripcion:
-      'Nada ha funcionado y duck-one propone una medida extraordinal. Moby tose, Duke quiere pintura nueva y todos miran a Duky. Escena 10, en el navegador.',
+      'Nada ha funcionado y duck-one propone una medida extraordinal. Moby tose, Duke quiere pintura nueva y todos miran a Duky. Escena 7, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-11': {
-    archivo: 'operacion-venganza/escena-11.html',
+  '/operacion-venganza/preparativos': {
+    archivo: 'operacion-venganza/preparativos.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 11: Preparativos — Volutus',
+    titulo: 'Operación Venganza, escena 8: Preparativos — Volutus',
     descripcion:
-      'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-22 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 11, en el navegador.',
+      'Nivel 3, el fantasma amarillo: un marinero sube a Duky a un F-22 experimental, el cinturón no encaja y la torre no recibe respuesta. Escena 8, en el navegador.',
     fondo: '#5c94fc',
   },
   '/operacion-venganza/nivel-3': {
@@ -419,40 +419,40 @@ export const PAGINAS = {
     tarjetaAlt: 'Un afiche en píxeles: Duky, el pato de hule gigante, aletea junto al texto «El fantasma amarillo».',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-13': {
-    archivo: 'operacion-venganza/escena-13.html',
+  '/operacion-venganza/la-sala-de-mando': {
+    archivo: 'operacion-venganza/la-sala-de-mando.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 13: La sala de mando — Volutus',
+    titulo: 'Operación Venganza, escena 9: La sala de mando — Volutus',
     descripcion:
-      'Duck-One, Moby y Duke miran en los monitores cómo Duky dispara como si viera el futuro. Moby se mira en la pantalla apagada. Escena 13, en el navegador.',
+      'Duck-One, Moby y Duke miran en los monitores cómo Duky dispara como si viera el futuro. Moby se mira en la pantalla apagada. Escena 9, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-14': {
-    archivo: 'operacion-venganza/escena-14.html',
+  '/operacion-venganza/ultimo-ataque': {
+    archivo: 'operacion-venganza/ultimo-ataque.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 14: Último ataque — Volutus',
+    titulo: 'Operación Venganza, escena 10: Último ataque — Volutus',
     descripcion:
-      'Duky gasta toda su munición y no le da a nadie. Chilla de rabia, vuelve al portaaviones y Moby llora en la sala de mando. Escena 14, en el navegador.',
+      'Duky gasta toda su munición y no le da a nadie. Chilla de rabia, vuelve al portaaviones y Moby llora en la sala de mando. Escena 10, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-15': {
-    archivo: 'operacion-venganza/escena-15.html',
+  '/operacion-venganza/el-regreso-del-fantasma': {
+    archivo: 'operacion-venganza/el-regreso-del-fantasma.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 15: El regreso del fantasma — Volutus',
+    titulo: 'Operación Venganza, escena 11: El regreso del fantasma — Volutus',
     descripcion:
-      'Duky vuelve al Sitting Ducks y el escuadrón Patoon-4 mira con él el atardecer. Después, una caja clasificada rumbo a Myanmar. Escena 15, en el navegador.',
+      'Duky vuelve al Sitting Ducks y el escuadrón Patoon-4 mira con él el atardecer. Después, una caja clasificada rumbo a Myanmar. Escena 11, en el navegador.',
     fondo: '#5c94fc',
   },
-  '/operacion-venganza/escena-16': {
-    archivo: 'operacion-venganza/escena-16.html',
+  '/operacion-venganza/desolacion': {
+    archivo: 'operacion-venganza/desolacion.html',
     tarjeta: '/operacion-venganza',
     actualizada: '2026-10-31',
-    titulo: 'Operación Venganza, escena 16: Desolación — Volutus',
+    titulo: 'Operación Venganza, escena 12: Desolación — Volutus',
     descripcion:
-      'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 16, en el navegador.',
+      'El almirante, solo en la proa, le habla a quien juega. Al final eliges tú: hundir el Sitting Ducks o dejarlos vivir. Escena 12, en el navegador.',
     fondo: '#5c94fc',
   },
   // El índice de todo el juego, para entrar a cualquier página sin jugar.

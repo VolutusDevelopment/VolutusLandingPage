@@ -1798,7 +1798,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-2": {
+    "/operacion-venganza/patoon-4": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -1856,7 +1856,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-3": {
+    "/operacion-venganza/despegue": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -1972,7 +1972,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-5": {
+    "/operacion-venganza/regreso": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2030,7 +2030,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-6": {
+    "/operacion-venganza/entrada": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2146,7 +2146,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-9": {
+    "/operacion-venganza/retirada": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2204,7 +2204,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-10": {
+    "/operacion-venganza/la-ultima-opcion": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2262,7 +2262,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-11": {
+    "/operacion-venganza/preparativos": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2378,7 +2378,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-13": {
+    "/operacion-venganza/la-sala-de-mando": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2436,7 +2436,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-14": {
+    "/operacion-venganza/ultimo-ataque": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2494,7 +2494,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-15": {
+    "/operacion-venganza/el-regreso-del-fantasma": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2552,7 +2552,7 @@
         "ocultosAlImprimir": 0
       }
     },
-    "/operacion-venganza/escena-16": {
+    "/operacion-venganza/desolacion": {
       "S": {
         "alto": 844,
         "desborda": false,
@@ -2852,11 +2852,11 @@
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-2": {
+    "/operacion-venganza/patoon-4": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-3": {
+    "/operacion-venganza/despegue": {
       "paradas": 0,
       "sinAnillo": 0
     },
@@ -2864,11 +2864,11 @@
       "paradas": 1,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-5": {
+    "/operacion-venganza/regreso": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-6": {
+    "/operacion-venganza/entrada": {
       "paradas": 0,
       "sinAnillo": 0
     },
@@ -2876,15 +2876,15 @@
       "paradas": 1,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-9": {
+    "/operacion-venganza/retirada": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-10": {
+    "/operacion-venganza/la-ultima-opcion": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-11": {
+    "/operacion-venganza/preparativos": {
       "paradas": 0,
       "sinAnillo": 0
     },
@@ -2892,19 +2892,19 @@
       "paradas": 1,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-13": {
+    "/operacion-venganza/la-sala-de-mando": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-14": {
+    "/operacion-venganza/ultimo-ataque": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-15": {
+    "/operacion-venganza/el-regreso-del-fantasma": {
       "paradas": 0,
       "sinAnillo": 0
     },
-    "/operacion-venganza/escena-16": {
+    "/operacion-venganza/desolacion": {
       "paradas": 0,
       "sinAnillo": 0
     },

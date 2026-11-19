@@ -1,9 +1,9 @@
-import { ALTO, ANCHO } from '../lib/escena1.js'
-import { FINALES } from '../lib/escena16.js'
-import { CARGAS } from '../lib/cargas.js'
-import { NIVELES, PAGINAS, siguienteDe } from '../lib/juego.js'
-import { BORDE, FLECHA, HUELLA } from '../lib/flecha.js'
-import { CUADROS_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../lib/cazas.js'
+import { ALTO, ANCHO } from '../lib/operacion-venganza/escena1.js'
+import { FINALES } from '../lib/operacion-venganza/escena12.js'
+import { CARGAS } from '../lib/operacion-venganza/cargas.js'
+import { NIVELES, PAGINAS, siguienteDe } from '../lib/operacion-venganza/juego.js'
+import { BORDE, FLECHA, HUELLA } from '../lib/operacion-venganza/flecha.js'
+import { CUADROS_DE_RETRATO, RETRATOS, rutaDeRetratos } from '../lib/operacion-venganza/cazas.js'
 
 const INDICE = '/operacion-venganza/indice'
 
@@ -12,18 +12,18 @@ const INDICE = '/operacion-venganza/indice'
 const CAMINANTES = Object.values(CARGAS).filter(({ tira }) => tira)
 
 /**
- * Operación Venganza, el juego al que lleva el portaaviones de /nosotros.
- * Cada escena y cada nivel (lib/juego.js) tiene su página, y en todas está el
- * juego entero, que empieza en ella: la pantalla de carga, con uno de los
- * personajes caminando mientras se llena la barra con todo lo del juego, las
- * escenas y los niveles. Ya cargado, corre de una página a otra sin volver a
- * cargar, hasta la 16, que lleva a Nosotros. Todo lo mueve
- * src/operacion-venganza.js, que empieza en `data-desde`; aquí está el HTML
- * que espera.
+ * Operación Venganza, el juego al que lleva el portaaviones de /nosotros. Cada
+ * escena y cada nivel (lib/operacion-venganza/juego.js) tiene su página, y en
+ * todas está el juego entero, que empieza en ella: la pantalla de carga, con
+ * uno de los personajes caminando mientras se llena la barra con todo lo del
+ * juego, las escenas y los niveles. Ya cargado, corre de una página a otra sin
+ * volver a cargar, hasta la 12, que lleva a Nosotros. Todo lo mueve
+ * src/comportamiento/operacion-venganza/operacion-venganza.js, que empieza en
+ * `data-desde`; aquí está el HTML que espera.
  *
  * Es una sola pantalla, sin barra ni pie: el juego ocupa la vista. Las
- * pantallas de carga (lib/cargas.js) tienen también su página, para verlas
- * solas, y desde ella se llega al índice de todo.
+ * pantallas de carga (lib/operacion-venganza/cargas.js) tienen también su
+ * página, para verlas solas, y desde ella se llega al índice de todo.
  */
 export default function OperacionVenganza({ ruta }) {
   if (ruta === INDICE) return <Indice />
@@ -107,7 +107,7 @@ function Juego({ ruta }) {
   )
 }
 
-// Las escenas, en un lienzo. Los finales de la 16, un menú sobre el cuadro.
+// Las escenas, en un lienzo. Los finales de la 12, un menú sobre el cuadro.
 function Escenas() {
   return (
     <section className="escena" aria-label="Escenas" hidden>
@@ -135,8 +135,9 @@ function Escenas() {
   )
 }
 
-// Una figura de pixeles de lib/flecha.js, como la que se mueve en el nivel,
-// a dos px por pixel: un trazo por color, X el borde y W el relleno.
+// Una figura de pixeles de lib/operacion-venganza/flecha.js, como la que se
+// mueve en el nivel, a dos px por pixel: un trazo por color, X el borde y W el
+// relleno.
 function Pixeles({ mapa }) {
   const ancho = Math.max(...mapa.map((fila) => fila.length))
   const trazo = (letra) => mapa.flatMap((fila, y) => [...fila].flatMap((c, x) => (c === letra ? [`M${x} ${y}h1v1h-1z`] : []))).join('')
@@ -148,18 +149,20 @@ function Pixeles({ mapa }) {
   )
 }
 
-// El retrato de `quien` en la hoja de lib/cazas.js; la hoja la pone el nivel.
+// El retrato de `quien` en la hoja de lib/operacion-venganza/cazas.js; la hoja
+// la pone el nivel.
 const Retrato = ({ quien }) => <span className="nivel-retrato" style={{ '--fila': RETRATOS.findIndex((r) => r.quien === quien) }} aria-hidden="true" />
 
 /**
- * Un nivel jugable: el combate de src/combate.js con el guion de `data-nivel`.
- * Llega desde las escenas que lo preceden y, al terminar, siguen las que vienen
- * después; también se puede saltar (sin JS, el enlace lleva a la página de la
- * escena siguiente). El cielo se pinta en el lienzo y todo lo demás flota
- * encima, en ventanas y menús de juego: antes de jugar, las reglas (solo en
- * el primer nivel, con las instrucciones del dispositivo: el CSS deja las del
- * ratón o las del dedo) y quién es cada piloto; jugando, los PV y el cuadro
- * de comunicaciones; y los paneles de pausa y derrota.
+ * Un nivel jugable: el combate de
+ * src/comportamiento/operacion-venganza/combate.js con el guion de
+ * `data-nivel`. Llega desde las escenas que lo preceden y, al terminar, siguen
+ * las que vienen después; también se puede saltar (sin JS, el enlace lleva a la
+ * página de la escena siguiente). El cielo se pinta en el lienzo y todo lo
+ * demás flota encima, en ventanas y menús de juego: antes de jugar, las reglas
+ * (solo en el primer nivel, con las instrucciones del dispositivo: el CSS deja
+ * las del ratón o las del dedo) y quién es cada piloto; jugando, los PV y el
+ * cuadro de comunicaciones; y los paneles de pausa y derrota.
  */
 function Nivel({ enlace, nivel, nombre }) {
   const guion = NIVELES[nivel]

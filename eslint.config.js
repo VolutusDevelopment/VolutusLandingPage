@@ -20,7 +20,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   {
-    files: ['src/nubes-lienzo.js'],
+    files: ['src/comportamiento/nubes-lienzo.js'],
     languageOptions: { globals: globals.worker },
   },
   {

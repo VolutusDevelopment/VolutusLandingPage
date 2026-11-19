@@ -1,153 +1,99 @@
-// Los sonidos de la escena 11 (src/lib/escena11.js), toma por toma
-// (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
+// Los sonidos de la escena 11 (src/lib/operacion-venganza/escena11.js), toma
+// por toma (../sonidos.mjs). Solo efectos: los diálogos van sin voz.
 //
 //   node --env-file=.env.local scripts/operacion-venganza/escena11/sonidos.mjs [nombre…]
 
-import { CAZAS, pasosDe, escribirSonidos } from '../sonidos.mjs'
-import { TOMAS } from '../../../src/lib/escena11.js'
+import { caminataDe, pasosDe, escribirSonidos } from '../sonidos.mjs'
+import { TOMAS } from '../../../src/lib/operacion-venganza/escena11.js'
 
-// Los cuadros salen de tomas.mjs: duky choca en el 10 (CHOCA), la plataforma
-// llega a la cubierta al final de `deposita`, el marinero tira del cinturón
-// en el 3 y el 9 de cada vuelta, y la catapulta lanza a los 0,36 s
-// (PISTA.lanza).
-const EN_LA_TORRE = ['radio', 'pitido', 'termina', 'otroPitido']
+// Los cuadros salen de tomas.mjs: el caza de duky toca la cubierta en el 7,2
+// (enPista, escena6/tomas.mjs); la cinta se pega del 1 al 19 y el sticker
+// aparece en el 25, y el marinero salta por la borda en el 16 y cae al agua
+// en el 26 (CAIDA).
+const EN_CUBIERTA = ['aterriza', 'saca', 'cubierta', 'acercan', 'recoge', 'caja', 'cinta', 'almirante', 'destino', 'myanmar', 'porque', 'clasificada', 'proteccion', 'patea', 'tiembla', 'corre']
+const EN_LA_BORDA = ['borde', 'lejos', 'atardecer', 'manos', 'bonito']
 
 const paso = pasosDe(11)
+const caminata = caminataDe(11)
 
 export const SONIDOS = [
-  { tomas: ['recoge', 'choca'], nombre: 'sala-de-mando' },
-  // La cubierta abierta se oye desde el hangar, lejos, y cada vez más cerca
-  // mientras la plataforma sube hasta ella.
-  { toma: 'hangar', nombre: 'cubierta', lejos: 0.8 },
-  { toma: 'sube', nombre: 'cubierta', lejos: [[0, 0.8], [40, 0.45]] },
-  { toma: 'deposita', nombre: 'cubierta', lejos: [[0, 0.45], [40, 0]] },
-  { tomas: ['cinturon', 'encoge'], nombre: 'cubierta' },
-  // El marinero entra, toma a duky en el cuadro 16 y se lo lleva.
-  paso('recoge', 'marinero', 'paso-marinero'),
-  { toma: 'recoge', nivel: 'suave', cuadro: 16, segundos: 1, texto: 'Starting right away: a rubber duck toy squeezed with one short squeak as it is grabbed and lifted' },
-  paso('choca', 'marinero', 'paso-marinero'),
+  { tomas: EN_CUBIERTA, nombre: 'cubierta' },
+  { tomas: EN_LA_BORDA, nombre: 'mar-desde-cubierta' },
+  { toma: 'flota', nombre: 'mar' },
+  // Como los demás, el caza de duky suena con su motor: llega de 184 m, toca
+  // en el 7,2 y se detiene a 27 m de la cámara (enPista); sigue en marcha
+  // mientras sacan a duky y se apaga despacio mientras se lo llevan.
   {
-    toma: 'choca',
-    nivel: 'medio',
-    cuadro: 9.7,
-    segundos: 1.5,
-    texto: 'A rubber duck toy bonks hard against a metal door frame: a hollow thud and a loud pained squeal',
-  },
-  paso('hangar', 'marinero', 'paso-marinero-cubierta'),
-  // Cada pisada en la escalerilla es un peldaño de aluminio.
-  {
-    ...paso('sube', 'marinero', 'peldano'),
-    nivel: 'suave',
-    segundos: 0.5,
-    texto: 'Starting right away: one boot stepping onto an aluminum ladder rung, a single hollow metallic clank',
-  },
-  // La plataforma arranca con un golpe al comienzo de `sube` y sube con sus
-  // motores hasta trabarse en la cubierta, al final de `deposita`: en cada
-  // toma acelera y frena suave (enElAscensor en tomas.mjs). Los motores
-  // suben de tono con ella, y bajan al trabarse.
-  {
-    toma: 'sube',
-    nombre: 'ascensor-arranca',
-    nivel: 'alto',
-    segundos: 2,
-    texto: 'Starting right away: a massive steel aircraft carrier elevator platform lurches into motion, a heavy metallic clunk of the locks releasing and big hydraulic pump motors whining up to speed',
+    toma: 'aterriza',
+    nombre: 'motor-f22',
+    entra: 0.4,
+    lejos: [[0, 0.78], [7.2, 0.6], [13, 0.43], [20, 0.26], [24, 0.23]],
+    tono: [[0, 1.08], [7.2, 1.05], [16, 0.95], [24, 0.85], [32, 0.8]],
   },
   {
-    toma: 'sube',
-    nombre: 'ascensor',
-    tono: [[0, 0.8], [10, 0.95], [40, 1.02]],
-    nivel: 'alto',
-    bucle: true,
-    fondo: true,
-    segundos: 6,
-    entra: 1.2,
-    texto: "A huge aircraft carrier deck-edge elevator platform rising, heard standing on it: the loud steady whine of its hydraulic pump motors, the deep rumble and rattle of the massive steel platform, cables humming and steel guide rails creaking, steady and even, with no distinct events",
-  },
-  { toma: 'deposita', nombre: 'ascensor', tono: [[0, 1.02], [30, 1.1], [38, 0.85]], lejos: [[36, 0], [40, 0.5]] },
-  // Lo pasa sobre el borde de la cabina y lo baja; duky toca el asiento entre
-  // los cuadros 28 y 32 (bajando, tomas.mjs), y su chillido llega 0,97 s
-  // después de empezar.
-  {
-    toma: 'deposita',
-    nivel: 'suave',
-    cuadro: 4,
-    segundos: 3.5,
-    texto: "A sailor's uniform fabric rustling as he leans over the edge of a fighter jet cockpit and carefully lowers something inside, his boots shifting on a metal ladder",
-  },
-  {
-    toma: 'deposita',
-    nombre: 'duky-al-asiento',
-    nivel: 'medio',
-    cuadro: 23.5,
-    segundos: 1.5,
-    texto: "A rubber duck toy pressed down into a fighter jet's ejection seat: one soft rubbery squeak, and the seat harness straps and metal buckles jingle softly",
-  },
-  {
-    toma: 'deposita',
-    nombre: 'ascensor-llega',
-    nivel: 'alto',
-    cuadro: 38,
-    segundos: 1.5,
-    texto: 'A massive aircraft carrier elevator platform locks into place at deck level with a deep heavy metallic clunk',
-  },
-  {
-    toma: 'cinturon',
-    nombre: 'hebilla',
-    nivel: 'medio',
-    cuadro: 3,
-    cada: 0.9,
-    segundos: 0.5,
-    texto: 'A seat belt buckle tongue jabbed against the latch and failing to click in: a short metallic clack and the strap pulled tight',
-  },
-  {
-    toma: 'encoge',
-    nivel: 'medio',
-    texto: 'One last failed seat belt click, then a fighter jet canopy lowers with a hydraulic whine and shuts with a heavy airtight thunk',
-  },
-  { tomas: ['despegue', 'silencio', 'calla'], nombre: 'cabina-duky' },
-  // Desde la cabina, como se oye de verdad: los motores ya a toda potencia en
-  // la catapulta, toda la toma; el disparo de la catapulta, que lo sacude
-  // desde PISTA.lanza (0,36 s) hasta que deja la proa (1,86 s); el tren que
-  // sube en el 24, y duky, que jadea de la emoción desde el 39.
-  {
-    toma: 'despegue',
-    nombre: 'acelera-duky',
+    toma: 'aterriza',
+    nombre: 'chirrido-duky',
     nivel: 'fuerte',
-    segundos: 7.4,
-    entra: 0.3,
-    texto: `Inside the cockpit of ${CAZAS.f22}, heard through the closed canopy: full afterburner on an aircraft carrier catapult, the roar shaking the airframe, then the jet accelerating hard and climbing with the engines roaring steadily and the wind rushing over the canopy`,
+    cuadros: [7.2],
+    segundos: 3,
+    texto: 'Starting right away with the impact: the main wheels of a heavy stealth fighter slam onto an aircraft carrier deck, a hard thump and a sharp screech of rubber tires, the arresting wire snapping taut with a metallic twang, then a rolling rumble fading out, no engine',
   },
+  { toma: 'saca', nombre: 'motor-f22', lejos: 0.15, tono: 0.8, entra: 0.3 },
+  { toma: 'cubierta', nombre: 'motor-f22', lejos: [[0, 0.3], [24, 0.7]], tono: [[0, 0.8], [24, 0.55]], entra: 0.3 },
+  { toma: 'borde', nombre: 'motor-f22', lejos: [[0, 0.7], [32, 1]], tono: [[0, 0.55], [32, 0.35]], entra: 0.3 },
+  { toma: 'saca', nivel: 'medio', texto: 'A cockpit canopy opens with a hydraulic hiss, and a rubber duck toy squeaks as it is lifted out' },
+  paso('cubierta', 'marinero', 'paso-marinero-cubierta'),
+  // Lo deja en el borde en el cuadro 17,6 y se vuelve.
+  { toma: 'borde', nivel: 'suave', cuadro: 15.1, segundos: 1, texto: 'Starting right away: a rubber duck toy gives one soft squeak as it is set down on a metal ledge' },
+  paso('borde', 'marinero', 'paso-marinero-cubierta'),
+  paso('acercan', 'moby', 'paso-moby-cubierta'),
+  paso('acercan', 'duckOne', 'paso-duck-one-cubierta'),
+  { ...caminata('acercan', 'duckOne'), nombre: 'medallas' },
+  paso('acercan', 'duke', 'paso-duke-cubierta'),
+  // Se toman de las manos todos a la vez, en el cuadro 19 (tramo(u, 0.15, 0.8));
+  // el sonido se aprieta 1 s después de empezar.
   {
-    toma: 'despegue',
-    nombre: 'catapulta',
-    nivel: 'fuerte',
-    cuadros: [3.6],
-    segundos: 2.5,
-    texto: "Starting right away: an aircraft carrier catapult launch felt from inside the fighter's cockpit, a violent bang as the shuttle fires, the airframe shaking and rattling hard, the nose wheel thumping over deck seams faster and faster for one and a half seconds, then the sudden smooth release as the jet leaves the bow",
+    toma: 'manos',
+    nivel: 'suave',
+    cuadro: 12.5,
+    segundos: 1.5,
+    texto: 'Several hands reaching out and clasping together at the same moment: a soft rustle of sleeves, then a few soft overlapping hand clasps, no music',
   },
+  // Llega caminando y lo levanta del borde en el cuadro 14.
+  paso('recoge', 'marinero', 'paso-marinero-cubierta'),
+  { toma: 'recoge', nivel: 'suave', cuadro: 12.6, segundos: 1, texto: 'Starting right away: a rubber duck toy gives one short squeak as it is picked up' },
+  // Lo baja hasta el fondo de la caja (cuadro 17,6) y cierra la tapa (28,8):
+  // sus golpes llegan 0,5 y 1,07 s después de empezar.
+  paso('caja', 'marinero', 'paso-marinero-cubierta'),
   {
-    toma: 'despegue',
-    nombre: 'tren',
+    toma: 'caja',
+    nombre: 'en-la-caja',
     nivel: 'medio',
-    cuadros: [24],
-    segundos: 2,
-    texto: 'Starting right away: inside a fighter jet cockpit in flight, the landing gear retracting, a short hydraulic whine and two solid thunks as the wheels lock up',
+    cuadro: 14.3,
+    segundos: 1,
+    texto: 'Starting right away: a rubber duck toy set down on the bottom of a wooden crate, a soft hollow wooden knock and one short rubbery squeak',
   },
   {
-    toma: 'despegue',
-    nombre: 'despegue-feliz',
+    toma: 'caja',
+    nombre: 'tapa',
     nivel: 'alto',
-    cuadro: 39,
-    texto: 'A rubber squeaky toy squeezed very fast over and over: quick high-pitched rubber squeaks in and out with little puffs of air, bouncy and giddy, a toy, not a person, no laughter',
+    cuadro: 21.7,
+    segundos: 1.5,
+    texto: 'A wooden crate lid lowered and closed: a short creak of the wood, then a solid hollow wooden thud as it shuts',
   },
-  { tomas: EN_LA_TORRE, nombre: 'sala' },
-  {
-    tomas: ['pitido', 'termina', 'otroPitido'],
-    nombre: 'radar',
-    nivel: 'medio',
-    cada: 1.2,
-    texto: 'A single clear radar contact beep from a military radar console, then a quiet electronic hum',
-  },
+  { toma: 'cinta', nivel: 'medio', cuadro: 1, segundos: 2.7, texto: 'Packing tape ripped off a roll in three long pulls and pressed over a wooden crate' },
+  { toma: 'cinta', nombre: 'sticker', nivel: 'medio', cuadro: 25, segundos: 0.5, texto: 'A big vinyl sticker slapped onto a wooden crate with the flat of a hand' },
+  paso('almirante', 'almirante', 'paso-almirante-cubierta'),
+  // Patea dos veces, en los cuadros 9,2 y 17,6 (GOLPES).
+  ...[9.2, 17.6].map((cuadro, i) => ({
+    toma: 'patea',
+    nombre: 'patada',
+    cuadro,
+    ...(i === 0 && { nivel: 'alto', segundos: 1, texto: 'A boot kicks a wooden crate hard: one loud hollow wooden thump and a muffled rubber squeak inside' }),
+  })),
+  paso('corre', 'marinero', 'carrera-marinero'),
+  { toma: 'corre', nombre: 'caida', nivel: 'medio', cuadro: 16, segundos: 1.5, texto: 'A person falling through the air from a great height: a short descending cartoon whistle' },
+  { toma: 'corre', nombre: 'chapuzon', nivel: 'alto', cuadro: 25.5, segundos: 2, texto: 'A big deep splash as a person plunges into the sea far below, water churning' },
 ]
 
 if (import.meta.main) await escribirSonidos(11, TOMAS, SONIDOS)

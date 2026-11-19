@@ -74,7 +74,7 @@ const boton = (pulsado) => [
 ]
 
 // El caza en sus metros: `piloto` es la figura de duck-one sentado, o nada;
-// `cupula`, los grados que tiene abierta la cúpula (escena 5); `alas`, los
+// `cupula`, los grados que tiene abierta la cúpula (escena 4); `alas`, los
 // grados de su barrido; `barra`, si está enganchado a la catapulta;
 // `gancho`, de 0 a 1, cuánto lo baja; `medalla`, los grados que se
 // balancea la del espejo, y `t`, el instante de la toma, que mueve el tablero.

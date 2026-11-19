@@ -168,7 +168,7 @@ async function capturar(navegador, url, camara, filas, crudo) {
   const pagina = await contexto.newPage()
   let problema = null
   await pagina.route(
-    (direccion) => direccion.pathname.endsWith('/src/nubes-lienzo.js'),
+    (direccion) => direccion.pathname.endsWith('/src/comportamiento/nubes-lienzo.js'),
     async (ruta) => {
       const respuesta = await ruta.fetch()
       let cuerpo = (await respuesta.text()).replace(/\r\n/g, '\n')

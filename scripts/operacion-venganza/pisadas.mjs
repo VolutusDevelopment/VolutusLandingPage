@@ -24,7 +24,7 @@ registerHooks({
   },
 })
 
-const { cuadrosDe } = await import('../../src/lib/escena1.js')
+const { cuadrosDe } = await import('../../src/lib/operacion-venganza/escena1.js')
 const { pDuckOne, pMoby, pDuke } = await import('./pilotos/cuerpos.mjs')
 const { pAlmirante } = await import('./escena1/personajes.mjs')
 
@@ -32,7 +32,7 @@ const { pAlmirante } = await import('./escena1/personajes.mjs')
 const CONOCIDOS = { duckOne: pDuckOne, moby: pMoby, duke: pDuke, almirante: pAlmirante }
 const quienEs = (p) => Object.keys(CONOCIDOS).find((quien) => JSON.stringify(CONOCIDOS[quien].pierna) === JSON.stringify(p.pierna)) ?? 'marinero'
 const enElSuelo = (fase) => (fase === null ? [true, true] : [0, 0.5].map((pie) => Math.sin(2 * Math.PI * (fase + pie)) >= 0))
-const ESCENAS = [1, 2, 3, 5, 6, 9, 10, 11, 13, 14, 15, 16]
+const ESCENAS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 const MULTITUD = 4
 const ARCHIVO = new URL('./pisadas.json', import.meta.url)
 
@@ -40,7 +40,7 @@ const pedidas = process.argv.slice(2).map(Number)
 const pisadas = pedidas.length && existsSync(ARCHIVO) ? JSON.parse(readFileSync(ARCHIVO, 'utf8')) : {}
 for (const numero of pedidas.length ? pedidas : ESCENAS) {
   delete pisadas[numero]
-  const guion = await import(`../../src/lib/escena${numero}.js`)
+  const guion = await import(`../../src/lib/operacion-venganza/escena${numero}.js`)
   const { TOMAS_3D } = await import(`./escena${numero}/tomas.mjs`)
   for (const toma of guion.TODAS ?? guion.TOMAS) {
     const escena = TOMAS_3D[toma.id]?.escena

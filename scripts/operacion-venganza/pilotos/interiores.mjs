@@ -1,7 +1,7 @@
 // Las cabinas de los cuatro cazas por dentro: tablero, consolas, asiento y
 // mandos, a escala dentro del modelo real del caza, que tiene abierta la
 // cabina bajo la cúpula. Las usan las láminas de las cabinas (cabinas.mjs), la
-// escena 3, con el caza de duck-one en la cubierta del Sitting Ducks, y la 11,
+// escena 3, con el caza de duck-one en la cubierta del Sitting Ducks, y la 8,
 // con el F-22 de duky en el hangar.
 //
 // El interior y el piloto van en unidades del piloto; aCaza() y escalar() los

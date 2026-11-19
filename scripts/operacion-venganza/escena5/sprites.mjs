@@ -1,5 +1,5 @@
-// Las tiras de la escena 5 (src/lib/escena5.js), una por toma (tiras.mjs).
-// La pantalla de carga es la de la escena 1.
+// Las tiras de la escena 5 (src/lib/operacion-venganza/escena5.js), una por
+// toma (tiras.mjs). La pantalla de carga es la de la escena 1.
 //
 //   node scripts/operacion-venganza/escena5/sprites.mjs
 //
@@ -8,6 +8,6 @@
 
 import { TOMAS_3D } from './tomas.mjs'
 import { escribirTiras } from '../tiras.mjs'
-import { TOMAS, rutaDeToma } from '../../../src/lib/escena5.js'
+import { TOMAS, rutaDeToma } from '../../../src/lib/operacion-venganza/escena5.js'
 
 await escribirTiras(TOMAS, TOMAS_3D, rutaDeToma)

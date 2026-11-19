@@ -1,5 +1,5 @@
 // Pista Lucero: la cinta de cuatro franjas escribe la marca al llegar y se va
-// por el pie, como la ola del logotipo de Volutus (src/ola.js).
+// por el pie, como la ola del logotipo de Volutus (src/comportamiento/ola.js).
 //
 // En la cabecera (`data-estela="entra"`) las franjas entran desde fuera de la
 // pantalla, la de abajo más atrás, cruzan la palabra estiradas y cada letra
