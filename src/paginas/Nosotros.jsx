@@ -428,8 +428,8 @@ export default function Nosotros() {
                 (Nosotros.css): de ahí el `sizes` mayor que el ancho. */}
             <figure className="nosotros-foto entra">
               <img
-                src="/image/morning-glory-1280.webp"
-                srcSet="/image/morning-glory-768.webp 768w, /image/morning-glory-1280.webp 1280w, /image/morning-glory-1920.webp 1920w"
+                src="/image/nosotros/morning-glory-1280.webp"
+                srcSet="/image/nosotros/morning-glory-768.webp 768w, /image/nosotros/morning-glory-1280.webp 1280w, /image/nosotros/morning-glory-1920.webp 1920w"
                 sizes="(min-width: 1200px) 1152px, (min-width: 640px) calc(100vw - 48px), calc((100vw - 48px) * 1.5)"
                 width={1920}
                 height={968}

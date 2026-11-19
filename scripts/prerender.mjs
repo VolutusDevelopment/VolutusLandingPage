@@ -558,6 +558,17 @@ traslados.push(
   '/operacion-venganza/escena-15 /operacion-venganza/el-regreso-del-fantasma 301',
   '/operacion-venganza/escena-16 /operacion-venganza/desolacion 301'
 )
+// Las fotos iban sueltas en /image y ahora van por tema. Las que un buscador
+// pudo indexar (socios, proyectos, artículos y la de Nosotros) llevan a su
+// lugar nuevo. Llevan comodín, así que van después de las reglas fijas.
+traslados.push(
+  ...['Diego', 'Rodrigo'].map((nombre) => `/image/${nombre}* /image/socios/${nombre}:splat 301`),
+  '/image/ponlenota* /image/proyectos/ponlenota:splat 301',
+  ...['antonelli-mexico-2026', 'fw14b-1992', 'limites-de-pista', 'monaco-'].map(
+    (nombre) => `/image/${nombre}* /image/articulos/${nombre}:splat 301`
+  ),
+  '/image/morning-glory* /image/nosotros/morning-glory:splat 301'
+)
 // La dirección canónica no lleva barra final. Cloudflare ya manda /privacidad/
 // a /privacidad, pero con un 307, que es temporal y el buscador no consolida;
 // `_redirects` corre antes y lo hace con un 301. Va al final porque Cloudflare

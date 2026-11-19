@@ -21,7 +21,7 @@ export const rutaDeCaza = (nombre) => `/operacion-venganza/combate/${nombre}.png
 export const PASADAS = ['duck-one', 'moby', 'duke', 'duky']
 export const PASADA = { pixelesPorMetro: 4, altura: -20 }
 export const LLAMAS = [1.25, 1.1, 1.4]
-export const rutaDePasadas = '/operacion-venganza/pasadas.png'
+export const rutaDePasadas = '/operacion-venganza/combate/pasadas.png'
 
 // Los retratos del cuadro de comunicaciones: quien habla en los niveles, una
 // fila por cada uno en este orden, con `CUADROS_DE_RETRATO` cuadros de

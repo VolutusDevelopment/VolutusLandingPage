@@ -118,7 +118,7 @@ export const PAGINAS = {
   // una sin `servicios` se sugiere en todas. Las opiniones llevan `autor`, el
   // `id` del socio que la firma (data/socios.js), no se sugieren en los
   // servicios y tienen su propio índice, aparte del de las guías. `portada` es
-  // el nombre de una foto de public/image (a 800 y 1600 px): abre la cabecera
+  // el nombre de una foto de public/image/articulos (a 800 y 1600 px): abre la cabecera
   // del artículo y es la carátula de su fila en el índice de opiniones.
   '/articulos': {
     archivo: 'articulos.html',

@@ -27,7 +27,7 @@ export const ANCHO = 336
 export const ALTO = 144
 
 // La pantalla de carga: duck-one caminando, de tres cuartos.
-export const CARGA = { cuadros: 8, lado: 72, ruta: '/operacion-venganza/carga.png' }
+export const CARGA = { cuadros: 8, lado: 72, ruta: '/operacion-venganza/cargas/duck-one.png' }
 
 export const MODOS = ['cursor', 'huella']
 

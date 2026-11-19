@@ -15,7 +15,7 @@ export const CUADROS = 8
 const marinero = (k, datos) => ({ tira: `/operacion-venganza/cargas/marinero-${k}.png`, ...datos })
 
 export const CARGAS = {
-  '/operacion-venganza/carga-duck-one': { nombre: 'duck-one camina', tira: '/operacion-venganza/carga.png', escenas: [1, 2, 3] },
+  '/operacion-venganza/carga-duck-one': { nombre: 'duck-one camina', tira: '/operacion-venganza/cargas/duck-one.png', escenas: [1, 2, 3] },
   '/operacion-venganza/carga-duke': {
     nombre: 'Duke camina',
     tira: '/operacion-venganza/cargas/duke.png',

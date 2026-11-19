@@ -152,7 +152,11 @@ worker/
   brief.js              # POST /api/brief
   comun.js              # lo que comparten los dos formularios
 public/
-  fonts/, image/        # Geist, Geist Mono, Archivo itálica y recursos webp
+  fonts/                # Geist, Geist Mono, Archivo itálica y las del brief y sus bocetos
+  image/                # og/, socios/, proyectos/, articulos/, nosotros/, iconos/, brief/ y bocetos/
+  grabados/             # la nube y el mar en video
+  brief/                # los bocetos del brief y sus muestras
+  operacion-venganza/   # los sprites del juego: escenaN/, combate/ y cargas/
   robots.txt, llms.txt, .well-known/security.txt
 ```
 

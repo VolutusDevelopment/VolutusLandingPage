@@ -24,9 +24,9 @@ export const SOCIOS = [
     titulo: 'Ingeniero Informático con Especialidad en Inteligencia Artificial',
     institucion: DUOC_UC,
     rol: 'Socio co-fundador',
-    foto: '/image/Diego.jpeg',
-    fotoSrcSet: '/image/Diego-720.webp 720w, /image/Diego.jpeg 960w',
-    avatar: '/image/Diego-120.webp',
+    foto: '/image/socios/Diego.jpeg',
+    fotoSrcSet: '/image/socios/Diego-720.webp 720w, /image/socios/Diego.jpeg 960w',
+    avatar: '/image/socios/Diego-120.webp',
     perfiles: {
       github: 'https://github.com/DiegoPyLL',
       linkedin: 'https://www.linkedin.com/in/diegopyll/',
@@ -42,8 +42,8 @@ export const SOCIOS = [
     titulo: 'Ingeniero Informático con Especialidad en Inteligencia Artificial',
     institucion: DUOC_UC,
     rol: 'Socio co-fundador',
-    foto: '/image/Rodrigo.webp',
-    avatar: '/image/Rodrigo-120.webp',
+    foto: '/image/socios/Rodrigo.webp',
+    avatar: '/image/socios/Rodrigo-120.webp',
     perfiles: {
       github: 'https://github.com/Marbeck-one',
       linkedin: 'https://www.linkedin.com/in/rodrigo-mart%C3%ADnez-becker-74b6ab241/',
